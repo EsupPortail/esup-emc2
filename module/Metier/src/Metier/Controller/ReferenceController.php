@@ -7,6 +7,7 @@ use Metier\Form\Reference\ReferenceFormAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -15,7 +16,7 @@ class ReferenceController extends AbstractActionController {
     use ReferenceServiceAwareTrait;
     use ReferenceFormAwareTrait;
 
-    public function ajouterAction()
+    public function ajouterAction()  :ViewModel
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
         $reference = new Reference();
@@ -42,7 +43,7 @@ class ReferenceController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $reference = $this->getReferenceService()->getRequestedReference($this);
         $form = $this->getReferenceForm();
@@ -68,21 +69,21 @@ class ReferenceController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $reference = $this->getReferenceService()->getRequestedReference($this);
         $this->getReferenceService()->historise($reference);
         return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $reference = $this->getReferenceService()->getRequestedReference($this);
         $this->getReferenceService()->restore($reference);
         return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $reference = $this->getReferenceService()->getRequestedReference($this);
 

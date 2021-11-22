@@ -29,6 +29,8 @@ class Activite implements HistoriqueAwareInterface,
     private $descriptions;
     /** @var ArrayCollection (FicheMetier) */
     private $fiches;
+    /** @var ArrayCollection (Domaines) */
+    private $domaines;
 
     /** @var NiveauEnveloppe|null */
     private $niveaux;
@@ -41,6 +43,7 @@ class Activite implements HistoriqueAwareInterface,
         $this->competences = new ArrayCollection();
         $this->formations = new ArrayCollection();
         $this->fiches = new ArrayCollection();
+        $this->domaines = new ArrayCollection();
     }
     /**
      * @return int
@@ -165,6 +168,16 @@ class Activite implements HistoriqueAwareInterface,
     public function getFichesMetiers()
     {
         return $this->fiches;
+    }
+
+    /** Domaine **************************************************************************************************/
+
+    /**
+     * @return ArrayCollection (Domaine)
+     */
+    public function getDomaines()
+    {
+        return $this->domaines;
     }
 
     /** ENVELOPPE DE NIVEAUX ******************************************************************************************/

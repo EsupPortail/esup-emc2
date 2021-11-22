@@ -3,6 +3,7 @@
 use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\SpecificiteActivite;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Metier\Entity\Db\Domaine;
 
 /**
  * @see \Application\View\Helper\SpecificitePosteViewHelper;
@@ -55,6 +56,17 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
                 </div>
             <?php endif; ?>
         </div>
+        <?php $domaines = $activite->getDomaines()->toArray(); ?>
+        <?php if (!empty($domaines)) : ?>
+        <?php foreach ($domaines as $domaine) : ?>
+            <?php /** @var Domaine $domaine */ ?>
+            <span class="label" style="background: lightskyblue;">
+                <?php echo $domaine->getLibelle(); ?>
+            </span>
+        <?php endforeach; ?>
+        <br/>
+        <br/>
+        <?php endif; ?>
     </div>
 
     <div class="activite-description">

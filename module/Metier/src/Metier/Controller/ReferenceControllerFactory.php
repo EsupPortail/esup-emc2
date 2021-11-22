@@ -13,7 +13,7 @@ class ReferenceControllerFactory {
      * @param ContainerInterface $container
      * @return ReferenceController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ReferenceController
     {
         /**
          * @var MetierService $metierService
