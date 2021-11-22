@@ -8,6 +8,7 @@ use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Entity\Db\NiveauEnveloppe;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
+use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -33,6 +34,7 @@ class ActiviteController  extends AbstractActionController {
     use NiveauEnveloppeServiceAwareTrait;
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
+    use HasDescriptionFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -203,14 +205,14 @@ class ActiviteController  extends AbstractActionController {
     public function ajouterDescriptionsAction()
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
-        $form = $this->getModifierDescriptionForm();
+        $form = $this->getHasDescriptionForm();
         $form->setAttribute('action', $this->url()->fromRoute('activite/ajouter-descriptions', ['activite' => $activite->getId()], [], true));
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $descriptions = explode("<li>", $data['description']);
+            $descriptions = explode("<li>", $data['HasDescription']['description']);
             $descriptions = array_map(function($string) {return strip_tags($string);}, $descriptions);
             $descriptions = array_map(function($string) {return str_replace("\r","",$string);}, $descriptions);
             $descriptions = array_map(function($string) {return str_replace("\n","",$string);}, $descriptions);

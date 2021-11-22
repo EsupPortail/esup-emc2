@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
+use Application\Form\HasDescription\HasDescriptionForm;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
@@ -37,6 +38,7 @@ class ActiviteControllerFactory {
 
         /**
          * @var ActiviteForm                $activiteForm
+         * @var HasDescriptionForm          $hasDescriptionForm
          * @var ModifierLibelleForm         $modifierLibelleForm
          * @var NiveauEnveloppeForm         $niveauEnveloppeForm
          * @var SelectionApplicationForm    $selectionApplicationForm
@@ -44,6 +46,7 @@ class ActiviteControllerFactory {
          * @var SelectionFormationForm      $selectionFormationForm
          */
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
+        $hasDescriptionForm = $container->get('FormElementManager')->get(HasDescriptionForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -59,6 +62,7 @@ class ActiviteControllerFactory {
         $controller->setHasFormationCollectionService($hasFormationCollectionService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setActiviteForm($activiteForm);
+        $controller->setHasDescriptionForm($hasDescriptionForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
