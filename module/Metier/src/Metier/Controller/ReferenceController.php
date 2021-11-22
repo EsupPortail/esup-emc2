@@ -46,7 +46,8 @@ class ReferenceController extends AbstractActionController {
     {
         $reference = $this->getReferenceService()->getRequestedReference($this);
         $form = $this->getReferenceForm();
-        $form->setAttribute('action', $this->url()->fromRoute('metier/modifier-reference', ['reference' => $reference->getId()], [], true));
+        /** @see ReferenceController::modifierAction() */
+        $form->setAttribute('action', $this->url()->fromRoute('metier/reference/modifier', ['reference' => $reference->getId()], [], true));
         $form->bind($reference);
 
         /** @var Request $request */
