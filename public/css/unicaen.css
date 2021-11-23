@@ -157,7 +157,7 @@ a.navbar-brand h1 {
 
 .navbar .nav .dropdown-menu > li > a {
     color: var(--color-medium);
-    padding: 4px 15px;
+    padding: 2px 15px;
 }
 .navbar .nav .dropdown-menu > li > a:focus, .navbar .nav .dropdown-menu > li > a:hover {
     color: var(--header-color);
@@ -175,7 +175,6 @@ header ul.dropdown-menu > li a:hover {
     font-size: 14px;
     color: var(--content-background);
     font-weight: bold;
-    font-variant: small-caps;
     text-decoration: underline;
 }
 
