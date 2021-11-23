@@ -34,6 +34,13 @@ return [
                 [
                     'controller' => ActiviteController::class,
                     'action' => [
+                        'rechercher-activite',
+                    ],
+                    'roles' => [],
+                ],
+                [
+                    'controller' => ActiviteController::class,
+                    'action' => [
                         'afficher',
                     ],
                     'privileges' => [
@@ -205,6 +212,17 @@ return [
                             'defaults' => [
                                 'controller' => ActiviteController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                    ],
+                    'rechercher-activite' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-activite',
+                            'defaults' => [
+                                'controller' => ActiviteController::class,
+                                'action'     => 'rechercher-activite',
                             ],
                         ],
                     ],

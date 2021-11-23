@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
-use Application\Form\FicheMetier\ActiviteExistanteForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -24,14 +23,15 @@ use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use Zend\View\Renderer\PhpRenderer;
 
-class FicheMetierControllerFactory {
+class FicheMetierControllerFactory
+{
 
-    public function __invoke(ContainerInterface $container) : FicheMetierController
+    public function __invoke(ContainerInterface $container): FicheMetierController
     {
         /**
          * @var ActiviteService $activiteService
-         * @var AgentService $agentService;
-         * @var RenduService $renduService;
+         * @var AgentService $agentService ;
+         * @var RenduService $renduService ;
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
@@ -58,7 +58,6 @@ class FicheMetierControllerFactory {
         /**
          * @var LibelleForm $libelleForm
          * @var ActiviteForm $activiteForm
-         * @var ActiviteExistanteForm $activiteExistanteForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
          * @var SelectionFormationForm $selectionFormationForm
@@ -66,13 +65,12 @@ class FicheMetierControllerFactory {
          */
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class); //2 ?
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
-        $activiteExistanteForm = $container->get('FormElementManager')->get(ActiviteExistanteForm::class); //2 ?
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
 
-        /* @var PhpRenderer $renderer  */
+        /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
 
         /** @var FicheMetierController $controller */
@@ -94,7 +92,6 @@ class FicheMetierControllerFactory {
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
-        $controller->setActiviteExistanteForm($activiteExistanteForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         $controller->setSelectionFormationForm($selectionFormationForm);

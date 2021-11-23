@@ -22,6 +22,7 @@ use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class ActiviteController  extends AbstractActionController {
@@ -466,5 +467,17 @@ class ActiviteController  extends AbstractActionController {
         }
 
         return $this->redirect()->toRoute('activite');
+    }
+
+    /** ACTIONS DE RECHERCHE ******************************************************************************************/
+
+    public function rechercherActiviteAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $activites = $this->getActiviteService()->findActiviteByTerm($term);
+            $result = $this->getActiviteService()->formatActiviteJSON($activites);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

@@ -1,49 +1,54 @@
 <?php
 
-use Application\Form\FicheMetier\ActiviteExistanteForm;
+use Application\Entity\Db\FicheMetier;
+use UnicaenApp\Form\Element\SearchAndSelect;
 
 /**
  * @see \Application\Controller\FicheMetierController::ajouterActiviteExistanteAction()
- * @var ActiviteExistanteForm $form
- * @var array $options
+ * @var FicheMetier $fichemetier
  */
 
 ?>
 
-<div>
-    <?php echo $this->form()->openTag($form); ?>
-    <?php echo $this->formControlGroup($form->get('activite')); ?>
-    <?php echo $this->formControlGroup($form->get('submit')); ?>
-    <?php echo $this->form()->closeTag(); ?>
+<form method="post" action="<?php echo $this->url('fiche-metier-type/ajouter-activite-existante', ['id' => $fichemetier->getId()], [], true); ?>">
+    <label for="formation">Activité à ajouter : </label>
+    <?php
+    /** @see  \Application\Controller\ActiviteController::rechercherActiviteAction() */
+    $structureF = new SearchAndSelect('activite');
+    $structureF
+        ->setAutocompleteSource($this->url('activite/rechercher-activite'))
+        ->setSelectionRequired(true)
+        ->setAttributes([
+            'id' => 'activite',
+            'placeholder' => "Sélectionner une activité",
+        ]);
+    ?>
+    <?php echo $this->formControlGroup($structureF); ?>
+    <input type="submit" value="Ajouter l'activité" class="btn btn-primary action">
+</form>
+
+<div id="description">
+
 </div>
-
-<hr/>
-
-<div id="none" class="preview">
-    Aucune prévisualisation.
-</div>
-
-<?php foreach ($options as $key => $infos) :?>
-    <div class="preview" style='display:none;' id="<?php echo $key;?>">
-        <div class="activite">
-            <h3><?php echo $infos["title"]; ?></h3>
-            <?php echo $infos["description"]; ?>
-        </div>
-    </div>
-<?php endforeach; ?>
 
 <script>
-    $(function() {
-        $("select#activite").change(function () {
-            let text = $("select#activite option:selected").val();
-            $("div.preview").hide();
-            if (text.length > 0) {
-                $("div#" + text).show();
-            } else {
-                $("div#none").show();
-            }
-        });
-    });
+   $(function() {
+       $("input[type=text]").change(function (e) {
+           let activite_id = $("input#activite").val();
 
-    $('select.bootstrap-selectpicker').selectpicker();
+           let url = "../../mission-principale/afficher/" + activite_id;
+           $.ajax({
+               type: "POST",
+               url: url,
+               beforeSend:
+                   function () {
+                       document.getElementById('description').innerHTML = "Récupération de l'activité ...";
+                   },
+               success:
+                   function (retour) {
+                       document.getElementById('description').innerHTML = retour;
+                   }
+           });
+       });
+   });
 </script>

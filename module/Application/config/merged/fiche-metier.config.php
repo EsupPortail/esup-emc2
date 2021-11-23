@@ -4,8 +4,6 @@ namespace Application;
 
 use Application\Controller\FicheMetierController;
 use Application\Controller\FicheMetierControllerFactory;
-use Application\Form\FicheMetier\ActiviteExistanteForm;
-use Application\Form\FicheMetier\ActiviteExistanteFormFactory;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
@@ -14,7 +12,6 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\View\Helper\FicheMetierEnteteViewHelper;
-use Application\View\Helper\FicheMetierEtatViewHelper;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FicheMetierViewHelper;
 use Application\View\Helper\RaisonsViewHelper;
@@ -452,7 +449,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            ActiviteExistanteForm::class => ActiviteExistanteFormFactory::class,
             LibelleForm::class => LibelleFormFactory::class,
         ],
     ],

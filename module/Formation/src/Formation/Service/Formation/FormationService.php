@@ -256,6 +256,8 @@ class FormationService
         return $formation;
     }
 
+    /** RECHERCHES ****************************************************************************************************/
+
     /**
      * @param string $texte
      * @return Formation[]

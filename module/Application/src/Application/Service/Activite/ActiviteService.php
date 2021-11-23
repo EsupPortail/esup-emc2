@@ -89,6 +89,8 @@ class ActiviteService {
             ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
             ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
             ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
+            ->andWhere('libelle.histoDestruction IS NULL')
+            ->andWhere('description.histoDestruction IS NULL')
         ;
         $qb = NiveauService::decorateWithNiveau($qb, 'activite', 'niveaux')
         ;
@@ -381,4 +383,41 @@ class ActiviteService {
         return $result;
     }
 
+    /** RECHERCHES ****************************************************************************************************/
+
+    /**
+     * @param string $texte
+     * @return Activite[]
+     */
+    public function findActiviteByTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(libelle.libelle) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    /**
+     * @param Activite[] $activites
+     * @return array
+     */
+    public function formatActiviteJSON(array $activites) : array
+    {
+        $result = [];
+        /** @var Activite[] $activites */
+        foreach ($activites as $activite) {
+            $result[] = array(
+                'id' => $activite->getId(),
+                'label' => $activite->getLibelle(),
+                'description' => 'blabla bli bli',
+//                'extra' => "<span class='badge' style='background-color: slategray;'>" .. "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
 }

@@ -9,8 +9,6 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
-use Application\Form\FicheMetier\ActiviteExistanteForm;
-use Application\Form\FicheMetier\ActiviteExistanteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
@@ -33,7 +31,6 @@ use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -61,7 +58,6 @@ class FicheMetierController extends AbstractActionController
 
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
-    use ActiviteExistanteFormAwareTrait;
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -264,6 +260,8 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
+    /** ACTIVITE LIEE *************************************************************************************************/
+
     public function ajouterNouvelleActiviteAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
@@ -300,37 +298,17 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
-        /** @var ActiviteExistanteForm $form */
-        $form = $this->getActiviteExistanteForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /** @var Select $select */
-        $select = $form->get('activite');
-        $select->setValueOptions($this->getActiviteService()->getActivitesAsOptions($fiche));
-
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $form->setData($data);
-            $activite = $this->getActiviteService()->getActivite($data['activite']);
+            $activite = $this->getActiviteService()->getActivite($data['activite']["id"]);
             $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
-        }
-
-        $activites = $this->getActiviteService()->getActivites();
-        $options = [];
-        foreach ($activites as $activite) {
-            $options[$activite->getId()] = [
-                "title" => $activite->getLibelle(),
-                "description" => $activite->getDescription(),
-            ];
         }
 
         return new ViewModel([
             'title' => 'Ajouter une activité existante',
-            'form' => $form,
-            'options' => $options,
+            'fichemetier' => $fiche,
         ]);
     }
 
