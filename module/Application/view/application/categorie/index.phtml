@@ -1,25 +1,31 @@
 <?php
 
 use Application\Entity\Db\Categorie;
+use Application\Provider\Privilege\CorpsPrivileges;
 
 /**
  * @var Categorie[] $categories
  */
 
-$canAjouter = true;
-$canModifier = true;
-$canHistoriser = true;
-$canDetruire = true;
+$canAfficher    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
+$canAjouter     = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canHistoriser  = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canDetruire    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+
+$this->headTitle("Liste des catégories");
 ?>
 
 <div class="row">
     <div class="col-md-8">
-        <h2>
+        <h1 class="page-header">
             Liste des catégories
-        </h2>
+            <span class="badge">
+                <?php echo count($categories); ?>
+            </span>
+        </h1>
     </div>
     <div class="pull-right">
-        <br/>
         <?php if ($canAjouter) : ?>
             <a
                     <?php /** @see \Application\Controller\CategorieController::ajouterAction() */ ?>
@@ -33,15 +39,13 @@ $canDetruire = true;
     </div>
 </div>
 
-<br/>
-<br/>
-
-<table class="datatable table table-condensed">
+<table class="datatable table table-condensed table-hover">
     <thead>
         <tr>
             <th> Code </th>
             <th> Libelle </th>
-            <th> Action </th>
+            <th> #Métier </th>
+            <th style="min-width: 10rem;"> Action </th>
         </tr>
     </thead>
     <tbody>
@@ -54,6 +58,18 @@ $canDetruire = true;
                 <?php echo $categorie->getLibelle(); ?>
             </td>
             <td>
+                <?php echo count($categorie->getMetiers()); ?>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\CategorieController::afficherMetiersAction() */ ?>
+                            href="<?php echo $this->url('categorie/afficher-metiers', ['categorie' => $categorie->getId()], [], true); ?>"
+                            title="Afficher la liste des métiers" data-toggle="tooltip" data-html="true"
+                            class="ajax-modal"
+                    >
+                        <span class="icon users"></span></a>
+                <?php endif; ?>
                 <?php if ($canModifier) : ?>
                     <a
                             <?php /** @see \Application\Controller\CategorieController::modifierAction() */ ?>
@@ -93,5 +109,18 @@ $canDetruire = true;
         </tr>
     <?php endforeach; ?>
     </tbody>
-
 </table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
+        $('.datatable').DataTable({
+            paging: false,
+        });
+    });
+</script>

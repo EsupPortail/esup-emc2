@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
-use Application\Form\AssocierAgent\AssocierAgentForm;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Expertise\ExpertiseForm;
@@ -54,14 +53,12 @@ class FichePosteControllerFactory {
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
-         * @var AssocierAgentForm $associerAgentForm
          * @var AssocierPosteForm $associerPosteForm
          * @var AssocierTitreForm $associerTitreForm
          * @var SpecificitePosteForm $specificiftePosteForm
          * @var ExpertiseForm $expertiseForm
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
-//        $associerAgentForm = $container->get('FormElementManager')->get(AssocierAgentForm::class);
         $associerPosteForm = $container->get('FormElementManager')->get(AssocierPosteForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
@@ -85,7 +82,6 @@ class FichePosteControllerFactory {
         $controller->setParcoursDeFormationService($parcoursService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
-//        $controller->setAssocierAgentForm($associerAgentForm);
         $controller->setAssocierPosteForm($associerPosteForm);
         $controller->setAssocierTitreForm($associerTitreForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);

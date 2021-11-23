@@ -7,6 +7,7 @@ use Application\Form\Categorie\CategorieForm;
 use Application\Form\Categorie\CategorieFormAwareTrait;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -15,7 +16,26 @@ class CategorieController extends AbstractActionController
     use CategorieServiceAwareTrait;
     use CategorieFormAwareTrait;
 
-    public function ajouterAction()
+    public function indexAction() : ViewModel
+    {
+        $categories = $this->getCategorieService()->getCategories();
+
+        return new ViewModel([
+            'categories' => $categories,
+        ]);
+    }
+
+    public function afficherMetiersAction() : ViewModel
+    {
+        $categorie = $this->getCategorieService()->getRequestedCategorie($this);
+
+        return new ViewModel([
+            'title' => 'Métiers ayant la categorie ['. $categorie->getLibelle().']',
+            'categorie' => $categorie,
+        ]);
+    }
+
+    public function ajouterAction(): ViewModel
     {
         /** @var Categorie $categorie */
         $categorie = new Categorie();
@@ -44,7 +64,7 @@ class CategorieController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
 
@@ -72,25 +92,25 @@ class CategorieController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
         if ($categorie !== null) {
             $this->getCategorieService()->historise($categorie);
         }
-        return $this->redirect()->toRoute('corps', [], ['fragment'=>'categorie'], true);
+        return $this->redirect()->toRoute('categorie', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
         if ($categorie !== null) {
             $this->getCategorieService()->restore($categorie);
         }
-        return $this->redirect()->toRoute('corps', [], ['fragment'=>'categorie'], true);
+        return $this->redirect()->toRoute('categorie', [], [], true);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
 

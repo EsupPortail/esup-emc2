@@ -109,7 +109,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'gestion' => [
                         'pages' => [
                             'mission-pincipale' => [
                                 'label'    => 'Missions principales',

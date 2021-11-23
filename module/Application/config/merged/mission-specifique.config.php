@@ -154,7 +154,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'gestion' => [
                         'pages' => [
                             'mission-specifique' => [
                                 'label' => 'Missions spécifiques',
@@ -162,10 +162,6 @@ return [
                                 'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER),
                                 'order'    => 1100,
                             ],
-                        ],
-                    ],
-                    'gestion' => [
-                        'pages' => [
                             'affectation' => [
                                 'label' => 'Affectations des missions spécifiques',
                                 'route' => 'mission-specifique/affectation',

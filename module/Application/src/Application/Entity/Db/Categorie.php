@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
@@ -14,6 +15,8 @@ class Categorie implements HistoriqueAwareInterface {
     private $code;
     /** @var string */
     private $libelle;
+    /** @var ArrayCollection (Metier) */
+    private $metiers;
 
     /**
      * @return int
@@ -59,5 +62,12 @@ class Categorie implements HistoriqueAwareInterface {
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getMetiers(): array
+    {
+        return $this->metiers->toArray();
+    }
 
 }

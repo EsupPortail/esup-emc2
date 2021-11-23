@@ -1,24 +1,24 @@
 <?php
 
 /**
- * @see \Application\Controller\CorpsController::afficherAgentsAvecCorrespondanceAction();
- * @var Correspondance $correspondance
+ * @see \Application\Controller\GradeController::afficherAgentsAction();
+ * @var Grade $grade
  */
 
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\Correspondance;
+use Application\Entity\Db\Grade;
 
 $now = new DateTime();
 
 /** @var  AgentGrade[] $agents */
-$agents = $correspondance->getAgentGrades();
+$agents = $grade->getAgentGrades();
 $agents = array_filter($agents, function (AgentGrade $a) { return !$a->isDeleted();});
 usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
 ?>
 
 <dl class="dl-horizontal">
-    <dt> Correspondance </dt>
-    <dd>[#<?php echo $correspondance->getId(); ?>] <?php echo $correspondance->getLibelleLong(); ?></dd>
+    <dt> Grade </dt>
+    <dd>[#<?php echo $grade->getId(); ?>] <?php echo $grade->getLibelleLong(); ?></dd>
     <dt> #AgentGrade </dt>
     <dd> <?php echo count($agents); ?></dd>
 </dl>

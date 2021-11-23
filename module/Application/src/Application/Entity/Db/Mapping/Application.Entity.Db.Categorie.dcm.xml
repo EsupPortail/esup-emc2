@@ -8,6 +8,7 @@
 
         <field name="code"          type="string"  length="255"                column="code"        nullable="false"/>
         <field name="libelle"       type="string"  length="1024"               column="libelle"     nullable="false"/>
+        <one-to-many field="metiers" target-entity="Metier\Entity\Db\Metier" mapped-by="categorie"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

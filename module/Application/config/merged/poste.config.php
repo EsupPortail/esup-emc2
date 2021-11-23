@@ -74,7 +74,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'gestion' => [
                         'pages' => [
                             [
                                 'order' => 1200,

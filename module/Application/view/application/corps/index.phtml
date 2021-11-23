@@ -2,19 +2,13 @@
 
 /**
  * @see \Application\Controller\CorpsController::indexAction()
- * @var Categorie[] $categories
  * @var Corps[] $corps
- * @var Grade[] $grades
- * @var Correspondance[] $correspondances
  */
 
-use Application\Entity\Db\Categorie;
 use Application\Entity\Db\Corps;
-use Application\Entity\Db\Correspondance;
-use Application\Entity\Db\Grade;
 use Application\Provider\Privilege\CorpsPrivileges;
 
-$this->headTitle('Corps, grades et correspondances');
+$this->headTitle("Liste des corps");
 
 $canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
 $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
@@ -23,115 +17,86 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Catégories, corps, grades et correspondances
+            Liste des corps
+            <span class="badge">
+                <?php echo count($corps); ?>
+            </span>
         </h1>
     </div>
-</div>
-
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-
-        <li>
-            <a href="#categorie" aria-controls="categorie" role="tab" data-toggle="tabz">
-                Catégories
-                <span class="badge">
-                    <?php echo count($categories); ?>
-                </span>
-                <span style="color:white;"><?php echo $this->synchroniserIcon(false); ?></span>
-            </a>
-        </li>
-
-        <li>
-            <a href="#corps" aria-controls="corps" role="tab" data-toggle="tabz">
-                Corps
-                <span class="badge">
-                    <?php echo count($corps); ?>
-                </span>
-                <?php echo $this->synchroniserIcon(); ?>
-            </a>
-        </li>
-
-        <li>
-            <a href="#grade" aria-controls="grade" role="tab" data-toggle="tabz">
-                Grades &nbsp;
-                <span class="badge">
-                    <?php echo count($grades); ?>
-                </span>
-                <?php echo $this->synchroniserIcon(); ?>
-            </a>
-        </li>
-
-        <li>
-            <a href="#correspondance" aria-controls="correspondance" role="tab" data-toggle="tabz" >
-                Correspondances &nbsp;
-                <span class="badge">
-                    <?php echo count($correspondances); ?>
-                </span>
-                <?php echo $this->synchroniserIcon(); ?>
-            </a>
-        </li>
-    </ul>
-
-    <div class="main-with-tab">
-
-        <div class="tab-content">
-
-            <!-- CATEGORIES ------------------------------------------------------------------------------------------->
-            <div id="categorie" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-categorie', ['categories' => $categories]); ?>
-            </div>
-
-            <!-- CORPS ------------------------------------------------------------------------------------------------>
-            <div id="corps" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-corps', ['corps' => $corps, 'canAfficher' => $canAfficher, 'canModifier' => $canModifier]); ?>
-            </div>
-
-            <!-- GRADES ----------------------------------------------------------------------------------------------->
-            <div id="grade" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-grade', ['grades' => $grades, 'canAfficher' => $canAfficher, 'canModifier' => $canModifier]); ?>
-            </div>
-
-            <!-- CORRESPONDANCES -------------------------------------------------------------------------------------->
-            <div id="correspondance" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-correspondance', ['correspondances' => $correspondances, 'canAfficher' => $canAfficher, 'canModifier' => $canModifier]); ?>
-            </div>
-
+    <div class="col-md-4">
+        <div class="alert alert-info">
+            <span class="icon synchroniser"></span>
+            Synchoniser depuis Octopus
         </div>
     </div>
 </div>
 
-
-
-
-</div>
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th style="width:70%;"> Libellé</th>
+        <th> #Agent/Grade </th>
+        <th> Catégorie </th>
+        <th> Niveau </th>
+        <th style="width:3rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($corps as $corp): ?>
+        <tr>
+            <td>
+                <span
+                    title="<?php echo $corp->generateTooltip(); ?>"
+                    data-toggle="tooltip" data-html="true"
+                >
+                <?php echo $corp->getLibelleLong(); ?>
+                </span>
+            </td>
+            <td> <?php echo count($corp->getAgentGrades()); ?> </td>
+            <td> <?php echo $corp->getCategorie(); ?> </td>
+            <td> <?php if ($corp->getNiveau()) : ?>
+                    <span
+                            data-toggle="tooltip" data-html="true"
+                            title="<?php echo $corp->getNiveau()->getLibelle(); ?> : Niveau <?php echo $corp->getNiveau()->getNiveau(); ?>">
+                    <?php echo $corp->getNiveau()->getEtiquette(); ?>
+                    </span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($canModifier) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\CorpsController::modifierNiveauAction() */ ?>
+                        href="<?php echo $this->url('corps/modifier-niveau', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                                          title="Modifier le niveu du corps"></span></a>
+                <?php endif; ?>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Application\Controller\CorpsController::afficherAgentsAction() */ ?>
+                        href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                                        <span class="icon voir" data-toggle="tooltip" data-html="true"
+                                              title="Afficher les agents ayant ce corps"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
 
 
 <script>
-    $(document).ready(function() {
-        $('.datatable').DataTable( {
-            language: {
-                url: '/localisation/fr_FR.json'
-            },
-            "pageLength": 10,
-            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
-        } );
-    } );
-
     $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        if (name === undefined || name === "") name = "corps";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
+        });
+
+        $('.datatable').DataTable({
+            paging: false,
         });
     });
 </script>

@@ -48,7 +48,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'gestion' => [
                         'pages' => [
                             'fonction' => [
                                 'label'    => 'Fonctions',
