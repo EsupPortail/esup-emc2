@@ -10,8 +10,6 @@ use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
-use Application\Form\AssocierAgent\AssocierAgentForm;
-use Application\Form\AssocierAgent\AssocierAgentFormAwareTrait;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreForm;
@@ -60,7 +58,6 @@ class FichePosteController extends AbstractActionController {
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
-    use AssocierAgentFormAwareTrait;
     use AssocierPosteFormAwareTrait;
     use AssocierTitreFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
@@ -351,54 +348,42 @@ class FichePosteController extends AbstractActionController {
     {
         $structureId = $this->params()->fromQuery('structure');
         $sousstructure = ($this->params()->fromQuery('sous-structure') == '1');
-
         $structure = $this->getStructureService()->getStructure($structureId);
 
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste');
-
-        /** @var AssocierAgentForm $form */
-        $form = $this->getAssocierAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/associer-agent', ['fiche-poste' => $fiche->getId()], ['query' => ["structure" => ($structure)?$structure->getId():null, "sous-structure" => $sousstructure]], true));
-
-        if ($structure !== null) {
-            $form = $form->reinitWithStructure($structure, $sousstructure);
-        }
-        $form->bind($fiche);
 
         /**@var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $form->setData($data);
+            $agent = $this->getAgentService()->getAgent($data["agent"]["id"]);
 
-            $agentId = $form->get('agent')->getValue();
-            $agent = $this->getAgentService()->getAgent($agentId);
-            $fiche_old = $this->getFichePosteService()->getFichePosteByAgent($agent);
-            if ($fiche_old !== null) {
-                $this->flashMessenger()->addErrorMessage("Cet agent est déjà associé à une fiche de poste active.");
-            } else {
-                if ($form->isValid()) {
+            if ($agent !== null) {
+                $fiche_old = $this->getFichePosteService()->getFichePosteByAgent($agent);
+                if ($fiche_old !== null) {
+                    $this->flashMessenger()->addErrorMessage("Cet agent est déjà associé à une fiche de poste active.");
+                } else {
+                    $fiche->setAgent($agent);
                     $this->getFichePosteService()->update($fiche);
 
-                    /**  !Attention! la fiche peut-être dans une sous-structure **/
-                    $structures = $this->getStructureService()->getStructuresFilles($structure);
-                    $structures[] = $structure;
-                    foreach ($structures as $structureTMP) {
-                        $structureTMP->removeFichePosteRecrutement($fiche);
-                        $this->getStructureService()->update($structureTMP);
+                    if ($structure) {
+                        /**  !Attention! la fiche peut-être dans une sous-structure **/
+                        $structures = $this->getStructureService()->getStructuresFilles($structure);
+                        $structures[] = $structure;
+                        foreach ($structures as $structureTMP) {
+                            $structureTMP->removeFichePosteRecrutement($fiche);
+                            $this->getStructureService()->update($structureTMP);
+                        }
                     }
                 }
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        return new ViewModel([
             'title' => 'Associer un agent',
-            'form' => $form,
-            'agents' => $this->getAgentService()->getAgents(),
+            'strcture' => $structure,
+            'ficheposte' => $fiche,
         ]);
-        return $vm;
     }
 
     /** POSTE *********************************************************************************************************/

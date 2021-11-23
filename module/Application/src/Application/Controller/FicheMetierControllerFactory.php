@@ -63,7 +63,7 @@ class FicheMetierControllerFactory
          * @var SelectionFormationForm $selectionFormationForm
          * @var SelectionEtatForm $selectionEtatForm
          */
-        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class); //2 ?
+        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);

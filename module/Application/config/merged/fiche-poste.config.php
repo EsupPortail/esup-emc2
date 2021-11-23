@@ -10,10 +10,6 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydrator;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydratorFactory;
-use Application\Form\AssocierAgent\AssocierAgentForm;
-use Application\Form\AssocierAgent\AssocierAgentFormFactory;
-use Application\Form\AssocierAgent\AssocierAgentHydrator;
-use Application\Form\AssocierAgent\AssocierAgentHydratorFactory;
 use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierPoste\AssocierPosteFormFactory;
 use Application\Form\AssocierPoste\AssocierPosteHydrator;
@@ -505,7 +501,6 @@ return [
     'form_elements' => [
         'factories' => [
             AjouterFicheMetierForm::class => AjouterFicheMetierFormFactory::class,
-            AssocierAgentForm::class => AssocierAgentFormFactory::class,
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
             ExpertiseForm::class => ExpertiseFormFactory::class,
@@ -518,7 +513,6 @@ return [
         ],
         'factories' => [
             AjouterFicheMetierHydrator::class => AjouterFicheMetierHydratorFactory::class,
-            AssocierAgentHydrator::class => AssocierAgentHydratorFactory::class,
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
