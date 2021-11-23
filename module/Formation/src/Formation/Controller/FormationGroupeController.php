@@ -16,6 +16,8 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
 
+    /** CRUD **********************************************************************************************************/
+
     public function indexAction() : ViewModel
     {
         $source = $this->params()->fromQuery('source');
@@ -104,14 +106,14 @@ class FormationGroupeController extends AbstractActionController
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->historise($groupe);
-        return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
+        return $this->redirect()->toRoute('formation', [], [], true);
     }
 
     public function restaurerGroupeAction() : Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->restore($groupe);
-        return $this->redirect()->toRoute('formation', [], ['fragment' => 'groupe'], true);
+        return $this->redirect()->toRoute('formation', [], [], true);
     }
 
     public function detruireGroupeAction() : ViewModel
@@ -136,30 +138,5 @@ class FormationGroupeController extends AbstractActionController
             ]);
         }
         return $vm;
-    }
-
-    public function updateOrdreGroupeAction()
-    {
-        $ordre = explode("_", $this->params()->fromRoute('ordre'));
-        $sort = [];
-        $position = 1;
-        foreach ($ordre as $item) {
-            $sort[$item] = $position;
-            $position++;
-        }
-
-        $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
-        foreach ($groupes as $groupe) {
-            if (!isset($sort[$groupe->getId()]) and $groupe->getOrdre() !== null) {
-                $groupe->setOrdre(null);
-                $this->getFormationGroupeService()->update($groupe);
-            }
-            if ($groupe->getOrdre() != $sort[$groupe->getId()]) {
-                $groupe->setOrdre($sort[$groupe->getId()]);
-                $this->getFormationGroupeService()->update($groupe);
-            }
-        }
-
-        return new ViewModel();
     }
 }

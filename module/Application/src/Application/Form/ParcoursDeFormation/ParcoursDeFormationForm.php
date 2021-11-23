@@ -101,7 +101,7 @@ class ParcoursDeFormationForm extends Form {
             'options' => [
                 'label' => "Formations * :",
                 'empty_option' => "Sélectionner des formations ...",
-                'value_options' => $this->getFormationService()->getFormationsThemesAsGroupOptions(),
+                'value_options' => $this->getFormationService()->getFormationsGroupesAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'formations',

@@ -15,7 +15,11 @@ use Interop\Container\ContainerInterface;
 class FormationControllerFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationController
+     */
+    public function __invoke(ContainerInterface $container) : FormationController
     {
         /**
          * @var FormationService $formationService

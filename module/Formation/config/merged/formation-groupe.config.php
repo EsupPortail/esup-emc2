@@ -50,7 +50,6 @@ return [
                     'controller' => FormationGroupeController::class,
                     'action' => [
                         'editer-groupe',
-                        'update-ordre-groupe',
                     ],
                     'privileges' => [
                         FormationgroupePrivileges::FORMATIONGROUPE_MODIFIER,
@@ -112,16 +111,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'update-ordre-groupe' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/update-ordre-groupe/:ordre',
-                            'defaults' => [
-                                'controller' => FormationGroupeController::class,
-                                'action'     => 'update-ordre-groupe',
-                            ],
-                        ],
-                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [

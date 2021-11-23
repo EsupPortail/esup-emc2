@@ -3,7 +3,6 @@
 namespace Formation\Controller;
 
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;

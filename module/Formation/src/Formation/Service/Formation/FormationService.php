@@ -97,17 +97,21 @@ class FormationService
     }
 
     /**
-     * @param FormationGroupe $groupe
+     * @param FormationGroupe|null $groupe
      * @param string $champ
      * @param string $ordre
      * @return Formation[]
      */
-    public function getFormationsByGroupe(FormationGroupe $groupe, string $champ = 'libelle', string $ordre = 'ASC') : array
+    public function getFormationsByGroupe(?FormationGroupe $groupe, string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('formation.groupe = :groupe')
-            ->setParameter('groupe', $groupe)
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
+
+        if ($groupe !== null) {
+            $qb = $qb->andWhere('formation.groupe = :groupe')
+                     ->setParameter('groupe', $groupe);
+        }
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }

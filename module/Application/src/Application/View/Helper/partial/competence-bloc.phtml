@@ -108,7 +108,7 @@ ksort($groupes);
                 <?php endif; ?>
                 <?php if ($objet instanceof Formation) : ?>
                     <a
-                        <?php /** @see \Formation\Controller\FormationController::ajouterCompetenceAction() */?>
+                        <?php /** @see \Formation\Controller\FormationController::ajouterCompetenceElementAction() */?>
                         <?php //todo ... Agent::class => get_class($objet) ... ?>
                             href="<?php echo $this->url('formation/ajouter-competence-element', ['type' => Formation::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                             class="ajax-modal btn btn-primary action"

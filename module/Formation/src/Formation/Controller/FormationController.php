@@ -15,6 +15,7 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -32,6 +33,8 @@ class FormationController extends AbstractActionController
     use CompetenceElementFormAwareTrait;
     use CompetenceElementServiceAwareTrait;
 
+    /** CRUD **********************************************************************************************************/
+
     public function indexAction() : ViewModel
     {
         $groupe = $this->params()->fromQuery('groupe');
@@ -39,12 +42,7 @@ class FormationController extends AbstractActionController
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
 
-        if ($groupe_ !== null) {
-            $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        } else {
-            $formations = $this->getFormationService()->getFormations();
-        }
-
+        $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
         if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource() === $source; });
         if ($historise !== null AND $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
             if ($historise === "1") return $a->estHistorise();
@@ -61,7 +59,7 @@ class FormationController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $formation = new Formation();
         $form = $this->getFormationForm();
@@ -91,7 +89,7 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function editerAction()
+    public function editerAction() : ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -122,21 +120,21 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->historise($formation);
-        return $this->redirect()->toRoute('formation', [], ['fragment' => 'formation'], true);
+        return $this->redirect()->toRoute('formation', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->restore($formation);
-        return $this->redirect()->toRoute('formation', [], ['fragment' => 'formation'], true);
+        return $this->redirect()->toRoute('formation', [], [], true);
     }
 
-    public function detruireAction()
+    public function detruireAction() : ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -160,7 +158,9 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierFormationInformationsAction()
+    /** AUTRES MODIFICATIONS ******************************************************************************************/
+
+    public function modifierFormationInformationsAction() : ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -188,9 +188,7 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    /** APPLICATION */
-
-    public function ajouterApplicationElementAction()
+    public function ajouterApplicationElementAction() : ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $hasApplicationElement = $this->getFormationService()->getRequestedFormation($this);
@@ -225,7 +223,7 @@ class FormationController extends AbstractActionController
         exit();
     }
 
-    public function ajouterCompetenceElementAction()
+    public function ajouterCompetenceElementAction() : ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $hasCompetenceElement = $this->getFormationService()->getRequestedFormation($this);
@@ -259,6 +257,8 @@ class FormationController extends AbstractActionController
         }
         exit();
     }
+
+    /** ACTIONS DE RECHERCHE ******************************************************************************************/
 
     public function rechercherFormationAction() : JsonModel
     {

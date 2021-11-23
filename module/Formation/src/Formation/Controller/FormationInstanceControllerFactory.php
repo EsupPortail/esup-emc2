@@ -19,7 +19,7 @@ class FormationInstanceControllerFactory
      * @param ContainerInterface $container
      * @return FormationInstanceController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FormationInstanceController
     {
         /**
          * @var EtatService $etatService

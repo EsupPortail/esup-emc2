@@ -9,7 +9,11 @@ use Interop\Container\ContainerInterface;
 class FormationGroupeControllerFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationGroupeController
+     */
+    public function __invoke(ContainerInterface $container) : FormationGroupeController
     {
         /**
          * @var FormationGroupeService $formationGroupeService

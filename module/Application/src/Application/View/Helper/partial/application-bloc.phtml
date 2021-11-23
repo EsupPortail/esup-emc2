@@ -103,7 +103,7 @@ ksort($groupes);
                     <?php endif; ?>
                     <?php if ($objet instanceof Formation) : ?>
                         <a
-                            <?php /** @see \Formation\Controller\FormationController::ajouterApplicationAction() */?>
+                            <?php /** @see \Formation\Controller\FormationController::ajouterApplicationElementAction() */?>
                             <?php //todo ... Agent::class => get_class($objet) ... ?>
                                 href="<?php echo $this->url('formation/ajouter-application-element', ['type' => Formation::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                 class="ajax-modal btn btn-primary action"
