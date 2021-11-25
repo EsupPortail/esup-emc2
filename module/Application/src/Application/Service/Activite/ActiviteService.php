@@ -78,9 +78,9 @@ class ActiviteService {
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Activite::class)->createQueryBuilder('activite')
-            ->addSelect('createur')->join('activite.histoCreateur', 'createur')
-            ->addSelect('modificateur')->join('activite.histoModificateur', 'modificateur')
-            ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
+//            ->addSelect('createur')->leftJoin('activite.histoCreateur', 'createur')
+//            ->addSelect('modificateur')->leftJoin('activite.histoModificateur', 'modificateur')
+//            ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
             ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
             ->addSelect('description')->leftJoin('activite.descriptions', 'description')
             ->addSelect('applicationelement')->leftJoin('activite.applications', 'applicationelement')
@@ -89,8 +89,8 @@ class ActiviteService {
             ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
             ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
             ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
-            ->andWhere('libelle.histoDestruction IS NULL')
-            ->andWhere('description.histoDestruction IS NULL')
+//            ->andWhere('libelle.histoDestruction IS NULL')
+//            ->andWhere('description.histoDestruction IS NULL')
         ;
         $qb = NiveauService::decorateWithNiveau($qb, 'activite', 'niveaux')
         ;
