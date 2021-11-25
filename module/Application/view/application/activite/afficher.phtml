@@ -15,7 +15,7 @@ $canModifierEnveloppe = $this->isAllowed(ActivitePrivileges::getResourceId(Activ
 
 $action = ($mode === 'modifier-activite')?"Modification":"Affichage";
 $titre = $action . " de la mission ";
-$this->headTitle($titre  . " : " .$activite->getCurrentActiviteLibelle()->getLibelle());
+$this->headTitle($titre  . " : " .($activite !== null and $activite->getCurrentActiviteLibelle() !== null)?$activite->getCurrentActiviteLibelle()->getLibelle():"Pas de libellé");
 ?>
 
 <?php if ($mode === 'modifier-activite') : ?>
