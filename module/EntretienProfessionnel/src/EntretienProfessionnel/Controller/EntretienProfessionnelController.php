@@ -17,7 +17,7 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use EntretienProfessionnel\Service\Notification\NotificationService;
+use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
@@ -57,6 +57,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
+    use RappelEntretienProfessionnelServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UrlServiceAwareTrait;
 
@@ -327,7 +328,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
     }
 
-    public function detruireAction()
+    public function detruireAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
 
@@ -419,7 +420,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
-    public function revoquerValidationAction()
+    public function revoquerValidationAction() : Response
     {
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
@@ -472,17 +473,21 @@ class EntretienProfessionnelController extends AbstractActionController
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
-    public function accepterEntretienAction() {
+    public function accepterEntretienAction() : ViewModel
+    {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
         $token = $this->params()->fromRoute('token');
 
         if ($entretien !== null AND $entretien->getToken() === $token) {
+            $this->getRappelEntretienProfessionnelService()->creer($entretien);
+
             $entretien->setToken(null);
             $entretien->setAcceptation($this->getDateTime());
             $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
             $this->getEntretienProfessionnelService()->update($entretien);
 
             $this->getNotificationService()->triggerConvocationAcceptation($entretien);
+
         }
 
         return new ViewModel([

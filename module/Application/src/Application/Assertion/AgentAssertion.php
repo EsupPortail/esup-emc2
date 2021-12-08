@@ -7,7 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use UnicaenAuthentification\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 

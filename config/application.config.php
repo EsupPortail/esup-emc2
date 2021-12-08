@@ -40,15 +40,17 @@ $modules = [
     'UnicaenGlossaire',
     'UnicaenParametre',
     'UnicaenValidation',
+    'UnicaenEvenement',
     'Autoform',
     'Indicateur',
     'EntretienProfessionnel',
     'Metier',
     'Formation',
     'Fichier',
+
     'Application',
 
-    'ZendDeveloperTools',
+    //'ZendDeveloperTools',
 
 ];
 

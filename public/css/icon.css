@@ -260,6 +260,7 @@ span.icon.filtrer:before {
     content: "\f0b0";
 }
 
+span.icon.rappel:before,
 span.icon.sursis:before {
     content:"\f017";
 }
@@ -311,6 +312,10 @@ span.icon.star:before {
 
 span.icon.convoquer:before {
     content: "\f4ad";
+}
+
+span.icon.parametrer:before {
+    content: "\f0ad";
 }
 
 span.icon.cloturer:before {

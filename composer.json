@@ -10,7 +10,7 @@
   "minimum-stability": "dev",
   "require": {
     "unicaen/app": "^3.1",
-    "unicaen/auth": "^3.1",
+    "unicaen/authentification": "dev-master",
     "unicaen/utilisateur": "dev-master",
     "unicaen/privilege": "dev-master",
     "unicaen/renderer": "dev-master",
@@ -21,12 +21,12 @@
     "unicaen/db-import": "3.0",
     "graphp/graphviz": "^0.2.2",
     "curl/curl": "^2.3",
-    "unicaen/octopus": "dev-master"
+    "unicaen/octopus": "dev-master",
+    "unicaen/evenement": "dev-master",
+    "ext-json": "*"
+
   },
   "require-dev": {
-    "unicaen/code": "^1.0",
-    "zendframework/zend-test": ">=2.3",
-    "phpunit/PHPUnit": ">=3.7",
     "zendframework/zend-developer-tools": ">=1.0"
   }
 }

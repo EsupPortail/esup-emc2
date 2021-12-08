@@ -4,6 +4,8 @@ namespace EntretienProfessionnel;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
+use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceFactory;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Notification\NotificationServiceFactory;
 use EntretienProfessionnel\Service\Url\UrlService;
@@ -45,6 +47,8 @@ return [
         'factories' => [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
+
+            RappelEntretienProfessionnelService::class => RappelEntretienProfessionnelServiceFactory::class,
         ],
     ],
     'controllers'     => [

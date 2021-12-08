@@ -126,4 +126,15 @@ class NotificationService {
 
         return $mail;
     }
+
+    public function triggerRappelEntretien(?EntretienProfessionnel $entretien) : Mail
+    {
+        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("ENTRETIEN_RAPPEL_AGENT", $vars);
+        $mail = $this->getMailService()->sendMail($entretien->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
 }

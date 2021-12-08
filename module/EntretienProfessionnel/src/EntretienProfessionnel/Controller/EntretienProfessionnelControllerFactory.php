@@ -13,6 +13,7 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFor
 use EntretienProfessionnel\Form\Observation\ObservationForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use EntretienProfessionnel\Service\Url\UrlService;
@@ -45,6 +46,7 @@ class EntretienProfessionnelControllerFactory {
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParcoursDeFormationService $parcoursDeFormationService
+         * @var RappelEntretienProfessionnelService $rappelEntretienProfessionnelService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
@@ -66,6 +68,7 @@ class EntretienProfessionnelControllerFactory {
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parcoursDeFormationService = $container->get(ParcoursDeFormationService::class);
+        $rappelEntretienProfessionnelService = $container->get(RappelEntretienProfessionnelService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
@@ -103,6 +106,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setFormulaireService($formulaireService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
+        $controller->setRappelEntretienProfessionnelService($rappelEntretienProfessionnelService);
         $controller->setStructureService($structureService);
         $controller->setUrlService($urlService);
 

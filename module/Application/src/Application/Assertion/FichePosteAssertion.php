@@ -6,7 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use UnicaenAuthentification\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
