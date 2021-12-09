@@ -5,6 +5,10 @@ namespace Formation;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Formation\Provider\Privilege\FormationPrivileges;
+use Formation\Service\Evenement\NotificationFormationsOuvertesService;
+use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
+use Formation\Service\Evenement\RappelAgentAvantFormationService;
+use Formation\Service\Evenement\RappelAgentAvantFormationServiceFactory;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
@@ -67,6 +71,10 @@ return [
         'factories' => [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
+
+            //Evenement
+            NotificationFormationsOuvertesService::class => NotificationFormationsOuvertesServiceFactory::class,
+            RappelAgentAvantFormationService::class => RappelAgentAvantFormationServiceFactory::class,
         ],
     ],
     'controllers'     => [

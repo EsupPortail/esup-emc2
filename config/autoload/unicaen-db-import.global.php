@@ -134,14 +134,14 @@ return [
                     'columns'            => ['code', 'categorie', 'lib_court', 'lib_long', 'histo'],
                 ],
             ],
-                        [
+            [
                 'name' => 'Import_GRADE',
                 'source' => [
                     'name'               => 'Grades des agents remonté depuis OCTOPUS',
-                    'select'             => 'SELECT ID, C_GRADE AS CODE, LIB_COURT, LIB_LONG, HISTO_DESTRUCTION AS HISTO FROM GRADE',
+                    'select'             => 'SELECT ID, LIB_COURT, LIB_LONG, C_GRADE AS CODE, HISTO_DESTRUCTION AS HISTO FROM GRADE',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
-                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
+//                    'columns'            => ['LIB_COURT', 'LIB_LONG', 'CODE', 'HISTO'],
                 ],
                 'intermediate_table' => 'src_grade',
                 'destination' => [
@@ -222,46 +222,7 @@ return [
                     'columns'            => ['structure_id', 'agent_id', 'fonction_id', 'date_debut', 'date_fin'],
                 ],
             ],
-//            [
-//                'name' => 'Import_FONCTION',
-//                'source' => [
-//                    'name'               => 'Fonctions remontées de PrEECoG',
-//                    'select'             => 'SELECT * FROM V_PREECOG_FONCTION',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'ID',
-//                    'columns'            => ['PARENT_ID', 'CODE', 'NIVEAU'],
-//                ],
-//                'intermediate_table' => 'src_fonction',
-//                'destination' => [
-//                    'name'               => 'Fonctions remontées de OCTOPUS',
-//                    'table'              => 'fonction',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'id',
-//                    'columns'            => ['parent_id', 'code', 'niveau'],
-//                ],
-//            ],
-//            [
-//                'name' => 'Import_FONCTION_LIBELLE',
-//                'source' => [
-//                    'name'               => 'Libellés des fonctions remontées de PrEECoG',
-//                    'select'             => 'SELECT * FROM V_PREECOG_FONCTION_LIBELLE',
-//                    'connection'         => 'octopus',
-//                    'source_code_column' => 'ID',
-//                    'columns'            => ['FONCTION_ID', 'LIBELLE', 'GENRE', 'DEFAUT'],
-//                ],
-//                'intermediate_table' => 'src_fonction_libelle',
-//                'destination' => [
-//                    'name'               => 'Libellés des fonctions remontées de OCTOPUS',
-//                    'table'              => 'fonction_libelle',
-//                    'connection'         => 'default',
-//                    'source_code_column' => 'id',
-//                    'columns'            => ['fonction_id', 'libelle', 'genre', 'defaut'],
-//                ],
-//            ],
-//
-
         ],
-
     ],
 
     'bjyauthorize'    => [

@@ -89,6 +89,14 @@ class Agent implements
         $this->structuresForcees = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
+    public function generateTag()  : string
+    {
+        return 'Agent_' . $this->getId();
+    }
+
     /** Éléments importés (octopus) : pas besoins de setters **********************************************************/
 
     /**

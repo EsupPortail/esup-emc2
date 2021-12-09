@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Autoform\Service\Formulaire\FormulaireInstanceService;
 use Formation\Form\FormationInstance\FormationInstanceForm;
+use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
@@ -29,6 +30,7 @@ class FormationInstanceControllerFactory
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
          * @var ParametreService $parametreService
+         * @var RappelAgentAvantFormationService $rappelAgentAvantFormationService
          */
         $etatService = $container->get(EtatService::class);
         $formationService = $container->get(FormationService::class);
@@ -37,6 +39,7 @@ class FormationInstanceControllerFactory
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
+        $rappelAgentAvantFormationService = $container->get(RappelAgentAvantFormationService::class);
 
         /**
          * @var FormationInstanceForm $formationInstanceForm
@@ -53,6 +56,7 @@ class FormationInstanceControllerFactory
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setMailService($mailService);
         $controller->setParametreService($parametreService);
+        $controller->setRappelAgentAvantFormationService($rappelAgentAvantFormationService);
         return $controller;
     }
 

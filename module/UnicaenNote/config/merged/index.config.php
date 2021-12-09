@@ -4,7 +4,6 @@ namespace UnicaenNote;
 
 use UnicaenNote\Controller\IndexController;
 use UnicaenNote\Controller\IndexControllerFactory;
-use UnicaenNote\Controller\NoteController;
 use UnicaenNote\Provider\Privilege\NotePrivileges;
 use UnicaenNote\Provider\Privilege\PortenotePrivileges;
 use UnicaenNote\Provider\Privilege\TypePrivileges;
@@ -39,10 +38,11 @@ return [
                     'administration' => [
                         'pages' => [
                             'unicaen-note' => [
-                                'label' => 'Notes et Porte-notes',
+                                'label' => 'Notes et porte-notes',
                                 'route' => 'unicaen-note',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
-                                'order'    => 10002,
+                                'order'    => 90005,
+                                'icon' => 'fas fa-angle-right',
                                 'pages' => [
                                 ],
                             ],

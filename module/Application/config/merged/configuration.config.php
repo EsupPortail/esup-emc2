@@ -155,7 +155,7 @@ return [
                                 'label'    => 'Configuration',
                                 'route'    => 'configuration',
                                 'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
-                                'order'    => 213456,
+                                'order'    => 90000,
                             ],
                         ],
                     ],

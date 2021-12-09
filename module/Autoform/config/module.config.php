@@ -41,10 +41,11 @@ return array(
                     'administration' => [
                         'pages' => [
                             'autoform' => [
-                                'label'    => 'Formulaire',
+                                'label'    => 'Formulaires',
                                 'route'    => 'autoform/formulaires',
                                 'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
-                                'order'    => 1,
+                                'order'    => 90009,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

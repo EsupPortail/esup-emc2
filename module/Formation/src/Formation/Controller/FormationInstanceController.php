@@ -3,7 +3,10 @@
 namespace Formation\Controller;
 
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use DateInterval;
+use DateTime;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
+use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
@@ -28,6 +31,7 @@ class FormationInstanceController extends AbstractActionController
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
+    use RappelAgentAvantFormationServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -186,6 +190,11 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->fermerInscription($instance);
+
+        $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
+        $dateRappel->sub(new DateInterval('P4D'));
+        $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
+
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 

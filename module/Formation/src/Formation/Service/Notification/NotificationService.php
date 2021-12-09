@@ -3,8 +3,10 @@
 namespace Formation\Service\Notification;
 
 use Application\Entity\Db\Agent;
+use DateTime;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -12,6 +14,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class NotificationService {
+    use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -121,5 +124,57 @@ class NotificationService {
         $this->getMailService()->update($mail);
 
         return $mail;
+    }
+
+    /** Mails de rappel ***********************************************************************************************/
+
+    public function triggerRappelAgentAvantFormation(FormationInstance $instance) : array
+    {
+        $vars = [
+            'instance' => $instance,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_RAPPEL_AVANT_FORMATION", $vars);
+
+        $liste = $instance->getListePrincipale();
+        $mails = [];
+        foreach ($liste as $inscrit) {
+            $agent = $inscrit->getAgent();
+            $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag(), $agent->generateTag() ]);
+            $this->getMailService()->update($mail);
+            $mails[] = $mail;
+        }
+
+        return $mails;
+    }
+
+    /**
+     * @return Mail|null
+     */
+    public function triggerNotificationFormationsOuvertes() : ?Mail
+    {
+        /** @var FormationInstance[] $instances */
+        $instances = $this->getFormationInstanceService()->getNouvelleInstance();
+
+        if (! empty($instances)) {
+            $texte = "<ul>";
+            foreach ($instances as $instance) {
+                $texte .= "<li>" . $instance->getInstanceLibelle() . " : " . $instance->getPeriode() . "</li>";
+            }
+            $texte .= "</ul>";
+
+            $email = $this->getParametreService()->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
+            $vars = [
+                'UrlService' => $this->getUrlService(),
+            ];
+            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_NOTIFICATION_NOUVELLE_FORMATION", $vars);
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail->setMotsClefs(["NOTIFICATION_FORMATION_" . (new DateTime())->format('d/m/Y')]);
+            $this->getMailService()->update($mail);
+            return $mail;
+        }
+
+        return null;
     }
 }

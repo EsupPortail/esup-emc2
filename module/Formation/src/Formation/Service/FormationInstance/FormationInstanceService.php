@@ -3,6 +3,8 @@
 namespace Formation\Service\FormationInstance;
 
 use Application\Service\GestionEntiteHistorisationTrait;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
@@ -23,6 +25,7 @@ class FormationInstanceService
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UrlServiceAwareTrait;
+
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -343,17 +346,26 @@ class FormationInstanceService
      */
     public function getFormationInstanceEnCours() : array
     {
-//        select fi.id, fi.formation_id, uee.code, f.libelle
-//        from formation_instance fi
-//        join formation f on fi.formation_id = f.id
-//        left join unicaen_etat_etat uee on fi.etat_id = uee.id
-//        where uee.id IS NOT NULL AND uee.code <> 'FORMATION_FERMEE'
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.etat IS NOT NULL AND etat.code <> :cloturer')
             ->setParameter('cloturer', FormationInstance::ETAT_CLOTURE_INSTANCE)
         ;
 
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** !! TODO !! NAZE FAIRE MIEUX */
+    public function getNouvelleInstance()
+    {
+        $date = (new DateTime())->sub(new DateInterval('P1W'));
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('Finstance.histoCreation > :date')
+            ->setParameter('date', $date)
+        ;
+        $result = $qb->getQuery()->getResult();
+
         return $result;
     }
 }

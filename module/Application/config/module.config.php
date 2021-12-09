@@ -14,6 +14,8 @@ use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\CorpsPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Service\Evenement\SynchroOctopusService;
+use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Metier\Provider\Privilege\MetierPrivileges;
@@ -226,6 +228,8 @@ return [
         'factories' => [
             RoleService::class => RoleServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
+
+            SynchroOctopusService::class => SynchroOctopusServiceFactory::class,
         ],
     ],
     'controllers'     => [

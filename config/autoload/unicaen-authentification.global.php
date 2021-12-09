@@ -11,7 +11,6 @@ return [
          * être enregistré/mis à jour dans la table des utilisateurs de l'appli.
          */
         'save_ldap_user_in_database' => false,
-
         'entity_manager_name' => 'doctrine.entitymanager.orm_default', // nom du gestionnaire d'entités à utiliser
 
         /**
