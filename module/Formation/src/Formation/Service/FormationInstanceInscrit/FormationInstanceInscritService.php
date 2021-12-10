@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
@@ -159,9 +160,10 @@ class FormationInstanceInscritService
     /**
      * @param Structure $structure
      * @param bool $avecStructuresFilles
+     * @param bool $anneeCourrante
      * @return FormationInstanceInscrit[]
      */
-    public function getInscriptionsByStructure(Structure $structure, bool $avecStructuresFilles = true) : array
+    public function getInscriptionsByStructure(Structure $structure, bool $avecStructuresFilles = true, bool $anneeCourrante = false) : array
     {
         $structures = [];
         $structures[] = $structure;
@@ -174,9 +176,24 @@ class FormationInstanceInscritService
         $qb = $this->createQueryBuilder()
             ->andWhere('affectation.structure in (:structures)')
             ->setParameter('structures', $structures)
-            ->andWhere('inscritetat.code = :demandevalidation')
-            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
+//            ->andWhere('inscritetat.code = :demandevalidation')
+//            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
         ;
+
+        if ($anneeCourrante) {
+            $today = new DateTime();
+            $month = ((int) $today->format('m'));
+            $year  = ((int) $today->format('Y'));
+            $annee = ($month > 8 ) ? $year : ($year-1) ;
+
+            $mini = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+            $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee+1));
+
+            $qb = $qb->andWhere('inscrit.histoCreation >= :mini AND inscrit.histoCreation <= :maxi')
+                ->setParameter('mini', $mini)
+                ->setParameter('maxi', $maxi)
+            ;
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

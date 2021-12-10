@@ -40,7 +40,7 @@ class NotificationFormationsOuvertesService extends EvenementService
      */
     public function traiter(Evenement $evenement) : string
     {
-        $parametres = json_decode($evenement->getParametres(), true);
+//        $parametres = json_decode($evenement->getParametres(), true);
 
         try {
             $this->getNotificationService()->triggerNotificationFormationsOuvertes();

@@ -13,6 +13,10 @@ $today = new DateTime();
 $mini = (new DateTime())->sub(New DateInterval('P1Y'));
 $maxi = (new DateTime())->add(New DateInterval('P1Y'));
 
+$month = ((int) $today->format('m'));
+$year  = ((int) $today->format('Y'));
+$annee = ($month > 8 ) ? ($year . "/" . ($year+1)) : (($year-1) . "/" . $year);
+
 $inscriptions = array_filter($inscriptions, function (FormationInstanceInscrit $inscription) use ($maxi, $mini) {
     if ($inscription->getInstance()->getDebut() === null) return false;
     /** @var FormationInstanceJournee $journee */
@@ -25,11 +29,13 @@ $inscriptions = array_filter($inscriptions, function (FormationInstanceInscrit $
 
 $array = [];
 foreach ($inscriptions as $inscription) {
-    $formation = $inscription->getInstance()->getFormation();
-    $instance = $inscription->getInstance();
-    $array[$formation->getId()]["formation"] = $formation;
-    $array[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
-    $array[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
+    if ($inscription->estNonHistorise()) {
+        $formation = $inscription->getInstance()->getFormation();
+        $instance = $inscription->getInstance();
+        $array[$formation->getId()]["formation"] = $formation;
+        $array[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
+        $array[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
+    }
 }
 
 ?>
@@ -46,18 +52,27 @@ foreach ($inscriptions as $inscription) {
 
     <?php
     $attentes = array_filter(
-            $inscriptions,
-            function (FormationInstanceInscrit $inscription) { return ($inscription->getEtat() !== null AND $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION);}
-            );
+        $inscriptions,
+        function (FormationInstanceInscrit $inscription) {
+            return (
+                    $inscription->estNonHistorise() AND
+                    $inscription->getEtat() !== null AND
+                    $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION
+                );
+        }
+    );
     ?>
-    <?php usort($attentes, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
-    <?php foreach ($array as $item) : ?>
+    <?php if (!empty($attentes)) : ?>
+        <?php usort($attentes, function (FormationInstanceInscrit $a,FormationInstanceInscrit $b) { return $a->getInstance()->getInstanceLibelle() > $b->getInstance()->getInstanceLibelle();}); ?>
+        <?php foreach ($array as $item) : ?>
         <h3> <?php echo $item['formation']->getLibelle(); ?> </h3>
 
         <?php foreach($item['instances'] as $instance) : ?>
             <h4>Instance du <?php echo $instance['instance']->getDebut(); ?> au <?php echo $instance['instance']->getFin(); ?> (<?php echo $instance['instance']->getDuree(); ?>).</h4>
             <ul>
             <?php foreach ($instance['inscriptions'] as $inscription) : ?>
+                <!-- //TODO CRADE -->
+                <?php if (array_search($inscription, $attentes) !== false) : ?>
                 <li>
                     <?php echo $this->etatbadge($inscription->getEtat()); ?>
                     <?php echo $inscription->getAgent()->getDenomination(); ?>
@@ -66,14 +81,15 @@ foreach ($inscriptions as $inscription) {
                                 href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do"> Gérer la demande</a>
                     <?php endif; ?>
                 </li>
+                <?php endif; ?>
             <?php endforeach; ?>
             </ul>
         <?php endforeach; ?>
     <?php endforeach; ?>
-
+    <?php endif; ?>
     </div>
     <div class="col-md-6">
-    <h2> Listes de demandes </h2>
+    <h2> Listes des inscriptions (<?php echo $annee; ?>)</h2>
 
     <?php usort($array, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
     <?php foreach ($array as $item) : ?>

@@ -13,30 +13,40 @@
 <?php echo $text; ?>
 </p>
 
-
-<form method="post" action="<?php echo $action; ?>">
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" action="<?php echo $action; ?>">
 <table>
     <tr><td>
+        <input type="hidden" name="reponse" value="oui">
+        <input type="submit" name="oui" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
+        <?php if ($complement === 'oui') : ?>
+            </td></tr><tr></tr><td>
+                <label for="complement">Compléments liés à l'acceptation</label>
+                <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;"></textarea>
+        <?php endif; ?>
 
-                <input type="hidden" name="reponse" value="oui">
-                <input type="submit" name="oui" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
-        </td></tr>
+    </td></tr>
 </table>
 </form>
-<form method="post" action="<?php echo $action; ?>">
+    </div>
+    <div class="col-md-4">
+        <form method="post" action="<?php echo $action; ?>">
 <table>
     <tr><td>
                 <input type="hidden" name="reponse" value="non">
                 <input type="submit" id="non" name="non" class="btn btn-danger action"  value="Non, je ne veux pas">
-                <?php if ($complement === true) : ?>
+                <?php if ($complement === 'non') : ?>
         </td></tr><tr></tr><td>
-                    <label for="complement">Motivations liées au refus</label>
-                    <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;">À renseigner en cas de refus</textarea>
+                    <label for="complement">Compléments liés au refus</label>
+                    <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;"></textarea>
                 <?php endif; ?>
 
         </td></tr>
 </table>
 </form>
+    </div>
+</div>
 
 <?php if ($complement !== true) : ?>
     <script>

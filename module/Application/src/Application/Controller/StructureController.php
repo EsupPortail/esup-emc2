@@ -98,8 +98,8 @@ class StructureController extends AbstractActionController {
         $entretiens = [];
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure);
-        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
+        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure, );
 
         return new ViewModel([
             'selecteur' => $selecteur,

@@ -382,7 +382,12 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tbody>
         <?php foreach ($inscriptions as $inscrit) : ?>
         <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
-            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+            <td>
+                <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                <?php if ($inscrit->getComplement() !== null) : ?>
+                    <span class="icon information" title="<?php echo $inscrit->getComplement(); ?>"></span>
+                <?php endif; ?>
+            </td>
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
             <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
             <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
@@ -547,7 +552,12 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tbody>
         <?php foreach ($historises as $inscrit) : ?>
             <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
-                <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+                <td>
+                    <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                    <?php if ($inscrit->getComplement() !== null) : ?>
+                        <span class="icon information" title="<?php echo $inscrit->getComplement(); ?>"></span>
+                    <?php endif; ?>
+                </td>
                 <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
                 <td>
                     <?php if ($canInscritModifier) : ?>

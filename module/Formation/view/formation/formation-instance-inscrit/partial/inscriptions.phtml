@@ -37,7 +37,7 @@ $canInscrire = true;
             <a
                 <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
                     href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
-                    class="btn btn-danger action"
+                    class="btn btn-danger action ajax-modal" data-event="modification"
             >
                 <span class="icon detruire"> J'annule mon inscription </span>
             </a>

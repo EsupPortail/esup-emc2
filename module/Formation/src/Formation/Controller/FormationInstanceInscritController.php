@@ -15,6 +15,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
@@ -32,10 +33,10 @@ class FormationInstanceInscritController extends AbstractActionController
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
+
     use SelectionAgentFormAwareTrait;
 
-
-    public function ajouterAgentAction()
+    public function ajouterAgentAction() : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -74,7 +75,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAgentAction()
+    public function historiserAgentAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $inscrit->setListe(null);
@@ -85,7 +86,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function restaurerAgentAction()
+    public function restaurerAgentAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $liste = $inscrit->getInstance()->getListeDisponible();
@@ -97,7 +98,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function supprimerAgentAction()
+    public function supprimerAgentAction() : ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
@@ -121,7 +122,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $vm;
     }
 
-    public function envoyerListePrincipaleAction()
+    public function envoyerListePrincipaleAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
@@ -133,7 +134,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function envoyerListeComplementaireAction()
+    public function envoyerListeComplementaireAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
@@ -145,7 +146,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function listeFormationsInstancesAction()
+    public function listeFormationsInstancesAction() : ViewModel
     {
         $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
         //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
@@ -161,7 +162,7 @@ class FormationInstanceInscritController extends AbstractActionController
         ]);
     }
 
-    public function inscriptionAction()
+    public function inscriptionAction()  : Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -178,9 +179,10 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'instances'], true);
     }
 
-    public function desinscriptionAction()
+    public function desinscriptionAction() : ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscrit->getInstance();
         $agent = $inscrit->getAgent();
         $user = $this->getUserService()->getConnectedUser();
 
@@ -191,14 +193,32 @@ class FormationInstanceInscritController extends AbstractActionController
         }
 
         if (!$break) {
-            $this->getFormationInstanceInscritService()->historise($inscrit);
-            $this->flashMessenger()->addSuccessMessage("Inscription annulée.");
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                if ($data["reponse"] === "oui") {
+                    $inscrit->setComplement($data["complement"]);
+                    $this->getFormationInstanceInscritService()->update($inscrit);
+                    $this->getFormationInstanceInscritService()->historise($inscrit);
+                    $this->flashMessenger()->addSuccessMessage("Inscription annulée.");
+                }
+            }
         }
 
-        return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'inscriptions'], true);
+        $intitule = $instance->getFormation()->getLibelle();
+        $periode = $instance->getDebut()." au " .$instance->getFin() ;
+        $vm = new ViewModel([
+            'title' => "Desinscription à la formation " . $intitule,
+            'text' => "Je confirme me désinscrire de la formation ". $intitule ." du ". $periode.".",
+            'action' => $this->url()->fromRoute('formation-instance/desinscription', ["inscrit" => $inscrit->getId()], [], true),
+            'complement' => 'oui',
+        ]);
+        $vm->setTemplate('formation/default/confirmation');
+        return $vm;
+
     }
 
-    public function validerResponsableAction()
+    public function validerResponsableAction() : ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $agent = $inscrit->getAgent();
@@ -207,9 +227,6 @@ class FormationInstanceInscritController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
-            $emailCCC = $this->getParametreService()->getParametreByCode('FORMATION','EMAIL')->getValeur();
-            $emailAgent = $agent->getEmail();
 
             if ($data["reponse"] === "oui") {
                 $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE));
@@ -234,14 +251,14 @@ class FormationInstanceInscritController extends AbstractActionController
             'title' => "Validation par le responsable hiérarchique",
             'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
             'action' => $this->url()->fromRoute('formation-instance/valider-responsable', ["isncrit" => $inscrit->getId()], [], true),
-            'complement' => true,
+            'complement' => 'non',
         ]);
         $vm->setTemplate('formation/default/confirmation');
         return $vm;
 
     }
 
-    public function validerDrhAction()
+    public function validerDrhAction() : ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $agent = $inscrit->getAgent();
@@ -276,7 +293,7 @@ class FormationInstanceInscritController extends AbstractActionController
             'title' => "Validation par la direction des ressources humaines",
             'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
             'action' => $this->url()->fromRoute('formation-instance/valider-drh', ["isncrit" => $inscrit->getId()], [], true),
-            'complement' => true,
+            'complement' => 'non',
         ]);
         $vm->setTemplate('formation/default/confirmation');
         return $vm;
