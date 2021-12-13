@@ -1,24 +1,26 @@
 <?php
 
 /**
+ * @see \Metier\Controller\ReferentielController::indexAction()
  * @var Referentiel[] $referentiels
  * @var boolean[] $droits
  */
 
 use Metier\Entity\Db\Referentiel;
+use Metier\Provider\Privilege\ReferentielmetierPrivileges;
 
-$canAjouter        = $droits["ajouter"];
-$canEditer         = $droits["editer"];
-$canHistoriser     = $droits["historiser"];
-$canEffacer        = $droits["effacer"];
+$canAjouter        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_AJOUTER));
+$canEditer         = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_MODIFIER));
+$canHistoriser     = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_HISTORISER));
+$canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId(ReferentielmetierPrivileges::REFERENTIEL_SUPPRIMER));
 
 ?>
 
 <div class="row">
     <div class="col-md-8">
-        <h2>
+        <h1 class="page-header">
             Liste des référentiels metiers
-        </h2>
+        </h1>
     </div>
     <div class="pull-right">
         <br/>
@@ -92,3 +94,12 @@ $canEffacer        = $droits["effacer"];
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

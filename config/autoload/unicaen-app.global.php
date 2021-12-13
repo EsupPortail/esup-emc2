@@ -17,6 +17,17 @@ return [
 
     'unicaen-app' => [
 
+        'hostlocalization' => [
+            'activated' => false,
+            'proxies' => [
+                //xxx.xx.xx.xxx
+            ],
+            'reverse-proxies' => [
+                //xxx.xx.xx.xxx
+            ],
+            'masque-ip' => '',
+        ],
+
         /**
          * Informations concernant cette application
          */

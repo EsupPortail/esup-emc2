@@ -10,7 +10,7 @@ class Referentiel implements HistoriqueAwareInterface {
 
     const WEB="web";
     const PDF="pdf";
-
+    const VIDE="vide";
 
     /** @var integer */
     private $id;

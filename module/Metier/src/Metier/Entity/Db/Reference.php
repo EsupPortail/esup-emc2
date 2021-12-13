@@ -70,6 +70,7 @@ class Reference implements HistoriqueAwareInterface {
      */
     public function getCode()
     {
+        if ($this->getReferentiel() !== null AND $this->getReferentiel()->getType() === Referentiel::VIDE) return $this->getReferentiel()->getLibelleCourt();
         return $this->code;
     }
 

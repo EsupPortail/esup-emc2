@@ -57,6 +57,7 @@ class ReferentielForm extends Form {
                 'value_options' => [
                     Referentiel::PDF => "PDF",
                     Referentiel::WEB => "Web",
+                    Referentiel::VIDE => "Vide",
                 ],
             ],
             'attributes' => [

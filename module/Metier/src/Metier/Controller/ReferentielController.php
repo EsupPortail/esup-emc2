@@ -14,6 +14,14 @@ class ReferentielController extends AbstractActionController
     use ReferentielServiceAwareTrait;
     use ReferentielFormAwareTrait;
 
+    public function indexAction()
+    {
+        $referentiels = $this->getReferentielService()->getReferentiels();
+
+        return new ViewModel([
+            'referentiels' => $referentiels,
+        ]);
+    }
 
     public function ajouterAction()
     {

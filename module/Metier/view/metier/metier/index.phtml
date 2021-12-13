@@ -84,23 +84,27 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     Aucune
                 <?php else: ?>
                 <?php foreach ($references as $reference) : ?>
-                <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
-                    <?php echo $reference->getCode(); ?>
-                </a>
-                <?php if ($canEditer) : ?>
-                <a  <?php /** @see \Metier\Controller\ReferenceController::modifierAction() */ ?>
-                        href="<?php echo $this->url('metier/reference/modifier', ['reference' => $reference->getId()], [], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                >
-                    <span class="icon editer" title="Modifier la référence"></span></a>
-                <a href="">
-                    <a  <?php /** @see \Metier\Controller\ReferenceController::supprimerAction() */ ?>
-                            href="<?php echo $this->url('metier/reference/supprimer', ['reference' => $reference->getId()], [], true); ?>"
+                    <?php if ($reference->getUrl() !== '') : ?>
+                        <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
+                            <?php echo $reference->getCode(); ?>
+                        </a>
+                    <?php else : ?>
+                        <?php echo $reference->getCode(); ?>
+                    <?php endif; ?>
+                    <?php if ($canEditer) : ?>
+                    <a  <?php /** @see \Metier\Controller\ReferenceController::modifierAction() */ ?>
+                            href="<?php echo $this->url('metier/reference/modifier', ['reference' => $reference->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire" title="Supprimer la référence"></span></a>
-                    <?php endif; ?>
-                    <br/>
+                        <span class="icon editer" title="Modifier la référence"></span></a>
+                    <a href="">
+                        <a  <?php /** @see \Metier\Controller\ReferenceController::supprimerAction() */ ?>
+                                href="<?php echo $this->url('metier/reference/supprimer', ['reference' => $reference->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon detruire" title="Supprimer la référence"></span></a>
+                        <?php endif; ?>
+                        <br/>
                     <?php endforeach ?>
                     <?php endif; ?>
             </td>
