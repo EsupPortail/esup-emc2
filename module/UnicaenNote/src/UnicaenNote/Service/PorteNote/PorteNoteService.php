@@ -3,14 +3,15 @@
 namespace UnicaenNote\Service\PorteNote;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenNote\Entity\Db\PorteNote;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class PorteNoteService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -18,9 +19,14 @@ class PorteNoteService {
      * @param PorteNote $portenote
      * @return PorteNote
      */
-    public function create(PorteNote $portenote)
+    public function create(PorteNote $portenote) : PorteNote
     {
-        $this->createFromTrait($portenote);
+        try {
+            $this->getEntityManager()->persist($portenote);
+            $this->getEntityManager()->flush($portenote);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $portenote;
     }
 
@@ -28,9 +34,13 @@ class PorteNoteService {
      * @param PorteNote $portenote
      * @return PorteNote
      */
-    public function update(PorteNote $portenote)
+    public function update(PorteNote $portenote) : PorteNote
     {
-        $this->updateFromTrait($portenote);
+        try {
+            $this->getEntityManager()->flush($portenote);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $portenote;
     }
 
@@ -38,9 +48,14 @@ class PorteNoteService {
      * @param PorteNote $portenote
      * @return PorteNote
      */
-    public function historise(PorteNote $portenote)
+    public function historise(PorteNote $portenote) : PorteNote
     {
-        $this->historiserFromTrait($portenote);
+        try {
+            $portenote->historiser();
+            $this->getEntityManager()->flush($portenote);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $portenote;
     }
 
@@ -48,9 +63,14 @@ class PorteNoteService {
      * @param PorteNote $portenote
      * @return PorteNote
      */
-    public function restore(PorteNote $portenote)
+    public function restore(PorteNote $portenote) : PorteNote
     {
-        $this->restoreFromTrait($portenote);
+        try {
+            $portenote->dehistoriser();
+            $this->getEntityManager()->flush($portenote);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $portenote;
     }
 
@@ -58,9 +78,14 @@ class PorteNoteService {
      * @param PorteNote $portenote
      * @return PorteNote
      */
-    public function delete(PorteNote $portenote)
+    public function delete(PorteNote $portenote) : PorteNote
     {
-        $this->deleteFromTrait($portenote);
+        try {
+            $this->getEntityManager()->remove($portenote);
+            $this->getEntityManager()->flush($portenote);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $portenote;
     }
 
@@ -69,7 +94,7 @@ class PorteNoteService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(PorteNote::class)->createQueryBuilder('portenote')
             ->addSelect('note')->leftjoin('portenote.notes', 'note')
@@ -82,7 +107,7 @@ class PorteNoteService {
      * @param string $ordre
      * @return PorteNote[]
      */
-    public function getPortesNotes(string $champ='id', string  $ordre='ASC')
+    public function getPortesNotes(string $champ='id', string  $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('portenote.' . $champ, $ordre);
@@ -95,7 +120,7 @@ class PorteNoteService {
      * @param string $ordre
      * @return array
      */
-    public function getPortesNotesAsOptions(string $champ='id', string  $ordre='ASC')
+    public function getPortesNotesAsOptions(string $champ='id', string  $ordre='ASC') : array
     {
         $portesnotes = $this->getPortesNotes($champ, $ordre);
         $array = [];
@@ -107,9 +132,9 @@ class PorteNoteService {
 
     /**
      * @param int|null $id
-     * @return PorteNote
+     * @return PorteNote|null
      */
-    public function getPorteNote(?int $id)
+    public function getPorteNote(?int $id) : ?PorteNote
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('portenote.id = :id')
@@ -126,9 +151,9 @@ class PorteNoteService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return PorteNote
+     * @return PorteNote|null
      */
-    public function getRequestePorteNote(AbstractActionController $controller, $param='porte-note')
+    public function getRequestePorteNote(AbstractActionController $controller, $param='porte-note') : ?PorteNote
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getPorteNote($id);
@@ -139,7 +164,7 @@ class PorteNoteService {
      * @param string $accroche
      * @return PorteNote
      */
-    public function getPorteNoteByAccroche(string $accroche)
+    public function getPorteNoteByAccroche(string $accroche) : ?PorteNote
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('portenote.accroche = :accroche')

@@ -5,19 +5,16 @@ namespace Autoform\Service\Formulaire;
 use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Categorie\CategorieServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireService {
     use EntityManagerAwareTrait;
     use CategorieServiceAwareTrait;
-    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -25,16 +22,8 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return Formulaire
      */
-    public function create($formulaire)
+    public function create(Formulaire $formulaire) : Formulaire
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $formulaire->setHistoCreateur($user);
-        $formulaire->setHistoCreation($date);
-        $formulaire->setHistoModificateur($user);
-        $formulaire->setHistoModification($date);
-
         try {
             $this->getEntityManager()->persist($formulaire);
             $this->getEntityManager()->flush($formulaire);
@@ -48,7 +37,7 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return Formulaire
      */
-    public function update($formulaire)
+    public function update(Formulaire $formulaire) : Formulaire
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = new DateTime();
@@ -68,7 +57,7 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return Formulaire
      */
-    public function historise($formulaire)
+    public function historise(Formulaire $formulaire) : Formulaire
     {
         $user = $this->getUserService()->getConnectedUser();
         $date = new DateTime();
@@ -88,7 +77,7 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return Formulaire
      */
-    public function restaure($formulaire)
+    public function restaure(Formulaire $formulaire) : Formulaire
     {
         $formulaire->setHistoDestructeur(null);
         $formulaire->setHistoDestruction(null);
@@ -105,7 +94,7 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return Formulaire
      */
-    public function delete($formulaire)
+    public function delete(Formulaire $formulaire) : Formulaire
     {
         try {
             $this->getEntityManager()->remove($formulaire);

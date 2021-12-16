@@ -2,16 +2,17 @@
 
 namespace Metier\Service\Reference;
 
+use Doctrine\ORM\ORMException;
 use Metier\Entity\Db\Reference;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ReferenceService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,7 +22,12 @@ class ReferenceService
      */
     public function create(Reference $referentiel) : Reference
     {
-        $this->createFromTrait($referentiel);
+        try {
+            $this->getEntityManager()->persist($referentiel);
+            $this->getEntityManager()->flush($referentiel);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $referentiel;
     }
 
@@ -31,7 +37,11 @@ class ReferenceService
      */
     public function update(Reference $referentiel) : Reference
     {
-        $this->updateFromTrait($referentiel);
+        try {
+            $this->getEntityManager()->flush($referentiel);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $referentiel;
     }
 
@@ -41,7 +51,12 @@ class ReferenceService
      */
     public function historise(Reference $referentiel) : Reference
     {
-        $this->historiserFromTrait($referentiel);
+        try {
+            $referentiel->historiser();
+            $this->getEntityManager()->flush($referentiel);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $referentiel;
     }
 
@@ -51,7 +66,12 @@ class ReferenceService
      */
     public function restore(Reference $referentiel) : Reference
     {
-        $this->restoreFromTrait($referentiel);
+        try {
+            $referentiel->dehistoriser();
+            $this->getEntityManager()->flush($referentiel);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $referentiel;
     }
 
@@ -61,7 +81,12 @@ class ReferenceService
      */
     public function delete(Reference $referentiel) : Reference
     {
-        $this->deleteFromTrait($referentiel);
+        try {
+            $this->getEntityManager()->remove($referentiel);
+            $this->getEntityManager()->flush($referentiel);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $referentiel;
     }
 

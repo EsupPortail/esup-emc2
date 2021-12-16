@@ -40,35 +40,4 @@
         </div>
     </div>
 
-    <h2>Action</h2>
-
-    <div class="row">
-        <div class="col-md-8">
-            <h3> Gestion des actions </h3>
-            Liste des actions gérées par le module
-        </div>
-        <div class="pull-right">
-            <br/>
-            <?php /** @see \UnicaenEtat\Controller\ActionController::indexAction() */?>
-            <a href="<?php echo $this->url('unicaen-etat/action', [], [], true); ?>"
-               class="btn btn-primary action">
-                Gestion des actions
-            </a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8">
-            <h3> Gestion des types d'action </h3>
-            Les types d'action permettant de trier ceux-ci en catégorie
-        </div>
-        <div class="pull-right">
-            <br/>
-            <?php /** @see \UnicaenEtat\Controller\EtatTypeController::indexAction() */?>
-            <a href="<?php echo $this->url('unicaen-etat/action-type', [], [], true); ?>"
-               class="btn btn-primary action">
-                Gestion des types d'action
-            </a>
-        </div>
-    </div>
 </div>

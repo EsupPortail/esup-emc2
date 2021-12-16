@@ -2,16 +2,16 @@
 
 namespace Autoform\Service\Champ;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Champ;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ChampService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,14 +21,6 @@ class ChampService {
      */
     public function create(Champ $champ) : Champ
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = (new DateTime());
-
-        $champ->setHistoCreateur($user);
-        $champ->setHistoCreation($date);
-        $champ->setHistoModificateur($user);
-        $champ->setHistoModification($date);
-
         try {
             $this->getEntityManager()->persist($champ);
             $this->getEntityManager()->flush($champ);
@@ -42,14 +34,8 @@ class ChampService {
      * @param Champ $champ
      * @return Champ
      */
-    public function update($champ)
+    public function update(Champ $champ) : Champ
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = (new DateTime());
-
-        $champ->setHistoModificateur($user);
-        $champ->setHistoModification($date);
-
         try {
             $this->getEntityManager()->flush($champ);
         } catch (ORMException $e) {
@@ -62,18 +48,13 @@ class ChampService {
      * @param Champ $champ
      * @return Champ
      */
-    public function historise($champ)
+    public function historise(Champ $champ) : Champ
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = (new DateTime());
-
-        $champ->setHistoDestructeur($user);
-        $champ->setHistoDestruction($date);
-
         try {
+            $champ->historiser();
             $this->getEntityManager()->flush($champ);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Champ.", $e);
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Champ.", $e);
         }
         return $champ;
     }
@@ -82,15 +63,13 @@ class ChampService {
      * @param Champ $champ
      * @return Champ
      */
-    public function restaure($champ)
+    public function restaure(Champ $champ) : Champ
     {
-        $champ->setHistoDestructeur(null);
-        $champ->setHistoDestruction(null);
-
         try {
+            $champ->historiser();
             $this->getEntityManager()->flush($champ);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Champ.", $e);
+            throw new RuntimeException("Un problème s'est produit lors de la mise à jour d'un Champ.", $e);
         }
         return $champ;
     }
@@ -99,7 +78,7 @@ class ChampService {
      * @param Champ $champ
      * @return Champ
      */
-    public function delete($champ)
+    public function delete(Champ $champ) : Champ
     {
         try {
             $this->getEntityManager()->remove($champ);

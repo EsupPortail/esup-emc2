@@ -80,19 +80,19 @@ $this->headTitle('Liste des domaines')
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($domaine->estNonHistorise()) : ?>
-                        <a  <?php /** @see \Application\Controller\DomaineController::historiserAction() */ ?>
+                        <a  <?php /** @see \Metier\Controller\DomaineController::historiserAction() */ ?>
                             href="<?php echo $this->url('domaine/historiser', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
                             <span class="icon historiser" title="Historiser le domaine"></span></a>
                     <?php else : ?>
-                        <a  <?php /** @see \Application\Controller\DomaineController::restaurerAction() */ ?>
+                        <a  <?php /** @see \Metier\Controller\DomaineController::restaurerAction() */ ?>
                             href="<?php echo $this->url('domaine/restaurer', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
                             <span class="icon restaurer" title="Restaurer le domaine"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
-                    <a  <?php /** @see \Application\Controller\DomaineController::effacerAction() */ ?>
+                    <a  <?php /** @see \Metier\Controller\DomaineController::effacerAction() */ ?>
                         href="<?php echo $this->url('domaine/effacer', ['domaine' => $domaine->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
@@ -105,7 +105,12 @@ $this->headTitle('Liste des domaines')
 </table>
 
 <script>
-    $(document).ready(function() {
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
         $('#domaines').DataTable( {
             sorting: false,
             paging: false,
@@ -113,5 +118,5 @@ $this->headTitle('Liste des domaines')
                 url: '/localisation/fr_FR.json'
             }
         } );
-    } );
+    });
 </script>

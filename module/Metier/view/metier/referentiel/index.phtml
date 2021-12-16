@@ -42,6 +42,7 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
     <tr>
         <th> Libelle </th>
         <th> Préfix </th>
+        <th> Type </th>
         <th class="cell-action"> Action </th>
     </tr>
     </thead>
@@ -58,6 +59,9 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
                 <?php else: ?>
                     <span class="icon ko" style="color:darkred"></span>
                 <?php endif; ?>
+            </td>
+            <td>
+                <?php echo $referentiel->getType(); ?>
             </td>
             <td>
                 <?php if ($canEditer) : ?>
@@ -96,10 +100,9 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
 </table>
 
 <script>
-    $(function () {
+    $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
-    });
 </script>

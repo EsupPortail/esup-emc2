@@ -6,6 +6,7 @@ use Metier\Entity\Db\Referentiel;
 use Metier\Form\Referentiel\ReferentielFormAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -14,7 +15,7 @@ class ReferentielController extends AbstractActionController
     use ReferentielServiceAwareTrait;
     use ReferentielFormAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         $referentiels = $this->getReferentielService()->getReferentiels();
 
@@ -23,7 +24,7 @@ class ReferentielController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $referentiel = new Referentiel();
         $form = $this->getReferentielForm();
@@ -48,7 +49,7 @@ class ReferentielController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
         $form = $this->getReferentielForm();
@@ -73,21 +74,21 @@ class ReferentielController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
         $this->getReferentielService()->historise($referentiel);
-        return $this->redirect()->toRoute('metier', [], ["fragment" => "referentiel"], true);
+        return $this->redirect()->toRoute('metier/referentiel', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
         $this->getReferentielService()->restore($referentiel);
-        return $this->redirect()->toRoute('metier', [], ["fragment" => "referentiel"], true);
+        return $this->redirect()->toRoute('metier/referentiel', [], [], true);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
 

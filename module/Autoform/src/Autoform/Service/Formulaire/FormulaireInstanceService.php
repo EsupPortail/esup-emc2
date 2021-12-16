@@ -2,17 +2,18 @@
 
 namespace Autoform\Service\Formulaire;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {
     use FormulaireServiceAwareTrait;
     use FormulaireReponseServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -22,7 +23,12 @@ class FormulaireInstanceService {
      */
     public function create(FormulaireInstance $instance) : FormulaireInstance
     {
-        $this->createFromTrait($instance);
+        try {
+            $this->getEntityManager()->persist($instance);
+            $this->getEntityManager()->flush($instance);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $instance;
     }
 
@@ -32,7 +38,11 @@ class FormulaireInstanceService {
      */
     public function update(FormulaireInstance $instance) : FormulaireInstance
     {
-        $this->updateFromTrait($instance);
+        try {
+            $this->getEntityManager()->flush($instance);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $instance;
     }
 
@@ -42,7 +52,12 @@ class FormulaireInstanceService {
      */
     public function historise(FormulaireInstance $instance) : FormulaireInstance
     {
-        $this->historiserFromTrait($instance);
+        try {
+            $instance->historiser();
+            $this->getEntityManager()->flush($instance);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $instance;
     }
 
@@ -52,7 +67,12 @@ class FormulaireInstanceService {
      */
     public function restore(FormulaireInstance $instance) : FormulaireInstance
     {
-        $this->restoreFromTrait($instance);
+        try {
+            $instance->dehistoriser();
+            $this->getEntityManager()->flush($instance);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $instance;
     }
 
@@ -62,7 +82,12 @@ class FormulaireInstanceService {
      */
     public function delete(FormulaireInstance $instance) : FormulaireInstance
     {
-        $this->deleteFromTrait($instance);
+        try {
+            $this->getEntityManager()->remove($instance);
+            $this->getEntityManager()->flush($instance);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $instance;
     }
 

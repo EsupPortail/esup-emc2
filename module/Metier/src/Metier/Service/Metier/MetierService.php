@@ -5,15 +5,16 @@ namespace Metier\Service\Metier;
 use Application\Service\Niveau\NiveauService;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
+use Doctrine\ORM\ORMException;
 use Metier\Entity\Db\Metier;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MetierService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
@@ -23,7 +24,12 @@ class MetierService {
      */
     public function create(Metier $metier) : Metier
     {
-        $this->createFromTrait($metier);
+        try {
+            $this->getEntityManager()->persist($metier);
+            $this->getEntityManager()->flush($metier);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metier;
     }
 
@@ -33,7 +39,11 @@ class MetierService {
      */
     public function update(Metier $metier) : Metier
     {
-        $this->updateFromTrait($metier);
+        try {
+            $this->getEntityManager()->flush($metier);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metier;
     }
 
@@ -43,7 +53,12 @@ class MetierService {
      */
     public function historise(Metier $metier) : Metier
     {
-        $this->historiserFromTrait($metier);
+        try {
+            $metier->historiser();
+            $this->getEntityManager()->flush($metier);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metier;
     }
 
@@ -53,7 +68,12 @@ class MetierService {
      */
     public function restore(Metier $metier) : Metier
     {
-        $this->restoreFromTrait($metier);
+        try {
+            $metier->dehistoriser();
+            $this->getEntityManager()->flush($metier);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metier;
     }
 
@@ -63,7 +83,12 @@ class MetierService {
      */
     public function delete(Metier $metier) : Metier
     {
-        $this->deleteFromTrait($metier);
+        try {
+            $this->getEntityManager()->remove($metier);
+            $this->getEntityManager()->flush($metier);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metier;
     }
 

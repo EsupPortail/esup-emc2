@@ -108,7 +108,7 @@ class MetierController extends AbstractActionController {
             $this->getMetierService()->historise($metier);
         }
 
-        return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
+        return $this->redirect()->toRoute('metier', [], [], true);
     }
 
     public function restaurerAction()
@@ -119,7 +119,7 @@ class MetierController extends AbstractActionController {
             $this->getMetierService()->restore($metier);
         }
 
-        return $this->redirect()->toRoute('metier', [], ["fragment" => "metier"], true);
+        return $this->redirect()->toRoute('metier', [], [], true);
     }
 
     public function supprimerAction()

@@ -2,15 +2,16 @@
 
 namespace Metier\Service\Domaine;
 
+use Doctrine\ORM\ORMException;
 use Metier\Entity\Db\Domaine;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DomaineService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,27 +21,12 @@ class DomaineService {
      */
     public function create(Domaine $domaine) : Domaine
     {
-        $this->createFromTrait($domaine);
-        return $domaine;
-    }
-
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
-    public function historise(Domaine $domaine) : Domaine
-    {
-        $this->historiserFromTrait($domaine);
-        return $domaine;
-    }
-
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
-    public function restore(Domaine $domaine) : Domaine
-    {
-        $this->restoreFromTrait($domaine);
+        try {
+            $this->getEntityManager()->persist($domaine);
+            $this->getEntityManager()->flush($domaine);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $domaine;
     }
 
@@ -50,7 +36,41 @@ class DomaineService {
      */
     public function update(Domaine $domaine) : Domaine
     {
-        $this->updateFromTrait($domaine);
+        try {
+            $this->getEntityManager()->flush($domaine);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function historise(Domaine $domaine) : Domaine
+    {
+        try {
+            $domaine->historiser();
+            $this->getEntityManager()->flush($domaine);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+        return $domaine;
+    }
+
+    /**
+     * @param Domaine $domaine
+     * @return Domaine
+     */
+    public function restore(Domaine $domaine) : Domaine
+    {
+        try {
+            $domaine->dehistoriser();
+            $this->getEntityManager()->flush($domaine);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $domaine;
     }
 
@@ -60,7 +80,12 @@ class DomaineService {
      */
     public function delete(Domaine $domaine) : Domaine
     {
-        $this->deleteFromTrait($domaine);
+        try {
+            $this->getEntityManager()->remove($domaine);
+            $this->getEntityManager()->flush($domaine);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $domaine;
     }
 

@@ -7,17 +7,14 @@ use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class FormulaireReponseService {
     use EntityManagerAwareTrait;
     use ChampServiceAwareTrait;
-    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES  ******************************************************************************************/
 
@@ -25,16 +22,8 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function create($reponse)
+    public function create(FormulaireReponse $reponse) : FormulaireReponse
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $reponse->setHistoCreateur($user);
-        $reponse->setHistoCreation($date);
-        $reponse->setHistoModificateur($user);
-        $reponse->setHistoModification($date);
-
         try {
             $this->getEntityManager()->persist($reponse);
             $this->getEntityManager()->flush($reponse);
@@ -48,14 +37,8 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function update($reponse)
+    public function update(FormulaireReponse $reponse) : FormulaireReponse
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $reponse->setHistoModificateur($user);
-        $reponse->setHistoModification($date);
-
         try {
             $this->getEntityManager()->flush($reponse);
         } catch (ORMException $e) {
@@ -68,15 +51,10 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function historise($reponse)
+    public function historise(FormulaireReponse $reponse) : FormulaireReponse
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $reponse->setHistoDestructeur($user);
-        $reponse->setHistoDestruction($date);
-
         try {
+            $reponse->historiser();
             $this->getEntityManager()->flush($reponse);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Reponse.", $e);
@@ -88,12 +66,10 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function restore($reponse)
+    public function restore(FormulaireReponse $reponse) : FormulaireReponse
     {
-        $reponse->setHistoDestructeur(null);
-        $reponse->setHistoDestruction(null);
-
         try {
+            $reponse->dehistoriser();
             $this->getEntityManager()->flush($reponse);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Reponse.", $e);
@@ -105,7 +81,7 @@ class FormulaireReponseService {
      * @param FormulaireReponse $reponse
      * @return FormulaireReponse
      */
-    public function delete($reponse)
+    public function delete(FormulaireReponse $reponse) : FormulaireReponse
     {
         try {
             $this->getEntityManager()->remove($reponse);

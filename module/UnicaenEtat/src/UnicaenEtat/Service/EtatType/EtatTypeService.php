@@ -2,25 +2,31 @@
 
 namespace UnicaenEtat\Service\EtatType;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EtatTypeService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
-    /** GESTION DES ENTITES  **********************************/
+    /** GESTION DES ENTITES  ******************************************************************************************/
 
     /**
      * @param EtatType $type
      * @return EtatType
      */
-    public function create(EtatType $type)
+    public function create(EtatType $type) : EtatType
     {
-        $this->createFromTrait($type);
+        try {
+            $this->getEntityManager()->persist($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -28,9 +34,13 @@ class EtatTypeService {
      * @param EtatType $type
      * @return EtatType
      */
-    public function update(EtatType $type)
+    public function update(EtatType $type) : EtatType
     {
-        $this->updateFromTrait($type);
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -38,9 +48,14 @@ class EtatTypeService {
      * @param EtatType $type
      * @return EtatType
      */
-    public function historise(EtatType $type)
+    public function historise(EtatType $type) : EtatType
     {
-        $this->historiserFromTrait($type);
+        try {
+            $type->historiser();
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -48,9 +63,14 @@ class EtatTypeService {
      * @param EtatType $type
      * @return EtatType
      */
-    public function restore(EtatType $type)
+    public function restore(EtatType $type) : EtatType
     {
-        $this->restoreFromTrait($type);
+        try {
+            $type->dehistoriser();
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -58,13 +78,18 @@ class EtatTypeService {
      * @param EtatType $type
      * @return EtatType
      */
-    public function delete(EtatType $type)
+    public function delete(EtatType $type) : EtatType
     {
-        $this->deleteFromTrait($type);
+        try {
+            $this->getEntityManager()->remove($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
-    /** REQUETAGE ************************************************/
+    /** REQUETAGE *****************************************************************************************************/
 
     /**
      * @return QueryBuilder

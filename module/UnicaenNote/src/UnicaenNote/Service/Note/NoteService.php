@@ -3,15 +3,16 @@
 namespace UnicaenNote\Service\Note;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenNote\Entity\Db\Note;
 use UnicaenNote\Entity\Db\PorteNote;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class NoteService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -19,9 +20,14 @@ class NoteService {
      * @param Note $note
      * @return Note
      */
-    public function create(Note $note)
+    public function create(Note $note) : Note
     {
-        $this->createFromTrait($note);
+        try {
+            $this->getEntityManager()->persist($note);
+            $this->getEntityManager()->flush($note);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $note;
     }
 
@@ -29,9 +35,13 @@ class NoteService {
      * @param Note $note
      * @return Note
      */
-    public function update(Note $note)
+    public function update(Note $note) : Note
     {
-        $this->updateFromTrait($note);
+        try {
+            $this->getEntityManager()->flush($note);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $note;
     }
 
@@ -39,9 +49,14 @@ class NoteService {
      * @param Note $note
      * @return Note
      */
-    public function historise(Note $note)
+    public function historise(Note $note) : Note
     {
-        $this->historiserFromTrait($note);
+        try {
+            $note->historiser();
+            $this->getEntityManager()->flush($note);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $note;
     }
 
@@ -49,9 +64,14 @@ class NoteService {
      * @param Note $note
      * @return Note
      */
-    public function restore(Note $note)
+    public function restore(Note $note) : Note
     {
-        $this->restoreFromTrait($note);
+        try {
+            $note->dehistoriser();
+            $this->getEntityManager()->flush($note);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $note;
     }
 
@@ -59,9 +79,14 @@ class NoteService {
      * @param Note $note
      * @return Note
      */
-    public function delete(Note $note)
+    public function delete(Note $note) : Note
     {
-        $this->deleteFromTrait($note);
+        try {
+            $this->getEntityManager()->remove($note);
+            $this->getEntityManager()->flush($note);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $note;
     }
 
@@ -70,7 +95,7 @@ class NoteService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Note::class)->createQueryBuilder('note')
             ->addSelect('ntype')->leftjoin('note.type', 'ntype')
@@ -84,7 +109,7 @@ class NoteService {
      * @param string $ordre
      * @return Note[]
      */
-    public function getNotes(string $champ='id', string $ordre='ASC')
+    public function getNotes(string $champ='id', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('note.' . $champ, $ordre);
@@ -93,10 +118,10 @@ class NoteService {
     }
 
     /**
-     * @param int $id
-     * @return Note
+     * @param int|null $id
+     * @return Note|null
      */
-    public function getNote(int $id)
+    public function getNote(?int $id) : ?Note
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('note.id = :id')
@@ -113,9 +138,9 @@ class NoteService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return Note
+     * @return Note|null
      */
-    public function getRequestedNote(AbstractActionController $controller, string $param='note')
+    public function getRequestedNote(AbstractActionController $controller, string $param='note') : ?Note
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getNote($id);
@@ -126,7 +151,7 @@ class NoteService {
      * @param PorteNote $portenote
      * @return Note[]
      */
-    public function getNotesByPorteNote(PorteNote $portenote)
+    public function getNotesByPorteNote(PorteNote $portenote) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('note.portenote = :portenote')

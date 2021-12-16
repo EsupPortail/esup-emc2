@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -15,6 +16,20 @@ class CampagneController extends AbstractActionController {
     use CampagneServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use CampagneFormAwareTrait;
+
+    private function getAnneeScolaire() : string
+    {
+        $date = new DateTime();
+        $annee = ((int) $date->format("Y"));
+        $mois  = ((int) $date->format("m"));
+
+        if ($mois < 9) {
+            $scolaire = ($annee - 1) . "/" . ($annee);
+        } else {
+            $scolaire = ($annee) . "/" . ($annee + 1);
+        }
+        return $scolaire;
+    }
 
     public function ajouterAction() : ViewModel
     {

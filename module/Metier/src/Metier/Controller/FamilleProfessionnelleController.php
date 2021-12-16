@@ -7,6 +7,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -23,7 +24,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $famille = new FamilleProfessionnelle();
 
@@ -51,7 +52,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
@@ -79,7 +80,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
@@ -87,10 +88,10 @@ class FamilleProfessionnelleController extends AbstractActionController {
             $this->getFamilleProfessionnelleService()->historise($famille);
         }
 
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
+        return $this->redirect()->toRoute('famille-professionnelle', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
@@ -98,10 +99,10 @@ class FamilleProfessionnelleController extends AbstractActionController {
             $this->getFamilleProfessionnelleService()->restore($famille);
         }
 
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'famille'], true);
+        return $this->redirect()->toRoute('famille-professionnelle', [], [], true);
     }
 
-    public function effacerAction()
+    public function effacerAction() : ViewModel
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 

@@ -5,18 +5,15 @@ namespace Autoform\Service\Categorie;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CategorieService {
     use ChampServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -24,16 +21,8 @@ class CategorieService {
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function create($categorie)
+    public function create(Categorie $categorie) : Categorie
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $categorie->setHistoCreateur($user);
-        $categorie->setHistoCreation($date);
-        $categorie->setHistoModificateur($user);
-        $categorie->setHistoModification($date);
-
         try {
             $this->getEntityManager()->persist($categorie);
             $this->getEntityManager()->flush($categorie);
@@ -47,14 +36,8 @@ class CategorieService {
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function update($categorie)
+    public function update(Categorie $categorie) : Categorie
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $categorie->setHistoModificateur($user);
-        $categorie->setHistoModification($date);
-
         try {
             $this->getEntityManager()->flush($categorie);
         } catch (ORMException $e) {
@@ -67,15 +50,10 @@ class CategorieService {
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function historise($categorie)
+    public function historise(Categorie $categorie) : Categorie
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $categorie->setHistoDestructeur($user);
-        $categorie->setHistoDestruction($date);
-
         try {
+            $categorie->historiser();
             $this->getEntityManager()->flush($categorie);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Categorie.", $e);
@@ -87,12 +65,10 @@ class CategorieService {
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function restaure($categorie)
+    public function restaure(Categorie $categorie) : Categorie
     {
-        $categorie->setHistoDestructeur(null);
-        $categorie->setHistoDestruction(null);
-
         try {
+            $categorie->dehistoriser();
             $this->getEntityManager()->flush($categorie);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Categorie.", $e);
@@ -104,7 +80,7 @@ class CategorieService {
      * @param Categorie $categorie
      * @return Categorie
      */
-    public function delete($categorie)
+    public function delete(Categorie $categorie) : Categorie
     {
         try {
             $this->getEntityManager()->remove($categorie);

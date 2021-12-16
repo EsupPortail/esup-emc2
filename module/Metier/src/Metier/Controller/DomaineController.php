@@ -7,6 +7,7 @@ use Metier\Form\Domaine\DomaineFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -42,7 +43,7 @@ class DomaineController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         /** @var Domaine $domaine */
         $domaine = new Domaine();
@@ -70,7 +71,7 @@ class DomaineController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
@@ -97,25 +98,25 @@ class DomaineController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
         if ($domaine !== null) {
             $this->getDomaineService()->historise($domaine);
         }
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
+        return $this->redirect()->toRoute('domaine', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
         if ($domaine !== null) {
             $this->getDomaineService()->restore($domaine);
         }
-        return $this->redirect()->toRoute('metier', [], ['fragment'=>'domaine'], true);
+        return $this->redirect()->toRoute('domaine', [], [], true);
     }
 
-    public function effacerAction()
+    public function effacerAction() : ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 

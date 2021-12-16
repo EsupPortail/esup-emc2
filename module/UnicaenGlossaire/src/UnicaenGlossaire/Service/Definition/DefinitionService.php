@@ -3,14 +3,15 @@
 namespace UnicaenGlossaire\Service\Definition;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenGlossaire\Entity\Db\Definition;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DefinitionService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Gestion des entités *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class DefinitionService {
      */
     public function create(Definition $definition) : Definition
     {
-        $this->createFromTrait($definition);
+        try {
+            $this->getEntityManager()->persist($definition);
+            $this->getEntityManager()->flush($definition);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $definition;
     }
 
@@ -30,7 +36,11 @@ class DefinitionService {
      */
     public function update(Definition $definition) : Definition
     {
-        $this->updateFromTrait($definition);
+        try {
+            $this->getEntityManager()->flush($definition);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $definition;
     }
 
@@ -40,7 +50,12 @@ class DefinitionService {
      */
     public function historise(Definition $definition) : Definition
     {
-        $this->historiserFromTrait($definition);
+        try {
+            $definition->historiser();
+            $this->getEntityManager()->flush($definition);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $definition;
     }
 
@@ -50,7 +65,12 @@ class DefinitionService {
      */
     public function restore(Definition $definition) : Definition
     {
-        $this->restoreFromTrait($definition);
+        try {
+            $definition->dehistoriser();
+            $this->getEntityManager()->flush($definition);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $definition;
     }
 
@@ -60,7 +80,12 @@ class DefinitionService {
      */
     public function delete(Definition $definition) : Definition
     {
-        $this->deleteFromTrait($definition);
+        try {
+            $this->getEntityManager()->remove($definition);
+            $this->getEntityManager()->flush($definition);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $definition;
     }
 

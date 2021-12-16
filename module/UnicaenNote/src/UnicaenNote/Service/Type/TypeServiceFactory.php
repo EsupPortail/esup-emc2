@@ -4,7 +4,6 @@ namespace UnicaenNote\Service\Type;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class TypeServiceFactory {
 
@@ -16,14 +15,11 @@ class TypeServiceFactory {
     {
         /**
          * @var EntityManager $entitymanager
-         * @var UserService $userService
          */
         $entitymanager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
         $service = new TypeService();
         $service->setEntityManager($entitymanager);
-        $service->setUserService($userService);
         return $service;
     }
 

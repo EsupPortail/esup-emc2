@@ -2,15 +2,16 @@
 
 namespace Metier\Service\FamilleProfessionnelle;
 
+use Doctrine\ORM\ORMException;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FamilleProfessionnelleService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class FamilleProfessionnelleService {
      */
     public function create(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
-        $this->createFromTrait($famille);
+        try {
+            $this->getEntityManager()->persist($famille);
+            $this->getEntityManager()->flush($famille);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $famille;
     }
 
@@ -30,7 +36,11 @@ class FamilleProfessionnelleService {
      */
     public function update(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
-        $this->updateFromTrait($famille);
+        try {
+            $this->getEntityManager()->flush($famille);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $famille;
     }
 
@@ -40,7 +50,12 @@ class FamilleProfessionnelleService {
      */
     public function historise(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
-        $this->historiserFromTrait($famille);
+        try {
+            $famille->historiser();
+            $this->getEntityManager()->flush($famille);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $famille;
     }
 
@@ -50,7 +65,12 @@ class FamilleProfessionnelleService {
      */
     public function restore(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
-        $this->restoreFromTrait($famille);
+        try {
+            $famille->dehistoriser();
+            $this->getEntityManager()->flush($famille);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $famille;
     }
 
@@ -60,7 +80,12 @@ class FamilleProfessionnelleService {
      */
     public function delete(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
-        $this->deleteFromTrait($famille);
+        try {
+            $this->getEntityManager()->remove($famille);
+            $this->getEntityManager()->flush($famille);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $famille;
     }
 

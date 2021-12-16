@@ -24,7 +24,6 @@ class CategorieServiceFactory {
         $service = new CategorieService();
         $service->setEntityManager($entityManager);
         $service->setChampService($champService);
-        $service->setUserService($userService);
         return $service;
     }
 }
