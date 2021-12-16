@@ -90,4 +90,18 @@ class FormationElementForm extends Form {
             'annee'         => [ 'required' => false, ],
         ]));
     }
+
+    /**
+     * @param int $debut
+     * @param int $fin
+     * @return array
+     */
+    public function getAnneesScolaires(int $debut, int $fin) : array
+    {
+        $result = [];
+        for($annee = $debut ; $annee <= $fin; $annee++) {
+            $result[] = $annee .'/'. ($annee+1);
+        }
+        return $result;
+    }
 }

@@ -4,6 +4,7 @@ namespace Formation\Assertion;
 
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -13,6 +14,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class FormationInstanceInscritAssertion extends AbstractAssertion
 {
+    use AgentServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -34,7 +36,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
                 $structures[] = $grade->getStructure();
             }
             foreach ($structures as $structure) {
-                $isGestionnaire = $this->getStructureService()->isGestionnaire($structure, $user);
+                $isGestionnaire = $this->getStructureService()->isGestionnaire($structure, $entity);
                 if ($isGestionnaire) break;
             }
         }
@@ -45,7 +47,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
                 $structures[] = $grade->getStructure();
             }
             foreach ($structures as $structure) {
-                $isResponsable = $this->getStructureService()->isResponsable($structure, $user);
+                $isResponsable = $this->getStructureService()->isResponsable($structure, $entity);
                 if ($isResponsable) break;
             }
         }
