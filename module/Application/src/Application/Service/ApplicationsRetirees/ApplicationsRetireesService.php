@@ -5,15 +5,14 @@ namespace Application\Service\ApplicationsRetirees;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ApplicationsRetireesService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -25,7 +24,7 @@ class ApplicationsRetireesService {
      */
     public function create(FicheposteApplicationRetiree $applicationConservee)
     {
-        $date = $this->getDateTime();
+        $date = new DateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $applicationConservee->setHistoCreation($date);
@@ -49,7 +48,7 @@ class ApplicationsRetireesService {
      */
     public function update(FicheposteApplicationRetiree $applicationConservee)
     {
-        $date = $this->getDateTime();
+        $date = new DateTime();
         $user = $this->getUserService()->getConnectedUser();
 
         $applicationConservee->setHistoModification($date);

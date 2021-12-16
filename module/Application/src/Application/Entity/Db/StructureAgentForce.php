@@ -3,8 +3,8 @@
 namespace Application\Entity\Db;
 
 use Application\Entity\HasAgentInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class StructureAgentForce implements HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;

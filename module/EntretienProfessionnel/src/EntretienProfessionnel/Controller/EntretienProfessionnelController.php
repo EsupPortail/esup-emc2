@@ -29,7 +29,6 @@ use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
@@ -41,7 +40,6 @@ use Zend\View\Model\ViewModel;
 
 class EntretienProfessionnelController extends AbstractActionController
 {
-    use DateTimeAwareTrait;
     use AgentServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -482,7 +480,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $this->getRappelEntretienProfessionnelService()->creer($entretien);
 
             $entretien->setToken(null);
-            $entretien->setAcceptation($this->getDateTime());
+            $entretien->setAcceptation((new DateTime()));
             $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
             $this->getEntretienProfessionnelService()->update($entretien);
 

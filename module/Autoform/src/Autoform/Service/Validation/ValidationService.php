@@ -4,16 +4,15 @@ namespace Autoform\Service\Validation;
 
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\Validation;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -26,7 +25,7 @@ class ValidationService {
     public function create($validation)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $validation->setHistoCreateur($user);
         $validation->setHistoCreation($date);
@@ -49,7 +48,7 @@ class ValidationService {
     public function update($validation)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $validation->setHistoModificateur($user);
         $validation->setHistoModification($date);
@@ -69,7 +68,7 @@ class ValidationService {
     public function historise($validation)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $validation->setHistoDestructeur($user);
         $validation->setHistoDestruction($date);

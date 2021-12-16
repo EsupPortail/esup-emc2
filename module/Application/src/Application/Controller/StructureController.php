@@ -24,6 +24,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -40,6 +41,7 @@ class StructureController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -62,7 +64,9 @@ class StructureController extends AbstractActionController {
 
     public function afficherAction() : ViewModel
     {
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         /** Récupération des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');

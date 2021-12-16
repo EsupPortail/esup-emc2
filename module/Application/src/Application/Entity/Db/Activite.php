@@ -10,8 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Activite implements HistoriqueAwareInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface

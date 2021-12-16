@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenNote\Entity\Db\Note;
 use UnicaenNote\Entity\Db\PorteNote;
-use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class NoteService {

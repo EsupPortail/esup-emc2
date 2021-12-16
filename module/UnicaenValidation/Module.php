@@ -3,7 +3,7 @@
 
 namespace UnicaenValidation;
 
-use UnicaenUtilisateur\Event\UserRoleSelectedEventListener;
+//use UnicaenUtilisateur\Event\UserRoleSelectedEventListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
@@ -31,9 +31,9 @@ class Module
 
         $sm = $e->getApplication()->getServiceManager();
 
-        /** @var UserRoleSelectedEventListener $listener */
-        $listener = $sm->get('UserRoleSelectedEventListener');
-        $listener->attach($eventManager);
+//        /** @var UserRoleSelectedEventListener $listener */
+//        $listener = $sm->get('UserRoleSelectedEventListener');
+//        $listener->attach($eventManager);
     }
 
     public function getConfig()

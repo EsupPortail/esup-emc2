@@ -2,8 +2,9 @@
 
 namespace Application\Entity\Db;
 
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Expertise implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

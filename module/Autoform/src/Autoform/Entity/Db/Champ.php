@@ -2,7 +2,7 @@
 
 namespace Autoform\Entity\Db;
 
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Champ {
     use HistoriqueAwareTrait;

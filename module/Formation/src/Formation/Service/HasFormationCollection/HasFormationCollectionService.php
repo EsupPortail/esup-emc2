@@ -2,6 +2,7 @@
 
 namespace Formation\Service\HasFormationCollection;
 
+use DateTime;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Service\Formation\FormationServiceAwareTrait;
@@ -9,8 +10,7 @@ use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class HasFormationCollectionService
@@ -18,7 +18,6 @@ class HasFormationCollectionService
     use FormationServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use DateTimeAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -30,7 +29,7 @@ class HasFormationCollectionService
         if ($object instanceof HistoriqueAwareInterface) {
             $user = $this->getUserService()->getConnectedUser();
             if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
-            $date = $this->getDateTime();
+            $date = new DateTime();
             $object->setHistoModification($date);
             $object->setHistoModificateur($user);
         }

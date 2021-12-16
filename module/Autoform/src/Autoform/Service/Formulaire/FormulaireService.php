@@ -5,12 +5,12 @@ namespace Autoform\Service\Formulaire;
 use Autoform\Entity\Db\Champ;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Categorie\CategorieServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -18,7 +18,6 @@ class FormulaireService {
     use EntityManagerAwareTrait;
     use CategorieServiceAwareTrait;
     use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -29,7 +28,7 @@ class FormulaireService {
     public function create($formulaire)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $formulaire->setHistoCreateur($user);
         $formulaire->setHistoCreation($date);
@@ -52,7 +51,7 @@ class FormulaireService {
     public function update($formulaire)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $formulaire->setHistoModificateur($user);
         $formulaire->setHistoModification($date);
@@ -72,7 +71,7 @@ class FormulaireService {
     public function historise($formulaire)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $formulaire->setHistoDestructeur($user);
         $formulaire->setHistoDestruction($date);

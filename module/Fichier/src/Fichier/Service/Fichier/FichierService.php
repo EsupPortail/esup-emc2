@@ -10,12 +10,10 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichierService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -38,7 +36,7 @@ class FichierService {
     public function create($fichier)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $fichier->setHistoCreateur($user);
         $fichier->setHistoCreation($date);
@@ -61,7 +59,7 @@ class FichierService {
     public function update($fichier)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $fichier->setHistoModificateur($user);
         $fichier->setHistoModification($date);
@@ -81,7 +79,7 @@ class FichierService {
     public function historise($fichier)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $fichier->setHistoDestructeur($user);
         $fichier->setHistoDestruction($date);

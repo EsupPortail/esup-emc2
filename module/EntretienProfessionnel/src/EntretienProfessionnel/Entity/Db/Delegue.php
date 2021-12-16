@@ -6,8 +6,8 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Delegue implements HistoriqueAwareInterface, HasDescriptionInterface {
 

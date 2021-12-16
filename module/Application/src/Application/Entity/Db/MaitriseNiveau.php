@@ -4,8 +4,8 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class MaitriseNiveau implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;

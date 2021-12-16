@@ -7,8 +7,6 @@ use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Doctrine\ORM\NonUniqueResultException;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormulaireInstanceService {

@@ -20,6 +20,7 @@ use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
 
@@ -38,6 +39,7 @@ class StructureControllerFactory {
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
+         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
@@ -51,6 +53,7 @@ class StructureControllerFactory {
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
@@ -78,6 +81,7 @@ class StructureControllerFactory {
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
+        $controller->setUserService($userService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setAjouterGestionnaireForm($ajouterGestionnaire);

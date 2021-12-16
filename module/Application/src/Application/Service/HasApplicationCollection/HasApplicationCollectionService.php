@@ -6,11 +6,11 @@ use Application\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class HasApplicationCollectionService
@@ -18,7 +18,6 @@ class HasApplicationCollectionService
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use EntityManagerAwareTrait;
-    use DateTimeAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -30,7 +29,7 @@ class HasApplicationCollectionService
         if ($object instanceof HistoriqueAwareInterface) {
             $user = $this->getUserService()->getConnectedUser();
             if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
-            $date = $this->getDateTime();
+            $date = new Datetime();
             $object->setHistoModification($date);
             $object->setHistoModificateur($user);
         }

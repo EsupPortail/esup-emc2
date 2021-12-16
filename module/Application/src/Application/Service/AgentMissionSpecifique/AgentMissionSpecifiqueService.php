@@ -10,7 +10,7 @@ use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentMissionSpecifiqueService

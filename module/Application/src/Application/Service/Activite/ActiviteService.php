@@ -334,7 +334,7 @@ class ActiviteService {
     public function updateLibelle(Activite $activite,  $data) : Activite
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $current = $activite->getCurrentActiviteLibelle();
 

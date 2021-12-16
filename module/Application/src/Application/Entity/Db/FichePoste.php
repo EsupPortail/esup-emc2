@@ -6,16 +6,14 @@ use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Application\Entity\HasAgentInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface {
-    use HistoriqueAwareTrait;
-    use DateTimeAwareTrait;
     use FichePosteMacroTrait;
+    use HistoriqueAwareTrait;
 
     const TYPE_DEFAULT  = 'DEFAULT';
     const TYPE_INCLUSIF = 'INCLUSIF';
@@ -290,7 +288,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
      */
     public function getCurrentExpertises($date = null)
     {
-        if ($date === null) $date = $this->getDateTime();
+        if ($date === null) $date = (new DateTime());
 
         $expertises = [];
         /** @var Expertise $expertise */

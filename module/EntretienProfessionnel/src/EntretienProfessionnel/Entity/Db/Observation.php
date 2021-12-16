@@ -2,8 +2,8 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Observation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

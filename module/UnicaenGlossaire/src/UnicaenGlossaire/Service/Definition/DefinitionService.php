@@ -6,7 +6,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenGlossaire\Entity\Db\Definition;
-use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DefinitionService {

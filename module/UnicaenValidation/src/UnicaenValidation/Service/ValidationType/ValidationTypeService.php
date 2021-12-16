@@ -2,18 +2,17 @@
 
 namespace UnicaenValidation\Service\ValidationType;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationType;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationTypeService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -26,7 +25,7 @@ class ValidationTypeService {
     public function create(ValidationType $type)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $type->setHistoCreation($date);
         $type->setHistoCreateur($user);
@@ -50,7 +49,7 @@ class ValidationTypeService {
     public function update(ValidationType $type)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $type->setHistoModification($date);
         $type->setHistoModificateur($user);
@@ -71,7 +70,7 @@ class ValidationTypeService {
     public function historise(ValidationType $type)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $type->setHistoDestruction($date);
         $type->setHistoDestructeur($user);

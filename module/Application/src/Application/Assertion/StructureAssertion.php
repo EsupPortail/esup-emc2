@@ -28,7 +28,7 @@ class StructureAssertion extends AbstractAssertion {
 
         $isGestionnaire = false;
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
-            $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $user);
+            $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $agent);
         }
         $isResponsable = false;
         if ($role->getRoleId() === RoleConstant::RESPONSABLE) {

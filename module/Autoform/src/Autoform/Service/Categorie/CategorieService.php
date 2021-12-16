@@ -5,11 +5,11 @@ namespace Autoform\Service\Categorie;
 use Autoform\Entity\Db\Categorie;
 use Autoform\Entity\Db\Formulaire;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -17,7 +17,6 @@ class CategorieService {
     use ChampServiceAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
-    use DateTimeAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -28,7 +27,7 @@ class CategorieService {
     public function create($categorie)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $categorie->setHistoCreateur($user);
         $categorie->setHistoCreation($date);
@@ -51,7 +50,7 @@ class CategorieService {
     public function update($categorie)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $categorie->setHistoModificateur($user);
         $categorie->setHistoModification($date);
@@ -71,7 +70,7 @@ class CategorieService {
     public function historise($categorie)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $categorie->setHistoDestructeur($user);
         $categorie->setHistoDestruction($date);

@@ -282,7 +282,7 @@ class ParcoursDeFormationService {
             if ($pdff->getFormation() === $formation) return $pdff;
         }
 
-        $date = $this->getDateTime();
+        $date = (new DateTime());
         $user = $this->getUserService()->getConnectedUser();
         $pdff = new ParcoursDeFormationFormation();
         $pdff->setParcours($parcours);

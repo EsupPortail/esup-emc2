@@ -5,14 +5,12 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 
 /**
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
 class AgentAffectation implements HasPeriodeInterface {
-    use DateTimeAwareTrait;
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
 

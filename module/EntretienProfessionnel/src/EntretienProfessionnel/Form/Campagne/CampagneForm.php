@@ -4,7 +4,6 @@ namespace EntretienProfessionnel\Form\Campagne;
 
 use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Select;
@@ -13,13 +12,12 @@ use Zend\InputFilter\Factory;
 
 class CampagneForm extends Form
 {
-    use DateTimeAwareTrait;
     use CampagneServiceAwareTrait;
 
     public function init()
     {
         //ANNEE (SELECT)
-        $current = $this->getDateTime()->format('Y');
+        $current = (new DateTime())->format('Y');
         $array = [];
         for ($delta = -5 ; $delta <= 5 ; $delta++) {
             $string = (((int) $current) - ($delta)) . "/" . (((int) $current) - ($delta-1));

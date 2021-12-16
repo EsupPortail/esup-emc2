@@ -5,8 +5,8 @@ namespace Application\Entity\Db;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class ParcoursDeFormation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

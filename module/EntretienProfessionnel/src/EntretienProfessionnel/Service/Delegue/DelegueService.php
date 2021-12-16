@@ -4,13 +4,13 @@ namespace EntretienProfessionnel\Service\Delegue;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
+use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
-use UnicaenUtilisateur\Service\GestionEntiteHistorisationTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DelegueService {

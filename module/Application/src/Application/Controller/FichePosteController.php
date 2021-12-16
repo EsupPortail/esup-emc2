@@ -30,7 +30,6 @@ use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -40,7 +39,6 @@ use Zend\View\Model\ViewModel;
 
 class FichePosteController extends AbstractActionController {
     /** Trait utilitaire */
-    use DateTimeAwareTrait;
 
     /** Service **/
     use AgentServiceAwareTrait;

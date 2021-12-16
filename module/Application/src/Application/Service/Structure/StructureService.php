@@ -7,7 +7,6 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -15,13 +14,13 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class StructureService
 {
-    use AgentServiceAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -127,13 +126,13 @@ class StructureService
      * @param bool $ouverte
      * @return Structure[]
      */
-    public function getStructuresByGestionnaire(User $user, bool $ouverte = true) : array
+    public function getStructuresByGestionnaire(User $user,  bool $ouverte = true) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
-            ->andWhere('gestionnaireSelection.id = :userId')
-            ->setParameter('userId', $user->getId())
+            ->andWhere('gestionnaire.utilisateur = :user')
+            ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt')
         ;
         if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
@@ -211,13 +210,13 @@ class StructureService
 
     /**
      * @param Structure $structure
-     * @param User $user
+     * @param Agent $agent
      * @return boolean
      */
-    public function isGestionnaire(Structure $structure, User $user) : bool
+    public function isGestionnaire(Structure $structure, Agent $agent) : bool
     {
-        if (array_search($user, $structure->getGestionnaires()) !== false) return true;
-        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $user);
+        if (array_search($agent, $structure->getGestionnaires()) !== false) return true;
+        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
         return false;
     }
 
@@ -394,9 +393,9 @@ EOS;
     /**
      * @return Structure[]
      */
-    public function getStructuresByCurrentRole() : array
+    public function getStructuresByCurrentRole(User $user, Role $role) : array
     {
-        $role = $this->getUserService()->getConnectedRole();
+
 
         $selecteur = [];
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {

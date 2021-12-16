@@ -3,12 +3,10 @@
 namespace Application\Entity\Db;
 
 use DateTime;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class FicheProfil implements HistoriqueAwareInterface {
-    use DateTimeAwareTrait;
     use HistoriqueAwareTrait;
 
     /** @var int */
@@ -272,7 +270,7 @@ class FicheProfil implements HistoriqueAwareInterface {
      */
     public function estEnCours(DateTime $date = null) : bool
     {
-        if ($date === null) $date = $this->getDateTime();
+        if ($date === null) $date = new DateTime();
         return (($this->dateAudition AND $this->dateAudition >= $date) OR ($this->dateDossier >= $date));
     }
 

@@ -3,7 +3,7 @@
 namespace Autoform\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Categorie {
     use HistoriqueAwareTrait;

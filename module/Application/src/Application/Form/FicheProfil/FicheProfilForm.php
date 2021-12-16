@@ -6,7 +6,6 @@ use Application\Entity\Db\Structure;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Date;
@@ -20,7 +19,6 @@ use Zend\InputFilter\Factory;
 class FicheProfilForm extends Form {
     use FichePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use DateTimeAwareTrait;
 
     /** @var Structure */
     private $structure;
@@ -98,7 +96,7 @@ class FicheProfilForm extends Form {
             ],
             'attributes' => [
                 'id' => 'date_dossier',
-//                'min' => $this->getDateTime(),
+//                'min' => (new DateTime()),
             ],
         ]);
         $this->add([
@@ -110,7 +108,7 @@ class FicheProfilForm extends Form {
             ],
             'attributes' => [
                 'id' => 'date_audition',
-//                'min' => $this->getDateTime(),
+//                'min' => (new DateTime()),
             ],
         ]);
         //email

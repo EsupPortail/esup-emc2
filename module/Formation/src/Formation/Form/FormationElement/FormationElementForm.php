@@ -4,7 +4,6 @@ namespace Formation\Form\FormationElement;
 
 use DateTime;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
@@ -13,7 +12,6 @@ use Zend\InputFilter\Factory;
 
 class FormationElementForm extends Form {
     use FormationServiceAwareTrait;
-    use DateTimeAwareTrait;
 
     public function init()
     {

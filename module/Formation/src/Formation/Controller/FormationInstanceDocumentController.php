@@ -38,7 +38,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'journee' => $journee,
         ]);
 
-        //$filemane = "PrEECoG_Emargement_" . /** . $this->getDateTime()->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) .**/ '.pdf';
+        //$filemane = "PrEECoG_Emargement_" . /** . (new DateTime())->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) .**/ '.pdf';
         $filemane = "PrEECoG_Emargement.pdf";
         try {
             $exporter->getMpdf()->SetTitle($filemane);

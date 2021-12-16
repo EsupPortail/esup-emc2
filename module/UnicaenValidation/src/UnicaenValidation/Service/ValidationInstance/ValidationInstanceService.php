@@ -2,20 +2,19 @@
 
 namespace UnicaenValidation\Service\ValidationInstance;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\Db\ValidationType;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ValidationInstanceService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use UserServiceAwareTrait;
 
@@ -28,7 +27,7 @@ class ValidationInstanceService {
     public function create(ValidationInstance $instance)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $instance->setHistoCreation($date);
         $instance->setHistoCreateur($user);
@@ -52,7 +51,7 @@ class ValidationInstanceService {
     public function update(ValidationInstance $instance)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $instance->setHistoModification($date);
         $instance->setHistoModificateur($user);
@@ -73,7 +72,7 @@ class ValidationInstanceService {
     public function historise(ValidationInstance $instance)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $instance->setHistoDestruction($date);
         $instance->setHistoDestructeur($user);

@@ -22,7 +22,7 @@ class ChampService {
     public function create(Champ $champ) : Champ
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $champ->setHistoCreateur($user);
         $champ->setHistoCreation($date);
@@ -45,7 +45,7 @@ class ChampService {
     public function update($champ)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $champ->setHistoModificateur($user);
         $champ->setHistoModification($date);
@@ -65,7 +65,7 @@ class ChampService {
     public function historise($champ)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $champ->setHistoDestructeur($user);
         $champ->setHistoDestruction($date);

@@ -7,15 +7,14 @@ use Autoform\Entity\Db\Formulaire;
 use Autoform\Entity\Db\FormulaireInstance;
 use Autoform\Entity\Db\FormulaireReponse;
 use Autoform\Service\Champ\ChampServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class FormulaireReponseService {
-    use DateTimeAwareTrait;
     use EntityManagerAwareTrait;
     use ChampServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -29,7 +28,7 @@ class FormulaireReponseService {
     public function create($reponse)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $reponse->setHistoCreateur($user);
         $reponse->setHistoCreation($date);
@@ -52,7 +51,7 @@ class FormulaireReponseService {
     public function update($reponse)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $reponse->setHistoModificateur($user);
         $reponse->setHistoModification($date);
@@ -72,7 +71,7 @@ class FormulaireReponseService {
     public function historise($reponse)
     {
         $user = $this->getUserService()->getConnectedUser();
-        $date = $this->getDateTime();
+        $date = new DateTime();
 
         $reponse->setHistoDestructeur($user);
         $reponse->setHistoDestruction($date);

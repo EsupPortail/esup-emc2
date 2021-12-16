@@ -17,7 +17,6 @@ use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -27,7 +26,6 @@ class Agent implements
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
-    use DateTimeAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
     use AgentMacroTrait;
 
@@ -266,7 +264,7 @@ class Agent implements
      */
     public function getAffectationsActifs() : array
     {
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $affectations = [];
         /** @var AgentAffectation $affectation */
@@ -296,7 +294,7 @@ class Agent implements
      */
     public function getStatutsActifs() : array
     {
-        $now = $this->getDateTime();
+        $now = (new DateTime());
         $statuts = [];
         /** @var AgentStatut $statut */
         foreach ($this->getStatuts() as $statut) {
@@ -466,7 +464,7 @@ class Agent implements
      */
     public function getFichePosteActif() : ?FichePoste
     {
-        $now = $this->getDateTime();
+        $now = (new DateTime());
         $fiches = [];
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
@@ -491,7 +489,7 @@ class Agent implements
     /** Entretien dans moins de 15 jours */
     public function hasEntretienEnCours() : bool
     {
-        $now = $this->getDateTime();
+        $now = (new DateTime());
         /** @var EntretienProfessionnel $entretien */
         foreach ($this->entretiens as $entretien) {
             if ($entretien->estNonHistorise()) {

@@ -2,16 +2,15 @@
 
 namespace Application\Service;
 
+use DateTime;
 use Doctrine\ORM\ORMException;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 trait GestionEntiteHistorisationTrait {
     use EntityManagerAwareTrait;
-    use DateTimeAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -22,7 +21,7 @@ trait GestionEntiteHistorisationTrait {
     {
         $user = $this->getUserService()->getConnectedUser();
         if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
-        $date = $this->getDateTime();
+        $date =new DateTime();
 
         $object->setHistoCreation($date);
         $object->setHistoCreateur($user);
@@ -47,7 +46,7 @@ trait GestionEntiteHistorisationTrait {
     {
         $user = $this->getUserService()->getConnectedUser();
         if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $object->setHistoModification($date);
         $object->setHistoModificateur($user);
@@ -69,7 +68,7 @@ trait GestionEntiteHistorisationTrait {
     {
         $user = $this->getUserService()->getConnectedUser();
         if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
-        $date = $this->getDateTime();
+        $date = (new DateTime());
 
         $object->setHistoDestruction($date);
         $object->setHistoDestructeur($user);

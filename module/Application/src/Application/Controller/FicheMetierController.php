@@ -30,7 +30,6 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenUtilisateur\Entity\DateTimeAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -41,7 +40,6 @@ use Zend\View\Model\ViewModel;
 
 class FicheMetierController extends AbstractActionController
 {
-    use DateTimeAwareTrait;
     use RendererAwareTrait;
 
     /** Traits associé aux services */

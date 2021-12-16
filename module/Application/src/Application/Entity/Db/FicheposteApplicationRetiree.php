@@ -2,7 +2,7 @@
 
 namespace Application\Entity\Db;
 
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class FicheposteApplicationRetiree {
     use HistoriqueAwareTrait;

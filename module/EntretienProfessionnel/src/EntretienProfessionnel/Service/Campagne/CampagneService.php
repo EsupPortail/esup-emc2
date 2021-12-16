@@ -161,7 +161,7 @@ class CampagneService {
      */
     public function getLastCampagne(?DateTime $date = null) : ?Campagne
     {
-        if ($date === null) $date = $this->getDateTime();
+        if ($date === null) $date = new DateTime();
         $qb = $this->createQueryBuilder()
             ->andWhere('campagne.dateFin < :date')
             ->setParameter('date', $date)

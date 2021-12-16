@@ -8,8 +8,8 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Service\Metier\MetierService;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Metier implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
