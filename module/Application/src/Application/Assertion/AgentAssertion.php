@@ -12,10 +12,11 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class AgentAssertion extends AbstractAssertion {
+    use AgentServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null)
+    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
     {
         if (!$entity instanceof Agent) {
             return false;
@@ -24,7 +25,9 @@ class AgentAssertion extends AbstractAssertion {
         /** @var Agent $entity */
 
         $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
+
 
         $isGestionnaire = false;
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
@@ -33,7 +36,7 @@ class AgentAssertion extends AbstractAssertion {
                 $structures[] = $grade->getStructure();
             }
             foreach ($structures as $structure) {
-                $isGestionnaire = $this->getStructureService()->isGestionnaire($structure, $user);
+                $isGestionnaire = $this->getStructureService()->isGestionnaire($structure, $agent);
                 if ($isGestionnaire) break;
             }
         }

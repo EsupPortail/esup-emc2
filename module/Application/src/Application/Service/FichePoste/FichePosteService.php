@@ -574,17 +574,17 @@ EOS;
 
         if ($fiche->getPoste()) {
             $structure = $fiche->getPoste()->getStructure();
-            if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
+            if ($this->getStructureService()->isGestionnaire($structure, $agent)) return true;
             if ($this->getStructureService()->isResponsable($structure, $agent)) return true;
         }
         if ($fiche->getAgent()) {
             foreach ($fiche->getAgent()->getAffectationsActifs() as $grade) {
                 $structure = $grade->getStructure();
-                if ($this->getStructureService()->isGestionnaire($structure, $user)) return true;
+                if ($this->getStructureService()->isGestionnaire($structure, $agent)) return true;
                 if ($this->getStructureService()->isResponsable($structure, $agent)) return true;
             }
             foreach ($fiche->getAgent()->getStructuresForcees() as $structureForcee) {
-                if ($this->getStructureService()->isGestionnaire($structureForcee->getStructure(), $user)) return true;
+                if ($this->getStructureService()->isGestionnaire($structureForcee->getStructure(), $agent)) return true;
                 if ($this->getStructureService()->isResponsable($structureForcee->getStructure(), $agent)) return true;
             }
         }

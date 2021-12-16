@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAccompagnement;
 use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -21,7 +22,12 @@ class AgentAccompagnementService {
      */
     public function create(AgentAccompagnement $accompagnement) : AgentAccompagnement
     {
-        $this->createFromTrait($accompagnement);
+        try {
+            $this->getEntityManager()->persist($accompagnement);
+            $this->getEntityManager()->flush($accompagnement);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $accompagnement;
     }
 
@@ -31,7 +37,11 @@ class AgentAccompagnementService {
      */
     public function update(AgentAccompagnement $accompagnement) : AgentAccompagnement
     {
-        $this->updateFromTrait($accompagnement);
+        try {
+            $this->getEntityManager()->flush($accompagnement);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $accompagnement;
     }
 
@@ -41,7 +51,12 @@ class AgentAccompagnementService {
      */
     public function restore(AgentAccompagnement $accompagnement)  :AgentAccompagnement
     {
-        $this->restoreFromTrait($accompagnement);
+        try {
+            $accompagnement->dehistoriser();
+            $this->getEntityManager()->flush($accompagnement);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $accompagnement;
     }
 
@@ -51,7 +66,12 @@ class AgentAccompagnementService {
      */
     public function historise(AgentAccompagnement $accompagnement) : AgentAccompagnement
     {
-        $this->historiserFromTrait($accompagnement);
+        try {
+            $accompagnement->historiser();
+            $this->getEntityManager()->flush($accompagnement);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $accompagnement;
     }
 
@@ -61,7 +81,12 @@ class AgentAccompagnementService {
      */
     public function delete(AgentAccompagnement $accompagnement) : AgentAccompagnement
     {
-        $this->deleteFromTrait($accompagnement);
+        try {
+            $this->getEntityManager()->remove($accompagnement);
+            $this->getEntityManager()->flush($accompagnement);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $accompagnement;
     }
 
