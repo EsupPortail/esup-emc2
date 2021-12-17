@@ -21,6 +21,7 @@ use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
@@ -45,6 +46,7 @@ class EntretienProfessionnelControllerFactory {
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
          * @var ParcoursDeFormationService $parcoursDeFormationService
          * @var RappelEntretienProfessionnelService $rappelEntretienProfessionnelService
          * @var StructureService $structureService
@@ -67,6 +69,7 @@ class EntretienProfessionnelControllerFactory {
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
+        $parametreService = $container->get(ParametreService::class);
         $parcoursDeFormationService = $container->get(ParcoursDeFormationService::class);
         $rappelEntretienProfessionnelService = $container->get(RappelEntretienProfessionnelService::class);
         $structureService = $container->get(StructureService::class);
@@ -100,6 +103,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setCampagneService($campagneService);
         $controller->setObservationService($observationService);
         $controller->setFormulaireInstanceService($formulaireInstanceService);
+        $controller->setParametreService($parametreService);
         $controller->setParcoursDeFormationService($parcoursDeFormationService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);

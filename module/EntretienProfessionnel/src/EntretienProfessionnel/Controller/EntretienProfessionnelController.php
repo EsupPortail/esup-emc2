@@ -9,6 +9,8 @@ use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
@@ -471,30 +473,8 @@ class EntretienProfessionnelController extends AbstractActionController
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
-    public function accepterEntretienAction() : ViewModel
+    public function findResponsablePourEntretienAction() : JsonModel
     {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
-        $token = $this->params()->fromRoute('token');
-
-        if ($entretien !== null AND $entretien->getToken() === $token) {
-            $this->getRappelEntretienProfessionnelService()->creer($entretien);
-
-            $entretien->setToken(null);
-            $entretien->setAcceptation((new DateTime()));
-            $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
-            $this->getEntretienProfessionnelService()->update($entretien);
-
-            $this->getNotificationService()->triggerConvocationAcceptation($entretien);
-
-        }
-
-        return new ViewModel([
-            'entretien' => $entretien,
-            'token' => $token,
-        ]);
-    }
-
-    public function findResponsablePourEntretienAction() {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
@@ -509,5 +489,36 @@ class EntretienProfessionnelController extends AbstractActionController
 
         exit();
     }
+
+
+    public function accepterEntretienAction() : ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $token = $this->params()->fromRoute('token');
+        if ($entretien === null) throw new RuntimeException("Aucun entretien professionnel de remonté pour l'id #".$this->params()->fromRoute('entretien-professionnel'));
+
+        $delai = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','DELAI_ACCEPTATION_AGENT')->getValeur();
+        $dateButoir = (DateTime::createFromFormat('d/m/Y',$entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P'.$delai.'D'));
+        $depassee = $dateButoir < (new DateTime());
+
+        if ($entretien->getToken() === $token) {
+            $this->getRappelEntretienProfessionnelService()->creer($entretien);
+
+            $entretien->setToken(null);
+            $entretien->setAcceptation((new DateTime()));
+            $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
+            $this->getEntretienProfessionnelService()->update($entretien);
+
+            $this->getNotificationService()->triggerConvocationAcceptation($entretien);
+        }
+
+        return new ViewModel([
+            'entretien' => $entretien,
+            'token' => $token,
+            'depassee' => $depassee,
+        ]);
+    }
+
+
 
 }

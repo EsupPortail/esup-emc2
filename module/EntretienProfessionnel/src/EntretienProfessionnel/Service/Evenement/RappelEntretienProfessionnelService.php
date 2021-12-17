@@ -10,11 +10,13 @@ use Exception;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Entity\Db\Type;
+use UnicaenEvenement\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class RappelEntretienProfessionnelService extends EvenementService {
 
     use EntretienProfessionnelServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use NotificationServiceAwareTrait;
 
     /**
@@ -31,7 +33,7 @@ class RappelEntretienProfessionnelService extends EvenementService {
         ];
 
         $description = "Rappel de l'entretien professionnel #" . $entretien->getId() . " de " . $entretien->getAgent()->getDenomination();
-        $evenement = $this->createEvent($description, $description, null, $type, $parametres, $dateTraitement);
+        $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $type, $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;
     }
