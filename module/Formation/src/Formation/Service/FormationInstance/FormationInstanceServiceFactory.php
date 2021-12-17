@@ -9,7 +9,6 @@ use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class FormationInstanceServiceFactory
 {
@@ -27,7 +26,6 @@ class FormationInstanceServiceFactory
          * @var ParametreService $parametreService
          * @var RenduService $renduService
          * @var UrlService $urlService
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $etatService = $container->get(EtatService::class);
@@ -35,7 +33,6 @@ class FormationInstanceServiceFactory
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $urlService = $container->get(UrlService::class);
-        $userService = $container->get(UserService::class);
 
         /**
          * @var FormationInstanceService $service
@@ -47,7 +44,6 @@ class FormationInstanceServiceFactory
         $service->setParametreService($parametreService);
         $service->setRenduService($renduService);
         $service->setUrlService($urlService);
-        $service->setUserService($userService);
         return $service;
     }
 }

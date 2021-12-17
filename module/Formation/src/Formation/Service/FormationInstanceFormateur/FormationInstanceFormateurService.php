@@ -2,16 +2,17 @@
 
 namespace Formation\Service\FormationInstanceFormateur;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstanceFormateur;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceFormateurService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,7 +22,12 @@ class FormationInstanceFormateurService
      */
     public function create(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
-        $this->createFromTrait($formateur);
+        try {
+            $this->getEntityManager()->persist($formateur);
+            $this->getEntityManager()->flush($formateur);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $formateur;
     }
 
@@ -31,7 +37,11 @@ class FormationInstanceFormateurService
      */
     public function update(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
-        $this->updateFromTrait($formateur);
+        try {
+            $this->getEntityManager()->flush($formateur);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $formateur;
     }
 
@@ -41,7 +51,12 @@ class FormationInstanceFormateurService
      */
     public function historise(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
-        $this->historiserFromTrait($formateur);
+        try {
+            $formateur->historiser();
+            $this->getEntityManager()->flush($formateur);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $formateur;
     }
 
@@ -51,7 +66,12 @@ class FormationInstanceFormateurService
      */
     public function restore(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
-        $this->restoreFromTrait($formateur);
+        try {
+            $formateur->dehistoriser();
+            $this->getEntityManager()->flush($formateur);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $formateur;
     }
 
@@ -61,7 +81,12 @@ class FormationInstanceFormateurService
      */
     public function delete(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
     {
-        $this->deleteFromTrait($formateur);
+        try {
+            $this->getEntityManager()->remove($formateur);
+            $this->getEntityManager()->flush($formateur);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $formateur;
     }
 

@@ -2,19 +2,20 @@
 
 namespace Formation\Service\FormationInstancePresence;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Entity\Db\FormationInstancePresence;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstancePresenceService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -22,9 +23,14 @@ class FormationInstancePresenceService
      * @param FormationInstancePresence $presence
      * @return FormationInstancePresence
      */
-    public function create(FormationInstancePresence $presence)
+    public function create(FormationInstancePresence $presence) : FormationInstancePresence
     {
-        $this->createFromTrait($presence);
+        try {
+            $this->getEntityManager()->persist($presence);
+            $this->getEntityManager()->flush($presence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $presence;
     }
 
@@ -32,9 +38,13 @@ class FormationInstancePresenceService
      * @param FormationInstancePresence $presence
      * @return FormationInstancePresence
      */
-    public function update(FormationInstancePresence $presence)
+    public function update(FormationInstancePresence $presence) : FormationInstancePresence
     {
-        $this->updateFromTrait($presence);
+        try {
+            $this->getEntityManager()->flush($presence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $presence;
     }
 
@@ -42,9 +52,14 @@ class FormationInstancePresenceService
      * @param FormationInstancePresence $presence
      * @return FormationInstancePresence
      */
-    public function historise(FormationInstancePresence $presence)
+    public function historise(FormationInstancePresence $presence) : FormationInstancePresence
     {
-        $this->historiserFromTrait($presence);
+        try {
+            $presence->historiser();
+            $this->getEntityManager()->flush($presence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $presence;
     }
 
@@ -52,9 +67,14 @@ class FormationInstancePresenceService
      * @param FormationInstancePresence $presence
      * @return FormationInstancePresence
      */
-    public function restore(FormationInstancePresence $presence)
+    public function restore(FormationInstancePresence $presence) : FormationInstancePresence
     {
-        $this->restoreFromTrait($presence);
+        try {
+            $presence->dehistoriser();
+            $this->getEntityManager()->flush($presence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $presence;
     }
 
@@ -62,9 +82,14 @@ class FormationInstancePresenceService
      * @param FormationInstancePresence $presence
      * @return FormationInstancePresence
      */
-    public function deleteFromTrait(FormationInstancePresence $presence)
+    public function deleteFromTrait(FormationInstancePresence $presence) : FormationInstancePresence
     {
-        $this->deleteFromTrait($presence);
+        try {
+            $this->getEntityManager()->remove($presence);
+            $this->getEntityManager()->flush($presence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $presence;
     }
 
@@ -73,7 +98,7 @@ class FormationInstancePresenceService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstancePresence::class)->createQueryBuilder('presence')
             ->addSelect('journee')->join('presence.journee', 'journee')

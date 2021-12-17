@@ -2,16 +2,17 @@
 
 namespace Formation\Service\FormationInstanceJournee;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstanceJournee;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceJourneeService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /**  GESTION ENTITY ***********************************************************************************************/
 
@@ -19,9 +20,14 @@ class FormationInstanceJourneeService
      * @param FormationInstanceJournee $journee
      * @return FormationInstanceJournee
      */
-    public function create(FormationInstanceJournee $journee)
+    public function create(FormationInstanceJournee $journee) : FormationInstanceJournee
     {
-        $this->createFromTrait($journee);
+        try {
+            $this->getEntityManager()->persist($journee);
+            $this->getEntityManager()->flush($journee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $journee;
     }
 
@@ -29,9 +35,13 @@ class FormationInstanceJourneeService
      * @param FormationInstanceJournee $journee
      * @return FormationInstanceJournee
      */
-    public function update(FormationInstanceJournee $journee)
+    public function update(FormationInstanceJournee $journee) : FormationInstanceJournee
     {
-        $this->updateFromTrait($journee);
+        try {
+            $this->getEntityManager()->flush($journee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $journee;
     }
 
@@ -39,9 +49,14 @@ class FormationInstanceJourneeService
      * @param FormationInstanceJournee $journee
      * @return FormationInstanceJournee
      */
-    public function historise(FormationInstanceJournee $journee)
+    public function historise(FormationInstanceJournee $journee) : FormationInstanceJournee
     {
-        $this->historiserFromTrait($journee);
+        try {
+            $journee->historiser();
+            $this->getEntityManager()->flush($journee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $journee;
     }
 
@@ -49,9 +64,14 @@ class FormationInstanceJourneeService
      * @param FormationInstanceJournee $journee
      * @return FormationInstanceJournee
      */
-    public function restore(FormationInstanceJournee $journee)
+    public function restore(FormationInstanceJournee $journee) : FormationInstanceJournee
     {
-        $this->restoreFromTrait($journee);
+        try {
+            $journee->dehistoriser();
+            $this->getEntityManager()->flush($journee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $journee;
     }
 
@@ -59,9 +79,14 @@ class FormationInstanceJourneeService
      * @param FormationInstanceJournee $journee
      * @return FormationInstanceJournee
      */
-    public function delete(FormationInstanceJournee $journee)
+    public function delete(FormationInstanceJournee $journee) : FormationInstanceJournee
     {
-        $this->deleteFromTrait($journee);
+        try {
+            $this->getEntityManager()->remove($journee);
+            $this->getEntityManager()->flush($journee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $journee;
     }
 
@@ -70,7 +95,7 @@ class FormationInstanceJourneeService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceJournee::class)->createQueryBuilder('journee')
             ->addSelect('finstance')->join('journee.instance', 'finstance')

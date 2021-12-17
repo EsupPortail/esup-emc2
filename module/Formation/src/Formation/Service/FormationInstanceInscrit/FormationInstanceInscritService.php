@@ -4,19 +4,20 @@ namespace Formation\Service\FormationInstanceInscrit;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceInscritService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
 
     /** GESTION ENTITES ****************************************************************************************/
@@ -25,9 +26,14 @@ class FormationInstanceInscritService
      * @param FormationInstanceInscrit $inscrit
      * @return FormationInstanceInscrit
      */
-    public function create(FormationInstanceInscrit $inscrit)
+    public function create(FormationInstanceInscrit $inscrit) : FormationInstanceInscrit
     {
-        $this->createFromTrait($inscrit);
+        try {
+            $this->getEntityManager()->persist($inscrit);
+            $this->getEntityManager()->flush($inscrit);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $inscrit;
     }
 
@@ -35,9 +41,13 @@ class FormationInstanceInscritService
      * @param FormationInstanceInscrit $inscrit
      * @return FormationInstanceInscrit
      */
-    public function update(FormationInstanceInscrit $inscrit)
+    public function update(FormationInstanceInscrit $inscrit) : FormationInstanceInscrit
     {
-        $this->updateFromTrait($inscrit);
+        try {
+            $this->getEntityManager()->flush($inscrit);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $inscrit;
     }
 
@@ -45,9 +55,14 @@ class FormationInstanceInscritService
      * @param FormationInstanceInscrit $inscrit
      * @return FormationInstanceInscrit
      */
-    public function historise(FormationInstanceInscrit $inscrit)
+    public function historise(FormationInstanceInscrit $inscrit) : FormationInstanceInscrit
     {
-        $this->historiserFromTrait($inscrit);
+        try {
+            $inscrit->historiser();
+            $this->getEntityManager()->flush($inscrit);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $inscrit;
     }
 
@@ -55,9 +70,14 @@ class FormationInstanceInscritService
      * @param FormationInstanceInscrit $inscrit
      * @return FormationInstanceInscrit
      */
-    public function restore(FormationInstanceInscrit $inscrit)
+    public function restore(FormationInstanceInscrit $inscrit) : FormationInstanceInscrit
     {
-        $this->restoreFromTrait($inscrit);
+        try {
+            $inscrit->dehistoriser();
+            $this->getEntityManager()->flush($inscrit);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $inscrit;
     }
 
@@ -65,9 +85,14 @@ class FormationInstanceInscritService
      * @param FormationInstanceInscrit $inscrit
      * @return FormationInstanceInscrit
      */
-    public function delete(FormationInstanceInscrit $inscrit)
+    public function delete(FormationInstanceInscrit $inscrit) : FormationInstanceInscrit
     {
-        $this->deleteFromTrait($inscrit);
+        try {
+            $this->getEntityManager()->remove($inscrit);
+            $this->getEntityManager()->flush($inscrit);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $inscrit;
     }
 

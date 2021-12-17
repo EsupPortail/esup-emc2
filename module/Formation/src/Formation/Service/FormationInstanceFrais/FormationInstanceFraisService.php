@@ -2,12 +2,14 @@
 
 namespace Formation\Service\FormationInstanceFrais;
 
-use Application\Service\GestionEntiteHistorisationTrait;
+use Doctrine\ORM\ORMException;
 use Formation\Entity\Db\FormationInstanceFrais;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class FormationInstanceFraisService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES **********************************************************************************/
 
@@ -15,9 +17,14 @@ class FormationInstanceFraisService
      * @param FormationInstanceFrais $frais
      * @return FormationInstanceFrais
      */
-    public function create(FormationInstanceFrais $frais)
+    public function create(FormationInstanceFrais $frais) : FormationInstanceFrais
     {
-        $this->createFromTrait($frais);
+        try {
+            $this->getEntityManager()->persist($frais);
+            $this->getEntityManager()->flush($frais);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $frais;
     }
 
@@ -25,9 +32,13 @@ class FormationInstanceFraisService
      * @param FormationInstanceFrais $frais
      * @return FormationInstanceFrais
      */
-    public function update(FormationInstanceFrais $frais)
+    public function update(FormationInstanceFrais $frais) : FormationInstanceFrais
     {
-        $this->updateFromTrait($frais);
+        try {
+            $this->getEntityManager()->flush($frais);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $frais;
     }
 
@@ -35,9 +46,14 @@ class FormationInstanceFraisService
      * @param FormationInstanceFrais $frais
      * @return FormationInstanceFrais
      */
-    public function historise(FormationInstanceFrais $frais)
+    public function historise(FormationInstanceFrais $frais) : FormationInstanceFrais
     {
-        $this->historiserFromTrait($frais);
+        try {
+            $frais->historiser();
+            $this->getEntityManager()->flush($frais);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $frais;
     }
 
@@ -45,9 +61,14 @@ class FormationInstanceFraisService
      * @param FormationInstanceFrais $frais
      * @return FormationInstanceFrais
      */
-    public function restore(FormationInstanceFrais $frais)
+    public function restore(FormationInstanceFrais $frais) : FormationInstanceFrais
     {
-        $this->restoreFromTrait($frais);
+        try {
+            $frais->dehistoriser();
+            $this->getEntityManager()->flush($frais);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $frais;
     }
 
@@ -55,9 +76,14 @@ class FormationInstanceFraisService
      * @param FormationInstanceFrais $frais
      * @return FormationInstanceFrais
      */
-    public function delete(FormationInstanceFrais $frais)
+    public function delete(FormationInstanceFrais $frais) : FormationInstanceFrais
     {
-        $this->deleteFromTrait($frais);
+        try {
+            $this->getEntityManager()->remove($frais);
+            $this->getEntityManager()->flush($frais);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $frais;
     }
 }
