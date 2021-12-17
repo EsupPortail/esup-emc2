@@ -2,15 +2,16 @@
 
 namespace EntretienProfessionnel\Service\Observation;
 
+use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\Observation;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ObservationService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class ObservationService {
      */
     public function create(Observation $observation) : Observation
     {
-        $this->createFromTrait($observation);
+        try {
+            $this->getEntityManager()->persist($observation);
+            $this->getEntityManager()->flush($observation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $observation;
     }
 
@@ -30,7 +36,11 @@ class ObservationService {
      */
     public function update(Observation $observation) : Observation
     {
-        $this->updateFromTrait($observation);
+        try {
+            $this->getEntityManager()->flush($observation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $observation;
     }
 
@@ -40,7 +50,12 @@ class ObservationService {
      */
     public function historise(Observation $observation) : Observation
     {
-        $this->historiserFromTrait($observation);
+        try {
+            $observation->historiser();
+            $this->getEntityManager()->flush($observation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $observation;
     }
 
@@ -50,7 +65,12 @@ class ObservationService {
      */
     public function restore(Observation $observation) : Observation
     {
-        $this->restoreFromTrait($observation);
+        try {
+            $observation->dehistoriser();
+            $this->getEntityManager()->flush($observation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $observation;
     }
 
@@ -60,7 +80,12 @@ class ObservationService {
      */
     public function delete(Observation $observation) : Observation
     {
-        $this->deleteFromTrait($observation);
+        try {
+            $this->getEntityManager()->remove($observation);
+            $this->getEntityManager()->flush($observation);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $observation;
     }
 

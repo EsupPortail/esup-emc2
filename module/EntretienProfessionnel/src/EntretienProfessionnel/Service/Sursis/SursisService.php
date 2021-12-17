@@ -3,14 +3,15 @@
 namespace EntretienProfessionnel\Service\Sursis;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Sursis;
 use UnicaenApp\Exception\RuntimeException;
-use Application\Service\GestionEntiteHistorisationTrait;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class SursisService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class SursisService {
      */
     public function create(Sursis $sursis) : Sursis
     {
-        $this->createFromTrait($sursis);
+        try {
+            $this->getEntityManager()->persist($sursis);
+            $this->getEntityManager()->flush($sursis);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $sursis;
     }
 
@@ -30,7 +36,11 @@ class SursisService {
      */
     public function update(Sursis $sursis) : Sursis
     {
-        $this->updateFromTrait($sursis);
+        try {
+            $this->getEntityManager()->flush($sursis);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $sursis;
     }
 
@@ -40,7 +50,12 @@ class SursisService {
      */
     public function historise(Sursis $sursis) : Sursis
     {
-        $this->historiserFromTrait($sursis);
+        try {
+            $sursis->historiser();
+            $this->getEntityManager()->flush($sursis);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $sursis;
     }
 
@@ -50,7 +65,12 @@ class SursisService {
      */
     public function restore(Sursis $sursis) : Sursis
     {
-        $this->restoreFromTrait($sursis);
+        try {
+            $sursis->dehistoriser();
+            $this->getEntityManager()->flush($sursis);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $sursis;
     }
 
@@ -60,7 +80,12 @@ class SursisService {
      */
     public function delete(Sursis $sursis) : Sursis
     {
-        $this->deleteFromTrait($sursis);
+        try {
+            $this->getEntityManager()->remove($sursis);
+            $this->getEntityManager()->flush($sursis);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $sursis;
     }
 

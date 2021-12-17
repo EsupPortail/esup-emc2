@@ -4,17 +4,18 @@ namespace EntretienProfessionnel\Service\Delegue;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DelegueService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -24,7 +25,12 @@ class DelegueService {
      */
     public function create(Delegue $delegue) : Delegue
     {
-        $this->createFromTrait($delegue);
+        try {
+            $this->getEntityManager()->persist($delegue);
+            $this->getEntityManager()->flush($delegue);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $delegue;
     }
 
@@ -34,7 +40,11 @@ class DelegueService {
      */
     public function update(Delegue $delegue) : Delegue
     {
-        $this->updateFromTrait($delegue);
+        try {
+            $this->getEntityManager()->flush($delegue);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $delegue;
     }
 
@@ -44,7 +54,12 @@ class DelegueService {
      */
     public function historise(Delegue $delegue) : Delegue
     {
-        $this->historiserFromTrait($delegue);
+        try {
+            $delegue->historiser();
+            $this->getEntityManager()->flush($delegue);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $delegue;
     }
 
@@ -54,7 +69,12 @@ class DelegueService {
      */
     public function restore(Delegue $delegue) : Delegue
     {
-        $this->restoreFromTrait($delegue);
+        try {
+            $delegue->dehistoriser();
+            $this->getEntityManager()->flush($delegue);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $delegue;
     }
 
@@ -64,7 +84,12 @@ class DelegueService {
      */
     public function delete(Delegue $delegue) : Delegue
     {
-        $this->deleteFromTrait($delegue);
+        try {
+            $this->getEntityManager()->remove($delegue);
+            $this->getEntityManager()->flush($delegue);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $delegue;
     }
 

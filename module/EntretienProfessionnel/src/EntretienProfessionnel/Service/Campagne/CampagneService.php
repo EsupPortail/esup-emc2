@@ -2,16 +2,17 @@
 
 namespace EntretienProfessionnel\Service\Campagne;
 
-use Application\Service\GestionEntiteHistorisationTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CampagneService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,7 +22,12 @@ class CampagneService {
      */
     public function create(Campagne $campagne) : Campagne
     {
-        $this->createFromTrait($campagne);
+        try {
+            $this->getEntityManager()->persist($campagne);
+            $this->getEntityManager()->flush($campagne);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $campagne;
     }
 
@@ -31,7 +37,11 @@ class CampagneService {
      */
     public function update(Campagne $campagne) : Campagne
     {
-        $this->updateFromTrait($campagne);
+        try {
+            $this->getEntityManager()->flush($campagne);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $campagne;
     }
 
@@ -41,7 +51,12 @@ class CampagneService {
      */
     public function historise(Campagne $campagne) : Campagne
     {
-        $this->historiserFromTrait($campagne);
+        try {
+            $campagne->historiser();
+            $this->getEntityManager()->flush($campagne);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $campagne;
     }
 
@@ -51,7 +66,12 @@ class CampagneService {
      */
     public function restore(Campagne $campagne) : Campagne
     {
-        $this->restoreFromTrait($campagne);
+        try {
+            $campagne->dehistoriser();
+            $this->getEntityManager()->flush($campagne);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $campagne;
     }
 
@@ -61,7 +81,12 @@ class CampagneService {
      */
     public function delete(Campagne $campagne) : Campagne
     {
-        $this->deleteFromTrait($campagne);
+        try {
+            $this->getEntityManager()->remove($campagne);
+            $this->getEntityManager()->flush($campagne);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $campagne;
     }
 

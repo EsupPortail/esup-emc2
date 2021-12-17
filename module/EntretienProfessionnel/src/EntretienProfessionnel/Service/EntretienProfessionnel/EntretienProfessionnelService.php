@@ -7,9 +7,9 @@ use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
@@ -18,13 +18,14 @@ use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DelegueServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
@@ -38,7 +39,12 @@ class EntretienProfessionnelService {
      */
     public function create(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
-        $this->createFromTrait($entretien);
+        try {
+            $this->getEntityManager()->persist($entretien);
+            $this->getEntityManager()->flush($entretien);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         $this->generateToken($entretien);
         return $entretien;
     }
@@ -49,7 +55,11 @@ class EntretienProfessionnelService {
      */
     public function update(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
-        $this->updateFromTrait($entretien);
+        try {
+            $this->getEntityManager()->flush($entretien);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $entretien;
     }
 
@@ -59,7 +69,12 @@ class EntretienProfessionnelService {
      */
     public function historise(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
-        $this->historiserFromTrait($entretien);
+        try {
+            $entretien->historiser();
+            $this->getEntityManager()->flush($entretien);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $entretien;
     }
 
@@ -69,7 +84,12 @@ class EntretienProfessionnelService {
      */
     public function restore(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
-        $this->restoreFromTrait($entretien);
+        try {
+            $entretien->dehistoriser();
+            $this->getEntityManager()->flush($entretien);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $entretien;
     }
 
@@ -79,7 +99,12 @@ class EntretienProfessionnelService {
      */
     public function delete(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
-        $this->deleteFromTrait($entretien);
+        try {
+            $this->getEntityManager()->remove($entretien);
+            $this->getEntityManager()->flush($entretien);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $entretien;
     }
 
