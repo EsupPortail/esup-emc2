@@ -20,7 +20,7 @@ class ApplicationService {
      * @param Application $application
      * @return Application
      */
-    public function create(Application $application)
+    public function create(Application $application) : Application
     {
         $application->setActif(true);
         try {
@@ -36,7 +36,7 @@ class ApplicationService {
      * @param Application $application
      * @return Application
      */
-    public function update(Application $application)
+    public function update(Application $application) : Application
     {
         try {
             $this->getEntityManager()->flush($application);
@@ -48,8 +48,9 @@ class ApplicationService {
 
     /**
      * @param Application $application
+     * @return Application
      */
-    public function delete(Application $application)
+    public function delete(Application $application) : Application
     {
         try {
             $this->getEntityManager()->remove($application);
@@ -57,6 +58,7 @@ class ApplicationService {
         } catch (ORMException $e) {
             throw new RuntimeException('Un problème est survenu lors de la suppression en BD', $e);
         }
+        return $application;
     }
 
     /** REQUETES ******************************************************************************************************/
@@ -64,7 +66,7 @@ class ApplicationService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
             ->addSelect('groupe')->leftJoin('application.groupe', 'groupe')
@@ -77,7 +79,7 @@ class ApplicationService {
      * @param string $ordre
      * @return Application[]
      */
-    public function getApplications(string $champ = 'libelle', string $ordre='ASC')
+    public function getApplications(string $champ = 'libelle', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.' . $champ, $ordre)
@@ -92,7 +94,7 @@ class ApplicationService {
      * @param string $ordre
      * @return Application[]
      */
-    public function getApplicationsAsOptions(string $champ = 'libelle', string $ordre='ASC')
+    public function getApplicationsAsOptions(string $champ = 'libelle', string $ordre='ASC') : array
     {
         $result = $this->getApplications($champ, $ordre);
         $array = [];
@@ -107,7 +109,7 @@ class ApplicationService {
      * @param ApplicationGroupe|null $groupe
      * @return Application[]
      */
-    public function getApplicationsGyGroupe(?ApplicationGroupe $groupe)
+    public function getApplicationsGyGroupe(?ApplicationGroupe $groupe) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.libelle')
@@ -126,10 +128,10 @@ class ApplicationService {
     }
 
     /**
-     * @param int $id
-     * @return Application
+     * @param int|null $id
+     * @return Application|null
      */
-    public function getApplication(int $id)
+    public function getApplication(?int $id) : ?Application
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('application.id = :id')
@@ -149,7 +151,7 @@ class ApplicationService {
      * @param string paramName
      * @return Application
      */
-    public function getRequestedApplication(AbstractActionController $controller, $paramName = 'application')
+    public function getRequestedApplication(AbstractActionController $controller, string $paramName = 'application') : ?Application
     {
         $id = $controller->params()->fromRoute($paramName);
         return $this->getApplication($id);

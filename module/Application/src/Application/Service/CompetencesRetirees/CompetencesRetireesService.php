@@ -5,14 +5,13 @@ namespace Application\Service\CompetencesRetirees;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class CompetencesRetireesService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,8 +19,14 @@ class CompetencesRetireesService {
      * @param FicheposteCompetenceRetiree $competenceRetiree
      * @return FicheposteCompetenceRetiree
      */
-    public function create(FicheposteCompetenceRetiree $competenceRetiree) {
-        $this->createFromTrait($competenceRetiree);
+    public function create(FicheposteCompetenceRetiree $competenceRetiree) : FicheposteCompetenceRetiree
+    {
+        try {
+            $this->getEntityManager()->persist($competenceRetiree);
+            $this->getEntityManager()->flush($competenceRetiree);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competenceRetiree;
     }
 
@@ -29,8 +34,13 @@ class CompetencesRetireesService {
      * @param FicheposteCompetenceRetiree $competenceConservee
      * @return FicheposteCompetenceRetiree
      */
-    public function update(FicheposteCompetenceRetiree $competenceConservee) {
-        $this->updateFromTrait($competenceConservee);
+    public function update(FicheposteCompetenceRetiree $competenceConservee) : FicheposteCompetenceRetiree
+    {
+        try {
+            $this->getEntityManager()->flush($competenceConservee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competenceConservee;
     }
 
@@ -38,8 +48,14 @@ class CompetencesRetireesService {
      * @param FicheposteCompetenceRetiree $competenceConservee
      * @return FicheposteCompetenceRetiree
      */
-    public function delete(FicheposteCompetenceRetiree $competenceConservee) {
-        $this->deleteFromTrait($competenceConservee);
+    public function delete(FicheposteCompetenceRetiree $competenceConservee) : FicheposteCompetenceRetiree
+    {
+        try {
+            $this->getEntityManager()->remove($competenceConservee);
+            $this->getEntityManager()->flush($competenceConservee);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competenceConservee;
     }
 
@@ -50,7 +66,7 @@ class CompetencesRetireesService {
      * @param Competence $competence
      * @return FicheposteCompetenceRetiree
      */
-    public function getCompetenceRetiree(FichePoste $ficheposte, Competence $competence)
+    public function getCompetenceRetiree(FichePoste $ficheposte, Competence $competence) : FicheposteCompetenceRetiree
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteCompetenceRetiree::class)->createQueryBuilder('retiree')
             ->andWhere('retiree.fichePoste = :ficheposte')
@@ -72,7 +88,7 @@ class CompetencesRetireesService {
      * @param Competence $competence
      * @return FicheposteCompetenceRetiree
      */
-    public function add(FichePoste $ficheposte, Competence $competence)
+    public function add(FichePoste $ficheposte, Competence $competence) : FicheposteCompetenceRetiree
     {
         $result = $this->getCompetenceRetiree($ficheposte, $competence);
 
@@ -90,7 +106,7 @@ class CompetencesRetireesService {
      * @param Competence $competence
      * @return FicheposteCompetenceRetiree
      */
-    public function remove(FichePoste $ficheposte, Competence $competence)
+    public function remove(FichePoste $ficheposte, Competence $competence) : FicheposteCompetenceRetiree
     {
         $result = $this->getCompetenceRetiree($ficheposte, $competence);
 

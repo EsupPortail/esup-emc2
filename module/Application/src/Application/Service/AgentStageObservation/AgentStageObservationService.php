@@ -4,14 +4,15 @@ namespace Application\Service\AgentStageObservation;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentStageObservation;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentStageObservationService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Gestion des entites ***************************************************************************************/
 
@@ -21,7 +22,12 @@ class AgentStageObservationService {
      */
     public function create(AgentStageObservation $stageobs) : AgentStageObservation
     {
-        $this->createFromTrait($stageobs);
+        try {
+            $this->getEntityManager()->persist($stageobs);
+            $this->getEntityManager()->flush($stageobs);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $stageobs;
     }
 
@@ -31,17 +37,11 @@ class AgentStageObservationService {
      */
     public function update(AgentStageObservation $stageobs) : AgentStageObservation
     {
-        $this->updateFromTrait($stageobs);
-        return $stageobs;
-    }
-
-    /**
-     * @param AgentStageObservation $stageobs
-     * @return AgentStageObservation
-     */
-    public function restore(AgentStageObservation $stageobs)  :AgentStageObservation
-    {
-        $this->restoreFromTrait($stageobs);
+        try {
+            $this->getEntityManager()->flush($stageobs);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $stageobs;
     }
 
@@ -51,7 +51,27 @@ class AgentStageObservationService {
      */
     public function historise(AgentStageObservation $stageobs) : AgentStageObservation
     {
-        $this->historiserFromTrait($stageobs);
+        try {
+            $stageobs->historiser();
+            $this->getEntityManager()->flush($stageobs);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+        return $stageobs;
+    }
+
+    /**
+     * @param AgentStageObservation $stageobs
+     * @return AgentStageObservation
+     */
+    public function restore(AgentStageObservation $stageobs)  :AgentStageObservation
+    {
+        try {
+            $stageobs->dehistoriser();
+            $this->getEntityManager()->flush($stageobs);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $stageobs;
     }
 
@@ -61,7 +81,12 @@ class AgentStageObservationService {
      */
     public function delete(AgentStageObservation $stageobs) : AgentStageObservation
     {
-        $this->deleteFromTrait($stageobs);
+        try {
+            $this->getEntityManager()->remove($stageobs);
+            $this->getEntityManager()->flush($stageobs);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $stageobs;
     }
 

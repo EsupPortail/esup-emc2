@@ -7,16 +7,16 @@ use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITÉS *******************************************************************************************/
 
@@ -26,7 +26,12 @@ class ActiviteService {
      */
     public function create(Activite $activite) : Activite
     {
-        $this->createFromTrait($activite);
+        try {
+            $this->getEntityManager()->persist($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -36,7 +41,11 @@ class ActiviteService {
      */
     public function update(Activite $activite) : Activite
     {
-        $this->updateFromTrait($activite);
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -46,7 +55,12 @@ class ActiviteService {
      */
     public function historise(Activite $activite) : Activite
     {
-        $this->historiserFromTrait($activite);
+        try {
+            $activite->historiser();
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -56,7 +70,12 @@ class ActiviteService {
      */
     public function restore(Activite $activite) : Activite
     {
-        $this->restoreFromTrait($activite);
+        try {
+            $activite->dehistoriser();
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -66,7 +85,12 @@ class ActiviteService {
      */
     public function delete(Activite $activite) : Activite
     {
-        $this->deleteFromTrait($activite);
+        try {
+            $this->getEntityManager()->remove($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -92,7 +116,7 @@ class ActiviteService {
 //            ->andWhere('libelle.histoDestruction IS NULL')
 //            ->andWhere('description.histoDestruction IS NULL')
         ;
-        $qb = NiveauService::decorateWithNiveau($qb, 'activite', 'niveaux')
+        $qb = NiveauService::decorateWithNiveau($qb, 'activite')
         ;
         return $qb;
     }
@@ -333,9 +357,6 @@ class ActiviteService {
      */
     public function updateLibelle(Activite $activite,  $data) : Activite
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = (new DateTime());
-
         $current = $activite->getCurrentActiviteLibelle();
 
         $libelle = null;
@@ -345,10 +366,6 @@ class ActiviteService {
             $activiteLibelle = new ActiviteLibelle();
             $activiteLibelle->setActivite($activite);
             $activiteLibelle->setLibelle($libelle);
-            $activiteLibelle->setHistoCreateur($user);
-            $activiteLibelle->setHistoCreation($date);
-            $activiteLibelle->setHistoModificateur($user);
-            $activiteLibelle->setHistoModification($date);
             try {
                 $this->getEntityManager()->persist($activiteLibelle);
                 $this->getEntityManager()->flush($activiteLibelle);
@@ -359,9 +376,8 @@ class ActiviteService {
         }
 
         if ($current !== null AND $ok === true) {
-            $current->setHistoDestruction($date);
-            $current->setHistoDestructeur($user);
             try {
+                $current->historiser();
                 $this->getEntityManager()->flush($current);
             } catch (ORMException $e) {
                 throw new RuntimeException("Un problème est survenu lors de l'enregistrement en base",0 ,$e);

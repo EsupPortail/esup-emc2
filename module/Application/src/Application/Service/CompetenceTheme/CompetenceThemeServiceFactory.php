@@ -4,23 +4,18 @@ namespace Application\Service\CompetenceTheme;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;;
 
 class CompetenceThemeServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CompetenceThemeService
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
-        /** @var CompetenceThemeService $service */
         $service = new CompetenceThemeService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
         return $service;
     }
 }

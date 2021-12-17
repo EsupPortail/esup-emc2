@@ -9,11 +9,9 @@ use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ActivitesDescriptionsRetireesService {
     use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,11 +19,8 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function create($description)
+    public function create(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
     {
-        $description->updateCreation($this->getUserService());
-        $description->updateModification($this->getUserService());
-
         try {
             $this->getEntityManager()->persist($description);
             $this->getEntityManager()->flush($description);
@@ -39,11 +34,8 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function update($description)
+    public function update(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
     {
-        $description->updateCreation($this->getUserService());
-        $description->updateModification($this->getUserService());
-
         try {
             $this->getEntityManager()->flush($description);
         } catch(ORMException $e) {
@@ -56,11 +48,8 @@ class ActivitesDescriptionsRetireesService {
      * @param FicheposteActiviteDescriptionRetiree $description
      * @return FicheposteActiviteDescriptionRetiree
      */
-    public function delete($description)
+    public function delete(FicheposteActiviteDescriptionRetiree $description) : FicheposteActiviteDescriptionRetiree
     {
-        $description->updateCreation($this->getUserService());
-        $description->updateModification($this->getUserService());
-
         try {
             $this->getEntityManager()->remove($description);
             $this->getEntityManager()->flush($description);
@@ -79,7 +68,7 @@ class ActivitesDescriptionsRetireesService {
      * @return FicheposteActiviteDescriptionRetiree[]
      */
 
-    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Activite $activite)
+    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Activite $activite) : array
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteActiviteDescriptionRetiree::class)->createQueryBuilder('description')
             ->addSelect('ficheposte')->join('description.fichePoste', 'ficheposte')

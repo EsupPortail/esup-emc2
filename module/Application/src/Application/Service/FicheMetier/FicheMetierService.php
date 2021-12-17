@@ -12,7 +12,6 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Niveau\NiveauService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -21,6 +20,7 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Metier\Entity\Db\Domaine;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractController;
 
@@ -31,7 +31,7 @@ class FicheMetierService {
     use CompetenceElementServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     use EntityFormManagmentTrait;
 
@@ -43,7 +43,12 @@ class FicheMetierService {
      */
     public function create(FicheMetier $fiche) : FicheMetier
     {
-        $this->createFromTrait($fiche);
+        try {
+            $this->getEntityManager()->persist($fiche);
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -53,7 +58,11 @@ class FicheMetierService {
      */
     public function update(FicheMetier $fiche) : FicheMetier
     {
-        $this->updateFromTrait($fiche);
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -63,7 +72,12 @@ class FicheMetierService {
      */
     public function historise(FicheMetier $fiche) : FicheMetier
     {
-        $this->historiserFromTrait($fiche);
+        try {
+            $fiche->historiser();
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -73,7 +87,12 @@ class FicheMetierService {
      */
     public function restore(FicheMetier $fiche) : FicheMetier
     {
-        $this->restoreFromTrait($fiche);
+        try {
+            $fiche->dehistoriser();
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -83,7 +102,12 @@ class FicheMetierService {
      */
     public function delete(FicheMetier $fiche) : FicheMetier
     {
-        $this->deleteFromTrait($fiche);
+        try {
+            $this->getEntityManager()->remove($fiche);
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 

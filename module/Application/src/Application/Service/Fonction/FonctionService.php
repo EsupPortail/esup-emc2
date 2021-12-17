@@ -5,7 +5,6 @@ namespace Application\Service\Fonction;
 use Application\Entity\Db\Fonction;
 use Application\Entity\Db\FonctionActivite;
 use Application\Entity\Db\FonctionDestination;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -14,7 +13,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FonctionService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Destinations **************************************************************************************************/
 
@@ -22,9 +21,14 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function createDestination(FonctionDestination $destination)
+    public function createDestination(FonctionDestination $destination) : FonctionDestination
     {
-        $this->createFromTrait($destination);
+        try {
+            $this->getEntityManager()->persist($destination);
+            $this->getEntityManager()->flush($destination);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $destination;
     }
 
@@ -32,9 +36,13 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function updateDestination(FonctionDestination $destination)
+    public function updateDestination(FonctionDestination $destination) : FonctionDestination
     {
-        $this->updateFromTrait($destination);
+        try {
+            $this->getEntityManager()->flush($destination);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $destination;
     }
 
@@ -42,9 +50,14 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function historiseDestination(FonctionDestination $destination)
+    public function historiseDestination(FonctionDestination $destination) : FonctionDestination
     {
-        $this->historiserFromTrait($destination);
+        try {
+            $destination->historiser();
+            $this->getEntityManager()->flush($destination);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $destination;
     }
 
@@ -52,9 +65,14 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function restoreDestination(FonctionDestination $destination)
+    public function restoreDestination(FonctionDestination $destination) : FonctionDestination
     {
-        $this->restoreFromTrait($destination);
+        try {
+            $destination->dehistoriser();
+            $this->getEntityManager()->flush($destination);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $destination;
     }
 
@@ -62,9 +80,14 @@ class FonctionService {
      * @param FonctionDestination $destination
      * @return FonctionDestination
      */
-    public function deleteDestination(FonctionDestination $destination)
+    public function deleteDestination(FonctionDestination $destination) : FonctionDestination
     {
-        $this->deleteFromTrait($destination);
+        try {
+            $this->getEntityManager()->remove($destination);
+            $this->getEntityManager()->flush($destination);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $destination;
     }
 
@@ -143,9 +166,14 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function createActivite(FonctionActivite $activite)
+    public function createActivite(FonctionActivite $activite) : FonctionActivite
     {
-        $this->createFromTrait($activite);
+        try {
+            $this->getEntityManager()->persist($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -153,9 +181,13 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function updateActivite(FonctionActivite $activite)
+    public function updateActivite(FonctionActivite $activite) : FonctionActivite
     {
-        $this->updateFromTrait($activite);
+        try {
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -163,9 +195,14 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function historiseActivite(FonctionActivite $activite)
+    public function historiseActivite(FonctionActivite $activite) : FonctionActivite
     {
-        $this->historiserFromTrait($activite);
+        try {
+            $activite->historiser();
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -173,9 +210,14 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function restoreActivite(FonctionActivite $activite)
+    public function restoreActivite(FonctionActivite $activite) : FonctionActivite
     {
-        $this->restoreFromTrait($activite);
+        try {
+            $activite->dehistoriser();
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 
@@ -183,9 +225,14 @@ class FonctionService {
      * @param FonctionActivite $activite
      * @return FonctionActivite
      */
-    public function deleteActivite(FonctionActivite $activite)
+    public function deleteActivite(FonctionActivite $activite) : FonctionActivite
     {
-        $this->deleteFromTrait($activite);
+        try {
+            $this->getEntityManager()->remove($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $activite;
     }
 

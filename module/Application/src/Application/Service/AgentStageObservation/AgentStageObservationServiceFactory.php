@@ -4,7 +4,6 @@ namespace Application\Service\AgentStageObservation;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class AgentStageObservationServiceFactory {
 
@@ -16,14 +15,11 @@ class AgentStageObservationServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
         $service = new AgentStageObservationService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
         return $service;
     }
 }

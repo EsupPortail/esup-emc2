@@ -5,14 +5,15 @@ namespace Application\Service\StructureAgentForce;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureAgentForce;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class StructureAgentForceService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -22,7 +23,12 @@ class StructureAgentForceService {
      */
     public function create(StructureAgentForce $structureAgentForce) : StructureAgentForce
     {
-        $this->createFromTrait($structureAgentForce);
+        try {
+            $this->getEntityManager()->persist($structureAgentForce);
+            $this->getEntityManager()->flush($structureAgentForce);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $structureAgentForce;
     }
 
@@ -32,7 +38,11 @@ class StructureAgentForceService {
      */
     public function upgrade(StructureAgentForce $structureAgentForce) : StructureAgentForce
     {
-        $this->updateFromTrait($structureAgentForce);
+        try {
+            $this->getEntityManager()->flush($structureAgentForce);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $structureAgentForce;
     }
 
@@ -42,7 +52,12 @@ class StructureAgentForceService {
      */
     public function historise(StructureAgentForce $structureAgentForce) : StructureAgentForce
     {
-        $this->historiserFromTrait($structureAgentForce);
+        try {
+            $structureAgentForce->historiser();
+            $this->getEntityManager()->flush($structureAgentForce);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $structureAgentForce;
     }
 
@@ -52,7 +67,12 @@ class StructureAgentForceService {
      */
     public function restore(StructureAgentForce $structureAgentForce) : StructureAgentForce
     {
-        $this->restoreFromTrait($structureAgentForce);
+        try {
+            $structureAgentForce->dehistoriser();
+            $this->getEntityManager()->flush($structureAgentForce);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $structureAgentForce;
     }
 
@@ -62,7 +82,12 @@ class StructureAgentForceService {
      */
     public function delete(StructureAgentForce $structureAgentForce) : StructureAgentForce
     {
-        $this->deleteFromTrait($structureAgentForce);
+        try {
+            $this->getEntityManager()->remove($structureAgentForce);
+            $this->getEntityManager()->flush($structureAgentForce);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $structureAgentForce;
     }
 

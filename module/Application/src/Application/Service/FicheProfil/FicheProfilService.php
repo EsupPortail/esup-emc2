@@ -4,15 +4,16 @@ namespace Application\Service\FicheProfil;
 
 use Application\Entity\Db\FicheProfil;
 use Application\Entity\Db\Structure;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FicheProfilService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -21,9 +22,14 @@ class FicheProfilService {
      * @param FicheProfil $ficheprofil
      * @return FicheProfil
      */
-    public function create(FicheProfil $ficheprofil)
+    public function create(FicheProfil $ficheprofil) : FicheProfil
     {
-        $this->createFromTrait($ficheprofil);
+        try {
+            $this->getEntityManager()->persist($ficheprofil);
+            $this->getEntityManager()->flush($ficheprofil);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ficheprofil;
     }
 
@@ -31,9 +37,13 @@ class FicheProfilService {
      * @param FicheProfil $ficheprofil
      * @return FicheProfil
      */
-    public function update(FicheProfil $ficheprofil)
+    public function update(FicheProfil $ficheprofil) : FicheProfil
     {
-        $this->updateFromTrait($ficheprofil);
+        try {
+            $this->getEntityManager()->flush($ficheprofil);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ficheprofil;
     }
 
@@ -41,9 +51,14 @@ class FicheProfilService {
      * @param FicheProfil $ficheprofil
      * @return FicheProfil
      */
-    public function historise(FicheProfil $ficheprofil)
+    public function historise(FicheProfil $ficheprofil) : FicheProfil
     {
-        $this->historiserFromTrait($ficheprofil);
+        try {
+            $ficheprofil->historiser();
+            $this->getEntityManager()->flush($ficheprofil);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ficheprofil;
     }
 
@@ -51,9 +66,14 @@ class FicheProfilService {
      * @param FicheProfil $ficheprofil
      * @return FicheProfil
      */
-    public function restore(FicheProfil $ficheprofil)
+    public function restore(FicheProfil $ficheprofil) : FicheProfil
     {
-        $this->restoreFromTrait($ficheprofil);
+        try {
+            $ficheprofil->dehistoriser();
+            $this->getEntityManager()->flush($ficheprofil);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ficheprofil;
     }
 
@@ -61,9 +81,14 @@ class FicheProfilService {
      * @param FicheProfil $ficheprofil
      * @return FicheProfil
      */
-    public function delete(FicheProfil $ficheprofil)
+    public function delete(FicheProfil $ficheprofil) : FicheProfil
     {
-        $this->deleteFromTrait($ficheprofil);
+        try {
+            $this->getEntityManager()->remove($ficheprofil);
+            $this->getEntityManager()->flush($ficheprofil);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ficheprofil;
     }
 
@@ -86,7 +111,7 @@ class FicheProfilService {
      * @param string $ordre
      * @return FicheProfil[]
      */
-    public function getFichesProfils($champ = 'id', $ordre='ASC') : array
+    public function getFichesProfils(string $champ = 'id', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('profil.' . $champ, $ordre)
@@ -119,7 +144,7 @@ class FicheProfilService {
      * @param string $param
      * @return FicheProfil|null
      */
-    public function getRequestedFicheProfil(AbstractActionController $controller, $param = 'fiche-profil') : ?FicheProfil
+    public function getRequestedFicheProfil(AbstractActionController $controller, string $param = 'fiche-profil') : ?FicheProfil
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFicheProfil($id);

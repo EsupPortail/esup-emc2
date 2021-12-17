@@ -4,14 +4,15 @@ namespace Application\Service\AgentTutorat;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentTutorat;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentTutoratService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Gestion des entites ***************************************************************************************/
 
@@ -21,7 +22,12 @@ class AgentTutoratService {
      */
     public function create(AgentTutorat $tutorat) : AgentTutorat
     {
-        $this->createFromTrait($tutorat);
+        try {
+            $this->getEntityManager()->persist($tutorat);
+            $this->getEntityManager()->flush($tutorat);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $tutorat;
     }
 
@@ -31,17 +37,11 @@ class AgentTutoratService {
      */
     public function update(AgentTutorat $tutorat) : AgentTutorat
     {
-        $this->updateFromTrait($tutorat);
-        return $tutorat;
-    }
-
-    /**
-     * @param AgentTutorat $tutorat
-     * @return AgentTutorat
-     */
-    public function restore(AgentTutorat $tutorat)  :AgentTutorat
-    {
-        $this->restoreFromTrait($tutorat);
+        try {
+            $this->getEntityManager()->flush($tutorat);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $tutorat;
     }
 
@@ -51,7 +51,27 @@ class AgentTutoratService {
      */
     public function historise(AgentTutorat $tutorat) : AgentTutorat
     {
-        $this->historiserFromTrait($tutorat);
+        try {
+            $tutorat->historiser();
+            $this->getEntityManager()->flush($tutorat);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
+        return $tutorat;
+    }
+
+    /**
+     * @param AgentTutorat $tutorat
+     * @return AgentTutorat
+     */
+    public function restore(AgentTutorat $tutorat)  :AgentTutorat
+    {
+        try {
+            $tutorat->dehistoriser();
+            $this->getEntityManager()->flush($tutorat);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $tutorat;
     }
 
@@ -61,7 +81,12 @@ class AgentTutoratService {
      */
     public function delete(AgentTutorat $tutorat) : AgentTutorat
     {
-        $this->deleteFromTrait($tutorat);
+        try {
+            $this->getEntityManager()->remove($tutorat);
+            $this->getEntityManager()->flush($tutorat);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $tutorat;
     }
 

@@ -3,15 +3,16 @@
 namespace Application\Service\Application;
 
 use Application\Entity\Db\ApplicationGroupe;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ApplicationGroupeService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use RendererAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -20,9 +21,14 @@ class ApplicationGroupeService {
      * @param ApplicationGroupe $groupe
      * @return ApplicationGroupe
      */
-    public function create(ApplicationGroupe $groupe)
+    public function create(ApplicationGroupe $groupe) : ApplicationGroupe
     {
-        $this->createFromTrait($groupe);
+        try {
+            $this->getEntityManager()->persist($groupe);
+            $this->getEntityManager()->flush($groupe);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $groupe;
     }
 
@@ -30,9 +36,13 @@ class ApplicationGroupeService {
      * @param ApplicationGroupe $groupe
      * @return ApplicationGroupe
      */
-    public function update(ApplicationGroupe $groupe)
+    public function update(ApplicationGroupe $groupe) : ApplicationGroupe
     {
-        $this->updateFromTrait($groupe);
+        try {
+            $this->getEntityManager()->flush($groupe);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $groupe;
     }
 
@@ -40,9 +50,14 @@ class ApplicationGroupeService {
      * @param ApplicationGroupe $groupe
      * @return ApplicationGroupe
      */
-    public function historise(ApplicationGroupe $groupe)
+    public function historise(ApplicationGroupe $groupe) : ApplicationGroupe
     {
-        $this->historiserFromTrait($groupe);
+        try {
+            $groupe->historiser();
+            $this->getEntityManager()->flush($groupe);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $groupe;
     }
 
@@ -50,9 +65,14 @@ class ApplicationGroupeService {
      * @param ApplicationGroupe $groupe
      * @return ApplicationGroupe
      */
-    public function restore(ApplicationGroupe $groupe)
+    public function restore(ApplicationGroupe $groupe) : ApplicationGroupe
     {
-        $this->restoreFromTrait($groupe);
+        try {
+            $groupe->dehistoriser();
+            $this->getEntityManager()->flush($groupe);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $groupe;
     }
 
@@ -60,9 +80,14 @@ class ApplicationGroupeService {
      * @param ApplicationGroupe $groupe
      * @return ApplicationGroupe
      */
-    public function delete(ApplicationGroupe $groupe)
+    public function delete(ApplicationGroupe $groupe) : ApplicationGroupe
     {
-        $this->deleteFromTrait($groupe);
+        try {
+            $this->getEntityManager()->remove($groupe);
+            $this->getEntityManager()->flush($groupe);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $groupe;
     }
 

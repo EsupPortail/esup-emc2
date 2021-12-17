@@ -4,15 +4,15 @@ namespace Application\Service\CompetenceElement;
 
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceElement;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use phpDocumentor\Reflection\Types\Array_;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceElementService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     
     /** Gestion des entites ***************************************************************************************/
 
@@ -20,9 +20,14 @@ class CompetenceElementService {
      * @param CompetenceElement $element
      * @return CompetenceElement
      */
-    public function create(CompetenceElement $element)
+    public function create(CompetenceElement $element) : CompetenceElement
     {
-        $this->createFromTrait($element);
+        try {
+            $this->getEntityManager()->persist($element);
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -30,9 +35,13 @@ class CompetenceElementService {
      * @param CompetenceElement $element
      * @return CompetenceElement
      */
-    public function update(CompetenceElement $element)
+    public function update(CompetenceElement $element) : CompetenceElement
     {
-        $this->updateFromTrait($element);
+        try {
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -40,9 +49,14 @@ class CompetenceElementService {
      * @param CompetenceElement $element
      * @return CompetenceElement
      */
-    public function restore(CompetenceElement $element)
+    public function historise(CompetenceElement $element) : CompetenceElement
     {
-        $this->restoreFromTrait($element);
+        try {
+            $element->historiser();
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -50,9 +64,14 @@ class CompetenceElementService {
      * @param CompetenceElement $element
      * @return CompetenceElement
      */
-    public function historise(CompetenceElement $element)
+    public function restore(CompetenceElement $element) : CompetenceElement
     {
-        $this->historiserFromTrait($element);
+        try {
+            $element->dehistoriser();
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -60,9 +79,14 @@ class CompetenceElementService {
      * @param CompetenceElement $element
      * @return CompetenceElement
      */
-    public function delete(CompetenceElement $element)
+    public function delete(CompetenceElement $element) : CompetenceElement
     {
-        $this->deleteFromTrait($element);
+        try {
+            $this->getEntityManager()->remove($element);
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -101,9 +125,9 @@ class CompetenceElementService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return CompetenceElement
+     * @return CompetenceElement|null
      */
-    public function getRequestedCompetenceElement(AbstractActionController $controller, string $param = "competence-element")
+    public function getRequestedCompetenceElement(AbstractActionController $controller, string $param = "competence-element") : ?CompetenceElement
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getCompetenceElement($id);

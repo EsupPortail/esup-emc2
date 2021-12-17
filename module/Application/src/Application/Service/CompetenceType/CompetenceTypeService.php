@@ -3,14 +3,15 @@
 namespace Application\Service\CompetenceType;
 
 use Application\Entity\Db\CompetenceType;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceTypeService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
@@ -18,9 +19,14 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function create(CompetenceType $type)
+    public function create(CompetenceType $type) : CompetenceType
     {
-        $this->createFromTrait($type);
+        try {
+            $this->getEntityManager()->persist($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -28,9 +34,13 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function update(CompetenceType $type)
+    public function update(CompetenceType $type) : CompetenceType
     {
-        $this->updateFromTrait($type);
+        try {
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -38,9 +48,14 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function historise(CompetenceType $type)
+    public function historise(CompetenceType $type) : CompetenceType
     {
-        $this->historiserFromTrait($type);
+        try {
+            $type->historiser();
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -48,9 +63,14 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function restore(CompetenceType $type)
+    public function restore(CompetenceType $type) : CompetenceType
     {
-        $this->restoreFromTrait($type);
+        try {
+            $type->dehistoriser();
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 
@@ -58,9 +78,14 @@ class CompetenceTypeService
      * @param CompetenceType $type
      * @return CompetenceType
      */
-    public function delete(CompetenceType $type)
+    public function delete(CompetenceType $type) : CompetenceType
     {
-        $this->deleteFromTrait($type);
+        try {
+            $this->getEntityManager()->remove($type);
+            $this->getEntityManager()->flush($type);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $type;
     }
 

@@ -4,13 +4,14 @@ namespace Application\Service\MaitriseNiveau;
 
 use Application\Entity\Db\MaitriseNiveau;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use Application\Service\GestionEntiteHistorisationTrait;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MaitriseNiveauService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class MaitriseNiveauService {
      */
     public function create(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
-        $this->createFromTrait($maitrise);
+        try {
+            $this->getEntityManager()->persist($maitrise);
+            $this->getEntityManager()->flush($maitrise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $maitrise;
     }
 
@@ -30,7 +36,11 @@ class MaitriseNiveauService {
      */
     public function update(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
-        $this->updateFromTrait($maitrise);
+        try {
+            $this->getEntityManager()->flush($maitrise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $maitrise;
     }
 
@@ -40,7 +50,12 @@ class MaitriseNiveauService {
      */
     public function historise(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
-        $this->historiserFromTrait($maitrise);
+        try {
+            $maitrise->historiser();
+            $this->getEntityManager()->flush($maitrise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $maitrise;
     }
 
@@ -50,7 +65,12 @@ class MaitriseNiveauService {
      */
     public function restore(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
-        $this->restoreFromTrait($maitrise);
+        try {
+            $maitrise->dehistoriser();
+            $this->getEntityManager()->flush($maitrise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $maitrise;
     }
 
@@ -60,7 +80,12 @@ class MaitriseNiveauService {
      */
     public function delete(MaitriseNiveau $maitrise) : MaitriseNiveau
     {
-        $this->deleteFromTrait($maitrise);
+        try {
+            $this->getEntityManager()->remove($maitrise);
+            $this->getEntityManager()->flush($maitrise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $maitrise;
     }
 

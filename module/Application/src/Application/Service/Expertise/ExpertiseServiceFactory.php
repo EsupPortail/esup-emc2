@@ -4,7 +4,6 @@ namespace Application\Service\Expertise;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class ExpertiseServiceFactory {
 
@@ -12,19 +11,16 @@ class ExpertiseServiceFactory {
      * @param ContainerInterface $container
      * @return ExpertiseService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ExpertiseService
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
         /** @var ExpertiseService $service */
         $service = new ExpertiseService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
         return $service;
     }
 }

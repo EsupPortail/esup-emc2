@@ -5,30 +5,30 @@ namespace Application\Service\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Entity\Db\MissionSpecifiqueType;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class MissionSpecifiqueService {
-//    use DateTimeAwareTrait;
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** MISSION SPECIFIQUE ********************************************************************************************/
 
-    /** ENTITY MANAGEMENT **/
-
     /**
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function create(MissionSpecifique $mission)
+    public function create(MissionSpecifique $mission) : MissionSpecifique
     {
-        $this->createFromTrait($mission);
+        try {
+            $this->getEntityManager()->persist($mission);
+            $this->getEntityManager()->flush($mission);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $mission;
     }
 
@@ -36,9 +36,13 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function update(MissionSpecifique $mission)
+    public function update(MissionSpecifique $mission) : MissionSpecifique
     {
-        $this->updateFromTrait($mission);
+        try {
+            $this->getEntityManager()->flush($mission);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $mission;
     }
 
@@ -46,9 +50,14 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function historise(MissionSpecifique $mission)
+    public function historise(MissionSpecifique $mission) : MissionSpecifique
     {
-        $this->historiserFromTrait($mission);
+        try {
+            $mission->historiser();
+            $this->getEntityManager()->flush($mission);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $mission;
     }
 
@@ -56,9 +65,14 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function restore(MissionSpecifique $mission)
+    public function restore(MissionSpecifique $mission) : MissionSpecifique
     {
-        $this->restoreFromTrait($mission);
+        try {
+            $mission->dehistoriser();
+            $this->getEntityManager()->flush($mission);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $mission;
     }
 
@@ -66,9 +80,14 @@ class MissionSpecifiqueService {
      * @param MissionSpecifique $mission
      * @return MissionSpecifique
      */
-    public function delete(MissionSpecifique $mission)
+    public function delete(MissionSpecifique $mission) : MissionSpecifique
     {
-        $this->deleteFromTrait($mission);
+        try {
+            $this->getEntityManager()->remove($mission);
+            $this->getEntityManager()->flush($mission);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $mission;
     }
 

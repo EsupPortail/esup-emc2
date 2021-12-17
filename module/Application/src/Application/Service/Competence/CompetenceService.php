@@ -4,15 +4,15 @@ namespace Application\Service\Competence;
 
 use Application\Entity\Db\Competence;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use CompetenceThemeServiceAwareTrait;
 
     /** COMPETENCES : ENTITY ******************************************************************************************/
@@ -21,9 +21,14 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function create(Competence $competence)
+    public function create(Competence $competence) : Competence
     {
-        $this->createFromTrait($competence);
+        try {
+            $this->getEntityManager()->persist($competence);
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competence;
     }
 
@@ -31,9 +36,13 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function update(Competence $competence)
+    public function update(Competence $competence) : Competence
     {
-       $this->updateFromTrait($competence);
+        try {
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competence;
     }
 
@@ -41,9 +50,14 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function historise(Competence $competence)
+    public function historise(Competence $competence) : Competence
     {
-        $this->updateFromTrait($competence);
+        try {
+            $competence->historiser();
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competence;
     }
 
@@ -51,9 +65,14 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function restore(Competence $competence)
+    public function restore(Competence $competence) : Competence
     {
-       $this->restoreFromTrait($competence);
+        try {
+            $competence->dehistoriser();
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competence;
     }
 
@@ -61,9 +80,14 @@ class CompetenceService {
      * @param Competence $competence
      * @return Competence
      */
-    public function delete(Competence $competence)
+    public function delete(Competence $competence) : Competence
     {
-        $this->deleteFromTrait($competence);
+        try {
+            $this->getEntityManager()->remove($competence);
+            $this->getEntityManager()->flush($competence);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $competence;
     }
 
@@ -72,7 +96,7 @@ class CompetenceService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
             ->addSelect('type')->leftJoin('competence.type', 'type')
@@ -86,7 +110,7 @@ class CompetenceService {
      * @param string $order
      * @return Competence[]
      */
-    public function getCompetences($champ = 'libelle', $order = 'ASC')
+    public function getCompetences(string $champ = 'libelle', string $order = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('competence.'.$champ, $order)
@@ -98,7 +122,7 @@ class CompetenceService {
     /**
      * @return array
      */
-    public function getCompetencesByTypes()
+    public function getCompetencesByTypes() : array
     {
         $competences = $this->getCompetences();
 
@@ -111,10 +135,10 @@ class CompetenceService {
     }
 
     /**
-     * @param integer $id
-     * @return Competence
+     * @param int|null $id
+     * @return Competence|null
      */
-    public function getCompetence(int $id)
+    public function getCompetence(?int $id) : ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.id = :id')
@@ -131,9 +155,9 @@ class CompetenceService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return Competence
+     * @return Competence|null
      */
-    public function getRequestedCompetence(AbstractActionController $controller, $paramName = 'competence')
+    public function getRequestedCompetence(AbstractActionController $controller, string $paramName = 'competence') : ?Competence
     {
         $id = $controller->params()->fromRoute($paramName);
         $competence = $this->getCompetence($id);
@@ -143,7 +167,7 @@ class CompetenceService {
     /**
      * @return array
      */
-    public function getCompetencesAsGroupOptions()
+    public function getCompetencesAsGroupOptions() : array
     {
         $competences = $this->getCompetences();
         $dictionnaire = [];
@@ -175,7 +199,8 @@ class CompetenceService {
      * @param int $max_length
      * @return array
      */
-    private function competenceOptionify(Competence $competence, $max_length=60) {
+    private function competenceOptionify(Competence $competence, int $max_length=60) : array
+    {
         $texte = (strlen($competence->getLibelle())>$max_length)?substr($competence->getLibelle(),0,$max_length)." ...":$competence->getLibelle();
         $this_option = [
             'value' =>  $competence->getId(),

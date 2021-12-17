@@ -3,13 +3,15 @@
 namespace Application\Service\ActiviteDescription;
 
 use Application\Entity\Db\ActiviteDescription;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ActiviteDescriptionService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -17,9 +19,14 @@ class ActiviteDescriptionService {
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function create(ActiviteDescription  $description)
+    public function create(ActiviteDescription $description) : ActiviteDescription
     {
-        $this->createFromTrait($description);
+        try {
+            $this->getEntityManager()->persist($description);
+            $this->getEntityManager()->flush($description);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $description;
     }
 
@@ -27,9 +34,13 @@ class ActiviteDescriptionService {
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function update(ActiviteDescription $description)
+    public function update(ActiviteDescription $description) : ActiviteDescription
     {
-        $this->updateFromTrait($description);
+        try {
+            $this->getEntityManager()->flush($description);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $description;
     }
 
@@ -37,9 +48,14 @@ class ActiviteDescriptionService {
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function historise(ActiviteDescription $description)
+    public function historise(ActiviteDescription $description) : ActiviteDescription
     {
-        $this->historiserFromTrait($description);
+        try {
+            $description->historiser();
+            $this->getEntityManager()->flush($description);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $description;
     }
 
@@ -47,9 +63,14 @@ class ActiviteDescriptionService {
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function restore(ActiviteDescription $description)
+    public function restore(ActiviteDescription $description) : ActiviteDescription
     {
-        $this->restoreFromTrait($description);
+        try {
+            $description->dehistoriser();
+            $this->getEntityManager()->flush($description);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $description;
     }
 
@@ -57,15 +78,20 @@ class ActiviteDescriptionService {
      * @param ActiviteDescription $description
      * @return ActiviteDescription
      */
-    public function delete(ActiviteDescription $description)
+    public function delete(ActiviteDescription $description) : ActiviteDescription
     {
-        $this->deleteFromTrait($description);
+        try {
+            $this->getEntityManager()->remove($description);
+            $this->getEntityManager()->flush($description);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $description;
     }
 
     /** ACCESSEUR *****************************************************************************************************/
 
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(ActiviteDescription::class)->createQueryBuilder('description')
             ->addSelect('activite')->join('description.activite', 'activite')

@@ -11,7 +11,8 @@ class ApplicationServiceFactory {
      * @param ContainerInterface $container
      * @return ApplicationService
      */
-    public function __invoke(ContainerInterface $container) {
+    public function __invoke(ContainerInterface $container) : ApplicationService
+    {
         /**
          * @var EntityManager $entityManager
          */

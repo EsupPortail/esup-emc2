@@ -12,17 +12,17 @@ use Application\Entity\Db\FicheMetier;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Formation\Entity\Db\Formation;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ConfigurationService {
     use FicheMetierServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
@@ -36,7 +36,12 @@ class ConfigurationService {
      */
     public function create($configuration)
     {
-        $this->createFromTrait($configuration);
+        try {
+            $this->getEntityManager()->persist($configuration);
+            $this->getEntityManager()->flush($configuration);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $configuration;
     }
 
@@ -46,7 +51,11 @@ class ConfigurationService {
      */
     public function update($configuration)
     {
-        $this->updateFromTrait($configuration);
+        try {
+            $this->getEntityManager()->flush($configuration);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $configuration;
     }
 
@@ -56,7 +65,12 @@ class ConfigurationService {
      */
     public function delete($configuration)
     {
-        $this->deleteFromTrait($configuration);
+        try {
+            $this->getEntityManager()->remove($configuration);
+            $this->getEntityManager()->flush($configuration);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $configuration;
     }
 

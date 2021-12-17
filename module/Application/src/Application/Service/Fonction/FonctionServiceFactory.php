@@ -4,24 +4,19 @@ namespace Application\Service\Fonction;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class FonctionServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FonctionService
     {
         /**
          * @var EntityManager $entityManager
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $userService = $container->get(UserService::class);
 
         /** @var FonctionService $service */
         $service = new FonctionService();
         $service->setEntityManager($entityManager);
-        $service->setUserService($userService);
         return $service;
-
     }
 }

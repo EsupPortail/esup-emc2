@@ -11,7 +11,6 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -21,11 +20,12 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
     use AgentServiceAwareTrait;
 
@@ -37,7 +37,12 @@ class FichePosteService {
      */
     public function create(FichePoste $fiche) : FichePoste
     {
-        $this->createFromTrait($fiche);
+        try {
+            $this->getEntityManager()->persist($fiche);
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -47,7 +52,11 @@ class FichePosteService {
      */
     public function update(FichePoste $fiche) : FichePoste
     {
-        $this->updateFromTrait($fiche);
+        try {
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -57,7 +66,12 @@ class FichePosteService {
      */
     public function historise(FichePoste $fiche) : FichePoste
     {
-        $this->historiserFromTrait($fiche);
+        try {
+            $fiche->historiser();
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -67,7 +81,12 @@ class FichePosteService {
      */
     public function restore(FichePoste $fiche) : FichePoste
     {
-        $this->restoreFromTrait($fiche);
+        try {
+            $fiche->dehistoriser();
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -77,7 +96,12 @@ class FichePosteService {
      */
     public function delete(FichePoste $fiche) : FichePoste
     {
-        $this->deleteFromTrait($fiche);
+        try {
+            $this->getEntityManager()->remove($fiche);
+            $this->getEntityManager()->flush($fiche);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $fiche;
     }
 
@@ -86,7 +110,7 @@ class FichePosteService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,7 +147,7 @@ class FichePosteService {
     /**
      * @return FichePoste[]
      */
-    public function getFichesPostes()
+    public function getFichesPostes() : array
     {
         $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
@@ -137,10 +161,10 @@ class FichePosteService {
     }
 
     /**
-     * @param integer $id
+     * @param int|null $id
      * @return FichePoste
      */
-    public function getFichePoste(int $id)
+    public function getFichePoste(?int $id) : ?FichePoste
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('fiche.id = :id')
@@ -161,7 +185,7 @@ class FichePosteService {
      * @param bool $notNull
      * @return FichePoste
      */
-    public function getRequestedFichePoste(AbstractActionController $controller, string $paramName = 'fiche-poste', bool $notNull = false)
+    public function getRequestedFichePoste(AbstractActionController $controller, string $paramName = 'fiche-poste', bool $notNull = false) : ?FichePoste
     {
         $id = $controller->params()->fromRoute($paramName);
         $fiche = $this->getFichePoste($id);

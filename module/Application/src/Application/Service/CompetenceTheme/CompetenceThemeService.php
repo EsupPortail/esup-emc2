@@ -3,13 +3,14 @@
 namespace Application\Service\CompetenceTheme;
 
 use Application\Entity\Db\CompetenceTheme;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CompetenceThemeService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** ENTITY MANAGMENT **********************************************************************************************/
 
@@ -17,9 +18,14 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function create(CompetenceTheme $theme)
+    public function create(CompetenceTheme $theme) : CompetenceTheme
     {
-        $this->createFromTrait($theme);
+        try {
+            $this->getEntityManager()->persist($theme);
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $theme;
     }
 
@@ -27,9 +33,13 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function update(CompetenceTheme $theme)
+    public function update(CompetenceTheme $theme) : CompetenceTheme
     {
-        $this->updateFromTrait($theme);
+        try {
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $theme;
     }
 
@@ -37,9 +47,14 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function historise(CompetenceTheme $theme)
+    public function historise(CompetenceTheme $theme) : CompetenceTheme
     {
-        $this->historiserFromTrait($theme);
+        try {
+            $theme->historiser();
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $theme;
     }
 
@@ -47,9 +62,14 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function restore(CompetenceTheme $theme)
+    public function restore(CompetenceTheme $theme) : CompetenceTheme
     {
-        $this->restoreFromTrait($theme);
+        try {
+            $theme->dehistoriser();
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $theme;
     }
 
@@ -57,9 +77,14 @@ class CompetenceThemeService {
      * @param CompetenceTheme $theme
      * @return CompetenceTheme
      */
-    public function delete(CompetenceTheme $theme)
+    public function delete(CompetenceTheme $theme) : CompetenceTheme
     {
-        $this->deleteFromTrait($theme);
+        try {
+            $this->getEntityManager()->remove($theme);
+            $this->getEntityManager()->flush($theme);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $theme;
     }
 
@@ -70,7 +95,7 @@ class CompetenceThemeService {
      * @param string $order
      * @return CompetenceTheme[]
      */
-    public function getCompetencesThemes($champ = 'libelle', $order = 'ASC')
+    public function getCompetencesThemes(string $champ = 'libelle', string $order = 'ASC') : array
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
             ->addSelect('competence')->leftJoin('theme.competences', 'competence')
@@ -85,7 +110,7 @@ class CompetenceThemeService {
      * @param string $order
      * @return array
      */
-    public function getCompetencesThemesAsOptions($champ = 'libelle', $order = 'ASC')
+    public function getCompetencesThemesAsOptions(string $champ = 'libelle', string $order = 'ASC') : array
     {
         $types = $this->getCompetencesThemes($champ, $order);
         $options = [];
@@ -96,10 +121,10 @@ class CompetenceThemeService {
     }
 
     /**
-     * @param integer $id
-     * @return CompetenceTheme
+     * @param int|null $id
+     * @return CompetenceTheme|null
      */
-    public function getCompetenceTheme(int $id)
+    public function getCompetenceTheme(?int $id) : ?CompetenceTheme
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
             ->andWhere('theme.id = :id')
@@ -116,9 +141,9 @@ class CompetenceThemeService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return CompetenceTheme
+     * @return CompetenceTheme|null
      */
-    public function getRequestedCompetenceTheme(AbstractActionController $controller, $paramName = 'competence-theme')
+    public function getRequestedCompetenceTheme(AbstractActionController $controller, string  $paramName = 'competence-theme') : ?CompetenceTheme
     {
         $id = $controller->params()->fromRoute($paramName);
         $theme = $this->getCompetenceTheme($id);

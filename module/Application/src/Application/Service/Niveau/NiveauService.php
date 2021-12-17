@@ -3,14 +3,15 @@
 namespace Application\Service\Niveau;
 
 use Application\Entity\Db\Niveau;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class NiveauService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -20,7 +21,12 @@ class NiveauService {
      */
     public function create(Niveau $niveau) : Niveau
     {
-        $this->createFromTrait($niveau);
+        try {
+            $this->getEntityManager()->persist($niveau);
+            $this->getEntityManager()->flush($niveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $niveau;
     }
 
@@ -30,7 +36,11 @@ class NiveauService {
      */
     public function update(Niveau $niveau) : Niveau
     {
-        $this->updateFromTrait($niveau);
+        try {
+            $this->getEntityManager()->flush($niveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $niveau;
     }
 
@@ -40,7 +50,12 @@ class NiveauService {
      */
     public function historise(Niveau $niveau) : Niveau
     {
-        $this->historiserFromTrait($niveau);
+        try {
+            $niveau->historiser();
+            $this->getEntityManager()->flush($niveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $niveau;
     }
 
@@ -50,7 +65,12 @@ class NiveauService {
      */
     public function restore(Niveau $niveau) : Niveau
     {
-        $this->restoreFromTrait($niveau);
+        try {
+            $niveau->dehistoriser();
+            $this->getEntityManager()->flush($niveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $niveau;
     }
 
@@ -60,7 +80,12 @@ class NiveauService {
      */
     public function delete(Niveau $niveau) : Niveau
     {
-        $this->deleteFromTrait($niveau);
+        try {
+            $this->getEntityManager()->remove($niveau);
+            $this->getEntityManager()->flush($niveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $niveau;
     }
 

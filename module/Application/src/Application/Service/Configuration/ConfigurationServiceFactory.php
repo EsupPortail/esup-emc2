@@ -3,14 +3,12 @@
 namespace Application\Service\Configuration;
 
 use Application\Service\ApplicationElement\ApplicationElementService;
-use Application\Service\Competence\CompetenceService;
 use Application\Service\CompetenceElement\CompetenceElementService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use UnicaenUtilisateur\Service\User\UserService;
 
 ;
 
@@ -29,7 +27,6 @@ class ConfigurationServiceFactory {
          * @var CompetenceElementService $competenceElementService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var FicheMetierService $ficheMetierService
-         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -37,7 +34,6 @@ class ConfigurationServiceFactory {
         $competenceElementService = $container->get(CompetenceElementService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $userService = $container->get(UserService::class);
 
         /** @var ConfigurationService $service */
         $service = new ConfigurationService();
@@ -47,7 +43,6 @@ class ConfigurationServiceFactory {
         $service->setCompetenceElementService($competenceElementService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
         $service->setFicheMetierService($ficheMetierService);
-        $service->setUserService($userService);
         return $service;
     }
 }

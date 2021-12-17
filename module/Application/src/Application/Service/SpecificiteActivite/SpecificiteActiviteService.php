@@ -4,14 +4,15 @@ namespace Application\Service\SpecificiteActivite;
 
 use Application\Entity\Db\SpecificiteActivite;
 use Application\Entity\Db\SpecificitePoste;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class SpecificiteActiviteService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,7 +22,12 @@ class SpecificiteActiviteService {
      */
     public function create(SpecificiteActivite $specificiteActivite) : SpecificiteActivite
     {
-        $this->createFromTrait($specificiteActivite);
+        try {
+            $this->getEntityManager()->persist($specificiteActivite);
+            $this->getEntityManager()->flush($specificiteActivite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $specificiteActivite;
     }
 
@@ -31,7 +37,11 @@ class SpecificiteActiviteService {
      */
     public function update(SpecificiteActivite $specificiteActivite) : SpecificiteActivite
     {
-        $this->updateFromTrait($specificiteActivite);
+        try {
+            $this->getEntityManager()->flush($specificiteActivite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $specificiteActivite;
     }
 
@@ -41,7 +51,12 @@ class SpecificiteActiviteService {
      */
     public function historise(SpecificiteActivite $specificiteActivite) : SpecificiteActivite
     {
-        $this->historiserFromTrait($specificiteActivite);
+        try {
+            $specificiteActivite->historiser();
+            $this->getEntityManager()->flush($specificiteActivite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $specificiteActivite;
     }
 
@@ -51,7 +66,12 @@ class SpecificiteActiviteService {
      */
     public function restore(SpecificiteActivite $specificiteActivite) : SpecificiteActivite
     {
-        $this->restoreFromTrait($specificiteActivite);
+        try {
+            $specificiteActivite->dehistoriser();
+            $this->getEntityManager()->flush($specificiteActivite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $specificiteActivite;
     }
 
@@ -61,7 +81,12 @@ class SpecificiteActiviteService {
      */
     public function delete(SpecificiteActivite $specificiteActivite) : SpecificiteActivite
     {
-        $this->deleteFromTrait($specificiteActivite);
+        try {
+            $this->getEntityManager()->remove($specificiteActivite);
+            $this->getEntityManager()->flush($specificiteActivite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $specificiteActivite;
     }
 

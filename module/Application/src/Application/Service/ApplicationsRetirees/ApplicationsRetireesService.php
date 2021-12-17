@@ -5,16 +5,13 @@ namespace Application\Service\ApplicationsRetirees;
 use Application\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ApplicationsRetireesService {
     use EntityManagerAwareTrait;
-    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -22,16 +19,8 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function create(FicheposteApplicationRetiree $applicationConservee)
+    public function create(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
     {
-        $date = new DateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $applicationConservee->setHistoCreation($date);
-        $applicationConservee->setHistoModification($date);
-        $applicationConservee->setHistoCreateur($user);
-        $applicationConservee->setHistoModificateur($user);
-
         try {
             $this->getEntityManager()->persist($applicationConservee);
             $this->getEntityManager()->flush($applicationConservee);
@@ -46,14 +35,8 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function update(FicheposteApplicationRetiree $applicationConservee)
+    public function update(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
     {
-        $date = new DateTime();
-        $user = $this->getUserService()->getConnectedUser();
-
-        $applicationConservee->setHistoModification($date);
-        $applicationConservee->setHistoModificateur($user);
-
         try {
             $this->getEntityManager()->flush($applicationConservee);
         } catch (ORMException $e) {
@@ -67,7 +50,7 @@ class ApplicationsRetireesService {
      * @param FicheposteApplicationRetiree $applicationConservee
      * @return FicheposteApplicationRetiree
      */
-    public function delete(FicheposteApplicationRetiree $applicationConservee)
+    public function delete(FicheposteApplicationRetiree $applicationConservee) : FicheposteApplicationRetiree
     {
         try {
             $this->getEntityManager()->remove($applicationConservee);
@@ -86,7 +69,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function getApplicationRetiree(FichePoste $ficheposte, Application $application)
+    public function getApplicationRetiree(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteApplicationRetiree::class)->createQueryBuilder('retiree')
             ->andWhere('retiree.fichePoste = :ficheposte')
@@ -108,7 +91,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function add(FichePoste $ficheposte, Application $application)
+    public function add(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
     {
         $result = $this->getApplicationRetiree($ficheposte, $application);
 
@@ -126,7 +109,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function remove(FichePoste $ficheposte, Application $application)
+    public function remove(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
     {
         $result = $this->getApplicationRetiree($ficheposte, $application);
 

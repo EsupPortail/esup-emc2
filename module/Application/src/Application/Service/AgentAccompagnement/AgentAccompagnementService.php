@@ -4,15 +4,15 @@ namespace Application\Service\AgentAccompagnement;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAccompagnement;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentAccompagnementService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Gestion des entites ***************************************************************************************/
 

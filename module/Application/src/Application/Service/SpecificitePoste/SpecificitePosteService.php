@@ -19,7 +19,7 @@ class SpecificitePosteService {
      * @param SpecificitePoste $specificite
      * @return SpecificitePoste
      */
-    public function create(SpecificitePoste $specificite)
+    public function create(SpecificitePoste $specificite) : SpecificitePoste
     {
         try {
             $this->getEntityManager()->persist($specificite);
@@ -34,7 +34,7 @@ class SpecificitePosteService {
      * @param SpecificitePoste $specificite
      * @return SpecificitePoste
      */
-    public function update(SpecificitePoste $specificite)
+    public function update(SpecificitePoste $specificite) : SpecificitePoste
     {
         try {
             $this->getEntityManager()->flush($specificite);
@@ -47,7 +47,7 @@ class SpecificitePosteService {
     /**
      * @param SpecificitePoste $specificite
      */
-    public function delete(SpecificitePoste $specificite)
+    public function delete(SpecificitePoste $specificite) : SpecificitePoste
     {
         try {
             $this->getEntityManager()->remove($specificite);

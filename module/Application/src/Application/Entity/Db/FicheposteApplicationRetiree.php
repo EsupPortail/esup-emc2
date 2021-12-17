@@ -2,9 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class FicheposteApplicationRetiree {
+class FicheposteApplicationRetiree implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */

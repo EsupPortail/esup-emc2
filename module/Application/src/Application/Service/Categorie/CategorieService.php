@@ -3,15 +3,16 @@
 namespace Application\Service\Categorie;
 
 use Application\Entity\Db\Categorie;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CategorieService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,7 +22,12 @@ class CategorieService
      */
     public function create(Categorie $categorie) : Categorie
     {
-        $this->createFromTrait($categorie);
+        try {
+            $this->getEntityManager()->persist($categorie);
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $categorie;
     }
 
@@ -30,9 +36,12 @@ class CategorieService
      * @return Categorie
      */
     public function update(Categorie $categorie) : Categorie
-
     {
-        $this->updateFromTrait($categorie);
+        try {
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $categorie;
     }
 
@@ -42,7 +51,12 @@ class CategorieService
      */
     public function historise(Categorie $categorie) : Categorie
     {
-        $this->historiserFromTrait($categorie);
+        try {
+            $categorie->historiser();
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $categorie;
     }
 
@@ -52,7 +66,12 @@ class CategorieService
      */
     public function restore(Categorie $categorie) : Categorie
     {
-        $this->restoreFromTrait($categorie);
+        try {
+            $categorie->dehistoriser();
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $categorie;
     }
 
@@ -62,7 +81,12 @@ class CategorieService
      */
     public function delete(Categorie $categorie) : Categorie
     {
-        $this->deleteFromTrait($categorie);
+        try {
+            $this->getEntityManager()->remove($categorie);
+            $this->getEntityManager()->flush($categorie);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $categorie;
     }
 

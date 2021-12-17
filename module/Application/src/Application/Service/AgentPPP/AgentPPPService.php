@@ -4,14 +4,15 @@ namespace Application\Service\AgentPPP;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentPPP;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentPPPService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** Gestion des entites ***************************************************************************************/
 
@@ -21,7 +22,12 @@ class AgentPPPService {
      */
     public function create(AgentPPP $ppp) : AgentPPP
     {
-        $this->createFromTrait($ppp);
+        try {
+            $this->getEntityManager()->persist($ppp);
+            $this->getEntityManager()->flush($ppp);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ppp;
     }
 
@@ -31,7 +37,11 @@ class AgentPPPService {
      */
     public function update(AgentPPP $ppp) : AgentPPP
     {
-        $this->updateFromTrait($ppp);
+        try {
+            $this->getEntityManager()->flush($ppp);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ppp;
     }
 
@@ -41,7 +51,12 @@ class AgentPPPService {
      */
     public function restore(AgentPPP $ppp)  :AgentPPP
     {
-        $this->restoreFromTrait($ppp);
+        try {
+            $ppp->historiser();
+            $this->getEntityManager()->flush($ppp);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ppp;
     }
 
@@ -51,7 +66,12 @@ class AgentPPPService {
      */
     public function historise(AgentPPP $ppp) : AgentPPP
     {
-        $this->historiserFromTrait($ppp);
+        try {
+            $ppp->dehistoriser();
+            $this->getEntityManager()->flush($ppp);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ppp;
     }
 
@@ -61,7 +81,12 @@ class AgentPPPService {
      */
     public function delete(AgentPPP $ppp) : AgentPPP
     {
-        $this->deleteFromTrait($ppp);
+        try {
+            $this->getEntityManager()->remove($ppp);
+            $this->getEntityManager()->flush($ppp);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $ppp;
     }
 

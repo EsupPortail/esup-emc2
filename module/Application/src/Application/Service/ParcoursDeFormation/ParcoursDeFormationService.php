@@ -8,7 +8,6 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;
 use Application\Service\Categorie\CategorieServiceAwareTrait;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -18,13 +17,14 @@ use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ParcoursDeFormationService {
     use CategorieServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -32,9 +32,14 @@ class ParcoursDeFormationService {
      * @param ParcoursDeFormation $parcours
      * @return ParcoursDeFormation
      */
-    public function create(ParcoursDeFormation $parcours)
+    public function create(ParcoursDeFormation $parcours) : ParcoursDeFormation
     {
-        $this->createFromTrait($parcours);
+        try {
+            $this->getEntityManager()->persist($parcours);
+            $this->getEntityManager()->flush($parcours);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $parcours;
     }
 
@@ -42,9 +47,13 @@ class ParcoursDeFormationService {
      * @param ParcoursDeFormation $parcours
      * @return ParcoursDeFormation
      */
-    public function update(ParcoursDeFormation $parcours)
+    public function update(ParcoursDeFormation $parcours) : ParcoursDeFormation
     {
-        $this->updateFromTrait($parcours);
+        try {
+            $this->getEntityManager()->flush($parcours);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $parcours;
     }
 
@@ -52,9 +61,14 @@ class ParcoursDeFormationService {
      * @param ParcoursDeFormation $parcours
      * @return ParcoursDeFormation
      */
-    public function historise(ParcoursDeFormation $parcours)
+    public function historise(ParcoursDeFormation $parcours) : ParcoursDeFormation
     {
-        $this->historiserFromTrait($parcours);
+        try {
+            $parcours->historiser();
+            $this->getEntityManager()->flush($parcours);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $parcours;
     }
 
@@ -62,9 +76,14 @@ class ParcoursDeFormationService {
      * @param ParcoursDeFormation $parcours
      * @return ParcoursDeFormation
      */
-    public function restore(ParcoursDeFormation $parcours)
+    public function restore(ParcoursDeFormation $parcours) : ParcoursDeFormation
     {
-        $this->restoreFromTrait($parcours);
+        try {
+            $parcours->dehistoriser();
+            $this->getEntityManager()->flush($parcours);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $parcours;
     }
 
@@ -72,9 +91,14 @@ class ParcoursDeFormationService {
      * @param ParcoursDeFormation $parcours
      * @return ParcoursDeFormation
      */
-    public function delete(ParcoursDeFormation $parcours)
+    public function delete(ParcoursDeFormation $parcours) : ParcoursDeFormation
     {
-        $this->deleteFromTrait($parcours);
+        try {
+            $this->getEntityManager()->remove($parcours);
+            $this->getEntityManager()->flush($parcours);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $parcours;
     }
 

@@ -3,17 +3,15 @@
 namespace Application\Service\Expertise;
 
 use Application\Entity\Db\Expertise;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ExpertiseService {
-//    use EntityManagerAwareTrait;
-//    use UserServiceAwareTrait;
-//    use DateTimeAwareTrait;
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,9 +19,14 @@ class ExpertiseService {
      * @param Expertise $expertise
      * @return Expertise
      */
-    public function create(Expertise $expertise)
+    public function create(Expertise $expertise) : Expertise
     {
-        $this->createFromTrait($expertise);
+        try {
+            $this->getEntityManager()->persist($expertise);
+            $this->getEntityManager()->flush($expertise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $expertise;
     }
 
@@ -31,9 +34,13 @@ class ExpertiseService {
      * @param Expertise $expertise
      * @return Expertise
      */
-    public function update(Expertise $expertise)
+    public function update(Expertise $expertise) : Expertise
     {
-        $this->updateFromTrait($expertise);
+        try {
+            $this->getEntityManager()->flush($expertise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $expertise;
     }
 
@@ -41,9 +48,14 @@ class ExpertiseService {
      * @param Expertise $expertise
      * @return Expertise
      */
-    public function historise(Expertise $expertise)
+    public function historise(Expertise $expertise) : Expertise
     {
-        $this->historiserFromTrait($expertise);
+        try {
+            $expertise->historiser();
+            $this->getEntityManager()->flush($expertise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $expertise;
     }
 
@@ -51,9 +63,14 @@ class ExpertiseService {
      * @param Expertise $expertise
      * @return Expertise
      */
-    public function restore(Expertise $expertise)
+    public function restore(Expertise $expertise) : Expertise
     {
-        $this->restoreFromTrait($expertise);
+        try {
+            $expertise->dehistoriser();
+            $this->getEntityManager()->flush($expertise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $expertise;
     }
 
@@ -61,9 +78,14 @@ class ExpertiseService {
      * @param Expertise $expertise
      * @return Expertise
      */
-    public function delete(Expertise $expertise)
+    public function delete(Expertise $expertise) : Expertise
     {
-        $this->deleteFromTrait($expertise);
+        try {
+            $this->getEntityManager()->remove($expertise);
+            $this->getEntityManager()->flush($expertise);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $expertise;
     }
 
@@ -72,7 +94,7 @@ class ExpertiseService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Expertise::class)->createQueryBuilder('expertise')
             ->addSelect('createur')->join('expertise.histoCreateur', 'createur')
@@ -87,7 +109,7 @@ class ExpertiseService {
      * @param $id
      * @return Expertise
      */
-    public function getExpertise($id)
+    public function getExpertise($id) : ?Expertise
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('expertise.id = :id')
@@ -107,7 +129,7 @@ class ExpertiseService {
      * @param string $param
      * @return Expertise
      */
-    public function getRequestedExpertise($controller, $param = 'expertise')
+    public function getRequestedExpertise($controller, $param = 'expertise') : ?Expertise
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getExpertise($id);

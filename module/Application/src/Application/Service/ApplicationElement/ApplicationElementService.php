@@ -4,16 +4,17 @@ namespace Application\Service\ApplicationElement;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\ApplicationElement;
-use Application\Service\GestionEntiteHistorisationTrait;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class ApplicationElementService {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     
     /** Gestion des entites ***************************************************************************************/
 
@@ -21,9 +22,14 @@ class ApplicationElementService {
      * @param ApplicationElement $element
      * @return ApplicationElement
      */
-    public function create(ApplicationElement $element)
+    public function create(ApplicationElement $element) : ApplicationElement
     {
-        $this->createFromTrait($element);
+        try {
+            $this->getEntityManager()->persist($element);
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -31,9 +37,13 @@ class ApplicationElementService {
      * @param ApplicationElement $element
      * @return ApplicationElement
      */
-    public function update(ApplicationElement $element)
+    public function update(ApplicationElement $element) : ApplicationElement
     {
-        $this->updateFromTrait($element);
+        try {
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -41,9 +51,14 @@ class ApplicationElementService {
      * @param ApplicationElement $element
      * @return ApplicationElement
      */
-    public function restore(ApplicationElement $element)
+    public function historise(ApplicationElement $element) : ApplicationElement
     {
-        $this->restoreFromTrait($element);
+        try {
+            $element->historiser();
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -51,9 +66,14 @@ class ApplicationElementService {
      * @param ApplicationElement $element
      * @return ApplicationElement
      */
-    public function historise(ApplicationElement $element)
+    public function restore(ApplicationElement $element) : ApplicationElement
     {
-        $this->historiserFromTrait($element);
+        try {
+            $element->dehistoriser();
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 
@@ -61,9 +81,14 @@ class ApplicationElementService {
      * @param ApplicationElement $element
      * @return ApplicationElement
      */
-    public function delete(ApplicationElement $element)
+    public function delete(ApplicationElement $element) : ApplicationElement
     {
-        $this->deleteFromTrait($element);
+        try {
+            $this->getEntityManager()->remove($element);
+            $this->getEntityManager()->flush($element);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $element;
     }
 

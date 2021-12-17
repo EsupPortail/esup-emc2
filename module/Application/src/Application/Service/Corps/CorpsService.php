@@ -19,7 +19,7 @@ class CorpsService {
      * @param Corps $corps
      * @return Corps
      */
-    public function update(Corps $corps)
+    public function update(Corps $corps) : Corps
     {
         try {
             $this->getEntityManager()->flush($corps);

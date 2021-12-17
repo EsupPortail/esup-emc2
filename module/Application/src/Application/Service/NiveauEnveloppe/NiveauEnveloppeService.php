@@ -3,11 +3,13 @@
 namespace Application\Service\NiveauEnveloppe;
 
 use Application\Entity\Db\NiveauEnveloppe;
-use Application\Service\GestionEntiteHistorisationTrait;
+use Doctrine\ORM\ORMException;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class NiveauEnveloppeService {
 
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
@@ -17,7 +19,12 @@ class NiveauEnveloppeService {
      */
     public function create(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
-        $this->createFromTrait($metierNiveau);
+        try {
+            $this->getEntityManager()->persist($metierNiveau);
+            $this->getEntityManager()->flush($metierNiveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metierNiveau;
     }
 
@@ -27,7 +34,11 @@ class NiveauEnveloppeService {
      */
     public function update(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
-        $this->updateFromTrait($metierNiveau);
+        try {
+            $this->getEntityManager()->flush($metierNiveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metierNiveau;
     }
 
@@ -37,7 +48,12 @@ class NiveauEnveloppeService {
      */
     public function historise(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
-        $this->historiserFromTrait($metierNiveau);
+        try {
+            $metierNiveau->historiser();
+            $this->getEntityManager()->flush($metierNiveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metierNiveau;
     }
 
@@ -47,7 +63,12 @@ class NiveauEnveloppeService {
      */
     public function restore(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
-        $this->restoreFromTrait($metierNiveau);
+        try {
+            $metierNiveau->dehistoriser();
+            $this->getEntityManager()->flush($metierNiveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metierNiveau;
     }
 
@@ -57,7 +78,12 @@ class NiveauEnveloppeService {
      */
     public function delete(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
-        $this->deleteFromTrait($metierNiveau);
+        try {
+            $this->getEntityManager()->remove($metierNiveau);
+            $this->getEntityManager()->flush($metierNiveau);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $metierNiveau;
     }
 }

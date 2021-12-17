@@ -10,12 +10,12 @@ use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
-use Application\Service\GestionEntiteHistorisationTrait;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class AgentMissionSpecifiqueService
 {
-    use GestionEntiteHistorisationTrait;
+    use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -26,7 +26,12 @@ class AgentMissionSpecifiqueService
      */
     public function create(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
-        $this->createFromTrait($agentMissionSpecifique);
+        try {
+            $this->getEntityManager()->persist($agentMissionSpecifique);
+            $this->getEntityManager()->flush($agentMissionSpecifique);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $agentMissionSpecifique;
     }
 
@@ -36,7 +41,11 @@ class AgentMissionSpecifiqueService
      */
     public function update(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
-        $this->updateFromTrait($agentMissionSpecifique);
+        try {
+            $this->getEntityManager()->flush($agentMissionSpecifique);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $agentMissionSpecifique;
     }
 
@@ -46,7 +55,12 @@ class AgentMissionSpecifiqueService
      */
     public function historise(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
-        $this->historiserFromTrait($agentMissionSpecifique);
+        try {
+            $agentMissionSpecifique->historiser();
+            $this->getEntityManager()->flush($agentMissionSpecifique);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $agentMissionSpecifique;
     }
 
@@ -56,7 +70,12 @@ class AgentMissionSpecifiqueService
      */
     public function restore(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
-        $this->restoreFromTrait($agentMissionSpecifique);
+        try {
+            $agentMissionSpecifique->dehistoriser();
+            $this->getEntityManager()->flush($agentMissionSpecifique);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $agentMissionSpecifique;
     }
 
@@ -66,7 +85,12 @@ class AgentMissionSpecifiqueService
      */
     public function delete(AgentMissionSpecifique $agentMissionSpecifique) : AgentMissionSpecifique
     {
-        $this->deleteFromTrait($agentMissionSpecifique);
+        try {
+            $this->getEntityManager()->remove($agentMissionSpecifique);
+            $this->getEntityManager()->flush($agentMissionSpecifique);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+        }
         return $agentMissionSpecifique;
     }
 
