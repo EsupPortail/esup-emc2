@@ -105,7 +105,6 @@ return [
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                     'assertion'  => StructureAssertion::class,
-
                 ],
             ],
         ],

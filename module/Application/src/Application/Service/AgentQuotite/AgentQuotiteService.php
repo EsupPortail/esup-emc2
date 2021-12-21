@@ -20,6 +20,7 @@ class AgentQuotiteService {
     {
         $qb = $this->getEntityManager()->getRepository(AgentQuotite::class)->createQueryBuilder('agentquotite')
             ->join('agentquotite.agent', 'agent')->addSelect('agent')
+            ->andWhere('agentquotite.deleted_on IS NULL')
         ;
         return $qb;
     }

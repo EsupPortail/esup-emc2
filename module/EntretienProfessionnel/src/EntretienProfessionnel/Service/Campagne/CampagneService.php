@@ -2,13 +2,16 @@
 
 namespace EntretienProfessionnel\Service\Campagne;
 
+use Application\Entity\Db\Structure;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenEtat\Entity\Db\Etat;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CampagneService {
@@ -199,5 +202,57 @@ class CampagneService {
             if ($last === null OR $item->getAnnee() > $last->getAnnee()) $last = $item;
         }
         return $item;
+    }
+
+    public function getAgentsSansEntretien(Campagne $campagne, Structure $structure)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('agent.affectations', 'affectation')->addSelect('affectation')
+            ->andWhere('entretien.campagne = :campagne')
+            ->andWhere('affectation.structure = :structure')
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :now')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :now')
+            ->setParameter('campagne', $campagne)
+            ->setParameter('structure', $structure)
+            ->setParameter('now', new DateTime())
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getAgentsAvecEntretiensEnCours(Campagne $campagne, array $agents)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.etat','etat')->addSelect('etat')
+            ->andWhere('etat.code <> :code')
+            ->andWhere('entretien.campagne = :campagne')
+            ->andWhere('agent in (:agents)')
+            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('campagne', $campagne)
+            ->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getAgentsAvecEntretiensFinalises(Campagne $campagne, array $agents)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.etat','etat')->addSelect('etat')
+            ->andWhere('etat.code = :code')
+            ->andWhere('entretien.campagne = :campagne')
+            ->andWhere('agent in (:agents)')
+            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('campagne', $campagne)
+            ->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

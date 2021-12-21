@@ -1,6 +1,7 @@
 <?php
 
 use Application\Service\Evenement\SynchroOctopusService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
@@ -15,6 +16,7 @@ return [
 
             // Évènements Application
             Type::NOTIFICATION_FORMATION_OUVERTE     => NotificationFormationsOuvertesService::class,
+            Type::RAPPEL_CAMPAGNE_AVANCEMENT         => RappelCampagneAvancementService::class,
             Type::RAPPEL_ENTRETIEN_PROFESSIONNEL     => RappelEntretienProfessionnelService::class,
             Type::RAPPEL_FORMATION_AGENT_AVANT       => RappelAgentAvantFormationService::class,
             Type::SYNCHRO_OCTOPUS                    => SynchroOctopusService::class,

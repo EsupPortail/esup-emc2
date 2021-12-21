@@ -2,10 +2,15 @@
 
 namespace EntretienProfessionnel\Service\Notification;
 
+use Application\Entity\Db\Structure;
+use Application\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
+use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -13,9 +18,11 @@ use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class NotificationService {
     use AgentServiceAwareTrait;
+    use CampagneServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use UrlServiceAwareTrait;
 
     /** Notifications liées à une campagne d'entretiens professionnels ************************************************/
@@ -135,6 +142,49 @@ class NotificationService {
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
+        return $mail;
+    }
+
+    public function triggerRappelCampagne(Campagne $campagne, Structure $structure) : Mail
+    {
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] =  $structure;
+        /** Récupération des agents et postes liés aux structures */
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
+        $allAgents = array_merge($agents, $agentsForces);
+
+
+        $entretiensProgrammes = $this->getCampagneService()->getAgentsAvecEntretiensEnCours($campagne, $allAgents);
+        $entretiensFinalises  = $this->getCampagneService()->getAgentsAvecEntretiensFinalises($campagne, $allAgents);
+        $entretiensAucuns     = count($allAgents) - count($entretiensFinalises) - count($entretiensProgrammes);
+        $total = count($allAgents);
+
+        if ($total !== 0) {
+            $texte = "<table style='width:80%; border: 1px solid black;border-collapse: collapse;font-weight:bold;' id='avancement'>";
+            $texte .= "<caption> Avancement de la campagne 2027/2028</caption>";
+            $texte .= "<tr>";
+            $texte .= "<td style='background: lightgreen; width:" . (count($entretiensFinalises) / $total * 100)  . "%;'>" . count($entretiensFinalises) . "/" . $total . "</td>";
+            $texte .= "<td style='background: #ffff9e; width:" .    (count($entretiensProgrammes) / $total * 100) . "%;'>" . count($entretiensProgrammes) . "/" . $total . "</td>";
+            $texte .= "<td style='background: salmon; width:" .     ($entretiensAucuns / $total * 100)     . "%;'>" . $entretiensAucuns . "/" . $total . "</td>";
+            $texte .= "</tr>";
+            $texte .= "</table>";
+        }
+
+
+        $emails = [];
+        foreach ($structure->getResponsables() as $responsable) {
+            $emails[] = $responsable->getAgent()->getEmail();
+        }
+        $vars = [
+            'campagne' => $campagne,
+            'structure' => $structure,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("CAMPAGNE_AVANCEMENT", $vars);
+        $mail = $this->getMailService()->sendMail(implode(',', $emails), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+        $mail->setMotsClefs(["NOTIFICATION_FORMATION_" . (new DateTime())->format('d/m/Y')]);
+        $this->getMailService()->update($mail);
         return $mail;
     }
 }
