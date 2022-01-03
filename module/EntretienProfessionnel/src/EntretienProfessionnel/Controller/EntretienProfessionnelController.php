@@ -383,7 +383,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 $urlService->setVariables(['entretien' => $entretien]);
                 switch ($type) {
                     case EntretienProfessionnelConstant::VALIDATION_AGENT :
-                        $entretien->setValidationAgent($validation);
+                        $entretien->addValidation($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
@@ -392,7 +392,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
-                        $entretien->setValidationResponsable($validation);
+                        $entretien->addValidation($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
@@ -400,7 +400,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_DRH :
-                        $entretien->setValidationDRH($validation);
+                        $entretien->addValidation($validation);
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
@@ -433,15 +433,12 @@ class EntretienProfessionnelController extends AbstractActionController
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_AGENT) {
-            $entity->setValidationAgent(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_RESPONSABLE) {
-            $entity->setValidationResponsable(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_DRH) {
-            $entity->setValidationDRH(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
         }
 

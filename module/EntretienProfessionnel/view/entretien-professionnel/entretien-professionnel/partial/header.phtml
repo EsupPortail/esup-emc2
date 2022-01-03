@@ -14,6 +14,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\StructurePrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+    use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
     use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
     $sursis = $entretien->getSursisActif();
@@ -168,29 +169,16 @@ $canAfficherInformationMetier = (
                     <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon ok" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
                     <dt>Responsable d'entretien </dt>
                     <dd>
-                        <?php if ($entretien->hasValidationResponsable()) : ?>
+                        <?php $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE); ?>
+                        <?php if ($validationResponsable !== null) : ?>
                             <div>
                                 <div style="display: inline-block; vertical-align: top;">
                                     <span class="icon ok" style="color:darkgreen;"></span>
                                 </div>
                                 <div style="display: inline-block;">
-                                    <?php echo $entretien->getValidationResponsable()->getHistoModificateur()->getDisplayName(); ?>
-                                    <br/><?php echo $entretien->getValidationResponsable()->getHistoModification()->format("d/m/Y à H:i"); ?>
+                                    <?php echo $validationResponsable->getHistoModificateur()->getDisplayName(); ?>
+                                    <br/><?php echo $validationResponsable->getHistoModification()->format("d/m/Y à H:i"); ?>
                                 </div>
-                            </div>
-                        <?php else : ?>
-                            <span class="icon sursis" title="Non effectuée"></span> Non effectuée
-                        <?php endif; ?>
-                    </dd>
-                    <dt>Agent </dt>
-                    <dd>
-                        <?php if ($entretien->hasValidationAgent()) : ?>
-                            <div style="display: inline-block; vertical-align: top;">
-                                <span class="icon ok" style="color:darkgreen;"></span>
-                            </div>
-                            <div style="display: inline-block;">
-                                <?php echo $entretien->getValidationAgent()->getHistoModificateur()->getDisplayName(); ?>
-                                <br/><?php echo $entretien->getValidationAgent()->getHistoModification()->format("d/m/Y à H:i"); ?>
                             </div>
                         <?php else : ?>
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
@@ -198,13 +186,34 @@ $canAfficherInformationMetier = (
                     </dd>
                     <dt>Responsable hiérachique </dt>
                     <dd>
-                        <?php if ($entretien->hasValidationDRH()) : ?>
+                        <?php $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH); ?>
+                        <?php if ($validationHierarchie !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
                                 <span class="icon ok" style="color:darkgreen;"></span>
                             </div>
                             <div style="display: inline-block;">
-                                <?php echo $entretien->getValidationDRH()->getHistoModificateur()->getDisplayName(); ?>
-                                <br/><?php echo $entretien->getValidationDRH()->getHistoModification()->format("d/m/Y à H:i"); ?>
+                                <?php echo $validationHierarchie->getHistoModificateur()->getDisplayName(); ?>
+                                <br/><?php echo $validationHierarchie->getHistoModification()->format("d/m/Y à H:i"); ?>
+                            </div>
+                        <?php else : ?>
+                            <span class="icon sursis" title="Non effectuée"></span> Non effectuée
+                        <?php endif; ?>
+                    </dd>
+                    <dt>Agent </dt>
+                    <dd>
+                        <?php
+                        $hasValidationAgent = $entretien->getValidations(EntretienProfessionnelConstant::VALIDATION_AGENT);
+                        $validationAgent = ($hasValidationAgent !== [])?current($hasValidationAgent):null;
+                        ?>
+
+                        <?php if ($validationAgent !== null) : ?>
+                            <div style="display: inline-block; vertical-align: top;">
+                                <span class="icon ok" style="color:darkgreen;"></span>
+                            </div>
+                            <div style="display: inline-block;">
+                                <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?>
+                                <br/>
+                                <?php echo $validationAgent->getHistoModification()->format("d/m/Y à H:i"); ?>
                             </div>
                         <?php else : ?>
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée

@@ -122,9 +122,7 @@ class EntretienProfessionnelService {
 
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
             ->addSelect('campagne')->join('entretien.campagne', 'campagne')
-            ->addSelect('validationResponsable')->leftjoin('entretien.validationResponsable','validationResponsable')
-            ->addSelect('validationAgent')->leftjoin('entretien.validationAgent','validationAgent')
-            ->addSelect('validationDRH')->leftjoin('entretien.validationDRH','validationDRH')
+            ->addSelect('validation')->leftjoin('entretien.validations','validation')
         ;
 
         $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');

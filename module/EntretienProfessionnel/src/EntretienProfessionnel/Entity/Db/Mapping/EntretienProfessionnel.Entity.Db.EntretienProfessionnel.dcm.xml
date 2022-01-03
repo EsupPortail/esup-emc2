@@ -34,15 +34,17 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationAgent">
-            <join-column name="validation_agent_id" referenced-column-name="id" />
-        </one-to-one>
-        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationResponsable">
-            <join-column name="validation_responsable_id" referenced-column-name="id" />
-        </one-to-one>
-        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validationDRH">
-            <join-column name="validation_drh_id" referenced-column-name="id" />
-        </one-to-one>
+        <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
+            <join-table name="entretienprofessionnel_validation">
+                <join-columns>
+                    <join-column name="entretien_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="validation_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
 
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Observation"   mapped-by="entretien" field="observations"/>
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Sursis"        mapped-by="entretien" field="sursis"/>

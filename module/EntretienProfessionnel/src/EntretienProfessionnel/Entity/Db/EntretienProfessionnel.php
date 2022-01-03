@@ -24,8 +24,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
     const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
     const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
-    const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
+    const ETAT_VALIDATION_OBSERVATION       = 'ENTRETIEN_VALIDATION_OBSERVATION';
     const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
+    const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
     const DELAI_OBSERVATION                 = 8;
 
 
@@ -61,12 +62,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @var ArrayCollection (Sursis) */
     private $sursis;
 
-    /** @var ValidationInstance */
-    private $validationAgent;
-    /** @var ValidationInstance */
-    private $validationResponsable;
-    /** @var ValidationInstance */
-    private $validationDRH;
+    /** @var ArrayCollection (ValidationInstance) */
+    private $validations;
+
     /** @var string */
     private $token;
     /** @var DateTime */
@@ -326,7 +324,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function getMaxSaisiObservation() : ?DateTime
     {
-        $validation = $this->getValidationResponsable();
+        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
         $date = $validation->getHistoCreation();
@@ -339,86 +337,55 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /** VALIDATION ****************************************************************************************************/
+    // todo faire un trait pour généraliser les validations ???
 
     /**
-     * @return ValidationInstance|null
+     * @param string|null $type
+     * @param bool $historisee
+     * @return ValidationInstance[]
      */
-    public function getValidationAgent() : ?ValidationInstance
+    public function getValidations(?string $type = null, bool $historisee = false) : array
     {
-        return $this->validationAgent;
+        $validations =  $this->validations->toArray();
+        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
+        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->estNonHistorise();});
+        return $validations;
     }
 
     /**
-     * @param ValidationInstance|null $validationAgent
+     * @param ValidationInstance $validation
      * @return EntretienProfessionnel
      */
-    public function setValidationAgent(?ValidationInstance $validationAgent) : EntretienProfessionnel
+    public function addValidation(ValidationInstance $validation) : EntretienProfessionnel
     {
-        $this->validationAgent = $validationAgent;
+        $this->validations->add($validation);
         return $this;
     }
 
     /**
-     * @return bool
-     */
-    public function hasValidationAgent() : bool
-    {
-        return ($this->validationAgent AND $this->validationAgent->estNonHistorise());
-    }
-
-    /**
-     * @return ValidationInstance|null
-     */
-    public function getValidationResponsable() : ?ValidationInstance
-    {
-        return $this->validationResponsable;
-    }
-
-    /**
-     * @param ValidationInstance|null $validationResponsable
+     * @param ValidationInstance $validation
      * @return EntretienProfessionnel
      */
-    public function setValidationResponsable(?ValidationInstance $validationResponsable) : EntretienProfessionnel
+    public function removeValidation(ValidationInstance $validation) : EntretienProfessionnel
     {
-        $this->validationResponsable = $validationResponsable;
+        $this->validations->removeElement($validation);
         return $this;
     }
 
     /**
-     * @return bool
-     */
-    public function hasValidationResponsable() : bool
-    {
-        $validation = $this->validationResponsable;
-        if ($validation === null) return false;
-        if ($validation->estHistorise())
-            return false;
-        return true;
-    }
-
-    /**
+     * @param string|null $type
+     * @param bool $historisee
      * @return ValidationInstance|null
      */
-    public function getValidationDRH() : ?ValidationInstance
+    public function getValidationByType(?string $type, bool $historisee = false) : ?ValidationInstance
     {
-        return $this->validationDRH;
-    }
+        $validations =  $this->validations->toArray();
+        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
+        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->getHistoDestruction() === null;});
 
-    /**
-     * @param ValidationInstance|null $validationDRH
-     * @return EntretienProfessionnel
-     */
-    public function setValidationDRH(?ValidationInstance $validationDRH) : EntretienProfessionnel
-    {
-        $this->validationDRH = $validationDRH;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasValidationDRH() : bool {
-        return ($this->validationDRH AND $this->validationDRH->estNonHistorise());
+        if ($validations === []) return null;
+        usort($validations, function (ValidationInstance $a, ValidationInstance $b) { return $a->getHistoCreation() > $b->getHistoCreation();});
+        return $validations[0];
     }
 
     /**
