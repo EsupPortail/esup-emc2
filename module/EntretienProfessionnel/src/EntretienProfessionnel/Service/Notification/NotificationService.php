@@ -40,7 +40,7 @@ class NotificationService {
         return $mailDac;
     }
 
-    public function triggerCampagneOuverturePersonnels(Campagne $campagne)
+    public function triggerCampagneOuverturePersonnels(Campagne $campagne) : Mail
     {
         $vars = ['campagne' => $campagne];
 

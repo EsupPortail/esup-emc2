@@ -6,8 +6,6 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
-use Autoform\Service\Formulaire\FormulaireInstanceService;
-use Autoform\Service\Formulaire\FormulaireService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Form\Observation\ObservationForm;
@@ -42,8 +40,6 @@ class EntretienProfessionnelControllerFactory {
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
          * @var ObservationService $observationService
-         * @var FormulaireService $formulaireService
-         * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -65,8 +61,6 @@ class EntretienProfessionnelControllerFactory {
         $campagneService = $container->get(CampagneService::class);
         $observationService = $container->get(ObservationService::class);
 
-        $formulaireService = $container->get(FormulaireService::class);
-        $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -102,12 +96,10 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
         $controller->setObservationService($observationService);
-        $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setParametreService($parametreService);
         $controller->setParcoursDeFormationService($parcoursDeFormationService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setValidationTypeService($validationTypeService);
-        $controller->setFormulaireService($formulaireService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setRappelEntretienProfessionnelService($rappelEntretienProfessionnelService);

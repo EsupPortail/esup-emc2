@@ -7,8 +7,6 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\ORMException;
@@ -63,13 +61,9 @@ class EntretienProfessionnelController extends AbstractActionController
     use StructureServiceAwareTrait;
     use UrlServiceAwareTrait;
 
-
     use EntretienProfessionnelFormAwareTrait;
     use CampagneFormAwareTrait;
     use ObservationFormAwareTrait;
-
-    use FormulaireServiceAwareTrait;
-    use FormulaireInstanceServiceAwareTrait;
 
     use RendererAwareTrait;
 
@@ -214,15 +208,9 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $entretien_instance = $this->getFormulaireInstanceService()->createInstance('ENTRETIEN_PROFESSIONNEL');
-                $formation_instance = $this->getFormulaireInstanceService()->createInstance('FORMATION');
-                $entretien->setFormulaireInstance($entretien_instance);
-                $entretien->setFormationInstance($formation_instance);
-                $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
-                $this->getEntretienProfessionnelService()->create($entretien);
-                $this->getEntretienProfessionnelService()->recopiePrecedent($entretien);
-
-                $this->getNotificationService()->triggerConvocationDemande($entretien);
+               $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
+               $this->getEntretienProfessionnelService()->initialiser($entretien);
+               $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
 

@@ -458,4 +458,19 @@ class EntretienProfessionnelService {
         }
         return $result_dele;
     }
+
+    /**
+     * @param EntretienProfessionnel $entretien
+     * @return EntretienProfessionnel
+     */
+    public function initialiser(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    {
+        $entretien_instance = $this->getFormulaireInstanceService()->createInstance('ENTRETIEN_PROFESSIONNEL');
+        $formation_instance = $this->getFormulaireInstanceService()->createInstance('FORMATION');
+        $entretien->setFormulaireInstance($entretien_instance);
+        $entretien->setFormationInstance($formation_instance);
+        $this->create($entretien);
+        $this->recopiePrecedent($entretien);
+        return $entretien;
+    }
 }

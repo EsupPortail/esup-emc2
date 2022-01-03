@@ -44,15 +44,6 @@ class EntretienProfessionnelForm extends Form {
 
     public function init()
     {
-        /** Année Scolaire **/
-        $date = new DateTime('now');
-        $annee = ((int) $date->format('Y'));
-        $anneeOpt = [];
-        for ($i = $annee - 5; $i <= $annee + 5 ; $i++) {
-            $text = $i . "/" . ($i + 1);
-            $anneeOpt[$text] = $text;
-        }
-
         //Responsable (connected user)
         $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel * :"]);
         $responsable
@@ -94,11 +85,11 @@ class EntretienProfessionnelForm extends Form {
 
         //Date        (initialisée à la date du jour)
         $this->add([
-            'type' => DateTime::class,
+            'type' => Date::class,
             'name' => 'date_entretien',
             'options' => [
                 'label' => "Date de l'entretien* :",
-                'format' => 'd/m/Y',
+//                'format' => 'd/m/Y',
             ],
             'attributes' => [
                 'id' => 'date_entretien',
@@ -163,7 +154,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $entretien = $this->getObject();
                                 $campagne = $entretien->getCampagne();
-                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
                                 $res =  ($campagne->getDateDebut() <= $date AND $campagne->getDateFin() >= $date);
                                 return $res;
                             },
@@ -180,7 +171,7 @@ class EntretienProfessionnelForm extends Form {
                                 /** @var EntretienProfessionnel $entretien */
                                 $maintenant = new DateTime();
                                 $maintenant = $maintenant->add(new DateInterval('P14D'));
-                                $date = DateTime::createFromFormat('d/m/Y', $context['date_entretien']);
+                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
                                 $res =  ($maintenant <= $date);
                                 return $res;
                             },
