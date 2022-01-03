@@ -14,10 +14,10 @@ $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
 $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
-$validationResponsable      = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
-$hasValidationObservation   = $entretien->getValidations('ENTRETIEN_OBSERVATION');
-$hasValidationHierarchie    = $entretien->getValidations('ENTRETIEN_HIERARCHIE');
-$hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
+$validationResponsable   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+$validationHierarchie    = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
+$validationAgent         = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -51,7 +51,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderResponsable and $hasValidationObservation === []) : ?>
+                <?php if ($canValiderResponsable and $validationObservation === null) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationResponsable->getId()], [], true); ?>"
@@ -83,8 +83,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
         <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
     <?php endif; ?>
 
-    <?php if ($hasValidationObservation) : ?>
-        <?php $validationObservation = current($hasValidationObservation); ?>
+    <?php if ($validationObservation !== null) : ?>
         <div class="row">
             <div class="col-md-8">
                 <div class="alert alert-success">
@@ -104,7 +103,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderAgent and $hasValidationHierarchie === []) : ?>
+                <?php if ($canValiderAgent and $validationHierarchie === null) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
@@ -117,7 +116,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
             </div>
         </div>
     <?php else :?>
-            <?php if ($hasValidationResponsable) : ?>
+            <?php if ($validationResponsable === null) : ?>
                 <div class="alert alert-info">
                     Vous pouvez exprimer vos observations dans l'onglet <em>Observations</em> une fois que le responsable de l'entretien professionnel aura validé celui-ci.
                 </div>
@@ -135,14 +134,13 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
         $depasse = ($date === null OR $date < $now);
     ?>
 
-    <?php if ($hasValidationObservation === [] OR !$depasse) : ?>
+    <?php if ($validationObservation === null OR !$depasse) : ?>
         <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_agent', '', []); ?>
     <?php endif; ?>
 
 
 
-    <?php if ($hasValidationHierarchie) : ?>
-        <?php $validationHierarchie = current($hasValidationHierarchie); ?>
+    <?php if ($validationHierarchie !== null) : ?>
         <div class="row">
             <div class="col-md-8">
                 <div class="alert alert-success">
@@ -162,7 +160,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderDrh and $hasValidationAgent === []) : ?>
+                <?php if ($canValiderDrh and $validationAgent === null) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationHierarchie->getId()], [], true); ?>"
@@ -175,7 +173,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
             </div>
         </div>
     <?php else : ?>
-        <?php if ($hasValidationObservation !== [] OR $depasse) : ?>
+        <?php if ($validationObservation !== null OR $depasse) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_DRH], [], true); ?>"
@@ -192,12 +190,11 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
 <div>
     <h3 class="categorie"> Validation de l'agent </h3>
 
-    <?php if (!$hasValidationAgent) : ?>
+    <?php if ($validationAgent === null) : ?>
         <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:reclamations', '', []); ?>
     <?php endif; ?>
 
-    <?php if ($hasValidationAgent) : ?>
-        <?php $validationAgent = current($hasValidationAgent); ?>
+    <?php if ($validationAgent !== null) : ?>
         <div class="row">
             <div class="col-md-8">
                 <div class="alert alert-success">
@@ -230,7 +227,7 @@ $hasValidationAgent         = $entretien->getValidations('ENTRETIEN_AGENT');
             </div>
         </div>
     <?php else : ?>
-        <?php if ($hasValidationHierarchie !== []) : ?>
+        <?php if ($validationHierarchie !== null) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_AGENT], [], true); ?>"
