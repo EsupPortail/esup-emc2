@@ -10,7 +10,7 @@ class ObservationHydratorFactory {
      * @param ContainerInterface $container
      * @return ObservationHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ObservationHydrator
     {
         $hydrator = new ObservationHydrator();
         return $hydrator;

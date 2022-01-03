@@ -7,6 +7,7 @@ use EntretienProfessionnel\Form\Sursis\SursisFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Sursis\SursisServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -15,7 +16,7 @@ class SursisController extends AbstractActionController {
     use SursisServiceAwareTrait;
     use SursisFormAwareTrait;
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
         return new ViewModel([
@@ -24,7 +25,7 @@ class SursisController extends AbstractActionController {
         ]);
     }
     
-    public function ajouterAction() 
+    public function ajouterAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         
@@ -52,7 +53,7 @@ class SursisController extends AbstractActionController {
         return $vm;
     }
     
-    public function modifierAction() 
+    public function modifierAction()  : ViewModel
     {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
         
@@ -77,7 +78,7 @@ class SursisController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
         $retour = $this->params()->fromQuery('retour');
@@ -85,7 +86,7 @@ class SursisController extends AbstractActionController {
         return $this->redirect()->toUrl($retour);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
         $retour = $this->params()->fromQuery('retour');
@@ -93,7 +94,7 @@ class SursisController extends AbstractActionController {
         return $this->redirect()->toUrl($retour);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $sursis = $this->getSursisService()->getRequestedSursis($this);
 

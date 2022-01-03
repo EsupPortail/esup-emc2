@@ -12,7 +12,7 @@ class CampagneHydratorFactory {
      * @param ContainerInterface $container
      * @return CampagneHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CampagneHydrator
     {
         /**
          * @var CampagneService $campagneService

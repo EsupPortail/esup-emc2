@@ -10,7 +10,7 @@ trait CampagneFormAwareTrait {
     /**
      * @return CampagneForm
      */
-    public function getCampagneForm()
+    public function getCampagneForm() : CampagneForm
     {
         return $this->campagneForm;
     }

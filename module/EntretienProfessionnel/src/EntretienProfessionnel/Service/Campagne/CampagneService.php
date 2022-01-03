@@ -11,7 +11,6 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Entity\Db\Etat;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class CampagneService {

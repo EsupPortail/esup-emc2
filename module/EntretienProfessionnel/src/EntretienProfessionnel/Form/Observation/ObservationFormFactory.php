@@ -10,7 +10,7 @@ class ObservationFormFactory {
      * @param ContainerInterface $container
      * @return ObservationForm
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ObservationForm
     {
         /**
          * @var ObservationHydrator $hydrator

@@ -13,7 +13,7 @@ class ObservationControllerFactory {
      * @param ContainerInterface $container
      * @return ObservationController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ObservationController
     {
         /**
          * @var EntretienProfessionnelService $entretienProfessionnelService

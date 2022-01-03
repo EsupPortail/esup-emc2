@@ -7,6 +7,7 @@ use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -15,7 +16,7 @@ class ObservationController extends AbstractActionController {
     use ObservationServiceAwareTrait;
     use ObservationFormAwareTrait;
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         $observation = new Observation();
@@ -44,7 +45,7 @@ class ObservationController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
 
@@ -71,21 +72,21 @@ class ObservationController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->historise($observation);
         return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->restore($observation);
         return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
 

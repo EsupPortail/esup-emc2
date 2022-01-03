@@ -23,6 +23,8 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
+use Exception;
+use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
@@ -130,6 +132,23 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
+    public function findResponsablePourEntretienAction() : JsonModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+
+        $term = $this->params()->fromQuery('term');
+
+        if ($term !== null and trim($term) !== "") {
+            $agentsResponsables = $this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term);
+            $agentsDelegues = $this->getEntretienProfessionnelService()->findDeleguePourEntretien($structure, $campagne, $term);
+            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsDelegues));
+            return new JsonModel($result);
+        }
+
+        exit;
+    }
+
     public function rechercherAgentAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
@@ -156,6 +175,9 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         // From route
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        if ($campagne === null) {
+            throw new RuntimeException("Aucune campagne d'entretien professionnel de selectionnée", null, null);
+        }
 
         // From Query
         $agentId = $this->params()->fromQuery('agent');
@@ -165,22 +187,18 @@ class EntretienProfessionnelController extends AbstractActionController
 
         // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
-        if ($campagne !== null and $agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
+        if ($agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) {
             /** @see EntretienProfessionnelController::afficherAction() */
             return $this->redirect()->toRoute('entretien-professionnel/afficher', ["entretien" => $entretien->getId()], [], true);
         }
 
         $entretien = new EntretienProfessionnel();
-        if ($campagne !== null) $entretien->setCampagne($campagne);
+        $entretien->setCampagne($campagne);
         if ($agent !== null) $entretien->setAgent($agent);
 
         $form = $this->getEntretienProfessionnelForm();
-        if ($campagne !== null) {
-            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
-        } else {
-            $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', [], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
-        }
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
         $form->bind($entretien);
 
         if ($structure !== null) {
@@ -288,7 +306,6 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function renseignerAction() : ViewModel
     {
-        /** TODO  revoir ici une seul fiche de poste actives sinon c'est la merde */
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
         $ficheposte = ($agent) ? $agent->getFichePosteActif() : null;
@@ -354,7 +371,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     /** Validation élément associée à l'agent *************************************************************************/
 
-    public function validerElementAction()
+    public function validerElementAction() : ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
@@ -408,15 +425,13 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        if ($entretien !== null) {
-            $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
-            $vm->setVariables([
-                'title' => "Validation de l'entretien",
-                'text' => "Validation de l'entretien",
-                'action' => $this->url()->fromRoute('entretien-professionnel/valider-element', ["type" => $type, "entretien" => $entityId], [], true),
-                'refus' => false,
-            ]);
-        }
+        $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
+        $vm->setVariables([
+            'title' => "Validation de l'entretien",
+            'text' => "Validation de l'entretien",
+            'action' => $this->url()->fromRoute('entretien-professionnel/valider-element', ["type" => $type, "entretien" => $entityId], [], true),
+            'refus' => false,
+        ]);
         return $vm;
     }
 
@@ -429,7 +444,6 @@ class EntretienProfessionnelController extends AbstractActionController
         /** @var EntretienProfessionnel $entity */
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
-        /** TODO c'est vraiment crado (faire mieux ...) */
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_AGENT) {
             $entity->setValidationAgent(null);
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
@@ -452,7 +466,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
-    public function exporterAction()
+    public function exporterAction() : string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
@@ -463,33 +477,19 @@ class EntretienProfessionnelController extends AbstractActionController
             'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('ENTRETIEN_PROFESSIONNEL', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('ENTRETIEN_PROFESSIONNEL', $vars);
 
-        $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('');
-        $exporter->setFooterScript('');
-        $exporter->addBodyHtml($rendu->getCorps());
-        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
-    }
-
-    public function findResponsablePourEntretienAction() : JsonModel
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-
-        $term = $this->params()->fromQuery('term');
-
-        if ($term !== null and trim($term) !== "") {
-            $agentsResponsables = $this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term);
-            $agentsDelegues = $this->getEntretienProfessionnelService()->findDeleguePourEntretien($structure, $campagne, $term);
-            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsDelegues));
-            return new JsonModel($result);
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenue lors de la génértion du PDF", null, $e);
         }
-
-        exit();
     }
-
 
     public function accepterEntretienAction() : ViewModel
     {
@@ -498,7 +498,11 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($entretien === null) throw new RuntimeException("Aucun entretien professionnel de remonté pour l'id #".$this->params()->fromRoute('entretien-professionnel'));
 
         $delai = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','DELAI_ACCEPTATION_AGENT')->getValeur();
-        $dateButoir = (DateTime::createFromFormat('d/m/Y',$entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P'.$delai.'D'));
+        try {
+            $dateButoir = (DateTime::createFromFormat('d/m/Y', $entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P' . $delai . 'D'));
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors du calcul de la date butoir", null, $e);
+        }
         $depassee = $dateButoir < (new DateTime());
 
         if ($entretien->getToken() === $token) {
@@ -518,7 +522,5 @@ class EntretienProfessionnelController extends AbstractActionController
             'depassee' => $depassee,
         ]);
     }
-
-
 
 }

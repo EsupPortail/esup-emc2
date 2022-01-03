@@ -26,7 +26,7 @@ class EntretienProfessionnelForm extends Form {
      * @param mixed $urlAgent
      * @return EntretienProfessionnelForm
      */
-    public function setUrlAgent($urlAgent)
+    public function setUrlAgent($urlAgent) : EntretienProfessionnelForm
     {
         $this->urlAgent = $urlAgent;
         return $this;
@@ -36,7 +36,7 @@ class EntretienProfessionnelForm extends Form {
      * @param mixed $urlResponsable
      * @return EntretienProfessionnelForm
      */
-    public function setUrlResponsable($urlResponsable)
+    public function setUrlResponsable($urlResponsable) : EntretienProfessionnelForm
     {
         $this->urlResponsable = $urlResponsable;
         return $this;

@@ -10,7 +10,7 @@ class SursisFormFactory
      * @param ContainerInterface $container
      * @return SursisForm
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : SursisForm
     {
         /**
          * @var SursisHydrator $hydrator

@@ -11,7 +11,7 @@ class CampagneFormFactory {
      * @param ContainerInterface $container
      * @return CampagneForm
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CampagneForm
     {
         /**
          * @var CampagneService $campagneService

@@ -9,7 +9,7 @@ use UnicaenUtilisateur\Service\User\UserService;
 
 class EntretienProfessionnelHydratorFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container)  :EntretienProfessionnelHydrator
     {
         /**
          * @var AgentService $agentService

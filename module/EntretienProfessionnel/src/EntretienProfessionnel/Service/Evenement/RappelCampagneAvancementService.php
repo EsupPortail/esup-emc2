@@ -10,6 +10,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Entity\Db\Type;
@@ -30,7 +31,11 @@ class RappelCampagneAvancementService extends EvenementService {
             'campagne'       =>  $campagne->getId(),
         ];
 
-        $dateTraitement = DateTime::createFromFormat('d/m/Y H:i:s', $campagne->getDateDebut()->format('d/m/Y'. " 08:00:00"))->add(new DateInterval($type->getRecursion()));
+        try {
+            $dateTraitement = DateTime::createFromFormat('d/m/Y H:i:s', $campagne->getDateDebut()->format('d/m/Y' . " 08:00:00"))->add(new DateInterval($type->getRecursion()));
+        } catch (Exception $e) {
+            throw new RuntimeException("Problème de calcul de la date de traitement de l'événement");
+        }
 
         $description = "Rappel de l'avancement de la campagne " . $campagne->getAnnee() . " de la structure" . $structure->getLibelleCourt();
         $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $type, $parametres, $dateTraitement);

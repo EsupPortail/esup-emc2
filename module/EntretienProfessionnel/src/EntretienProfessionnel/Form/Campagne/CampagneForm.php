@@ -19,7 +19,7 @@ class CampagneForm extends Form
         //ANNEE (SELECT)
         $current = (new DateTime())->format('Y');
         $array = [];
-        for ($delta = -5 ; $delta <= 5 ; $delta++) {
+        for ($delta = -1 ; $delta <= 5 ; $delta++) {
             $string = (((int) $current) - ($delta)) . "/" . (((int) $current) - ($delta-1));
             $array[$string] = $string;
         }
@@ -43,13 +43,13 @@ class CampagneForm extends Form
         //DEBUT (DATE)
         $this->add([
             'name' => 'date_debut',
-            'type' => DateTime::class,
+            'type' => Date::class,
             'options' => [
                 'label' => 'Date de début de la campagne * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'format' => 'd/m/Y'
+//                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_debut',
@@ -58,13 +58,13 @@ class CampagneForm extends Form
         //FIN (DATE)
         $this->add([
             'name' => 'date_fin',
-            'type' => DateTime::class,
+            'type' => Date::class,
             'options' => [
                 'label' => 'Date de fin de la campagne * : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'format' => 'd/m/Y'
+//                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_fin',
@@ -73,13 +73,13 @@ class CampagneForm extends Form
         //DEBUT (DATE)
         $this->add([
             'name' => 'date_circulaire',
-            'type' => DateTime::class,
+            'type' => Date::class,
             'options' => [
                 'label' => 'Date de la circulaire : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
-                'format' => 'd/m/Y'
+//                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id'                => 'date_circulaire',

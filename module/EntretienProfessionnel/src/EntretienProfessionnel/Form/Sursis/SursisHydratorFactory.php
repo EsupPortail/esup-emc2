@@ -10,7 +10,7 @@ class SursisHydratorFactory {
      * @param ContainerInterface $container
      * @return SursisHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : SursisHydrator
     {
         $hydrator = new SursisHydrator();
         return $hydrator;

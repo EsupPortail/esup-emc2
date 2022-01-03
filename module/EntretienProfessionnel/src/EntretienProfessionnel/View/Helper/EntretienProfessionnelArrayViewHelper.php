@@ -2,10 +2,10 @@
 
 namespace EntretienProfessionnel\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
+use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplatePathStack;
 
 /**

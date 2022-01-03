@@ -9,7 +9,7 @@ use Interop\Container\ContainerInterface;
 
 class SursisControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : SursisController
     {
         /**
          * @var EntretienProfessionnelService $entretienService

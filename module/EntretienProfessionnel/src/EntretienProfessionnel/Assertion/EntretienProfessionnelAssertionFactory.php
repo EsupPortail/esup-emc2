@@ -13,7 +13,7 @@ class EntretienProfessionnelAssertionFactory {
      * @param ContainerInterface $container
      * @return EntretienProfessionnelAssertion
      */
-    public function  __invoke(ContainerInterface $container)
+    public function  __invoke(ContainerInterface $container) : EntretienProfessionnelAssertion
     {
         /**
          * @var AgentService $agentService
