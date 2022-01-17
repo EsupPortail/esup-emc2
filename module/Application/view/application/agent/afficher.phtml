@@ -48,6 +48,8 @@ if ($agent !== null) {
     $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
     $canInfoSource = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
     $canAfficherMission = $canVoir;
+    $canCCC = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
+    $canPortfolio = $canCCC;
 
     $droits = [
         'afficher' => $canVoir,
@@ -105,26 +107,30 @@ if ($agent !== null) {
                 </a>
             </li>
             <?php endif; ?>
-            <li>
-                <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
-                    Acquis de l'agent <br/> &nbsp;
-                </a>
-            </li>
-            <li>
-                <a href="#portfolio" aria-controls="portfolio" role="tab" data-toggle="tabz">
-                    Portfolio <br/> &nbsp;
-                </a>
-            </li>
-            <li>
-                <a href="#ppp" aria-controls="ppp" role="tab" data-toggle="tabz">
-                    Projet professionnel <br/> &nbsp;personnel
-                </a>
-            </li>
-            <li>
-                <a href="#tutorat" aria-controls="tutorat" role="tab" data-toggle="tabz">
-                    Tutorats et <br/> encadrements
-                </a>
-            </li>
+            <?php if ($canPortfolio) : ?>
+                <li>
+                    <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
+                        Acquis de l'agent <br/> &nbsp;
+                    </a>
+                </li>
+                <li>
+                    <a href="#portfolio" aria-controls="portfolio" role="tab" data-toggle="tabz">
+                        Portfolio <br/> &nbsp;
+                    </a>
+                </li>
+            <?php endif; ?>
+            <?php if ($canCCC === true) : ?>
+                <li>
+                    <a href="#ppp" aria-controls="ppp" role="tab" data-toggle="tabz">
+                        Projet professionnel <br/> &nbsp;personnel
+                    </a>
+                </li>
+                <li>
+                    <a href="#tutorat" aria-controls="tutorat" role="tab" data-toggle="tabz">
+                        Tutorats et <br/> encadrements
+                    </a>
+                </li>
+            <?php endif; ?>
         </ul>
     </div>
 
