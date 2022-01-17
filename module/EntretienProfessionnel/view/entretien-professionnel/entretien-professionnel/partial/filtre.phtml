@@ -178,7 +178,7 @@ use UnicaenEtat\Entity\Db\Etat;
     <?php endif; ?>
 
     <?php if ($params['responsable'] !== null) :?>
-    $('input[name="responsable-filtre[label]').val(" <?php echo $params['responsable']->getDisplayName(); ?> ");
+    $('input[name="responsable-filtre[label]').val(" <?php echo $params['responsable']->getDenomination(); ?> ");
     $('input[name="responsable-filtre[id]').val(<?php echo $params['responsable']->getId(); ?>);
     <?php endif; ?>
 </script>

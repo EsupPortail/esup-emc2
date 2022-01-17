@@ -125,14 +125,14 @@ return [
                                     ],
                                 ],
                             ],
-                            'detruire' => [
+                            'supprimer' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/detruire/:observation',
+                                    'route'    => '/supprimer/:observation',
                                     'defaults' => [
                                         'controller' => ObservationController::class,
-                                        'action'     => 'detruire',
+                                        'action'     => 'supprimer',
                                     ],
                                 ],
                             ],

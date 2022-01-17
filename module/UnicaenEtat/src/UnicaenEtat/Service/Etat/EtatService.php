@@ -121,10 +121,10 @@ class EtatService {
     }
 
     /**
-     * @param int $id
-     * @return Etat
+     * @param int|null $id
+     * @return Etat|null
      */
-    public function getEtat(int $id)
+    public function getEtat(?int $id) : ?Etat
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.id = :id')

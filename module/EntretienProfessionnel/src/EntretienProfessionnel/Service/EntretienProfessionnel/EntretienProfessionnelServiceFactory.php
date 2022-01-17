@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
+use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 class EntretienProfessionnelServiceFactory
 {
@@ -23,12 +25,16 @@ class EntretienProfessionnelServiceFactory
          * @var DelegueService $delegueService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
+         * @var ValidationInstanceService $validationInstanceService
+         * @var ValidationTypeService $validationTypeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $configurationService = $container->get(ConfigurationService::class);
         $delegueService = $container->get(DelegueService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
+        $validationInstanceService = $container->get(ValidationInstanceService::class);
+        $validationTypeService = $container->get(ValidationTypeService::class);
 
         $service = new EntretienProfessionnelService();
         $service->setEntityManager($entityManager);
@@ -36,6 +42,8 @@ class EntretienProfessionnelServiceFactory
         $service->setDelegueService($delegueService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);
+        $service->setValidationInstanceService($validationInstanceService);
+        $service->setValidationTypeService($validationTypeService);
         return $service;
     }
 }

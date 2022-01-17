@@ -8,6 +8,8 @@ use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceFactory;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceFactory;
+use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
+use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceFactory;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Notification\NotificationServiceFactory;
 use EntretienProfessionnel\Service\Url\UrlService;
@@ -52,6 +54,7 @@ return [
 
             RappelCampagneAvancementService::class => RappelCampagneAvancementServiceFactory::class,
             RappelEntretienProfessionnelService::class => RappelEntretienProfessionnelServiceFactory::class,
+            RappelPasObservationService::class => RappelPasObservationServiceFactory::class,
         ],
     ],
     'controllers'     => [

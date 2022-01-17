@@ -93,6 +93,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return $entity->getResponsable()->getUtilisateur() === $user;
                 }
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
+            case EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:

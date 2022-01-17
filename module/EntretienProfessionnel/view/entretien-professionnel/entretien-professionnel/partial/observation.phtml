@@ -9,11 +9,15 @@
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Entity\Db\Observation;
+use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
 
-$canAjouterObservation = true;
-$canModifierObservation = true;
-$canHistoriserObservation = true;
-$canDetruireObservation = true;
+$canAjouterObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_AJOUTER));
+$canModifierObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_MODIFIER));
+$canHistoriserObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_HISTORISER));
+$canDetruireObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_SUPPRIMER));
+
+$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+$canValiderObservation  = true; //$this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
@@ -77,7 +81,6 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\ObservationController::historiserAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
                         >
                             <span class="icon historiser"> </span>
                         </a>
@@ -85,7 +88,6 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\ObservationController::restaurerAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/observation/restaurer', ['observation' => $observation->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
                         >
                             <span class="icon restaurer"> </span>
                         </a>
@@ -93,8 +95,8 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                 <?php endif; ?>
                 <?php if ($canDetruireObservation) : ?>
                     <a
-                        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::detruireAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/observation/detruire', ['observation' => $observation->getId()], [], true); ?>"
+                        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::supprimerAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/observation/supprimer', ['observation' => $observation->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
                         <span class="icon detruire"> </span>
@@ -158,4 +160,31 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                 Aucune observation
             <?php endif; ?>
         </div>
+<?php endif; ?>
+
+<?php if ($canValiderObservation AND $validationHierarchie === null AND $date_non_depassee === true) : ?>
+    <?php if ($validationObservation !== null) : ?>
+        <div class="pull-right">
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                        href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
+                        class="btn btn-danger action"
+                >
+                    <span class="icon validation-undo"></span>
+                    Révoquer la validation
+                </a>
+        </div>
+    <?php else : ?>
+        <div class="pull-right">
+            <a
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                    class="btn btn-success action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Valider les observations
+            </a>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>

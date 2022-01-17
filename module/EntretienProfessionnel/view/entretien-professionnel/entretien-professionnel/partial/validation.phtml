@@ -9,6 +9,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
+$canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 
@@ -116,9 +117,12 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             </div>
         </div>
     <?php else :?>
+            <p>
+                Pour exprimer et valider vos observations (facultatives) rendez vous dans l'onglet <em>Observations</em>.
+            </p>
             <?php if ($validationResponsable === null) : ?>
                 <div class="alert alert-info">
-                    Vous pouvez exprimer vos observations dans l'onglet <em>Observations</em> une fois que le responsable de l'entretien professionnel aura validé celui-ci.
+                    Vous pouvez exprimer vos observations qu'une fois que le responsable de l'entretien professionnel aura validé celui-ci.
                 </div>
             <?php endif; ?>
     <?php endif; ?>
@@ -160,7 +164,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderDrh and $validationAgent === null) : ?>
+                <?php if ($validationAgent === null) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationHierarchie->getId()], [], true); ?>"
@@ -172,8 +176,8 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 <?php endif; ?>
             </div>
         </div>
-    <?php else : ?>
-        <?php if ($validationObservation !== null OR $depasse) : ?>
+   <?php else : ?>
+        <?php if ($validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_DRH], [], true); ?>"

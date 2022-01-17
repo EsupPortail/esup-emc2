@@ -54,10 +54,10 @@ class ValidationInstance {
     }
 
     /**
-     * @param string $valeur
+     * @param string|null $valeur
      * @return ValidationInstance
      */
-    public function setValeur($valeur)
+    public function setValeur(?string $valeur)
     {
         $this->valeur = $valeur;
         return $this;

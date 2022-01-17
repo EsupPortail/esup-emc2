@@ -6,6 +6,7 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -15,6 +16,7 @@ use Zend\View\Model\ViewModel;
 class CampagneController extends AbstractActionController {
     use CampagneServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use RappelCampagneAvancementServiceAwareTrait;
     use CampagneFormAwareTrait;
 
     private function getAnneeScolaire() : string
@@ -49,6 +51,8 @@ class CampagneController extends AbstractActionController {
 
                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
+               $this->getRappelCampagneAvancementService()->creer($campagne);
+
             }
         }
 

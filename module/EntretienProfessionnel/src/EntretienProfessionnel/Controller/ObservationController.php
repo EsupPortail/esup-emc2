@@ -2,10 +2,14 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Entity\Db\Observation;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -13,7 +17,9 @@ use Zend\View\Model\ViewModel;
 
 class ObservationController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use ObservationServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
     use ObservationFormAwareTrait;
 
     public function ajouterAction() : ViewModel
@@ -33,6 +39,10 @@ class ObservationController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getObservationService()->create($observation);
+//                $this->getEntretienProfessionnelService()->addValidation(EntretienProfessionnelConstant::VALIDATION_OBSERVATION, $entretien);
+//                $etat = $this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION);
+//                $entretien->setEtat($etat);
+//                $this->getEntretienProfessionnelService()->update($entretien);
             }
         }
 
@@ -60,6 +70,10 @@ class ObservationController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getObservationService()->update($observation);
+//                $entretien = $observation->getEntretien();
+//                $validation = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+//                $this->getValidationInstanceService()->historise($validation);
+//                $this->getEntretienProfessionnelService()->addValidation(EntretienProfessionnelConstant::VALIDATION_OBSERVATION, $entretien);
             }
         }
 
@@ -76,14 +90,25 @@ class ObservationController extends AbstractActionController {
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->historise($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+//        $entretien = $observation->getEntretien();
+//        $validation = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+//        $this->getValidationInstanceService()->historise($validation);
+//        $etat = $this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE);
+//        $entretien->setEtat($etat);
+//        $this->getEntretienProfessionnelService()->update($entretien);
+        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
     public function restaurerAction() : Response
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->restore($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+//        $entretien = $observation->getEntretien();
+//        $this->getEntretienProfessionnelService()->addValidation(EntretienProfessionnelConstant::VALIDATION_OBSERVATION, $entretien);
+//        $etat = $this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION);
+//        $entretien->setEtat($etat);
+//        $this->getEntretienProfessionnelService()->update($entretien);
+        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
     public function supprimerAction() : ViewModel
@@ -94,7 +119,15 @@ class ObservationController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getObservationService()->delete($observation);
+            if ($data["reponse"] === "oui") {
+                $this->getObservationService()->delete($observation);
+//                $entretien = $observation->getEntretien();
+//                $validation = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+//                $this->getValidationInstanceService()->delete($validation);
+//                $etat = $this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE);
+//                $entretien->setEtat($etat);
+//                $this->getEntretienProfessionnelService()->update($entretien);
+            }
             exit();
         }
 

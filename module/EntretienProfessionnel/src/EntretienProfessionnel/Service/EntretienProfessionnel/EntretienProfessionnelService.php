@@ -22,6 +22,9 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
+use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
@@ -30,6 +33,8 @@ class EntretienProfessionnelService {
     use DelegueServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
+    use ValidationTypeServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -132,13 +137,13 @@ class EntretienProfessionnelService {
 
     /**
      * @param Agent|null $agent
-     * @param User|null $responsable
+     * @param Agent|null $responsable
      * @param Structure|null $structure
      * @param Campagne|null $campagne
      * @param Etat|null $etat
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels(?Agent $agent = null, ?User $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?Etat $etat = null) : array
+    public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?Etat $etat = null) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.annee, agent.nomUsuel, agent.prenom');
@@ -470,5 +475,24 @@ class EntretienProfessionnelService {
         $this->create($entretien);
         $this->recopiePrecedent($entretien);
         return $entretien;
+    }
+
+    /**
+     * @param string $type
+     * @param EntretienProfessionnel|null $entretien
+     * @param string|null $value
+     * @return ValidationInstance
+     */
+    public function addValidation(string $type, ?EntretienProfessionnel $entretien, ?string $value = null) : ValidationInstance
+    {
+        $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
+        $validation = new ValidationInstance();
+        $validation->setEntity($entretien);
+        $validation->setType($vtype);
+        $validation->setValeur($value);
+        $this->getValidationInstanceService()->create($validation);
+        $entretien->addValidation($validation);
+        $this->update($entretien);
+        return $validation;
     }
 }

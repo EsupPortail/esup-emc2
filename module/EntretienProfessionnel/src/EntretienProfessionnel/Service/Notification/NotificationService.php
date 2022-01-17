@@ -94,24 +94,6 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerValidationAgent(EntretienProfessionnel $entretien) : Mail
-    {
-        $responsables = $this->getAgentService()->getResponsablesHierarchiques($entretien->getAgent());
-        $mailResponsables = "";
-        foreach ($responsables as $responsable) {
-            if ($mailResponsables !== "" AND $responsable->getEmail() !== null) $mailResponsables .= ",";
-            if ($responsable->getEmail() !== null) $mailResponsables .= $responsable->getEmail();
-        }
-
-        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-AGENT", $vars);
-        $mail = $this->getMailService()->sendMail($mailResponsables, $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
-        return $mail;
-    }
-
     public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien) : Mail
     {
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
@@ -126,7 +108,18 @@ class NotificationService {
     public function triggerObservations(EntretienProfessionnel $entretien) : Mail
     {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_OBSERVATION_AGENT", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-OBSERVATION", $vars);
+        $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerPasObservations(EntretienProfessionnel $entretien) : Mail
+    {
+        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-PAS_D_OBSERVATION", $vars);
         $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
