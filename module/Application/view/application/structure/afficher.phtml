@@ -6,6 +6,7 @@
  * @var Structure $structure
  * @var Structure[] $filles
  * @var AgentMissionSpecifique[] $missions
+ * @var FichePoste[] $fiches
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
  * @var FichePoste[] $fichesRecrutements
@@ -18,7 +19,6 @@
  * @var Campagne $last
  * @var Campagne[] $campagnes
  * @var Delegue[] $delegues
-
  */
 
 use Application\Entity\Db\Agent;
@@ -150,7 +150,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         </div>
                     </div>
 
-                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'fichespostes' => $fiches]); ?>
 
                     <?php echo $this->portenote('StructureController::indexAction()>AgentsManuels', '', []); ?>
                     <div class="row">
@@ -169,7 +169,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                             </a>
                         </div>
                     </div>
-                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'fichespostes' => $fiches, 'options' => ['force' => true]]); ?>
 
                 </div>
 

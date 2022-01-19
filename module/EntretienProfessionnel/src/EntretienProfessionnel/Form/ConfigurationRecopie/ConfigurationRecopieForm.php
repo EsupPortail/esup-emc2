@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\ConfigurationEntretienProfessionnel;
+namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
 use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -9,11 +9,12 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class ConfigurationEntretienProfessionnelForm extends Form {
+class ConfigurationRecopieForm extends Form {
     use FormulaireServiceAwareTrait;
 
     public function init()
     {
+        //id => code
         $formulaire = $this->getFormulaireService()->getFormulaire(1);
         $options = $this->getFormulaireService()->getChampsAsOptions($formulaire);
 

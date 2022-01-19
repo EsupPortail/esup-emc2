@@ -5,7 +5,7 @@
  * @var EntretienProfessionnel $entretien
  * @var Agent $agent
  * @var ParcoursDeFormation[] $parcours
- * @var FichePoste $fichesposte
+ * @var FichePoste $ficheposte
  * @var FicheMetier[] $fichesmetiers
  * @var Mail[] $mails
  * @var string[] $documents
@@ -16,13 +16,12 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use Mailing\Model\Db\Mail;
+use UnicaenMail\Entity\Db\Mail;
 
 $displayParcours = false;
 $displayAcquis = false;
 
 $this->headTitle('Édition de l\'entretien professionnel');
-$ficheposte = $agent->getFichePosteActif();
 
 $droits = [
         'canVoir' => $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER)),
@@ -35,7 +34,7 @@ $droits = [
 </h1>
 
 <?php
-echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $fichesposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
+echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
 
 <div role="tabpanel">
@@ -96,7 +95,7 @@ echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $ag
 
             <?php if ($displayParcours === true) : ?>
                 <div id="parcours" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'affichage', 'modification' => false, 'droits' => $droits], 'source' => 'afficherAction']); ?>
+                    <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'ficheposte' => $ficheposte, 'options' => ['mode' => 'affichage', 'modification' => false, 'droits' => $droits], 'source' => 'afficherAction']); ?>
                 </div>
             <?php endif; ?>
             <?php if ($displayAcquis === true) : ?>

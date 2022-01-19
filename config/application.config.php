@@ -50,7 +50,7 @@ $modules = [
 
     'Application',
 
-    //'ZendDeveloperTools',
+//    'ZendDeveloperTools',
 
 ];
 

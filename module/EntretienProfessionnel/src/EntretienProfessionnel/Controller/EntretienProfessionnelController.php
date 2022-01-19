@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -48,6 +49,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use ObservationServiceAwareTrait;
     use MailServiceAwareTrait;
@@ -264,7 +266,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
 
-        $fichesposte = ($agent) ? $agent->getFichePosteActif() : [];
+        $fichesposte = ($agent) ? $this->getFichePosteService()->getFichePosteActiveByAgent($agent) : [];
         $fichesmetiers = [];
         if ($fichesposte) {
             foreach ($fichesposte->getFichesMetiers() as $fiche) {
@@ -290,7 +292,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
-        $ficheposte = ($agent) ? $agent->getFichePosteActif() : null;
+        $ficheposte = ($agent) ? $this->getFichePosteService()->getFichePosteActiveByAgent($agent) : null;
         $fichesmetiers = [];
         $parcours = ($ficheposte) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte) : null;
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
@@ -305,7 +307,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'parcours' => $parcours,
 
             'agent' => $agent,
-            'ficheposte' => $agent->getFichePosteActif(),
+            'ficheposte' => $this->getFichePosteService()->getFichePosteActiveByAgent($agent),
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
             'mails'                     => $mails,

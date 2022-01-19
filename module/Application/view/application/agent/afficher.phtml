@@ -22,6 +22,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var User[]  $responsables
  * @var array $parcoursArray
  * @var FichePoste[] $fichespostes
+ * @var FichePoste $ficheposte
  * @var AgentMissionSpecifique[] $missions
  * @var AgentAffectation[] $affectations
  * @var AgentStatut[] $statuts
@@ -165,7 +166,7 @@ if ($agent !== null) {
                     Il est possible qu'un domaine ou un métier ne possède pas de parcours.
                 </div>
 
-                <?php echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent], [], true); ?>
+                <?php echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent, 'ficheposte' => $ficheposte], [], true); ?>
             </div>
             <?php endif; ?>
             <div id="acquis" class="tab-pane " role="tabpanel">

@@ -194,7 +194,7 @@ class SpecificitePoste {
     }
 
     /** @return SpecificitePoste */
-    public function clone_it()
+    public function clone_it() : SpecificitePoste
     {
         $result = new SpecificitePoste();
         $result->setSpecificite($this->getSpecificite());

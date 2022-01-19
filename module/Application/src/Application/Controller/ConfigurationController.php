@@ -4,10 +4,8 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Application;
 use Application\Entity\Db\Competence;
-use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Formation\Entity\Db\Formation;
-use Application\Form\ConfigurationEntretienProfessionnel\ConfigurationEntretienProfessionnelFormAwareTrait;
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
@@ -31,7 +29,7 @@ class ConfigurationController extends AbstractActionController  {
     use FicheMetierServiceAwareTrait;
     use FormulaireServiceAwareTrait;
     use ConfigurationFicheMetierFormAwareTrait;
-    use ConfigurationEntretienProfessionnelFormAwareTrait;
+
 
     public function indexAction()
     {
@@ -126,68 +124,5 @@ class ConfigurationController extends AbstractActionController  {
         $this->flashMessenger()->addSuccessMessage("Ré-application terminée");
         return $this->redirect()->toRoute('configuration', [], [],true);
 
-    }
-
-    /** CONFIGURATION ENTRETIEN PROFESSIONNEL *************************************************************************/
-
-    public function ajouterRecopieAction()
-    {
-        $recopie = new ConfigurationEntretienProfessionnel();
-        $form = $this->getConfigurationEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('configuration/ajouter-recopie', [], [], true));
-        $form->bind($recopie);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getConfigurationService()->create($recopie);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une recopie de champ de l'entretien professionnel",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierRecopieAction()
-    {
-        $id = $this->params()->fromRoute('recopie');
-        $recopie = $this->getConfigurationService()->getConfigurationEntretienProfessionnel($id);
-        $form = $this->getConfigurationEntretienProfessionnelForm();
-        $form->setAttribute('action', $this->url()->fromRoute('configuration/modifier-recopie', ['recopie' => $recopie->getId()], [], true));
-        $form->bind($recopie);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getConfigurationService()->update($recopie);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'une recopie de champ de l'entretien professionnel",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function supprimerRecopieAction()
-    {
-        $id = $this->params()->fromRoute('recopie');
-        $recopie = $this->getConfigurationService()->getConfigurationEntretienProfessionnel($id);
-        $this->getConfigurationService()->delete($recopie);
-        return $this->redirect()->toRoute('configuration', [], [],true);
     }
 }

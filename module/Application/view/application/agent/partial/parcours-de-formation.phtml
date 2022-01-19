@@ -3,6 +3,7 @@
 /**
  * @var Agent $agent
  * @var array $parcoursArray ('type' => ParcoursDeFormation[])
+ * @var FichePoste $ficheposte
  */
 
 use Application\Entity\Db\Agent;
@@ -23,9 +24,8 @@ $canValidate = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
         <?php endforeach; ?>
 
         <?php
-        $fiche = $agent->getFichePosteActif();
-        if($fiche !== null) : ?>
-            <?php echo $this->parcoursApplication($fiche, $agent, ['mode' => 'modification', 'modification' => $canValidate]); ?>
+        if($ficheposte !== null) : ?>
+            <?php echo $this->parcoursApplication($ficheposte, $agent, ['mode' => 'modification', 'modification' => $canValidate]); ?>
         <?php endif; ?>
     </div>
 </div>

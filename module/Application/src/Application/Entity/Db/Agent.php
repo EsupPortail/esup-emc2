@@ -201,9 +201,9 @@ class Agent implements
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getHarpId() : int
+    public function getHarpId() : ?int
     {
         return $this->harpId;
     }
@@ -459,33 +459,6 @@ class Agent implements
 
     /** Postes en cours et Fiche de poste en cours ********************************************************************/
 
-    /**
-     * @return FichePoste
-     */
-    public function getFichePosteActif() : ?FichePoste
-    {
-        $now = (new DateTime());
-        $fiches = [];
-        /** @var FichePoste $fiche */
-        foreach ($this->fiches as $fiche) {
-            if ($fiche->getHistoCreation() <= $now and $fiche->estNonHistorise($now)) {
-                $fiches[] = $fiche;
-            }
-        }
-        if (count($fiches) > 1) throw new RuntimeException("Un agent a plus d'une fiche de poste active", 0, null);
-        if (empty($fiches)) return null;
-        return $fiches[0];
-    }
-
-    /**
-     * @return Poste
-     */
-    public function getPosteActif() : ?Poste
-    {
-        $fiche = $this->getFichePosteActif();
-        return ($fiche) ? $fiche->getPoste() : null;
-    }
-
     /** Entretien dans moins de 15 jours */
     public function hasEntretienEnCours() : bool
     {
@@ -525,7 +498,7 @@ class Agent implements
     {
         $quotites = $this->quotites->toArray();
         array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
-        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDebut() > $b->getDebut();});
+        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDateDebut() > $b->getDateDebut();});
         return $quotites;
     }
 

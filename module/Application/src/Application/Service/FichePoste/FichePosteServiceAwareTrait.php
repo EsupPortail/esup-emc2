@@ -24,6 +24,4 @@ Trait FichePosteServiceAwareTrait {
         $this->fichePosteService = $fichePosteService;
         return $this->fichePosteService;
     }
-
-
 }

@@ -77,7 +77,6 @@ class AgentController extends AbstractActionController
     use HasCompetenceCollectionServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
-
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use NatureServiceAwareTrait;
@@ -87,7 +86,6 @@ class AgentController extends AbstractActionController
     use CategorieServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use StructureServiceAwareTrait;
-
 
     use ApplicationElementFormAwareTrait;
     use CompetenceElementFormAwareTrait;
@@ -139,8 +137,9 @@ class AgentController extends AbstractActionController
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgents([$agent]);
+        $fichePosteActive = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
 
-        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($agent->getFichePosteActif());
+        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichePosteActive);
 //        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);
 
         return new ViewModel([
@@ -150,6 +149,7 @@ class AgentController extends AbstractActionController
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
             'fichespostes' => $fichespostes,
+            'ficheposte' => $fichePosteActive,
 
             'entretiens' => $entretiens,
             'responsables' => $responsables,

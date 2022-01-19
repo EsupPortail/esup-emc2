@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Form\ConfigurationEntretienProfessionnel;
+namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Zend\Hydrator\HydratorInterface;
 
-class ConfigurationEntretienProfessionnelHydrator implements HydratorInterface {
+class ConfigurationRecopieHydrator implements HydratorInterface {
 
     /**
      * @param ConfigurationEntretienProfessionnel $object

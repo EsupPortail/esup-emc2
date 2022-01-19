@@ -69,7 +69,7 @@ class StructureController extends AbstractActionController {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         /** Récupération des structures */
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] =  $structure;
 
@@ -103,7 +103,7 @@ class StructureController extends AbstractActionController {
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
         $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
-        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure, );
+        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -112,6 +112,7 @@ class StructureController extends AbstractActionController {
             'filles' =>   $structure->getEnfants(),
 
             'missions' => $missionsSpecifiques,
+            'fiches' => $fichesPostes,
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
             'fichesRecrutements' => $fichesRecrutements,
@@ -132,7 +133,7 @@ class StructureController extends AbstractActionController {
 
     public function editerDescriptionAction() : ViewModel
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $form = $this->getHasDescriptionForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/editer-description', ['structure' => $structure->getId()], [] , true));
@@ -159,7 +160,7 @@ class StructureController extends AbstractActionController {
 
     public function toggleResumeMereAction() : Response
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
         $this->getStructureService()->update($structure);
 
@@ -170,7 +171,7 @@ class StructureController extends AbstractActionController {
 
     public function ajouterGestionnaireAction() : ViewModel
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
 
         /** @var AjouterGestionnaireForm $form */
@@ -198,7 +199,7 @@ class StructureController extends AbstractActionController {
 
     public function retirerGestionnaireAction() : Response
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this, 'structure');
+        $structure = $this->getStructureService()->getRequestedStructure($this);
         $gestionnaire = $this->getAgentService()->getAgent($this->params()->fromRoute('gestionnaire'));
 
         $structure->removeGestionnaire($gestionnaire);
@@ -295,7 +296,7 @@ class StructureController extends AbstractActionController {
 
     /** FiCHE DE POSTE RECRUTEMENT ************************************************************************************/
 
-    public function ajouterFichePosteRecrutementAction()
+    public function ajouterFichePosteRecrutementAction() : Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $fiche = new FichePoste();
@@ -308,7 +309,7 @@ class StructureController extends AbstractActionController {
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
     }
 
-    public function dupliquerFichePosteRecrutementAction()
+    public function dupliquerFichePosteRecrutementAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
@@ -318,21 +319,7 @@ class StructureController extends AbstractActionController {
             $fiche = $this->getFichePosteService()->getFichePoste($data['fiche']);
 
             if ($fiche != null) {
-                $nouvelleFiche = new FichePoste();
-                $nouvelleFiche->setLibelle($fiche->getLibelle());
-                if ($fiche->getSpecificite()) {
-                    $specifite = $fiche->getSpecificite()->clone_it();
-                    $this->getSpecificitePosteService()->create($specifite);
-                    $nouvelleFiche->setSpecificite($specifite);
-                }
-                $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
-
-                //dupliquer fiche metier externe
-                foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
-                    $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
-                    $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
-                    $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
-                }
+                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
 
                 $structure->addFichePosteRecrutement($nouvelleFiche);
                 $this->getStructureService()->update($structure);
@@ -380,7 +367,7 @@ class StructureController extends AbstractActionController {
             $fiche = "";
             $complement = "";
 
-            $ficheposte = $agent->getFichePosteActif();
+            $ficheposte = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
             if ($ficheposte !== null) {
                 $fiche = $ficheposte->getLibelleMetierPrincipal(FichePoste::TYPE_GENRE);
                 $complement = $ficheposte->getLibelle();

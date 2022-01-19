@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Form\ConfigurationEntretienProfessionnel\ConfigurationEntretienProfessionnelForm;
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierForm;
 use Application\Service\Application\ApplicationService;
 use Application\Service\Competence\CompetenceService;
@@ -28,7 +27,6 @@ class ConfigurationControllerFactory {
          * @var FicheMetierService $ficheMetierService
          * @®ar FormulaireService $formulaireService
          * @var ConfigurationFicheMetierForm $configurationFicheMetierForm
-         * @var ConfigurationEntretienProfessionnelForm $configurationEntretienProfessionnelForm
          */
         $configurationService = $container->get(ConfigurationService::class);
         $applicationService = $container->get(ApplicationService::class);
@@ -37,7 +35,6 @@ class ConfigurationControllerFactory {
         $ficheMetierService = $container->get(FicheMetierService::class);
         $formulaireService = $container->get(FormulaireService::class);
         $configurationFicheMetierForm = $container->get('FormElementManager')->get(ConfigurationFicheMetierForm::class);
-        $configurationEntretienProfessionnelForm = $container->get('FormElementManager')->get(ConfigurationEntretienProfessionnelForm::class);
 
         /** @var ConfigurationController $controller */
         $controller = new ConfigurationController();
@@ -48,7 +45,6 @@ class ConfigurationControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFormulaireService($formulaireService);
         $controller->setConfigurationFicheMetierForm($configurationFicheMetierForm);
-        $controller->setConfigurationEntretienProfessionnelForm($configurationEntretienProfessionnelForm);
         return $controller;
     }
 }

@@ -395,17 +395,13 @@ EOS;
      */
     public function getStructuresByCurrentRole(User $user, Role $role) : array
     {
-
-
         $selecteur = [];
         if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
-            $user = $this->getUserService()->getConnectedUser();
             $structures = $this->getStructuresByGestionnaire($user);
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;
         }
         if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
-            $user = $this->getUserService()->getConnectedUser();
             $structures = $this->getStructuresByResponsable($user);
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;

@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Controller;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
+use Application\Service\FichePoste\FichePosteService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
@@ -39,6 +40,7 @@ class EntretienProfessionnelControllerFactory {
          * @var EntretienProfessionnelService $entretienProfesionnelService
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
+         * @var FichePosteService $fichePosteService
          * @var ObservationService $observationService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -56,6 +58,7 @@ class EntretienProfessionnelControllerFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
+        $fichePosteService = $container->get(FichePosteService::class);
 
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -94,6 +97,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);
+        $controller->setFichePosteService($fichePosteService);
         $controller->setCampagneService($campagneService);
         $controller->setObservationService($observationService);
         $controller->setParametreService($parametreService);

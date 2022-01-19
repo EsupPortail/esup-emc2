@@ -11,6 +11,7 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -27,6 +28,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FichePosteService {
     use EntityManagerAwareTrait;
     use StructureServiceAwareTrait;
+    use SpecificitePosteServiceAwareTrait;
     use AgentServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -194,6 +196,8 @@ class FichePosteService {
 
     }
 
+    /** Recupération des fiche de postes par agent ********************************************************************/
+
     /**
      * @var Agent $agent
      * @return FichePoste[]
@@ -208,6 +212,41 @@ class FichePosteService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @param Agent $agent
+     * @param DateTime|null $date
+     * @return FichePoste|null
+     */
+    public function getFichePosteByAgent(Agent $agent, ?DateTime $date = null) : ?FichePoste
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('fiche.histoCreation <= :date')
+            ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
+            ->setParameter('date', $date)
+            ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch(NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs fiches de poste remontées pour l'agent [".$agent->getDenomination()."] en date du [".$date->format('d/m/Y')."]");
+        }
+        return $result;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return FichePoste|null
+     */
+    public function getFichePosteActiveByAgent(Agent $agent) : ?FichePoste
+    {
+        return $this->getFichePosteByAgent($agent);
+    }
+
+    /** AUTRES *******************************************************************************************/
 
     /**
      * @param int $id
@@ -317,7 +356,12 @@ EOS;
         } catch (DRV_Exception $e) {
             throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
         }
-        return $tmp;
+
+        $array = [];
+        foreach ($tmp as $fiche) {
+            $array[$fiche['agent_id']] = $fiche;
+        }
+        return $array;
     }
 
     /** FICHE TYPE EXTERNE ********************************************************************************************/
@@ -793,26 +837,6 @@ EOS;
         return $dictionnaire;
     }
 
-    /**
-     * @param Agent $agent
-     * @return FichePoste
-     */
-    public function getFichePosteByAgent(Agent $agent)
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('fiche.agent = :agent')
-            ->setParameter('agent',$agent)
-            ->andWhere('fiche.histoDestruction IS NULL')
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs fiche de postes actives associés à l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
-        }
-        return $result;
-    }
-
     public function updateRepatitions(FicheTypeExterne $fichetype, $data)
     {
         /** @var DomaineRepartition[] $repartitions */
@@ -873,5 +897,30 @@ EOS;
         }
 
         return $options;
+    }
+
+    /**
+     * @param FichePoste $fiche
+     * @return FichePoste
+     */
+    public function clonerFichePoste(FichePoste $fiche) : FichePoste
+    {
+        $nouvelleFiche = new FichePoste();
+        $nouvelleFiche->setLibelle($fiche->getLibelle());
+        if ($fiche->getSpecificite()) {
+            $specifite = $fiche->getSpecificite()->clone_it();
+            $this->getSpecificitePosteService()->create($specifite);
+            $nouvelleFiche->setSpecificite($specifite);
+        }
+        $nouvelleFiche = $this->create($nouvelleFiche);
+
+        //dupliquer fiche metier externe
+        foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
+            $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
+            $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
+            $this->createFicheTypeExterne($nouvelleFicheMetier);
+        }
+
+        return $nouvelleFiche;
     }
 }

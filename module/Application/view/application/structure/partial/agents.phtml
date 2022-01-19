@@ -3,11 +3,13 @@
 /**
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var FichePoste[] $fichespostes
  * @var array $options
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -76,13 +78,13 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php endforeach; ?>
             </td>
             <td>
-                <?php $fiche = $agent->getFichePosteActif(); ?>
+                <?php $fiche = $fichespostes[$agent->getId()]; ?>
                 <?php if ($fiche !== null) : ?>
-                <?php if ($fiche->isComplete()) : ?>
+                <?php if ($fiche["fiche_principale"] !== null) : ?>
                     <span
                         class="icon ok" style="color:darkgreen;"
                         data-toggle="tooltip" data-html="true"
-                        title="<?php echo $fiche->getLibelleMetierPrincipal(); ?>"
+                        title="<?php echo $fiche["fiche_principale"]; ?>"
                     >
 
                                         </span>
@@ -129,7 +131,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <?php if ($canVoirFichePoste) : ?>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche['id']], [], true); ?>"
                             target="_blank"
                         ><span class="icon fiche-poste"
                                data-toggle="tooltip" data-html="true"
@@ -139,7 +141,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <?php if ($canModifierFichePoste) : ?>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche['id']], [], true); ?>"
                             target="_blank"
                         ><span class="icon editer"
                                data-toggle="tooltip" data-html="true"

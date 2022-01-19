@@ -31,7 +31,6 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
-use Mailing\Provider\Privilege\MailingPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;

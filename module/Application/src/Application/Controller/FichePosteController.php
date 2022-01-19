@@ -127,24 +127,9 @@ class FichePosteController extends AbstractActionController {
             $ficheId = $data['fiche'];
             $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
 
-            $nouvelleFiche = new FichePoste();
-            $nouvelleFiche->setLibelle($fiche->getLibelle());
+            $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
             $nouvelleFiche->setAgent($agent);
-
-            //dupliquer specificite
-            if ($fiche->getSpecificite()) {
-                $specifite = $fiche->getSpecificite()->clone_it();
-                $this->getSpecificitePosteService()->create($specifite);
-                $nouvelleFiche->setSpecificite($specifite);
-            }
-            $nouvelleFiche = $this->getFichePosteService()->create($nouvelleFiche);
-
-            //dupliquer fiche metier externe
-            foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {
-                $nouvelleFicheMetier = $ficheMetierExterne->clone_it();
-                $nouvelleFicheMetier->setFichePoste($nouvelleFiche);
-                $this->getFichePosteService()->createFicheTypeExterne($nouvelleFicheMetier);
-            }
+            $this->getFichePosteService()->update($nouvelleFiche);
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
             return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);

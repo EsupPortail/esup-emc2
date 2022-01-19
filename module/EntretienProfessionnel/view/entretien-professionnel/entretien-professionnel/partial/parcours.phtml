@@ -4,10 +4,12 @@
  * @var Agent $agent
  * @var EntretienProfessionnel $entretien
  * @var ParcoursDeFormation[] $parcours
+ * @var FichePoste $ficheposte
  * @var array $options
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
@@ -42,9 +44,8 @@ $options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretie
     <div class="col-md-1"></div>
     <div class="col-md-10">
         <?php
-        $fiche = $agent->getFichePosteActif();
-        if($fiche !== null) : ?>
-            <?php echo $this->parcoursApplication($fiche, $agent, $options); ?>
+        if($ficheposte !== null) : ?>
+            <?php echo $this->parcoursApplication($ficheposte, $agent, $options); ?>
         <?php endif; ?>
     </div>
 </div>
