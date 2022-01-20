@@ -52,7 +52,6 @@ class CampagneController extends AbstractActionController {
                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                $this->getRappelCampagneAvancementService()->creer($campagne);
-
             }
         }
 

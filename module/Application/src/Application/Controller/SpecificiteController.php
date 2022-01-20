@@ -8,6 +8,7 @@ use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\SpecificiteActivite\SpecificiteActiviteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -20,7 +21,7 @@ class SpecificiteController extends AbstractActionController
 
     /** ACTIVITES LIEES A LA SPECIFICITE DE POSTE *********************************************************************/
 
-    public function ajouterActiviteAction()
+    public function ajouterActiviteAction() : ViewModel
     {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $specificite = $this->getSpecificitePosteService()->getRequestedSpecificitePoste($this);
@@ -63,7 +64,7 @@ class SpecificiteController extends AbstractActionController
 
     }
 
-    public function retirerActiviteAction()
+    public function retirerActiviteAction() : Response
     {
         $specificiteActivite = $this->getSpecificiteActiviteService()->getRequestSpecificiteActivite($this);
         $retour = $this->params()->fromQuery('retour');
@@ -74,7 +75,7 @@ class SpecificiteController extends AbstractActionController
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $specificiteActivite->getSpecificite()->getFiche()->getId()], [], true);
     }
 
-    public function gererActiviteAction()
+    public function gererActiviteAction() : ViewModel
     {
         $specificiteActivite = $this->getSpecificiteActiviteService()->getRequestSpecificiteActivite($this);
 

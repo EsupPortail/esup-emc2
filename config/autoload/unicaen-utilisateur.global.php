@@ -72,7 +72,10 @@ return [
 //            'ldap'      => LdapService::class,
             'octopus'   => OctopusService::class,
         ],
-        'identity-provider' => IdentityProvider::class,
+        'identity-provider' => [
+            IdentityProvider::class,
+            \EntretienProfessionnel\Provider\IdentityProvider::class,
+        ],
     ],
 
     // pour la mise a jour des champs d'historisation ...

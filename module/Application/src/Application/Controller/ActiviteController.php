@@ -21,6 +21,7 @@ use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -44,7 +45,7 @@ class ActiviteController  extends AbstractActionController {
 
     /** ACTION SIMPLE *************************************************************************************************/
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         /** @var Activite[] $activites */
         $activites = $this->getActiviteService()->getActivites();
@@ -54,7 +55,18 @@ class ActiviteController  extends AbstractActionController {
         ]);
     }
 
-    public function creerAction()
+    public function afficherAction() : ViewModel
+    {
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
+
+        return new ViewModel([
+            'title' => 'Visualisation d\'une activité',
+            'mode' => 'afficher',
+            'activite' => $activite,
+        ]);
+    }
+
+    public function creerAction() : ViewModel
     {
         /** @var Activite $activite */
         $activite = new Activite();
@@ -84,18 +96,7 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function afficherAction()
-    {
-        $activite = $this->getActiviteService()->getRequestedActivite($this);
-
-        return new ViewModel([
-            'title' => 'Visualisation d\'une activité',
-            'mode' => 'afficher',
-            'activite' => $activite,
-        ]);
-    }
-
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
@@ -108,23 +109,23 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $this->getActiviteService()->historise($activite);
         return $this->redirect()->toRoute('activite');
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $this->getActiviteService()->restore($activite);
         return $this->redirect()->toRoute('activite');
     }
 
-    public function detruireAction()
+    public function detruireAction() : ViewModel
     {
-        $activite = $this->getActiviteService()->getRequestedActivite($this, 'activite');
+        $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -148,7 +149,7 @@ class ActiviteController  extends AbstractActionController {
 
     /** GESTION DES CONSTITUANTS **************************************************************************************/
 
-    public function modifierLibelleAction()
+    public function modifierLibelleAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
@@ -172,7 +173,8 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function ajouterDescriptionAction() {
+    public function ajouterDescriptionAction() : ViewModel
+    {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $description = new ActiviteDescription();
 
@@ -203,7 +205,7 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function ajouterDescriptionsAction()
+    public function ajouterDescriptionsAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $form = $this->getHasDescriptionForm();
@@ -237,7 +239,8 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierDescriptionAction() {
+    public function modifierDescriptionAction() : ViewModel
+    {
         $description = $this->getActiviteDescriptionService()->getRequestedActiviteDescription($this);
 
         $form = $this->getModifierLibelleForm();
@@ -269,7 +272,8 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function supprimerDescriptionAction() {
+    public function supprimerDescriptionAction() : Response
+    {
         $description = $this->getActiviteDescriptionService()->getRequestedActiviteDescription($this);
         $activite = $description->getActivite();
 
@@ -278,7 +282,8 @@ class ActiviteController  extends AbstractActionController {
         return $this->redirect()->toRoute('activite/modifier', ['activite' => $activite->getId()], [], true);
     }
 
-    public function modifierApplicationAction() {
+    public function modifierApplicationAction() : ViewModel
+    {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         $form = $this->getSelectionApplicationForm();
@@ -301,7 +306,8 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierCompetenceAction() {
+    public function modifierCompetenceAction() : ViewModel
+    {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         $form = $this->getSelectionCompetenceForm();
@@ -324,7 +330,8 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierFormationAction() {
+    public function modifierFormationAction() : ViewModel
+    {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
         $form = $this->getSelectionFormationForm();
@@ -348,7 +355,7 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function updateOrdreDescriptionAction()
+    public function updateOrdreDescriptionAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $ordre = explode("_",$this->params()->fromRoute('ordre'));
@@ -376,7 +383,7 @@ class ActiviteController  extends AbstractActionController {
 
     /** ENVELOPPE DE NIVEAUX ******************************************************************************************/
 
-    public function ajouterNiveauxAction()
+    public function ajouterNiveauxAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
 
@@ -404,7 +411,7 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierNiveauxAction()
+    public function modifierNiveauxAction() : ViewModel
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $niveauEnveloppe = $activite->getNiveaux();
@@ -430,7 +437,7 @@ class ActiviteController  extends AbstractActionController {
         return $vm;
     }
 
-    public function retirerNiveauxAction()
+    public function retirerNiveauxAction() : Response
     {
         $activite = $this->getActiviteService()->getRequestedActivite($this);
         $this->getNiveauEnveloppeService()->delete($activite->getNiveaux());
@@ -439,7 +446,7 @@ class ActiviteController  extends AbstractActionController {
 
     }
 
-    public function initialiserNiveauxAction()
+    public function initialiserNiveauxAction() : Response
     {
         $activites = $this->getActiviteService()->getActivites();
         foreach ($activites as $activite) {

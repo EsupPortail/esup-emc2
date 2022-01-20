@@ -15,7 +15,6 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
-use EntretienProfessionnel\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
@@ -50,7 +49,6 @@ class EntretienProfessionnelControllerFactory {
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
-         * @var UrlService $urlService
          */
         $agentService = $container->get(AgentService::class);
         $renduService = $container->get(RenduService::class);
@@ -72,7 +70,6 @@ class EntretienProfessionnelControllerFactory {
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
-        $urlService = $container->get(UrlService::class);
 
         /**
          * @var EntretienProfessionnelForm $entretienProfessionnelForm
@@ -108,7 +105,6 @@ class EntretienProfessionnelControllerFactory {
         $controller->setNotificationService($notificationService);
         $controller->setRappelEntretienProfessionnelService($rappelEntretienProfessionnelService);
         $controller->setStructureService($structureService);
-        $controller->setUrlService($urlService);
 
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
         $controller->setCampagneForm($campagneForm);

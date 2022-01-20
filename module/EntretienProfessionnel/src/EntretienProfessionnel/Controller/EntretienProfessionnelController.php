@@ -21,7 +21,6 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
-use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Exception;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
@@ -61,7 +60,6 @@ class EntretienProfessionnelController extends AbstractActionController
     use ValidationTypeServiceAwareTrait;
     use RappelEntretienProfessionnelServiceAwareTrait;
     use StructureServiceAwareTrait;
-    use UrlServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
     use CampagneFormAwareTrait;
@@ -370,8 +368,6 @@ class EntretienProfessionnelController extends AbstractActionController
                 if ($data["reponse"] === "non") $validation = $this->getEntretienProfessionnelService()->addValidation($type, $entretien, 'Refus');
             }
             if ($validation !== null) {
-                $urlService = $this->getUrlService();
-                $urlService->setVariables(['entretien' => $entretien]);
                 switch ($type) {
                     case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
