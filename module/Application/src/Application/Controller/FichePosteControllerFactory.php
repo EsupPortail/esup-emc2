@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
-use Application\Form\AssocierPoste\AssocierPosteForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
@@ -23,7 +22,7 @@ use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FichePosteControllerFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FichePosteController
     {
         /**
          * @var AgentService $agentService
@@ -53,13 +52,11 @@ class FichePosteControllerFactory {
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
-         * @var AssocierPosteForm $associerPosteForm
          * @var AssocierTitreForm $associerTitreForm
          * @var SpecificitePosteForm $specificiftePosteForm
          * @var ExpertiseForm $expertiseForm
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
-        $associerPosteForm = $container->get('FormElementManager')->get(AssocierPosteForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
         $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
@@ -82,7 +79,6 @@ class FichePosteControllerFactory {
         $controller->setParcoursDeFormationService($parcoursService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
-        $controller->setAssocierPosteForm($associerPosteForm);
         $controller->setAssocierTitreForm($associerTitreForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);
         $controller->setExpertiseForm($expertiseForm);

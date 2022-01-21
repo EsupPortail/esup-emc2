@@ -103,7 +103,6 @@ return [
                         'editer',
 
                         'associer-agent',
-                        'associer-poste',
                         'associer-titre',
                         'editer-specificite',
                         'ajouter-fiche-metier',
@@ -286,17 +285,6 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'associer-agent',
-                            ],
-                        ],
-                    ],
-                    'associer-poste' => [
-                        'type' => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/associer-poste/:fiche-poste',
-                            'defaults' => [
-                                'controller' => FichePosteController::class,
-                                'action'     => 'associer-poste',
                             ],
                         ],
                     ],
