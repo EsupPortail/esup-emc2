@@ -61,4 +61,9 @@ trait HasApplicationCollectionTrait
     {
         $this->applications->add($element);
     }
+
+    public function removeApplicationElement(ApplicationElement $element)
+    {
+        $this->applications->removeElement($element);
+    }
 }

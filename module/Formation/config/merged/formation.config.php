@@ -106,6 +106,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'detruire',
+                        'dedoublonner',
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_SUPPRIMER,
@@ -225,6 +226,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                    ],
+                    'dedoublonner' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dedoublonner/:formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'dedoublonner',
                             ],
                         ],
                     ],

@@ -330,3 +330,14 @@ span.icon.reset:before,
 span.icon.remise-a-zero:before {
     content: "\f12d";
 }
+
+span.icon.merge:before,
+span.icon.fusionner:before
+{
+    content: "\f247";
+}
+span.icon.unmerge:before,
+span.icon.defusionner:before
+{
+    content: "\f248";
+}

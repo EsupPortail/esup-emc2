@@ -18,6 +18,7 @@ $canAjouter = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivi
 $canEditer = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 $canHistoriser = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_HISTORISER));
 $canDetruire = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
+$canDedoublonner = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_SUPPRIMER));
 
 $this->headTitle("Actions de formation");
 
@@ -87,6 +88,14 @@ $this->headTitle("Actions de formation");
                         >
                             <span class="icon restaurer" title="Restaurer la formation"></span></a>
                     <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDedoublonner) : ?>
+                    <a
+                        <?php /** @see FormationController::dedoublonnerAction() */ ?>
+                            href="<?php echo $this->url('formation/dedoublonner', ['formation' => $formation->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon fusionner" title="Dédoublonner la formation"></span></a>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <a

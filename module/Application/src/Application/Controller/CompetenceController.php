@@ -423,7 +423,8 @@ class CompetenceController extends AbstractActionController
         return $this->redirect()->toRoute('competence',[],[], true);
     }
 
-    public function substituerAction() {
+    public function substituerAction() : ViewModel
+    {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
 
         $form = $this->getSelectionCompetenceForm();

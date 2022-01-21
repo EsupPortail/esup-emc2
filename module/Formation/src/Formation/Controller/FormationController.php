@@ -11,7 +11,9 @@ use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
+use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Zend\Http\Request;
@@ -23,6 +25,7 @@ use Zend\View\Model\ViewModel;
 class FormationController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
+    use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
@@ -32,6 +35,7 @@ class FormationController extends AbstractActionController
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementFormAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use SelectionFormationFormAwareTrait;
 
     /** CRUD **********************************************************************************************************/
 
@@ -268,5 +272,71 @@ class FormationController extends AbstractActionController
             return new JsonModel($result);
         }
         exit;
+    }
+
+    /** DEBOULONNAGE **************************************************************************************************/
+
+    public function dedoublonnerAction() : ViewModel
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+
+        $form = $this->getSelectionFormationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/dedoublonner', ['formation' => $formation->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $formationSub = $this->getFormationService()->getFormation($data['formations'][0]);
+
+            if ($formationSub AND $formationSub !== $formation) {
+                //décalages des éléments
+                $elements = $this->getFormationElementService()->getElementsByFormation($formation);
+                foreach ($elements as $element) {
+                    $element->setFormation($formationSub);
+                    $this->getFormationElementService()->update($element);
+                }
+                //décalage des instances
+                $instances = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
+                foreach ($instances as $instance) {
+                    $instance->setFormation($formationSub);
+                    $this->getFormationInstanceService()->update($instance);
+                }
+                //décalage des parcours
+                // TODO décaler dans les parcours de formations
+
+                //decalage des applications acquises
+                $applications = $formation->getApplicationCollection();
+                foreach ($applications as $application) {
+                    if ($formationSub->hasApplication($application->getApplication())) {
+                        $this->getApplicationElementService()->delete($application);
+                    } else {
+                        $formation->removeApplicationElement($application);
+                        $formationSub->addApplicationElement($application);
+                    }
+                }
+                //decalage des compétences acquises
+                $competences = $formation->getCompetenceCollection();
+                foreach ($competences as $competence) {
+                    if ($formationSub->hasCompetence($competence->getCompetence())) {
+                        $this->getCompetenceElementService()->delete($competence);
+                    } else {
+                        $formation->removeCompetenceElement($competence);
+                        $formationSub->addCompetenceElement($competence);
+                    }
+                }
+                //effacement final
+                $this->getFormationService()->delete($formation);
+                $this->getFormationService()->update($formationSub);
+            }
+
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Sélection de la formation qui remplacera [".$formation->getLibelle()."]",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }

@@ -52,4 +52,9 @@ trait HasCompetenceCollectionTrait {
     {
         $this->competences->add($element);
     }
+
+    public function removeCompetenceElement(CompetenceElement $element)
+    {
+        $this->competences->removeElement($element);
+    }
 }
