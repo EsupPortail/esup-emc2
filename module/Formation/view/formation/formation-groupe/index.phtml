@@ -14,6 +14,7 @@ $canAfficher        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
 $canAjouter         = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AJOUTER));
 $canEditer          = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_MODIFIER));
 $canHistoriser      = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_HISTORISER));
+$canDedoublonner    = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 
 ?>
@@ -39,7 +40,7 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
     </div>
 </div>
 
-<?php echo $this->partial('partial/filtre',['historise' => $historise, 'source' => $source], [], true); ?>
+<?php //echo $this->partial('partial/filtre',['historise' => $historise, 'source' => $source], [], true); ?>
 
 <table class="datatable table table-condensed table-hover" id="groupes">
     <thead>
@@ -98,6 +99,16 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                         <span class="icon restaurer" style="color:lightgrey;"></span>
                     <?php endif; ?>
                 <?php endif; ?>
+                <?php if ($canDedoublonner) : ?>
+                    <a
+                        <?php /** @see FormationGroupeController::dedoublonnerAction() */ ?>
+                            href="<?php  echo $this->url('formation-groupe/dedoublonner', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon fusionner" title="Dedoublonner le groupe"></span></a>
+                <?php else : ?>
+                    <span class="icon fusionner" style="color:lightgrey;"></span>
+                <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <a
                         <?php /** @see FormationGroupeController::detruireGroupeAction() */ ?>
@@ -113,3 +124,12 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

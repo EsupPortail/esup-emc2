@@ -8,6 +8,8 @@ use Formation\Form\FormationGroupe\FormationGroupeForm;
 use Formation\Form\FormationGroupe\FormationGroupeFormFactory;
 use Formation\Form\FormationGroupe\FormationGroupeHydrator;
 use Formation\Form\FormationGroupe\FormationGroupeHydratorFactory;
+use Formation\Form\SelectionFormationGroupe\SelectionFormationGroupeForm;
+use Formation\Form\SelectionFormationGroupe\SelectionFormationGroupeFormFactory;
 use Formation\Provider\Privilege\FormationgroupePrivileges;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationGroupe\FormationGroupeServiceFactory;
@@ -69,6 +71,7 @@ return [
                     'controller' => FormationGroupeController::class,
                     'action' => [
                         'detruire-groupe',
+                        'dedoublonner'
                     ],
                     'privileges' => [
                         FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER,
@@ -161,6 +164,16 @@ return [
                             ],
                         ],
                     ],
+                    'dedoublonner' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dedoublonner/:formation-groupe',
+                            'defaults' => [
+                                'controller' => FormationGroupeController::class,
+                                'action'     => 'dedoublonner',
+                            ],
+                        ],
+                    ],
                     'detruire' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -189,6 +202,7 @@ return [
     'form_elements' => [
         'factories' => [
             FormationGroupeForm::class => FormationGroupeFormFactory::class,
+            SelectionFormationGroupeForm::class => SelectionFormationGroupeFormFactory::class,
         ],
     ],
     'hydrators' => [

@@ -5,6 +5,8 @@ namespace Formation\Controller;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Form\FormationGroupe\FormationGroupeFormAwareTrait;
+use Formation\Form\SelectionFormationGroupe\SelectionFormationGroupeFormAwareTrait;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -13,8 +15,10 @@ use Zend\View\Model\ViewModel;
 
 class FormationGroupeController extends AbstractActionController
 {
+    use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
+    use SelectionFormationGroupeFormAwareTrait;
 
     /** CRUD **********************************************************************************************************/
 
@@ -137,6 +141,43 @@ class FormationGroupeController extends AbstractActionController
                 'action' => $this->url()->fromRoute('formation-groupe/detruire', ["formation-groupe" => $groupe->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** DEBOULONNAGE **************************************************************************************************/
+
+    public function dedoublonnerAction() : ViewModel
+    {
+        $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
+
+        $form = $this->getSelectionFormationGroupeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-groupe/dedoublonner', ['formation-groupe' => $groupe->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $groupeSub = $this->getFormationGroupeService()->getFormationGroupe($data['groupes']);
+
+            if ($groupeSub AND $groupeSub !== $groupe) {
+                //décalages des formations
+                $formations = $groupe->getFormations();
+                foreach ($formations as $formation) {
+                    $formation->setGroupe($groupeSub);
+                    $this->getFormationService()->update($formation);
+                }
+
+                $this->getFormationGroupeService()->delete($groupe);
+                $this->getFormationGroupeService()->update($groupeSub);
+            }
+
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Sélection de le groupe qui remplacera [".$groupe->getLibelle()."]",
+            'form' => $form,
+        ]);
         return $vm;
     }
 }
