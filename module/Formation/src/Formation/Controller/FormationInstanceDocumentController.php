@@ -76,7 +76,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FORMATION_CONVOCATION', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FORMATION_CONVOCATION', $vars);
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
@@ -99,7 +99,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FORMATION_ATTESTATION', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FORMATION_ATTESTATION', $vars);
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');

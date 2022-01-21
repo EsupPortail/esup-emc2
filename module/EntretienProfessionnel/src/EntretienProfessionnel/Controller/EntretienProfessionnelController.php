@@ -485,7 +485,8 @@ class EntretienProfessionnelController extends AbstractActionController
         $depassee = $dateButoir < (new DateTime());
 
         if ($entretien->getToken() === $token) {
-            $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'))->sub(new DateInterval('P1W'));
+            $dateRappel = DateTime::createFromFormat('d/m/Y à H:i', $entretien->getDateEntretien()->format('d/m/Y à H:i'));
+            $dateRappel = $dateRappel->sub(new DateInterval('P1W'));
             $this->getRappelEntretienProfessionnelService()->creer($entretien, $dateRappel);
 
             $entretien->setToken(null);

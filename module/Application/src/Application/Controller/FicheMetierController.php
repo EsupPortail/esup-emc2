@@ -182,7 +182,7 @@ class FicheMetierController extends AbstractActionController
             'metier' => $fichemetier->getMetier(),
             'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FICHE_METIER', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_METIER', $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

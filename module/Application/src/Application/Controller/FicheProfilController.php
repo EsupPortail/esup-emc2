@@ -118,7 +118,7 @@ class FicheProfilController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('PROFIL_DE_RECRUTEMENT', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PROFIL_DE_RECRUTEMENT', $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

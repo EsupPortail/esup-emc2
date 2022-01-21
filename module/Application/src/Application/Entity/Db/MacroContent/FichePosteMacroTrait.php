@@ -77,8 +77,7 @@ trait FichePosteMacroTrait {
             $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
 
-        $texte = "<h3> Applications </h3>";
-        $texte .= "<ul>";
+        $texte = "<ul>";
         foreach ($result as $groupe => $liste) {
             $texte .= "<li class='rubrique'>";
             $texte .= $groupe;

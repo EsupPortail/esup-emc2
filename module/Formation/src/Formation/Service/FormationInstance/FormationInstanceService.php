@@ -259,7 +259,7 @@ class FormationInstanceService
             'instance' => $instance,
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSCRIPTION_OUVERTE", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_OUVERTE", $vars);
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -278,7 +278,7 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
 
             $vars = [ 'agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService() ];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_PRINCIPALE", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_PRINCIPALE", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -287,7 +287,7 @@ class FormationInstanceService
         foreach ($instance->getListeComplementaire() as $inscrit) {
 
             $vars = [ 'agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService() ];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_COMPLEMENTAIRE", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_COMPLEMENTAIRE", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -307,7 +307,7 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
 
             $vars = ['instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_CONVOCATION", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_CONVOCATION", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -329,7 +329,7 @@ class FormationInstanceService
 
         $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
         $vars = ['instance' => $instance, 'UrlService' => $urlService];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_EMARGEMENT", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_EMARGEMENT", $vars);
         $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -346,7 +346,7 @@ class FormationInstanceService
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
             $vars = [ 'instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->genereateRenduByTemplateCode("FORMATION_INSTANCE_RETOUR", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_RETOUR", $vars);
             $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);

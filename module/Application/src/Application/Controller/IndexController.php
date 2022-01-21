@@ -68,7 +68,7 @@ class IndexController extends AbstractActionController
                     break;
             }
         }
-
+                
         return new ViewModel([
             'user' => $connectedUser,
             'role' => $connectedRole,

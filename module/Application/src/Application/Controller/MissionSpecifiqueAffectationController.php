@@ -207,7 +207,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('MISSION_SPECIFIQUE_LETTRE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('MISSION_SPECIFIQUE_LETTRE', $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

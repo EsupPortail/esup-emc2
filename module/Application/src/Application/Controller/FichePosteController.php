@@ -286,7 +286,7 @@ class FichePosteController extends AbstractActionController {
             'agent' => $agent,
             'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
         ];
-        $rendu = $this->getRenduService()->genereateRenduByTemplateCode('FICHE_DE_POSTE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_DE_POSTE', $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
