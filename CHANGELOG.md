@@ -4,6 +4,9 @@ Version 1.3.0 *Module de bourse emploi*
 
 Version 1.2.0 *Module de formation*
 -------------
++ Dédoublonnage des formations
++ Dédoublonnage des groupes de formation
+
 
 Version 1.1.5
 -------------

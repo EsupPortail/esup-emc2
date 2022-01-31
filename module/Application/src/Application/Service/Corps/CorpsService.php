@@ -2,6 +2,7 @@
 
 namespace Application\Service\Corps;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Corps;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -34,7 +35,8 @@ class CorpsService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() {
+    public function createQueryBuilder() : QueryBuilder
+    {
         $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
             ->andWhere('corps.deleted_on IS NULL')
         ;
@@ -47,7 +49,8 @@ class CorpsService {
      * @param boolean $avecAgent
      * @return Corps[]
      */
-    public function getCorps($champ = 'libelleLong', $ordre = 'ASC', $avecAgent = true) {
+    public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true) : array
+    {
         $qb = $this->createQueryBuilder()
             ->andWhere('corps.histo IS NULL')
             ->orderBy('corps.' . $champ, $ordre)
@@ -59,6 +62,7 @@ class CorpsService {
                     ->andWhere('agent.deleted_on IS NULL')
                     ->andWhere('agentGrade.deleted_on IS NULL')
             ;
+            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
         }
 
         $result = $qb->getQuery()->getResult();
@@ -70,7 +74,7 @@ class CorpsService {
      * @param bool $avecAgent
      * @return Corps
      */
-    public function getCorp(int $id, bool $avecAgent=true)
+    public function getCorp(int $id, bool $avecAgent=true) : ?Corps
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('corps.id = :id')
@@ -97,7 +101,7 @@ class CorpsService {
      * @param string $param
      * @return Corps
      */
-    public function getRequestedCorps(AbstractActionController $controller, string $param = 'corps')
+    public function getRequestedCorps(AbstractActionController $controller, string $param = 'corps') : ?Corps
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCorp($id);
@@ -110,7 +114,7 @@ class CorpsService {
      * @param bool $avecAgent
      * @return array
      */
-    public function getCorpsAsOptions(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent=false)
+    public function getCorpsAsOptions(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent=false) : array
     {
         $corps = $this->getCorps($champ, $ordre, $avecAgent);
         $options = [];

@@ -509,9 +509,8 @@ class FichePosteController extends AbstractActionController {
     /**
      * @param FichePoste $fiche
      * @param array $data
-     * @return ViewModel|null
      */
-    private function checkValidite(FichePoste $fiche, array $data) : ?ViewModel
+    private function checkValidite(FichePoste $fiche, $data)
     {
         $cut = false;
         if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
@@ -529,6 +528,7 @@ class FichePosteController extends AbstractActionController {
         if ($cut) {
             return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
         }
+        exit();
     }
 
     /** Applications et Compétences de la fiche de postes  ************************************************************/

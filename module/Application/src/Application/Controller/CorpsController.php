@@ -52,7 +52,7 @@ class CorpsController extends AbstractActionController {
         return $vm;
     }
 
-    public function afficherAgentsAvecCorpsAction() : ViewModel
+    public function afficherAgentsAction() : ViewModel
     {
         $corps = $this->getCorpsService()->getRequestedCorps($this);
 

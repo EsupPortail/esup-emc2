@@ -2,6 +2,7 @@
 
 namespace Application\Service\Grade;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Grade;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -55,7 +56,10 @@ class GradeService {
             ->andWhere("grade.histo IS NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
-        if ($avecAgent) $qb = $this->decorateWithAgent($qb);
+        if ($avecAgent) {
+            $qb = $this->decorateWithAgent($qb);
+            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
