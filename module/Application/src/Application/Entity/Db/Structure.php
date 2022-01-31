@@ -26,6 +26,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return 'Structure';
     }
 
+    /**
+     * @return string
+     */
+    public function generateTag()  : string
+    {
+        return 'Structure_' . $this->getId();
+    }
+
     /** @var string */
     private $id;
     /** @var integer */

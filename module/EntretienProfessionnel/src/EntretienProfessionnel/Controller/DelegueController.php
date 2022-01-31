@@ -8,6 +8,7 @@ use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
+use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -16,6 +17,7 @@ class DelegueController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use DelegueServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use SelectionAgentFormAwareTrait;
 
@@ -44,6 +46,7 @@ class DelegueController extends AbstractActionController {
             if ($agent !== null) {
                 $delegue->setAgent($agent);
                 $this->getDelegueService()->create($delegue);
+                $this->getNotificationService()->triggerCampagneDelegue($delegue);
             }
         }
 
