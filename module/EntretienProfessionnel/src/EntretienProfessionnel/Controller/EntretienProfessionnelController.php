@@ -74,7 +74,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $responsable  = $this->getAgentService()->getAgent($fromQueries['responsable']);
         $structure    = $this->getStructureService()->getStructure($fromQueries['structure']);
         $campagne     = $this->getCampagneService()->getCampagne($fromQueries['campagne']);
-        $etat         = $this->getEtatService()->getEtat($fromQueries['etat']);
+        $etat         = $this->getEtatService()->getEtat((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null);
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
 
         $campagnes = $this->getCampagneService()->getCampagnes();

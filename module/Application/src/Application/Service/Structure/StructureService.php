@@ -70,10 +70,10 @@ class StructureService
     }
 
     /**
-     * @param int|null $id
+     * @param string|null $id
      * @return Structure|null
      */
-    public function getStructure(?int $id) : ?Structure
+    public function getStructure(?string $id) : ?Structure
     {
         if ($id === "" OR $id === null) return null;
         $qb = $this->createQueryBuilder()
