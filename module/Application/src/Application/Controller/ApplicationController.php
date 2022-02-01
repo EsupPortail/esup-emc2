@@ -15,6 +15,7 @@ use Application\Service\Application\ApplicationGroupeServiceAwareTrait;
 use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -25,6 +26,7 @@ class ApplicationController  extends AbstractActionController {
     use ApplicationElementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use MaitriseNiveauServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 
@@ -168,6 +170,8 @@ class ApplicationController  extends AbstractActionController {
     public function ajouterApplicationElementAction()
     {
         $type = $this->params()->fromRoute('type');
+        $multiple = $this->params()->fromQuery('multiple');
+
         $hasApplicationElement = null;
         switch($type) {
             case Agent::class : $hasApplicationElement = $this->getAgentService()->getRequestedAgent($this, 'id');
@@ -184,11 +188,20 @@ class ApplicationController  extends AbstractActionController {
 
         if ($hasApplicationElement !== null) {
             $form = $this->getApplicationElementForm();
+
+            if ($multiple === '1') {
+                $form->get('application')->setAttribute('multiple', 'multiple');
+                $form->remove('clef');
+                $form->remove('niveau');
+            }
+
             $element = new ApplicationElement();
             if ($application !== null) {$element->setApplication($application);}
             if ($clef === 'masquer') $form->masquerClef();
 
-            $form->setAttribute('action', $this->url()->fromRoute('application/ajouter-application-element', ['type' => $type, 'id' => $hasApplicationElement->getId()], [], true));
+            $form->setAttribute('action', $this->url()->fromRoute('application/ajouter-application-element',
+                ['type' => $type, 'id' => $hasApplicationElement->getId()],
+                ['query' => ['multiple' => $multiple]], true));
             $form->bind($element);
 
 
@@ -196,10 +209,35 @@ class ApplicationController  extends AbstractActionController {
             if ($request->isPost()) {
                 $data = $request->getPost();
                 $form->setData($data);
-                if ($form->isValid()) {
-                    $this->getApplicationElementService()->create($element);
-                    $hasApplicationElement->addApplicationElement($element);
-                    switch($type) {
+                if ($multiple !== '1') {
+                    if ($form->isValid()) {
+                        $this->getApplicationElementService()->create($element);
+                        $hasApplicationElement->addApplicationElement($element);
+                        switch ($type) {
+                            case Agent::class :
+                                $this->getAgentService()->update($hasApplicationElement);
+                                break;
+                            case FicheMetier::class :
+                                $this->getFicheMetierService()->update($hasApplicationElement);
+                                break;
+                        }
+                    }
+                } else {
+                    $niveau = $this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $clef = (isset($data['clef']) AND $data['clef'] === "1")?true:false;
+                    foreach ($data['application'] as $applicationId) {
+                        $application = $this->getApplicationService()->getApplication($applicationId);
+                        if ($application !== null AND !$hasApplicationElement->hasApplication($application)) {
+                            $element = new ApplicationElement();
+                            $element->setClef($clef);
+                            $element->setApplication($application);
+                            $element->setNiveauMaitrise($niveau);
+                            $element->setClef($clef);
+                            $hasApplicationElement->addApplicationElement($element);
+                            $this->getApplicationElementService()->create($element);
+                        }
+                    }
+                    switch ($type) {
                         case Agent::class :
                             $this->getAgentService()->update($hasApplicationElement);
                             break;

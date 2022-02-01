@@ -60,6 +60,8 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
     </div>
 </div>
 
+
+
 <?php if (! $canAfficherStructure) : ?>
 
     <div class="alert alert-danger col-md-8">
@@ -70,6 +72,8 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
     </div>
 
 <?php else : ?>
+
+    <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
     <div class="main">
 

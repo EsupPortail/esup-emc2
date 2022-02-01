@@ -37,8 +37,11 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+
+/** @method FlashMessenger flashMessenger() */
 
 class EntretienProfessionnelController extends AbstractActionController
 {
@@ -202,6 +205,11 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $jplus15 = (new DateTime())->add(new DateInterval('P15J'));
+                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>".$entretien->getAgent()->getDenomination()."</strong> est bien planifié.");
+                if ($entretien->getDateEntretien() < $jplus15 ) {
+                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                }
                $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
                $this->getEntretienProfessionnelService()->initialiser($entretien);
                $this->getNotificationService()->triggerConvocationDemande($entretien);
@@ -241,6 +249,12 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                $jplus15 = (new DateTime())->add(new DateInterval('P15J'));
+                $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>".$entretien->getAgent()->getDenomination()."</strong> est bien planifié.");
+                if ($entretien->getDateEntretien() < $jplus15 ) {
+                    $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
+                }
+
                 $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);

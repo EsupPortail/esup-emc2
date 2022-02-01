@@ -158,26 +158,24 @@ class EntretienProfessionnelForm extends Form {
                                 $res =  ($campagne->getDateDebut() <= $date AND $campagne->getDateFin() >= $date);
                                 return $res;
                             },
-                            //'break_chain_on_failure' => true,
                         ],
                     ],
-                    [
-                        'name' => Callback::class,
-                        'options' => [
-                            'messages' => [
-                                Callback::INVALID_VALUE => "L'entretien doit être conduit au minimum 15 jours après l'envoi de la convocation",
-                            ],
-                            'callback' => function ($value, $context = []) {
-                                /** @var EntretienProfessionnel $entretien */
-                                $maintenant = new DateTime();
-                                $maintenant = $maintenant->add(new DateInterval('P14D'));
-                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
-                                $res =  ($maintenant <= $date);
-                                return $res;
-                            },
-                            //'break_chain_on_failure' => true,
-                        ],
-                    ],
+//                    [
+//                        'name' => Callback::class,
+//                        'options' => [
+//                            'messages' => [
+//                                Callback::INVALID_VALUE => "L'entretien doit être conduit au minimum 15 jours après l'envoi de la convocation",
+//                            ],
+//                            'callback' => function ($value, $context = []) {
+//                                /** @var EntretienProfessionnel $entretien */
+//                                $maintenant = new DateTime();
+//                                $maintenant = $maintenant->add(new DateInterval('P14D'));
+//                                $date = DateTime::createFromFormat('Y-m-d', $context['date_entretien']);
+//                                $res =  ($maintenant <= $date);
+//                                return $res;
+//                            },
+//                        ],
+//                    ],
                 ],
             ],
             'heure_entretien'          => [ 'required' => true,  ],

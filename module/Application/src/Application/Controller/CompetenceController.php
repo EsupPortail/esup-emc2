@@ -17,10 +17,10 @@ use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Application\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Application\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -460,6 +460,8 @@ class CompetenceController extends AbstractActionController
     public function ajouterCompetenceElementAction()
     {
         $type = $this->params()->fromRoute('type');
+        $multiple = $this->params()->fromQuery('multiple');
+
         $hasCompetenceCollection = null;
         switch($type) {
             case Agent::class : $hasCompetenceCollection = $this->getAgentService()->getRequestedAgent($this, 'id');
@@ -473,18 +475,52 @@ class CompetenceController extends AbstractActionController
             $element = new CompetenceElement();
 
             $form = $this->getCompetenceElementForm();
-            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceCollection->getId(), 'clef' => $clef], [], true));
+
+            if ($multiple === '1') {
+                $form->get('competence')->setAttribute('multiple', 'multiple');
+                $form->remove('clef');
+                $form->remove('niveau');
+            }
+
+            $form->setAttribute('action', $this->url()->fromRoute('competence/ajouter-competence-element',
+                ['type' => $type, 'id' => $hasCompetenceCollection->getId(), 'clef' => $clef],
+                ['query' => ['multiple' => $multiple]], true));
             $form->bind($element);
             if ($clef === 'masquer') $form->masquerClef();
 
             $request = $this->getRequest();
             if ($request->isPost()) {
                 $data = $request->getPost();
-                $form->setData($data);
-                if ($form->isValid()) {
-                    $this->getCompetenceElementService()->create($element);
-                    $hasCompetenceCollection->addCompetenceElement($element);
-                    switch($type) {
+                if ($multiple !== '1') {
+                    $form->setData($data);
+                    if ($form->isValid()) {
+                        $this->getCompetenceElementService()->create($element);
+                        $hasCompetenceCollection->addCompetenceElement($element);
+                        switch ($type) {
+                            case Agent::class :
+                                $this->getAgentService()->update($hasCompetenceCollection);
+                                break;
+                            case FicheMetier::class :
+                                $this->getFicheMetierService()->update($hasCompetenceCollection);
+                                break;
+                        }
+                    }
+                } else {
+                    $niveau = $this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $clef = (isset($data['clef']) AND $data['clef'] === "1")?true:false;
+                    foreach ($data['competence'] as $competenceId) {
+                        $competence = $this->getCompetenceService()->getCompetence($competenceId);
+                        if ($competence !== null AND !$hasCompetenceCollection->hasCompetence($competence)) {
+                            $competenceElement = new CompetenceElement();
+                            $competenceElement->setClef($clef);
+                            $competenceElement->setCompetence($competence);
+                            $competenceElement->setNiveauMaitrise($niveau);
+                            $competenceElement->setClef($clef);
+                            $hasCompetenceCollection->addCompetenceElement($competenceElement);
+                            $this->getCompetenceElementService()->create($competenceElement);
+                        }
+                    }
+                    switch ($type) {
                         case Agent::class :
                             $this->getAgentService()->update($hasCompetenceCollection);
                             break;

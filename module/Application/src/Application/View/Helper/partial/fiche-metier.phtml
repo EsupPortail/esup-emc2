@@ -127,12 +127,13 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 <div class="pull-right">
                     <?php if (isset($options['mode']) and $options['mode'] === 'edition-fiche-metier') : ?>
                         <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */ ?>
-                        <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fiche->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fiche->getId()],
+                            ['query' => ['multiple' => true]], true); ?>"
                            class="btn btn-primary action ajax-modal"
                            data-event="modification"
                         >
                             <span class="icon ajouter"></span>
-                            Ajouter une compétence
+                            Ajouter des compétences
                         </a>
                     <?php endif; ?>
 
@@ -178,12 +179,13 @@ if ($options['popup']) $options['actions']['afficher'] = false;
                 <div class="pull-right">
                     <?php if (isset($options['mode']) and $options['mode'] === 'edition-fiche-metier'): ?>
                         <?php /** @see \Application\Controller\ApplicationController::ajouterApplicationElementAction() */ ?>
-                        <a href="<?php echo $this->url('application/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fiche->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('application/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fiche->getId()],
+                            ['query' => ['multiple' => true]], true); ?>"
                            class="btn btn-primary action ajax-modal"
                            data-event="modification"
                         >
                             <span class="icon ajouter"></span>
-                            Ajouter une application
+                            Ajouter des applications
                         </a>
                     <?php endif; ?>
                 </div>
