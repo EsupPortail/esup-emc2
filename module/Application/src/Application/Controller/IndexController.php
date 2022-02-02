@@ -28,8 +28,6 @@ class IndexController extends AbstractActionController
     {
         /** @var User $connectedUser */
         $connectedUser = $this->getUserService()->getConnectedUser();
-        /** @var Agent $agent */
-        $agent = null;
 
         if ($this->getServiceUserContext()->getLdapUser()) {
             $supannId = ((int) $this->getServiceUserContext()->getLdapUser()->getSupannEmpId());
@@ -68,11 +66,21 @@ class IndexController extends AbstractActionController
                     break;
             }
         }
-                
+
+
+        $tous_mes_roles = $connectedUser->getRoles();
+
+        $roles = [];
+        foreach ($tous_mes_roles as $role_actuel) {
+            if ($role_actuel !== $connectedRole) {
+                $roles[] = $role_actuel;
+            }
+        }
+
         return new ViewModel([
             'user' => $connectedUser,
             'role' => $connectedRole,
-            'agent' => $agent,
+            'roles' => $roles,
         ]);
     }
 
