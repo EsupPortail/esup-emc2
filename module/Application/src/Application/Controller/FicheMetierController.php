@@ -93,14 +93,12 @@ class FicheMetierController extends AbstractActionController
     public function afficherAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-
         $missions = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
-        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
+        $parcours = ($fiche->getMetier()->getCategorie())?$this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche):null;
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
 
         return new ViewModel([
-            'title' => "Visualisation d'une fiche métier",
             'fiche' => $fiche,
             'competences' => $competences,
             'applications' => $applications,
