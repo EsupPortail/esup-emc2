@@ -67,20 +67,9 @@ class IndexController extends AbstractActionController
             }
         }
 
-
-        $tous_mes_roles = $connectedUser->getRoles();
-
-        $roles = [];
-        foreach ($tous_mes_roles as $role_actuel) {
-            if ($role_actuel !== $connectedRole) {
-                $roles[] = $role_actuel;
-            }
-        }
-
         return new ViewModel([
             'user' => $connectedUser,
             'role' => $connectedRole,
-            'roles' => $roles,
         ]);
     }
 
