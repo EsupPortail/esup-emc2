@@ -1,0 +1,85 @@
+<?php
+
+use Application\Entity\Db\FicheMetier;
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var string $mode
+ */
+
+
+$metier = $fichemetier->getMetier();
+$libelle = $metier->getLibelle(true);
+?>
+
+<div class="row">
+    <div class="col-md-7">
+        <h1 class="page-header">
+            <?php echo $libelle; ?>
+        </h1>
+
+        <?php if ($mode === 'edition-fiche-metier') : ?>
+            <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
+            <a class="btn btn-primary action ajax-modal" data-event="modification"
+               href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fichemetier->getId()], [], true); ?>">
+                <span class="icon editer"></span>
+                Modifier libellé
+            </a>
+        <?php endif; ?>
+
+    </div>
+    <div class="col-md-5">
+        <dl>
+            <dt> Domaine </dt>
+            <dd>
+                <?php $domaines = $metier->getDomaines(); ?>
+                <?php if (!empty($domaines)) : ?>
+                    <?php foreach ($domaines as $domaine) : ?>
+                        <?php echo $domaine->getLibelle(); ?>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Aucun domaine
+                <?php endif; ?>
+            </dd>
+            <dt> Références </dt>
+            <dd>
+                <?php $references = $metier->getReferences(); ?>
+                <?php if (!empty($references)) : ?>
+                    <?php foreach ($references as $reference) : ?>
+                        <a href="<?php echo $reference->getUrl(); ?>">
+                            <?php echo $reference->getTitre(); ?>
+                        </a>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Aucune référence
+                <?php endif; ?>
+            </dd>
+            <dt> Expertise </dt>
+            <dd>
+                <?php if ($fichemetier->hasExpertise()) : ?>
+                    Sujet à expertise
+                <?php else : ?>
+                    Non sujet à expertise
+                <?php endif; ?>
+                <?php if ($mode === 'edition-fiche-metier') : ?>
+                    <a
+                        <?php /** @see FicheMetierController::changerExpertiseAction() */ ?>
+                        href="<?php echo $this->url('fiche-metier-type/changer-expertise', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                    >
+                        <span class="icon synchoniser"></span>
+                    </a>
+                <?php endif; ?>
+            </dd>
+            <dt> Niveau associé </dt>
+            <dd>
+                <?php $enveloppe = $metier->getNiveaux(); ?>
+                <?php if ($enveloppe !== null) : ?>
+                    De <?php echo $enveloppe->getBorneInferieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneInferieure()->getEtiquette(); ?>)
+                    à <?php echo $enveloppe->getBorneSuperieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneSuperieure()->getEtiquette(); ?>)
+                <?php else : ?>
+                    Non renseigné
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+</div>

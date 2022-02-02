@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var ParcoursDeFormation[] $parcours
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Entity\Db\ParcoursDeFormation;
+
+?>
+
+<!-- FORMATION ---------------------------------------------------------------------------------------------------->
+<?php if (isset($options['parcours'])) : ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>
+                <span class="icon formation"></span>
+                Parcours de formation
+            </h2>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <?php
+                    $arrays = $parcours;
+                    ksort($arrays);
+                    foreach ($arrays as $type => $array) : ?>
+                        <?php $parcours = $array; ?>
+                        <?php foreach ($parcours as $parcour) : ?>
+                            <?php echo $this->parcoursDeFormation($parcour); ?>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+
+                    <?php echo $this->parcoursApplication($fichemetier); ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<?php endif; ?>

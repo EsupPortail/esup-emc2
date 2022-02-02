@@ -12,18 +12,14 @@
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 
+$mode = 'affichage';
+
 $libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libellé";
 $this->headTitle('Affichage de la fiche métier #' . $fiche->getId(). " : " . $libelle);
-?>
 
-<?php
-    echo $this->ficheMetier($fiche, [
-        'mode' => 'affichage',
-        'competences' => $competences,
-        'applications' => $applications,
-        'parcours' => $parcours,
-        'missions' => $missions,
-        'actions' => ['modifier' => false, 'supprimer' => false, 'valider' => false],
-    ]);
-?>
+echo $this->partial('partial/entete', ['fichemetier' => $fiche, 'mode' => $mode], [], true);
+echo $this->partial('partial/missions-principales',   ['fichemetier' => $fiche, 'missionsprincipales' => $missions, 'mode' => $mode ],  [], true);
+echo $this->partial('partial/competences',            ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode ],       [], true);
+echo $this->partial('partial/applications',           ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode ],     [], true);
+//echo $this->partial('partial/parcours-fromations',    ['fichemetier' => $fiche, 'parcours' => $parcours ],                              [], true);
 

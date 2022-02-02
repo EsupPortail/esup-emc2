@@ -461,8 +461,6 @@ return [
         'invokables' => [
             'specificitePoste' => SpecificitePosteViewHelper::class,
             'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
-            'ficheMetier'  => FicheMetierViewHelper::class,
-            'ficheMetierEntete' => FicheMetierEnteteViewHelper::class,
             'raisons' => RaisonsViewHelper::class,
         ],
     ],
