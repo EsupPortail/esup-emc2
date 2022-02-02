@@ -16,7 +16,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -239,6 +238,7 @@ class Agent implements
                 return ($aa->estEnCours($date));
             });
         }
+
         usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
             return $a->getDateDebut() < $b->getDateDebut();
         });
