@@ -159,7 +159,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
         if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
-        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche);
+        $parcours = ($fiche->getMetier()->getCategorie())?$this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche):null;
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
 
