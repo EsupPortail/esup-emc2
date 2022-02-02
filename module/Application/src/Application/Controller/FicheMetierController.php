@@ -180,7 +180,7 @@ class FicheMetierController extends AbstractActionController
         $vars = [
             'fichemetier' => $fichemetier,
             'metier' => $fichemetier->getMetier(),
-            'parcours' => $this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()),
+            'parcours' => ($fichemetier->getMetier()->getCategorie())?$this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()):null,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_METIER', $vars);
 
