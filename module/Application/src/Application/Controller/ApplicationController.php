@@ -16,6 +16,7 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -27,6 +28,7 @@ class ApplicationController  extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use MaitriseNiveauServiceAwareTrait;
+    use MetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
 
@@ -256,5 +258,31 @@ class ApplicationController  extends AbstractActionController {
             return $vm;
         }
         exit();
+    }
+
+    public function cartographieAction() : ViewModel
+    {
+        $metiers = $this->getMetierService()->getMetiers();
+        $applications = $this->getApplicationService()->getApplications();
+
+        $link = [];
+
+        foreach ($metiers as $metier) {
+            if ($metier->estNonHistorise()) {
+                foreach ($metier->getFichesMetiers() as $ficheMetier) {
+                    if ($ficheMetier->estNonHistorise() AND $ficheMetier->getEtat()->getCode() === 'FICHE_METIER_OK') {
+                        foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
+                            if ($applicationElement->estNonHistorise()) $link[$metier->getLibelle()][$applicationElement->getApplication()->getLibelle()] = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        return new ViewModel([
+            'metiers' => $metiers,
+            'applications' => $applications,
+            'link' => $link,
+        ]);
     }
 }

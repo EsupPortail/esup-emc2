@@ -55,6 +55,7 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'afficher',
+                        'cartographie',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -173,6 +174,17 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'cartographie' => [
+                        'type' => Literal::class,
+                        'may_terminate' => false,
+                        'options' => [
+                            'route' => '/cartographie',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action' => 'cartographie'
+                            ],
+                        ],
+                    ],
                     'groupe' => [
                         'type' => Literal::class,
                         'may_terminate' => false,
