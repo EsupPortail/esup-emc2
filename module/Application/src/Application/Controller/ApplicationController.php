@@ -16,7 +16,10 @@ use Application\Service\Application\ApplicationServiceAwareTrait;
 use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use DateTime;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -26,6 +29,7 @@ class ApplicationController  extends AbstractActionController {
     use ApplicationGroupeServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use MaitriseNiveauServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -262,6 +266,7 @@ class ApplicationController  extends AbstractActionController {
 
     public function cartographieAction() : ViewModel
     {
+        $domaines = $this->getDomaineService()->getDomaines();
         $metiers = $this->getMetierService()->getMetiers();
         $applications = $this->getApplicationService()->getApplications();
 
@@ -280,9 +285,45 @@ class ApplicationController  extends AbstractActionController {
         }
 
         return new ViewModel([
+            'domaines' => $domaines,
             'metiers' => $metiers,
             'applications' => $applications,
             'link' => $link,
         ]);
+    }
+
+    public function exportCartographieAction() {
+
+        $metiers = $this->getMetierService()->getMetiers();
+        $applications = $this->getApplicationService()->getApplications();
+
+        $headers = [];
+        foreach ($applications as $application) $headers[] = $application->getLibelle();
+
+        $link = [];
+        foreach ($metiers as $metier) {
+            $link[$metier->getLibelle()] = [];
+
+            foreach ($applications as $application) {
+                $res = 0;
+                foreach ($metier->getFichesMetiers() as $ficheMetier) {
+                    if ($ficheMetier->hasApplication($application)) {
+                        $res = 1;
+                        break;
+                    }
+                }
+                $link[$metier->getLibelle()][] = $res;
+            }
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="export_utilisateur_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($link);
+        $CSV->setFilename($filename);
+        return $CSV;
     }
 }

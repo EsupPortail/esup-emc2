@@ -11,6 +11,7 @@ use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Interop\Container\ContainerInterface;
+use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 
 class ApplicationControllerFactory {
@@ -30,6 +31,7 @@ class ApplicationControllerFactory {
         $applicationGroupeService = $container->get(ApplicationGroupeService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
         $agentService = $container->get(AgentService::class);
+        $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $maitriseNiveauService = $container->get(MaitriseNiveauService::class);
         $metierService = $container->get(MetierService::class);
@@ -47,6 +49,7 @@ class ApplicationControllerFactory {
         $controller->setApplicationGroupeService($applicationGroupeService);
         $controller->setApplicationElementService($applicationElementService);
         $controller->setAgentService($agentService);
+        $controller->setDomaineService($domaineService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMaitriseNiveauService($maitriseNiveauService);
         $controller->setMetierService($metierService);

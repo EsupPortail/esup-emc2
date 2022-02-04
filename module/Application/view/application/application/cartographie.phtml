@@ -3,14 +3,17 @@
 /**
  * @see \Application\Controller\ApplicationController::cartographieAction()
  * @var Application[]   $applications
+ * @var Domaine[]       $domaines
  * @var Metier[]        $metiers
  * @var array           $link
  */
 
 use Application\Entity\Db\Application;
+use Metier\Entity\Db\Domaine;
 use Metier\Entity\Db\Metier;
 
 $this->headTitle('Cartographie Metier/Application');
+$nbApplications = count($applications);
 
 ?>
 
@@ -20,9 +23,10 @@ $this->headTitle('Cartographie Metier/Application');
 
 <div class="row">
 
-<!--    <div class="col-md-5" >-->
-<!--            <span class="export btn btn-primary action" id="cartographie">Exporter la cartographie</span>-->
-<!--    </div>-->
+    <div class="col-md-5" >
+            <a href="<?php echo $this->url('application/exporter-cartographie', [], [], true); ?>"
+               class="btn btn-primary action" id="cartographie">Exporter la cartographie</a>
+    </div>
 
     <div class="col-md-5 pull-right">
         <div class="alert alert-warning">
@@ -44,24 +48,35 @@ $this->headTitle('Cartographie Metier/Application');
             </th>
         <?php endforeach; ?>
     </tr>
-    <?php foreach ($metiers as $metier) : ?>
-        <?php $libelle = $metier->getLibelle(); ?>
+    <?php foreach ($domaines as $domaine): ?>
         <tr>
-            <th class="metier">
-                <br/>
-                <?php echo $libelle; ?>
-                <br/>
-                <br/>
-            </th>
-            <?php foreach ($applications as $application) : ?>
-                <td>
-                    <?php if (isset($link[$libelle][$application->getLibelle()])) : ?>
-                        <span class="icon ok" style="color: darkgreen;"></span>
-                    <?php else : ?>
-                    <?php endif;?>
-                </td>
-            <?php endforeach; ?>
+            <td class="domaine" colspan="<?php echo 1 + $nbApplications; ?>">
+                <?php echo $domaine->getLibelle(); ?>
+            </td>
         </tr>
+        <?php
+            $metiers4domaine = $domaine->getMetiers();
+            usort($metiers4domaine, function (Metier $a, Metier $b) { return $a->getLibelle() > $b->getLibelle(); });
+        ?>
+        <?php foreach ($metiers4domaine as $metier) : ?>
+            <?php $libelle = $metier->getLibelle(); ?>
+            <tr>
+                <th class="metier">
+                    <br/>
+                    <?php echo $libelle; ?>
+                    <br/>
+                    <br/>
+                </th>
+                <?php foreach ($applications as $application) : ?>
+                    <td>
+                        <?php if (isset($link[$libelle][$application->getLibelle()])) : ?>
+                            <span class="icon ok" style="color: darkgreen;"></span>
+                        <?php else : ?>
+                        <?php endif;?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
     <?php endforeach; ?>
 </table>
 
@@ -83,6 +98,13 @@ $this->headTitle('Cartographie Metier/Application');
     }
 
     th.metier {
+    }
+
+    td.domaine {
+        background: var(--warning-background-back);
+        text-align: left;
+        font-weight: bold;
+        border: 1px solid var(--header-background-hover);
     }
 
     th.application {
