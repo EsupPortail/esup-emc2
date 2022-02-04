@@ -56,6 +56,7 @@ return [
                     'action' => [
                         'afficher',
                         'cartographie',
+                        'exporter-cartographie',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -182,6 +183,17 @@ return [
                             'defaults' => [
                                 'controller' => ApplicationController::class,
                                 'action' => 'cartographie'
+                            ],
+                        ],
+                    ],
+                    'exporter-cartographie' => [
+                        'type' => Literal::class,
+                        'may_terminate' => false,
+                        'options' => [
+                            'route' => '/exporter-cartographie',
+                            'defaults' => [
+                                'controller' => ApplicationController::class,
+                                'action' => 'exporter-cartographie'
                             ],
                         ],
                     ],
