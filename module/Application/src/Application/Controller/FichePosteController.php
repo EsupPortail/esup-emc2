@@ -528,7 +528,6 @@ class FichePosteController extends AbstractActionController {
         if ($cut) {
             return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
         }
-        exit();
     }
 
     /** Applications et Compétences de la fiche de postes  ************************************************************/
