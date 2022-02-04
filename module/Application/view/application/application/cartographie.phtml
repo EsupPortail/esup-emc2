@@ -24,6 +24,7 @@ $nbApplications = count($applications);
 <div class="row">
 
     <div class="col-md-5" >
+            <?php /** @see \Application\Controller\ApplicationController::exporterCartographieAction() */?>
             <a href="<?php echo $this->url('application/exporter-cartographie', [], [], true); ?>"
                class="btn btn-primary action" id="cartographie">Exporter la cartographie</a>
     </div>

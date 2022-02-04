@@ -292,7 +292,7 @@ class ApplicationController  extends AbstractActionController {
         ]);
     }
 
-    public function exporterCartographieAction()
+    public function exporterCartographieAction() : CsvModel
     {
         $metiers = $this->getMetierService()->getMetiers();
         $applications = $this->getApplicationService()->getApplications();
