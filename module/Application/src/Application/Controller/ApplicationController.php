@@ -292,17 +292,18 @@ class ApplicationController  extends AbstractActionController {
         ]);
     }
 
-    public function exportCartographieAction() {
-
+    public function exporterCartographieAction()
+    {
         $metiers = $this->getMetierService()->getMetiers();
         $applications = $this->getApplicationService()->getApplications();
 
         $headers = [];
+        $headers[] = 'Métier';
         foreach ($applications as $application) $headers[] = $application->getLibelle();
 
         $link = [];
         foreach ($metiers as $metier) {
-            $link[$metier->getLibelle()] = [];
+            $link[$metier->getLibelle()][] = $metier->getLibelle();
 
             foreach ($applications as $application) {
                 $res = 0;
