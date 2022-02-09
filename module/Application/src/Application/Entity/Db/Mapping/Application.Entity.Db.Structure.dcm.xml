@@ -48,8 +48,11 @@
         <many-to-one target-entity="Application\Entity\Db\Structure" field="parent">
             <join-column name="parent_id" referenced-column-name="id" />
         </many-to-one>
-
         <one-to-many target-entity="Application\Entity\Db\Structure" mapped-by="parent" field="enfants"/>
+
+        <many-to-one target-entity="Application\Entity\Db\Structure" field="niv2">
+            <join-column name="niv2_id" referenced-column-name="id" />
+        </many-to-one>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>

@@ -54,6 +54,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     private $repriseResumeMere;
     /** @var Structure */
     private $parent;
+    /** @var Structure|null */
+    private $niv2;
     /** @var ArrayCollection (Structure) */
     private $enfants;
 
@@ -280,6 +282,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     public function getParent() : ?Structure
     {
         return $this->parent;
+    }
+
+    /**
+     * @return Structure|null
+     */
+    public function getNiv2() : ?Structure
+    {
+        return $this->niv2;
     }
 
     /**
