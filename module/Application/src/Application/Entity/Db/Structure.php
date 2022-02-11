@@ -376,4 +376,13 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $text .= $this->getLibelleCourt();
         return $text;
     }
+
+    /**
+     * @return string
+     */
+    public function toString() : string
+    {
+        $text = $this->getLibelleCourt();
+        return $text;
+    }
 }

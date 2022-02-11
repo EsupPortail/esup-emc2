@@ -9,6 +9,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Complement;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\AgentPrivileges;
@@ -31,6 +32,21 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     <thead>
     <tr>
         <th>Dénomination</th>
+        <th>
+            Structure fine
+            <span class="icon information" data-toggle="tooltip" data-html="true"
+                  title="Structure de plus bas niveau dans laquelle est affectée l'agent"></span>
+        </th>
+        <th>
+            Responsable hiérarchique
+            <span class="icon information" data-toggle="tooltip" data-html="true"
+                  title="Responsable directe de l'agent">
+        </th>
+        <th>
+            Autorité hiérarchique
+            <span class="icon information"  data-toggle="tooltip" data-html="true"
+                  title="Responsable de la structure de l'agent">
+        </th>
         <th>Statut</th>
         <th>Grade</th>
 <!--        <th>Poste</th>-->
@@ -40,6 +56,10 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     </thead>
     <tbody>
     <?php foreach ($agents as $agent) :?>
+        <?php
+            $structure =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
+            $niveau2   =  ($structure AND $structure->getNiv2())?$structure->getNiv2():null;
+        ?>
         <tr>
             <td>
                 <?php if ($canVoirAgent) : ?>
@@ -52,6 +72,64 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
+            </td>
+            <td> <!-- STRUCTURE --------------------------------------------------------------------------------------->
+                <?php if ($structure) : ?>
+                    <span class="icon application" title="Déterminé par EMC2"></span>
+                    <?php echo $structure->getLibelleCourt(); ?><br/>
+                <?php else : ?>
+                    Pas de structure fines<br/>
+                <?php endif ?>
+                <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_STRUCTURE) as $complement) : ?>
+                    <span class="icon formation" title="Manuellement indiqué"></span>
+                    <?php echo $this->complement($complement); ?>
+                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <br/>
+                <?php endforeach; ?>
+                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_STRUCTURE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <span class="icon ajouter"></span> Ajouter une structure
+                </a>
+            </td>
+            <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
+                <?php if ($structure) : ?>
+                    <?php foreach ($structure->getResponsables() as $responsable) : ?>
+                        <span class="icon application" title="Déterminé par EMC2"></span>
+                        <?php echo $responsable->getAgent()->getDenomination(); ?> <br/>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Pas de structure fines<br/>
+                <?php endif ?>
+                <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE) as $complement) : ?>
+                    <span class="icon formation" title="Manuellement indiqué"></span>
+                    <?php echo $this->complement($complement); ?>
+                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <br/>
+                <?php endforeach; ?>
+                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <span class="icon ajouter"></span> Ajouter un responsable
+                </a>
+            </td>
+            <td> <!-- AUTORITE HIERARCHIQUE --------------------------------------------------------------------------->
+                <?php if ($niveau2) : ?>
+                    <?php foreach ($niveau2->getResponsables() as $responsable) : ?>
+                        <span class="icon application" title="Déterminé par EMC2"></span>
+                        <?php echo $responsable->getAgent()->getDenomination(); ?> <br/>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    Pas de structure de niv2<br/>
+                <?php endif ?>
+                <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_AUTORITE) as $complement) : ?>
+                    <span class="icon formation" title="Manuellement indiqué"></span>
+                    <?php echo $this->complement($complement); ?>
+                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <br/>
+                <?php endforeach; ?>
+                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_AUTORITE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <span class="icon ajouter"></span> Ajouter une autorité
+                </a>
             </td>
             <td>
                 <?php $temoins = []; ?>
@@ -72,8 +150,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             <td>
                 <?php /** @var AgentGrade $grade */ ?>
                 <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                    <?php echo $grade->getStructure()->getLibelleCourt(); ?> <br/>
-                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> -
+                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> <br/>
                     <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?>
                 <?php endforeach; ?>
             </td>

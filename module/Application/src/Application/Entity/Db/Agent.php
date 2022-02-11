@@ -4,10 +4,12 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Application\Entity\Db\Interfaces\HasComplementsInterface;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Application\Entity\Db\Traits\HasComplementsTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -21,11 +23,13 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class Agent implements
     ResourceInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
+    HasComplementsInterface
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
+    use HasComplementsTrait;
     use AgentMacroTrait;
 
     public function getResourceId() : string
@@ -161,6 +165,11 @@ class Agent implements
     {
         return ucwords(strtolower($this->getPrenom()), "-") . ' ' . $this->getNomUsuel();
 
+    }
+
+    public function toString() : string
+    {
+        return $this->getDenomination();
     }
 
     /**

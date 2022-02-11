@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @see \Application\Controller\ComplementController::afficherAction()
+ * @var Complement $complement
+ */
+
+use Application\Entity\Db\Complement;
+
+?>
+
+<dl>
+    <dt> Identifiant </dt>
+    <dd> <?php echo $complement->getId(); ?> </dd>
+    <dt> AttachmentType  </dt>
+    <dd> <?php echo $complement->getAttachmentType(); ?> </dd>
+    <dt> AttachmentId  </dt>
+    <dd> <?php echo $complement->getAttachmentId(); ?> </dd>
+    <dt> Type  </dt>
+    <dd> <?php echo $complement->getType(); ?> </dd>
+    <dt> ComplementType  </dt>
+    <dd> <?php echo ($complement->getComplementType())?:"Aucun type pour le complement"; ?> </dd>
+    <dt> ComplementId  </dt>
+    <dd> <?php echo ($complement->getComplementId())?:"Aucun identifiant pour le complement"; ?> </dd>
+    <dt> ComplementText  </dt>
+    <dd> <?php echo ($complement->getComplementText())?:"Aucun complement textuel"; ?> </dd>
+</dl>
