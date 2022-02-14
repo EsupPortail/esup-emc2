@@ -198,7 +198,9 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     public function getResponsables() : array
     {
         if ($this->responsables === null) return [];
-        return $this->responsables->toArray();
+        $array = $this->responsables->toArray();
+        $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted();});
+        return $array;
     }
 
     /** POSTE ****************************************************************************************************/
