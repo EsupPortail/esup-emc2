@@ -6,7 +6,6 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
 use Application\Entity\Db\Interfaces\HasComplementsInterface;
 use Application\Entity\Db\Structure;
-use Application\Entity\Db\Traits\HasComplementsTrait;
 use Application\Form\Complement\ComplementFormAwareTrait;
 use Application\Service\Complement\ComplementServiceAwareTrait;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -73,7 +72,7 @@ class ComplementController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/complement/formulaire');
         $vm->setVariables([
-            'title' => "Ajout d'un complement pour [ATTACHMENT]",
+            'title' => "Ajout d'un complement pour [".$attachment->toString()."]",
             'form' => $form,
         ]);
         return $vm;
@@ -86,6 +85,9 @@ class ComplementController extends AbstractActionController {
 
         $form = $this->getComplementForm();
         $form->setAttribute('action', $this->url()->fromRoute('complement/modifier', ['complement' => $complement->getId()], [], true));
+
+        /** @var HasComplementsInterface $attachment */
+        $attachment = $this->getEntityManager()->getRepository($complement->getAttachmentType())->find($complement->getAttachmentId());
 
         switch ($complement->getType()) {
             case Complement::COMPLEMENT_TYPE_RESPONSABLE :
@@ -110,7 +112,7 @@ class ComplementController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setTemplate('application/complement/formulaire');
         $vm->setVariables([
-            'title' => "Modification d'un complement pour [ATTACHMENT]",
+            'title' => "Modification d'un complement pour [".$attachment->toString()."]",
             'form' => $form,
         ]);
         return $vm;
@@ -128,11 +130,14 @@ class ComplementController extends AbstractActionController {
             exit();
         }
 
+        /** @var HasComplementsInterface $attachment */
+        $attachment = $this->getEntityManager()->getRepository($complement->getAttachmentType())->find($complement->getAttachmentId());
+
         $vm = new ViewModel();
         if ($complement !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du complément " . $complement->getId(),
+                'title' => "Suppression du complément #" . $complement->getId() . " pour [".$attachment->toString()."]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('complement/supprimer', ["complement" => $complement->getId()], [], true),
             ]);

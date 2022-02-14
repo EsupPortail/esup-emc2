@@ -29,8 +29,12 @@ class ComplementForm extends Form {
             'type' => Text::class,
             'name' => 'text',
             'options' => [
-                'label' => "Complément textuel <span class='icon information'> Complément en cas d'échec de la recherche ci-dessus </span>:",
+                'label' => 'Complément textuel <span class="icon information" title="Complément en cas d\'échec de la recherche ci-dessus"> </span>:',
+                'label_options' => [
+                    'disable_html_escape' => true,
+                ],
             ],
+
             'attributes' => [
                 'id' => 'text',
             ],

@@ -17,10 +17,20 @@ use Application\Entity\Db\Structure;
     method="post"
     action="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
 >
-    <select id="fiche" name="fiche">
+    <label for="fiche">Fiche de poste à dupliquer :</label> <br/>
+    <select id="fiche" name="fiche" class="bootstrap-selectpicker show-tick" data-live-search="true" data-width="70%">
+        <option value="null"> Aucune fiche de poste </option>
         <?php foreach ($fiches as $fiche) : ?>
-            <option value="<?php echo $fiche->getId(); ?>"> <?php echo $fiche->getLibelleMetierPrincipal() ?> - <?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?> </option>
+            <option value="<?php echo $fiche->getId(); ?>"
+                    data-content="<strong><?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?></strong> - <?php echo $fiche->getLibelleMetierPrincipal() ?>"
+            >
+                <?php echo $fiche->getLibelleMetierPrincipal() ?> - <strong><?php echo ($fiche->getAgent())?$fiche->getAgent()->getDenomination():"Pas d'agent"; ?></strong>
+            </option>
         <?php endforeach; ?>
     </select>
-    <input type="submit" value="Utiliser cette fiche de poste">
+    <input type="submit" value="Utiliser cette fiche de poste" class="btn btn-primary" style="margin-top: 2rem;">
 </form>
+
+<script>
+    $('select').selectpicker();
+</script>

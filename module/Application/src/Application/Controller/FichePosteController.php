@@ -123,10 +123,16 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $ficheId = $data['fiche'];
+            $ficheId = ($data['fiche'] !== 'null')?$data['fiche']:null;
             $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
 
-            $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
+            if ($fiche !== null ) {
+                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
+            } else {
+                $nouvelleFiche = new FichePoste();
+                $this->getFichePosteService()->create($nouvelleFiche);
+            }
+
             $nouvelleFiche->setAgent($agent);
             $this->getFichePosteService()->update($nouvelleFiche);
 
