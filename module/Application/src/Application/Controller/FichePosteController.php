@@ -310,7 +310,7 @@ class FichePosteController extends AbstractActionController {
         $form = $this->getSelectionEtatForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($fiche);
-        $form->reinit(FichePoste::TYPE_FICHEPOSTE);
+        $form->reinit(FichePoste::ETAT_TYPE_FICHEPOSTE);
 
         $request = $this->getRequest();
         if ($request->isPost()) {

@@ -297,7 +297,8 @@ select
     aa.id_orig,
     s.id as structure_id, s.libelle_court as structure,
     m.libelle_default as fiche_principale,
-    e.id as etat
+    e.id as etat,
+    e.code as etat_code
 from fiche_poste f
 left join agent a on f.agent = a.c_individu
 left join agent_affectation aa on a.c_individu = aa.agent_id
@@ -339,7 +340,8 @@ select
        a.c_individu AS agent_id, a.prenom, a.nom_usage,
        s.id as structure_id, s.libelle_court as structure, 
        m.libelle_default as fiche_principale, f.libelle as fiche_libelle, f.histo_destruction,
-       e.id as etat
+       e.id as etat,
+       e.code as etat_code
 from fiche_poste f
 join agent a on f.agent = a.c_individu
 join agent_affectation aa on a.c_individu = aa.agent_id
