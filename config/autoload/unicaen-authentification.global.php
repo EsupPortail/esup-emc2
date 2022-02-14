@@ -10,7 +10,7 @@ return [
          * Flag indiquant si l'utilisateur authenitifié avec succès via l'annuaire LDAP doit
          * être enregistré/mis à jour dans la table des utilisateurs de l'appli.
          */
-        'save_ldap_user_in_database' => false,
+        'save_ldap_user_in_database' => true,
         'entity_manager_name' => 'doctrine.entitymanager.orm_default', // nom du gestionnaire d'entités à utiliser
 
         /**

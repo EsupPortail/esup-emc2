@@ -32,6 +32,7 @@ return [
                     [
                         'privileges' => [
                             EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                            EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,

@@ -52,6 +52,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
+            case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:

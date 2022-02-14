@@ -31,18 +31,13 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 <table class="datatable table table-condensed">
     <thead>
     <tr>
-        <th>Dénomination</th>
-        <th>
-            Structure fine
-            <span class="icon information" data-toggle="tooltip" data-html="true"
-                  title="Structure de plus bas niveau dans laquelle est affectée l'agent"></span>
-        </th>
-        <th>
-            Responsable hiérarchique
+        <th style="width:25%; min-width: 25%;">Dénomination et structures fines</th>
+        <th style="width:25%; min-width: 25%;">
+            Supérieur&middot;e hiérarchique direct&middot;e
             <span class="icon information" data-toggle="tooltip" data-html="true"
                   title="Responsable directe de l'agent">
         </th>
-        <th>
+        <th style="width:25%; min-width: 25%;">
             Autorité hiérarchique
             <span class="icon information"  data-toggle="tooltip" data-html="true"
                   title="Responsable de la structure de l'agent">
@@ -72,8 +67,8 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
-            </td>
-            <td> <!-- STRUCTURE --------------------------------------------------------------------------------------->
+                <br/>
+                <!-- STRUCTURE --------------------------------------------------------------------------------------->
                 <?php if ($structure) : ?>
                     <span class="icon application" title="Déterminé par EMC2"></span>
                     <?php echo $structure->getLibelleCourt(); ?><br/>

@@ -14,11 +14,11 @@ $settings = [
     'unicaen-auth' => [
         'enable_privileges' => true,
         'identity_providers' => [
-            300 => 'UnicaenAuthentification\Provider\Identity\Basic', // en 1er
-            200 => 'UnicaenAuthentification\Provider\Identity\Db',    // en 2e
-            100 => 'UnicaenAuthentification\Provider\Identity\Ldap',  // en 3e @deprecated
-            001 => 'Application\Provider\IdentityProvider', // en 3e
-            000 => 'EntretienProfessionnel\Provider\IdentityProvider', // en 3e
+            300 => 'UnicaenAuthentification\Provider\Identity\Basic',   // en 1er
+            200 => 'UnicaenAuthentification\Provider\Identity\Db',      // en 2e
+            100 => 'UnicaenAuthentification\Provider\Identity\Ldap',    // en 3e @deprecated
+            001 => 'Application\Provider\IdentityProvider',             // en 3e
+            000 => 'EntretienProfessionnel\Provider\IdentityProvider',  // en 3e
         ],
     ],
 ];

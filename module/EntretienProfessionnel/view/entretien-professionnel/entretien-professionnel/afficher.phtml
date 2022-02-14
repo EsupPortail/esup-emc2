@@ -21,21 +21,40 @@ use UnicaenMail\Entity\Db\Mail;
 $displayParcours = false;
 $displayAcquis = false;
 
-$this->headTitle('Édition de l\'entretien professionnel');
+$this->headTitle('Affichage de l\'entretien professionnel');
 
 $droits = [
         'canVoir' => $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER)),
 ];
 
+$canExporter = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
 ?>
 
-<h1 class="page-header">
-    Affichage de l'entretien professionnel
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
+            <?php echo $agent->getPrenom(); ?>
+            <?php echo $agent->getNomUsuel(); ?>
+        </h1>
+    </div>
+    <div class="pull-right">
+        <?php if ($canExporter) : ?>
+            <a href="" target="_blank"
+               class="btn btn-primary action">
+                <span class="icon pdf"></span>
+                Exporter en PDF
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
 
 <?php
 echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
+
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">

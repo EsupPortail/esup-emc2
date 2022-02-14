@@ -39,6 +39,8 @@ $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::E
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 
+$canExporter = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
+
 $droits = [
     'afficher' => $canVoir,
     'ajouter' => $canAjouter,
@@ -50,16 +52,25 @@ $droits = [
 ?>
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
-<h1 class="page-header">
-    Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
-    <?php echo $entretien->getAgent()->getPrenom(); ?>
-    <?php echo $entretien->getAgent()->getNomUsuel(); ?>
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
+            <?php echo $agent->getPrenom(); ?>
+            <?php echo $agent->getNomUsuel(); ?>
+        </h1>
+    </div>
+    <div class="pull-right">
+        <?php if ($canExporter) : ?>
+            <a href="" target="_blank"
+               class="btn btn-primary action">
+                <span class="icon pdf"></span>
+                Exporter en PDF
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
 
-
-<h1 class="page-header">
-    Affichage de l'entretien professionnel
-</h1>
 
 <?php
 echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);

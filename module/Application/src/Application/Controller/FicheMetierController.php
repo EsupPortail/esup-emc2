@@ -25,6 +25,8 @@ use Application\Service\RendererAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Mpdf\MpdfException;
+use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -73,7 +75,6 @@ class FicheMetierController extends AbstractActionController
         $etatId       = $fromQueries['etat'];
         $domaineId    = $fromQueries['domaine'];
         $expertise    = $fromQueries['expertise'];
-
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
         $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
@@ -158,7 +159,7 @@ class FicheMetierController extends AbstractActionController
     public function editerAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', false);
-        if ($fiche === null) $fiche = $this->getFicheMetierService()->getLastFicheMetier();
+        $missions = $this->getActiviteService()->getActivitesByFicheMetierType($fiche);
         $parcours = ($fiche->getMetier()->getCategorie())?$this->getParcoursDeFormationService()->generateParcoursArrayFromFicheMetier($fiche):null;
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fiche, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fiche, true);
@@ -168,10 +169,11 @@ class FicheMetierController extends AbstractActionController
             'competences' => $competences,
             'applications' => $applications,
             'parcours' => $parcours,
+            'missions' => $missions,
         ]);
     }
 
-    public function exporterAction()
+    public function exporterAction() : string
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
@@ -182,12 +184,16 @@ class FicheMetierController extends AbstractActionController
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_METIER', $vars);
 
-        $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('');
-        $exporter->setFooterScript('');
-        $exporter->addBodyHtml($rendu->getCorps());
-        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'export en PDF",0,$e);
+        }
     }
 
     public function historiserAction() : Response
@@ -357,7 +363,7 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function changerExpertiseAction()
+    public function changerExpertiseAction() : Response
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this);
         if ($fiche->hasExpertise()) {
@@ -372,7 +378,7 @@ class FicheMetierController extends AbstractActionController
 
     /** GESTION DES ETATS DES FICHES METIERS **************************************************************************/
 
-    public function changerEtatAction()
+    public function changerEtatAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -401,7 +407,8 @@ class FicheMetierController extends AbstractActionController
 
     /** Graphique *****************************************************************************************************/
 
-    public function graphiqueCompetencesAction() {
+    public function graphiqueCompetencesAction() : ViewModel
+    {
         $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -451,7 +458,8 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function graphiqueApplicationsAction() {
+    public function graphiqueApplicationsAction() : ViewModel
+    {
         $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -489,9 +497,6 @@ class FicheMetierController extends AbstractActionController
                 'color' => "0,255,0",
             ];
         }
-
-//        var_dump($valuesFiche);
-//        var_dump($valuesAgent);
 
         $libelle = $ficheMetier->getMetier()->getLibelle();
         $vm =  new ViewModel([
