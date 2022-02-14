@@ -283,14 +283,14 @@ class StructureController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        if ($structureAgentForce !== null) {
+//        if ($structureAgentForce !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Retirer [".$structureAgentForce->getAgent()->getDenomination()."] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
                 'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
             ]);
-        }
+//        }
         return $vm;
     }
 

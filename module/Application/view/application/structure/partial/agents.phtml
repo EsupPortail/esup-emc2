@@ -24,36 +24,34 @@ $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResource
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 $canRetirerAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
+$canComplement              = $this->isAllowed($structure,StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT);
+
 $isForce = (isset($options['force']) AND $options['force'] === true);
 
 ?>
 
-<table class="datatable table table-condensed">
+<table class="datatable table table-condensed" style="font-size: 14px;">
     <thead>
     <tr>
-        <th style="width:25%; min-width: 25%;">Dénomination et structures fines</th>
-        <th style="width:25%; min-width: 25%;">
+        <th style="width:17%; min-width: 17%;">Dénomination</th>
+        <th style="width:20%; min-width: 20%;">Structures fines</th>
+        <th style="width:22%; min-width: 22%;">
             Supérieur&middot;e hiérarchique direct&middot;e
-            <span class="icon information" data-toggle="tooltip" data-html="true"
-                  title="Responsable directe de l'agent">
+<!--            <span class="icon information" data-toggle="tooltip" data-html="true" title="Responsable directe de l'agent">-->
         </th>
-        <th style="width:25%; min-width: 25%;">
+        <th style="width:22%; min-width: 22%;">
             Autorité hiérarchique
-            <span class="icon information"  data-toggle="tooltip" data-html="true"
-                  title="Responsable de la structure de l'agent">
+<!--            <span class="icon information"  data-toggle="tooltip" data-html="true"title="Responsable de la structure de l'agent">-->
         </th>
-        <th>Statut</th>
-        <th>Grade</th>
-<!--        <th>Poste</th>-->
-        <th>Fiche</th>
-        <th class="cell-action"> Action </th>
+        <th>Grade & statuts</th>
+        <th style="width:8rem; min-width: 8rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($agents as $agent) :?>
         <?php
-            $structure =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
-            $niveau2   =  ($structure AND $structure->getNiv2())?$structure->getNiv2():null;
+            $structureAgent =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
+            $niveau2   =  ($structureAgent AND $structureAgent->getNiv2())?$structureAgent->getNiv2():null;
         ?>
         <tr>
             <td>
@@ -67,28 +65,33 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     <?php echo $agent->getDenomination(); ?>
                 <?php endif; ?>
-                <br/>
+            </td>
+            <td>
                 <!-- STRUCTURE --------------------------------------------------------------------------------------->
-                <?php if ($structure) : ?>
+                <?php if ($structureAgent) : ?>
                     <span class="icon application" title="Déterminé par EMC2"></span>
-                    <?php echo $structure->getLibelleCourt(); ?><br/>
+                    <?php echo $structureAgent->getLibelleCourt(); ?><br/>
                 <?php else : ?>
                     Pas de structure fines<br/>
                 <?php endif ?>
                 <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_STRUCTURE) as $complement) : ?>
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
-                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php if ($canComplement) : ?>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
-                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_STRUCTURE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span> Ajouter une structure
-                </a>
+                <?php if ($canComplement) : ?>
+                    <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_STRUCTURE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon ajouter"></span> Ajouter une structure
+                    </a>
+                <?php endif; ?>
             </td>
             <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
-                <?php if ($structure) : ?>
-                    <?php foreach ($structure->getResponsables() as $responsable) : ?>
+                <?php if ($structureAgent) : ?>
+                    <?php foreach ($structureAgent->getResponsables() as $responsable) : ?>
                         <span class="icon application" title="Déterminé par EMC2"></span>
                         <?php echo $responsable->getAgent()->getDenomination(); ?> <br/>
                     <?php endforeach; ?>
@@ -98,13 +101,17 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE) as $complement) : ?>
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
-                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php if ($canComplement) : ?>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
-                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span> Ajouter un responsable
-                </a>
+                <?php if ($canComplement) : ?>
+                    <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon ajouter"></span> Ajouter un responsable
+                    </a>
+                <?php endif; ?>
             </td>
             <td> <!-- AUTORITE HIERARCHIQUE --------------------------------------------------------------------------->
                 <?php if ($niveau2) : ?>
@@ -118,15 +125,26 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_AUTORITE) as $complement) : ?>
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
-                    <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                    <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php if ($canComplement) : ?>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                    <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
-                <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_AUTORITE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span> Ajouter une autorité
-                </a>
+                <?php if ($canComplement) : ?>
+                    <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_AUTORITE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon ajouter"></span> Ajouter une autorité
+                    </a>
+                <?php endif; ?>
             </td>
             <td>
+                <?php /** @var AgentGrade $grade */ ?>
+                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> -
+                        <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?> <br/>
+                <?php endforeach; ?>
+
+                <u>Statuts :</u>
                 <?php $temoins = []; ?>
                 <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
                     <?php if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
@@ -142,35 +160,28 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <?php endforeach; ?>
                 </ul>
             </td>
-            <td>
-                <?php /** @var AgentGrade $grade */ ?>
-                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> <br/>
-                    <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?>
-                <?php endforeach; ?>
-            </td>
-            <td>
+<!--            <td>-->
                 <?php $fiche = $fichespostes[$agent->getId()]; ?>
-                <?php if ($fiche !== null) : ?>
-                <?php if ($fiche["fiche_principale"] !== null) : ?>
-                    <span
-                        class="icon ok" style="color:darkgreen;"
-                        data-toggle="tooltip" data-html="true"
-                        title="<?php echo $fiche["fiche_principale"]; ?>"
-                    >
-
-                                        </span>
-                <?php else: ?>
-                <span
-                    class="icon question" style="color:orangered;"
-                    data-toggle="tooltip" data-html="true"
-                    title="Fiche incomplète"
-                >
-                                    <?php endif; ?>
-                    <?php else : ?>
-                        <span class="icon ko" style="color:darkred;"></span>
-                    <?php endif; ?>
-            </td>
+<!--                --><?php //if ($fiche !== null) : ?>
+<!--                --><?php //if ($fiche["fiche_principale"] !== null) : ?>
+<!--                    <span-->
+<!--                        class="icon ok" style="color:darkgreen;"-->
+<!--                        data-toggle="tooltip" data-html="true"-->
+<!--                        title="--><?php //echo $fiche["fiche_principale"]; ?><!--"-->
+<!--                    >-->
+<!---->
+<!--                                        </span>-->
+<!--                --><?php //else: ?>
+<!--                <span-->
+<!--                    class="icon question" style="color:orangered;"-->
+<!--                    data-toggle="tooltip" data-html="true"-->
+<!--                    title="Fiche incomplète"-->
+<!--                >-->
+<!--                                    --><?php //endif; ?>
+<!--                    --><?php //else : ?>
+<!--                        <span class="icon ko" style="color:darkred;"></span>-->
+<!--                    --><?php //endif; ?>
+<!--            </td>-->
             <td>
                 <?php if ($canVoirAgent) : ?>
                     <a

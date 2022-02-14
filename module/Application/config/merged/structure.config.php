@@ -33,6 +33,7 @@ return [
                             StructurePrivileges::STRUCTURE_AFFICHER,
                             StructurePrivileges::STRUCTURE_DESCRIPTION,
                             StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                            StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
                         ],
                         'resources' => ['Structure'],
                         'assertion' => StructureAssertion::class

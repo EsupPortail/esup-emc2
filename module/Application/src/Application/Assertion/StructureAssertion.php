@@ -42,6 +42,7 @@ class StructureAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::OBSERVATEUR:
+                    case RoleConstant::DRH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;
@@ -53,9 +54,11 @@ class StructureAssertion extends AbstractAssertion {
 
             case StructurePrivileges::STRUCTURE_DESCRIPTION:
             case StructurePrivileges::STRUCTURE_GESTIONNAIRE:
+            case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
                         return true;
                     case RoleConstant::GESTIONNAIRE:
                         return $isGestionnaire;

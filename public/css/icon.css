@@ -6,7 +6,7 @@ span.icon:before {
     padding-right: 3px;
     vertical-align: middle;
     font-weight: 900;
-    font-size: large;
+    /*font-size: large;*/
 }
 
 span.icon.retour:before {
