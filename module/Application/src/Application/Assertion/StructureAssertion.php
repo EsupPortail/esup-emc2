@@ -8,6 +8,8 @@ use Application\Provider\Privilege\StructurePrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -15,6 +17,7 @@ class StructureAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
 
     protected function assertEntity(ResourceInterface $entity = null,  $privilege = null)
     {
@@ -24,6 +27,7 @@ class StructureAssertion extends AbstractAssertion {
 
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+        /** @var RoleInterface $role */
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
@@ -36,7 +40,6 @@ class StructureAssertion extends AbstractAssertion {
         }
 
         switch($privilege) {
-
             case StructurePrivileges::STRUCTURE_AFFICHER :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:

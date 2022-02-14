@@ -24,7 +24,9 @@ $canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResource
 $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 $canRetirerAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
-$canComplement              = $this->isAllowed($structure,StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT);
+$canComplement              =
+    $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT))
+    AND $this->isAllowed($structure,StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT);
 
 $isForce = (isset($options['force']) AND $options['force'] === true);
 
