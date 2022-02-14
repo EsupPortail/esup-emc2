@@ -146,7 +146,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                         <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?> <br/>
                 <?php endforeach; ?>
 
-                <u>Statuts :</u>
+<!--                <u>Statuts :</u>-->
                 <?php $temoins = []; ?>
                 <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
                     <?php if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
@@ -157,7 +157,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <ul>
                     <?php foreach ($temoins as $temoin => $valeur) : ?>
                         <?php if ($valeur === true) : ?>
-                            <li> <?php echo $temoin; ?></li>
+                            <li style="margin-left:-2rem;"> <?php echo $temoin; ?></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>
