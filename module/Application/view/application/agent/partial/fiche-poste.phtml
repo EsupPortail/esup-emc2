@@ -8,6 +8,12 @@ use Application\Entity\Db\FichePoste;
 
 $retour = $this->url(null, [], [], true);
 ?>
+
+
 <h2> Fiches de poste </h2>
+
+<div class="alert alert-info">
+    <span class="icon attention"></span> Seules les fiches de postes validées sont visualisable par l'agent.
+</div>
 
 <?php echo $this->fichesPostesAsArray($fichespostes, null, ['retour' => $retour]); ?>

@@ -28,6 +28,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use Zend\Http\Request;
@@ -58,6 +59,7 @@ class FichePosteController extends AbstractActionController {
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierTitreFormAwareTrait;
+    use SelectionEtatFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
     use ExpertiseFormAwareTrait;
 
@@ -298,6 +300,36 @@ class FichePosteController extends AbstractActionController {
             throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
         }
     }
+
+    /** GESTION DES ETATS DES FICHES POSTES ***************************************************************************/
+
+    public function changerEtatAction() : ViewModel
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
+
+        $form = $this->getSelectionEtatForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+        $form->reinit(FichePoste::TYPE_FICHEPOSTE);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Changer l'état de la fiche de poste",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
     /** TITRE *********************************************************************************************************/
 
     public function associerTitreAction() : ViewModel

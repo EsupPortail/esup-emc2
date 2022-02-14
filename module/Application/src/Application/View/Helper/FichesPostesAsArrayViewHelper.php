@@ -29,6 +29,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'agent' => true,
             'structure' => true,
             'poste' => false,
+            'etat' => true,
             'fiche-principale' => true,
             'modification' => false,
             'action' => true,

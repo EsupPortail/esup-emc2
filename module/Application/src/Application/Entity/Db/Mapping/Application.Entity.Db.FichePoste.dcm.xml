@@ -27,6 +27,10 @@
         <one-to-many target-entity="Application\Entity\Db\FicheposteCompetenceRetiree" mapped-by="fichePoste" field="competencesRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteActiviteDescriptionRetiree" mapped-by="fichePoste" field="descriptionsRetirees"/>
 
+        <many-to-one field="etat" target-entity="UnicaenEtat\Entity\Db\Etat">
+            <join-column name="etat_id" referenced-column-name="id" />
+        </many-to-one>
+
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

@@ -121,6 +121,8 @@ return [
                         'historiser-expertise',
                         'restaurer-expertise',
                         'supprimer-expertise',
+
+                        'changer-etat',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
                     'assertion'  => FichePosteAssertion::class,
@@ -230,6 +232,17 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'exporter',
+                            ],
+                        ],
+                    ],
+                    'changer-etat' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/changer-etat/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'changer-etat',
                             ],
                         ],
                     ],

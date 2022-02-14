@@ -26,9 +26,11 @@ $canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
+
         <!--    Fiche de poste #--><?php //echo $fiche->getId(); ?><!-- <br/>-->
             <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
         </h1>
+        État de la fiche de poste : <?php echo $this->etatbadge($fiche->getEtat()); ?>
     </div>
 
     <div class="pull-right">

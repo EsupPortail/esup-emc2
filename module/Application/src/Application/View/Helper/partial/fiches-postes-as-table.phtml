@@ -47,6 +47,9 @@ if ($retour)    $query['retour'] = $retour;
         <?php if ($displays['modification']) : ?>
             <th> Modification </th>
         <?php endif; ?>
+        <?php if ($displays['etat']) : ?>
+            <th> État </th>
+        <?php endif; ?>
         <?php if ($displays['action']) : ?>
             <th class="cell-action" style="width: 11rem;"> Action </th>
         <?php endif; ?>
@@ -121,6 +124,12 @@ if ($retour)    $query['retour'] = $retour;
                 <td>
                         <?php echo $fiche->getHistoModificateur()->getDisplayName(); ?> <br/>
                         <?php echo $fiche->getHistoModification()->format('d/m/Y à H:i:s'); ?>
+                </td>
+            <?php endif; ?>
+
+            <?php if ($displays['action']) : ?>
+                <td>
+                        <?php echo $this->etatbadge($fiche['etat']); ?>
                 </td>
             <?php endif; ?>
 

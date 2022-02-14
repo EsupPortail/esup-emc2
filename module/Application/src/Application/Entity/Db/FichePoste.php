@@ -9,15 +9,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
-class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface {
+class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface {
     use FichePosteMacroTrait;
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
 
+    const TYPE_FICHEPOSTE = 'FICHE_POSTE';
     const TYPE_DEFAULT  = 'DEFAULT';
     const TYPE_INCLUSIF = 'INCLUSIF';
     const TYPE_GENRE    = 'GENRE';
+    
     public function getResourceId()
     {
         return 'FichePoste';

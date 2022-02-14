@@ -18,6 +18,7 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FichePosteControllerFactory {
@@ -53,11 +54,13 @@ class FichePosteControllerFactory {
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
          * @var AssocierTitreForm $associerTitreForm
+         * @var SelectionEtatForm $selectionEtatForm
          * @var SpecificitePosteForm $specificiftePosteForm
          * @var ExpertiseForm $expertiseForm
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
+        $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
         $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
 
@@ -80,6 +83,7 @@ class FichePosteControllerFactory {
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);
+        $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);
         $controller->setExpertiseForm($expertiseForm);
 
