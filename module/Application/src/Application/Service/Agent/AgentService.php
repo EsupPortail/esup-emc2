@@ -285,12 +285,14 @@ EOS;
             ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
             ->andWhere('affectation.dateDebut <= :today')
             ->andWhere('affectation.principale = :true')
+            ->andWhere('affectation.deleted_on IS NULL')
             //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
             ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false)')
+            ->andWhere('statut.deleted_on IS NULL')
             //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
             ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
@@ -299,6 +301,7 @@ EOS;
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
             ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
             ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
+            ->andWhere('grade.deleted_on IS NULL')
             //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
 

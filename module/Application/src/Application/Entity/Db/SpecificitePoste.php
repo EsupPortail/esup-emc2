@@ -204,7 +204,14 @@ class SpecificitePoste {
         $result->setContraintes($this->getContraintes());
         $result->setMoyens($this->getMoyens());
         $result->setFormations($this->getFormations());
-        //todo clone activite
+
+        foreach ($this->getActivites() as $activite) {
+            $newActivite = new SpecificiteActivite();
+            $newActivite->setSpecificite($result);
+            $newActivite->setActivite($activite->getActivite());
+            $newActivite->setRetrait($activite->getRetrait());
+            $newActivite->setDescription($activite->getDescription());
+        }
         return $result;
     }
 

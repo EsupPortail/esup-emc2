@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var Agent $agent
  * @var AgentStatut[] $statuts
@@ -19,10 +20,8 @@ use UnicaenUtilisateur\Entity\Db\User;
 ?>
 <h2> Informations générales sur l'agent </h2>
 
-
 <div class="row">
-    <div class="col-md-6">
-        Informations générales "publiques"
+    <div class="col-md-4">
         <dl>
             <dt> Prénom </dt>
             <dd>
@@ -48,9 +47,59 @@ use UnicaenUtilisateur\Entity\Db\User;
             </div>
         <?php endif; ?>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <?php $affectation = $agent->getAffectationPrincipale(); ?>
+        <?php if ($affectation AND $affectation->getStructure()) : ?>
+        <dl>
+            <dt> Affectation principale </dt>
+            <dd> <?php echo $affectation->getStructure()->getLibelleLong(); ?></dd>
+            <dt> Autorité hiérarchique </dt>
+            <dd>
+                <?php if ($affectation->getStructure()->getNiv2()) : ?>
+                    <?php $responsables = $affectation->getStructure()->getNiv2()->getResponsables(); ?>
+                    <?php if (! empty($responsables)) : ?>
+                        <ul>
+                        <?php foreach ($responsables as $responsable) : ?>
+                            <li> <?php echo $responsable->getAgent()->getDenomination(); ?> </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php else : ?>
+                        <span class="probleme">
+                            <span class="icon attention"></span>
+                            Aucune responsable pour la structure de niveau 2 <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                        </span>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <span class="probleme">
+                        <span class="icon attention"></span>
+                        Aucune structure de niveau 2 de trouvée pour <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                    </span>
+                <?php endif; ?>
+            </dd>
+            <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
+            <dd>
+                <?php $superieurs = $affectation->getStructure()->getResponsables(); ?>
+                <?php if (! empty($superieurs)) : ?>
+                    <ul>
+                        <?php foreach ($superieurs as $superieur) : ?>
+                            <li> <?php echo $superieur->getAgent()->getDenomination(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else : ?>
+                    <span class="probleme">
+                        <span class="icon attention"></span>
+                        Aucune responsable pour la structure <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                    </span>
+                <?php endif; ?>
+            </dd>
+        </dl>
+        <?php else : ?>
+            <div class="alert alert-danger"> Aucune affectation principale </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="col-md-4">
         <?php if ($canInfoSource) : ?>
-            Informations générales "application"
             <dl>
                 <dt> Identifiant sources </dt>
                 <dd>
@@ -58,30 +107,14 @@ use UnicaenUtilisateur\Entity\Db\User;
                     HARPEGE - <?php echo $agent->getHarpId(); ?>
                 <dt> Compte associé </dt>
                 <dd>
-                    Agent : <?php echo $agent->getLogin(); ?> (<?php echo $agent->getEmail(); ?>) <br/>
+                    Agent : <?php echo $agent->getLogin(); ?> <br/> &Rightarrow; <?php echo $agent->getEmail(); ?> <br/>
                     <?php if($agent->getUtilisateur()) : ?>
-                        Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> (<?php echo $agent->getUtilisateur()->getEmail(); ?>)
+                        Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> <br/> &Rightarrow;<?php echo $agent->getUtilisateur()->getEmail(); ?>
                     <?php else: ?>
                         <span class="probleme">
                                 <span class="icon attention"></span>
-                                <em> Aucun compte lié à l'agent </em>
+                                Aucun compte lié à l'agent
                             </span>
-                    <?php endif; ?>
-                </dd>
-                <dt> Responsables hiérarchiques</dt>
-                <dd>
-                    <?php if ($responsables !== null AND !empty($responsables)) : ?>
-                        <ul>
-                            <?php foreach ($responsables as $responsable) : ?>
-                                <li> <?php echo $responsable->getDenomination(); ?> </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <span class="probleme">
-                                <span class="icon attention"></span>
-                                <em> Aucun responsable de remonté </em>
-                            </span>
-
                     <?php endif; ?>
                 </dd>
             </dl>

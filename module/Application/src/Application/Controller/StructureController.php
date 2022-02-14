@@ -319,7 +319,7 @@ class StructureController extends AbstractActionController {
             $fiche = $this->getFichePosteService()->getFichePoste($data['fiche']);
 
             if ($fiche != null) {
-                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
+                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche, true);
 
                 $structure->addFichePosteRecrutement($nouvelleFiche);
                 $this->getStructureService()->update($structure);

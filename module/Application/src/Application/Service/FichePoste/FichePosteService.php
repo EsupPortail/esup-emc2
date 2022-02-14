@@ -910,18 +910,25 @@ EOS;
 
     /**
      * @param FichePoste $fiche
+     * @param bool $dupliquer_specificite
      * @return FichePoste
      */
-    public function clonerFichePoste(FichePoste $fiche) : FichePoste
+    public function clonerFichePoste(FichePoste $fiche, bool $dupliquer_specificite) : FichePoste
     {
         $nouvelleFiche = new FichePoste();
         $nouvelleFiche->setLibelle($fiche->getLibelle());
+        $nouvelleFiche = $this->create($nouvelleFiche);
+
         if ($fiche->getSpecificite()) {
             $specifite = $fiche->getSpecificite()->clone_it();
             $this->getSpecificitePosteService()->create($specifite);
-            $nouvelleFiche->setSpecificite($specifite);
+            if ($dupliquer_specificite) {
+                $nouvelleFiche->setSpecificite($specifite);
+            }
         }
-        $nouvelleFiche = $this->create($nouvelleFiche);
+
+        $nouvelleFiche = $this->update($nouvelleFiche);
+
 
         //dupliquer fiche metier externe
         foreach ($fiche->getFichesMetiers() as $ficheMetierExterne) {

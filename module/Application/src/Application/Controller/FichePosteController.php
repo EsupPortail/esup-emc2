@@ -129,7 +129,7 @@ class FichePosteController extends AbstractActionController {
             $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
 
             if ($fiche !== null ) {
-                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche);
+                $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche, false);
             } else {
                 $nouvelleFiche = new FichePoste();
                 $this->getFichePosteService()->create($nouvelleFiche);
