@@ -23,10 +23,22 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
 
 <h2 class="page-header-tab"> Validations </h2>
 
-<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>validations', '', []); ?>
+<?php if ($canValiderDrh === null) : ?>
+    <div class="alert alert-warning">
+        <span class="icon attention"> </span>
+        La validation de l'entretien professionnel provoquent un blocage des saisies de celui-ci.
+    </div>
+<?php endif; ?>
 
 <div>
     <h3 class="categorie"> Validation du responsable de l'entretien professionnel </h3>
+
+    <?php if ($validationResponsable === null) : ?>
+        <div class="alert alert-info">
+           <span class="icon information"></span>
+            Le reponsable de l'entretien est soit le&middot;a supérieur&middot;e hiérarchique direct&middot;e de l'agent soit une personne nommée en remplacement de le&middot;a supérieur&middot;e hiérarchique direct&middot;e.
+        </div>
+    <?php endif; ?>
 
     <?php if (!$dateOk) : ?>
         <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
@@ -37,7 +49,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             <div class="col-md-8">
                 <div class="alert alert-success">
                     <div class="col-md-5">
-                        <strong><u>Validation responsable d'entretien effectuée.</u></strong>
+                        <strong>Validation effectuée</strong>
                     </div>
                     <div class="col-md-7">
                         <dl class="dl-horizontal">
@@ -52,7 +64,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderResponsable and $validationObservation === null) : ?>
+                <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                                 href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationResponsable->getId()], [], true); ?>"
@@ -77,11 +89,21 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
     <?php endif; ?>
 </div>
 
+<?php
+    // délai ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    $now = new DateTime();
+    $date = $entretien->getMaxSaisiObservation();
+    $depasse = ($date === null OR $date < $now);
+?>
+
 <div>
     <h3 class="categorie"> Expression des observations </h3>
 
-    <?php if (!$dateOk) : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
+    <?php if ($validationObservation === null) :?>
+        <div class="alert alert-info">
+            <span class="icon information"></span>
+            L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable.
+        </div>
     <?php endif; ?>
 
     <?php if ($validationObservation !== null) : ?>
@@ -89,7 +111,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             <div class="col-md-8">
                 <div class="alert alert-success">
                     <div class="col-md-5">
-                        <strong><u>Expression des observations faites.</u></strong>
+                        <strong>Observations faites</strong>
                     </div>
                     <div class="col-md-7">
                         <dl class="dl-horizontal">
@@ -118,38 +140,29 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
         </div>
     <?php else :?>
             <p>
-                Pour exprimer et valider vos observations (facultatives) rendez vous dans l'onglet <em>Observations</em>.
+                Pour exprimer et valider vos observations (facultatives) rendez vous dans l'onglet
+                <a href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'avis'], true); ?>"><em>Observations</em></a>.
             </p>
-            <?php if ($validationResponsable === null) : ?>
-                <div class="alert alert-info">
-                    Vous pouvez exprimer vos observations qu'une fois que le responsable de l'entretien professionnel aura validé celui-ci.
-                </div>
-            <?php endif; ?>
     <?php endif; ?>
 </div>
 
 
 <div>
-    <h3 class="categorie"> Validation du responsable hiérarchique </h3>
+    <h3 class="categorie"> Validation de l'autorité hiérarchique </h3>
 
-    <?php
-        $now = new DateTime();
-        $date = $entretien->getMaxSaisiObservation();
-        $depasse = ($date === null OR $date < $now);
-    ?>
-
-    <?php if ($validationObservation === null OR !$depasse) : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:pas_de_validation_agent', '', []); ?>
+    <?php if ($validationHierarchie === null) : ?>
+        <div class="alert alert-info">
+            <span class="icon information"></span>
+            La validation de l'entretien professionnel par l'autorité hérarchique n'est possible d'après la validation des observations (ou un délai de 8 jours depuis la validation de l'entretien professionnel par son responsable).
+        </div>
     <?php endif; ?>
-
-
 
     <?php if ($validationHierarchie !== null) : ?>
         <div class="row">
             <div class="col-md-8">
                 <div class="alert alert-success">
                     <div class="col-md-5">
-                        <strong><u>Validation du responsable hiérarchique effectuée.</u></strong>
+                        <strong>Validation effectuée</strong>
                     </div>
                     <div class="col-md-7">
                         <dl class="dl-horizontal">
@@ -195,7 +208,10 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
     <h3 class="categorie"> Validation de l'agent </h3>
 
     <?php if ($validationAgent === null) : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:reclamations', '', []); ?>
+        <div class="alert alert-info">
+            <span class="icon information"></span>
+            La validation de l'entretien professionnel par l'agent n'est possible qu'après la validation de l'autorité hiérarchique.
+        </div>
     <?php endif; ?>
 
     <?php if ($validationAgent !== null) : ?>
@@ -203,7 +219,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             <div class="col-md-8">
                 <div class="alert alert-success">
                     <div class="col-md-5">
-                        <strong><u>Validation du responsable hiérarchique effectuée.</u></strong>
+                        <strong>Validation effectuée</strong>
                     </div>
                     <div class="col-md-7">
                         <dl class="dl-horizontal">
@@ -218,7 +234,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderAgent) : ?>
+                <?php if ($canValiderAgent AND $entretien->getCampagne()->estEnCours()) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationAgent->getId()], [], true); ?>"
@@ -244,9 +260,3 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
-<style>
-    h3.categorie {
-        border-bottom: 1px solid #31708f;
-    }
-</style>
