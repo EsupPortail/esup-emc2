@@ -44,7 +44,7 @@ class SpecificiteController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $activite = $this->getActiviteService()->getActivite((int)$data['activite']);
+            $activite = $this->getActiviteService()->getActivite((int)$data['activite']['id']);
             if ($activite !== null) {
                 $specificiteActivite = new SpecificiteActivite();
                 $specificiteActivite->setActivite($activite);
@@ -59,7 +59,9 @@ class SpecificiteController extends AbstractActionController
             'specificite' => $specificite,
             'activites' => $activites,
             'alreadyIn' => $alreadyIn,
+            'url' => $this->url()->fromRoute('specificite/ajouter-activite', ['fiche-poste' => $fichePoste->getId(), 'specificite-poste' => $specificite->getId()], [], true),
         ]);
+        $vm->setTemplate('application/fiche-metier/ajouter-activite-existante');
         return $vm;
 
     }

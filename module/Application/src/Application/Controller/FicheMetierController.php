@@ -310,7 +310,7 @@ class FicheMetierController extends AbstractActionController
 
         return new ViewModel([
             'title' => 'Ajouter une activité existante',
-            'fichemetier' => $fiche,
+            'url' => $this->url()->fromRoute('fiche-metier-type/ajouter-activite-existante', ['id' => $fiche->getId()], [], true),
         ]);
     }
 

@@ -436,4 +436,16 @@ class ActiviteService {
         });
         return $result;
     }
+
+    public function findActiviteByExtendedTerm($texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(libelle.libelle) like :search or LOWER(description.description) like :search")
+            ->andWhere('description.histoDestruction IS NULL')
+            ->andWhere('libelle.histoDestruction IS NULL')
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
 }

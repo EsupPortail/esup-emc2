@@ -69,17 +69,38 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
         <?php endif; ?>
     </div>
 
-    <div class="activite-description">
-        <ul>
-            <?php foreach ($descriptions as $description) : ?>
-                <?php if (!isset($retraits[$description->getId()])) : ?>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="activite-description">
+                Description de l'activité :
+                <ul>
+                    <?php foreach ($descriptions as $description) : ?>
+                        <?php if (!isset($retraits[$description->getId()])) : ?>
+                            <li>
+                                <?php echo $description->getLibelle(); ?>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4" style="border: solid 1px var(--information-background-hover); background: var(--information-background-back); margin-top: 0.5rem;">
+            Métiers associés
+            <ul>
+                <?php foreach ($activite->getFichesMetiers() as $ficheMetier) : ?>
+                    <?php $metier = $ficheMetier->getFiche()->getMetier(); ?>
                     <li>
-                        <?php echo $description->getLibelle(); ?>
+                        <?php echo $metier->getLibelle(); ?>
+                        <?php foreach ($metier->getReferences() as $reference) : ?>
+                            <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
+                        <?php endforeach; ?>
                     </li>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </ul>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
+
+
 </div>
 
 <style>

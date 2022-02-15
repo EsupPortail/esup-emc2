@@ -5,12 +5,14 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 
 /**
  * @see \Application\Controller\FicheMetierController::ajouterActiviteExistanteAction()
- * @var FicheMetier $fichemetier
+ * @see \Application\Controller\SpecificiteController::ajouterActiviteAction()
+ * @var string $url
+ *
  */
 
 ?>
 
-<form method="post" action="<?php echo $this->url('fiche-metier-type/ajouter-activite-existante', ['id' => $fichemetier->getId()], [], true); ?>">
+<form method="post" action="<?php echo $url; ?>">
     <label for="formation">Activité à ajouter : </label>
     <?php
     /** @see  \Application\Controller\ActiviteController::rechercherActiviteAction() */

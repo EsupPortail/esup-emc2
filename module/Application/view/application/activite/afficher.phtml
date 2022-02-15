@@ -64,7 +64,13 @@ $this->headTitle($titre  . " : " .($activite !== null and $activite->getCurrentA
 
 <ul>
     <?php foreach ($ficheMetiers as $ficheMetier) : ?>
-        <li> <?php echo $ficheMetier->getFiche()->getMetier()->getLibelle(); ?> </li>
+        <?php $metier = $ficheMetier->getFiche()->getMetier(); ?>
+        <li>
+            <?php echo $metier->getLibelle(); ?>
+            <?php foreach ($metier->getReferences() as $reference) : ?>
+                <span class="badge" style="background-color: #dfc4b2"><a href="<?php echo $reference->getUrl(); ?>"> <?php echo $reference->getTitre(); ?> </a></span>
+            <?php endforeach; ?>
+        </li>
     <?php endforeach; ?>
 </ul>
 </div>

@@ -481,7 +481,7 @@ class ActiviteController  extends AbstractActionController {
     public function rechercherActiviteAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
-            $activites = $this->getActiviteService()->findActiviteByTerm($term);
+            $activites = $this->getActiviteService()->findActiviteByExtendedTerm($term);
             $result = $this->getActiviteService()->formatActiviteJSON($activites);
             return new JsonModel($result);
         }
