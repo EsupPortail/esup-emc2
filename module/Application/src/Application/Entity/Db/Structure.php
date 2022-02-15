@@ -6,11 +6,8 @@ use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\MacroContent\StructureMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
-use Application\Entity\SynchroAwareInterface;
-use Application\Entity\SynchroAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 class Structure implements ResourceInterface, HasDescriptionInterface {
@@ -21,7 +18,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     const ROLE_RESPONSABLE   = 'Responsable de structure';
     const ROLE_GESTIONNAIRE  = 'Gestionnaire de structure';
 
-    public function getResourceId()
+    public function getResourceId() : string
     {
         return 'Structure';
     }
