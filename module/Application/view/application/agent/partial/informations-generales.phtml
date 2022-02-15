@@ -48,15 +48,22 @@ use UnicaenUtilisateur\Entity\Db\User;
         <?php endif; ?>
     </div>
     <div class="col-md-4">
-        <?php $affectation = $agent->getAffectationPrincipale(); ?>
-        <?php if ($affectation AND $affectation->getStructure()) : ?>
+        <?php
+            $affectation = $agent->getAffectationPrincipale();
+            $structure = ($affectation)?$affectation->getStructure():null;
+            $niveau2   = ($structure)?$structure->getNiv2():null;
+        ?>
+        <?php if ($structure) : ?>
         <dl>
             <dt> Affectation principale </dt>
-            <dd> <?php echo $affectation->getStructure()->getLibelleLong(); ?></dd>
+            <dd>
+                <?php echo $structure->getLibelleLong(); ?> <br/>
+                <?php echo ($niveau2)?$niveau2->getLibelleLong():"aucune structure de renseignée"; ?>
+            </dd>
             <dt> Autorité hiérarchique </dt>
             <dd>
-                <?php if ($affectation->getStructure()->getNiv2()) : ?>
-                    <?php $responsables = $affectation->getStructure()->getNiv2()->getResponsables(); ?>
+                <?php if ($niveau2) : ?>
+                    <?php $responsables = $niveau2->getResponsables(); ?>
                     <?php if (! empty($responsables)) : ?>
                         <ul>
                         <?php foreach ($responsables as $responsable) : ?>
