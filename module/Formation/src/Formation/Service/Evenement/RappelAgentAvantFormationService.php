@@ -5,11 +5,11 @@ namespace Formation\Service\Evenement;
 use DateTime;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
-use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class RappelAgentAvantFormationService extends EvenementService
@@ -24,7 +24,7 @@ class RappelAgentAvantFormationService extends EvenementService
      */
     public function creer(FormationInstance $instance, DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(Type::RAPPEL_FORMATION_AGENT_AVANT);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::RAPPEL_FORMATION_AGENT_AVANT);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
 
         $parametres = [

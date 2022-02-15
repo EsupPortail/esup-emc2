@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Service\Evenement;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Structure\StructureService;
+use EntretienProfessionnel\Provider\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
@@ -41,7 +42,7 @@ class RappelCampagneAvancementServiceFactory {
         $service->setNotificationService($notificationService);
         $service->setStructureService($structureService);
 
-        $service->setType($typeService->findByCode(Type::RAPPEL_CAMPAGNE_AVANCEMENT));
+        $service->setType($typeService->findByCode(EvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT));
         return $service;
     }
 }

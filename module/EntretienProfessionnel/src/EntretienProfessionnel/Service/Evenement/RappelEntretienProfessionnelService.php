@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Service\Evenement;
 
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\EvenementProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
@@ -26,7 +27,7 @@ class RappelEntretienProfessionnelService extends EvenementService {
      */
     public function creer(EntretienProfessionnel $entretien, DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(Type::RAPPEL_ENTRETIEN_PROFESSIONNEL);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL);
 
         $parametres = [
             'entretien'       =>  $entretien->getId(),

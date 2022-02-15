@@ -4,11 +4,11 @@ namespace Formation\Service\Evenement;
 
 use DateTime;
 use Exception;
+use Formation\Provider\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
-use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class NotificationFormationsOuvertesService extends EvenementService
@@ -22,7 +22,7 @@ class NotificationFormationsOuvertesService extends EvenementService
      */
     public function creer(DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(Type::NOTIFICATION_FORMATION_OUVERTE);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::NOTIFICATION_FORMATION_OUVERTE);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
 
         $parametres = [

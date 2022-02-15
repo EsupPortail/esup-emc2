@@ -1,8 +1,12 @@
 <?php
 
 use Application\Service\Evenement\SynchroOctopusService;
+use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
+use Formation\Provider\EvenementProvider as FormationEvenementProvider;
+use EntretienProfessionnel\Provider\EvenementProvider as EntretienProfessionnelEvenementProvider;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
+use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use UnicaenEvenement\Entity\Db\Type;
@@ -14,16 +18,19 @@ return [
             // Évènements de base
             Type::COLLECTION => EvenementCollectionService::class,
 
-            // Évènements Application
-            Type::NOTIFICATION_FORMATION_OUVERTE     => NotificationFormationsOuvertesService::class,
-            Type::RAPPEL_CAMPAGNE_AVANCEMENT         => RappelCampagneAvancementService::class,
-            Type::RAPPEL_ENTRETIEN_PROFESSIONNEL     => RappelEntretienProfessionnelService::class,
-            Type::RAPPEL_FORMATION_AGENT_AVANT       => RappelAgentAvantFormationService::class,
-            Type::SYNCHRO_OCTOPUS                    => SynchroOctopusService::class,
+            ApplicationEvenementProvider::SYNCHRO_OCTOPUS                                               => SynchroOctopusService::class,
+
+            FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE                                  => NotificationFormationsOuvertesService::class,
+            FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT                                    => RappelAgentAvantFormationService::class,
+
+            EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT                         => RappelCampagneAvancementService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL                     => RappelEntretienProfessionnelService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL     => RappelPasObservationService::class,
+
         ],
 
         'icone' => [
-            Type::RAPPEL_ENTRETIEN_PROFESSIONNEL    => 'icon rappel',
+            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL    => 'icon rappel',
         ],
     ],
 ];

@@ -4,13 +4,12 @@ namespace EntretienProfessionnel\Service\Evenement;
 
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
+use EntretienProfessionnel\Provider\EvenementProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
-use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
@@ -27,7 +26,7 @@ class RappelPasObservationService extends EvenementService {
      */
     public function creer(EntretienProfessionnel $entretien, DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(Type::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL);
 
         $parametres = [
             'entretien'       =>  $entretien->getId(),

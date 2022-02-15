@@ -2,12 +2,12 @@
 
 namespace Application\Service\Evenement;
 
+use Application\Provider\EvenementProvider;
 use DateTime;
 use Exception;
 use UnicaenDbImport\Service\Traits\SynchroServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
-use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class SynchroOctopusService extends EvenementService {
@@ -19,7 +19,7 @@ class SynchroOctopusService extends EvenementService {
      */
     public function creer(DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(Type::SYNCHRO_OCTOPUS);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::SYNCHRO_OCTOPUS);
         $description = "Synchonisation avec octopus ".(new DateTime())->format('d/m/Y');
         $evenement = $this->createEvent($description, $description, null, $type, null, $dateTraitement);
         $this->ajouter($evenement);
