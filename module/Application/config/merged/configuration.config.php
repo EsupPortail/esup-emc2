@@ -114,10 +114,11 @@ return [
                     'administration' => [
                         'pages' => [
                             'configuration' => [
-                                'label'    => 'Configuration',
+                                'label'    => 'Configurations',
                                 'route'    => 'configuration',
                                 'resource' => ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AFFICHER),
-                                'order'    => 90000,
+                                'order'    => 7010,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

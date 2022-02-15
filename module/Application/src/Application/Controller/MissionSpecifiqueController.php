@@ -21,9 +21,16 @@ class MissionSpecifiqueController extends AbstractActionController
 
     /** Partie gestion des missions spécifiques  **********************************************************************/
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
+        $typeId = $this->params()->fromQuery('type');
+        $type = $this->getMissionSpecifiqueService()->getMissionSpecifiqueType(($typeId)?((int) $typeId):null);
+        $themeId = $this->params()->fromQuery('theme');
+        $theme = $this->getMissionSpecifiqueService()->getMissionSpecifiqueTheme(($themeId)?((int) $themeId):null);
+
         $missions = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
+        if ($type !== null) $missions = array_filter($missions, function (MissionSpecifique $mission) use ($type) { return $mission->getType() === $type; });
+        if ($theme !== null) $missions = array_filter($missions, function (MissionSpecifique $mission) use ($theme) { return $mission->getTheme() === $theme; });
         $types = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesTypes();
         $themes = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesThemes();
 
@@ -31,6 +38,7 @@ class MissionSpecifiqueController extends AbstractActionController
             'missions' => $missions,
             'types' => $types,
             'themes' => $themes,
+            'params' => ['type' => $typeId, 'theme' => $themeId],
         ]);
     }
 

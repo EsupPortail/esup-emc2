@@ -48,29 +48,29 @@ return [
             'home' => [
                 'pages' => [
                     'administration' => [
-                        'pages' => [
-                            'validations' => [
-                                'label'    => 'Validations',
-                                'route'    => 'validation',
-                                'resource' => ValidationtypePrivileges::getResourceId(ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER),
-                                'order'    => 1111,
-
-                                'pages' => [
-                                    'type' => [
-                                        'label'    => 'Types de validation',
-                                        'route'    => 'validation/type',
-                                        'resource' => ValidationtypePrivileges::getResourceId(ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER),
-                                        'order'    => 1111,
-                                    ],
-                                    'instance' => [
-                                        'label'    => 'Instances de validation',
-                                        'route'    => 'validation/isntance',
-                                        'resource' => ValidationtypePrivileges::getResourceId(ValidationinstancePrivileges::VALIDATIONINSTANCE_AFFICHER),
-                                        'order'    => 1112,
-                                    ],
-                                ],
-                            ],
-                        ],
+//                        'pages' => [
+//                            'validations' => [
+//                                'label'    => 'Validations',
+//                                'route'    => 'validation',
+//                                'resource' => ValidationtypePrivileges::getResourceId(ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER),
+//                                'order'    => 1111,
+//
+//                                'pages' => [
+//                                    'type' => [
+//                                        'label'    => 'Types de validation',
+//                                        'route'    => 'validation/type',
+//                                        'resource' => ValidationtypePrivileges::getResourceId(ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER),
+//                                        'order'    => 1111,
+//                                    ],
+//                                    'instance' => [
+//                                        'label'    => 'Instances de validation',
+//                                        'route'    => 'validation/isntance',
+//                                        'resource' => ValidationtypePrivileges::getResourceId(ValidationinstancePrivileges::VALIDATIONINSTANCE_AFFICHER),
+//                                        'order'    => 1112,
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
                     ],
                 ],
             ],

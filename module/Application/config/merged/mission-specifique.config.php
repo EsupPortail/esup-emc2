@@ -156,17 +156,26 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
+                            'missions' => [
+                                'label' => 'Gestion des missions',
+                                'route' => 'mission-specifique',
+                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER),
+                                'order'    => 1000,
+                                'dropdown-header' => true,
+                            ],
                             'mission-specifique' => [
                                 'label' => 'Missions spécifiques',
                                 'route' => 'mission-specifique',
                                 'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER),
-                                'order'    => 1100,
+                                'order'    => 1030,
+                                'icon' => 'fas fa-angle-right',
                             ],
                             'affectation' => [
                                 'label' => 'Affectations des missions spécifiques',
                                 'route' => 'mission-specifique/affectation',
                                 'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_INDEX),
-                                'order'    => 1100,
+                                'order'    => 1040,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

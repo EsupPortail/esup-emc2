@@ -52,7 +52,8 @@ return [
                                 'label' => 'État',
                                 'route' => 'unicaen-etat',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
-                                'order'    => 10002,
+                                'order'    => 5000,
+                                'icon' => 'fas fa-angle-right',
                                 'pages' => [
                                 ],
                             ],

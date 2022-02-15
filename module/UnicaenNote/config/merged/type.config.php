@@ -82,20 +82,20 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'unicaen-note' => [
-                                'pages' => [
-                                    'un-type' => [
-                                        'label' => 'Type de notes',
-                                        'route' => 'unicaen-note/type',
-                                        'resource' => PrivilegeController::getResourceId(TypeController::class, 'index'),
-                                        'order'    => 10002,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+//                    'administration' => [
+//                        'pages' => [
+//                            'unicaen-note' => [
+//                                'pages' => [
+//                                    'un-type' => [
+//                                        'label' => 'Type de notes',
+//                                        'route' => 'unicaen-note/type',
+//                                        'resource' => PrivilegeController::getResourceId(TypeController::class, 'index'),
+//                                        'order'    => 10002,
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
+//                    ],
                 ],
             ],
         ],

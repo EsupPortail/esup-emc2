@@ -41,10 +41,11 @@ return array(
                     'administration' => [
                         'pages' => [
                             'indicateurs' => [
-                                'label'    => 'Indicateur',
+                                'label'    => 'Indicateurs',
                                 'route'    => 'indicateurs',
                                 'resource' => IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER),
-                                'order'    => 1000,
+                                'order'    => 4000,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

@@ -318,7 +318,7 @@ class MissionSpecifiqueService {
      * @param integer $id
      * @return MissionSpecifiqueType
      */
-    public function getMissionSpecifiqueType($id)
+    public function getMissionSpecifiqueType(?int $id)
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
             ->andWhere('type.id = :id')
@@ -406,7 +406,7 @@ class MissionSpecifiqueService {
      * @param string $ordre
      * @return MissionSpecifiqueTheme[]
      */
-    public function getMissionsSpecifiquesThemes($historiser= true, $champ = 'libelle', $ordre ='ASC')
+    public function getMissionsSpecifiquesThemes(bool $historiser= true, string $champ = 'libelle', string $ordre ='ASC') : array
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('theme')
             ->addSelect('mission')->leftJoin('theme.missions', 'mission')
@@ -428,7 +428,7 @@ class MissionSpecifiqueService {
      * @param string $ordre
      * @return array
      */
-    public function getMissionsSpecifiquesThemesAsOptions($historiser= false, $champ = 'libelle', $ordre ='ASC')
+    public function getMissionsSpecifiquesThemesAsOptions(bool $historiser= false, string $champ = 'libelle', string $ordre ='ASC') : array
     {
         $types = $this->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
         $array = [];
@@ -439,10 +439,10 @@ class MissionSpecifiqueService {
     }
 
     /**
-     * @param integer $id
-     * @return MissionSpecifiqueTheme
+     * @param int|null $id
+     * @return MissionSpecifiqueTheme|null
      */
-    public function getMissionSpecifiqueTheme($id)
+    public function getMissionSpecifiqueTheme(?int $id) : ?MissionSpecifiqueTheme
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
             ->andWhere('type.id = :id')
@@ -460,9 +460,9 @@ class MissionSpecifiqueService {
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
-     * @return MissionSpecifiqueTheme
+     * @return MissionSpecifiqueTheme|null
      */
-    public function getRequestedMissionSpecifiqueTheme(AbstractActionController $controller, $paramName = 'theme')
+    public function getRequestedMissionSpecifiqueTheme(AbstractActionController $controller, string $paramName = 'theme') : ?MissionSpecifiqueTheme
     {
         $id = $controller->params()->fromRoute($paramName);
         $result = $this->getMissionSpecifiqueTheme($id);

@@ -329,11 +329,18 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
-                            'entretienpro' => [
+                            'entretienpros' => [
+                                'label' => 'Gestion des entretiens professionnels',
+                                'route' => 'entretien-professionnel',
+                                'resource' =>  EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_INDEX) ,
+                                'order'    => 3000,
+                                'dropdown-header' => true,
+                            ],'entretienpro' => [
                                 'label' => 'Entretiens professionnels',
                                 'route' => 'entretien-professionnel',
                                 'resource' =>  EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_INDEX) ,
-                                'order'    => 500,
+                                'order'    => 3020,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

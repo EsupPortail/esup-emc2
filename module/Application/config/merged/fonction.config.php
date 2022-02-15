@@ -44,24 +44,24 @@ return [
     ],
 
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'gestion' => [
-                        'pages' => [
-                            'fonction' => [
-                                'label'    => 'Fonctions',
-                                'route'    => 'fonction',
-                                'resource' => FonctionPrivileges::getResourceId(FonctionPrivileges::FONCTION_AFFICHER),
-                                'order'    => 11680,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'gestion' => [
+//                        'pages' => [
+//                            'fonction' => [
+//                                'label'    => 'Fonctions',
+//                                'route'    => 'fonction',
+//                                'resource' => FonctionPrivileges::getResourceId(FonctionPrivileges::FONCTION_AFFICHER),
+//                                'order'    => 11680,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

@@ -83,16 +83,16 @@ return [
                 'pages' => [
                     'administration' => [
                         'pages' => [
-                            'unicaen-etat' => [
-                                'pages' => [
-                                    'etat' => [
-                                        'label' => 'État',
-                                        'route' => 'unicaen-etat/etat',
-                                        'resource' => PrivilegeController::getResourceId(EtatController::class, 'index'),
-                                        'order'    => 10001,
-                                    ],
-                                ],
-                            ],
+//                            'unicaen-etat' => [
+//                                'pages' => [
+//                                    'etat' => [
+//                                        'label' => 'État',
+//                                        'route' => 'unicaen-etat/etat',
+//                                        'resource' => PrivilegeController::getResourceId(EtatController::class, 'index'),
+//                                        'order'    => 10001,
+//                                    ],
+//                                ],
+//                            ],
                         ],
                     ],
                 ],

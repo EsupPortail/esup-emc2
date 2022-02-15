@@ -481,6 +481,14 @@ div.panel {
     border-radius: 0;
 }
 
+div.panel div.panel-heading{
+    border-radius: 0;
+}
+
+div.panel div.panel-body{
+    border-radius: 0;
+}
+
 div.panel.panel-info {
     border-color:  var(--information-background);
     color:  var(--information-background);
@@ -523,6 +531,17 @@ div.panel.panel-success div.panel-heading{
     background: var(--success-background-back);
     border-color:  var(--success-background);
     color:  var(--success-background);
+}
+
+div.panel.panel-default {
+    border-color:  var(--color-dark);
+    color:  var(--default-background);
+}
+
+div.panel.panel-default div.panel-heading{
+    background: var(--color-medium-bis);
+    border-color:  var(--color-dark);
+    color:  var(--default-background-hover);
 }
 
 /** TABLE *************************************************************************************************************/

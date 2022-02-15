@@ -70,24 +70,24 @@ return [
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'gestion' => [
-                        'pages' => [
-                            [
-                                'order' => 1200,
-                                'label' => 'Postes',
-                                'route' => 'poste',
-                                'resource' => PrivilegeController::getResourceId(PosteController::class, 'index') ,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'gestion' => [
+//                        'pages' => [
+//                            [
+//                                'order' => 1200,
+//                                'label' => 'Postes',
+//                                'route' => 'poste',
+//                                'resource' => PrivilegeController::getResourceId(PosteController::class, 'index') ,
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

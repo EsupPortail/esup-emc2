@@ -44,7 +44,7 @@ return array(
                                 'label'    => 'Formulaires',
                                 'route'    => 'autoform/formulaires',
                                 'resource' => IndexPrivileges::getResourceId(IndexPrivileges::AFFICHER_INDEX),
-                                'order'    => 90009,
+                                'order'    => 10500,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

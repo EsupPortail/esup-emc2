@@ -10,6 +10,7 @@ use Application\Provider\Privilege\MissionspecifiquePrivileges;
  * @var MissionSpecifique[] $missions
  * @var MissionSpecifiqueType[] $types
  * @var MissionSpecifiqueTheme[] $themes
+ * @var array $params
  */
 
 $canVoir            = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_AFFICHER));
@@ -71,7 +72,7 @@ $this->headTitle("Missions spécifiques");
 
                 <!-- Mission------------------------------------------------------------------------------------------->
                 <div id="mission" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/index-mission', ['missions' => $missions, 'droits' => $droits]); ?>
+                    <?php echo $this->partial('partial/index-mission', ['missions' => $missions, 'types' => $types, 'themes' => $themes, 'params' => $params, 'droits' => $droits]); ?>
                 </div>
 
                 <!-- Type---------------------------------------------------------------------------------------------->

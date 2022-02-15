@@ -33,11 +33,19 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
-                            'indeicateur' => [
-                                'label' => 'Mes Indicateurs',
+                            'emc2' => [
+                                'label' => 'Mon EMC2',
                                 'route' => 'mes-indicateurs',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
-                                'order'    => 10000,
+                                'order'    => 10001,
+                                'dropdown-header' => true,
+                            ],
+                            'indeicateur' => [
+                                'label' => 'Mes indicateurs',
+                                'route' => 'mes-indicateurs',
+                                'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
+                                'order'    => 10001,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

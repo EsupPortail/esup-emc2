@@ -36,17 +36,17 @@ return [
             'home' => [
                 'pages' => [
                     'administration' => [
-                        'pages' => [
-                            'unicaen-note' => [
-                                'label' => 'Notes et porte-notes',
-                                'route' => 'unicaen-note',
-                                'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
-                                'order'    => 90005,
-                                'icon' => 'fas fa-angle-right',
-                                'pages' => [
-                                ],
-                            ],
-                        ],
+//                        'pages' => [
+//                            'unicaen-note' => [
+//                                'label' => 'Notes et porte-notes',
+//                                'route' => 'unicaen-note',
+//                                'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
+//                                'order'    => 90005,
+//                                'icon' => 'fas fa-angle-right',
+//                                'pages' => [
+//                                ],
+//                            ],
+//                        ],
                     ],
                 ],
             ],

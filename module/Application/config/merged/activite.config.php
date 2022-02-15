@@ -112,10 +112,11 @@ return [
                     'gestion' => [
                         'pages' => [
                             'mission-pincipale' => [
-                                'label'    => 'Missions principales',
+                                'label'    => 'Missions principales / Activités',
                                 'route'    => 'activite',
                                 'resource' => ActivitePrivileges::getResourceId(ActivitePrivileges::ACTIVITE_AFFICHER),
-                                'order'    => 1000,
+                                'order'    => 1020,
+                                'icon' => 'fas fa-angle-right',
                                 'pages' => [
                                     'modifier' => [
                                         'label'    => 'Modifier une activité',

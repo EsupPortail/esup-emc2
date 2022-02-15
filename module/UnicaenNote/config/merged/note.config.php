@@ -89,20 +89,20 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'unicaen-note' => [
-                                'pages' => [
-                                    'un-note' => [
-                                        'label' => 'Note',
-                                        'route' => 'unicaen-note/note',
-                                        'resource' => PrivilegeController::getResourceId(NoteController::class, 'index'),
-                                        'order'    => 10003,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+//                    'administration' => [
+//                        'pages' => [
+//                            'unicaen-note' => [
+//                                'pages' => [
+//                                    'un-note' => [
+//                                        'label' => 'Note',
+//                                        'route' => 'unicaen-note/note',
+//                                        'resource' => PrivilegeController::getResourceId(NoteController::class, 'index'),
+//                                        'order'    => 10003,
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
+//                    ],
                 ],
             ],
         ],

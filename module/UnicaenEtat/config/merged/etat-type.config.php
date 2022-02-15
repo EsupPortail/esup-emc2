@@ -75,18 +75,18 @@ return [
             'home' => [
                 'pages' => [
                     'administration' => [
-                        'pages' => [
-                            'unicaen-etat' => [
-                                'pages' => [
-                                    'etat-type' => [
-                                        'label' => 'État type',
-                                        'route' => 'unicaen-etat/etat-type',
-                                        'resource' => PrivilegeController::getResourceId(EtatTypeController::class, 'index'),
-                                        'order'    => 10001,
-                                    ],
-                                ],
-                            ],
-                        ],
+//                        'pages' => [
+//                            'unicaen-etat' => [
+//                                'pages' => [
+//                                    'etat-type' => [
+//                                        'label' => 'État type',
+//                                        'route' => 'unicaen-etat/etat-type',
+//                                        'resource' => PrivilegeController::getResourceId(EtatTypeController::class, 'index'),
+//                                        'order'    => 10001,
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
                     ],
                 ],
             ],

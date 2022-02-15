@@ -2,39 +2,60 @@
 
 /**
  * @var MissionSpecifique[] $missions
+ * @var MissionSpecifiqueTheme[] $themes
+ * @var MissionSpecifiqueType[] $types
+ * @var array $params
  * @var array $droits
  */
 
 use Application\Entity\Db\MissionSpecifique;
+use Application\Entity\Db\MissionSpecifiqueTheme;
+use Application\Entity\Db\MissionSpecifiqueType;
 
 ?>
 
-<?php if ($droits["ajouter"] === true) : ?>
-    <a
-        <?php /** @see \Application\Controller\MissionSpecifiqueController::ajouterMissionAction() */?>
-        href="<?php echo $this->url('mission-specifique/mission/ajouter', [], [], true); ?>"
-        class="ajax-modal action btn btn-primary" data-event="modification"
-    >
-        <span class="icon ajouter"></span>
-        Ajouter d'une mission spécifique
-    </a>
-<?php endif; ?>
+<br/>
 
-<table class="datatable table table-condensed">
+<div class="row">
+    <div class="col-md-8">
+        <h2>Liste des missions spécifiques </h2>
+    </div>
+    <div class="col-md-4">
+        <?php if ($droits["ajouter"] === true) : ?>
+            <br/>
+            <a
+                <?php /** @see \Application\Controller\MissionSpecifiqueController::ajouterMissionAction() */?>
+                    href="<?php echo $this->url('mission-specifique/mission/ajouter', [], [], true); ?>"
+                    class="ajax-modal action btn btn-primary" data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une mission spécifique
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<?php echo $this->partial('partial/filtre', ['types' => $types, 'themes' => $themes, 'params' => $params]); ?>
+
+
+
+
+<table class="datatable table table-condensed table-hover">
     <thead>
     <tr>
-        <th> Thème </th>
-        <th> Libellé </th>
-        <th> Type </th>
-        <th class="cell-action"> Action </th>
+        <th style="width: 50%;"> Libellé </th>
+        <th style="width: 20%;"> Type </th>
+        <th style="width: 20%;"> Thème </th>
+        <th style="width: 10%;"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($missions as $mission) : ?>
         <tr <?php if ($mission->estHistorise()) echo "class='historise'"; ?>>
-            <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans thème</span>"; ?> </td>
             <td> <?php echo $mission->getLibelle(); ?> </td>
             <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans type</span>"; ?> </td>
+            <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='probleme'><span class='icon attention'></span>Sans thème</span>"; ?> </td>
             <td>
                 <?php if ($droits["voir"] === true) : ?>
                     <a

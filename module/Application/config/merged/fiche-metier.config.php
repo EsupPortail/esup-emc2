@@ -116,11 +116,19 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
+                            'fiches' => [
+                                'label' => 'Gestion des fiches',
+                                'route' => 'fiche-metier-type',
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
+                                'order'    => 2000,
+                                'dropdown-header' => true,
+                            ],
                             'fiche-metier' => [
                                 'label' => 'Fiches métiers',
                                 'route' => 'fiche-metier-type',
                                 'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
-                                'order'    => 500,
+                                'order'    => 2020,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

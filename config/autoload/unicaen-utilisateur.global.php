@@ -5,6 +5,8 @@ use Application\Provider\IdentityProviderFactory;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
+use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
+use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenUtilisateurLdapAdapter\Service\LdapService;
 use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
@@ -94,4 +96,55 @@ return [
             IdentityProvider::class => IdentityProviderFactory::class
         ],
     ],
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            'unicaen-utilisateur' =>
+                            [
+                                'label' => 'Gestion des rôles et utilisateurs',
+                                'route' => 'utilisateur-preecog',
+                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                'order'    => 20000,
+                                'dropdown-header' => true,
+                            ],
+                            'utilisateur' => [
+                                'label' => 'Utilisateurs',
+                                'route' => 'utilisateur-preecog',
+                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                'order'    => 20200,
+                                'icon' => 'fas fa-angle-right',
+                                'pages' => [
+                                    'listing-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'utilisateur-preecog/listing',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                        'order'    => 20210,
+                                    ],
+                                    'ajouter-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'utilisateur-preecog/ajouter',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
+                                        'order'    => 20220,
+                                    ],
+                                ],
+                            ],
+                            'role' => [
+                                'label' => 'Rôles',
+                                'route' => 'role',
+                                'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
+                                'order'    => 20100,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+
 ];
