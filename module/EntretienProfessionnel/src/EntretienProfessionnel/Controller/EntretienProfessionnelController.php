@@ -205,7 +205,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $jplus15 = (new DateTime())->add(new DateInterval('P15J'));
+                $jplus15 = (new DateTime())->add(new DateInterval('P15D'));
                 $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>".$entretien->getAgent()->getDenomination()."</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15 ) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
@@ -249,7 +249,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $jplus15 = (new DateTime())->add(new DateInterval('P15J'));
+                $jplus15 = (new DateTime())->add(new DateInterval('P15D'));
                 $this->flashMessenger()->addSuccessMessage("Entretien profesionnel de <strong>".$entretien->getAgent()->getDenomination()."</strong> est bien planifié.");
                 if ($entretien->getDateEntretien() < $jplus15 ) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
