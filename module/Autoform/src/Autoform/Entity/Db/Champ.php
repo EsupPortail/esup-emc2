@@ -2,11 +2,13 @@
 
 namespace Autoform\Entity\Db;
 
+use Autoform\Entity\HasMotsClefsAwareTrait;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
 class Champ implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
+    use HasMotsClefsAwareTrait;
 
     const TYPE_SPACER           = "Spacer";
     const TYPE_LABEL            = "Label";
@@ -43,6 +45,8 @@ class Champ implements HistoriqueAwareInterface {
     private $balise;
     /** @var string */
     private $options;
+
+
 
     /**
      * @return int

@@ -46,7 +46,7 @@ class FormulaireReponse implements HistoriqueAwareInterface {
     /**
      * @return Champ
      */
-    public function getChamp()
+    public function getChamp() : ?Champ
     {
         return $this->champ;
     }

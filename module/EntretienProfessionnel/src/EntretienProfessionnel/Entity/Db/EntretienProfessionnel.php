@@ -481,4 +481,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         }
         return "Aucune formulaire";
     }
+
+    public function toString_311() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.1']);
+    }
 }

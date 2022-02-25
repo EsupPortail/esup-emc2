@@ -187,4 +187,12 @@ class FormulaireInstance implements HistoriqueAwareInterface {
         return $text;
     }
 
+    public function fetchChampReponseByMotsClefs(array $mots) : string
+    {
+        foreach ($this->getReponses() as $reponse) {
+            if ($reponse->getChamp()->hasMotsClefs($mots) AND $reponse->estNonHistorise()) return $reponse->getReponse();
+        }
+        return "";
+    }
+
 }

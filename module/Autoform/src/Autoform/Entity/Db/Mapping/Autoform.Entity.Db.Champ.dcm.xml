@@ -17,6 +17,7 @@
         <field name="element"           column="element"            type="string"    length="64"     nullable="false" />
         <field name="balise"            column="balise"             type="boolean"                   nullable="false" />
         <field name="options"           column="options"            type="string"    length="1024"   nullable="true" />
+        <field name="motsClefs"         column="mots_clefs"         type="string"    length="1024"   nullable="true" />
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
