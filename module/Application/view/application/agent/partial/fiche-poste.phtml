@@ -64,7 +64,7 @@ foreach ($agent->getFichiers() as $fichier) {
                         <a
                             <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
                                 href="<?php echo $this->url('download-fichier', ['fichier' => $fiche->getId()], [], true); ?>">
-                            <span class="icon voir" title="voir le fichier"></span></a>
+                            <span class="icon voir" title="voir le fichier"></span>
                         </a>
                     <?php endif; ?>
                     <?php if ($canDetruireFichier) : ?>
