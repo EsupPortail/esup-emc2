@@ -10,6 +10,31 @@ use Application\Entity\Db\Agent;
 
 trait AgentMacroTrait
 {
+
+    public function toStringPrenom() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        if ($agent->getPrenom()) return $agent->getPrenom();
+        return "Aucun prénom de renseigné";
+    }
+
+    public function toStringNomUsage() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        if ($agent->getNomUsuel()) return $agent->getNomUsuel();
+        return "Aucun nom d'usage de renseigné";
+    }
+
+    public function toStringNomFamille() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        if ($agent->getNomFamille()) return $agent->getNomFamille();
+        return "Aucun nom de famille de renseigné";
+    }
+
     /**
      * @return string
      */
@@ -172,4 +197,16 @@ trait AgentMacroTrait
         }
         return $texte;
     }
+
+    public function toStringDateNaissance() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+
+        if ($agent->getDateNaissance()) {
+            return $agent->getDateNaissance()->format('d/m/Y');
+        }
+        return "Date de naissance non renseignée";
+    }
+
 }

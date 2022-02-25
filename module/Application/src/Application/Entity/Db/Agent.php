@@ -44,6 +44,8 @@ class Agent implements
     /** @var string */
     private $nomUsuel;
     /** @var string */
+    private $nomFamille;
+    /** @var string */
     private $sexe;
     /** @var DateTime */
     private $dateNaissance;
@@ -124,6 +126,14 @@ class Agent implements
     public function getNomUsuel() : ?string
     {
         return $this->nomUsuel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNomFamille() : ?string
+    {
+        return $this->nomFamille;
     }
 
     /**
