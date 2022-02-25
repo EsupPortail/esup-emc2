@@ -2,9 +2,10 @@
 
 namespace Autoform\Entity\Db;
 
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class Champ {
+class Champ implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     const TYPE_SPACER           = "Spacer";

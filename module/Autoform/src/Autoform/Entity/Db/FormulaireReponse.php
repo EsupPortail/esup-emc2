@@ -2,9 +2,10 @@
 
 namespace Autoform\Entity\Db;
 
+use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class FormulaireReponse {
+class FormulaireReponse implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */
