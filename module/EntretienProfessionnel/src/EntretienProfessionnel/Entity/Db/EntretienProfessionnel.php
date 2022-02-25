@@ -512,4 +512,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function toString_CREP_314() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.4']);
     }
+    public function toString_CREP_321() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.2.1']);
+    }
 }
