@@ -482,16 +482,28 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucune formulaire";
     }
 
-    public function toString_311() : string {
+    public function toStringObservationEntretien() : string {
+        $observation = $this->getObservationActive();
+        if ($observation AND $observation->getObservationAgentEntretien()) return $observation->getObservationAgentEntretien();
+        return "";
+    }
+
+    public function toStringObservationPerspective() : string {
+        $observation = $this->getObservationActive();
+        if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
+        return "";
+    }
+
+    public function toString_CREP_311() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.1']);
     }
-    public function toString_312() : string {
+    public function toString_CREP_312() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.2']);
     }
-    public function toString_313() : string {
+    public function toString_CREP_313() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.3']);
     }
-    public function toString_314() : string {
+    public function toString_CREP_314() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.4']);
     }
 }
