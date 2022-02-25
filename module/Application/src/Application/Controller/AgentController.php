@@ -351,6 +351,39 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
+    public function uploadFichePostePdfAction()
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $nature = $this->getNatureService()->getNatureByCode('FICHE_POSTE');
+
+        $fichier = new Fichier();
+        $fichier->setNature($nature);
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true));
+        $form->bind($fichier);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $file = current($request->getFiles());
+
+            if ($file['name'] != '') {
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $agent->addFichier($fichier);
+                $this->getAgentService()->update($agent);
+            }
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'fiches']);
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
     /** Recherche d'agent  ********************************************************************************************/
 
     public function rechercherAction() : JsonModel

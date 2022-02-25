@@ -129,6 +129,7 @@ return [
                         'ajouter-formation',
                         'ajouter-application',
                         'modifier-formation',
+                        'upload-fiche-poste-pdf',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_EDITER,
@@ -351,6 +352,16 @@ return [
                             ],
                         ],
                     ],
+                    'upload-fiche-poste-pdf' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/upload-fiche-poste-pdf/:agent',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'upload-fiche-poste-pdf',
+                            ],
+                        ],
+                    ],
 
                     /** PPP *******************************************************************************************/
 
@@ -478,7 +489,6 @@ return [
                             ],
                         ],
                     ],
-
                     'tutorat' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -541,7 +551,6 @@ return [
                             ],
                         ],
                     ],
-
                     'accompagnement' => [
                         'type'  => Literal::class,
                         'options' => [

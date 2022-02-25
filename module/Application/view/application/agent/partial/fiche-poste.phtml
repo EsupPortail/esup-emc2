@@ -1,19 +1,92 @@
 <?php
 
 /**
+ * @var Agent $agent
  * @var FichePoste[] $fichespostes
+ * @var array $droits
  */
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 
+$canDetruireFichier     = $droits['detruire'];
+$canVoirFichier         = $droits['voir'];
+$canAjouterFichier      = $droits['ajouter'];
+
 $retour = $this->url(null, [], [], true);
+
+$fichesPDF = [];
+foreach ($agent->getFichiers() as $fichier) {
+    if ($fichier->getNature()->getCode() === 'FICHE_POSTE' AND $fichier->estNonHistorise()) $fichesPDF[] = $fichier;
+}
+
 ?>
 
 
 <h2> Fiches de poste </h2>
 
-<div class="alert alert-info">
-    <span class="icon attention"></span> Seules les fiches de postes validées sont visualisables par les agents.
+<div>
+    <div class="alert alert-info">
+        <span class="icon attention"></span> Seules les fiches de postes validées sont visualisables par les agents.
+    </div>
+
+    <?php echo $this->fichesPostesAsArray($fichespostes, null, ['retour' => $retour]); ?>
 </div>
 
-<?php echo $this->fichesPostesAsArray($fichespostes, null, ['retour' => $retour]); ?>
+<div>
+    <br/>
+    <br/>
+
+    <?php if ($canAjouterFichier) : ?>
+        <div class="alert alert-warning">
+            <span class="icon attention"></span> Il ne faut déposer une fiche de poste PDF que si l'agent n'a pas de fiche de poste de renseignée dans EMC2.
+        </div>
+    <?php endif; ?>
+
+    <?php if (! empty($fichesPDF)) : ?>
+        <table class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th> Fichier </th>
+                <th> Nature </th>
+                <th> Date de dépôt </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($fichesPDF as $fiche) : ?>
+            <tr>
+                <td> <?php echo $fiche->getNomOriginal(); ?> </td>
+                <td> <?php echo $fiche->getHistoCreation()->format('d/m/Y à H:i'); ?> </td>
+                <td> <?php echo $fiche->getNature()->getLibelle(); ?> </td>
+                <td>
+                    <?php if ($canVoirFichier) : ?>
+                        <a
+                            <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
+                                href="<?php echo $this->url('download-fichier', ['fichier' => $fiche->getId()], [], true); ?>">
+                            <span class="icon voir" title="voir le fichier"></span></a>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canDetruireFichier) : ?>
+                        <a
+                            <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
+                                href="<?php echo $this->url('delete-fichier', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
+                        >
+                            <span class="icon detruire" title="supprimer le fichier"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php else : ?>
+        <?php if ($canAjouterFichier) : ?>
+            <a class="btn btn-primary ajax-modal" data-event="modification"
+               href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+            >
+                <span class="icon pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
+                Ajouter une fiche de poste PDF
+            </a>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
