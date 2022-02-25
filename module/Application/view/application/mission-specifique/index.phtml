@@ -100,16 +100,6 @@ $this->headTitle("Missions spécifiques");
         });
     });
 
-    $(document).ready(function() {
-        $('.datatable').DataTable( {
-            sorting:false,
-            paging:false,
-            language: {
-                url: '/localisation/fr_FR.json'
-            }
-        } );
-    } );
-
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);

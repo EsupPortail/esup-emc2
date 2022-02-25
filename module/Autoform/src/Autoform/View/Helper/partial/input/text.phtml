@@ -16,6 +16,11 @@ $options = explode(';', $champ->getOptions());
                 <?php echo $champ->getLibelle()?>&nbsp;:
             </label>
         <?php endif; ?>
+        <?php if ($champ->getTexte() !== null AND trim($champ->getTexte()) !== '') : ?>
+            <p>
+                <?php echo $champ->getTexte(); ?>
+            </p>
+        <?php endif; ?>
         <div class="col-sm-9">
             <input class="form-control" type="text"
                    id="text_<?php echo $champ->getId()?>" name="<?php echo $champ->getId()?>"

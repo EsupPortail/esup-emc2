@@ -8,7 +8,7 @@ use Zend\Session\Storage\SessionArrayStorage;
 return [
     'session_config' => [
         'cookie_lifetime' => 60*60*8,
-        'gc_maxlifetime'     => 60*60*24*30,
+        'gc_maxlifetime'  => 60*60*24*30,
     ],
 
     'session_storage' => [
@@ -36,7 +36,7 @@ return [
             'desc'    => "Emploi Mobilité Carrière Compétences",
             'version' => "1.1.5",
             'date'    => "08/06/2021",
-            'contact' => ['mail' => "dsi.applications@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
+            'contact' => ['mail' => "assistance-emc2@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
             'mentionsLegales'        => "http://www.unicaen.fr/acces-direct/mentions-legales/",
             'informatiqueEtLibertes' => "http://www.unicaen.fr/acces-direct/informatique-et-libertes/",
         ],

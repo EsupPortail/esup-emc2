@@ -14,6 +14,11 @@ $options = explode(';', $champ->getOptions());
         <?php if (trim($champ->getLibelle()) !== 'empty') : ?>
             <label for="textarea_<?php echo $champ->getId(); ?>"><?php echo $champ->getLibelle(); ?></label>
         <?php endif; ?>
+        <?php if ($champ->getTexte() !== null AND trim($champ->getTexte()) !== '') : ?>
+            <p>
+                <?php echo $champ->getTexte(); ?>
+            </p>
+        <?php endif; ?>
         <div class="col-sm-12">
             <textarea class="form-control autoform-textarea" id="textarea_<?php echo $champ->getId(); ?>" name="<?php echo $champ->getId(); ?>" ><?php echo trim($reponse); ?></textarea>
         </div>
