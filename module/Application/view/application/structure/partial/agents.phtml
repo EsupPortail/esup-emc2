@@ -45,7 +45,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             Autorité hiérarchique
 <!--            <span class="icon information"  data-toggle="tooltip" data-html="true"title="Responsable de la structure de l'agent">-->
         </th>
-        <th>Grade & statuts</th>
+<!--        <th>Grade & statuts</th>-->
         <th style="width:8rem; min-width: 8rem;"> Action </th>
     </tr>
     </thead>
@@ -139,29 +139,28 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </a>
                 <?php endif; ?>
             </td>
-            <td>
-                <?php /** @var AgentGrade $grade */ ?>
-                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                    BAP <?php echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?> -
-                        <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?> <br/>
-                <?php endforeach; ?>
-
-<!--                <u>Statuts :</u>-->
-                <?php $temoins = []; ?>
-                <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
-                    <?php if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
-                    <?php if ($statut->isTitulaire()) $temoins['Titulaire'] = true; ?>
-                    <?php if ($statut->isCdi()) $temoins['C.D.I.'] = true; ?>
-                    <?php if ($statut->isCdd()) $temoins['C.D.D.'] = true; ?>
-                <?php endforeach; ?>
-                <ul>
-                    <?php foreach ($temoins as $temoin => $valeur) : ?>
-                        <?php if ($valeur === true) : ?>
-                            <li style="margin-left:-2rem;"> <?php echo $temoin; ?></li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            </td>
+<!--            <td>-->
+<!--                --><?php ///** @var AgentGrade $grade */ ?>
+<!--                --><?php //foreach ($agent->getGradesActifs() as $grade) : ?>
+<!--                    BAP --><?php //echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?><!-- --->
+<!--                        --><?php //echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?><!-- <br/>-->
+<!--                --><?php //endforeach; ?>
+<!---->
+<!--                --><?php //$temoins = []; ?>
+<!--                --><?php //foreach ($agent->getStatutsActifs() as $statut) : ?>
+<!--                    --><?php //if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
+<!--                    --><?php //if ($statut->isTitulaire()) $temoins['Titulaire'] = true; ?>
+<!--                    --><?php //if ($statut->isCdi()) $temoins['C.D.I.'] = true; ?>
+<!--                    --><?php //if ($statut->isCdd()) $temoins['C.D.D.'] = true; ?>
+<!--                --><?php //endforeach; ?>
+<!--                <ul>-->
+<!--                    --><?php //foreach ($temoins as $temoin => $valeur) : ?>
+<!--                        --><?php //if ($valeur === true) : ?>
+<!--                            <li style="margin-left:-2rem;"> --><?php //echo $temoin; ?><!--</li>-->
+<!--                        --><?php //endif; ?>
+<!--                    --><?php //endforeach; ?>
+<!--                </ul>-->
+<!--            </td>-->
 <!--            <td>-->
                 <?php $fiche = $fichespostes[$agent->getId()]; ?>
 <!--                --><?php //if ($fiche !== null) : ?>
