@@ -485,15 +485,21 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function toStringObservationEntretien() : string {
         $observation = $this->getObservationActive();
         if ($observation AND $observation->getObservationAgentEntretien()) return $observation->getObservationAgentEntretien();
-        return "";
+        return "Aucune observation";
     }
 
     public function toStringObservationPerspective() : string {
         $observation = $this->getObservationActive();
         if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
-        return "";
+        return "Aucune observation";
     }
 
+    public function toString_CREP_21() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '2.1']);
+    }
+    public function toString_CREP_22() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '2.2']);
+    }
     public function toString_CREP_311() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.1']);
     }
