@@ -45,6 +45,8 @@ class Agent implements
     private $nomUsuel;
     /** @var string */
     private $sexe;
+    /** @var DateTime */
+    private $dateNaissance;
     /** @var User */
     private $utilisateur;
     /** @var int */
@@ -139,6 +141,24 @@ class Agent implements
     public function setSexe(?string $sexe) : Agent
     {
         $this->sexe = $sexe;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDateNaissance(): ?DateTime
+    {
+        return $this->dateNaissance;
+    }
+
+    /**
+     * @param DateTime $dateNaissance
+     * @return Agent
+     */
+    public function setDateNaissance(DateTime $dateNaissance): Agent
+    {
+        $this->dateNaissance = $dateNaissance;
         return $this;
     }
 
