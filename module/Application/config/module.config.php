@@ -225,7 +225,7 @@ return [
         'invokables' => [
         ],
         'factories' => [
-            RoleService::class => RoleServiceFactory::class,
+//            RoleService::class => RoleServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,

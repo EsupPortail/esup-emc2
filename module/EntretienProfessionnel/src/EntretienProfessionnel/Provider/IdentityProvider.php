@@ -51,7 +51,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
         if ($agent !== null) {
             $deleguations = $this->getDelegueService()->getDeleguesByAgent($agent);
             if ($deleguations !== null and $deleguations !== []) {
-                $roleDelegue = $this->getRoleService()->getRoleByCode(EntretienProfessionnelConstant::ROLE_DELEGUE);
+                $roleDelegue = $this->getRoleService()->findByRoleId(EntretienProfessionnelConstant::ROLE_DELEGUE);
                 $roles[] = $roleDelegue;
             }
         }

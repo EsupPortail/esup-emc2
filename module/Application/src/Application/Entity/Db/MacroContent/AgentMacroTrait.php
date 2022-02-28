@@ -209,4 +209,26 @@ trait AgentMacroTrait
         return "Date de naissance non renseignée";
     }
 
+    public function toStringAffectationStructure() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $structure = ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
+
+        if ($structure === null) return "Aucune Structure";
+        if ($structure->getNiv2() === null or $structure === $structure->getNiv2()) return $structure->getLibelleLong();
+
+        return $structure->getNiv2()->getLibelleLong() ." - ". $structure->getLibelleLong();
+    }
+
+    public function toStringAffectationDate() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $date = ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getDateDebut():null;
+
+        if ($date === null) return "Aucune date";
+
+        return $date->format('d/m/Y');
+    }
 }

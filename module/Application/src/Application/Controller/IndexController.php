@@ -36,7 +36,7 @@ class IndexController extends AbstractActionController
             if ($connectedUser !== null && $agent !== null && $agent->getUtilisateur() === null) {
                 $agent->setUtilisateur($connectedUser);
                 $this->getAgentService()->update($agent);
-                $personnel = $this->getRoleService()->getRoleByCode(RoleConstant::PERSONNEL);
+                $personnel = $this->getRoleService()->findByRoleId(RoleConstant::PERSONNEL);
                 $hasAgent = $connectedUser->hasRole($personnel);
                 if (! $hasAgent) $this->getUserService()->addRole($connectedUser, $personnel);
                 return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);

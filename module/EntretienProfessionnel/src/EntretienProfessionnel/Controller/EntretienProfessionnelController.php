@@ -474,9 +474,11 @@ class EntretienProfessionnelController extends AbstractActionController
 
         try {
             $exporter = new PdfExporter();
+            $exporter->setRenderer($this->renderer);
             $exporter->getMpdf()->SetTitle($rendu->getSujet());
-            $exporter->setHeaderScript('');
-            $exporter->setFooterScript('');
+            $exporter->setHeaderScript('/entretien-professionnel/pdf/header');
+            $exporter->setFooterScript('/entretien-professionnel/pdf/footer');
+//            $exporter->getMpdf()->SetHTMLFooter('<h1>TEST</h1>');
             $exporter->addBodyHtml($rendu->getCorps());
             return $exporter->export($rendu->getSujet());
         } catch (MpdfException $e) {
