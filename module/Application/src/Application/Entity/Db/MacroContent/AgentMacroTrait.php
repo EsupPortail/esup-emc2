@@ -231,4 +231,19 @@ trait AgentMacroTrait
 
         return $date->format('d/m/Y');
     }
+
+    public function toStringCorpsGrade() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $grades = ($agent->getGradesActifs())?$agent->getGradesActifs():null;
+
+        if ($grades === null) return "Aucune date";
+
+        $texte = "";
+        foreach ($grades as $grade) {
+            $texte .= $grade->getCorps()->getLibelleLong() . "  - " . $grade->getGrade()->getLibelleLong();
+        }
+        return $texte;
+    }
 }

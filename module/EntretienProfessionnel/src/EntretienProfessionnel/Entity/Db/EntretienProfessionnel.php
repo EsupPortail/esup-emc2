@@ -445,6 +445,45 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucun responsable d'entretien donné";
     }
 
+    public function toStringReponsableNomUsage() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        if ($agent->getNomUsuel() === null) return "Aucun nom d'usage";
+        return $agent->getNomUsuel();
+    }
+
+    public function toStringReponsableNomFamille() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        if ($agent->getNomFamille() === null) return "Aucun nom de famille";
+        return $agent->getNomFamille();
+    }
+
+    public function toStringReponsablePrenom() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        if ($agent->getPrenom() === null) return "Aucun prénom";
+        return $agent->getPrenom();
+    }
+
+    public function toStringReponsableCorpsGrade() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        $grades = ($agent->getGradesActifs()) ? $agent->getGradesActifs() : null;
+
+        if ($grades === null) return "Aucune date";
+
+        $texte = "";
+        foreach ($grades as $grade) {
+            $texte .= $grade->getCorps()->getLibelleLong() . "  - " . $grade->getGrade()->getLibelleLong();
+        }
+        return $texte;
+    }
+
     public function  toStringValidationAgent() : string {
         if ($this->validationAgent !== null) {
             return $this->validationAgent->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationAgent->getHistoCreateur()->getDisplayName();
