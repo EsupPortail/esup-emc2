@@ -8,10 +8,7 @@ use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenUtilisateur\Service\User\UserService;
-use UnicaenUtilisateurLdapAdapter\Service\LdapService;
 use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
-
-//use UnicaenUtilisateurOctopusAdapter\Service\OctopusService;
 
 return [
     /**

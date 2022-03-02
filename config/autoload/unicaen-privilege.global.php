@@ -1,9 +1,11 @@
 <?php
 
 use UnicaenPrivilege\Entity\Db\Privilege;
+use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 
 $settings = [
     /**
@@ -19,6 +21,24 @@ $settings = [
             100 => 'UnicaenAuthentification\Provider\Identity\Ldap',    // en 3e @deprecated
             001 => 'Application\Provider\IdentityProvider',             // en 3e
             000 => 'EntretienProfessionnel\Provider\IdentityProvider',  // en 3e
+        ],
+    ],
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'administration' => [
+                        'pages' => [
+                            [
+                                'label' => "Gérer les privilèges",
+                                'title' => "Gérer les privilèges",
+                                'route' => 'unicaen-privilege',
+                                'resource' => RolePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_VOIR),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
 ];
@@ -52,7 +72,8 @@ if ($settings['unicaen-auth']['enable_privileges']) {
             'rule_providers'     => [
                 PrivilegeRuleProvider::class => [],
             ],
-        ]
+        ],
+
     ];
 } else {
     $privileges = [];

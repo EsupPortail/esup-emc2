@@ -218,7 +218,17 @@ trait AgentMacroTrait
         if ($structure === null) return "Aucune Structure";
         if ($structure->getNiv2() === null or $structure === $structure->getNiv2()) return $structure->getLibelleLong();
 
-        return $structure->getNiv2()->getLibelleLong() ." - ". $structure->getLibelleLong();
+        return $structure->getNiv2()->getLibelleLong();
+    }
+
+    public function toStringAffectationStructureFine() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $structure = ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
+
+        if ($structure === null) return "Aucune Structure";
+        return $structure->getLibelleLong();
     }
 
     public function toStringAffectationDate() : string
