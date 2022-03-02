@@ -484,6 +484,32 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $texte;
     }
 
+    public function toStringReponsableStructure() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        $structure = ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
+
+        if ($structure === null) return "Aucune Structure";
+        if ($structure->getNiv2() === null or $structure === $structure->getNiv2()) return $structure->getLibelleLong();
+
+        return $structure->getNiv2()->getLibelleLong();
+    }
+
+    public function toStringReponsableIntitulePoste() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this->getResponsable();
+        $fiche = $agent->getFichePosteActive();
+
+        if ($fiche === null) return "Aucune fiche de poste EMC2";
+        $metier  = $fiche->getLibelleMetierPrincipal();
+        $complement = $fiche->getLibelle();
+
+        if ($complement) return $metier . " rattaché à " . $complement;
+        return $metier;
+    }
+
     public function  toStringValidationAgent() : string {
         if ($this->validationAgent !== null) {
             return $this->validationAgent->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationAgent->getHistoCreateur()->getDisplayName();
@@ -531,6 +557,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $observation = $this->getObservationActive();
         if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
         return "Aucune observation";
+    }
+
+    public function toString_CREP_missions() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'missions']);
     }
 
     public function toString_CREP_projet() : string {

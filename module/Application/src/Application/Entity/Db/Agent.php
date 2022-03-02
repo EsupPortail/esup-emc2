@@ -15,6 +15,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use Exception;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
@@ -366,6 +367,27 @@ class Agent implements
             if ($grade->estEnCours()) $grades[] = $grade;
         }
         return $grades;
+    }
+
+    /** FICHES POSTES *************************************************************************************************/
+
+    /**
+     * @return FichePoste|null
+     * @throws Exception
+     */
+    public function getFichePosteActive() : ?FichePoste
+    {
+        $ficheposte = null;
+        foreach ($this->getFiches() as $fiche) {
+            if ($fiche->estNonHistorise()
+                AND $fiche->isComplete()
+            ) {
+                if ($ficheposte !== null) throw new Exception("Plusieurs fiches de poste actives !");
+                $ficheposte = $fiche;
+
+            }
+        }
+        return $ficheposte;
     }
 
     /** STRUCTURES  ***************************************************************************************************/

@@ -3,6 +3,8 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use Zend\Http\Header\Age;
 
 /**
  * Trait AgentMacroTrait
@@ -255,5 +257,59 @@ trait AgentMacroTrait
             $texte .= $grade->getCorps()->getLibelleLong() . "  - " . $grade->getGrade()->getLibelleLong();
         }
         return $texte;
+    }
+
+    public function toStringIntitulePoste() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $fiche = $agent->getFichePosteActive();
+
+        if ($fiche === null) return "Aucune fiche de poste EMC2";
+        $metier  = $fiche->getLibelleMetierPrincipal();
+        $complement = $fiche->getLibelle();
+
+        if ($complement) return $complement . " rattaché à " . $metier;
+        return $metier;
+    }
+
+    public function toStringMissions() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $fiche = $agent->getFichePosteActive();
+
+       $activites = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getActivites();
+
+        $texte  = "";
+        $texte .= "<ul>";
+        foreach ($activites as $activite) {
+            $texte .= "<li>" . $activite->getActivite()->getCurrentActiviteLibelle()->getLibelle() . "</li>";
+        }
+        $texte .= "</ul>";
+
+        return $texte;
+    }
+
+    public function toStringEmploiType() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $fiche = $agent->getFichePosteActive();
+
+        if ($fiche === null) return "Aucune fiche de poste EMC2";
+        $metier  = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getReferencesAffichage();
+
+        return $metier;
+    }
+
+    public function toStringQuotite() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $quotite = $agent->getQuotiteCourante();
+
+        if ($quotite === null) return "100 %";
+        return $quotite->getQuotite() . " %";
     }
 }
