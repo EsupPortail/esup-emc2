@@ -128,12 +128,16 @@ class EntretienProfessionnelController extends AbstractActionController
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
+        $agentId = $this->params()->fromQuery('agent');
+        $agent = $this->getAgentService()->getAgent($agentId);
+
         $term = $this->params()->fromQuery('term');
 
         if ($term !== null and trim($term) !== "") {
             $agentsResponsables = $this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term);
             $agentsDelegues = $this->getEntretienProfessionnelService()->findDeleguePourEntretien($structure, $campagne, $term);
-            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsDelegues));
+            $agentsSuperieures = $this->getEntretienProfessionnelService()->findSuperieurPourEntretien($agent, $term);
+            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsDelegues, $agentsSuperieures));
             return new JsonModel($result);
         }
 
@@ -196,7 +200,7 @@ class EntretienProfessionnelController extends AbstractActionController
             /** @var SearchAndSelect $element */
             $element = $form->get('responsable');
             /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true));
+            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], ['query' => ['agent' => $agentId]], true));
         }
 
         /** @var Request $request */

@@ -559,6 +559,25 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucune observation";
     }
 
+    public function toString_CREP_echelon() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'echelon']);
+    }
+    public function toString_CREP_echelon_date() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'echelon_date']);
+    }
+    public function toString_CREP_affectation_date() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'affectation_date']);
+    }
+    public function toString_CREP_agent_poste() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'agent_poste']);
+    }
+    public function toString_CREP_responsable_poste() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'responsable_date']);
+    }
+    public function toString_CREP_emploi_type() : string {
+        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'emploi-type']);
+    }
+
     public function toString_CREP_missions() : string {
         return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'missions']);
     }
@@ -568,7 +587,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         if ($res === null OR trim($res) === '' ) return "Non";
         return "Oui";
     }
-
     public function toString_CREP_encadrement() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement']);
         if ($res === null OR trim($res) === '' ) return "Non";

@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -18,6 +19,7 @@ use Zend\View\Model\ViewModel;
 class IndexController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use CampagneServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -64,6 +66,8 @@ class IndexController extends AbstractActionController
                 case EntretienProfessionnelConstant::ROLE_DELEGUE :
                     return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
                     break;
+                case Agent::ROLE_SUPERIEURE :
+                    return $this->redirect()->toRoute('index-superieur', [], [], true);
             }
         }
 
@@ -86,6 +90,26 @@ class IndexController extends AbstractActionController
     public function indexAdministrationAction() : ViewModel
     {
         return new ViewModel();
+    }
+
+    public function indexSuperieurAction() : ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $complements = $this->getAgentService()->getSuperieurByUser($user);
+
+        $agents = [];
+        foreach ($complements as $complement) {
+            $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
+            if ($agent !== null) $agents[$agent->getId()] = $agent;
+        }
+
+
+        return new ViewModel([
+            'agents' => $agents,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
+            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
+            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
+        ]);
     }
 
 }

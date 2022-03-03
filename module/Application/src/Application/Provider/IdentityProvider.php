@@ -2,6 +2,7 @@
 
 namespace Application\Provider;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -28,7 +29,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
     public function computeUsersAutomatiques(string $code) : ?array
     {
         switch ($code) {
-            case 'Agent' :
+            case Agent::ROLE_AGENT :
                 $user = $this->getAgentService()->getUsersInAgent();
                 return $user;
             case Structure::ROLE_RESPONSABLE :
@@ -36,6 +37,9 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
                 return $user;
             case Structure::ROLE_GESTIONNAIRE :
                 $user = $this->getStructureService()->getUsersInGestionnaires();
+                return $user;
+            case Agent::ROLE_SUPERIEURE :
+                $user = $this->getAgentService()->getUsersInSuperieurs();
                 return $user;
         }
         return null;
@@ -55,7 +59,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
         $agent = $this->getAgentService()->getAgentByUser($user);
         if ($agent !== null) {
-            $roleAgent = $this->getRoleService()->findByRoleId('Agent');
+            $roleAgent = $this->getRoleService()->findByRoleId(Agent::ROLE_AGENT);
             $roles[] = $roleAgent;
 
             $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
@@ -68,6 +72,12 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
             if ($gestions !== null and $gestions !== []) {
                 $roleGestionnaire = $this->getRoleService()->findByRoleId(Structure::ROLE_GESTIONNAIRE);
                 $roles[] = $roleGestionnaire;
+            }
+
+            $superieurs = $this->getAgentService()->getSuperieurByUser($user);
+            if ($superieurs !== null AND $superieurs !== []) {
+                $roleSuperieur = $this->getRoleService()->findByRoleId(Agent::ROLE_SUPERIEURE);
+                $roles[] = $roleSuperieur;
             }
         }
         return $roles;

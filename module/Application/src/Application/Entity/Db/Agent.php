@@ -14,6 +14,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
 use Fichier\Entity\Db\Fichier;
@@ -32,6 +33,9 @@ class Agent implements
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
     use HasComplementsTrait;
     use AgentMacroTrait;
+
+    const ROLE_AGENT         = 'Agent';
+    const ROLE_SUPERIEURE    = 'Supérieur·e hiérarchique direct·e';
 
     public function getResourceId() : string
     {
@@ -375,12 +379,12 @@ class Agent implements
      * @return FichePoste|null
      * @throws Exception
      */
-    public function getFichePosteActive() : ?FichePoste
+    public function getFichePosteActive(bool $incomplement = false) : ?FichePoste
     {
         $ficheposte = null;
         foreach ($this->getFiches() as $fiche) {
             if ($fiche->estNonHistorise()
-                AND $fiche->isComplete()
+                AND ($incomplement OR $fiche->isComplete())
             ) {
                 if ($ficheposte !== null) throw new Exception("Plusieurs fiches de poste actives !");
                 $ficheposte = $fiche;
@@ -491,6 +495,19 @@ class Agent implements
             if ($entretien->estNonHistorise()) $entretiens[] = $entretien;
         }
         return $entretiens;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel|null
+     */
+    public function getEntretienProfessionnelByCampagne(Campagne $campagne) : ?EntretienProfessionnel
+    {
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($this->entretiens as $entretien) {
+            if ($entretien->getCampagne() === $campagne) return $entretien;
+        }
+        return null;
     }
 
     /**  MISSIONS SPECIFIQUES *****************************************************************************************/
@@ -635,5 +652,17 @@ class Agent implements
             }
         }
         return $dictionnaire;
+    }
+
+    /**
+     * @param Agent $superieur
+     * @return bool
+     */
+    public function hasSuperieurHierarchique(Agent $superieur) : bool
+    {
+        foreach ($this->getComplements() as $complement) {
+            if ($complement->getType() === Complement::COMPLEMENT_TYPE_RESPONSABLE AND $complement->getComplementId() == $superieur->getId()) return true;
+        }
+        return false;
     }
 }

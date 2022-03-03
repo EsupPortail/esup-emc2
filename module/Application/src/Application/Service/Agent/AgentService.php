@@ -3,6 +3,7 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Complement;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\Structure\StructureServiceAwareTrait;
@@ -505,4 +506,50 @@ EOS;
         return $users;
     }
 
+    /** FONCTION POUR LES RÔLES AUTOMATIQUES **************************************************************************/
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInSuperieurs() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder("complement")
+            ->andWhere('complement.histoDestruction IS NULL')
+            ->andWhere('complement.type = :SUPERIEUR')
+            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        /** @var Complement[] $result */
+
+        $ids = [];
+        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
+
+        $users = [];
+        foreach ($ids as $id) $users[] = $this->getAgent($id)->getUtilisateur();
+
+        return $users;
+    }
+
+    /**
+     * @param User|null $user
+     * @return Complement[]|null
+     */
+    public function getSuperieurByUser(?User $user) : ?array
+    {
+        if ($user === null) return null;
+
+        $agent = $this->getAgentByUser($user);
+        if ($agent === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
+            ->andWhere('complement.type = :SUPERIEUR')
+            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
+            ->andWhere('complement.complementId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

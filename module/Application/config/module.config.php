@@ -91,6 +91,15 @@ return [
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_INDEX,
                     ],
                 ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'index-superieur',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_AFFICHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -183,6 +192,17 @@ return [
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
                         'action'     => 'index-validateur',
+                    ],
+                ],
+            ],
+            'index-superieur' => [
+                'type'          => Literal::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/index-superieur',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'index-superieur',
                     ],
                 ],
             ],

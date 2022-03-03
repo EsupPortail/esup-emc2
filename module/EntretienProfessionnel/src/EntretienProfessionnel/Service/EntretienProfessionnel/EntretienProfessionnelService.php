@@ -4,8 +4,10 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\Complement;
 use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
@@ -28,6 +30,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
+    use AgentServiceAwareTrait;
     use EntityManagerAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -460,6 +463,28 @@ class EntretienProfessionnelService {
             $result_dele = array_merge($result_dele, $parent);
         }
         return $result_dele;
+    }
+
+    /**
+     * @param Agent $agent
+     * @param string $term
+     * @return Agent[]|null[]
+     */
+    public function findSuperieurPourEntretien(Agent $agent, string $term)
+    {
+        $superieurs = [];
+
+        /** @var Complement[] $complements */
+        $complements = $agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE);
+        foreach ($complements as $complement) {
+            $superieur = $this->getAgentService()->getAgent($complement->getComplementId());
+            if ($superieur !== null) {
+                $superieurs[$superieur->getId()] = $superieur;
+            }
+        }
+
+        $result = array_filter($superieurs,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
+        return $result;
     }
 
     /**

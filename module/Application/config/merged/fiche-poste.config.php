@@ -59,6 +59,7 @@ return [
                         'privileges' => [
                             FichePostePrivileges::FICHEPOSTE_INDEX,
                             FichePostePrivileges::FICHEPOSTE_AFFICHER,
+                            FichePostePrivileges::FICHEPOSTE_AJOUTER,
                             FichePostePrivileges::FICHEPOSTE_MODIFIER,
                             FichePostePrivileges::FICHEPOSTE_HISTORISER,
                             FichePostePrivileges::FICHEPOSTE_DETRUIRE,
@@ -96,6 +97,7 @@ return [
                         'dupliquer',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AJOUTER,
+                    'assertion'  => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,

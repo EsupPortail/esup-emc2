@@ -279,6 +279,8 @@ trait AgentMacroTrait
         $agent = $this;
         $fiche = $agent->getFichePosteActive();
 
+        if ($fiche === null) return 'Aucune fiche de poste EMC2';
+        if ($fiche->getFicheTypeExternePrincipale() === null) return 'Aucune fiche de métier EMC2 principale';
        $activites = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getActivites();
 
         $texte  = "";
