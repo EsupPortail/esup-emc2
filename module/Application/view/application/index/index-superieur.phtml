@@ -102,10 +102,10 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                     <?php $entretien = $agent->getEntretienProfessionnelByCampagne($campagnePrevious); ?>
                     <?php if ($entretien !== null) : ?>
                         Entretien du <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
                             <span class="icon voir"></span></a>
-                        <a href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
                             <span class="icon pdf"></span></a>
                     <?php else : ?>
