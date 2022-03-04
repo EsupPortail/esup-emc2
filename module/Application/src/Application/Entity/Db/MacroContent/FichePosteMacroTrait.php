@@ -4,6 +4,7 @@ namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\ParcoursDeFormation;
 use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Reference;
@@ -77,7 +78,8 @@ trait FichePosteMacroTrait {
             $result [$entite->getGroupe()?$entite->getGroupe()->getLibelle():"Sans groupe"][$entite->getId()] = $entite;
         }
 
-        $texte = "<ul>";
+        $texte = "<h3> Applications </h3>";
+        $texte .= "<ul>";
         foreach ($result as $groupe => $liste) {
             $texte .= "<li class='rubrique'>";
             $texte .= $groupe;
@@ -107,7 +109,18 @@ trait FichePosteMacroTrait {
         $dictionnaire = array_filter($dictionnaire, function ($a) use ($typeId) { return $a["entite"]->getType()->getId() === $typeId;});
         usort($dictionnaire, function ($a, $b) { return $a["entite"]->getLibelle() > $b["entite"]->getLibelle();});
 
-        $texte = "<ul>";
+        if (empty($dictionnaire)) return "";
+
+        $competence = $dictionnaire[0]["entite"];
+        $competenceType = "";
+        switch($competence->getType()->getId()) {
+            case 1 : $competenceType = "Compétences comportementales"; break;
+            case 2 : $competenceType = "Compétences opérationnelles"; break;
+            case 3 : $competenceType = "Connaissances"; break;
+        }
+
+        $texte = "<h3>".$competenceType."</h3>";
+        $texte .= "<ul>";
         foreach ($dictionnaire as $element) {
             $texte .= "<li>";
             $texte .= $element["entite"]->getLibelle();
@@ -549,4 +562,31 @@ trait FichePosteMacroTrait {
         return $texte;
     }
 
+    /**
+     * @return string
+     */
+    public function toStringSpecificiteActivites() : string
+    {
+        /** @var FichePoste $fiche */
+        $fiche = $this;
+
+        $activites = $fiche->getSpecificite()->getActivites();
+        if ($activites === null or $activites === []) return "";
+
+
+        $texte = "<h3> Autres missions spécifiques au poste </h3>";
+
+        foreach ($activites as $activite) {
+            $retrait = explode(";", $activite->getRetrait());
+            $texte .= "<div>";
+            $texte .= "<span class='activite'>".$activite->getActivite()->getCurrentActiviteLibelle()->getLibelle()."</span>";
+            $texte .= "<ul>";
+            foreach ($activite->getActivite()->getDescriptions() as $description) {
+                if (array_search($description->getId(), $retrait) === false) $texte .= "<li>". $description->getLibelle()."</li>";
+            }
+            $texte .= "</ul>";
+            $texte .= "</div>";
+        }
+        return $texte;
+    }
 }
