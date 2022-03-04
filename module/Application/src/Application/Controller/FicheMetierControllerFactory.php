@@ -22,7 +22,6 @@ use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use Zend\View\Renderer\PhpRenderer;
 
 class FicheMetierControllerFactory
 {
@@ -73,12 +72,8 @@ class FicheMetierControllerFactory
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionFicheMetierForm = $container->get('FormElementManager')->get(SelectionFicheMetierForm::class);
 
-        /* @var PhpRenderer $renderer */
-        $renderer = $container->get('ViewRenderer');
-
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
-        $controller->setRenderer($renderer);
 
         $controller->setActiviteService($activiteService);
         $controller->setAgentService($agentService);

@@ -11,7 +11,6 @@ use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
-use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
@@ -22,7 +21,6 @@ use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
-use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\ORMException;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
@@ -44,31 +42,29 @@ use Zend\View\Model\ViewModel;
 
 class FicheMetierController extends AbstractActionController
 {
-    use RendererAwareTrait;
-
     /** Traits associé aux services */
     use ActiviteServiceAwareTrait;
     use AgentServiceAwareTrait;
-    use RenduServiceAwareTrait;
+    use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
+    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use RenduServiceAwareTrait;
 
     /** Traits associé aux formulaires */
     use ActiviteFormAwareTrait;
     use LibelleFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
-    use SelectionFormationFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionFicheMetierFormAwareTrait;
-    use EtatTypeServiceAwareTrait;
+    use SelectionFormationFormAwareTrait;
 
-    use ConfigurationServiceAwareTrait;
 
     /** CRUD **********************************************************************************************************/
 
@@ -451,30 +447,7 @@ class FicheMetierController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierApplicationAction()
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
-
-        /** @var SelectionApplicationForm $form */
-        $form = $this->getSelectionApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/modifier-application', ['id' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $this->getHasApplicationCollectionService()->updateApplications($fiche, $data);
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modification des applications',
-            'form' => $form,
-        ]);
-        return $vm;
-    }
+    /** Expertise  ****************************************************************************************************/
 
     public function changerExpertiseAction() : Response
     {
@@ -488,7 +461,6 @@ class FicheMetierController extends AbstractActionController
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
     }
-
     /** GESTION DES ETATS DES FICHES METIERS **************************************************************************/
 
     public function changerEtatAction() : ViewModel

@@ -52,7 +52,7 @@ class Metier implements HistoriqueAwareInterface {
     }
 
     /**
-     * @param bool $inclusif
+     * @param bool|null $inclusif
      * @return string
      */
     public function getLibelle(bool $inclusif = true) : ?string
