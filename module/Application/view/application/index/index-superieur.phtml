@@ -16,7 +16,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 ?>
 
 <h1 class="panel-heading">
-    Liste des agents sous votre responsabilité directe
+    Liste des agents dont vous êtes le supérieur hiérarchique direct
 </h1>
 
 <div class="alert alert-info">
@@ -47,7 +47,11 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
             <td>
                 <?php $affectation = $agent->getAffectationPrincipale(); ?>
                 <?php if ($affectation) : ?>
-                    <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                    <?php $niveau2 = $affectation->getStructure()->getNiv2(); ?>
+                    <?php if ($niveau2 !== null) : ?>
+                        <?php echo $niveau2->getLibelleLong(); ?> <br/>
+                    <?php endif; ?>
+                    <?php echo $affectation->getStructure()->getLibelleLong(); ?>
                 <?php else : ?>
                     Aucune affectation principale
                 <?php endif; ?>
