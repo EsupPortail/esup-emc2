@@ -6,6 +6,7 @@ use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
@@ -62,6 +63,7 @@ class FicheMetierControllerFactory
          * @var SelectionCompetenceForm $selectionCompetenceForm
          * @var SelectionFormationForm $selectionFormationForm
          * @var SelectionEtatForm $selectionEtatForm
+         * @var SelectionFicheMetierForm $selectionFicheMetierForm
          */
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
@@ -69,6 +71,7 @@ class FicheMetierControllerFactory
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
+        $selectionFicheMetierForm = $container->get('FormElementManager')->get(SelectionFicheMetierForm::class);
 
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
@@ -96,6 +99,7 @@ class FicheMetierControllerFactory
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         $controller->setSelectionFormationForm($selectionFormationForm);
         $controller->setSelectionEtatForm($selectionEtatForm);
+        $controller->setSelectionFicheMetierForm($selectionFicheMetierForm);
 
         return $controller;
     }

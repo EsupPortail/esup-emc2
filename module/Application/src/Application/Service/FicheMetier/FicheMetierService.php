@@ -318,6 +318,22 @@ class FicheMetierService {
      * @param int $niveau
      * @return array
      */
+    public function getFichesMetiersAsOptionGroup() : array
+    {
+        $fiches = $this->getFichesMetiers();
+        $array = [];
+        foreach ($fiches as $fiche) {
+            if ($fiche->estNonHistorise()) {
+                $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();
+            }
+        }
+        return $array;
+    }
+
+    /**
+     * @param int $niveau
+     * @return array
+     */
     public function getFichesMetiersAsOptions(int $niveau =0) : array
     {
         $fiches = $this->getFichesMetiersWithNiveau($niveau);

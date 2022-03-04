@@ -14,6 +14,7 @@ use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\SelectionApplication\SelectionApplicationForm;
 use Application\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
@@ -22,6 +23,7 @@ use Application\Service\HasApplicationCollection\HasApplicationCollectionService
 use Application\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\RendererAwareTrait;
+use Doctrine\ORM\ORMException;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
@@ -63,6 +65,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionCompetenceFormAwareTrait;
     use SelectionFormationFormAwareTrait;
     use SelectionEtatFormAwareTrait;
+    use SelectionFicheMetierFormAwareTrait;
     use EtatTypeServiceAwareTrait;
 
     use ConfigurationServiceAwareTrait;
@@ -336,6 +339,96 @@ class FicheMetierController extends AbstractActionController
         $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
+    }
+
+    /** ACTIONS LIEES AUX ELEMENTS ************************************************************************************/
+
+    public function clonerApplicationsAction() : ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionFicheMetierForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-applications', ['fiche-metier' => $ficheMetier->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
+
+            if ($ficheClone !== null) {
+                try {
+                    /** @var CompetenceElement[] $oldCollection */
+                    $oldCollection = $ficheMetier->getApplicationCollection();
+                    foreach ($oldCollection as $element) $element->historiser();
+
+                    $newCollection = $ficheClone->getApplicationListe();
+                    foreach ($newCollection as $element) {
+                        $newElement = new ApplicationElement();
+                        $newElement->setApplication($element->getApplication());
+                        $newElement->setCommentaire("Clonée depuis la fiche #".$ficheClone->getId());
+                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
+                        $this->getFicheMetierService()->getEntityManager()->persist($newElement);
+                        $ficheMetier->addApplicationElement($newElement);
+                  }
+                  $this->getFicheMetierService()->getEntityManager()->flush();
+                } catch (ORMException $e) {
+                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
+                }
+            }
+
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Cloner les applications d'une autre fiche métier",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function clonerCompetencesAction() : ViewModel
+    {
+        $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getSelectionFicheMetierForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/cloner-competences', ['fiche-metier' => $ficheMetier->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $ficheClone = $this->getFicheMetierService()->getFicheMetier($data['fiche-metier']);
+
+            if ($ficheClone !== null) {
+                try {
+                    /** @var CompetenceElement[] $oldCollection */
+                    $oldCollection = $ficheMetier->getCompetenceCollection();
+                    foreach ($oldCollection as $element) $element->historiser();
+
+                    $newCollection = $ficheClone->getCompetenceListe();
+                    foreach ($newCollection as $element) {
+                        $newElement = new CompetenceElement();
+                        $newElement->setCompetence($element->getCompetence());
+                        $newElement->setCommentaire("Clonée depuis la fiche #" . $ficheClone->getId());
+                        $newElement->setNiveauMaitrise($element->getNiveauMaitrise());
+                        $this->getFicheMetierService()->getEntityManager()->persist($newElement);
+                        $ficheMetier->addCompetenceElement($newElement);
+                    }
+                    $this->getFicheMetierService()->getEntityManager()->flush();
+                } catch (ORMException $e) {
+                    throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
+                }
+            }
+
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/default-form');
+        $vm->setVariables([
+            'title' => "Cloner les compétences d'une autre fiche métier",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     public function modifierApplicationAction()

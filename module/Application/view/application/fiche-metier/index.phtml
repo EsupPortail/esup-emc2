@@ -45,9 +45,6 @@ $this->headTitle('Index des fiches métiers');
 
 <div class="main">
 
-    <?php echo $this->portenote('FicheMetierController::indexAction()', '', []); ?>
-
-
     <?php echo $this->partial('partial/filtre.phtml', ['etats' => $etats, 'domaines'=> $domaines, 'params' => $params]); ?>
 
     <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'portenote' => $portenote]); ?>

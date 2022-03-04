@@ -8,6 +8,8 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
 use Application\Form\FicheMetier\LibelleHydratorFactory;
+use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
+use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FicheMetier\FicheMetierServiceFactory;
@@ -71,6 +73,9 @@ return [
                         'changer-etat',
                         'modifier-application',
                         'modifier-formation',
+
+                        'cloner-applications',
+                        'cloner-competences',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -223,6 +228,28 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'dupliquer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'cloner-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/cloner-applications/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'cloner-applications',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'cloner-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/cloner-competences/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'cloner-competences',
                             ],
                         ],
                         'may_terminate' => true,
@@ -456,6 +483,7 @@ return [
     'form_elements' => [
         'factories' => [
             LibelleForm::class => LibelleFormFactory::class,
+            SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
         ],
     ],
     'hydrators' => [
