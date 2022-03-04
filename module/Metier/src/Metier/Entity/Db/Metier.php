@@ -235,15 +235,31 @@ class Metier implements HistoriqueAwareInterface {
 
     public function getReferencesAffichage() : string
     {
-        $texte = "";
+        $texte = "Réference" . ((count($this->getReferences()) > 1)?"s":"") . " : ";
+        $texte .= "<ul id='reference'>";
         /** @var Reference $reference */
         foreach ($this->getReferences() as $reference) {
+            $texte .= "<li>";
             $texte .= "<a href='". $reference->getUrl()."'>";
             $texte .= "<span class='reference'>";
             $texte .= $reference->getReferentiel()->getLibelleCourt().' - '.$reference->getCode();
             $texte .= "</span>";
             $texte .= "</a>";
+            $texte .= "</li>";
         }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function getDomainesAffichage() : string
+    {
+        $domaines = $this->getDomaines();
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle(); });
+
+        $texte = "Domaine" . ((count($domaines) > 1)?"s":"") . " : ";
+        $texte .= "<ul id='domaine'>";
+        foreach ($domaines as $domaine) $texte .= "<li>".$domaine->getLibelle()."</li>";
+        $texte .= "</ul>";
         return $texte;
     }
 

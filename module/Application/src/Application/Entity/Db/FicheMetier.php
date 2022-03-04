@@ -176,7 +176,18 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
         $competences = array_filter($competences, function (Competence $c) use ($typeId) { return $c->getType()->getId() === $typeId;});
         usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
 
-        $texte = "<ul>";
+        if (empty($competences)) return "";
+
+        $competence = $competences[0];
+        $competenceType = "";
+        switch($competence->getType()->getId()) {
+            case 1 : $competenceType = "Compétences comportementales"; break;
+            case 2 : $competenceType = "Compétences opérationnelles"; break;
+            case 3 : $competenceType = "Connaissances"; break;
+        }
+
+        $texte = "<h3>".$competenceType."</h3>";
+        $texte .= "<ul>";
         foreach ($competences as $competence) {
             $texte .= "<li>";
             $texte .= $competence->getLibelle();
