@@ -558,30 +558,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
         return "Aucune observation";
     }
-
-    public function toString_CREP_echelon() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'echelon']);
-    }
-    public function toString_CREP_echelon_date() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'echelon_date']);
-    }
-    public function toString_CREP_affectation_date() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'affectation_date']);
-    }
-    public function toString_CREP_agent_poste() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'agent_poste']);
-    }
-    public function toString_CREP_responsable_poste() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'responsable_date']);
-    }
-    public function toString_CREP_emploi_type() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'emploi-type']);
-    }
-
-    public function toString_CREP_missions() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'missions']);
-    }
-
     public function toString_CREP_projet() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'projet']);
         if ($res === null OR trim($res) === '' ) return "Non";
@@ -608,42 +584,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         if ($res === null OR trim($res) === '' ) return "0";
         return $res;
     }
-    public function toString_CREP_21() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '2.1']);
-    }
-    public function toString_CREP_22() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '2.2']);
-    }
-    public function toString_CREP_311() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.1']);
-    }
-    public function toString_CREP_312() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.2']);
-    }
-    public function toString_CREP_313() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.3']);
-    }
-    public function toString_CREP_314() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.1.4']);
-    }
-    public function toString_CREP_321() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.2.1']);
-    }
-    public function toString_CREP_322() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.2.2']);
-    }
-    public function toString_CREP_323() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.2.3']);
-    }
-    public function toString_CREP_324() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '3.2.4']);
-    }
-    public function toString_CREP_realisation() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'realisation']);
-    }
-    public function toString_CREP_appreciation() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'appreciation']);
-    }
 
     public function toString_CREP_experiencepro() : string {
         $texte1 =  $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'exppro_1']);
@@ -654,18 +594,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
             $res = "<p>Autres : " . $texte2 . "</p>";
         }
         return $res;
-    }
-    public function toString_CREP_51() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '5.1']);
-    }
-    public function toString_CREP_52() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '5.2']);
-    }
-    public function toString_CREP_61() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '6.1']);
-    }
-    public function toString_CREP_62() : string {
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', '6.2']);
     }
 
     public function toStringCREP_Champ($motsClefs)

@@ -39,12 +39,6 @@ class FormulaireService {
      */
     public function update(Formulaire $formulaire) : Formulaire
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $formulaire->setHistoModificateur($user);
-        $formulaire->setHistoModification($date);
-
         try {
             $this->getEntityManager()->flush($formulaire);
         } catch (ORMException $e) {
@@ -59,13 +53,8 @@ class FormulaireService {
      */
     public function historise(Formulaire $formulaire) : Formulaire
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $date = new DateTime();
-
-        $formulaire->setHistoDestructeur($user);
-        $formulaire->setHistoDestruction($date);
-
         try {
+            $formulaire->historiser();
             $this->getEntityManager()->flush($formulaire);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de l'historisation d'un Formulaire.", $e);
@@ -79,10 +68,8 @@ class FormulaireService {
      */
     public function restaure(Formulaire $formulaire) : Formulaire
     {
-        $formulaire->setHistoDestructeur(null);
-        $formulaire->setHistoDestruction(null);
-
         try {
+            $formulaire->dehistoriser();
             $this->getEntityManager()->flush($formulaire);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème s'est produit lors de la restauration d'un Formulaire.", $e);
@@ -110,7 +97,7 @@ class FormulaireService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Formulaire::class)->createQueryBuilder('formulaire')
             ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
@@ -122,7 +109,7 @@ class FormulaireService {
     /**
      * @return Formulaire[]
      */
-    public function getFormulaires()
+    public function getFormulaires() : array
     {
         $qb = $this->createQueryBuilder();
 
@@ -131,10 +118,10 @@ class FormulaireService {
     }
 
     /**
-     * @param integer $id
-     * @return Formulaire
+     * @param int|null $id
+     * @return Formulaire|null
      */
-    public function getFormulaire($id)
+    public function getFormulaire(?int $id) : ?Formulaire
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formulaire.id = :id')
@@ -150,10 +137,10 @@ class FormulaireService {
     }
 
     /**
-     * @param string $code
+     * @param string|null $code
      * @return Formulaire
      */
-    public function getFormulaireByCode($code)
+    public function getFormulaireByCode(?string $code) : ?Formulaire
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formulaire.code = :code')
@@ -173,14 +160,18 @@ class FormulaireService {
      * @param string $label
      * @return Formulaire
      */
-    public function getRequestedFormulaire($controller, $label)
+    public function getRequestedFormulaire(AbstractActionController $controller, string $label = 'formaulaire') : ?Formulaire
     {
         $id = $controller->params()->fromRoute($label);
         $formulaire = $this->getFormulaire($id);
         return $formulaire;
     }
 
-    public function compacter($formulaire) {
+    /**
+     * @param Formulaire $formulaire
+     */
+    public function compacter(Formulaire $formulaire)
+    {
         $categories = $this->getCategorieService()->getCategoriesByFormulaire($formulaire, 'ordre');
 
         $position = 1;
@@ -195,7 +186,7 @@ class FormulaireService {
      * @param Formulaire $formulaire
      * @return array
      */
-    public function getChampsAsOptions(Formulaire $formulaire)
+    public function getChampsAsOptions(Formulaire $formulaire) : array
     {
         $champs = [];
         foreach ($formulaire->getCategories() as  $categorie) {
