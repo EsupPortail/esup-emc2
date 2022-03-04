@@ -19,6 +19,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Metier\Entity\Db\Domaine;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
@@ -29,6 +30,7 @@ class FicheMetierService {
     use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use EntityManagerAwareTrait;
@@ -315,19 +317,27 @@ class FicheMetierService {
     }
 
     /**
-     * @param int $niveau
      * @return array
      */
     public function getFichesMetiersAsOptionGroup() : array
     {
-        $fiches = $this->getFichesMetiers();
-        $array = [];
-        foreach ($fiches as $fiche) {
-            if ($fiche->estNonHistorise()) {
-                $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();
+        $domaines = $this->getDomaineService()->getDomaines();
+        $options = [];
+
+        foreach ($domaines as $domaine) {
+            $optionsoptions = [];
+            foreach ($this->getFicheByDomaine($domaine) as $fiche) {
+                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification ".$fiche->getHistoModification()->format("d/m/Y").")";
             }
+            asort($optionsoptions);
+            $array = [
+                'label' => $domaine->getLibelle(),
+                'options' => $optionsoptions,
+            ];
+            $options[] = $array;
         }
-        return $array;
+
+        return $options;
     }
 
     /**

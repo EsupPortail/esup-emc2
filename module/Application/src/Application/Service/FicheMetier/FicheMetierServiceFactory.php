@@ -9,6 +9,7 @@ use Application\Service\CompetenceElement\CompetenceElementService;
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
+use Metier\Service\Domaine\DomaineService;
 use UnicaenEtat\Service\Etat\EtatService;
 
 class FicheMetierServiceFactory {
@@ -25,6 +26,7 @@ class FicheMetierServiceFactory {
          * @var ApplicationElementService $applicationElementService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
+         * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var FormationService $formationService
          */
@@ -33,6 +35,7 @@ class FicheMetierServiceFactory {
         $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $formationService = $container->get(FormationService::class);
 
@@ -43,6 +46,7 @@ class FicheMetierServiceFactory {
         $service->setApplicationElementService($applicationElementService);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
+        $service->setDomaineService($domaineService);
         $service->setEtatService($etatService);
         $service->setFormationService($formationService);
 
