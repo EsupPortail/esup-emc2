@@ -37,6 +37,8 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'afficher',
+                        'afficher-applications',
+                        'afficher-competences',
                         'exporter',
                         'exporter-toutes',
                         'graphique-applications',
@@ -232,6 +234,17 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'afficher-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-applications/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'afficher-applications',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
                     'cloner-applications' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -239,6 +252,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'cloner-applications',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'afficher-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-competences/:fiche-metier',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'afficher-competences',
                             ],
                         ],
                         'may_terminate' => true,

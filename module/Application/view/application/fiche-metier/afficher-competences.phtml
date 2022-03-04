@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @see \Application\Controller\FicheMetierController::afficherCompetencesAction()
+ * @var FicheMetier $fichemetier
+ * @var CompetenceElement[] $competences
+ */
+
+use Application\Entity\Db\CompetenceElement;
+use Application\Entity\Db\FicheMetier;
+
+?>
+
+<div class="panel-body">
+    <?php echo $this->competenceBloc($competences, $fichemetier,
+        ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
+            'actions' => ['modifier' => false, 'supprimer' => false, 'valider' => false]]); ?>
+</div>

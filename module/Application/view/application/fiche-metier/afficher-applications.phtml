@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @see \Application\Controller\FicheMetierController::afficherApplications()
+ * @var FicheMetier $fichemetier
+ * @var ApplicationElement[] $applications
+ */
+
+use Application\Entity\Db\ApplicationElement;
+use Application\Entity\Db\FicheMetier;
+
+?>
+
+<div class="panel-body">
+    <?php echo $this->applicationBloc($applications, $fichemetier,
+        ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
+            'actions' => ['modifier' => false, 'supprimer' => false, 'valider' => false]]); ?>
+</div>

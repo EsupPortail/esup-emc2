@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @see \Application\Controller\FicheMetierController::clonerCompetencesAction()
+ * @var FicheMetier $ficheMetier
+ * @var SelectionFicheMetierForm $form
+ */
+
+use Application\Entity\Db\FicheMetier;
+use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<div id="affichage-competences">
+    Zone d'affichage des compétences ...
+</div>
+
+
+<script>
+    $('#fiche-metier').change(function() {
+        let fichemetier_id = $("#fiche-metier").val();
+
+        let url = "../afficher-competences/" + fichemetier_id;
+        $.ajax({
+            type: "POST",
+            url: url,
+            beforeSend:
+                function () {
+                    document.getElementById('affichage-competences').innerHTML = "Récupération des compétences de la fiche metier #" + fichemetier_id;
+                },
+            success:
+                function (retour) {
+                    document.getElementById('affichage-competences').innerHTML = retour;
+                }
+        });
+    });
+    $('select').selectpicker();
+
+
+</script>

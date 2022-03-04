@@ -343,6 +343,17 @@ class FicheMetierController extends AbstractActionController
 
     /** ACTIONS LIEES AUX ELEMENTS ************************************************************************************/
 
+    public function afficherApplicationsAction() : ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
+
+        return new ViewModel([
+            'fichemetier' => $fichemetier,
+            'applications' => $applications,
+        ]);
+    }
+
     public function clonerApplicationsAction() : ViewModel
     {
         $ficheMetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -379,12 +390,22 @@ class FicheMetierController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Cloner les applications d'une autre fiche métier",
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function afficherCompetencesAction() : ViewModel
+    {
+        $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
+
+        return new ViewModel([
+            'fichemetier' => $fichemetier,
+            'competences' => $competences,
+        ]);
     }
 
     public function clonerCompetencesAction() : ViewModel
@@ -423,7 +444,6 @@ class FicheMetierController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
             'title' => "Cloner les compétences d'une autre fiche métier",
             'form' => $form,
