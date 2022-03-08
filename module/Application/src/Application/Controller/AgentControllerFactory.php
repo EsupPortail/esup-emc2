@@ -38,6 +38,7 @@ use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -58,6 +59,7 @@ class AgentControllerFactory {
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var FormationElementService $formationElementService
          * @var HasFormationCollectionService $hasFormationElementService
+         * @var ParametreService $parametreService
          * @var ParcoursDeFormationService $parcoursService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
@@ -89,6 +91,7 @@ class AgentControllerFactory {
         $agentStatutService = $container->get(AgentStatutService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $fichePosteService = $container->get(FichePosteService::class);
+        $parametreService = $container->get(ParametreService::class);
         $userService = $container->get(UserService::class);
 
         $applicationElementService = $container->get(ApplicationElementService::class);
@@ -130,6 +133,7 @@ class AgentControllerFactory {
         $controller->setAgentStatutService($agentStatutService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setFichePosteService($fichePosteService);
+        $controller->setParametreService($parametreService);
         $controller->setUserService($userService);
 
         $controller->setApplicationElementService($applicationElementService);

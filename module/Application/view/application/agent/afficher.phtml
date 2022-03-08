@@ -30,6 +30,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentQuotite|null $quotite
  *
  * @var array $applications
+ * @var string $intranet
  *
  * @var AgentPPP[] $ppps
  * @var AgentStageObservation[] $stages
@@ -158,6 +159,11 @@ if ($agent !== null) {
                         'droits' => ['modifier' => false, 'historiser' => false,  'supprimer' => false, 'sursis' => false]
                     ]
                 ); ?>
+
+                <br/>
+                <div class="alert alert-info">
+                    <span class="icon attention"></span> Vous pouvez retrouvez sur l'intranet les documents vous permettant de préparer votre entretien : <?php echo $intranet; ?>.
+                </div>
             </div>
 
             <?php if ($displayParcours === true) : ?>

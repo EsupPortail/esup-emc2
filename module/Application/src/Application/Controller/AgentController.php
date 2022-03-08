@@ -49,6 +49,7 @@ use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareT
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -68,6 +69,7 @@ class AgentController extends AbstractActionController
     use AgentStatutServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use ApplicationElementServiceAwareTrait;
@@ -163,6 +165,7 @@ class AgentController extends AbstractActionController
             'stages' =>  $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
             'tutorats' =>  $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
             'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
+            'intranet' => $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT')->getValeur(),
         ]);
     }
 
