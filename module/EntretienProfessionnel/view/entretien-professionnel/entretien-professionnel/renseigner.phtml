@@ -60,15 +60,21 @@ $droits = [
             <?php echo $agent->getNomUsuel(); ?>
         </h1>
     </div>
-    <div class="pull-right">
-        <?php if ($canExporter) : ?>
-            <a href="" target="_blank"
+    <?php if ($canExporter) : ?>
+        <div class="pull-right">
+            <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                class="btn btn-primary action">
                 <span class="icon pdf"></span>
-                Exporter en PDF
+                Exporter le CREP
             </a>
-        <?php endif; ?>
-    </div>
+            <br/>
+            <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
+               class="btn btn-primary action">
+                <span class="icon pdf"></span>
+                Exporter le CREF
+            </a>
+        </div>
+    <?php endif; ?>
 </div>
 
 

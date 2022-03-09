@@ -601,4 +601,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $mots = explode(";", $motsClefs);
         return $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
     }
+
+    /** MACRO du CREF *************************************************************************************************/
+
+
 }

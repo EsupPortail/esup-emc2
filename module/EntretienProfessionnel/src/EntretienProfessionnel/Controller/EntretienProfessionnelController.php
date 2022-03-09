@@ -16,6 +16,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
+use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
@@ -463,7 +464,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
-    public function exporterAction() : string
+    public function exporterCrepAction() : string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
@@ -474,7 +475,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('ENTRETIEN_PROFESSIONNEL', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREP, $vars);
 
         try {
             $exporter = new PdfExporter();
@@ -482,7 +483,32 @@ class EntretienProfessionnelController extends AbstractActionController
             $exporter->getMpdf()->SetTitle($rendu->getSujet());
             $exporter->setHeaderScript('/entretien-professionnel/pdf/header');
             $exporter->setFooterScript('/entretien-professionnel/pdf/footer');
-//            $exporter->getMpdf()->SetHTMLFooter('<h1>TEST</h1>');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenue lors de la génértion du PDF", null, $e);
+        }
+    }
+
+    public function exporterCrefAction() : string
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
+        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
+
+        $vars= [
+            'entretien' => $entretien,
+            'agent' => $entretien->getAgent(),
+            'formations' => $formations,
+            'campagne' => $entretien->getCampagne(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREF, $vars);
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->setRenderer($this->renderer);
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('/entretien-professionnel/pdf/header');
+            $exporter->setFooterScript('/entretien-professionnel/pdf/footer');
             $exporter->addBodyHtml($rendu->getCorps());
             return $exporter->export($rendu->getSujet());
         } catch (MpdfException $e) {

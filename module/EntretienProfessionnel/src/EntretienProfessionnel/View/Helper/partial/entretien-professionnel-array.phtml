@@ -155,10 +155,17 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <?php endif; ?>
             <?php if ($canExporter) : ?>
                 <a
-                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterAction() */?>
-                    href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true) ?>"
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
                 >
-                    <span class="icon pdf" title="Exporter l'entretien professionnel"></a>
+                    <span class="icon pdf" title="Exporter le compte-rendu d'entretien professionnel ">
+                        <span class="small-lettrine">CREP</span></a>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>"
+                >
+                    <span class="icon pdf" title="Exporter  le compte-rendu d'entretien de formation">
+                        <span class="small-lettrine">CREF</span></a>
             <?php endif; ?>
             <?php if ($canRenseigner) : ?>
                 <a

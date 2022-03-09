@@ -78,7 +78,8 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'afficher',
-                        'exporter',
+                        'exporter-crep',
+                        'exporter-cref',
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
@@ -241,14 +242,25 @@ return [
                             ],
                         ],
                     ],
-                    'exporter' => [
+                    'exporter-crep' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/exporter/:entretien',
+                            'route'    => '/exporter-crep/:entretien',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'exporter',
+                                'action'     => 'exporter-crep',
+                            ],
+                        ],
+                    ],
+                    'exporter-cref' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/exporter-cref/:entretien',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'exporter-cref',
                             ],
                         ],
                     ],
