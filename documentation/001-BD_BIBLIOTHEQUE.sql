@@ -100,3 +100,63 @@ CREATE TABLE UNICAEN_ROLE_PRIVILEGE_LINKER (
 CREATE INDEX IX_UNICAEN_ROLE_PRIVILEGE_LINKER_ROLE ON UNICAEN_ROLE_PRIVILEGE_LINKER (ROLE_ID);
 CREATE INDEX IX_UNICAEN_ROLE_PRIVILEGE_LINKER_PRIVILEGE ON UNICAEN_ROLE_PRIVILEGE_LINKER (PRIVILEGE_ID);
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN RENDERER ----------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_renderer_macro
+(
+    id serial not null constraint unicaen_document_macro_pk primary key,
+    code varchar(256) not null,
+    description text,
+    variable_name varchar(256) not null,
+    methode_name varchar(256) not null
+);
+
+create unique index unicaen_document_macro_code_uindex on unicaen_renderer_macro (code);
+create unique index unicaen_document_macro_id_uindex on unicaen_renderer_macro (id);
+
+create table unicaen_renderer_template
+(
+    id serial not null constraint unicaen_content_content_pk primary key,
+    code varchar(256) not null,
+    description text,
+    document_type varchar(256) not null,
+    document_sujet text not null,
+    document_corps text not null,
+    document_css text
+);
+
+create unique index unicaen_content_content_code_uindex on unicaen_renderer_template (code);
+create unique index unicaen_content_content_id_uindex on unicaen_renderer_template (id);
+create unique index unicaen_document_rendu_id_uindex on unicaen_renderer_template (id);
+
+
+create table unicaen_renderer_rendu
+(
+    id serial not null   constraint unicaen_document_rendu_pk primary key,
+    template_id integer constraint unicaen_document_rendu_template_id_fk references unicaen_renderer_template on delete set null,
+    date_generation timestamp not null,
+    sujet text not null,
+    corps text not null
+);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN MAIL --------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_mail_mail
+(
+    id serial not null constraint umail_pkey primary key,
+    date_envoi timestamp not null,
+    status_envoi varchar(256) not null,
+    destinataires text not null,
+    destinataires_initials text,
+    sujet text,
+    corps text,
+    mots_clefs text,
+    log text
+);
+
+create unique index ummail_id_uindex on unicaen_mail_mail (id);
+

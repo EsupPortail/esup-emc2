@@ -62,12 +62,14 @@ $droits = [
     </div>
     <?php if ($canExporter) : ?>
         <div class="pull-right">
+            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
             <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                class="btn btn-primary action">
                 <span class="icon pdf"></span>
                 Exporter le CREP
             </a>
             <br/>
+            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
             <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                class="btn btn-primary action">
                 <span class="icon pdf"></span>
