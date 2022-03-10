@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace Carriere\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareInterface;

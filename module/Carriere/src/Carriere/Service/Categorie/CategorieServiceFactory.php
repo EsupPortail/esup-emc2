@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\Categorie;
+namespace Carriere\Service\Categorie;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;

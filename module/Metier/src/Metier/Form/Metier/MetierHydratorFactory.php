@@ -2,7 +2,7 @@
 
 namespace Metier\Form\Metier;
 
-use Application\Service\Categorie\CategorieService;
+use Carriere\Service\Categorie\CategorieService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 

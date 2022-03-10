@@ -2,7 +2,7 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
-use Application\Service\Categorie\CategorieService;
+use Carriere\Service\Categorie\CategorieService;
 use Metier\Service\Metier\MetierService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;

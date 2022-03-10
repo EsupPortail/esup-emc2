@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Categorie;
+namespace Carriere\Form\Categorie;
 
 use Interop\Container\ContainerInterface;
 
@@ -10,7 +10,7 @@ class CategorieFormFactory {
      * @param ContainerInterface $container
      * @return CategorieForm
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CategorieForm
     {
         /** @var CategorieHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CategorieHydrator::class);

@@ -1,11 +1,10 @@
 <?php
 
-namespace Application\Controller;
+namespace Carriere\Controller;
 
-use Application\Entity\Db\Categorie;
-use Application\Form\Categorie\CategorieForm;
-use Application\Form\Categorie\CategorieFormAwareTrait;
-use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Carriere\Entity\Db\Categorie;
+use Carriere\Form\Categorie\CategorieFormAwareTrait;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -37,10 +36,8 @@ class CategorieController extends AbstractActionController
 
     public function ajouterAction(): ViewModel
     {
-        /** @var Categorie $categorie */
         $categorie = new Categorie();
 
-        /** @var CategorieForm $form */
         $form = $this->getCategorieForm();
         $form->setAttribute('action', $this->url()->fromRoute('categorie/ajouter', [], [], true));
         $form->bind($categorie);
@@ -68,7 +65,6 @@ class CategorieController extends AbstractActionController
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
 
-        /** @var CategorieForm $form */
         $form = $this->getCategorieForm();
         $form->setAttribute('action', $this->url()->fromRoute('categorie/modifier', ['categorie' => $categorie->getId()], [], true));
         $form->bind($categorie);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service\Categorie;
+namespace Carriere\Service\Categorie;
 
 trait CategorieServiceAwareTrait {
 

@@ -2,12 +2,13 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
-use Application\Entity\Db\Categorie;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;
-use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Carriere\Entity\Db\Categorie;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
+use DateTime;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;

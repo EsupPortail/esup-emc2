@@ -1,17 +1,16 @@
 <?php
 
-namespace Application;
+namespace Carriere;
 
-use Application\Controller\CategorieController;
-use Application\Controller\CategorieControllerFactory;
-use Application\Controller\CorpsController;
-use Application\Form\Categorie\CategorieForm;
-use Application\Form\Categorie\CategorieFormFactory;
-use Application\Form\Categorie\CategorieHydrator;
-use Application\Form\Categorie\CategorieHydratorFactory;
-use Application\Provider\Privilege\CorpsPrivileges;
-use Application\Service\Categorie\CategorieService;
-use Application\Service\Categorie\CategorieServiceFactory;
+use Carriere\Controller\CategorieController;
+use Carriere\Controller\CategorieControllerFactory;
+use Carriere\Form\Categorie\CategorieForm;
+use Carriere\Form\Categorie\CategorieFormFactory;
+use Carriere\Form\Categorie\CategorieHydrator;
+use Carriere\Form\Categorie\CategorieHydratorFactory;
+use Carriere\Provider\Privilege\CategoriePrivileges;
+use Carriere\Service\Categorie\CategorieService;
+use Carriere\Service\Categorie\CategorieServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -26,7 +25,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_INDEX,
+                        CategoriePrivileges::CATEGORIE_INDEX
                     ],
                 ],
                 [
@@ -35,7 +34,7 @@ return [
                         'afficher-metiers',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_AFFICHER,
+                        CategoriePrivileges::CATEGORIE_AFFICHER
                     ],
                 ],
                 [
@@ -48,7 +47,7 @@ return [
                         'supprimer',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_MODIFIER,
+                        CategoriePrivileges::CATEGORIE_MODIFIER
                     ],
                 ],
             ],
@@ -65,7 +64,7 @@ return [
                                 'order' => 810,
                                 'label' => 'Catégories',
                                 'route' => 'categorie',
-                                'resource' => PrivilegeController::getResourceId(CorpsController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(CategorieController::class, 'index') ,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

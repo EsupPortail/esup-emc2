@@ -3,9 +3,9 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
-use Application\Service\Categorie\CategorieServiceAwareTrait;
 use Application\Service\Corps\CorpsServiceAwareTrait;
 use Application\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

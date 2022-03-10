@@ -3,7 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\Categorie;
+use Carriere\Entity\Db\Categorie;
 use Metier\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;

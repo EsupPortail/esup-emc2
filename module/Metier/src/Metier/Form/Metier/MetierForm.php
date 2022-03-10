@@ -2,10 +2,9 @@
 
 namespace Metier\Form\Metier;
 
-use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;

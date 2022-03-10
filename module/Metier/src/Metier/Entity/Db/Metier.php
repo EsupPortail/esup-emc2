@@ -3,9 +3,9 @@
 namespace Metier\Entity\Db;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\Categorie;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\NiveauEnveloppe;
+use Carriere\Entity\Db\Categorie;
 use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Service\Metier\MetierService;
 use UnicaenApp\Entity\HistoriqueAwareInterface;

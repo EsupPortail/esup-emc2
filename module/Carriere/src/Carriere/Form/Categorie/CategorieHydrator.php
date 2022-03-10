@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Form\Categorie;
+namespace Carriere\Form\Categorie;
 
-use Application\Entity\Db\Categorie;
+use Carriere\Entity\Db\Categorie;
 use Zend\Hydrator\HydratorInterface;
 
 class CategorieHydrator implements HydratorInterface {

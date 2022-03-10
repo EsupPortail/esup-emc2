@@ -43,6 +43,7 @@ $modules = [
     'Autoform',
     'Indicateur',
     'EntretienProfessionnel',
+    'Carriere',
     'Metier',
     'Formation',
     'Fichier',

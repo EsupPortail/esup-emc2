@@ -2,7 +2,7 @@
 
 namespace Application\Form\ModifierRattachement;
 
-use Application\Service\Categorie\CategorieService;
+use Carriere\Service\Categorie\CategorieService;
 use Metier\Service\Metier\MetierService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;

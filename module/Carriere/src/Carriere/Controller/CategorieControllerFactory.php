@@ -1,9 +1,9 @@
 <?php
 
-namespace Application\Controller;
+namespace Carriere\Controller;
 
-use Application\Form\Categorie\CategorieForm;
-use Application\Service\Categorie\CategorieService;
+use Carriere\Form\Categorie\CategorieForm;
+use Carriere\Service\Categorie\CategorieService;
 use Interop\Container\ContainerInterface;
 
 class CategorieControllerFactory {
@@ -12,7 +12,7 @@ class CategorieControllerFactory {
      * @param ContainerInterface $container
      * @return CategorieController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CategorieController
     {
         /**
          * @var CategorieService $categorieService

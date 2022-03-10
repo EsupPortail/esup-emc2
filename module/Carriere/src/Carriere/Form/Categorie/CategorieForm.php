@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Categorie;
+namespace Carriere\Form\Categorie;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;

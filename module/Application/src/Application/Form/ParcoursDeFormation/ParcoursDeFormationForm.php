@@ -3,7 +3,7 @@
 namespace Application\Form\ParcoursDeFormation;
 
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Zend\Form\Element\Button;

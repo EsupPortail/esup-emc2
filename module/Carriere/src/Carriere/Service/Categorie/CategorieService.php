@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Service\Categorie;
+namespace Carriere\Service\Categorie;
 
-use Application\Entity\Db\Categorie;
+use Carriere\Entity\Db\Categorie;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;

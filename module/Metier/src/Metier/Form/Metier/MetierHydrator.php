@@ -2,7 +2,7 @@
 
 namespace Metier\Form\Metier;
 
-use Application\Service\Categorie\CategorieServiceAwareTrait;
+use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;

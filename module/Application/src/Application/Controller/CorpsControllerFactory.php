@@ -3,9 +3,9 @@
 namespace Application\Controller;
 
 use Application\Form\ModifierNiveau\ModifierNiveauForm;
-use Application\Service\Categorie\CategorieService;
 use Application\Service\Corps\CorpsService;
 use Application\Service\Niveau\NiveauService;
+use Carriere\Service\Categorie\CategorieService;
 use Interop\Container\ContainerInterface;
 
 class CorpsControllerFactory {

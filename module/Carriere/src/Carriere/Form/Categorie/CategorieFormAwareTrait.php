@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Categorie;
+namespace Carriere\Form\Categorie;
 
 trait CategorieFormAwareTrait {
 
@@ -10,7 +10,7 @@ trait CategorieFormAwareTrait {
     /**
      * @return CategorieForm
      */
-    public function getCategorieForm()
+    public function getCategorieForm() : CategorieForm
     {
         return $this->categorieForm;
     }
@@ -19,7 +19,7 @@ trait CategorieFormAwareTrait {
      * @param CategorieForm $categorieForm
      * @return CategorieForm
      */
-    public function setCategorieForm($categorieForm)
+    public function setCategorieForm($categorieForm) : CategorieForm
     {
         $this->categorieForm = $categorieForm;
         return $this->categorieForm;
