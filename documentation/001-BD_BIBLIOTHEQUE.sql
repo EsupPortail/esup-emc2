@@ -338,4 +338,119 @@ create table unicaen_evenement_journal
 
 create unique index unicaen_evenement_journal_id_uindex on unicaen_evenement_journal (id);
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- AUTOFORM ------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_autoform_formulaire
+(
+    id serial not null constraint autoform_formulaire_pk primary key,
+    libelle varchar(128) not null,
+    description varchar(2048),
+    code varchar(256),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint autoform_formulaire_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint autoform_formulaire_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint autoform_formulaire_destructeur_fk references unicaen_utilisateur_user
+);
+
+create table unicaen_autoform_categorie
+(
+    id serial not null constraint autoform_categorie_pk primary key,
+    code varchar(64) not null,
+    libelle varchar(256) not null,
+    ordre integer default 10000 not null,
+    formulaire integer not null constraint autoform_categorie_formulaire_fk references unicaen_autoform_formulaire,
+    mots_clefs varchar(1024),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint autoform_categorie_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint autoform_categorie_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint autoform_categorie_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index autoform_categorie_code_uindex on unicaen_autoform_categorie (code);
+create unique index autoform_categorie_id_uindex on unicaen_autoform_categorie (id);
+
+create table unicaen_autoform_champ
+(
+    id serial not null constraint autoform_champ_pk primary key,
+    categorie integer not null constraint autoform_champ_categorie_fk references unicaen_autoform_categorie,
+    code varchar(64) not null,
+    libelle varchar(1024) not null,
+    texte text not null,
+    ordre integer default 10000 not null,
+    element varchar(64),
+    balise boolean,
+    options varchar(1024),
+    mots_clefs varchar(1024),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint autoform_champ_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint autoform_champ_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint autoform_champ_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index autoform_champ_id_uindex on unicaen_autoform_champ (id);
+create unique index autoform_formulaire_id_uindex on unicaen_autoform_formulaire (id);
+
+create table unicaen_autoform_formulaire_instance
+(
+    id serial not null constraint autoform_formulaire_instance_pk primary key,
+    formulaire integer not null constraint autoform_formulaire_instance_autoform_formulaire_id_fk references unicaen_autoform_formulaire,
+    histo_creation timestamp not null,
+    histo_createur_id integer constraint autoform_formulaire_instance_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint autoform_formulaire_instance_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint autoform_formulaire_instance_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index autoform_formulaire_instance_id_uindex on unicaen_autoform_formulaire_instance (id);
+
+create table unicaen_autoform_formulaire_reponse
+(
+    id serial not null constraint autoform_reponse_pk primary key,
+    instance integer not null constraint autoform_formulaire_reponse_instance_fk references unicaen_autoform_formulaire_instance on delete cascade,
+    champ integer not null constraint autoform_reponse_champ_fk references unicaen_autoform_champ on delete cascade,
+    reponse text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint autoform_reponse_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint autoform_reponse_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint autoform_reponse_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index autoform_reponse_id_uindex on unicaen_autoform_formulaire_reponse (id);
+
+create table unicaen_autoform_validation
+(
+    id serial not null constraint validation_pk primary key,
+    type varchar(64) not null,
+    instance integer not null constraint validation_instance_fk references unicaen_autoform_formulaire_instance on delete cascade,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint validation_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint validation_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint validation_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index validation_id_uindex on unicaen_autoform_validation (id);
+
+create table unicaen_autoform_validation_reponse
+(
+    id serial not null constraint validation_reponse_pk primary key,
+    validation integer not null constraint autoform_validation_reponse_autoform_validation_id_fk references unicaen_autoform_validation on delete cascade,
+    reponse integer not null constraint validation_reponse_autoform_reponse_id_fk references unicaen_autoform_formulaire_reponse on delete cascade,
+    value boolean default false not null
+);
+
+create unique index validation_reponse_id_uindex on unicaen_autoform_validation_reponse (id);
+
 

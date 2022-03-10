@@ -30,8 +30,8 @@ $modules = [
     'UnicaenAuthentification',
     'UnicaenUtilisateurLdapAdapter',
     'UnicaenUtilisateurOctopusAdapter',
-    'Octopus',
     'UnicaenUtilisateur',
+    'UnicaenAutoform',
     'UnicaenEtat',
     'UnicaenRenderer',
     'UnicaenPdf',
@@ -41,9 +41,6 @@ $modules = [
     'UnicaenValidation',
     'UnicaenEvenement',
 
-
-
-    'Autoform',
     'Indicateur',
     'EntretienProfessionnel',
     'Carriere',

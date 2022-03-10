@@ -6,7 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\HasAgentInterface;
-use Autoform\Entity\Db\FormulaireInstance;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenEtat\Entity\Db\HasEtatInterface;

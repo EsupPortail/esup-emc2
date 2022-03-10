@@ -26,17 +26,15 @@ use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\View\Helper\ActionIconViewHelper;
 use Application\View\Helper\SynchorniserIconViewHelper;
-use Autoform\Provider\Privilege\IndexPrivileges;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
+use UnicaenAutoform\Provider\Privilege\IndexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
-use UnicaenUtilisateur\Service\Role\RoleService;
-use UnicaenUtilisateur\Service\Role\RoleServiceFactory;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
 use Zend\Router\Http\Literal;
 

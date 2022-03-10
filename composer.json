@@ -24,7 +24,8 @@
     "curl/curl": "^2.3",
     "unicaen/octopus": "dev-master",
     "unicaen/evenement": "dev-master",
-    "ext-json": "*"
+    "ext-json": "*",
+    "unicaen/autoform": "dev-master"
 
   },
   "require-dev": {
