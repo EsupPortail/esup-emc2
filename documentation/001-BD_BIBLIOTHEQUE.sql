@@ -191,3 +191,151 @@ create table unicaen_parametre_parametre
 create unique index unicaen_parametre_parametre_id_uindex on unicaen_parametre_parametre (id);
 create unique index unicaen_parametre_parametre_code_categorie_id_uindex on unicaen_parametre_parametre (code, categorie_id);
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN ETAT --------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_etat_etat_type
+(
+    id serial not null constraint unicaen_etat_etat_type_pk primary key,
+    code varchar(256) not null,
+    libelle varchar(256) not null,
+    icone varchar(256),
+    couleur varchar(256),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint unicaen_content_content_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint unicaen_content_content_user_id_fk_3 references unicaen_utilisateur_user
+);
+
+create table unicaen_etat_etat
+(
+    id serial not null constraint unicaen_etat_etat_pk primary key,
+    code varchar(256) not null,
+    libelle varchar(256) not null,
+    type_id integer not null constraint unicaen_etat_etat_unicaen_etat_etat_type_id_fk references unicaen_etat_etat_type,
+    icone varchar(256),
+    couleur varchar(256),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint unicaen_content_content_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint unicaen_content_content_user_id_fk_3 references unicaen_utilisateur_user,
+    ordre integer default 9999 not null
+);
+
+create unique index unicaen_etat_etat_id_uindex on unicaen_etat_etat (id);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN GLOSSAIRE ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_glossaire_definition
+(
+    id serial not null constraint unicaen_glossaire_definition_pk primary key,
+    terme varchar(1024) not null,
+    definition text not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
+    alternatives text
+);
+
+create unique index unicaen_glossaire_definition_id_uindex on unicaen_glossaire_definition (id);
+create unique index unicaen_glossaire_definition_terme_uindex on unicaen_glossaire_definition (terme);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN VALIDATION --------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_validation_type
+(
+    id serial not null constraint unicaen_validation_type_pk primary key,
+    code varchar(256) not null,
+    libelle varchar(1024) not null,
+    refusable boolean default true not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint unicaen_validation_type_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint unicaen_validation_type_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint unicaen_validation_type_destructeur_fk references unicaen_utilisateur_user
+);
+
+create table unicaen_validation_instance
+(
+    id serial not null constraint unicaen_validation_instance_pk primary key,
+    type_id integer not null constraint unicaen_validation_instance_unicaen_validation_type_id_fk references unicaen_validation_type on delete cascade,
+    valeur text,
+    entity_class varchar(1024),
+    entity_id varchar(64),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint unicaen_validation_instance_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint unicaen_validation_instance_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint unicaen_validation_instance_destructeur_fk references unicaen_utilisateur_user
+);
+
+create unique index unicaen_validation_instance_id_uindex on unicaen_validation_instance (id);
+create unique index unicaen_validation_type_id_uindex on unicaen_validation_type (id);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN EVENEMENT ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_evenement_etat
+(
+    id serial not null constraint pk_evenement_etat primary key,
+    code varchar(255) not null constraint un_evenement_etat_code unique deferrable initially deferred,
+    libelle varchar(255) not null,
+    description varchar(2047)
+);
+
+create table unicaen_evenement_type
+(
+    id serial not null constraint pk_evenement_type primary key,
+    code varchar(255) not null constraint un_evenement_type_code unique deferrable initially deferred,
+    libelle varchar(255) not null,
+    description varchar(2047),
+    parametres varchar(2047),
+    recursion varchar(64)
+);
+
+create table unicaen_evenement_instance
+(
+    id serial not null constraint pk_evenement_instance primary key,
+    nom varchar(255) not null,
+    description varchar(1024) not null,
+    type_id integer not null constraint fk_evenement_instance_type references unicaen_evenement_type deferrable,
+    etat_id integer not null constraint fk_evenement_instance_etat references unicaen_evenement_etat deferrable,
+    parametres text,
+    date_creation timestamp not null,
+    date_planification timestamp not null,
+    date_traitement timestamp,
+    log text,
+    parent_id integer constraint fk_evenement_instance_parent references unicaen_evenement_instance deferrable,
+    date_fin timestamp
+);
+
+create index ix_evenement_instance_type on unicaen_evenement_instance (type_id);
+create index ix_evenement_instance_etat on unicaen_evenement_instance (etat_id);
+create index ix_evenement_instance_parent on unicaen_evenement_instance (parent_id);
+
+create table unicaen_evenement_journal
+(
+    id serial not null constraint unicaen_evenement_journal_pk primary key,
+    date_execution timestamp not null,
+    log text,
+    etat_id integer constraint unicaen_evenement_journal_unicaen_evenement_etat_id_fk references unicaen_evenement_etat on delete set null
+);
+
+create unique index unicaen_evenement_journal_id_uindex on unicaen_evenement_journal (id);
+
+

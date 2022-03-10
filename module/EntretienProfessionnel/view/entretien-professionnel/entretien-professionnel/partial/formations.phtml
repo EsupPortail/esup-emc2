@@ -56,19 +56,16 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
 
-<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formation', '', []); ?>
 
 <!-- Formation de l'agent : WARNING ----------------------------------------------------------------------------------->
 
 <?php if ($validationReponsable !== null) : ?>
     <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>validation_responsable', '', []); ?>
     <?php endif; ?>
 <?php endif; ?>
 
 <?php if ($date_depassee) : ?>
     <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formation>date_depassee', '', []); ?>
     <?php endif; ?>
 <?php endif; ?>
 

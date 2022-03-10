@@ -36,7 +36,6 @@ $modules = [
     'UnicaenRenderer',
     'UnicaenPdf',
     'UnicaenMail',
-    'UnicaenNote',
     'UnicaenGlossaire',
     'UnicaenParametre',
     'UnicaenValidation',

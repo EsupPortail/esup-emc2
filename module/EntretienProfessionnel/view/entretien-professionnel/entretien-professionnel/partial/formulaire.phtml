@@ -32,19 +32,16 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
 <h2 class="page-header-tab"> Compte-rendu d'entretien professionnel </h2>
 
-<?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>formulaire', '', []); ?>
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
 <?php if ($validationResponsable !== null) : ?>
     <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formulaire>validation_responsable', '', []); ?>
     <?php endif; ?>
 <?php endif; ?>
 
 <?php if ($date_depassee) : ?>
     <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()formulaire>date_depassee', '', []); ?>
     <?php endif; ?>
 <?php endif; ?>
 

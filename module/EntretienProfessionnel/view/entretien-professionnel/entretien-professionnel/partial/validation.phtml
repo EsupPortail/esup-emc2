@@ -40,10 +40,6 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
         </div>
     <?php endif; ?>
 
-    <?php if (!$dateOk) : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()validations:date_non_atteinte', '', []); ?>
-    <?php endif; ?>
-
     <?php if ($validationResponsable !== null) : ?>
         <div class="row">
             <div class="col-md-8">

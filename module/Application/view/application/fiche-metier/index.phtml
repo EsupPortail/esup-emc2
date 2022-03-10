@@ -12,7 +12,6 @@ use UnicaenEtat\Entity\Db\Etat;
  * @var FicheMetier[] $fiches
  * @var Etat[] $etats
  * @var array $params
- * @var \UnicaenNote\Entity\Db\PorteNote $portenote
  */
 
 
@@ -47,7 +46,7 @@ $this->headTitle('Index des fiches métiers');
 
     <?php echo $this->partial('partial/filtre.phtml', ['etats' => $etats, 'domaines'=> $domaines, 'params' => $params]); ?>
 
-    <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines, 'portenote' => $portenote]); ?>
+    <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines]); ?>
 
 </div>
 

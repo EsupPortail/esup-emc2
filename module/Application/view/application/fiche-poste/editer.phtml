@@ -139,7 +139,6 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
     usort($fichesMetiers, function (FicheTypeExterne $a, FicheTypeExterne $b) { return ($a->getQuotite() > $b->getQuotite()); });
     ?>
 
-    <?php echo $this->portenote('FichePosteController::editerAction()>composition', '', []); ?>
 
     <?php /** @var FicheTypeExterne $ficheType **/ ?>
     <div class="panel panel-default">
@@ -181,7 +180,6 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
             <h2>Compétences attendues - Formations proposées</h2>
         </div>
         <div class="panel-body">
-            <?php echo $this->portenote('FichePosteController::editerAction()>acf', '', []); ?>
             <?php //echo $this->competenceBloc($competences, $fiche->getAgent()); ?>
             <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'edition'], [], true); ?>
             <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'edition'], [], true); ?>

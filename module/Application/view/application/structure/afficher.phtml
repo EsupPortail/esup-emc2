@@ -144,7 +144,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="agents" class="tab-pane " role="tabpanel">
 
-                    <?php echo $this->portenote('StructureController::indexAction()>Agents', '', []); ?>
                     <div class="row">
                         <div class="col-md-8">
                             <h2>
@@ -156,7 +155,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                     <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'fichespostes' => $fiches]); ?>
 
-                    <?php echo $this->portenote('StructureController::indexAction()>AgentsManuels', '', []); ?>
                     <div class="row">
                         <div class="col-md-8">
                             <h2>

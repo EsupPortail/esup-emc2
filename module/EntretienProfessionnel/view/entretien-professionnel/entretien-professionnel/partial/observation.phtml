@@ -45,7 +45,6 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
 
 
 <?php if ($source !== 'afficherAction') : ?>
-    <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()>observation', '', []); ?>
 <?php endif; ?>
 
 <!-- Observation de l'agent : CONTROLE -------------------------------------------------------------------------------->
@@ -106,26 +105,6 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
         <?php endif; ?>
     </div>
 </div>
-
-<!-- Observation de l'agent : WARNING --------------------------------------------------------------------------------->
-
-<?php if ($validationResponsable === null) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>pas_de_validation_responsable', '', []); ?>
-    <?php endif; ?>
-<?php endif; ?>
-
-<?php if ($validationHierarchie !== null) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>validation_agent', '', []); ?>
-    <?php endif; ?>
-<?php endif; ?>
-
-<?php if (!$date_non_depassee) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-        <?php echo $this->portenote('EntretienProfessionnelController::renseignerAction()Observation>date_incorrecte', '', []); ?>
-    <?php endif; ?>
-<?php endif; ?>
 
 <!-- Observation de l'agent : AFFICHAGE ------------------------------------------------------------------------------->
 

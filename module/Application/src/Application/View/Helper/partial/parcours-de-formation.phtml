@@ -46,8 +46,6 @@ usort($formationArray,
     $mode = (isset($options['mode']))?$options['mode']:"affichage";
 ?>
 
-<?php echo $this->portenote('FichePosteController::editerAction()>parcours_de_formation', '', []); ?>
-
 <?php if (array_search($mode, $modesAutorises) === false) : ?>
 <div class="alert alert-danger">
     Le <strong>mode</strong> [<?php echo $mode; ?>] est non géré par l'aide de vue [ParcoursDeFormationViewHelper].

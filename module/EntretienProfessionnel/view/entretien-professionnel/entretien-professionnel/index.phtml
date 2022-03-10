@@ -12,11 +12,9 @@
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenEtat\Entity\Db\Etat;
-use UnicaenNote\Provider\Privilege\NotePrivileges;
 
 $this->headTitle('Index des entretiens professionnel');
 
-$canPorteNote = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::NOTE_INDEX));
 ?>
 
 <h1 class="page-header">
@@ -45,14 +43,6 @@ $canPorteNote = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::N
             </span>
             </a>
         </li>
-
-        <?php if ($canPorteNote) : ?>
-            <li role="presentation" class="pull-right"">
-                <a href="#messages" aria-controls="messages" role="tab" data-toggle="tabz">
-                    Bulles d'information
-                </a>
-            </li>
-        <?php endif; ?>
     </ul>
 </div>
 
@@ -66,11 +56,6 @@ $canPorteNote = $this->isAllowed(NotePrivileges::getResourceId(NotePrivileges::N
     <!-- ENTRETIENS ------------------------------------------------------------------------------------------------>
     <div id="entretien" class="tab-pane " role="tabpanel">
         <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens, 'etats' => $etats, 'campagnes' => $campagnes, 'params' => $params]); ?>
-    </div>
-
-    <!-- MESSAGES ------------------------------------------------------------------------------------------------>
-    <div id="messages" class="tab-pane " role="tabpanel">
-        <?php echo $this->partial('administration-messages', []); ?>
     </div>
 </div>
 

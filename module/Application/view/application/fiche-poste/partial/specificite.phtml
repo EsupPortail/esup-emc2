@@ -37,7 +37,6 @@ $date = new DateTime();
         </div>
         <div class="panel-body">
             <?php if ($mode === 'edition') : ?>
-                <?php echo $this->portenote('FichePosteController::editerAction()>specificite', '', []); ?>
             <?php endif; ?>
             <?php echo $this->specificitePoste($fiche, $fiche->getSpecificite(), ["mode" => $mode]); ?>
         </div>
