@@ -16,6 +16,7 @@
     "unicaen/renderer": "dev-master",
     "unicaen/pdf": "dev-master",
     "unicaen/mail": "dev-master",
+    "unicaen/parametre": "dev-main",
     "unicaen/bjy-authorize": "^3.0",
     "unicaen/ldap": "^3.0",
     "unicaen/db-import": "3.0",
