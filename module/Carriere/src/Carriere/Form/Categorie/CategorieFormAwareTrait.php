@@ -19,7 +19,7 @@ trait CategorieFormAwareTrait {
      * @param CategorieForm $categorieForm
      * @return CategorieForm
      */
-    public function setCategorieForm($categorieForm) : CategorieForm
+    public function setCategorieForm(CategorieForm $categorieForm) : CategorieForm
     {
         $this->categorieForm = $categorieForm;
         return $this->categorieForm;
