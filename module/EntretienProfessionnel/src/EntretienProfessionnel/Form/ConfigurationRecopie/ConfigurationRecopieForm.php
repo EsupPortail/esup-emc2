@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
-use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;

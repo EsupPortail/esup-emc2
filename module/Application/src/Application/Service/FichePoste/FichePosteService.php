@@ -305,7 +305,7 @@ left join agent_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
 left join fiche_type_externe fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
-left join metier m on m.id = f2.metier_id
+left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on f.etat_id = e.id
 where (fte.principale = true OR fte IS NULL)
   and (aa IS NULL OR aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
@@ -348,7 +348,7 @@ join agent_affectation aa on a.c_individu = aa.agent_id
 join structure s on aa.structure_id = s.id
 left join fiche_type_externe fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
-left join metier m on m.id = f2.metier_id
+left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on e.id = f.etat_id
 where a.c_individu in (:agent_ids)
   and aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null

@@ -12,7 +12,7 @@ use Application\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Zend\Form\Element\Select;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;

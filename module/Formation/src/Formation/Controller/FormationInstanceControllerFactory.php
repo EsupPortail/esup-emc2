@@ -2,7 +2,7 @@
 
 namespace Formation\Controller;
 
-use Autoform\Service\Formulaire\FormulaireInstanceService;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use Formation\Service\Formation\FormationService;

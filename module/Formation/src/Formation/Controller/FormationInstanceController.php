@@ -2,7 +2,7 @@
 
 namespace Formation\Controller;
 
-use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;

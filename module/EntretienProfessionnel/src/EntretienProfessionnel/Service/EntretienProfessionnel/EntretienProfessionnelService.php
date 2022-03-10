@@ -9,7 +9,7 @@ use Application\Entity\Db\Structure;
 use Application\Entity\Db\StructureResponsable;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Autoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;

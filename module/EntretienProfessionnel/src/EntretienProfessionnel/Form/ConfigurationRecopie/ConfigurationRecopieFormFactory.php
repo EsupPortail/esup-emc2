@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
-use Autoform\Service\Formulaire\FormulaireService;
+use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
 
 class ConfigurationRecopieFormFactory {

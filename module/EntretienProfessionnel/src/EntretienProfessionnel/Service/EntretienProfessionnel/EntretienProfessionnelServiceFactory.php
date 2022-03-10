@@ -4,7 +4,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
-use Autoform\Service\Formulaire\FormulaireInstanceService;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use Interop\Container\ContainerInterface;
