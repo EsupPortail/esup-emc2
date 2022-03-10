@@ -16,7 +16,7 @@
         <one-to-many target-entity="Metier\Entity\Db\Reference" mapped-by="metier" field="references"/>
 
         <many-to-many field="domaines" inversed-by="metiers" target-entity="Metier\Entity\Db\Domaine">
-            <join-table name="metier_domaine">
+            <join-table name="metier_metier_domaine">
                 <join-columns>
                     <join-column name="metier_id" referenced-column-name="id" />
                 </join-columns>
