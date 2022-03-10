@@ -254,4 +254,20 @@ class CampagneService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /** FACADE ********************************************************************************************************/
+
+    public static function getAnneeScolaire() : string
+    {
+        $date = new DateTime();
+        $annee = ((int) $date->format("Y"));
+        $mois  = ((int) $date->format("m"));
+
+        if ($mois < 9) {
+            $scolaire = ($annee - 1) . "/" . ($annee);
+        } else {
+            $scolaire = ($annee) . "/" . ($annee + 1);
+        }
+        return $scolaire;
+    }
 }

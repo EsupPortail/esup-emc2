@@ -79,14 +79,15 @@ foreach ($agent->getFichiers() as $fichier) {
             <?php endforeach; ?>
         </tbody>
     </table>
-    <?php else : ?>
-        <?php if ($canAjouterFichier) : ?>
-            <a class="btn btn-primary ajax-modal" data-event="modification"
-               href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
-            >
-                <span class="icon pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
-                Ajouter une fiche de poste PDF
-            </a>
-        <?php endif; ?>
+<!--    --><?php //else : ?>
+    <?php endif; ?>
+
+    <?php if ($canAjouterFichier) : ?>
+        <a class="btn btn-primary ajax-modal" data-event="modification"
+           href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+        >
+            <span class="icon pdf"></span><span class="lettrine" style="color:var(--color-dark);">P</span>
+            Ajouter une fiche de poste PDF
+        </a>
     <?php endif; ?>
 </div>

@@ -2,16 +2,19 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Zend\View\Model\ViewModel;
+
+/** @method FlashMessenger flashMessenger() */
 
 class CampagneController extends AbstractActionController {
     use CampagneServiceAwareTrait;
@@ -19,24 +22,10 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementServiceAwareTrait;
     use CampagneFormAwareTrait;
 
-    private function getAnneeScolaire() : string
-    {
-        $date = new DateTime();
-        $annee = ((int) $date->format("Y"));
-        $mois  = ((int) $date->format("m"));
-
-        if ($mois < 9) {
-            $scolaire = ($annee - 1) . "/" . ($annee);
-        } else {
-            $scolaire = ($annee) . "/" . ($annee + 1);
-        }
-        return $scolaire;
-    }
-
     public function ajouterAction() : ViewModel
     {
         $campagne = new Campagne();
-        $campagne->setAnnee($this->getAnneeScolaire());
+        $campagne->setAnnee(CampagneService::getAnneeScolaire());
 
         $form = $this->getCampagneForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/campagne/ajouter', [], [], true));
@@ -48,10 +37,13 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->create($campagne);
+                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être créée.");
 
                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                $this->getRappelCampagneAvancementService()->creer($campagne);
+
+
             }
         }
 
@@ -78,6 +70,7 @@ class CampagneController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCampagneService()->update($campagne);
+                $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être modifiée.");
             }
         }
 

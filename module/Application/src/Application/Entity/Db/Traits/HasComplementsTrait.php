@@ -28,6 +28,10 @@ trait HasComplementsTrait {
         $this->complements->removeElement($complement);
     }
 
+    /**
+     * @param string $type
+     * @return Complement[]
+     */
     public function getComplementsByType(string $type) : array
     {
         $complements = $this->getComplements();

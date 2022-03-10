@@ -144,6 +144,9 @@ class AgentController extends AbstractActionController
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichePosteActive);
 //        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);
 
+        $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
+        $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
+        
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
@@ -165,7 +168,7 @@ class AgentController extends AbstractActionController
             'stages' =>  $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
             'tutorats' =>  $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
             'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
-            'intranet' => $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT')->getValeur(),
+            'intranet' => $lienIntranet,
         ]);
     }
 

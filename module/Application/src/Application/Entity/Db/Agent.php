@@ -376,6 +376,7 @@ class Agent implements
     /** FICHES POSTES *************************************************************************************************/
 
     /**
+     * @param bool $incomplement
      * @return FichePoste|null
      * @throws Exception
      */

@@ -59,7 +59,6 @@ group by a.c_individu, a.prenom, a.c_individu, a.nom_usage, uuu.username
 order by a.nom_usage, a.prenom
 EOS;
 
-        $tmp = null;
         try {
             $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
             try {

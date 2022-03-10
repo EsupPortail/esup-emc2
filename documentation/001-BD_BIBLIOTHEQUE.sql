@@ -160,3 +160,34 @@ create table unicaen_mail_mail
 
 create unique index ummail_id_uindex on unicaen_mail_mail (id);
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- UNICAEN PARAMETRE ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table unicaen_parametre_categorie
+(
+    id serial not null constraint unicaen_parametre_categorie_pk primary key,
+    code varchar(1024) not null,
+    libelle varchar(1024) not null,
+    ordre integer default 9999,
+    description text
+);
+
+create unique index unicaen_parametre_categorie_code_uindex on unicaen_parametre_categorie (code);
+create unique index unicaen_parametre_categorie_id_uindex on unicaen_parametre_categorie (id);
+
+create table unicaen_parametre_parametre
+(
+    id serial not null constraint unicaen_parametre_parametre_pk primary key,
+    categorie_id integer not null constraint unicaen_parametre_parametre_unicaen_parametre_categorie_id_fk references unicaen_parametre_categorie,
+    code varchar(1024) not null,
+    libelle varchar(1024) not null,
+    description text,
+    valeurs_possibles text,
+    valeur text,
+    ordre integer default 9999
+);
+
+create unique index unicaen_parametre_parametre_id_uindex on unicaen_parametre_parametre (id);
+create unique index unicaen_parametre_parametre_code_categorie_id_uindex on unicaen_parametre_parametre (code, categorie_id);
+
