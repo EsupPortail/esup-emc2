@@ -3,8 +3,8 @@
 namespace Application\Form\AgentAccompagnement;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Corps\CorpsService;
-use Application\Service\Correspondance\CorrespondanceService;
+use Carriere\Service\Corps\CorpsService;
+use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 

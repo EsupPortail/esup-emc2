@@ -4,8 +4,8 @@ namespace Application\Form\Poste;
 
 use Application\Controller\StructureController;
 use Application\Service\Agent\AgentService;
-use Application\Service\Correspondance\CorrespondanceService;
 use Application\Service\Structure\StructureService;
+use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Zend\View\Helper\Url;

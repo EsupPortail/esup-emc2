@@ -4,16 +4,16 @@ namespace Application\Form\Poste;
 
 use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Application\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
-    use StructureServiceAwareTrait;
-    use DomaineServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
+    use DomaineServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     /**
      * @param Poste $object

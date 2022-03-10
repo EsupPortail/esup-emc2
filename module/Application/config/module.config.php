@@ -11,7 +11,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
-use Application\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\CorpsPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\Evenement\SynchroOctopusService;

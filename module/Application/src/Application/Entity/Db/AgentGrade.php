@@ -5,6 +5,9 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use Carriere\Entity\Db\Corps;
+use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\Grade;
 
 /**
  * Données synchronisées depuis Octopus :

@@ -5,16 +5,16 @@ namespace Application\Form\AgentAccompagnement;
 use Application\Entity\Db\AgentAccompagnement;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Corps\CorpsServiceAwareTrait;
-use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\Corps\CorpsServiceAwareTrait;
+use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use DateTime;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class AgentAccompagnementHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
-    use CorrespondanceServiceAwareTrait;
     use CorpsServiceAwareTrait;
+    use CorrespondanceServiceAwareTrait;
     use EtatServiceAwareTrait;
 
     /**

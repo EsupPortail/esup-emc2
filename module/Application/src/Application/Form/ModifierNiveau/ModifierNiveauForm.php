@@ -4,7 +4,6 @@ namespace Application\Form\ModifierNiveau;
 
 use Application\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;

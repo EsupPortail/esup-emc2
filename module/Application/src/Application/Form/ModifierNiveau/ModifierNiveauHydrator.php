@@ -2,8 +2,8 @@
 
 namespace Application\Form\ModifierNiveau;
 
-use Application\Entity\Db\Corps;
 use Application\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Entity\Db\Corps;
 use Metier\Entity\Db\Metier;
 use Zend\Hydrator\HydratorInterface;
 

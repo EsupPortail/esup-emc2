@@ -3,8 +3,8 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Correspondance\CorrespondanceService;
 use Application\Service\Structure\StructureService;
+use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 
@@ -14,8 +14,8 @@ class PosteHydratorFactory {
     {
         /**
          * @var AgentService $agentService
-         * @var DomaineService $domaineService
          * @var CorrespondanceService $correspondanceService
+         * @var DomaineService $domaineService
          * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);

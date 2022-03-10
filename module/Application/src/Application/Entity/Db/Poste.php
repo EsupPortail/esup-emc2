@@ -2,6 +2,9 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\Correspondance;
+use Metier\Entity\Db\Domaine;
+
 class Poste {
 
     /** @var integer */

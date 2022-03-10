@@ -3,11 +3,9 @@
 namespace Application\Form\AgentAccompagnement;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Corps\CorpsService;
-use Application\Service\Correspondance\CorrespondanceService;
-use Application\Service\Structure\StructureService;
+use Carriere\Service\Corps\CorpsService;
+use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Metier\MetierService;
 use UnicaenEtat\Service\Etat\EtatService;
 use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;

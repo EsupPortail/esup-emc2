@@ -4,6 +4,8 @@ namespace Application;
 
 use Application\Controller\NiveauController;
 use Application\Controller\NiveauControllerFactory;
+use Application\Form\ModifierNiveau\ModifierNiveauForm;
+use Application\Form\ModifierNiveau\ModifierNiveauFormFactory;
 use Application\Form\Niveau\NiveauForm;
 use Application\Form\Niveau\NiveauFormFactory;
 use Application\Form\Niveau\NiveauHydrator;
@@ -148,6 +150,7 @@ return [
         'factories' => [
             NiveauForm::class => NiveauFormFactory::class,
             NiveauEnveloppeForm::class => NiveauEnveloppeFormFactory::class,
+            ModifierNiveauForm::class => ModifierNiveauFormFactory::class,
 
         ],
     ],

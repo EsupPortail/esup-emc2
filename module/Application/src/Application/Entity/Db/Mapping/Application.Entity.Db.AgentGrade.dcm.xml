@@ -12,15 +12,15 @@
             <join-column name="structure_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Corps"  field="corps">
+        <many-to-one target-entity="Carriere\Entity\Db\Corps"  field="corps">
             <join-column name="corps_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Grade"  field="grade">
+        <many-to-one target-entity="Carriere\Entity\Db\Grade"  field="grade">
             <join-column name="grade_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\Correspondance"  field="bap">
+        <many-to-one target-entity="Carriere\Entity\Db\Correspondance"  field="bap">
             <join-column name="bap_id" referenced-column-name="id"/>
         </many-to-one>
 

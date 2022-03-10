@@ -4,8 +4,8 @@ namespace Application\Form\AgentAccompagnement;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Corps\CorpsServiceAwareTrait;
-use Application\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use Carriere\Service\Corps\CorpsServiceAwareTrait;
+use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;

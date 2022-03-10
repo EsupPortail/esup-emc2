@@ -12,10 +12,10 @@
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="cible">
             <join-column name="cible_id" referenced-column-name="c_individu"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Correspondance"  field="bap">
+        <many-to-one target-entity="Carriere\Entity\Db\Correspondance"  field="bap">
             <join-column name="bap_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Corps"  field="corps">
+        <many-to-one target-entity="Carriere\Entity\Db\Corps"  field="corps">
             <join-column name="corps_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="complement"              column="complement"            type="string"   length="9999"/>
