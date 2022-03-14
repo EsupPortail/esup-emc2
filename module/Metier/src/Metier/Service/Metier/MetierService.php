@@ -305,10 +305,10 @@ left join fichemetier f on m.id = f.metier_id
 left join fiche_type_externe fte on f.id = fte.fiche_type
 left join fiche_poste fp on fte.fiche_poste = fp.id
 left join agent a on fp.agent = a.c_individu
-left join agent_grade ag on a.c_individu=ag.agent_id
+left join agent_carriere_grade ag on a.c_individu=ag.agent_id
 left join grade g on ag.grade_id = g.id
 left join corps cp on ag.corps_id = cp.id
-left join agent_affectation aa on a.c_individu = aa.agent_id
+left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
 where m.id = :metier
 and ag.deleted_on IS NULL

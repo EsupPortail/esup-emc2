@@ -53,7 +53,7 @@ return [
 //                'intermediate_table' => 'src_agent',
                 'destination' => [
                     'name'               => 'Affectation des agents gérés par la DRH',
-                    'table'              => 'agent_affectation',
+                    'table'              => 'agent_carriere_affectation',
                     'connection'         => 'default',
                     'source_code_column' => 'affectation_id',
                     'columns'            => ['individu_id', 'structure_id', 'date_debut', 'date_fin', 'id_orig', 't_principale'],
@@ -71,7 +71,7 @@ return [
                 'intermediate_table' => 'src_agent_grade',
                 'destination' => [
                     'name'               => 'Grade des agents gérés par la DRH',
-                    'table'              => 'agent_grade',
+                    'table'              => 'agent_carriere_grade',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['id_orig', 'agent_id', 'structure_id', 'corps_id', 'grade_id', 'bap_id', 'd_debut', 'd_fin'],
@@ -89,7 +89,7 @@ return [
                 'intermediate_table' => 'src_agent_quotite',
                 'destination' => [
                     'name'               => 'Grade des agents gérés par la DRH',
-                    'table'              => 'agent_quotite',
+                    'table'              => 'agent_carriere_quotite',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['agent_id', 'debut', 'fin', 'quotite'],
@@ -107,7 +107,7 @@ return [
                 'intermediate_table' => 'src_agent_statut',
                 'destination' => [
                     'name'               => 'Statut des agents geres par la DRH',
-                    'table'              => 'agent_statut',
+                    'table'              => 'agent_carriere_statut',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
                     'columns'            => ['id_orig', 'c_source', 'individu_id', 'structure_id', 'd_debut', 'd_fin', 't_titulaire', 't_cdi', 't_cdd', 't_vacataire', 't_enseignant', 't_administratif', 't_chercheur', 't_etudiant', 't_auditeur_libre', 't_doctorant', 't_detache_in', 't_detache_out', 't_dispo', 't_heberge', 't_emerite', 't_retraite', 't_cld', 't_clm'],

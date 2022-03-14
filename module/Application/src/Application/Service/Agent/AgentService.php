@@ -52,7 +52,7 @@ select
     current_date
 from agent a
 left join unicaen_utilisateur_user uuu on a.utilisateur_id = uuu.id
-left join agent_affectation aa on aa.agent_id = a.c_individu
+left join agent_carriere_affectation aa on aa.agent_id = a.c_individu
 where aa.t_principale = 'O'
 and aa.date_debut <= current_date AND (aa.date_fin IS NULL OR aa.date_fin >= current_date)
 group by a.c_individu, a.prenom, a.c_individu, a.nom_usage, uuu.username
