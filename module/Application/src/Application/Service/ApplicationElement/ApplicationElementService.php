@@ -142,7 +142,7 @@ class ApplicationElementService {
         $sql = <<<EOS
 select a.c_individu as agent_id, ai.id as application_id, ai.libelle, ae.commentaire as commantaire, ae.histo_destruction as historisation
 from agent a
-join agent_application aa on a.c_individu = aa.agent_id
+join agent_element_application aa on a.c_individu = aa.agent_id
 join application_element ae on aa.application_element_id = ae.id
 join application_informations ai on ae.application_id = ai.id
 where a.c_individu=:id
