@@ -4,11 +4,11 @@ namespace EntretienProfessionnel\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 
 class DelegueControllerFactory {
 

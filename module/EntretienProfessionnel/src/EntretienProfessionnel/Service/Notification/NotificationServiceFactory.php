@@ -3,10 +3,10 @@
 namespace EntretienProfessionnel\Service\Notification;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;

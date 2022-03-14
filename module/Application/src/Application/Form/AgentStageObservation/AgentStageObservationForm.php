@@ -3,8 +3,8 @@
 namespace Application\Form\AgentStageObservation;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Form\Element\Button;

@@ -2,7 +2,7 @@
 
 namespace Application\Entity\Db\MacroContent;
 
-use Application\Entity\Db\Structure;
+use Structure\Entity\Db\Structure;
 
 trait StructureMacroTrait {
 

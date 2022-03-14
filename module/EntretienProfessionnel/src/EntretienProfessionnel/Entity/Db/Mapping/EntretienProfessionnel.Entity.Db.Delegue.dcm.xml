@@ -9,7 +9,7 @@
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Structure"  field="structure">
+        <many-to-one target-entity="Structure\Entity\Db\Structure"  field="structure">
             <join-column name="structure_id" referenced-column-name="id"/>
         </many-to-one>
         <many-to-one target-entity="EntretienProfessionnel\Entity\Db\Campagne"  field="campagne">

@@ -3,13 +3,13 @@
 namespace EntretienProfessionnel\Service\Evenement;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;

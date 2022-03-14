@@ -6,7 +6,7 @@ use Application\Entity\Db\Poste;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {

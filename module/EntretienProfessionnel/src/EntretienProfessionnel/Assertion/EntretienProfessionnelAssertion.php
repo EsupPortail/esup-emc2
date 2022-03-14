@@ -4,9 +4,9 @@ namespace EntretienProfessionnel\Assertion;
 
 use Application\Constant\RoleConstant;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;

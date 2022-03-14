@@ -3,12 +3,11 @@
 namespace EntretienProfessionnel\Service\Evenement;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Provider\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
-use UnicaenEvenement\Entity\Db\Type;
+use Structure\Service\Structure\StructureService;
 use UnicaenEvenement\Service\Etat\EtatService;
 use UnicaenEvenement\Service\Type\TypeService;
 

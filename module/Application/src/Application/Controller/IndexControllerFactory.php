@@ -3,9 +3,9 @@
 namespace Application\Controller;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenAuthentification\Service\UserContext;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;

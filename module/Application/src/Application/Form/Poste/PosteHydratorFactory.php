@@ -3,10 +3,10 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
+use Structure\Service\Structure\StructureService;
 
 class PosteHydratorFactory {
 

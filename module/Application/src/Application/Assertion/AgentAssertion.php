@@ -6,7 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;

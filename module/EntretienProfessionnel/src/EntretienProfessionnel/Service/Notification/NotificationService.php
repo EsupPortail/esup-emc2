@@ -3,8 +3,7 @@
 namespace EntretienProfessionnel\Service\Notification;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\Structure;
-use Application\Entity\Db\StructureAgentForce;
+use Structure\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -13,7 +12,8 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;

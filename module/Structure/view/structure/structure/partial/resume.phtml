@@ -1,0 +1,175 @@
+<?php
+
+/**
+ * @var Structure $structure
+ * @var Structure[] $filles
+ */
+
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
+use Structure\Provider\Privilege\StructurePrivileges;
+
+$canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+$canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+
+$responsables = $structure->getResponsables();
+$responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted(); });
+
+$gestionnaires = $structure->getGestionnaires();
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+
+
+        <h2 style="border-bottom:1px solid black;">
+            Description
+            <?php if ($canEditerDescription) : ?>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::editerDescriptionAction() */ ?>
+                    href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
+                >
+                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                    </span></a>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::toggleResumeMereAction() */ ?>
+                        href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
+                >
+                    <?php if ($structure->getRepriseResumeMere()) : ?>
+                        <span class="icon ko" data-toggle="tooltip" data-html="true"
+                              title="Ne plus réutiliser le résumé de la structure mère">
+                        </span></a>
+                    <?php else : ?>
+                        <span class="icon ok" data-toggle="tooltip" data-html="true"
+                          title="Réutiliser le résumé de la structure mère">
+                        </span></a>
+                    <?php endif; ?>
+
+            <?php endif; ?>
+        </h2>
+
+
+        <?php if ($structure->getRepriseResumeMere()) : ?>
+            <div class="alert alert-info">
+                <span class="icon information"></span>
+                Reprise du résumé de la structure mère.
+            </div>
+        <?php endif; ?>
+        <?php if ($structure->getDescriptionComplete()) : ?>
+            <?php echo $structure->getDescriptionComplete(); ?>
+        <?php else : ?>
+            <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
+        <?php endif; ?>
+
+        <dl class="dl-horizontal">
+            <?php if ($structure->getOuverture() !== null) : ?>
+                <dt> Date d'ouverture </dt>
+                <dd> <?php echo $structure->getOuverture()->format('d/m/Y'); ?></dd>
+            <?php endif; ?>
+            <?php if ($structure->getFermeture() !== null) : ?>
+                <dt> Date de fermeture </dt>
+                <dd> <?php echo $structure->getFermeture()->format('d/m/Y'); ?></dd>
+            <?php endif; ?>
+        </dl>
+    </div>
+
+    <!-- RESPONSABLE ET GESTIONNAIRE ---------------------------------------------------------------------------------->
+
+    <div class="col-md-6">
+        <h2 style="border-bottom:1px solid black;">
+            Rôles
+            <span class="icon information" style="color:var(--content-background)"></span>
+        </h2>
+
+        <?php //echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
+
+        <h3>
+            Responsables
+            <span class="badge"><?php echo count($responsables); ?></span>
+            <span class="icon synchoniser" title="Synchronisé depuis OCTOPUS"></span>
+        </h3>
+        <ul>
+            <?php foreach ($responsables as $responsable) : ?>
+                <li>
+                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <?php echo $responsable->getAgent()->getDenomination(); ?>
+                    </span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h3>
+            Gestionnaires
+            <span class="badge"><?php echo count($gestionnaires); ?></span>
+            <?php if ($canEditerGestionnaire) : ?>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
+                    href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
+                >
+                    <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                          title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                    </span></a>
+            <?php endif; ?>
+        </h3>
+        <ul>
+            <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                <li>
+                    <?php echo $gestionnaire->getDenomination(); ?>
+                    <?php if ($canEditerGestionnaire) : ?>
+                        <a
+                            <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
+                            href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
+                        >
+                            <span class="icon detruire"  data-toggle="tooltip" data-html="true"
+                                  title="Supprimer la gestion de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $gestionnaire->getDenomination(); ?></span>">
+                            </span></a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h2 style="border-bottom:1px solid black;">
+            Structures
+            <span class="icon information" style="color:var(--content-background)"></span>
+        </h2>
+
+        <?php //echo $this->portenote('StructureController::indexAction()>structures_liees', '', []); ?>
+
+        <h3> Structure mère <tt>n+1</tt> </h3>
+        <?php if ($structure->getParent() !== null) :?>
+            <ul>
+                <li>
+                    <a href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
+                        <?php echo $structure->getParent()->getLibelleCourt(); ?>
+                        -
+                        <?php echo $structure->getParent()->getLibelleLong(); ?>
+                    </a></li>
+            </ul>
+        <?php else : ?>
+            Aucune structure mère
+        <?php endif; ?>
+        <h3>
+            Structures filles <tt>n-1</tt>
+            <span class="badge">
+                    <?php echo count($filles); ?>
+                </span>
+        </h3>
+        <ul>
+            <?php foreach ($filles as $enfant) : ?>
+                <li>
+                    <a href="<?php echo $this->url('structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
+                        <?php echo $enfant->getLibelleCourt(); ?>
+                        -
+                        <?php echo $enfant->getLibelleLong(); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

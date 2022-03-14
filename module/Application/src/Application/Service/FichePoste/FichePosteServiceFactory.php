@@ -4,9 +4,9 @@ namespace Application\Service\FichePoste;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
-use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 
 class FichePosteServiceFactory {
 

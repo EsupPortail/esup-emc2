@@ -4,11 +4,11 @@ namespace EntretienProfessionnel\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

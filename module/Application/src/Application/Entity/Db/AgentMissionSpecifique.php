@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Entity\HasAgentInterface;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 

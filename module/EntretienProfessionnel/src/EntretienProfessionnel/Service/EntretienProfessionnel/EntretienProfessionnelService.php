@@ -5,8 +5,7 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Complement;
-use Application\Entity\Db\Structure;
-use Application\Entity\Db\StructureResponsable;
+
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
@@ -19,6 +18,8 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;

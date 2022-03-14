@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use Structure\Entity\Db\Structure;
 
 /**
  * Données synchronisées depuis Octopus :

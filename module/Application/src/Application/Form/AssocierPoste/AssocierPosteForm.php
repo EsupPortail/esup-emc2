@@ -2,8 +2,8 @@
 
 namespace Application\Form\AssocierPoste;
 
-use Application\Entity\Db\Structure;
 use Application\Service\Poste\PosteServiceAwareTrait;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;

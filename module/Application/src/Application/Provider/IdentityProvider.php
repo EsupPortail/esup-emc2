@@ -3,9 +3,9 @@
 namespace Application\Provider;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\Structure;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
+use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;

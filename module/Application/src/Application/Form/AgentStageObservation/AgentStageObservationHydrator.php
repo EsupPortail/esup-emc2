@@ -4,9 +4,9 @@ namespace Application\Form\AgentStageObservation;
 
 use Application\Entity\Db\AgentStageObservation;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 

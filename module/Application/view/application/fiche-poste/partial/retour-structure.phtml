@@ -2,8 +2,8 @@
 
 /** @var Structure $structure */
 
-use Application\Entity\Db\Structure;
-use Application\Provider\Privilege\StructurePrivileges;
+use Structure\Provider\Privilege\StructurePrivileges;
+use Structure\Entity\Db\Structure;
 
 $canGereStructure = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER));
 

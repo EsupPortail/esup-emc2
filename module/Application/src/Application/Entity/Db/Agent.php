@@ -20,6 +20,7 @@ use Exception;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
+use Structure\Entity\Db\StructureAgentForce;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 

@@ -3,8 +3,8 @@
 namespace Application\Form\FicheProfil;
 
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 
 class FicheProfilFormFactory {
 

@@ -4,8 +4,8 @@ namespace Application\Form\AgentMissionSpecifique;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 
 class AgentMissionSpecifiqueHydratorFactory
 {

@@ -8,6 +8,7 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\Grade;
+use Structure\Entity\Db\Structure;
 
 /**
  * Données synchronisées depuis Octopus :

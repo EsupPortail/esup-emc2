@@ -2,9 +2,9 @@
 
 namespace Application\Form\AgentStageObservation;
 
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
+use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\Etat\EtatService;
 
 class AgentStageObservationHydratorFactory {

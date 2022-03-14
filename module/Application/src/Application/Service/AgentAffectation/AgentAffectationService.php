@@ -4,8 +4,8 @@ namespace Application\Service\AgentAffectation;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
-use Application\Entity\Db\Structure;
 use Doctrine\ORM\QueryBuilder;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class AgentAffectationService {

@@ -4,8 +4,8 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
-use Application\Entity\Db\Structure;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 

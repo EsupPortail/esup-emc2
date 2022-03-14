@@ -1,0 +1,276 @@
+<?php
+
+/**
+ * @see StructureController::afficherAction()
+ * @var Structure[] $selecteur
+ * @var Structure $structure
+ * @var Structure[] $filles
+ * @var AgentMissionSpecifique[] $missions
+ * @var FichePoste[] $fiches
+ * @var FichePoste[] $fichesCompletes
+ * @var FichePoste[] $fichesIncompletes
+ * @var FichePoste[] $fichesRecrutements
+ * @var Poste[] $postes
+ * @var Agent[] $agents
+ * @var Agent[] $agentsForces
+ * @var FicheProfil[] $profils
+ * @var FormationInstanceInscrit[] $inscriptions
+ *
+ * @var Campagne $last
+ * @var Campagne[] $campagnes
+ * @var Delegue[] $delegues
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\FicheProfil;
+use Application\Entity\Db\Poste;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\Delegue;
+use Formation\Entity\Db\FormationInstanceInscrit;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
+
+$this->headTitle($structure->getLibelleLong());
+
+$canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER);
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            <strong> <?php echo $structure->getLibelleLong(); ?> </strong> <br/>
+            <?php echo $structure->getType(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <br/>
+        <?php if (! empty($selecteur)) : ?>
+            <label for="structure-selecteur">Structure à afficher : <br/></label>
+            <select id="structure-selecteur" name="structure-selecteur" class="bootstrap-select">
+                <option value="">Aucune sélection</option>
+                <?php foreach ($selecteur as $s) : ?>
+                    <option value="<?php echo $s->getId(); ?>" <?php if ($structure->getId() == $s->getId()) echo "selected"; ?>><?php echo $s->getLibelleCourt(); ?></option>
+                <?php endforeach; ?>
+            </select>
+
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
+<?php if (! $canAfficherStructure) : ?>
+
+    <div class="alert alert-danger col-md-8">
+        <p class="lead">
+            <span class="icon attention"></span>
+            Vous n'êtes pas habilité&middot;e à visualiser cette structure.
+        </p>
+    </div>
+
+<?php else : ?>
+
+    <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+    <div class="main">
+
+        <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles]); ?>
+
+        <div role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist">
+
+                <li role="presentation">
+                    <a href="#agents" aria-controls="agents" role="tab" data-toggle="tabz">
+                        Agents <br/> &nbsp;
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
+                        Fiches de  <br/> poste
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#missions" aria-controls="missions" role="tab" data-toggle="tabz">
+                        Missions <br/> spécifiques
+                    </a>
+                </li>
+
+                <?php if ($last !== null) : ?>
+                    <li role="presentation">
+                        <a href="#campagne_<?php echo $last->getId(); ?>" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
+                            Entretien professionnel  <br/>
+                            <strong><?php echo $last->getAnnee(); ?></strong>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php foreach ($campagnes as $campagne) : ?>
+                    <li role="presentation">
+                        <a href="#campagne_<?php echo $campagne->getId(); ?>" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
+                            Entretien professionnel <br/>
+                            <strong><?php echo $campagne->getAnnee(); ?></strong>
+                        </a>
+                    </li>
+                <?php endforeach;?>
+
+                <li role="presentation">
+                    <a href="#profil" aria-controls="profil" role="tab" data-toggle="tabz" >
+                        Profil de  <br/>
+                        recrutement
+                    </a>
+                </li>
+
+                <li role="presentation">
+                    <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz" >
+                        Demande de <br/> Formation
+                    </a>
+                </li>
+
+                <li role="presentation">
+                    <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
+                        Extractions  <br/> &nbsp;
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-with-tab">
+
+            <div class="tab-content">
+
+                <!-- Informations ------------------------------------------------------------------------------------->
+                <div id="agents" class="tab-pane " role="tabpanel">
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>
+                                Agents
+                                <span class="badge"><?php echo count($agents); ?></span>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'fichespostes' => $fiches]); ?>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>
+                                Agents manuellement ajoutés
+                                <span class="badge"><?php echo count($agentsForces); ?></span>
+                            </h2>
+                        </div>
+                        <div class="pull-right">
+                            <?php /** @see \Application\Controller\StructureController::ajouterManuellementAgentAction(); */ ?>
+                            <a class="btn btn-primary action ajax-modal" data-event="modification"
+                               href="<?php echo $this->url("structure/ajouter-manuellement-agent", ["structure" => $structure->getId()], [], true); ?>"
+                            >
+                                <span class="icon ajouter-user"></span> Ajouter manuellement un agent
+                            </a>
+                        </div>
+                    </div>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'fichespostes' => $fiches, 'options' => ['force' => true]]); ?>
+
+                </div>
+
+                <!-- Informations ------------------------------------------------------------------------------------->
+                <div id="informations" class="tab-pane " role="tabpanel">
+
+                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
+
+
+                </div>
+
+                <!-- Missions spécifique ------------------------------------------------------------------------------------->
+                <div id="missions" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
+                </div>
+                <!-- Campagne ------------------------------------------------------------------------------------->
+                <?php $allAgents = array_merge($agents, $agentsForces); ?>
+
+                <?php if ($last !== null) : ?>
+                    <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane " role="tabpanel">
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues]); ?>
+                    </div>
+                <?php endif; ?>
+                <?php foreach ($campagnes as $campagne) : ?>
+                    <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues]); ?>
+                    </div>
+                <?php endforeach; ?>
+
+                <!-- Profil de recrutement ------------------------------->
+                <div id="profil" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
+                </div>
+
+                <!-- Demande de formation ------------------------------->
+                <div id="formation" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptions]); ?>
+                </div>
+
+                <!-- Extraction ------------------------------------------------------------------------------------->
+                <div id="extraction" class="tab-pane " role="tabpanel">
+                    <?php echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<script>
+    // $("body").on("modification", function (event) {
+    //     event.div.modal('hide');
+    //     window.location.reload();
+    // });
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "agents";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+    });
+
+    $(function() {
+        $('select#structure-selecteur').change(function() {
+            let id = $('select#structure-selecteur option:selected').val();
+            if (id !== "" && id !== "<?php echo $structure->getId(); ?>") {
+                window.location.href = './' + id;
+            }
+        });
+    });
+
+
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
+        $("body").on("duplication", function (event) {
+            let content = event.div.html();
+            let match_regex = content.match(/#[0-9]*/g)[0];
+            let id = match_regex.split('#')[1];
+            event.div.modal('hide');
+            let win = window.open('../../fiche-poste/editer/' + id + '?structure=' + <?php echo ($structure)?$structure->getId():0; ?>, '_blank');
+            if (win) {
+                //Browser has allowed it to be opened
+                win.focus();
+            } else {
+                //Browser has blocked it
+                alert('Please allow popups for this website');
+            }
+            console.log("fiche-de-poste: " + id);
+            window.location.reload();
+        });
+    });
+</script>

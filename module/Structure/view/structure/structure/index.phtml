@@ -1,0 +1,102 @@
+<?php
+
+use Structure\Provider\Privilege\StructurePrivileges;
+
+/**
+ * @see \Application\Controller\StructureController::indexAction()
+ * @var Structure\Entity\Db\Structure[] $structures
+ */
+
+$this->headTitle("Index des structures");
+
+$canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER));
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="page-header">
+            Structures
+            <span class="badge">
+                <?php echo count($structures); ?>
+            </span>
+            <?php echo $this->synchroniserIcon(); ?>
+        </h1>
+    </div>
+</div>
+<div class="main">
+
+    <table id="structures" class="datatable table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th> Libellé </th>
+                <th> Code </th>
+                <th> Type </th>
+                <th> Resp./Gest. </th>
+                <th> Action </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($structures as $structure) : ?>
+                <tr>
+                    <td>
+                        <abbr title="<?php echo $structure->getLibelleLong(); ?>">
+                            <?php echo $structure->getLibelleCourt(); ?>
+                        </abbr>
+                        <?php if ($structure->getFermeture() !== null) : ?>
+                            <span class="ferme" title="<?php echo $structure->getFermeture()->format('d/m/Y'); ?>">
+                                Fermée
+                            </span>
+                        <?php endif; ?>
+                    </td>
+                    <td> <?php echo $structure->getCode(); ?> </td>
+                    <td> <?php echo $structure->getType(); ?> </td>
+                    <td>
+                        <!-- responsables -->
+                        <?php
+                            $responsables = $structure->getResponsables();
+                            $listing = "<u><b>Responsable(s) : </b></u><br/>";
+                            foreach ($responsables as $responsable) { $listing .= $responsable->getAgent()->getDenomination() . "<br/>"; }
+                        ?>
+                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true" <?php if (empty($responsables)) echo ' style="color:darkred;" '; ?> >
+                        <?php echo count($responsables); ?> <span class="icon agent"></span>
+                        </span>
+
+                        /
+
+                        <!-- gestionnaires -->
+                        <?php
+                            $gestionnaires = $structure->getGestionnaires();
+                            $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
+                            foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getDenomination() . "<br/>"; }
+                        ?>
+                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true"  >
+                        <?php echo count($gestionnaires); ?> <span class="icon agent"></span>
+                        </span>
+                    </td>
+                    <td>
+                        <?php if ($canAfficher) : ?>
+                            <a
+                                    href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getId()], [], true); ?>"
+                            >
+                                <span class="icon voir"   title="Afficher la structure"></span></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+        $('.datatable').DataTable({
+            paging: false,
+        });
+    });
+</script>

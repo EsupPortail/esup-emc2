@@ -14,7 +14,6 @@ create table niveau_definition
     histo_destructeur_id integer constraint niveau_definition_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
     label varchar(64) not null
 );
-
 create unique index niveau_definition_id_uindex on niveau_definition (id);
 
 create table niveau_enveloppe
@@ -31,7 +30,6 @@ create table niveau_enveloppe
     histo_destructeur_id integer constraint niveau_enveloppe_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
     description text
 );
-
 create unique index niveau_enveloppe_id_uindex on niveau_enveloppe (id);
 
 -- MODULE CARRIERE -----------------------------------------------------------------------------------------------------
@@ -48,7 +46,6 @@ create table carriere_categorie
     histo_destruction timestamp,
     histo_destructeur_id integer constraint categorie_user_id_fk_3 references unicaen_utilisateur_user
 );
-
 create unique index categorie_code_uindex on carriere_categorie (code);
 create unique index categorie_id_uindex on carriere_categorie (id);
 
@@ -66,7 +63,6 @@ create table carriere_corps
     niveau integer,
     niveau_id integer constraint corps_niveau_definition_id_fk references niveau_definition on delete set null
 );
-
 create unique index corps_code_uindex on carriere_corps (code);
 
 create table carriere_correspondance
@@ -122,7 +118,6 @@ create table metier_domaine
     histo_destruction timestamp,
     histo_destructeur_id integer constraint domaine_user_id_fk_3 references unicaen_utilisateur_user
 );
-
 create unique index domaine_id_uindex on metier_domaine (id);
 create unique index metier_famille_id_uindex on metier_familleprofessionnelle (id);
 
@@ -182,11 +177,10 @@ create table metier_reference
     histo_destruction timestamp,
     histo_destructeur_id integer constraint metier_reference_user_id_fk_3 references unicaen_utilisateur_user
 );
-
 create unique index metier_reference_id_uindex on metier_reference (id);
 create unique index metier_referentiel_id_uindex on metier_referentiel (id);
 
--- MINIMUM -------------------------------------------------------------------------------------------------------------
+-- AGENT -------------------------------------------------------------------------------------------------------------
 
 create table agent
 (
@@ -207,4 +201,162 @@ create table agent
     date_naissance date,
     nom_famille varchar(256)
 );
+
+-- STRUCTURE -----------------------------------------------------------------------------------------------------------
+
+create table structure_type
+(
+    id integer not null constraint structure_type_pk primary key,
+    code varchar(64) not null,
+    libelle varchar(256) not null,
+    synchro timestamp,
+    histo timestamp,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+create unique index structure_type_source_id_uindex on structure_type (id);
+
+create table structure
+(
+    id integer not null constraint structure_pk primary key,
+    code varchar(40),
+    libelle_court varchar(128),
+    libelle_long varchar(1024),
+    histo timestamp,
+    ouverture timestamp,
+    fermeture timestamp,
+    resume_mere boolean default false,
+    description text,
+    type_id integer constraint structure_structure_type_id_fk references structure_type on delete set null,
+    parent_id integer constraint structure_structure_source_id_fk references structure on delete set null,
+    niv2_id integer constraint structure_structure_id_fk references structure on delete set null,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+create unique index structure_source_id_uindex on structure (id);
+
+-- STRUCTURE <-> AGENT -------------------------------------------------------------------------------------------------
+
+create table structure_gestionnaire
+(
+    agent_id varchar(40) not null constraint structure_gestionnaire_agent_c_individu_fk references agent on delete cascade,
+    structure_id integer not null constraint structure_gestionnaire_structure_source_id_fk references structure on delete cascade,
+    constraint structure_gestionnaire_pk primary key (agent_id, structure_id)
+);
+
+create table structure_responsable
+(
+    id integer not null constraint structure_responsable_pk primary key,
+    structure_id integer not null,
+    agent_id varchar(40) not null,
+    fonction_id integer not null,
+    date_debut timestamp,
+    date_fin timestamp,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+
+create table structure_agent_force
+(
+    id serial not null constraint structure_agent_force_pk  primary key,
+    structure_id integer not null constraint structure_agent_force_structure_id_fk references structure on delete cascade,
+    agent_id varchar(40) not null constraint structure_agent_force_agent_c_individu_fk references agent,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint structure_agent_force_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint structure_agent_force_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint structure_agent_force_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index structure_agent_force_id_uindex on structure_agent_force (id);
+
+-- AGENT CCC -----------------------------------------------------------------------------------------------------------
+
+create table agent_ccc_ppp
+(
+    id serial not null constraint agent_ppp_pk primary key,
+    agent_id varchar(64) not null constraint agent_ppp_agent_c_individu_fk references agent on delete cascade,
+    type varchar(1024) not null,
+    libelle varchar(1024) not null,
+    complement text,
+    date_debut timestamp,
+    date_fin timestamp,
+    etat_id integer constraint agent_ppp_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    formation_cpf double precision,
+    formation_cout double precision,
+    formation_prisencharge double precision,
+    formation_organisme varchar(1024),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint agent_ppp_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint agent_ppp_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint agent_ppp_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index agent_ppp_id_uindex on agent_ccc_ppp (id);
+
+create table agent_ccc_stageobs
+(
+    id serial not null constraint agent_stageobs_pk primary key,
+    agent_id varchar(64) not null constraint agent_stageobs_agent_c_individu_fk references agent on delete cascade,
+    structure_id integer constraint agent_stageobs_structure_id_fk references structure on delete set null,
+    metier_id integer constraint agent_stageobs_metier_id_fk references metier_metier on delete set null,
+    complement text,
+    date_debut timestamp,
+    date_fin timestamp,
+    etat_id integer constraint agent_stageobs_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint agent_stageobs_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint agent_stageobs_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint agent_stageobs_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index agent_stageobs_id_uindex on agent_ccc_stageobs (id);
+
+create table agent_ccc_tutorat
+(
+    id serial not null constraint agent_tutorat_pk primary key,
+    agent_id varchar(64) not null constraint agent_tutorat_agent_c_individu_fk references agent on delete cascade,
+    cible_id varchar(64) constraint agent_tutorat_agent_c_individu_fk_2 references agent on delete set null,
+    metier_id integer constraint agent_tutorat_metier_id_fk references metier_metier on delete set null,
+    date_debut timestamp,
+    date_fin timestamp,
+    complement text,
+    formation boolean,
+    etat_id integer constraint agent_tutorat_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint agent_tutorat_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint agent_tutorat_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint agent_tutorat_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index agent_tutorat_id_uindex on agent_ccc_tutorat (id);
+
+create table agent_ccc_accompagnement
+(
+    id serial not null constraint agent_accompagnement_pk primary key,
+    agent_id varchar(64) not null constraint agent_accompagnement_agent_c_individu_fk references agent on delete cascade,
+    cible_id varchar(64) constraint agent_accompagnement_agent_c_individu_fk_2 references agent on delete set null,
+    bap_id integer constraint agent_accompagnement_correspondance_id_fk references carriere_correspondance on delete set null,
+    corps_id integer constraint agent_accompagnement_corps_id_fk references carriere_corps on delete set null,
+    complement text,
+    resultat boolean,
+    etat_id integer constraint agent_accompagnement_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    date_debut timestamp,
+    date_fin timestamp,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint agent_accompagnement_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint agent_accompagnement_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint agent_accompagnement_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index agent_accompagnement_id_uindex on agent_ccc_accompagnement (id);
+
+
 

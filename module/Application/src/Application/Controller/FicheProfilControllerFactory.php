@@ -5,8 +5,8 @@ namespace Application\Controller;
 use Application\Form\FicheProfil\FicheProfilForm;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 

@@ -3,7 +3,6 @@
 namespace Application\Form\AgentTutorat;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
 use UnicaenEtat\Service\Etat\EtatService;

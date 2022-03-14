@@ -3,11 +3,11 @@
 namespace Application\Service\FicheProfil;
 
 use Application\Entity\Db\FicheProfil;
-use Application\Entity\Db\Structure;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;

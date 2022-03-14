@@ -3,8 +3,8 @@
 namespace Application\Assertion;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class AgentAssertionFactory {

@@ -6,8 +6,8 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\MissionSpecifique\MissionSpecifiqueService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class MissionSpecifiqueAffectationControllerFactory {

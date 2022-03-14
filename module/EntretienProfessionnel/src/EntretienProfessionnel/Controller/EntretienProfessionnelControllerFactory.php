@@ -6,7 +6,6 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
-use Application\Service\Structure\StructureService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Form\Observation\ObservationForm;
@@ -16,6 +15,7 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;

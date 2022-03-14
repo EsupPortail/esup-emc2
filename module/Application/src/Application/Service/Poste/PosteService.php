@@ -3,11 +3,11 @@
 namespace Application\Service\Poste;
 
 use Application\Entity\Db\Poste;
-use Application\Entity\Db\Structure;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 

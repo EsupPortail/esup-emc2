@@ -4,11 +4,11 @@ namespace Application\Service\AgentGrade;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\Structure;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\Grade;
 use Doctrine\ORM\QueryBuilder;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class AgentGradeService {

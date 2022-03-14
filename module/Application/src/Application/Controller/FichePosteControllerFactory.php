@@ -16,8 +16,8 @@ use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
-use Application\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenRenderer\Service\Rendu\RenduService;
 

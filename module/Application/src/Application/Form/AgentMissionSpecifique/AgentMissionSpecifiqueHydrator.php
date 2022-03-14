@@ -6,8 +6,8 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class AgentMissionSpecifiqueHydrator implements HydratorInterface {

@@ -18,8 +18,8 @@ $sousstructure = true;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Entity\Db\Structure;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Structure\Entity\Db\Structure;
 
 
 $canEditerSpecificte = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));

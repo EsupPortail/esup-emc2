@@ -2,9 +2,9 @@
 
 namespace Application\Service\Poste;
 
-use Application\Service\Structure\StructureService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Structure\Service\Structure\StructureService;
 
 class PosteServiceFactory {
 

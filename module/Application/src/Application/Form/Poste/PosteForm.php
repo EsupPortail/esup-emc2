@@ -3,9 +3,9 @@
 namespace Application\Form\Poste;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;

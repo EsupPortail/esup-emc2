@@ -2,13 +2,12 @@
 
 namespace Application\Form\FicheProfil;
 
-use Application\Entity\Db\Structure;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
+use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;

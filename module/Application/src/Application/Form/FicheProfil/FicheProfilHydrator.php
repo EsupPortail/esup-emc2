@@ -4,8 +4,8 @@ namespace Application\Form\FicheProfil;
 
 use Application\Entity\Db\FicheProfil;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\Structure\StructureServiceAwareTrait;
 use DateTime;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class FicheProfilHydrator implements HydratorInterface {
