@@ -94,72 +94,47 @@ return [
         ],
     ],
 
-//    'navigation' => [
-//        'default' => [
-//            'home' => [
-//                'pages' => [
-//                    'administration' => [
-//                        'pages' => [
-//                            'unicaen-utilisateur' =>
-//                            [
-//                                'label' => 'Gestion des rôles et utilisateurs',
-//                                'route' => 'utilisateur-preecog',
-//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-//                                'order'    => 20000,
-//                                'dropdown-header' => true,
-//                            ],
-//                            'utilisateur' => [
-//                                'label' => 'Utilisateurs',
-//                                'route' => 'utilisateur-preecog',
-//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-//                                'order'    => 20200,
-//                                'icon' => 'fas fa-angle-right',
-//                                'pages' => [
-//                                    'listing-utilisateur' => [
-//                                        'label' => 'Listing',
-//                                        'route' => 'utilisateur-preecog/listing',
-//                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
-//                                        'order'    => 20210,
-//                                    ],
-//                                    'ajouter-utilisateur' => [
-//                                        'label' => 'Listing',
-//                                        'route' => 'utilisateur-preecog/ajouter',
-//                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
-//                                        'order'    => 20220,
-//                                    ],
-//                                ],
-//                            ],
-//                            'role' => [
-//                                'label' => 'Rôles',
-//                                'route' => 'role',
-//                                'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
-//                                'order'    => 20100,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
-
     'navigation' => [
         'default' => [
             'home' => [
                 'pages' => [
                     'administration' => [
                         'pages' => [
+                            'unicaen-utilisateur' =>
                             [
-                                'label' => 'Gérer les utilisateurs',
-                                'title' => 'Gérer les utilisateurs',
+                                'label' => 'Gestion des rôles et utilisateurs',
+                                'route' => 'utilisateur-preecog',
+                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                'order'    => 20000,
+                                'dropdown-header' => true,
+                            ],
+                            'utilisateur' => [
+                                'label' => 'Utilisateurs',
                                 'route' => 'unicaen-utilisateur',
                                 'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                'order'    => 20200,
+                                'icon' => 'fas fa-angle-right',
+                                'pages' => [
+                                    'listing-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'unicaen-utilisateur/listing',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+                                        'order'    => 20210,
+                                    ],
+                                    'ajouter-utilisateur' => [
+                                        'label' => 'Listing',
+                                        'route' => 'unicaen-utilisateur/ajouter',
+                                        'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER),
+                                        'order'    => 20220,
+                                    ],
+                                ],
                             ],
-                            [
-                                'label' => 'Gérer les rôles',
-                                'title' => 'Gérer les rôles',
+                            'role' => [
+                                'label' => 'Rôles',
                                 'route' => 'unicaen-role',
                                 'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
+                                'order'    => 20100,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],
@@ -167,6 +142,31 @@ return [
             ],
         ],
     ],
+
+//    'navigation' => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'administration' => [
+//                        'pages' => [
+//                            [
+//                                'label' => 'Gérer les utilisateurs',
+//                                'title' => 'Gérer les utilisateurs',
+//                                'route' => 'unicaen-utilisateur',
+//                                'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
+//                            ],
+//                            [
+//                                'label' => 'Gérer les rôles',
+//                                'title' => 'Gérer les rôles',
+//                                'route' => 'unicaen-role',
+//                                'resource' => RolePrivileges::getResourceId(RolePrivileges::ROLE_AFFICHER),
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
 
 ];

@@ -237,6 +237,85 @@ create table structure
 );
 create unique index structure_source_id_uindex on structure (id);
 
+-- AGENT <-> CARRIERE --------------------------------------------------------------------------------------------------
+
+create table agent_carriere_grade
+(
+    id varchar(40) not null constraint agent_grade_pk primary key,
+    id_orig varchar(255),
+    agent_id varchar(40) not null,
+    structure_id integer,
+    grade_id integer,
+    corps_id integer,
+    bap_id integer,
+    d_debut timestamp,
+    d_fin timestamp,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+
+create table agent_carriere_quotite
+(
+    id integer not null  constraint agent_quotite_pk primary key,
+    agent_id varchar(40) not null constraint agent_quotite_agent_c_individu_fk references agent on delete cascade,
+    debut timestamp,
+    fin timestamp,
+    quotite integer not null,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+create unique index agent_quotite_id_uindex on agent_carriere_quotite (id);
+
+create table agent_carriere_affectation
+(
+    affectation_id integer not null constraint agent_affectation_pk primary key,
+    agent_id varchar(40) not null,
+    structure_id integer not null,
+    date_debut timestamp not null,
+    date_fin timestamp,
+    id_orig varchar(255),
+    t_principale varchar(1) default 'N'::character varying,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+create unique index agent_affectation_id_uindex on agent_carriere_affectation (affectation_id);
+
+create table agent_carriere_statut
+(
+    id varchar(40) not null constraint agent_statut_pk primary key,
+    id_orig varchar(256),
+    c_source varchar(40),
+    agent_id varchar(40) not null,
+    structure_id integer constraint agent_statut_structure_source_id_fk references structure  on delete set null,
+    d_debut timestamp not null,
+    d_fin timestamp,
+    structure_id_old integer,
+    octo_id integer,
+    preecog_id integer,
+    t_titulaire varchar(1) not null,
+    t_cdi varchar(1) not null,
+    t_cdd varchar(1) not null,
+    t_vacataire varchar(1) not null,
+    t_enseignant varchar(1) not null,
+    t_administratif varchar(1) not null,
+    t_chercheur varchar(1) not null,
+    t_etudiant varchar(1) not null,
+    t_auditeur_libre varchar(1) not null,
+    t_doctorant varchar(1) not null,
+    t_detache_in varchar(1) not null,
+    t_detache_out varchar(1) not null,
+    t_dispo varchar(1) not null,
+    t_heberge varchar(1) not null,
+    t_emerite varchar(1) not null,
+    t_retraite varchar(1) not null,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0)
+);
+
 -- STRUCTURE <-> AGENT -------------------------------------------------------------------------------------------------
 
 create table structure_gestionnaire
@@ -273,7 +352,7 @@ create table structure_agent_force
 );
 create unique index structure_agent_force_id_uindex on structure_agent_force (id);
 
--- AGENT CCC -----------------------------------------------------------------------------------------------------------
+-- AGENT <-> CCC -------------------------------------------------------------------------------------------------------
 
 create table agent_ccc_ppp
 (
@@ -358,5 +437,24 @@ create table agent_ccc_accompagnement
 );
 create unique index agent_accompagnement_id_uindex on agent_ccc_accompagnement (id);
 
+-- ELEMENTS -------------------------------------------------------------------------------------------------------------
+
+
+
+-- FICHE_METIER --------------------------------------------------------------------------------------------------------
+
+create table fichemetier
+(
+    id serial not null constraint fiche_type_metier_pkey primary key,
+    metier_id integer not null constraint fichetype_metier__fk references metier_metier,
+    expertise boolean default false,
+    etat_id integer default 0 constraint fichemetier_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint fichemetier_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null,
+    histo_destruction timestamp,
+    histo_destructeur_id integer
+);
 
 

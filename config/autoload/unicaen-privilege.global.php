@@ -31,10 +31,12 @@ $settings = [
                     'administration' => [
                         'pages' => [
                             [
-                                'label' => "Gérer les privilèges",
+                                'label' => "Privilèges",
                                 'title' => "Gérer les privilèges",
                                 'route' => 'unicaen-privilege',
                                 'resource' => RolePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_VOIR),
+                                'order'    => 20050,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],
