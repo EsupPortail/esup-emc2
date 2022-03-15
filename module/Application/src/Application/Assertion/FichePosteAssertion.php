@@ -8,6 +8,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Structure\Provider\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -29,7 +30,7 @@ class FichePosteAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE || $role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE || $role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
         }
 
@@ -42,8 +43,8 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::GESTIONNAIRE:
+                    case RoleProvider::RESPONSABLE:
                         return $isGestionnaire;
                     case Agent::ROLE_SUPERIEURE:
                         $agent = $entity->getAgent();
@@ -65,8 +66,8 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::GESTIONNAIRE:
+                    case RoleProvider::RESPONSABLE:
                         return $isGestionnaire;
                     case Agent::ROLE_SUPERIEURE:
                         $agent = $entity->getAgent();

@@ -6,6 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -30,7 +31,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $isResponsable = false;
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getAgent()->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -65,9 +66,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
                         // TODO FIN
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return  $entity->getResponsable() === $user;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:
                         return false;
@@ -78,9 +79,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return  $entity->getResponsable() === $user;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:
                         return false;
@@ -110,7 +111,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isHierarchie;
                     default:
                         return false;

@@ -4,6 +4,8 @@ namespace Structure;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Structure\Provider\IdentityProvider;
+use Structure\Provider\IdentityProviderFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -39,6 +41,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            IdentityProvider::class => IdentityProviderFactory::class
         ],
     ],
     'controllers'     => [

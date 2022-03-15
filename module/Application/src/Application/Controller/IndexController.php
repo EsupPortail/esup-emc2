@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
@@ -55,11 +56,11 @@ class IndexController extends AbstractActionController
                     return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
                 case RoleConstant::VALIDATEUR :
                     return $this->redirect()->toRoute('index-validateur', [], [], true);
-                case RoleConstant::GESTIONNAIRE :
+                case RoleProvider::GESTIONNAIRE :
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
                     break;
-                case RoleConstant::RESPONSABLE :
+                case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
                     break;

@@ -6,6 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
+use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -31,11 +32,11 @@ class StructureAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
             $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $agent);
         }
         $isResponsable = false;
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
         }
 
@@ -47,9 +48,9 @@ class StructureAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:
                         return false;
@@ -63,9 +64,9 @@ class StructureAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_TECH:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:
                         return false;

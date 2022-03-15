@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider;
+namespace Structure\Provider;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -19,6 +19,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 {
     use AgentServiceAwareTrait;
     use RoleServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -28,11 +29,11 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
     public function computeUsersAutomatiques(string $code) : ?array
     {
         switch ($code) {
-            case Agent::ROLE_AGENT :
-                $user = $this->getAgentService()->getUsersInAgent();
+            case Structure::ROLE_RESPONSABLE :
+                $user = $this->getStructureService()->getUsersInResponsables();
                 return $user;
-            case Agent::ROLE_SUPERIEURE :
-                $user = $this->getAgentService()->getUsersInSuperieurs();
+            case Structure::ROLE_GESTIONNAIRE :
+                $user = $this->getStructureService()->getUsersInGestionnaires();
                 return $user;
         }
         return null;
@@ -52,14 +53,19 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
         $agent = $this->getAgentService()->getAgentByUser($user);
         if ($agent !== null) {
-            $roleAgent = $this->getRoleService()->findByRoleId(Agent::ROLE_AGENT);
-            $roles[] = $roleAgent;
 
-            $superieurs = $this->getAgentService()->getSuperieurByUser($user);
-            if ($superieurs !== null AND $superieurs !== []) {
-                $roleSuperieur = $this->getRoleService()->findByRoleId(Agent::ROLE_SUPERIEURE);
-                $roles[] = $roleSuperieur;
+            $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
+            if ($responsabilites !== null and $responsabilites !== []) {
+                $roleResponsable = $this->getRoleService()->findByRoleId(Structure::ROLE_RESPONSABLE);
+                $roles[] = $roleResponsable;
             }
+
+            $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
+            if ($gestions !== null and $gestions !== []) {
+                $roleGestionnaire = $this->getRoleService()->findByRoleId(Structure::ROLE_GESTIONNAIRE);
+                $roles[] = $roleGestionnaire;
+            }
+
         }
         return $roles;
     }

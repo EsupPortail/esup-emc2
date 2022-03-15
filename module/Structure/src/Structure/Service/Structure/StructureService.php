@@ -12,6 +12,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureResponsable;
+use Structure\Provider\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
@@ -396,12 +397,12 @@ EOS;
     public function getStructuresByCurrentRole(User $user, Role $role) : array
     {
         $selecteur = [];
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
             $structures = $this->getStructuresByGestionnaire($user);
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;
         }
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = $this->getStructuresByResponsable($user);
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
             $selecteur = $structures;

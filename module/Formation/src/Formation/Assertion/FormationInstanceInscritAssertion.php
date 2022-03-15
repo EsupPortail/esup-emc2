@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\FormationPrivileges;
+use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -30,7 +31,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -41,7 +42,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
             }
         }
         $isResponsable = false;
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -60,9 +61,9 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
                     case RoleConstant::OBSERVATEUR:
                     case RoleConstant::DRH:
                         return true;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
                     case RoleConstant::PERSONNEL:
                         return ($entity->getAgent()->getUtilisateur() !== null and $user === $entity->getAgent()->getUtilisateur());

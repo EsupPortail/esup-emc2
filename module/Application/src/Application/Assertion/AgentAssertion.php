@@ -6,6 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -30,7 +31,7 @@ class AgentAssertion extends AbstractAssertion {
 
 
         $isGestionnaire = false;
-        if ($role->getRoleId() === RoleConstant::GESTIONNAIRE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -41,7 +42,7 @@ class AgentAssertion extends AbstractAssertion {
             }
         }
         $isResponsable = false;
-        if ($role->getRoleId() === RoleConstant::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];
             foreach ($entity->getGrades() as $grade) {
                 $structures[] = $grade->getStructure();
@@ -65,9 +66,9 @@ class AgentAssertion extends AbstractAssertion {
                         return true;
                     case RoleConstant::PERSONNEL:
                         return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                             return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                 }
                 return false;
@@ -84,9 +85,9 @@ class AgentAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
                         return true;
-                    case RoleConstant::GESTIONNAIRE:
+                    case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleConstant::RESPONSABLE:
+                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                 }
                 return false;
