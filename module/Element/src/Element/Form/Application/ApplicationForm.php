@@ -3,7 +3,7 @@
 namespace Element\Form\Application;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
-use Element\Service\ApplicationGroupe\ApplicationGroupeServiceAwareTrait;
+use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
@@ -13,7 +13,7 @@ use Zend\InputFilter\Factory;
 
 class ApplicationForm extends Form {
     use FormationServiceAwareTrait;
-    use ApplicationGroupeServiceAwareTrait;
+    use ApplicationThemeServiceAwareTrait;
 
     public function init()
     {
@@ -38,7 +38,7 @@ class ApplicationForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => 'Sélectionner un groupe ...',
-                'value_options' => $this->getApplicationGroupeService()->getApplicationsGroupesAsOption(),
+                'value_options' => $this->getApplicationThemeService()->getApplicationsGroupesAsOption(),
             ],
             'attributes' => [
                 'class' => 'description form-control',
@@ -64,22 +64,6 @@ class ApplicationForm extends Form {
                 'id' => 'url',
             ],
         ]);
-        // formation
-        $this->add([
-            'type' => Select::class,
-            'name' => 'formations',
-            'options' => [
-                'label' => "Formations associées :",
-                'empty_option' => "Sélectionner la ou les formations ...",
-                'value_options' => $this->getFormationService()->getFormationsAsOptions(),
-            ],
-            'attributes' => [
-                'id' => 'formations',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-                'multiple'          => 'multiple',
-            ],
-        ]);
         // button
         $this->add([
             'type' => Button::class,
@@ -102,7 +86,6 @@ class ApplicationForm extends Form {
             'groupe'                => [ 'required' => false,  ],
             'description'           => [ 'required' => false,  ],
             'url'                   => [ 'required' => false,  ],
-            'formations'            => [ 'required' => false,  ],
         ]));
     }
 }

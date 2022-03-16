@@ -1,27 +1,27 @@
 <?php
 
-namespace Element\Service\ApplicationGroupe;
+namespace Element\Service\ApplicationTheme;
 
 use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Element\Entity\Db\ApplicationGroupe;
+use Element\Entity\Db\ApplicationTheme;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class ApplicationGroupeService {
+class ApplicationThemeService {
     use EntityManagerAwareTrait;
     use RendererAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param ApplicationGroupe $groupe
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $groupe
+     * @return ApplicationTheme
      */
-    public function create(ApplicationGroupe $groupe) : ApplicationGroupe
+    public function create(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
             $this->getEntityManager()->persist($groupe);
@@ -33,10 +33,10 @@ class ApplicationGroupeService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $groupe
+     * @return ApplicationTheme
      */
-    public function update(ApplicationGroupe $groupe) : ApplicationGroupe
+    public function update(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
             $this->getEntityManager()->flush($groupe);
@@ -47,10 +47,10 @@ class ApplicationGroupeService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $groupe
+     * @return ApplicationTheme
      */
-    public function historise(ApplicationGroupe $groupe) : ApplicationGroupe
+    public function historise(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
             $groupe->historiser();
@@ -62,10 +62,10 @@ class ApplicationGroupeService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $groupe
+     * @return ApplicationTheme
      */
-    public function restore(ApplicationGroupe $groupe) : ApplicationGroupe
+    public function restore(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
             $groupe->dehistoriser();
@@ -77,10 +77,10 @@ class ApplicationGroupeService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $groupe
+     * @return ApplicationTheme
      */
-    public function delete(ApplicationGroupe $groupe) : ApplicationGroupe
+    public function delete(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
             $this->getEntityManager()->remove($groupe);
@@ -98,7 +98,7 @@ class ApplicationGroupeService {
      */
     public function createQueryBuilder()
     {
-        $qb = $this->getEntityManager()->getRepository(ApplicationGroupe::class)->createQueryBuilder('groupe')
+        $qb = $this->getEntityManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('groupe')
              ->addSelect('application')->leftJoin('groupe.applications', 'application')
             ;
         return $qb;
@@ -107,7 +107,7 @@ class ApplicationGroupeService {
     /**
      * @param string $champ
      * @param string $ordre
-     * @return ApplicationGroupe[]
+     * @return ApplicationTheme[]
      */
     public function getApplicationsGroupes($champ = 'ordre', $ordre='ASC')
     {
@@ -119,10 +119,10 @@ class ApplicationGroupeService {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
+     * @param ApplicationTheme $groupe
      * @return array
      */
-    public function optionify(ApplicationGroupe $groupe) {
+    public function optionify(ApplicationTheme $groupe) {
         $this_option = [
             'value' =>  $groupe->getId(),
             'label' => $groupe->getLibelle(),
@@ -146,9 +146,9 @@ class ApplicationGroupeService {
 
     /**
      * @param integer $id
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
-    public function getApplicationGroupe(int $id)
+    public function getApplicationTheme(int $id)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
@@ -157,7 +157,7 @@ class ApplicationGroupeService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ApplicationGroupe paratagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs ApplicationTheme paratagent le même id [".$id."]");
         }
         return $result;
     }
@@ -165,12 +165,12 @@ class ApplicationGroupeService {
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
-    public function getRequestedApplicationGroupe(AbstractActionController $controller, $param = 'application-groupe')
+    public function getRequestedApplicationTheme(AbstractActionController $controller, $param = 'application-groupe')
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getApplicationGroupe($id);
+        $result = $this->getApplicationTheme($id);
         return $result;
     }
 }

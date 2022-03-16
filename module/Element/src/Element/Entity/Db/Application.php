@@ -4,7 +4,6 @@ namespace Element\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
@@ -20,18 +19,11 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     private $url;
     /** @var boolean */
     private $actif;
-    /** @var ApplicationGroupe */
+    /** @var ApplicationTheme */
     private $groupe;
-
-    /** @var ArrayCollection */
-    private  $activites;
-    /** @var ArrayCollection */
-    private  $formations;
 
     public function __construct()
     {
-        $this->activites = new ArrayCollection();
-        $this->formations = new ArrayCollection();
     }
 
     /**
@@ -97,7 +89,7 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     }
 
     /**
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function getGroupe()
     {
@@ -105,77 +97,12 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
+     * @param ApplicationTheme $groupe
      * @return Application
      */
     public function setGroupe($groupe)
     {
         $this->groupe = $groupe;
-        return $this;
-    }
-
-    /**
-     * @return Activite[]
-     */
-    public function getActivites()
-    {
-        return $this->activites->toArray();
-    }
-
-    /**
-     * @param Activite $activite
-     * @return Application
-     */
-    public function addApplication($activite)
-    {
-        $this->activites->add($activite);
-        return $this;
-    }
-
-    /**
-     * @param Activite $activite
-     * @return Application
-     */
-    public function removeApplication($activite)
-    {
-        $this->activites->removeElement($activite);
-        return $this;
-    }
-
-    /**
-     * @param Activite $activite
-     * @return boolean
-     */
-    public function hasApplication($activite)
-    {
-        return $this->activites->contains($activite);
-    }
-
-    /**
-     * @return Formation[]
-     */
-    public function getFormations()
-    {
-        return $this->formations->toArray();
-    }
-
-    /**
-     * @param Formation $formation
-     * @return Application
-     */
-    public function addFormation($formation)
-    {
-        $this->formations->add($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return Application
-     */
-    public function removeFormation($formation)
-    {
-        $this->formations->removeElement($formation);
         return $this;
     }
 }

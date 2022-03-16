@@ -2,7 +2,7 @@
 
 namespace Element\Form\ApplicationElement;
 
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
@@ -12,7 +12,7 @@ use Zend\InputFilter\Factory;
 
 class ApplicationElementForm extends Form {
     use ApplicationServiceAwareTrait;
-    use MaitriseNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     public function init()
     {
@@ -44,7 +44,7 @@ class ApplicationElementForm extends Form {
                     'class' => 'control-label',
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
-                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions("Application"),
+                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions("Application"),
             ],
             'attributes' => [
                 'id'                => 'niveau',

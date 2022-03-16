@@ -3,14 +3,14 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Application\Entity\Db\Traits\HasSourceTrait;
-use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
-use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;

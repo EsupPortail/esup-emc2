@@ -180,7 +180,7 @@ create unique index metier_referentiel_id_uindex on metier_referentiel (id);
 
 -- ELEMENT -----------------------------------------------------------------------------------------------------------
 
-create table element_application_groupe
+create table element_application_theme
 (
     id serial not null constraint application_groupe_pk primary key,
     libelle varchar(1024),
@@ -193,7 +193,7 @@ create table element_application_groupe
     histo_destruction timestamp,
     histo_destructeur_id integer constraint application_groupe_user_id_fk_3 references unicaen_utilisateur_user
 );
-create unique index application_groupe_id_uindex on element_application_groupe (id);
+create unique index application_groupe_id_uindex on element_application_theme (id);
 
 create table element_application
 (
@@ -202,7 +202,7 @@ create table element_application
     description varchar(2048),
     url varchar(128),
     actif boolean default true not null,
-    groupe_id integer constraint element_application_groupe_id_fk references element_application_groupe on delete set null,
+    groupe_id integer constraint element_application_theme_id_fk references element_application_theme on delete set null,
     histo_creation timestamp default ('now'::text)::date not null,
     histo_createur_id integer default 0 not null constraint element_application_user_id_fk references unicaen_utilisateur_user,
     histo_modification timestamp,

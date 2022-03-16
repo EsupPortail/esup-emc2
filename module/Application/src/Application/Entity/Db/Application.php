@@ -17,7 +17,7 @@ class Application implements HasDescriptionInterface {
     private $url;
     /** @var boolean */
     private $actif;
-    /** @var ApplicationGroupe */
+    /** @var ApplicationTheme */
     private $groupe;
 
     /** @var ArrayCollection */
@@ -94,7 +94,7 @@ class Application implements HasDescriptionInterface {
     }
 
     /**
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function getGroupe()
     {
@@ -102,7 +102,7 @@ class Application implements HasDescriptionInterface {
     }
 
     /**
-     * @param ApplicationGroupe $groupe
+     * @param ApplicationTheme $groupe
      * @return Application
      */
     public function setGroupe($groupe)

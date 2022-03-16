@@ -2,87 +2,152 @@
 
 use Element\Entity\Db\Application;
 use Element\Provider\Privilege\ApplicationPrivileges;
-use Element\Entity\Db\ApplicationGroupe;
+use Element\Entity\Db\ApplicationTheme;
+use Element\Provider\Privilege\ApplicationthemePrivileges;
 
 /**
  * @see \Application\Controller\ApplicationController::indexAction()
  * @var Application[] $applications
- * @var ApplicationGroupe[] $groupes
+ * @var ApplicationTheme[] $groupes
  * @var int $groupeSelected
  * @var int $activite
  */
 
+$this->headTitle("Liste des applications");
 
-$droits = [];
-$droits['canAfficher'] = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
-$droits['canAjouter']  = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AJOUTER));
-$droits['canEditer']   = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EDITER));
-$droits['canEffacer']  = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EFFACER));
+$canAfficher = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
+$canAjouter = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_MODIFIER));
+$canModifier = $canAjouter;
+$canHistoriser = $canAjouter;
+$canSupprimer = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EFFACER));
 
-$this->headTitle("Index des applications");
+$canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getResourceId(ApplicationthemePrivileges::APPLICATIONTHEME_INDEX));
+
 ?>
 
 <h1 class="page-header">
-    Applications et groupes d'application
+    Liste des applications
 </h1>
 
-<a href="<?php echo $this->url('application/cartographie'); ?>"
-   class="btn btn-primary"
->
-    <span class="icon voir"> Cartographie Métier/Application</span>
-</a>
-
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="application">
-            <a href="#application" aria-controls="application" role="tab" data-toggle="tabz" >
-                Applications &nbsp;
-                <span class="badge">
-                    <?php echo count($applications); ?>
-                </span>
+<div class="row">
+    <div class="col-md-8">
+        <?php if ($canAjouter) : ?>
+            <a  <?php /** @see \Element\Controller\ApplicationController::creerAction() */?>
+                    href="<?php echo $this->url('element/application/creer', [], [], true);?>"
+                    class="btn btn-primary action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter une application
             </a>
-        </li>
-        <li role="groupe">
-            <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
-                Groupes &nbsp;
-                <span class="badge">
-                    <?php echo count($groupes); ?>
-                </span>
+        <?php endif; ?>
+        <?php if ($canAfficher) : ?>
+            <a href="<?php echo $this->url('element/application/cartographie'); ?>"
+               class="btn btn-primary"
+            >
+                <span class="icon voir"> Cartographie </span>
             </a>
-        </li>
-    </ul>
-
-    <div class="main-with-tab">
-
-        <div class="tab-content">
-
-            <div id="groupe" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
-            </div>
-
-            <div id="application" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'groupes' => $groupes, 'groupeSelected' => $groupeSelected, 'activite' => $activite, 'droits' => $droits], [], true); ?>
-            </div>
-        </div>
+        <?php endif; ?>
+    </div>
+    <div class="pull-right">
+        <?php if ($canApplicationThemeIndex) : ?>
+            <a href="<?php echo $this->url('element/application-theme'); ?>"
+               class="btn btn-primary"
+            >
+                Accéder aux thèmes
+            </a>
+        <?php endif; ?>
     </div>
 </div>
 
+<?php
+//echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupeSelected, 'activite' => $activite], [], true);
+?>
+<!--<br/>-->
+<!--<br/>-->
+
+<table id="applications" class="datatable" style="width:100%;">
+    <thead>
+    <tr>
+        <th> Libelle</th>
+        <th> Groupe</th>
+        <th> Liens </th>
+        <th style="width: 4rem;"> Actif </th>
+        <th style="width: 10rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($applications as $application): ?>
+        <tr class="<?php if ($application->estHistorise()) echo " historise "; ?>">
+            <td> <?php echo $this->application($application); ?> </td>
+            <td>
+                <?php if ($application->getGroupe()) : ?>
+                    <?php echo $application->getGroupe()->getLibelle(); ?>
+                <?php else : ?>
+                    Sans groupe
+                <?php endif; ?>
+            </td>
+            <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
+            <td>
+                <?php if ($canModifier) : ?>
+                <a
+                    <?php /** @see \Element\Controller\ApplicationController::changerStatusAction() */?>
+                        href="<?php echo $this->url('element/application/changer-status', ['id' => $application->getId()], [], true); ?>"
+                        title="Activer/Desactiver l'application"
+                >
+                    <?php endif; ?>
+                    <?php if ($application->isActif()) : ?>
+                        <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+                    <?php else : ?>
+                        <span class="badge" style="background-color: darkred;">&nbsp;</span>
+                    <?php endif;?>
+                    <?php if ($canModifier) : ?>
+                </a>
+            <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
+                            href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
+                        <span class="icon voir"        title="Voir l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationController::editerAction() */?>
+                            href="<?php echo $this->url('element/application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                        <span class="icon editer" title="Modifier l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($application->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see \Element\Controller\ApplicationController::historiserAction() */?>
+                                href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>">
+                            <span class="icon historiser" title="Historiser l'application"></span></a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see \Element\Controller\ApplicationController::restaurerAction() */?>
+                                href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>">
+                            <span class="icon restaurer" title="Restaurer l'application"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($canSupprimer) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationController::effacerAction() */?>
+                            href="<?php echo $this->url('element/application/effacer', ['id' => $application->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
 <script>
-
-
     $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        name = name.split("?")[0];
-        console.log(name);
-        if (name === undefined || name === "") name = "application";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function () {
-            $(this).tab('show');
-        });
-
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

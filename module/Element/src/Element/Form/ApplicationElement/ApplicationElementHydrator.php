@@ -4,12 +4,12 @@ namespace Element\Form\ApplicationElement;
 
 use Element\Entity\Db\ApplicationElement;
 use Element\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class ApplicationElementHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
-    use MaitriseNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     /**
      * @param ApplicationElement $object
@@ -33,7 +33,7 @@ class ApplicationElementHydrator implements HydratorInterface {
     public function hydrate(array $data, $object)
     {
         $application = isset($data['application'])?$this->getApplicationService()->getApplication($data['application']):null;
-        $niveau = (isset($data['niveau']) AND $data['niveau'] !== '')?$this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']):null;
+        $niveau = (isset($data['niveau']) AND $data['niveau'] !== '')?$this->getNiveauService()->getMaitriseNiveau($data['niveau']):null;
 
         $object->setApplication($application);
         $object->setNiveauMaitrise($niveau);

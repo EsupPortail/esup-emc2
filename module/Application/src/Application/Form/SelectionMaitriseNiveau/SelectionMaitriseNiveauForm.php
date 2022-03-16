@@ -2,7 +2,7 @@
 
 namespace Application\Form\SelectionMaitriseNiveau;
 
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Select;
@@ -10,7 +10,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
 class SelectionMaitriseNiveauForm extends Form {
-    use MaitriseNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     /**
      * @var string
@@ -36,7 +36,7 @@ class SelectionMaitriseNiveauForm extends Form {
             'options' => [
                 'label' => "Niveau de maîtrise * :",
                 'empty_option' => "Sélectionner un niveau de maîtrise ...",
-                'value_options' => $this->getMaitriseNiveauService()->getMaitrisesNiveauxAsOptions(($this->type)??""),
+                'value_options' => $this->getNiveauService()->getMaitrisesNiveauxAsOptions(($this->type)??""),
             ],
             'attributes' => [
                 'id'                => 'niveau',

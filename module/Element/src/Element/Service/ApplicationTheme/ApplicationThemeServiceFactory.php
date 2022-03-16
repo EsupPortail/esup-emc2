@@ -1,18 +1,18 @@
 <?php
 
-namespace Element\Service\ApplicationGroupe;
+namespace Element\Service\ApplicationTheme;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Zend\View\Renderer\PhpRenderer;
 
-class ApplicationGroupeServiceFactory {
+class ApplicationThemeServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return ApplicationGroupeService
+     * @return ApplicationThemeService
      */
-    public function __invoke(ContainerInterface $container) : ApplicationGroupeService
+    public function __invoke(ContainerInterface $container) : ApplicationThemeService
     {
         /**
          * @var EntityManager $entityManager
@@ -22,8 +22,8 @@ class ApplicationGroupeServiceFactory {
         /* @var PhpRenderer $renderer  */
         $renderer = $container->get('ViewRenderer');
 
-        /** @var ApplicationGroupeService $service */
-        $service = new ApplicationGroupeService();
+        /** @var ApplicationThemeService $service */
+        $service = new ApplicationThemeService();
         $service->setEntityManager($entityManager);
         $service->setRenderer($renderer);
         return $service;

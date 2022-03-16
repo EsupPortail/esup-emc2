@@ -3,11 +3,11 @@
 namespace Application\Form\SelectionMaitriseNiveau;
 
 use Application\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class SelectionMaitriseNiveauHydrator implements HydratorInterface {
-    use MaitriseNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     /**
      * @param HasNiveauMaitriseInterface $object
@@ -29,7 +29,7 @@ class SelectionMaitriseNiveauHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $niveau = $this->getMaitriseNiveauService()->getMaitriseNiveau(isset($data['niveau'])?$data['niveau']:null);
+        $niveau = $this->getNiveauService()->getMaitriseNiveau(isset($data['niveau'])?$data['niveau']:null);
         $object->setNiveauMaitrise($niveau);
         $clef = (isset($data['clef']))? ($data['clef'] == 1) : null;
         $object->setClef($clef);

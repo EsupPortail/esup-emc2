@@ -2,13 +2,13 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasComplementsInterface;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
-use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Application\Entity\Db\Traits\HasComplementsTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;

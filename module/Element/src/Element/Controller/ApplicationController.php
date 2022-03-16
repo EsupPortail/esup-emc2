@@ -4,34 +4,35 @@ namespace Element\Controller;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
-use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Application\Service\MaitriseNiveau\MaitriseNiveauServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Application;
-use Element\Entity\Db\ApplicationGroupe;
 use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\ApplicationTheme;
 use Element\Form\Application\ApplicationForm;
 use Element\Form\Application\ApplicationFormAwareTrait;
+use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
-use Element\Service\ApplicationGroupe\ApplicationGroupeServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
+use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ApplicationController  extends AbstractActionController {
     use ApplicationServiceAwareTrait;
-    use ApplicationGroupeServiceAwareTrait;
+    use ApplicationThemeServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
-    use MaitriseNiveauServiceAwareTrait;
+    use NiveauServiceAwareTrait;
     use MetierServiceAwareTrait;
     use ApplicationFormAwareTrait;
     use ApplicationElementFormAwareTrait;
@@ -44,15 +45,15 @@ class ApplicationController  extends AbstractActionController {
         $activite = $this->params()->fromQuery('activite');
         /**
          * @var Application[] $applications
-         * @var ApplicationGroupe[] $groupes
+         * @var ApplicationTheme[] $groupes
          */
         if ($groupeId !== null AND $groupeId !== "") {
-            $groupe = $this->getApplicationGroupeService()->getApplicationGroupe($groupeId);
+            $groupe = $this->getApplicationThemeService()->getApplicationTheme($groupeId);
             $applications = $this->getApplicationService()->getApplicationsGyGroupe($groupe);
         } else {
             $applications = $this->getApplicationService()->getApplications();
         }
-        $groupes = $this->getApplicationGroupeService()->getApplicationsGroupes('libelle');
+        $groupes = $this->getApplicationThemeService()->getApplicationsGroupes('libelle');
 
         if ($activite === "1") $applications = array_filter($applications, function (Application $a) { return $a->isActif();});
         if ($activite === "0") $applications = array_filter($applications, function (Application $a) { return !$a->isActif();});
@@ -65,14 +66,14 @@ class ApplicationController  extends AbstractActionController {
         ]);
 }
 
-    public function creerAction()
+    public function creerAction() : ViewModel
     {
         /** @var Application $application */
         $application = new Application();
 
         /** @var ApplicationForm $form */
         $form = $this->getApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/creer', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('element/application/creer', [], [], true));
         $form->bind($application);
 
         /** @var Request $request */
@@ -95,7 +96,7 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function editerAction()
+    public function editerAction() : ViewModel
     {
         /** @var Application $application */
         $applicationId = $this->params()->fromRoute('id');
@@ -103,7 +104,7 @@ class ApplicationController  extends AbstractActionController {
 
         /** @var ApplicationForm $form */
         $form = $this->getApplicationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('application/editer', ['id' => $application->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('element/application/editer', ['id' => $application->getId()], [], true));
         $form->bind($application);
 
         /** @var Request $request */
@@ -126,7 +127,7 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function effacerAction()
+    public function effacerAction() : ViewModel
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
@@ -145,7 +146,7 @@ class ApplicationController  extends AbstractActionController {
             $vm->setVariables([
                 'title' => "Suppression de l'application [" . $application->getLibelle(). "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('application/effacer', ["id" => $application->getId()], [], true),
+                'action' => $this->url()->fromRoute('element/application/effacer', ["id" => $application->getId()], [], true),
             ]);
         }
         return $vm;
@@ -158,7 +159,7 @@ class ApplicationController  extends AbstractActionController {
         $application->setActif( !$application->isActif() );
 
         $this->getApplicationService()->update($application);
-        return $this->redirect()->toRoute('application');
+        return $this->redirect()->toRoute('element/application');
     }
 
     public function afficherAction() : ViewModel
@@ -169,6 +170,20 @@ class ApplicationController  extends AbstractActionController {
             'title' => "Description de l'application",
             'application' => $application,
         ]);
+    }
+
+    public function historiserAction() : Response
+    {
+        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
+        $this->getApplicationService()->historise($application);
+        return $this->redirect()->toRoute('element/application', [], [], true);
+    }
+
+    public function restaurerAction() : Response
+    {
+        $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
+        $this->getApplicationService()->restore($application);
+        return $this->redirect()->toRoute('element/application', [], [], true);
     }
 
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/
@@ -229,7 +244,7 @@ class ApplicationController  extends AbstractActionController {
                         }
                     }
                 } else {
-                    $niveau = $this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
                     $clef = (isset($data['clef']) AND $data['clef'] === "1")?true:false;
                     foreach ($data['application'] as $applicationId) {
                         $application = $this->getApplicationService()->getApplication($applicationId);

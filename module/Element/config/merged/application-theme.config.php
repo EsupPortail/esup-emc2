@@ -2,15 +2,15 @@
 
 namespace Element;
 
-use Element\Controller\ApplicationGroupeController;
-use Element\Controller\ApplicationGroupeControllerFactory;
-use Element\Form\ApplicationGroupe\ApplicationGroupeForm;
-use Element\Form\ApplicationGroupe\ApplicationGroupeFormFactory;
-use Element\Form\ApplicationGroupe\ApplicationGroupeHydrator;
-use Element\Form\ApplicationGroupe\ApplicationGroupeHydratorFactory;
-use Element\Provider\Privilege\ApplicationGroupePrivileges;
-use Element\Service\ApplicationGroupe\ApplicationGroupeService;
-use Element\Service\ApplicationGroupe\ApplicationGroupeServiceFactory;
+use Element\Controller\ApplicationThemeController;
+use Element\Controller\ApplicationThemeControllerFactory;
+use Element\Form\ApplicationTheme\ApplicationThemeForm;
+use Element\Form\ApplicationTheme\ApplicationThemeFormFactory;
+use Element\Form\ApplicationTheme\ApplicationThemeHydrator;
+use Element\Form\ApplicationTheme\ApplicationThemeHydratorFactory;
+use Element\Provider\Privilege\ApplicationthemePrivileges;
+use Element\Service\ApplicationTheme\ApplicationThemeService;
+use Element\Service\ApplicationTheme\ApplicationThemeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -20,16 +20,25 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => ApplicationGroupeController::class,
+                    'controller' => ApplicationThemeController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        ApplicationthemePrivileges::APPLICATIONTHEME_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationThemeController::class,
                     'action' => [
                         'afficher',
                     ],
                     'privileges' => [
-                        ApplicationGroupePrivileges::APPLICATIONGROUPE_AFFICHER,
+                        ApplicationthemePrivileges::APPLICATIONTHEME_AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => ApplicationGroupeController::class,
+                    'controller' => ApplicationThemeController::class,
                     'action' => [
                         'ajouter',
                         'modifier',
@@ -37,16 +46,16 @@ return [
                         'restaurer',
                     ],
                     'privileges' => [
-                        ApplicationGroupePrivileges::APPLICATIONGROUPE_MODIFIER,
+                        ApplicationthemePrivileges::APPLICATIONTHEME_MODIFIER,
                     ],
                 ],
                 [
-                    'controller' => ApplicationGroupeController::class,
+                    'controller' => ApplicationThemeController::class,
                     'action' => [
                         'detruire-groupe',
                     ],
                     'privileges' => [
-                        ApplicationGroupePrivileges::APPLICATIONGROUPE_EFFACER,
+                        ApplicationthemePrivileges::APPLICATIONTHEME_EFFACER,
                     ],
                 ],
             ],
@@ -55,24 +64,21 @@ return [
 
     'router' => [
         'routes' => [
-            'application' => [
+            'element' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/application',
-//                    'defaults' => [
-//                        'controller' => ApplicationController::class,
-//                        'action' => 'index',
-//                    ],
+                    'route' => '/element',
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'groupe' => [
+                    'application-theme' => [
                         'type' => Literal::class,
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'options' => [
-                            'route' => '/groupe',
+                            'route' => '/application-theme',
                             'defaults' => [
-                                'controller' => ApplicationGroupeController::class,
+                                'controller' => ApplicationThemeController::class,
+                                'action' => 'index',
                             ],
                         ],
                         'child_routes' => [
@@ -81,7 +87,7 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'afficher',
                                     ],
                                 ],
@@ -91,7 +97,7 @@ return [
                                 'options' => [
                                     'route' => '/ajouter',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'ajouter',
                                     ],
                                 ],
@@ -101,7 +107,7 @@ return [
                                 'options' => [
                                     'route' => '/modifier/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'modifier',
                                     ],
                                 ],
@@ -111,7 +117,7 @@ return [
                                 'options' => [
                                     'route' => '/historiser/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'historiser',
                                     ],
                                 ],
@@ -121,7 +127,7 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'restaurer',
                                     ],
                                 ],
@@ -131,7 +137,7 @@ return [
                                 'options' => [
                                     'route' => '/detruire/:application-groupe',
                                     'defaults' => [
-                                        'controller' => ApplicationGroupeController::class,
+                                        'controller' => ApplicationThemeController::class,
                                         'action' => 'detruire',
                                     ],
                                 ],
@@ -145,22 +151,22 @@ return [
 
     'service_manager' => [
         'factories' => [
-            ApplicationGroupeService::class => ApplicationGroupeServiceFactory::class,
+            ApplicationThemeService::class => ApplicationThemeServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            ApplicationGroupeController::class => ApplicationGroupeControllerFactory::class,
+            ApplicationThemeController::class => ApplicationThemeControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            ApplicationGroupeForm::class => ApplicationGroupeFormFactory::class,
+            ApplicationThemeForm::class => ApplicationThemeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            ApplicationGroupeHydrator::class => ApplicationGroupeHydratorFactory::class,
+            ApplicationThemeHydrator::class => ApplicationThemeHydratorFactory::class,
         ],
     ]
 

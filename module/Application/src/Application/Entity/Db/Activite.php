@@ -2,10 +2,10 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\Entity\Db\Traits\HasApplicationCollectionTrait;
-use Application\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
+use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;

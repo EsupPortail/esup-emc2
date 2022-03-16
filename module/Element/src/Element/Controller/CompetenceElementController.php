@@ -60,7 +60,7 @@ class CompetenceElementController extends AbstractActionController {
                         }
                     }
                 } else {
-                    $niveau = $this->getMaitriseNiveauService()->getMaitriseNiveau($data['niveau']);
+                    $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
                     $clef = (isset($data['clef']) AND $data['clef'] === "1")?true:false;
                     foreach ($data['competence'] as $competenceId) {
                         $competence = $this->getCompetenceService()->getCompetence($competenceId);

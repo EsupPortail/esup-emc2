@@ -2,9 +2,7 @@
 
 namespace Element\Form\Application;
 
-use Element\Entity\Db\ApplicationGroupe;
-use Element\Service\ApplicationGroupe\ApplicationGroupeService;
-use Formation\Service\Formation\FormationService;
+use Element\Service\ApplicationTheme\ApplicationThemeService;
 use Interop\Container\ContainerInterface;
 
 class ApplicationFormFactory {
@@ -12,18 +10,15 @@ class ApplicationFormFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var ApplicationGroupe $applicationGroupeService
-         * @var FormationService $formationService
+         * @var ApplicationThemeService $applicationGroupeService
          */
-        $applicationGroupeService = $container->get(ApplicationGroupeService::class);
-        $formationService = $container->get(FormationService::class);
+        $applicationGroupeService = $container->get(ApplicationThemeService::class);
 
         /** @var ApplicationHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ApplicationHydrator::class);
 
         $form = new ApplicationForm();
-        $form->setApplicationGroupeService($applicationGroupeService);
-        $form->setFormationService($formationService);
+        $form->setApplicationThemeService($applicationGroupeService);
         $form->init();
         $form->setHydrator($hydrator);
 

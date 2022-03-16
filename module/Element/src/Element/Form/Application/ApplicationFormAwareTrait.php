@@ -10,7 +10,7 @@ trait ApplicationFormAwareTrait
     /**
      * @return ApplicationForm
      */
-    public function getApplicationForm()
+    public function getApplicationForm() : ApplicationForm
     {
         return $this->applicationForm;
     }
@@ -19,7 +19,7 @@ trait ApplicationFormAwareTrait
      * @param ApplicationForm $applicationForm
      * @return ApplicationForm
      */
-    public function setApplicationForm($applicationForm)
+    public function setApplicationForm(ApplicationForm $applicationForm) : ApplicationForm
     {
         $this->applicationForm = $applicationForm;
         return $this->applicationForm;

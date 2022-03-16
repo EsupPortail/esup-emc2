@@ -2,7 +2,7 @@
 
 namespace Application\Form\SelectionMaitriseNiveau;
 
-use Application\Service\MaitriseNiveau\MaitriseNiveauService;
+use Element\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
 
 class SelectionMaitriseNiveauHydratorFactory {
@@ -14,12 +14,12 @@ class SelectionMaitriseNiveauHydratorFactory {
     public function __invoke(ContainerInterface $container)
     {
         /**
-         * @var MaitriseNiveauService $MaitriseNiveauService
+         * @var NiveauService $MaitriseNiveauService
          */
-        $MaitriseNiveauService = $container->get(MaitriseNiveauService::class);
+        $MaitriseNiveauService = $container->get(NiveauService::class);
 
         $hydrator = new SelectionMaitriseNiveauHydrator();
-        $hydrator->setMaitriseNiveauService($MaitriseNiveauService);
+        $hydrator->setNiveauService($MaitriseNiveauService);
         return $hydrator;
     }
 }

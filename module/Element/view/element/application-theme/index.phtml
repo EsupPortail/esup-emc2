@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @see \Element\Controller\ApplicationThemeController::indexAction()
+ * @var ApplicationTheme[] $themes;
+ */
+
+use Element\Entity\Db\ApplicationTheme;
+use Element\Provider\Privilege\ApplicationPrivileges;
+use Element\Provider\Privilege\ApplicationthemePrivileges;
+
+$this->headTitle("Liste des applications");
+
+$canAfficher = $this->isAllowed(ApplicationthemePrivileges::getResourceId(ApplicationthemePrivileges::APPLICATIONTHEME_AFFICHER));
+$canAjouter = $this->isAllowed(ApplicationthemePrivileges::getResourceId(ApplicationthemePrivileges::APPLICATIONTHEME_MODIFIER));
+$canModifier = $canAjouter;
+$canHistoriser = $canAjouter;
+$canSupprimer = $this->isAllowed(ApplicationthemePrivileges::getResourceId(ApplicationthemePrivileges::APPLICATIONTHEME_EFFACER));
+
+$canApplicationIndex = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_INDEX));
+
+?>
+
+<h1 class="page-header">
+    Liste des applications
+</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <?php if ($canAjouter) : ?>
+            <a  <?php /** @see \Element\Controller\ApplicationThemeController::ajouterAction() */?>
+                    href="<?php echo $this->url('element/application-theme/ajouter', [], [], true);?>"
+                    class="btn btn-primary action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon ajouter"></span>
+                Ajouter un thème d'application
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="pull-right">
+        <?php if ($canApplicationIndex) : ?>
+            <a href="<?php echo $this->url('element/application'); ?>"
+               class="btn btn-primary"
+            >
+                Accéder aux applications
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<table id="applications" class="datatable" style="width:100%;">
+    <thead>
+    <tr>
+        <th> Libelle</th>
+        <th> #Application</th>
+        <th style="width: 10rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($themes as $theme): ?>
+        <tr class="<?php if ($theme->estHistorise()) echo " historise "; ?>">
+            <td> <?php echo $theme->getLibelle(); ?> </td>
+            <td>
+                <?php echo count($theme->getApplications()); ?>
+            </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationThemeController::afficherAction() */?>
+                            href="<?php echo $this->url('element/application-theme/afficher', ['application-groupe' => $theme->getId()], [], true); ?>" class="ajax-modal">
+                        <span class="icon voir"        title="Voir l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationThemeController::modifierAction() */?>
+                            href="<?php echo $this->url('element/application-theme/editer', ['application-groupe' => $theme->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
+                        <span class="icon editer" title="Modifier l'application"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($theme->estNonHistorise()) : ?>
+                        <a
+                            <?php /** @see \Element\Controller\ApplicationThemeController::historiserAction() */?>
+                                href="<?php echo $this->url('element/application-theme/historiser', ['application-groupe' => $theme->getId()], [], true); ?>">
+                            <span class="icon historiser" title="Historiser l'application"></span></a>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see \Element\Controller\ApplicationThemeController::restaurerAction() */?>
+                                href="<?php echo $this->url('element/application-theme/restaurer', ['application-groupe' => $theme->getId()], [], true); ?>">
+                            <span class="icon historiser" title="Restaurer l'application"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <a
+                        <?php /** @see \Element\Controller\ApplicationThemeController::detruireAction() */?>
+                            href="<?php echo $this->url('element/application-theme/detruire', ['application-groupe' => $theme->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

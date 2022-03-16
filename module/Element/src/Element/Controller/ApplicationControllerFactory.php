@@ -2,14 +2,14 @@
 
 namespace Element\Controller;
 
-use Application\Form\ApplicationElement\ApplicationElementForm;
 use Application\Service\Agent\AgentService;
-use Application\Service\ApplicationElement\ApplicationElementService;
 use Application\Service\FicheMetier\FicheMetierService;
-use Application\Service\MaitriseNiveau\MaitriseNiveauService;
 use Element\Form\Application\ApplicationForm;
+use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Service\Application\ApplicationService;
-use Element\Service\ApplicationGroupe\ApplicationGroupeService;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\ApplicationTheme\ApplicationThemeService;
+use Element\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
@@ -20,20 +20,20 @@ class ApplicationControllerFactory {
     {
         /**
          * @var ApplicationService $applicationService
-         * @var ApplicationGroupeService $applicationGroupeService
+         * @var ApplicationThemeService $applicationGroupeService
          * @var ApplicationElementService $applicationElementService
          * @var AgentService $agentService
          * @var FicheMetierService $ficheMetierService
-         * @var MaitriseNiveauService $maitriseNiveauService
+         * @var NiveauService $maitriseNiveauService
          * @var MetierService $metierService
          */
         $applicationService = $container->get(ApplicationService::class);
-        $applicationGroupeService = $container->get(ApplicationGroupeService::class);
+        $applicationGroupeService = $container->get(ApplicationThemeService::class);
         $applicationElementService = $container->get(ApplicationElementService::class);
         $agentService = $container->get(AgentService::class);
         $domaineService = $container->get(DomaineService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
-        $maitriseNiveauService = $container->get(MaitriseNiveauService::class);
+        $maitriseNiveauService = $container->get(NiveauService::class);
         $metierService = $container->get(MetierService::class);
 
         /**
@@ -46,12 +46,12 @@ class ApplicationControllerFactory {
         /** @var ApplicationController $controller */
         $controller = new ApplicationController();
         $controller->setApplicationService($applicationService);
-        $controller->setApplicationGroupeService($applicationGroupeService);
+        $controller->setApplicationThemeService($applicationGroupeService);
         $controller->setApplicationElementService($applicationElementService);
         $controller->setAgentService($agentService);
         $controller->setDomaineService($domaineService);
         $controller->setFicheMetierService($ficheMetierService);
-        $controller->setMaitriseNiveauService($maitriseNiveauService);
+        $controller->setNiveauService($maitriseNiveauService);
         $controller->setMetierService($metierService);
         $controller->setApplicationForm($applicationForm);
         $controller->setApplicationElementForm($applicationElementForm);

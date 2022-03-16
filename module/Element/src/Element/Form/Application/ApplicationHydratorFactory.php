@@ -2,8 +2,7 @@
 
 namespace Element\Form\Application;
 
-use Element\Service\ApplicationGroupe\ApplicationGroupeService;
-use Formation\Service\Formation\FormationService;
+use Element\Service\ApplicationTheme\ApplicationThemeService;
 use Interop\Container\ContainerInterface;
 
 class ApplicationHydratorFactory {
@@ -11,16 +10,13 @@ class ApplicationHydratorFactory {
     public function __invoke(ContainerInterface $container) : ApplicationHydrator
     {
         /**
-         * @var ApplicationGroupeService $applicationGroupeService
-         * @var FormationService $formationService
+         * @var ApplicationThemeService $applicationGroupeService
          */
-        $applicationGroupeService = $container->get(ApplicationGroupeService::class);
-        $formationService = $container->get(FormationService::class);
+        $applicationGroupeService = $container->get(ApplicationThemeService::class);
 
         /** @var ApplicationHydrator $hydrator */
         $hydrator = new ApplicationHydrator();
-        $hydrator->setApplicationGroupeService($applicationGroupeService);
-        $hydrator->setFormationService($formationService);
+        $hydrator->setApplicationThemeService($applicationGroupeService);
         return $hydrator;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Element\Form\ApplicationGroupe;
+namespace Element\Form\ApplicationTheme;
 
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Color;
@@ -9,7 +9,7 @@ use Zend\Form\Element\Text;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class ApplicationGroupeForm extends Form {
+class ApplicationThemeForm extends Form {
 
     public function init()
     {

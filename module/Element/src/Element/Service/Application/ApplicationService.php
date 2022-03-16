@@ -6,7 +6,7 @@ use Element\Entity\Db\Application;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Element\Entity\Db\ApplicationGroupe;
+use Element\Entity\Db\ApplicationTheme;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -39,6 +39,36 @@ class ApplicationService {
     public function update(Application $application) : Application
     {
         try {
+            $this->getEntityManager()->flush($application);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $application;
+    }
+
+    /**
+     * @param Application $application
+     * @return Application
+     */
+    public function historise(Application $application) : Application
+    {
+        try {
+            $application->historiser();
+            $this->getEntityManager()->flush($application);
+        } catch (ORMException $e) {
+            throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
+        }
+        return $application;
+    }
+
+    /**
+     * @param Application $application
+     * @return Application
+     */
+    public function restore(Application $application) : Application
+    {
+        try {
+            $application->dehistoriser();
             $this->getEntityManager()->flush($application);
         } catch (ORMException $e) {
             throw new RuntimeException('Un problème est survenu lors de la mise à jour en BD', $e);
@@ -106,10 +136,10 @@ class ApplicationService {
     }
 
     /**
-     * @param ApplicationGroupe|null $groupe
+     * @param ApplicationTheme|null $groupe
      * @return Application[]
      */
-    public function getApplicationsGyGroupe(?ApplicationGroupe $groupe) : array
+    public function getApplicationsGyGroupe(?ApplicationTheme $groupe) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('application.libelle')

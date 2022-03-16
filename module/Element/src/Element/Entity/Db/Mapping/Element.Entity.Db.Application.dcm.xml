@@ -11,20 +11,9 @@
         <field name="url"               type="string"   length="128"      column="url"                    nullable="false"  />
         <field name="actif"             type="boolean"                    column="actif"                  nullable="false"  />
 
-        <many-to-one target-entity="Element\Entity\Db\ApplicationGroupe"  field="groupe">
+        <many-to-one target-entity="Element\Entity\Db\ApplicationTheme"  field="groupe">
             <join-column name="groupe_id" referenced-column-name="id"/>
         </many-to-one>
-
-        <many-to-many field="formations" target-entity="Formation\Entity\Db\Formation" inversed-by="formation" fetch="LAZY">
-            <join-table name="application_formation">
-                <join-columns>
-                    <join-column name="application_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="formation_id" referenced-column-name="id"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

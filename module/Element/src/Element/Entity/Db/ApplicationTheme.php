@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
-class ApplicationGroupe implements HistoriqueAwareInterface {
+class ApplicationTheme implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var integer */
@@ -38,7 +38,7 @@ class ApplicationGroupe implements HistoriqueAwareInterface {
 
     /**
      * @param string $libelle
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function setLibelle($libelle)
     {
@@ -56,7 +56,7 @@ class ApplicationGroupe implements HistoriqueAwareInterface {
 
     /**
      * @param string $couleur
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function setCouleur($couleur)
     {
@@ -74,7 +74,7 @@ class ApplicationGroupe implements HistoriqueAwareInterface {
 
     /**
      * @param string $ordre
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function setOrdre($ordre)
     {
@@ -92,7 +92,7 @@ class ApplicationGroupe implements HistoriqueAwareInterface {
 
     /**
      * @param Application $application
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function addFormation($application)
     {
@@ -101,7 +101,7 @@ class ApplicationGroupe implements HistoriqueAwareInterface {
     }
     /**
      * @param Application $application
-     * @return ApplicationGroupe
+     * @return ApplicationTheme
      */
     public function removeFormation($application)
     {

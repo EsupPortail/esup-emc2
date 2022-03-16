@@ -51,6 +51,8 @@ return [
                     'action' => [
                         'changer-status',
                         'editer',
+                        'historiser',
+                        'restaurer',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_MODIFIER,
@@ -96,7 +98,7 @@ return [
                         'pages' => [
                             [
                                 'label' => 'Applications',
-                                'route' => 'application',
+                                'route' => 'element/application',
                                 'resource' => PrivilegeController::getResourceId(ApplicationController::class, 'index') ,
                                 'order' => 220,
                                 'icon' => 'fas fa-angle-right',
@@ -110,100 +112,129 @@ return [
 
     'router' => [
         'routes' => [
-            'application' => [
+            'element' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/application',
-                    'defaults' => [
-                        'controller' => ApplicationController::class,
-                        'action' => 'index',
-                    ],
+                    'route' => '/element',
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'cartographie' => [
+                    'application' => [
                         'type' => Literal::class,
-                        'may_terminate' => false,
                         'options' => [
-                            'route' => '/cartographie',
+                            'route' => '/application',
                             'defaults' => [
                                 'controller' => ApplicationController::class,
-                                'action' => 'cartographie'
-                            ],
-                        ],
-                    ],
-                    'exporter-cartographie' => [
-                        'type' => Literal::class,
-                        'may_terminate' => false,
-                        'options' => [
-                            'route' => '/exporter-cartographie',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'exporter-cartographie'
-                            ],
-                        ],
-                    ],
-                    'afficher' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/afficher/:id',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'afficher',
-                            ],
-                        ],
-                    ],
-                    'ajouter-application-element' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-application-element/:type/:id[/:clef]',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action'     => 'ajouter-application-element',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
-                    ],
-                    'changer-status' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/changer-status/:id',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'changer-status',
+                        'child_routes' => [
+                            'cartographie' => [
+                                'type' => Literal::class,
+                                'may_terminate' => false,
+                                'options' => [
+                                    'route' => '/cartographie',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'cartographie'
+                                    ],
+                                ],
                             ],
+                            'exporter-cartographie' => [
+                                'type' => Literal::class,
+                                'may_terminate' => false,
+                                'options' => [
+                                    'route' => '/exporter-cartographie',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'exporter-cartographie'
+                                    ],
+                                ],
+                            ],
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'ajouter-application-element' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter-application-element/:type/:id[/:clef]',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action'     => 'ajouter-application-element',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'changer-status' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/changer-status/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'changer-status',
+                                    ],
+                                ],
+                            ],
+                            'editer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/editer/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'editer',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/historiser/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'historiser',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/restaurer/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'restaurer',
+                                    ],
+                                ],
+                            ],
+                            'effacer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/effacer/:id',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'effacer',
+                                    ],
+                                ],
+                            ],
+                            'creer' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/creer',
+                                    'defaults' => [
+                                        'controller' => ApplicationController::class,
+                                        'action' => 'creer',
+                                    ],
+                                ],
+                            ]
                         ],
                     ],
-                    'editer' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/editer/:id',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'editer',
-                            ],
-                        ],
-                    ],
-                    'effacer' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/effacer/:id',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'effacer',
-                            ],
-                        ],
-                    ],
-                    'creer' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/creer',
-                            'defaults' => [
-                                'controller' => ApplicationController::class,
-                                'action' => 'creer',
-                            ],
-                        ],
-                    ]
                 ],
             ],
         ],

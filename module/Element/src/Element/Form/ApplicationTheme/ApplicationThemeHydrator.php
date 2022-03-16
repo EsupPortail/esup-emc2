@@ -1,14 +1,14 @@
 <?php
 
-namespace Element\Form\ApplicationGroupe;
+namespace Element\Form\ApplicationTheme;
 
-use Element\Entity\Db\ApplicationGroupe;
+use Element\Entity\Db\ApplicationTheme;
 use Zend\Hydrator\HydratorInterface;
 
-class ApplicationGroupeHydrator implements HydratorInterface {
+class ApplicationThemeHydrator implements HydratorInterface {
 
     /**
-     * @param ApplicationGroupe $object
+     * @param ApplicationTheme $object
      * @return array
      */
     public function extract($object)
@@ -23,8 +23,8 @@ class ApplicationGroupeHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param ApplicationGroupe $object
-     * @return ApplicationGroupe
+     * @param ApplicationTheme $object
+     * @return ApplicationTheme
      */
     public function hydrate(array $data, $object)
     {
