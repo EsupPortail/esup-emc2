@@ -1,0 +1,226 @@
+<?php
+
+use Application\Controller\ElementController;
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\FicheMetier;
+use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
+use Element\View\Helper\CompetenceBlocViewHelper;
+use Formation\Entity\Db\Formation;
+use Formation\Provider\Privilege\FormationPrivileges;
+
+/**
+ * @see \Application\View\Helper\CompetenceBlocViewHelper
+ * @var array $competences
+ * @var CompetenceType[] $types (n.b. deja ordonnée)
+ * @var HasCompetenceCollectionInterface $objet
+ * @var array $options
+ *
+ * la sutrcture de application est la suivante :
+ *
+ * $applications = [
+ *      ID => [
+ *          'entite' => Application,
+ *          'display' => true|false,
+ *          'raison' => [
+ *                  [ 'source', SourceEntity ],
+ *                  [ 'source', SourceEntity ],
+ *                  ...
+ *              ]
+ *          ],
+ *      ...
+ *  ]
+ */
+
+$canAcquisAfficher = false;
+$canAcquisModifier = false;
+if ($objet instanceof FicheMetier) {
+    $canAcquisAfficher = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+    $canAcquisModifier = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+} else {
+    if ($objet instanceof Formation) {
+        $canAcquisAfficher = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+        $canAcquisModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+    } else {
+        $canAcquisAfficher = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_AFFICHER);
+        $canAcquisModifier = $this->isAllowed($objet, AgentPrivileges::AGENT_ACQUIS_MODIFIER);
+    }
+}
+
+$canAfficher        = (CompetenceBlocViewHelper::isActionActivee($options, 'afficher')  AND $canAcquisAfficher);
+$canAjouter         = (CompetenceBlocViewHelper::isActionActivee($options, 'ajouter')   AND $canAcquisModifier);
+$canModifier        = (CompetenceBlocViewHelper::isActionActivee($options, 'modifier')  AND $canAcquisModifier);
+$canSupprimer       = (CompetenceBlocViewHelper::isActionActivee($options, 'supprimer') AND $canAcquisModifier);
+$canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'valider')   AND $canAcquisModifier);
+
+$displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
+$displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
+$displayRaison      = CompetenceBlocViewHelper::isDisplayed($options,'raison');
+
+//var_dump([
+//        'actions' => $options['actions'],
+//        'can' => ['afficher' => $canAfficher, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canSupprimer, 'valider' => $canValider,]
+//]);
+
+$groupes = [];
+$sansGroupe = "zzz";
+foreach ($competences as $item) {
+    /** @var Competence $competence */
+    $entite = $item['entite'];
+    $competence = $entite;
+    if ($entite instanceof CompetenceElement) $competence = $entite->getCompetence();
+    if ($competence) {
+        $libelleGroupe = ($competence->getType()) ? $competence->getType()->getLibelle() : $sansGroupe;
+        if ($item['conserve'] === true) $groupes[$libelleGroupe][] = $item;
+    }
+}
+
+ksort($groupes);
+
+?>
+
+<!-- TITRE DU BLOC ---------------------------------------------------------------------------------------------------->
+
+<?php if ($displayTitre) : ?>
+<div class="titre">
+    <div class="row">
+        <div class="col-md-8" style="border-bottom: 1px solid #31708f">
+            <h3> <span class="icon competence"></span> Compétences</h3>
+        </div>
+        <div class="pull-right">
+            <?php if ($canAjouter) : ?>
+                <br/>
+                <?php if ($objet instanceof Agent) : ?>
+                <a
+                    <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */?>
+                        <?php //todo ... Agent::class => get_class($objet) ... ?>
+                        href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                        class="ajax-modal btn btn-primary action"
+                        data-event="modification"
+                >
+                    <span class="icon ajouter" title="Ajouter une compétence"></span>
+                    Ajouter une compétence
+                </a>
+                <?php endif; ?>
+                <?php if ($objet instanceof Formation) : ?>
+                    <a
+                        <?php /** @see \Formation\Controller\FormationController::ajouterCompetenceElementAction() */?>
+                        <?php //todo ... Agent::class => get_class($objet) ... ?>
+                            href="<?php echo $this->url('formation/ajouter-competence-element', ['type' => Formation::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                            class="ajax-modal btn btn-primary action"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une compétence"></span>
+                        Ajouter une compétence
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    <br/>
+</div>
+<?php endif; ?>
+
+<div class="listing">
+    <table>
+    <?php foreach ($types as $type) : ?>
+        <?php $groupe = $groupes[$type->getLibelle()]; ?>
+        <?php if ($groupe !== null AND !empty($groupe)) : ?>
+            <tr>
+                <th colspan="5">
+                    <?php echo $type->getLibelle(); ?>
+                </th>
+            </tr>
+            <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
+            <?php foreach ($groupe as $element) : ?>
+                <?php
+                    $entite = $element['entite'];
+                    $competence = $entite;
+                    $isClef = false;
+                    if ($competence instanceof CompetenceElement) {
+                        $isClef = $competence->isClef();
+                        $competence = $competence->getCompetence();
+                    }
+                ?>
+                <tr>
+                    <td class="libelle">
+                        <?php echo $competence->getLibelle(); ?>
+                        <?php if ($displayRaison) : ?>
+                            <?php echo $this->raisons($element['raison']); ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="niveau">
+                        <?php if ($entite instanceof CompetenceElement) : ?>
+                            <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Non précisé"; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td class="clef">
+                        <?php if ($isClef) : ?>
+                            <span class="icon star"></span>
+                        <?php endif; ?>
+                    </td>
+                    <?php if ($displayValidation) : ?>
+                        <td class="validation">
+                            <?php if ($entite instanceof CompetenceElement) : ?>
+                                <?php echo $this->validationBadge($entite->getValidation(),$options); ?>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
+                    <td class="action">
+                        <?php if ($entite instanceof CompetenceElement) : ?>
+<!--                            --><?php //if ($canAfficher) : ?>
+<!--                                <a  --><?php ///** @see \Application\Controller\ElementController::afficherAction() */ ?>
+<!--                                    href="--><?php //echo $this->url("element/afficher", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?><!--"-->
+<!--                                    class="ajax-modal" data-toggle="tooltip" data-html="true"-->
+<!--                                    title="Afficher l'application <span class='highlight competence'>--><?php //echo $entite->getLibelle(); ?><!--</span>">-->
+<!--                                <span class="icon voir"></span></a>-->
+<!--                            --><?php //endif; ?>
+                            <?php if ($canModifier) : ?>
+                                <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
+                                        href="<?php echo $this->url("element/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                        class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
+                                        title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
+                                    <span class="icon editer"></span></a>
+                            <?php endif; ?>
+                            <?php if ($canSupprimer) : ?>
+                                <a
+                                    <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
+                                        href="<?php echo $this->url('element/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
+                                        class="ajax-modal"
+                                        data-event="modification"
+                                >
+                                    <span class="icon detruire" title="Supprimer définitivement une compétence liées à l'agent"></span></a>
+                            <?php endif; ?>
+                            <?php if ($canValider) : ?>
+                                <?php if ($entite->getValidation() === null) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_COMPETENCE", 'id' => $entite->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="modification"
+                                    >
+                                        <span class="icon validation-do" title="Valider la compétence"></span></a>
+                                <?php else: ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
+                                            href="<?php echo $this->url('agent/revoquer-element', ['validation' => $entite->getValidation()->getId()], ['query' => ['retour' => $options['retour']]], true); ?>"
+                                    >
+                                        <span class="icon validation-undo" title="Dévalider la compétence"></span></a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</table>
+</div>
+
+
+
+

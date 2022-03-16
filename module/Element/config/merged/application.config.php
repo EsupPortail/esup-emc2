@@ -8,9 +8,16 @@ use Element\Form\Application\ApplicationForm;
 use Element\Form\Application\ApplicationFormFactory;
 use Element\Form\Application\ApplicationHydrator;
 use Element\Form\Application\ApplicationHydratorFactory;
+use Element\Form\SelectionApplication\SelectionApplicationForm;
+use Element\Form\SelectionApplication\SelectionApplicationFormFactory;
+use Element\Form\SelectionApplication\SelectionApplicationHydrator;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use Element\Service\Application\ApplicationService;
 use Element\Service\Application\ApplicationServiceFactory;
+use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceFactory;
+use Element\View\Helper\ApplicationBlocViewHelper;
+use Element\View\Helper\ApplicationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -205,6 +212,7 @@ return [
     'service_manager' => [
         'factories' => [
             ApplicationService::class => ApplicationServiceFactory::class,
+            HasApplicationCollectionService::class => HasApplicationCollectionServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -215,12 +223,22 @@ return [
     'form_elements' => [
         'factories' => [
             ApplicationForm::class => ApplicationFormFactory::class,
+            SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SelectionApplicationHydrator::class => SelectionApplicationHydrator::class,
+        ],
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'application' => ApplicationViewHelper::class,
+            'applicationBloc' => ApplicationBlocViewHelper::class,
+        ],
+    ],
 
 ];

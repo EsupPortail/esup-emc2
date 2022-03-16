@@ -8,9 +8,16 @@ use Element\Form\Competence\CompetenceForm;
 use Element\Form\Competence\CompetenceFormFactory;
 use Element\Form\Competence\CompetenceHydrator;
 use Element\Form\Competence\CompetenceHydratorFactory;
+use Element\Form\SelectionCompetence\SelectionCompetenceForm;
+use Element\Form\SelectionCompetence\SelectionCompetenceFormFactory;
+use Element\Form\SelectionCompetence\SelectionCompetenceHydrator;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\Competence\CompetenceServiceFactory;
+use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceFactory;
+use Element\View\Helper\CompetenceBlocViewHelper;
+use Element\View\Helper\CompetenceBlocViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -184,6 +191,7 @@ return [
     'service_manager' => [
         'factories' => [
             CompetenceService::class => CompetenceServiceFactory::class,
+            HasCompetenceCollectionService::class => HasCompetenceCollectionServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -194,12 +202,24 @@ return [
     'form_elements' => [
         'factories' => [
             CompetenceForm::class => CompetenceFormFactory::class,
+            SelectionCompetenceForm::class => SelectionCompetenceFormFactory::class,
         ],
     ],
     'hydrators' => [
+        'invokables' => [
+            SelectionCompetenceHydrator::class => SelectionCompetenceHydrator::class,
+        ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'factories' => [
+            CompetenceBlocViewHelper::class => CompetenceBlocViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'competenceBloc' => CompetenceBlocViewHelper::class,
+        ],
+    ],
 
 ];

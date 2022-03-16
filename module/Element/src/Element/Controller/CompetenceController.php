@@ -2,10 +2,7 @@
 
 namespace Element\Controller;
 
-use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
-use Element\Form\CompetenceType\CompetenceTypeFormAwareTrait;
-use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
-use Application\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Element\Entity\Db\Competence;

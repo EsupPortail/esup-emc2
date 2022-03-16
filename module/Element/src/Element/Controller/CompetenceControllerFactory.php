@@ -2,7 +2,7 @@
 
 namespace Element\Controller;
 
-use Application\Form\SelectionCompetence\SelectionCompetenceForm;
+use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Element\Form\Competence\CompetenceForm;
