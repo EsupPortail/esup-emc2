@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @see CompetenceController::indexAction()
+ * @var CompetenceType[]        $types
+ * @var Competence[]            $competences
+ * @var Niveau[]                $niveaux
+ * @var array                   $competencesByType
+
+ */
+
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceType;
+use Element\Entity\Db\Niveau;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencethemePrivileges;
+use Element\Provider\Privilege\CompetencetypePrivileges;
+
+$canVoir        = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_AFFICHER));
+$canAjouter     = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_MODIFIER));
+$canModifier    = $canAjouter;
+$canHistoriser  = $canAjouter;
+$canDetruire    = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_EFFACER));
+
+$canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
+$canCompetenceTypeIndex = $this->isAllowed(CompetencetypePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_INDEX));
+
+$this->headTitle("Liste des compétences");
+
+?>
+
+<h1 class="page-header">
+    Liste des compétences
+</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <?php if ($canAjouter) : ?>
+            <a href="<?php echo $this->url('element/competence/ajouter', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter une compétence
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="pull-right">
+        <?php if ($canCompetenceThemeIndex) : ?>
+            <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>" class="btn btn-primary">
+                Accéder aux thèmes</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceTypeIndex) : ?>
+            <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>" class="btn btn-primary">Accéder aux types</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php foreach ($competencesByType as $type => $competences) : ?>
+    <h2> Compétence : <?php echo  $type; ?> </h2>
+
+    <table class="datatable table table-condensed table-hover">
+        <thead>
+        <tr>
+            <th style="width:50%;"> Libellé </th>
+            <th style="width:25%;"> Thème </th>
+            <th> Source </th>
+            <th style="width:10rem;"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($competences as $competence) : ?>
+            <tr class="<?php if ($competence->estHistorise()) echo " historise "; ?>">
+                <td> <?php echo $competence->getLibelle(); ?>
+                    <?php if ($competence->getDescription() !== null AND trim($competence->getDescription() !== '')) : ?>
+                        <span class="icon information" title="<?php echo $competence->getDescription(); ?>"
+                              data-toggle="tooltip" data-html="true"
+                        ></span>
+                    <?php endif; ?>
+                </td>
+                <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </td>
+                <td>
+                    <?php if ($competence->getSource() !== null) : ?>
+                    <span class="badge"><?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?></span></td>
+                <?php else : ?>
+                    Sans source
+                <?php endif; ?>
+                <td>
+                    <?php if ($canVoir): ?>
+                        <?php /** @see CompetenceController::afficherAction() */?>
+                        <a href="<?php echo $this->url('element/competence/afficher', ['competence' => $competence->getId()], [], true); ?>"
+                           class="ajax-modal">
+                            <span class="icon voir" title="Afficher la compétence "></span></a>
+                    <?php endif; ?>
+                    <?php if ($canModifier): ?>
+                        <?php /** @see CompetenceController::modifierAction() */?>
+                        <a href="<?php echo $this->url('element/competence/modifier', ['competence' => $competence->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification"
+                        >
+                            <span class="icon editer" title="Modifier la compétence"></span></a>
+                        <?php /** @see CompetenceController::substituerAction() */?>
+                        <a href="<?php echo $this->url('element/competence/substituer', ['competence' => $competence->getId()], [], true); ?>"
+                           class="ajax-modal"
+                           data-event="modification"
+                        >
+                            <span class="icon synchoniser" title="Substituer la compétence"></span></a>
+                    <?php endif; ?>
+                    <?php if ($canModifier): ?>
+                        <?php if($competence->estNonHistorise()) : ?>
+                            <?php /** @see CompetenceController::historiserAction() */?>
+                            <a href="<?php echo $this->url('element/competence/historiser', ['competence' => $competence->getId()], [], true); ?>">
+                                <span class="icon historiser" title="Historiser la compétence"></span></a>
+                        <?php else : ?>
+                            <?php /** @see CompetenceController::restaurerAction() */?>
+                            <a href="<?php echo $this->url('element/competence/restaurer', ['competence' => $competence->getId()], [], true); ?>">
+                                <span class="icon restaurer" title="Restaurer la compétence"></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canDetruire): ?>
+                        <?php /** @see CompetenceController::detruireAction() */?>
+                        <a href="<?php echo $this->url('element/competence/detruire', ['competence' => $competence->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="icon detruire" title="Detruire la compétence"></span></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endforeach; ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

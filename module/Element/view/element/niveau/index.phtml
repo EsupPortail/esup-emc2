@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @see \Element\Controller\NiveauController::indexAction();
+ * @var Niveau[] $niveaux
+ */
+
+use Element\Entity\Db\Niveau;
+
+$this->headTitle("Niveau de maîtrise");
+
+$dictionnaires = [];
+foreach ($niveaux as $niveau) {
+    $dictionnaires[$niveau->getType()][] = $niveau;
+}
+ksort($dictionnaires);
+
+$canAjouter = true;
+$canModifier = true;
+$canHistoriser = true;
+$canSupprimer = true;
+?>
+
+<h1 class="page-header">
+    Niveau de maîtrise
+</h1>
+
+<a href="<?php echo $this->url('element/niveau/ajouter', [], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
+>
+    <span class="icon ajouter"></span>
+    Ajouter un niveau
+</a>
+
+<?php foreach ($dictionnaires as $type => $elements) : ?>
+    <h2> Niveau associé à [<?php echo $type; ?>]</h2>
+
+    <table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Libelle </th>
+        <th style="width:10rem;"> Niveau </th>
+        <th style="width:10rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php usort($elements, function(Niveau $a, Niveau $b) { return $a->getNiveau() > $b->getNiveau(); }); ?>
+    <?php /** @var Niveau $element */ ?>
+    <?php foreach ($elements as $element) : ?>
+    <tr <?php if ($element->estHistorise()) echo " class='historise'; ";?> >
+        <td>
+            <?php echo $element->getLibelle(); ?>
+            <?php if ($element->getDescription() !== null) : ?>
+                <span class="icon information" title="<?php echo $element->getDescription(); ?>" data-toggle="tooltip" data-html="true"></span>
+            <?php endif; ?>
+        </td>
+        <td> <?php echo $element->getNiveau(); ?></td>
+        <td>
+            <?php if ($canModifier) : ?>
+                <?php /** @see NiveauController::modifierAction() */?>
+                <a href="<?php echo $this->url('element/niveau/modifier', ['maitrise' => $element->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <span class="icon editer"></span></a>
+            <?php endif; ?>
+            <?php if ($canHistoriser) : ?>
+                <?php if ($element->estNonHistorise()) : ?>
+                    <?php /** @see NiveauController::historiserAction() */?>
+                    <a href="<?php echo $this->url('element/niveau/historiser', ['maitrise' => $element->getId()], ['query' => ['retour' => $this->url('element/niveau', [], [], true)]], true); ?>">
+                        <span class="icon historiser"></span></a>
+                <?php else : ?>
+                    <a href="<?php echo $this->url('element/niveau/restaurer', ['maitrise' => $element->getId()], ['query' => ['retour' => $this->url('element/niveau', [], [], true)]], true); ?>">
+                        <span class="icon restaurer"></span></a>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($canSupprimer) : ?>
+                <a href="<?php echo $this->url('element/niveau/supprimer', ['maitrise' => $element->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <span class="icon detruire"></span></a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+    </table>
+<?php endforeach; ?>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

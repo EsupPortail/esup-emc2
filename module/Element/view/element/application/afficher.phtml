@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @see \Application\Controller\ApplicationController::afficherAction()
+ * @var Application $application
+ */
+use Element\Entity\Db\Application;
+?>
+
+<!--<h1 class="page-header">-->
+<!--    Affichage d'une application-->
+<!--</h1>-->
+
+
+<dl class="dl-horizontal">
+    <dt> Identifiant</dt>
+    <dd> <?php echo $application->getId(); ?> </dd>
+    <dt> Libelle</dt>
+    <dd> <?php echo $application->getLibelle(); ?> </dd>
+    <dt> Lien</dt>
+    <dd>
+        <a href="<?php echo $application->getUrl(); ?>">
+            <?php echo $application->getUrl(); ?>
+        </a>
+    </dd>
+    <dt> Actif</dt>
+    <dd>
+        <?php if ($application->isActif()) : ?>
+            <span class="badge" style="background-color: darkgreen;">&nbsp;</span>
+        <?php else: ?>
+            <span class="badge" style="background-color: darkred;">&nbsp;</span>
+        <?php endif;?>
+    </dd>
+    <dt> Description</dt>
+    <dd> <?php echo $application->getDescription(); ?> </dd>
+</dl>
+
+<h3>
+    Formations
+    <span class="badge">
+        <?php echo count($application->getFormations()); ?>
+    </span>
+</h3>
+
+    <ul>
+        <?php foreach ($application->getFormations() as $formation) : ?>
+            <li>
+                <?php echo $formation->getLibelle(); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+

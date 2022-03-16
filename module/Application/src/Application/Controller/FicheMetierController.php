@@ -3,8 +3,8 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\ApplicationElement;
-use Application\Entity\Db\CompetenceElement;
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;

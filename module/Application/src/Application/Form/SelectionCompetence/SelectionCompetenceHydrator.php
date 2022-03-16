@@ -3,8 +3,8 @@
 namespace Application\Form\SelectionCompetence;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\Competence;
-use Application\Entity\Db\CompetenceElement;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Zend\Hydrator\HydratorInterface;
 

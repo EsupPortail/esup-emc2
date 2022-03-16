@@ -2,10 +2,10 @@
 
 namespace Application\Service\HasApplicationCollection;
 
-use Application\Entity\Db\ApplicationElement;
+use Element\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;

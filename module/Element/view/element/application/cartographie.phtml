@@ -1,0 +1,146 @@
+<?php
+
+/**
+ * @see \Application\Controller\ApplicationController::cartographieAction()
+ * @var Application[]   $applications
+ * @var Domaine[]       $domaines
+ * @var Metier[]        $metiers
+ * @var array           $link
+ */
+
+use Element\Entity\Db\Application;
+use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\Metier;
+
+$this->headTitle('Cartographie Metier/Application');
+$nbApplications = count($applications);
+
+?>
+
+<h1 class="page-header">
+    Cartographie Metier/Application
+</h1>
+
+<div class="row">
+
+    <div class="col-md-5" >
+            <?php /** @see \Application\Controller\ApplicationController::exporterCartographieAction() */?>
+            <a href="<?php echo $this->url('application/exporter-cartographie', [], [], true); ?>"
+               class="btn btn-primary action" id="cartographie">Exporter la cartographie</a>
+    </div>
+
+    <div class="col-md-5 pull-right">
+        <div class="alert alert-warning">
+            <strong>Attention :</strong> La cartographie se base sur les fiches métiers.
+        </div>
+    </div>
+
+</div>
+
+<table>
+    <tr>
+        <td id="blank"></td>
+        <?php foreach ($applications as $application) : ?>
+            <th class="application">
+                <br/>
+                <?php echo $application->getLibelle(); ?>
+                <br/>
+                <br/>
+            </th>
+        <?php endforeach; ?>
+    </tr>
+    <?php foreach ($domaines as $domaine): ?>
+        <tr>
+            <td class="domaine" colspan="<?php echo 1 + $nbApplications; ?>">
+                <?php echo $domaine->getLibelle(); ?>
+            </td>
+        </tr>
+        <?php
+            $metiers4domaine = $domaine->getMetiers();
+            usort($metiers4domaine, function (Metier $a, Metier $b) { return $a->getLibelle() > $b->getLibelle(); });
+        ?>
+        <?php foreach ($metiers4domaine as $metier) : ?>
+            <?php $libelle = $metier->getLibelle(); ?>
+            <tr>
+                <th class="metier">
+                    <br/>
+                    <?php echo $libelle; ?>
+                    <br/>
+                    <br/>
+                </th>
+                <?php foreach ($applications as $application) : ?>
+                    <td>
+                        <?php if (isset($link[$libelle][$application->getLibelle()])) : ?>
+                            <span class="icon ok" style="color: darkgreen;"></span>
+                        <?php else : ?>
+                        <?php endif;?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</table>
+
+<style>
+    table {
+        border: 1px solid var(--header-background-hover);
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid var(--header-color);
+        background: var(--header-background);
+        color: var(--header-color);
+    }
+    td {
+        border: 1px solid var(--header-background-hover);
+        background: white;
+        text-align: center;
+    }
+
+    th.metier {
+    }
+
+    td.domaine {
+        background: var(--warning-background-back);
+        text-align: left;
+        font-weight: bold;
+        border: 1px solid var(--header-background-hover);
+    }
+
+    th.application {
+        writing-mode: vertical-rl;
+        text-orientation: sideways;
+    }
+
+    td#blank {
+        border: 1px solid white;
+    }
+</style>
+
+<script>
+    downloadCSVFromJson = (filename, arrayOfJson) => {
+        // convert JSON to CSV
+        const replacer = (key, value) => value === null ? '-' : value
+        const header = Object.keys(arrayOfJson[0])
+        let csv = arrayOfJson.map(row => header.map(fieldName =>
+            JSON.stringify(row[fieldName], replacer)).join(';'))
+        csv.unshift(header.join(';'))
+        csv = csv.join('\r\n')
+
+        // Create link and download
+        var link = document.createElement('a');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    $('span.export#cartographie').on('click', function() {
+        let tableau = <?php echo json_encode($link); ?>;
+        console.log(tableau);
+        downloadCSVFromJson('cartographie_'+ Date.now().toString() +'.csv', tableau);
+    });
+</script>

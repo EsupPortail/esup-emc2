@@ -1,0 +1,48 @@
+<?php
+
+namespace Application;
+
+use Application\Form\SelectionApplication\SelectionApplicationForm;
+use Application\Form\SelectionApplication\SelectionApplicationFormFactory;
+use Application\Form\SelectionApplication\SelectionApplicationHydrator;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Application\Service\HasApplicationCollection\HasApplicationCollectionServiceFactory;
+use Application\View\Helper\ApplicationBlocViewHelper;
+use Application\View\Helper\ApplicationViewHelper;
+
+return [
+
+
+
+
+    'service_manager' => [
+        'invokables' => [
+        ],
+        'factories' => [
+            HasApplicationCollectionService::class => HasApplicationCollectionServiceFactory::class,
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+        ],
+    ],
+    'form_elements' => [
+        'factories' => [
+            SelectionApplicationForm::class => SelectionApplicationFormFactory::class,
+        ],
+    ],
+    'hydrators' => [
+        'invokables' => [
+            SelectionApplicationHydrator::class => SelectionApplicationHydrator::class,
+        ],
+        'factories' => [
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'application' => ApplicationViewHelper::class,
+            'applicationBloc' => ApplicationBlocViewHelper::class,
+        ],
+    ],
+
+];

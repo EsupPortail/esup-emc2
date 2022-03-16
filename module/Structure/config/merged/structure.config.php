@@ -120,7 +120,7 @@ return [
                                 'label' => 'Structures',
                                 'route' => 'structure',
                                 'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER) ,
-                                'order'    => 280,
+                                'order'    => 110,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

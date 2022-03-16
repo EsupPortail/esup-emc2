@@ -77,7 +77,7 @@ return [
                             'route'    => 'definition',
 //                            'resource' => PrivilegeController::getResourceId(DefinitionController::class, 'index'),
                             'resource' => DefinitionPrivileges::getResourceId(DefinitionPrivileges::DEFINITION_INDEX),
-                            'order'    => 10000,
+                            'order'    => 20000,
                             'pages' => [],
                     ],
                 ],

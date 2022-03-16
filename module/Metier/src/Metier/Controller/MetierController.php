@@ -2,10 +2,10 @@
 
 namespace Metier\Controller;
 
-use Application\Entity\Db\NiveauEnveloppe;
-use Application\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
-use Application\Service\Niveau\NiveauServiceAwareTrait;
-use Application\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
+use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use Metier\Entity\Db\Metier;
 use Metier\Form\Metier\MetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;

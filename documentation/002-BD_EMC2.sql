@@ -1,6 +1,6 @@
--- NIVEAU --------------------------------------------------------------------------------------------------------------
+-- MODULE CARRIERE -----------------------------------------------------------------------------------------------------
 
-create table niveau_definition
+create table carriere_niveau
 (
     id serial not null constraint niveau_definition_pk primary key,
     niveau integer not null,
@@ -14,14 +14,14 @@ create table niveau_definition
     histo_destructeur_id integer constraint niveau_definition_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
     label varchar(64) not null
 );
-create unique index niveau_definition_id_uindex on niveau_definition (id);
+create unique index niveau_definition_id_uindex on carriere_niveau (id);
 
-create table niveau_enveloppe
+create table carriere_niveau_enveloppe
 (
     id serial not null constraint niveau_enveloppe_pk primary key,
-    borne_inferieure_id integer not null constraint niveau_enveloppe_niveau_definition_id_fk references niveau_definition,
-    borne_superieure_id integer not null constraint niveau_enveloppe_niveau_definition_id_fk_2 references niveau_definition,
-    valeur_recommandee_id integer constraint niveau_enveloppe_niveau_definition_id_fk_3 references niveau_definition on delete set null,
+    borne_inferieure_id integer not null constraint niveau_enveloppe_niveau_definition_id_fk references carriere_niveau,
+    borne_superieure_id integer not null constraint niveau_enveloppe_niveau_definition_id_fk_2 references carriere_niveau,
+    valeur_recommandee_id integer constraint niveau_enveloppe_niveau_definition_id_fk_3 references carriere_niveau on delete set null,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint niveau_enveloppe_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
     histo_modification timestamp,
@@ -30,9 +30,7 @@ create table niveau_enveloppe
     histo_destructeur_id integer constraint niveau_enveloppe_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
     description text
 );
-create unique index niveau_enveloppe_id_uindex on niveau_enveloppe (id);
-
--- MODULE CARRIERE -----------------------------------------------------------------------------------------------------
+create unique index niveau_enveloppe_id_uindex on carriere_niveau_enveloppe (id);
 
 create table carriere_categorie
 (
@@ -61,7 +59,7 @@ create table carriere_corps
     updated_on timestamp(0),
     deleted_on timestamp(0),
     niveau integer,
-    niveau_id integer constraint corps_niveau_definition_id_fk references niveau_definition on delete set null
+    niveau_id integer constraint corps_niveau_definition_id_fk references carriere_niveau on delete set null
 );
 create unique index corps_code_uindex on carriere_corps (code);
 
@@ -129,7 +127,7 @@ create table metier_metier
     libelle_feminin varchar(256),
     libelle_masculin varchar(256),
     categorie_id integer constraint metier_categorie_id_fk references carriere_categorie on delete set null,
-    niveaux_id integer constraint metier_niveau_enveloppe_id_fk references niveau_enveloppe on delete set null,
+    niveaux_id integer constraint metier_niveau_enveloppe_id_fk references carriere_niveau_enveloppe on delete set null,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint metier_user_id_fk references unicaen_utilisateur_user,
     histo_modification timestamp not null,
@@ -179,6 +177,141 @@ create table metier_reference
 );
 create unique index metier_reference_id_uindex on metier_reference (id);
 create unique index metier_referentiel_id_uindex on metier_referentiel (id);
+
+-- ELEMENT -----------------------------------------------------------------------------------------------------------
+
+create table element_application_groupe
+(
+    id serial not null constraint application_groupe_pk primary key,
+    libelle varchar(1024),
+    couleur varchar(255),
+    ordre integer default 9999,
+    histo_creation timestamp default ('now'::text)::date not null,
+    histo_createur_id integer default 0 not null constraint application_groupe_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer  constraint application_groupe_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint application_groupe_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index application_groupe_id_uindex on element_application_groupe (id);
+
+create table element_application
+(
+    id serial not null constraint element_application_pkey primary key,
+    libelle varchar(128) not null,
+    description varchar(2048),
+    url varchar(128),
+    actif boolean default true not null,
+    groupe_id integer constraint element_application_groupe_id_fk references element_application_groupe on delete set null,
+    histo_creation timestamp default ('now'::text)::date not null,
+    histo_createur_id integer default 0 not null constraint element_application_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer  constraint element_application_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint element_application_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index application_informations_id_uindex on element_application (id);
+
+create table element_niveau
+(
+    id serial not null constraint maitrise_niveau_pk primary key,
+    type varchar(256) not null,
+    libelle varchar(256) not null,
+    niveau integer not null,
+    description text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint maitrise_niveau_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint maitrise_niveau_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint maitrise_niveau_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index maitrise_niveau_type_niveau_uindex on element_niveau (type, niveau);
+
+
+
+create table element_application_element
+(
+    id serial not null constraint application_element_pk primary key,
+    application_id integer not null constraint application_element_application_informations_id_fk references element_application on delete cascade,
+    commentaire text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint application_element_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer not null constraint application_element_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint application_element_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
+    validation_id integer constraint application_element_unicaen_validation_instance_id_fk references unicaen_validation_instance on delete set null,
+    niveau_id integer constraint application_element_maitrise_niveau_id_fk references element_niveau on delete set null,
+    clef boolean
+);
+create unique index application_element_id_uindex on element_application_element (id);
+
+create table element_competence_theme
+(
+    id serial not null constraint competence_theme_pk primary key,
+    libelle varchar(256) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint competence_theme_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer  constraint competence_theme_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint competence_theme_user_id_fk references unicaen_utilisateur_user
+);
+create unique index competence_theme_id_uindex on element_competence_theme (id);
+
+create table element_competence_type
+(
+    id serial not null constraint competence_type_pk primary key,
+    libelle varchar(256) not null,
+    ordre integer,
+    couleur varchar(255),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint competence_type_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp ,
+    histo_modificateur_id integer constraint competence_type_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint competence_type_user_id_fk references unicaen_utilisateur_user
+);
+create unique index competence_type_id_uindex on element_competence_type (id);
+
+create table element_competence
+(
+    id serial not null constraint competence_pk primary key,
+    libelle varchar(256) not null,
+    description text,
+    histo_creation timestamp not null,
+    type_id integer constraint competence_type__fk references element_competence_type on delete set null,
+    theme_id integer constraint competence_theme__fk references element_competence_theme on delete set null,
+    source varchar(256),
+    id_source integer,
+    histo_createur_id integer not null constraint competence_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint competence_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint competence_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index competence_id_uindex on element_competence (id);
+
+create table element_competence_element
+(
+    id serial not null constraint competence_element_pk primary key,
+    competence_id integer not null constraint competence_element_competence_informations_id_fk references element_competence on delete cascade,
+    commentaire text,
+    validation_id integer constraint competence_element_unicaen_validation_instance_id_fk references unicaen_validation_instance on delete set null,
+    niveau_id integer constraint competence_element_maitrise_niveau_id_fk references element_niveau on delete set null,
+    clef boolean default false,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint competence_element_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp not null,
+    histo_modificateur_id integer constraint competence_element_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint competence_element_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index competence_element_id_uindex on element_competence_element (id);
+
+
+
 
 -- AGENT -------------------------------------------------------------------------------------------------------------
 
@@ -440,6 +573,63 @@ create unique index agent_accompagnement_id_uindex on agent_ccc_accompagnement (
 -- ELEMENTS -------------------------------------------------------------------------------------------------------------
 
 
+-- ACTIVITE -------------------------------------
+
+create table activite
+(
+    id serial not null constraint activite_pkey primary key,
+    histo_creation timestamp not null,
+    histo_modification timestamp,
+    histo_destruction timestamp,
+    histo_createur_id integer not null constraint activite_user_id_fk references unicaen_utilisateur_user,
+    histo_modificateur_id integer constraint activite_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destructeur_id integer constraint activite_user_id_fk_3 references unicaen_utilisateur_user,
+    niveaux_id integer constraint activite_niveau_enveloppe_id_fk references carriere_niveau_enveloppe on delete set null
+);
+create unique index activite_id_uindex on activite (id);
+
+create table activite_libelle
+(
+    id serial not null constraint activite_libelle_pk primary key,
+    activite_id integer not null,
+    libelle text not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint activite_description_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint activite_description_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint activite_description_user_id_fk references unicaen_utilisateur_user
+);
+
+create table activite_description
+(
+    id serial not null constraint activite_description_pk primary key,
+    activite_id integer not null constraint activite_description_activite_fk references activite on delete cascade,
+    description text not null,
+    ordre integer,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint activite_description_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint activite_description_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint activite_description_user_id_fk references unicaen_utilisateur_user
+);
+create unique index activite_description_id_uindex on activite_description (id);
+
+create table activite_application
+(
+    activite_id integer not null constraint activite_application_activite_id_fk references activite on delete cascade,
+    application_element_id integer not null constraint activite_application_application_element_id_fk references element_application_element on delete cascade,
+    constraint activite_application_pk primary key (activite_id, application_element_id)
+);
+
+create table activite_competence
+(
+    activite_id integer not null constraint activite_competence_activite_id_fk references activite on delete cascade,
+    competence_element_id integer not null constraint activite_competence_competence_element_id_fk references element_competence_element on delete cascade,
+    constraint activite_competence_pk primary key (activite_id, competence_element_id)
+);
+
 
 -- FICHE_METIER --------------------------------------------------------------------------------------------------------
 
@@ -455,6 +645,20 @@ create table fichemetier
     histo_modificateur_id integer not null,
     histo_destruction timestamp,
     histo_destructeur_id integer
+);
+
+create table fichemetier_application
+(
+    fichemetier_id integer not null constraint fichemetier_application_fichemetier_id_fk references fichemetier on delete cascade,
+    application_element_id integer not null constraint fichemetier_application_application_element_id_fk references element_application_element on delete cascade,
+    constraint fichemetier_application_pk primary key (fichemetier_id, application_element_id)
+);
+
+create table fichemetier_competence
+(
+    fichemetier_id integer not null constraint fichemetier_competence_fichemetier_id_fk references fichemetier on delete cascade,
+    competence_element_id integer not null constraint fichemetier_competence_competence_element_id_fk references element_competence_element on delete cascade,
+    constraint fichemetier_competence_pk primary key (fichemetier_id, competence_element_id)
 );
 
 

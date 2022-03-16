@@ -3,8 +3,8 @@
 namespace Application\Form\SelectionApplication;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\Application;
-use Application\Entity\Db\ApplicationElement;
+use Element\Entity\Db\Application;
+use Element\Entity\Db\ApplicationElement;
 use Application\Entity\Db\FicheMetier;
 use Zend\Hydrator\HydratorInterface;
 

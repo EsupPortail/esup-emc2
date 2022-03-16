@@ -37,7 +37,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 830,
+                                'order' => 825,
                                 'label' => 'Correspondances',
                                 'route' => 'correspondance',
                                 'resource' => PrivilegeController::getResourceId(CorrespondanceController::class, 'index') ,

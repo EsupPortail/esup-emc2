@@ -2,8 +2,8 @@
 
 namespace Application\Form\Activite;
 
-use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;

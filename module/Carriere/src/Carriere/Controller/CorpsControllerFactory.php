@@ -2,10 +2,10 @@
 
 namespace Carriere\Controller;
 
-use Application\Form\ModifierNiveau\ModifierNiveauForm;
-use Application\Service\Niveau\NiveauService;
+use Carriere\Form\ModifierNiveau\ModifierNiveauForm;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Corps\CorpsService;
+use Carriere\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
 
 class CorpsControllerFactory {

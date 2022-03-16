@@ -48,8 +48,10 @@ $modules = [
     'Formation',
     'Structure',
     'Fichier',
-
+    'Element',
     'Application',
+
+
 
 //    'ZendDeveloperTools',
 

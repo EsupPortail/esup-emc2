@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @see \Element\Controller\CompetenceTypeController::indexAction()
+ * @var CompetenceType[] $types;
+ */
+
+use Element\Entity\Db\CompetenceType;
+use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencethemePrivileges;
+use Element\Provider\Privilege\CompetencetypePrivileges;
+
+$this->headTitle("Liste des types de compétence");
+
+$canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
+$canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
+
+$canAfficher = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_AFFICHER));
+$canModifier = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_MODIFIER));
+$canAjouter = $canModifier;
+$canHistoriser = $canModifier;
+$canDetruire = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_EFFACER));
+
+?>
+
+<h1 class="page-header">
+    Liste des types de compétences
+</h1>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <?php if ($canAjouter) : ?>
+            <a href="<?php echo $this->url('element/competence-type/ajouter', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter un type
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="pull-right">
+        <?php if ($canCompetenceIndex) : ?>
+            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-primary">Accéder aux compétences</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceThemeIndex) : ?>
+            <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>" class="btn btn-primary">Accéder aux thèmes</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<table class="datatable table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th style="width:66%;"> Libellé </th>
+        <!--            <th> Type </th>-->
+        <th> #Compétence </th>
+        <th> Ordre </th>
+        <th style="width:11rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($types as $type) : ?>
+        <tr class="<?php if ($type->estHistorise()) echo " historise "; ?>">
+            <td> <?php echo $type->getLibelle(); ?> </td>
+            <td> <?php echo count($type->getCompetences()); ?> </td>
+            <td> <?php echo $type->getOrdre(); ?> </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see CompetenceController::afficherCompetenceTypeAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence-type/afficher', ['competence-type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal">
+                        <span class="icon voir" title="Afficher le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                <?php else : ?>
+                    <span class="icon voir" style="color: lightgrey"></span>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <?php /** @see CompetenceController::modifierCompetenceTypeAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence-type/modifier', ['competence-type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon editer" title="Modifier le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                <?php else : ?>
+                    <span class="icon editer" style="color: lightgrey"></span>
+                <?php endif; ?>
+                <?php if ($canHistoriser): ?>
+                    <?php if($type->estNonHistorise()) : ?>
+                        <?php /** @see CompetenceController::historiserCompetenceTypeAction() */?>
+                        <a href="<?php echo $this->url('element/competence-type/historiser', ['competence-type' => $type->getId()], [], true); ?>">
+                            <span class="icon historiser" title="Historiser le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                    <?php else : ?>
+                        <?php /** @see CompetenceController::restaurerCompetenceTypeAction() */?>
+                        <a href="<?php echo $this->url('element/competence-type/restaurer', ['competence-type' => $type->getId()], [], true); ?>">
+                            <span class="icon restaurer" title="Restaurer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <?php if($type->estNonHistorise()) : ?>
+                        <span class="icon historiser" style="color:lightgray;"></span>
+                    <?php else : ?>
+                        <span class="icon restaurer" style="color:lightgray;"></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canDetruire) : ?>
+                    <?php /** @see CompetenceController::detruireCompetenceTypeAction() */ ?>
+                    <a href="<?php echo $this->url('element/competence-type/detruire', ['competence-type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon detruire" title="Supprimer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                <?php else : ?>
+                    <span class="icon detruire" style="color: lightgrey"></span>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

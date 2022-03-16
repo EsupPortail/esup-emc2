@@ -2,7 +2,7 @@
 
 namespace Application\Service\ApplicationsRetirees;
 
-use Application\Entity\Db\Application;
+use Element\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Doctrine\ORM\NonUniqueResultException;

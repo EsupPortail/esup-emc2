@@ -4,13 +4,13 @@ namespace Application\Service\Activite;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteLibelle;
-use Application\Entity\Db\Competence;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
-use Application\Service\Niveau\NiveauService;
+use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Element\Entity\Db\Competence;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -108,11 +108,12 @@ class ActiviteService {
             ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
             ->addSelect('description')->leftJoin('activite.descriptions', 'description')
             ->addSelect('applicationelement')->leftJoin('activite.applications', 'applicationelement')
-            ->addSelect('application')->leftJoin('applicationelement.application', 'application')
+//            ->addSelect('application')->leftJoin('applicationelement.application', 'application')
             ->addSelect('competenceelement')->leftJoin('activite.competences', 'competenceelement')
-            ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
-            ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
-            ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
+//            ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
+//            ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
+//            ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
+
 //            ->andWhere('libelle.histoDestruction IS NULL')
 //            ->andWhere('description.histoDestruction IS NULL')
         ;

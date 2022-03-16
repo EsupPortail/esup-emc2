@@ -2,13 +2,13 @@
 
 namespace Formation\Controller;
 
-use Application\Entity\Db\ApplicationElement;
-use Application\Entity\Db\CompetenceElement;
-use Application\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
-use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
-use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\CompetenceElement;
+use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;

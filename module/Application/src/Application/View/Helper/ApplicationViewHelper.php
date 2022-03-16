@@ -2,7 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Application;
+use Element\Entity\Db\Application;
 use Application\View\Renderer\PhpRenderer;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;

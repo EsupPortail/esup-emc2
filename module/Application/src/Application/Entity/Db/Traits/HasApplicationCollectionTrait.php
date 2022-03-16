@@ -2,8 +2,8 @@
 
 namespace Application\Entity\Db\Traits;
 
-use Application\Entity\Db\Application;
-use Application\Entity\Db\ApplicationElement;
+use Element\Entity\Db\Application;
+use Element\Entity\Db\ApplicationElement;
 use Doctrine\Common\Collections\ArrayCollection;
 
 trait HasApplicationCollectionTrait

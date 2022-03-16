@@ -2,7 +2,7 @@
 
 namespace Application\Form\SelectionCompetence;
 
-use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;
@@ -20,7 +20,7 @@ class SelectionCompetenceForm extends Form {
             'options' => [
                 'label' => "Compétences associées :",
                 'empty_option' => "Sélectionner la ou les compétences ...",
-                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
+//                'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],
             'attributes' => [
                 'id' => 'competences',

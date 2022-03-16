@@ -2,13 +2,13 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Application;
-use Application\Entity\Db\Competence;
+use Element\Entity\Db\Application;
+use Element\Entity\Db\Competence;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Formation\Entity\Db\Formation;
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareTrait;
-use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;

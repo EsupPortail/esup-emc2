@@ -2,7 +2,7 @@
 
 namespace Metier\Service\Metier;
 
-use Application\Service\Niveau\NiveauService;
+use Carriere\Service\Niveau\NiveauService;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\ORMException;

@@ -8,7 +8,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\ApplicationPrivileges;
+use Element\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
@@ -65,8 +65,6 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX,
-                        ApplicationPrivileges::APPLICATION_INDEX,
-                        CompetencePrivileges::COMPETENCE_INDEX,
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
                         FormationPrivileges::FORMATION_ACCES,
@@ -147,7 +145,7 @@ return [
                         'resource' => PrivilegeController::getResourceId(IndexController::class, 'index-ressources') ,
                     ],
                     'administration' => [
-                        'order' => 1000000,
+                        'order' => 10000,
                         'label' => 'Administration',
                         'title' => "Administration",
                         'route' => 'administration',

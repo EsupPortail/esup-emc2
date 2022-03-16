@@ -2,10 +2,10 @@
 
 namespace Application\Service\HasCompetenceCollection;
 
-use Application\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Application\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use UnicaenApp\Exception\RuntimeException;

@@ -2,21 +2,21 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Entity\Db\ApplicationElement;
-use Application\Entity\Db\Competence;
-use Application\Entity\Db\CompetenceElement;
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierTypeActivite;
 use Application\Form\EntityFormManagmentTrait;
-use Application\Service\Application\ApplicationServiceAwareTrait;
-use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
-use Application\Service\Competence\CompetenceServiceAwareTrait;
-use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Application\Service\Niveau\NiveauService;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Carriere\Service\Niveau\NiveauService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Element\Entity\Db\Competence;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;

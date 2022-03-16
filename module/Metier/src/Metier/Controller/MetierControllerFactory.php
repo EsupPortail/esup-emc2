@@ -2,9 +2,9 @@
 
 namespace Metier\Controller;
 
-use Application\Form\NiveauEnveloppe\NiveauEnveloppeForm;
-use Application\Service\Niveau\NiveauService;
-use Application\Service\NiveauEnveloppe\NiveauEnveloppeService;
+use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
+use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Interop\Container\ContainerInterface;
 use Metier\Form\Metier\MetierForm;
 use Metier\Service\Domaine\DomaineService;

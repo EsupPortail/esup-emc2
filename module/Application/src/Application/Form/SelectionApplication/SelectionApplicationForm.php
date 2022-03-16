@@ -2,7 +2,7 @@
 
 namespace Application\Form\SelectionApplication;
 
-use Application\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\Application\ApplicationServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Form;

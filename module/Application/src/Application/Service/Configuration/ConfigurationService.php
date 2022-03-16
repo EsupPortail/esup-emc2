@@ -2,8 +2,8 @@
 
 namespace Application\Service\Configuration;
 
-use Application\Entity\Db\Application;
-use Application\Entity\Db\ApplicationElement;
+use Element\Entity\Db\Application;
+use Element\Entity\Db\ApplicationElement;
 use Application\Entity\Db\Competence;
 use Application\Entity\Db\CompetenceElement;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;

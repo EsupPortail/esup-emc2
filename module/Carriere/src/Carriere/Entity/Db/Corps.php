@@ -3,7 +3,7 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\AgentGrade;
-use Application\Entity\Db\Niveau;
+use Carriere\Entity\Db\Niveau;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

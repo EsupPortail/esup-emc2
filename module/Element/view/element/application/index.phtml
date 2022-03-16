@@ -1,0 +1,92 @@
+<?php
+
+use Element\Entity\Db\Application;
+use Element\Provider\Privilege\ApplicationPrivileges;
+use Element\Entity\Db\ApplicationGroupe;
+
+/**
+ * @see \Application\Controller\ApplicationController::indexAction()
+ * @var Application[] $applications
+ * @var ApplicationGroupe[] $groupes
+ * @var int $groupeSelected
+ * @var int $activite
+ */
+
+
+$droits = [];
+$droits['canAfficher'] = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
+$droits['canAjouter']  = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AJOUTER));
+$droits['canEditer']   = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EDITER));
+$droits['canEffacer']  = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EFFACER));
+
+$this->headTitle("Index des applications");
+?>
+
+<h1 class="page-header">
+    Applications et groupes d'application
+</h1>
+
+<a href="<?php echo $this->url('application/cartographie'); ?>"
+   class="btn btn-primary"
+>
+    <span class="icon voir"> Cartographie Métier/Application</span>
+</a>
+
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="application">
+            <a href="#application" aria-controls="application" role="tab" data-toggle="tabz" >
+                Applications &nbsp;
+                <span class="badge">
+                    <?php echo count($applications); ?>
+                </span>
+            </a>
+        </li>
+        <li role="groupe">
+            <a href="#groupe" aria-controls="groupe" role="tab" data-toggle="tabz">
+                Groupes &nbsp;
+                <span class="badge">
+                    <?php echo count($groupes); ?>
+                </span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-with-tab">
+
+        <div class="tab-content">
+
+            <div id="groupe" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-groupe', ['groupes' => $groupes, 'droits' => $droits], [], true); ?>
+            </div>
+
+            <div id="application" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/index-application', ['applications' => $applications, 'groupes' => $groupes, 'groupeSelected' => $groupeSelected, 'activite' => $activite, 'droits' => $droits], [], true); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        name = name.split("?")[0];
+        console.log(name);
+        if (name === undefined || name === "") name = "application";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function () {
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

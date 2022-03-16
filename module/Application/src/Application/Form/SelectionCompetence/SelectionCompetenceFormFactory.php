@@ -2,7 +2,7 @@
 
 namespace Application\Form\SelectionCompetence;
 
-use Application\Service\Competence\CompetenceService;
+use Element\Service\Competence\CompetenceService;
 use Interop\Container\ContainerInterface;
 
 class SelectionCompetenceFormFactory {

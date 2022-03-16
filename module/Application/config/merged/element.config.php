@@ -5,10 +5,10 @@ namespace Application;
 use Application\Controller\ElementController;
 use Application\Controller\ElementControllerFactory;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\ApplicationPrivileges;
-use Application\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\View\Helper\FormationBlocViewHelper;
+use Element\Provider\Privilege\ApplicationPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
@@ -25,7 +25,6 @@ return [
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
-                        CompetencePrivileges::COMPETENCE_AFFICHER,
                         FormationPrivileges::FORMATION_AFFICHER,
                         AgentPrivileges::AGENT_ACQUIS_AFFICHER,
                     ],
@@ -59,7 +58,7 @@ return [
 
     'router'          => [
         'routes' => [
-            'element' => [
+            'element_' => [
                 'type'  => Literal::class,
                 'options' => [
                     'route'    => '/element',

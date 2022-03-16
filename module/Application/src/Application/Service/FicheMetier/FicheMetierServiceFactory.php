@@ -2,11 +2,11 @@
 
 namespace Application\Service\FicheMetier;
 
-use Application\Service\Application\ApplicationService;
-use Application\Service\ApplicationElement\ApplicationElementService;
-use Application\Service\Competence\CompetenceService;
-use Application\Service\CompetenceElement\CompetenceElementService;
 use Doctrine\ORM\EntityManager;
+use Element\Service\Application\ApplicationService;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\Competence\CompetenceService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
@@ -18,7 +18,7 @@ class FicheMetierServiceFactory {
      * @param ContainerInterface $container
      * @return FicheMetierService
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FicheMetierService
     {
         /**
          * @var EntityManager $entityManager

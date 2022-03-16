@@ -2,28 +2,28 @@
 
 namespace Application\Entity\Db\Traits;
 
-use Application\Entity\Db\MaitriseNiveau;
+use Element\Entity\Db\Niveau;
 
 trait HasNiveauMaitriseTrait {
 
-    /** @var MaitriseNiveau */
+    /** @var Niveau */
     private $niveau;
     /** @var bool */
     private $clef;
 
     /**
-     * @return MaitriseNiveau|null
+     * @return Niveau|null
      */
-    public function getNiveauMaitrise(): ?MaitriseNiveau
+    public function getNiveauMaitrise(): ?Niveau
     {
         return $this->niveau;
     }
 
     /**
-     * @param MaitriseNiveau|null $niveau
+     * @param Niveau|null $niveau
      * @return HasNiveauMaitriseTrait
      */
-    public function setNiveauMaitrise(?MaitriseNiveau $niveau): self
+    public function setNiveauMaitrise(?Niveau $niveau): self
     {
         $this->niveau = $niveau;
         return $this;

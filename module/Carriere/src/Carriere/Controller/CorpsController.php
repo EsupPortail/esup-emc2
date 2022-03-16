@@ -2,10 +2,10 @@
 
 namespace Carriere\Controller;
 
-use Application\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
-use Application\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
+use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
