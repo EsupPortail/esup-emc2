@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Form\SelectionMaitriseNiveau;
+namespace Element\Form\SelectionNiveau;
 
-use Application\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
+use Element\Entity\Db\Interfaces\HasNiveauInterface;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
-class SelectionMaitriseNiveauHydrator implements HydratorInterface {
+class SelectionNiveauHydrator implements HydratorInterface {
     use NiveauServiceAwareTrait;
 
     /**
-     * @param HasNiveauMaitriseInterface $object
+     * @param HasNiveauInterface $object
      * @return array|void
      */
     public function extract($object)
@@ -24,8 +24,8 @@ class SelectionMaitriseNiveauHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param HasNiveauMaitriseInterface $object
-     * @return HasNiveauMaitriseInterface
+     * @param HasNiveauInterface $object
+     * @return HasNiveauInterface
      */
     public function hydrate(array $data, $object)
     {

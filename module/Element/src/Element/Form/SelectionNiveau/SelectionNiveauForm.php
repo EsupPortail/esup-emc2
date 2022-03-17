@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\SelectionMaitriseNiveau;
+namespace Element\Form\SelectionNiveau;
 
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Zend\Form\Element\Button;
@@ -9,7 +9,7 @@ use Zend\Form\Element\Select;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class SelectionMaitriseNiveauForm extends Form {
+class SelectionNiveauForm extends Form {
     use NiveauServiceAwareTrait;
 
     /**
@@ -19,9 +19,9 @@ class SelectionMaitriseNiveauForm extends Form {
 
     /**
      * @param string $type
-     * @return SelectionMaitriseNiveauForm
+     * @return SelectionNiveauForm
      */
-    public function setType(string $type = ""): SelectionMaitriseNiveauForm
+    public function setType(string $type = ""): SelectionNiveauForm
     {
         $this->type = $type;
         return $this;

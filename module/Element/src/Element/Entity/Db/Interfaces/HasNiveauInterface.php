@@ -1,10 +1,10 @@
 <?php
 
-namespace Application\Entity\Db\Interfaces;
+namespace Element\Entity\Db\Interfaces;
 
 use Element\Entity\Db\Niveau;
 
-interface HasNiveauMaitriseInterface {
+interface HasNiveauInterface {
 
     public function getNiveauMaitrise() : ?Niveau;
     public function setNiveauMaitrise(?Niveau $competenceMaitrise);

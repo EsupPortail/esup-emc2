@@ -2,8 +2,6 @@
 
 namespace Application\View\Helper;
 
-use Application\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\View\Renderer\PhpRenderer;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
@@ -24,7 +22,6 @@ class FormationBlocViewHelper extends AbstractHelper
      */
     public function __invoke(array $formations, ?HasFormationCollectionInterface $objet = null, $options = [])
     {
-        /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 

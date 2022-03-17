@@ -1,10 +1,10 @@
 <?php
 
-namespace Application\Entity\Db\Traits;
+namespace Element\Entity\Db\Traits;
 
 use Element\Entity\Db\Niveau;
 
-trait HasNiveauMaitriseTrait {
+trait HasNiveauTrait {
 
     /** @var Niveau */
     private $niveau;
@@ -21,7 +21,7 @@ trait HasNiveauMaitriseTrait {
 
     /**
      * @param Niveau|null $niveau
-     * @return HasNiveauMaitriseTrait
+     * @return HasNiveauTrait
      */
     public function setNiveauMaitrise(?Niveau $niveau): self
     {
@@ -39,7 +39,7 @@ trait HasNiveauMaitriseTrait {
 
     /**
      * @param bool|null $clef
-     * @return HasNiveauMaitriseTrait
+     * @return HasNiveauTrait
      */
     public function setClef(?bool $clef): self
     {

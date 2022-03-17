@@ -2,9 +2,9 @@
 
 namespace Application\Controller;
 
-use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauFormAwareTrait;
-use Application\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
-use Application\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Form\SelectionNiveau\SelectionNiveauFormAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -14,7 +14,7 @@ class ElementController extends AbstractActionController {
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FormationElementServiceAwareTrait;
-    use SelectionMaitriseNiveauFormAwareTrait;
+    use SelectionNiveauFormAwareTrait;
 
     const TYPE_APPLICATION = 'Application';
     const TYPE_COMPETENCE = 'Competence';

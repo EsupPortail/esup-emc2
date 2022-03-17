@@ -2,17 +2,17 @@
 
 namespace Element\Entity\Db;
 
-use Application\Entity\Db\Interfaces\HasNiveauMaitriseInterface;
-use Application\Entity\Db\Traits\HasNiveauMaitriseTrait;
+use Element\Entity\Db\Interfaces\HasNiveauInterface;
+use Element\Entity\Db\Traits\HasNiveauTrait;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 
-class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface, HasNiveauMaitriseInterface {
+class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface, HasNiveauInterface {
     use HistoriqueAwareTrait;
     use ValidableAwareTrait;
-    use HasNiveauMaitriseTrait;
+    use HasNiveauTrait;
 
     /** @var integer */
     private $id;

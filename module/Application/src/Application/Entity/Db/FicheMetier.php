@@ -2,6 +2,10 @@
 
 namespace Application\Entity\Db;
 
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Entity\Db\CompetenceType;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
@@ -154,8 +158,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     {
         $competences = $this->getCompetenceListe();
 
-        $texte  = "";
-        $texte .= "<ul>";
+        $texte = "<ul>";
         foreach ($competences as $competence) {
             $texte .= "<li>";
             $texte .= $competence->getCompetence()->getLibelle();
@@ -228,8 +231,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     {
         $applications = $this->getApplicationListe();
 
-        $texte = "";
-        $texte .= "<ul>";
+        $texte = "<ul>";
         /** @var ApplicationElement $applicationElement */
         foreach ($applications as $applicationElement) {
             $application = $applicationElement->getApplication();

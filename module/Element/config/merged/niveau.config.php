@@ -8,6 +8,10 @@ use Element\Form\Niveau\NiveauForm;
 use Element\Form\Niveau\NiveauFormFactory;
 use Element\Form\Niveau\NiveauHydrator;
 use Element\Form\Niveau\NiveauHydratorFactory;
+use Element\Form\SelectionNiveau\SelectionNiveauForm;
+use Element\Form\SelectionNiveau\SelectionNiveauFormFactory;
+use Element\Form\SelectionNiveau\SelectionNiveauHydrator;
+use Element\Form\SelectionNiveau\SelectionNiveauHydratorFactory;
 use Element\Provider\Privilege\NiveauPrivileges;
 use Element\Service\Niveau\NiveauService;
 use Element\Service\Niveau\NiveauServiceFactory;
@@ -189,11 +193,13 @@ return [
     'form_elements' => [
         'factories' => [
             NiveauForm::class => NiveauFormFactory::class,
+            SelectionNiveauForm::class => SelectionNiveauFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             NiveauHydrator::class => NiveauHydratorFactory::class,
+            SelectionNiveauHydrator::class => SelectionNiveauHydratorFactory::class,
         ],
     ]
 

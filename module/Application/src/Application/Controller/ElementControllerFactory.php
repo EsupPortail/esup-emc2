@@ -2,9 +2,9 @@
 
 namespace Application\Controller;
 
-use Application\Form\SelectionMaitriseNiveau\SelectionMaitriseNiveauForm;
-use Application\Service\ApplicationElement\ApplicationElementService;
-use Application\Service\CompetenceElement\CompetenceElementService;
+use Element\Form\SelectionNiveau\SelectionNiveauForm;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use Formation\Service\FormationElement\FormationElementService;
 use Interop\Container\ContainerInterface;
 
@@ -14,7 +14,7 @@ class ElementControllerFactory {
      * @param ContainerInterface $container
      * @return ElementController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ElementController
     {
         /**
          * @var ApplicationElementService $applicationElementService
@@ -26,15 +26,15 @@ class ElementControllerFactory {
         $formationElementService = $container->get(FormationElementService::class);
 
         /**
-         * @var SelectionMaitriseNiveauForm $selectionMaitriseForm
+         * @var SelectionNiveauForm $selectionMaitriseForm
          */
-        $selectionMaitriseForm = $container->get('FormElementManager')->get(SelectionMaitriseNiveauForm::class);
+        $selectionMaitriseForm = $container->get('FormElementManager')->get(SelectionNiveauForm::class);
 
         $controller = new ElementController();
         $controller->setApplicationElementService($applicationElementService);
         $controller->setCompetenceElementService($competenceElementService);
         $controller->setFormationElementService($formationElementService);
-        $controller->setSelectionMaitriseNiveauForm($selectionMaitriseForm);
+        $controller->setSelectionNiveauForm($selectionMaitriseForm);
         return $controller;
     }
 }
