@@ -876,6 +876,13 @@ create table fichemetier_activite
 );
 create unique index fichemetier_activite_id_uindex on fichemetier_activite (id);
 
+create table fichemetier_formation
+(
+    fiche_metier_id integer not null constraint fiche_metier_formation_fiche_metier_id_fk references fichemetier on delete cascade,
+    formation_id integer not null constraint fiche_metier_formation_formation_id_fk references formation on delete cascade,
+    constraint fiche_metier_formation_pk primary key (fiche_metier_id, formation_id)
+);
+
 
 
 

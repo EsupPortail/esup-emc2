@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\CompetenceElement;
+namespace Element\Form\CompetenceElement;
 
 trait CompetenceElementFormAwareTrait {
 

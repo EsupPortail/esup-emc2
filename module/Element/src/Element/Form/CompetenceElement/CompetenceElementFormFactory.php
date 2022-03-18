@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\CompetenceElement;
+namespace Element\Form\CompetenceElement;
 
 use Element\Service\Competence\CompetenceService;
 use Element\Service\Niveau\NiveauService;
@@ -27,7 +27,7 @@ class CompetenceElementFormFactory {
         /** @var CompetenceElementForm $form */
         $form = new CompetenceElementForm();
         $form->setCompetenceService($competenceService);
-        $form->setMaitriseNiveauService($maitriseNiveauService);
+        $form->setNiveauService($maitriseNiveauService);
         $form->setHydrator($hydrator);
         return $form;
     }

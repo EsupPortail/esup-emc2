@@ -14,6 +14,23 @@ return [
 
         'synchros' => [
             [
+                'name' => 'Import_AGENT',
+                'source' => [
+                    'name'               => 'Agents geres par la DRH',
+                    'select'             => 'SELECT * FROM v_agent',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'C_INDIVIDU',
+                    'columns'            => [],
+                ],
+                'destination' => [
+                    'name'               => 'Agents gérés par la DRH',
+                    'table'              => 'agent',
+                    'connection'         => 'default',
+                    'source_code_column' => 'c_individu',
+                    'columns'            => [],
+                ],
+            ],
+            [
                 'name' => 'Import_BAP',
                 'source' => [
                     'name'               => 'BAP des agents remonté depuis OCTOPUS',

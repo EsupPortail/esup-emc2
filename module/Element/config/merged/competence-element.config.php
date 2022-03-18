@@ -2,6 +2,8 @@
 
 namespace Element;
 
+use Element\Form\CompetenceElement\CompetenceElementForm;
+use Element\Form\CompetenceElement\CompetenceElementFormFactory;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceElement\CompetenceElementServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -24,14 +26,16 @@ return [
 
     'service_manager' => [
         'factories' => [
-            CompetenceElementService::class => CompetenceElementServiceFactory::class
+            CompetenceElementService::class => CompetenceElementServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            CompetenceElementForm::class => CompetenceElementFormFactory::class,
+        ],
     ],
     'hydrators' => [
         'factories' => [],

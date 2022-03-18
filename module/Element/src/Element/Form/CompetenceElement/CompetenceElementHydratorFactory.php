@@ -16,15 +16,15 @@ class CompetenceElementHydratorFactory {
     {
         /**
          * @var CompetenceService $competenceService
-         * @var MaitriseNiveauService $maitriseNiveauService
+         * @var NiveauService $maitriseNiveauService
          */
         $competenceService = $container->get(CompetenceService::class);
-        $maitriseNiveauService = $container->get(MaitriseNiveauService::class);
+        $maitriseNiveauService = $container->get(NiveauService::class);
 
         /** @var CompetenceElementHydrator $hydrator */
         $hydrator = new CompetenceElementHydrator();
         $hydrator->setCompetenceService($competenceService);
-        $hydrator->setMaitriseNiveauService($maitriseNiveauService);
+        $hydrator->setNiveauService($maitriseNiveauService);
         return $hydrator;
     }
 }

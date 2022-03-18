@@ -303,6 +303,33 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiqueaffectation';
 
+-- AGENT ------------------------------------------------------------------------------------------------------
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('agent', 'Gestion des agents', 500, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'agent_index', 'Accéder à l''index', 0 UNION
+    SELECT 'agent_afficher', 'Afficher un agent', 10 UNION
+    SELECT 'agent_info_source', 'Afficher les informations sur les identifiants sources', 11 UNION
+    SELECT 'agent_afficher_donnees', 'Afficher le menu "mes données"', 12 UNION
+    SELECT 'agent_ajouter', 'Ajouter un agent', 20 UNION
+    SELECT 'agent_editer', 'Modifier un agent', 30 UNION
+    SELECT 'agent_effacer', 'Effacer un agent', 50 UNION
+    SELECT 'agent_element_ajouter_epro', 'Ajouter un entretien professionnel associé à un agent', 100 UNION
+    SELECT 'agent_element_voir', 'Afficher les éléments associés à l''agent', 510 UNION
+    SELECT 'agent_element_ajouter', 'Ajouter un élément associé à l''agent', 520 UNION
+    SELECT 'agent_element_modifier', 'Modifier un élément associé à l''agent', 530 UNION
+    SELECT 'agent_element_historiser', 'Historiser/restaurer un élément associé à l''agent', 540 UNION
+    SELECT 'agent_element_detruire', 'Détruire un élément associé à l''agent', 550 UNION
+    SELECT 'agent_element_valider', 'Valider un élément associé à l''agent', 560 UNION
+    SELECT 'agent_acquis_afficher', 'Afficher les acquis d''un agent', 1000 UNION
+    SELECT 'agent_acquis_modifier', 'Modifier les acquis d''un agent', 1010 UNION
+    SELECT 'agent_gestion_ccc', 'Gestion des agents CCC', 9999
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agent';
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;

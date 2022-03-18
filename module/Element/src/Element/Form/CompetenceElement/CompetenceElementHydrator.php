@@ -1,8 +1,7 @@
 <?php
 
-namespace Application\Form\CompetenceElement;
+namespace Element\Form\CompetenceElement;
 
-use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
