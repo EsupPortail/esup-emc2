@@ -73,9 +73,9 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $agentSS = $form->get('agent');
 
         if ($structure === null) {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], [], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/ajouter', [], [], true));
         } else {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
             /** @var SearchAndSelect $structureSS */
             $structureSS = $form->get('structure');
             /** @see StructureController::rechercherWithStructureMereAction() */
@@ -120,9 +120,9 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent');
         if ($structure === null) {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], [], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/modifier', [], [], true));
         } else {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/affectation/modifier', [], ["query" =>["structure" => $structure->getId()]], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/modifier', [], ["query" =>["structure" => $structure->getId()]], true));
             /** @see AgentController::rechercherWithStructureMereAction() */
             $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
             /** @var SearchAndSelect $structureSS */
@@ -161,7 +161,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('mission-specifique/affectation', [], [], true);
+        return $this->redirect()->toRoute('mission-specifique-affectation', [], [], true);
     }
 
     public function restaurerAction() {
@@ -170,7 +170,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('mission-specifique/affectation', [], [], true);
+        return $this->redirect()->toRoute('mission-specifique-affectation', [], [], true);
     }
 
     public function detruireAction()
@@ -191,7 +191,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $vm->setVariables([
                 'title' => "Suppression de l'affectation de " . $affectation->getAgent()->getDenomination(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('mission-specifique/affectation/detruire', ["affectation" => $affectation->getId()], [], true),
+                'action' => $this->url()->fromRoute('mission-specifique-affectation/detruire', ["affectation" => $affectation->getId()], [], true),
             ]);
         }
         return $vm;

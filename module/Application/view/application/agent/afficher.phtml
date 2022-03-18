@@ -197,7 +197,8 @@ if ($agent !== null) {
                 <?php endif; ?>
 
                 <!-- FORMATION ------------------------------------------------------------------------------------------------------->
-                <?php echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
+                <?php //echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
+                Formation desactiver pour le moment
             </div>
             <div id="portfolio" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>

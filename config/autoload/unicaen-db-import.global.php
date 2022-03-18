@@ -119,6 +119,23 @@ return [
                     'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'parent_id', 'niv2_id'],
                 ],
             ],
+            [
+                'name' => 'Import_AGENT_QUOTITE',
+                'source' => [
+                    'name'               => 'Quotité travaillé par les agents',
+                    'select'             => 'SELECT ID, INDIVIDU_ID AS AGENT_ID, DEBUT AS DEBUT, FIN AS FIN, QUOTITE FROM INDIVIDU_QUOTITE JOIN V_AGENT on V_AGENT.C_INDIVIDU = INDIVIDU_QUOTITE.INDIVIDU_ID',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                ],
+                'intermediate_table' => 'src_agent_quotite',
+                'destination' => [
+                    'name'               => 'Grade des agents gérés par la DRH',
+                    'table'              => 'agent_carriere_quotite',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['agent_id', 'debut', 'fin', 'quotite'],
+                ],
+            ],
         ],
     ],
 

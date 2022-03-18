@@ -829,11 +829,16 @@ create table agent_missionspecifique
     histo_destruction timestamp,
     histo_destructeur_id integer constraint agent_missionspecifique_destructeur_fk references unicaen_utilisateur_user
 );
+create unique index agent_missionspecifique_id_uindex on agent_missionspecifique (id);
 
-alter table agent_missionspecifique owner to ad_preecog_prod;
+create table agent_fichier
+(
+    agent varchar(40) not null,
+    fichier varchar(13) not null constraint agent_fichier_fichier_fk references fichier_fichier on delete cascade,
+    constraint agent_fichier_pk primary key (agent, fichier)
+);
 
-create unique index agent_missionspecifique_id_uindex
-    on agent_missionspecifique (id);
+
 
 
 
@@ -883,6 +888,57 @@ create table fichemetier_formation
     constraint fiche_metier_formation_pk primary key (fiche_metier_id, formation_id)
 );
 
+-- FICHE POSTE -------------------------------------------------------------------------------------------
 
+create table ficheposte
+(
+    id serial not null constraint ficheposte_pkey primary key,
+    libelle varchar(256),
+    agent varchar(40),
+    octo_id varchar(40),
+    preecog_id varchar(40),
+    etat_id integer constraint ficheposte_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    histo_creation timestamp not null,
+    histo_modification timestamp,
+    histo_destruction timestamp,
+    histo_createur_id integer not null constraint ficheposte_createur_fk references unicaen_utilisateur_user on delete cascade,
+    histo_modificateur_id integer constraint ficheposte_modificateur_fk references unicaen_utilisateur_user on delete cascade,
+    histo_destructeur_id integer
+);
+create unique index fiche_metier_id_uindex on ficheposte (id);
+
+create table ficheposte_specificite
+(
+    id serial not null constraint ficheposte_specificite_pk primary key,
+    ficheposte_id integer constraint ficheposte_specificite_fiche_metier_id_fk references ficheposte on delete cascade,
+    specificite text,
+    encadrement text,
+    relations_internes text,
+    relations_externes text,
+    contraintes text,
+    moyens text,
+    formations text
+);
+create unique index ficheposte_specificite_id_uindex on ficheposte_specificite (id);
+
+create table fichemetier_fichetype
+(
+    id serial not null constraint fichemetier_fichetype_pkey primary key,
+    fiche_id integer not null constraint fichemetier_fichetype_fiche_type_metier_id_fk references fichemetier on delete cascade,
+    activite integer not null constraint fichemetier_fichetype_activite_id_fk references activite on delete cascade,
+    position integer default 0 not null
+);
+create unique index fichemetier_fichetype_id_uindex on fichemetier_fichetype (id);
+
+create table ficheposte_fichetype
+(
+    id serial not null constraint fiche_type_externe_pk primary key,
+    fiche_poste integer not null constraint fiche_type_externe_fiche_metier_id_fk references ficheposte on delete cascade,
+    fiche_type integer not null constraint fiche_type_externe_fiche_type_metier_id_fk references fichemetier_fichetype on delete cascade,
+    quotite integer not null,
+    principale boolean,
+    activites varchar(128)
+);
+create unique index fiche_type_externe_id_uindex on ficheposte_fichetype (id);
 
 

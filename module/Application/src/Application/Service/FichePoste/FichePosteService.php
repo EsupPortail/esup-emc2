@@ -135,8 +135,8 @@ class FichePosteService {
 
 
 
-            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
             ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
             ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
             ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
@@ -260,7 +260,7 @@ class FichePosteService {
 select
     id,
     a.c_individu as agent_id
-from fiche_poste f
+from ficheposte f
 left join agent a on f.agent = a.c_individu
 where f.id = :id
 EOS;
@@ -299,11 +299,11 @@ select
     m.libelle_default as fiche_principale,
     e.id as etat,
     e.code as etat_code
-from fiche_poste f
+from ficheposte f
 left join agent a on f.agent = a.c_individu
 left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
-left join fiche_type_externe fte on f.id = fte.fiche_poste
+left join ficheposte_fichetype fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on f.etat_id = e.id
@@ -342,11 +342,11 @@ select
        m.libelle_default as fiche_principale, f.libelle as fiche_libelle, f.histo_destruction,
        e.id as etat,
        e.code as etat_code
-from fiche_poste f
+from ficheposte f
 join agent a on f.agent = a.c_individu
 join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 join structure s on aa.structure_id = s.id
-left join fiche_type_externe fte on f.id = fte.fiche_poste
+left join ficheposte_fichetype fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on e.id = f.etat_id
