@@ -8,6 +8,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use Application\Provider\Privilege\CompetencePrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
@@ -70,7 +71,7 @@ return [
                         FormationPrivileges::FORMATION_ACCES,
                         ActivitePrivileges::ACTIVITE_AFFICHER,
                         ActivitePrivileges::ACTIVITE_INDEX,
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_GESTION_INDEX,
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         PostePrivileges::POSTE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
@@ -84,7 +85,7 @@ return [
                         EntretienproPrivileges::ENTRETIENPRO_INDEX,
                         FicheMetierPrivileges::FICHEMETIER_INDEX,
                         FichePostePrivileges::FICHEPOSTE_INDEX,
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_INDEX,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_INDEX,
                     ],
                 ],
                 [
