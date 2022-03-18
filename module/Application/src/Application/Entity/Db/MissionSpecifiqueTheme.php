@@ -24,7 +24,7 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -32,16 +32,16 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
     /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return MissionSpecifiqueTheme
      */
-    public function setLibelle($libelle)
+    public function setLibelle(?string  $libelle) : MissionSpecifiqueTheme
     {
         $this->libelle = $libelle;
         return $this;
@@ -50,7 +50,7 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
     /**
      * @return MissionSpecifique[]
      */
-    public function getMissions()
+    public function getMissions() : array
     {
         return $this->missions->toArray();
     }
@@ -59,7 +59,7 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
      * @param MissionSpecifique $mission
      * @return MissionSpecifiqueTheme
      */
-    public function addMissionSpecifique($mission)
+    public function addMissionSpecifique(MissionSpecifique $mission): MissionSpecifiqueTheme
     {
         $this->missions->add($mission);
         return $this;
@@ -69,7 +69,7 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
      * @param MissionSpecifique $mission
      * @return MissionSpecifiqueTheme
      */
-    public function removeMissionSpecifique($mission)
+    public function removeMissionSpecifique(MissionSpecifique $mission): MissionSpecifiqueTheme
     {
         $this->missions->removeElement($mission);
         return $this;
@@ -79,7 +79,7 @@ class MissionSpecifiqueTheme implements HistoriqueAwareInterface {
      * @param MissionSpecifique $mission
      * @return boolean
      */
-    public function hasMissionSpecifique($mission)
+    public function hasMissionSpecifique(MissionSpecifique $mission):bool
     {
         return $this->missions->contains($mission);
     }

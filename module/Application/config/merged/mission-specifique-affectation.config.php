@@ -2,15 +2,9 @@
 
 namespace Application;
 
-use Application\Controller\MissionSpecifiqueController;
-use Application\Controller\MissionSpecifiqueControllerFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueForm;
-use Application\Form\MissionSpecifique\MissionSpecifiqueFormFactory;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydrator;
-use Application\Form\MissionSpecifique\MissionSpecifiqueHydratorFactory;
-use Application\Provider\Privilege\MissionspecifiquePrivileges;
-use Application\Service\MissionSpecifique\MissionSpecifiqueService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueServiceFactory;
+use Application\Controller\MissionSpecifiqueAffectationController;
+use Application\Controller\MissionSpecifiqueAffectationControllerFactory;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -20,54 +14,62 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'index',
                     ],
                     'privileges' => [
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_INDEX,
                     ],
                 ],
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'afficher',
                     ],
                     'privileges' => [
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFICHER,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'ajouter',
                         'modifier',
-                        'historiser',
-                        'restaurer',
                     ],
                     'privileges' => [
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER,
                     ],
                 ],
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_HISTORISER,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER,
                     ],
                 ],
                 [
-                    'controller' => MissionSpecifiqueController::class,
+                    'controller' => MissionSpecifiqueAffectationController::class,
                     'action' => [
                         'detruire',
                     ],
                     'privileges' => [
-                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_DETRUIRE,
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE,
                     ],
                 ],
+                [
+                    'controller' => MissionSpecifiqueAffectationController::class,
+                    'action' => [
+                        'generer-lettre-type',
+                    ],
+                    'privileges' => [
+                        MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER,
+                    ],
+                ],
+
             ],
         ],
     ],
@@ -78,18 +80,11 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
-                            'missions' => [
-                                'label' => 'Gestion des missions',
-                                'route' => 'mission-specifique',
-                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX),
-                                'order'    => 1000,
-                                'dropdown-header' => true,
-                            ],
-                            'mission-specifique' => [
-                                'label' => 'Missions spécifiques',
-                                'route' => 'mission-specifique',
-                                'resource' =>  MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX),
-                                'order'    => 1030,
+                            'affectation' => [
+                                'label' => 'Affectations des missions spécifiques',
+                                'route' => 'mission-specifique-affectation',
+                                'resource' =>  MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_INDEX),
+                                'order'    => 1040,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -101,12 +96,12 @@ return [
 
     'router'          => [
         'routes' => [
-            'mission-specifique' => [
+            'mission-specifique-affectation' => [
                 'type'  => Literal::class,
                 'options' => [
-                    'route'    => '/mission-specifique',
+                    'route'    => '/mission-specifique-affectation',
                     'defaults' => [
-                        'controller' => MissionSpecifiqueController::class,
+                        'controller' => MissionSpecifiqueAffectationController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -115,19 +110,19 @@ return [
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/afficher/:mission',
+                            'route'    => '/afficher/:agent-mission-specifique',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'afficher',
                             ],
                         ],
                     ],
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route'    => '/ajouter[/:structure]',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -135,9 +130,9 @@ return [
                     'modifier' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier/:mission',
+                            'route'    => '/modifier/:agent-mission-specifique',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -145,9 +140,9 @@ return [
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:mission',
+                            'route'    => '/historiser/:agent-mission-specifique',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -155,9 +150,9 @@ return [
                     'restaurer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:mission',
+                            'route'    => '/restaurer/:agent-mission-specifique',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -165,10 +160,20 @@ return [
                     'detruire' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/detruire/:mission',
+                            'route'    => '/detruire/:agent-mission-specifique',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                'controller' => MissionSpecifiqueAffectationController::class,
                                 'action'     => 'detruire',
+                            ],
+                        ],
+                    ],
+                    'generer-lettre-type' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-lettre-type/:agent-mission-specifique',
+                            'defaults' => [
+                                'controller' => MissionSpecifiqueAffectationController::class,
+                                'action'     => 'generer-lettre-type',
                             ],
                         ],
                     ],
@@ -179,22 +184,19 @@ return [
 
     'service_manager' => [
         'factories' => [
-            MissionSpecifiqueService::class => MissionSpecifiqueServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            MissionSpecifiqueController::class => MissionSpecifiqueControllerFactory::class,
+            MissionSpecifiqueAffectationController::class => MissionSpecifiqueAffectationControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            MissionSpecifiqueForm::class => MissionSpecifiqueFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            MissionSpecifiqueHydrator::class => MissionSpecifiqueHydratorFactory::class,
         ],
     ]
 

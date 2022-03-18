@@ -15,17 +15,17 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\MissionSpecifique;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\MissionspecifiquePrivileges;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Structure\Entity\Db\Structure;
 
 $this->headTitle("Affectations de missions spécifiques");
 
-$canVoir        = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
-$canLettre      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
+$canVoir        = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canLettre      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
 $canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
 $canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
-$canhistoriser  = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_HISTORISER));
-$canDetruire    = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_DETRUIRE));
+$canhistoriser  = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
+$canDetruire    = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 
 $query = ['retour' => $this->url(null,[],
     ["query" => ['agent' => (($agent)?$agent->getId():null), 'structure' => (($structure)?$structure->getId():null), 'mission' => (($mission)?$mission->getId():null)]], true)];
@@ -150,7 +150,5 @@ $query = ['retour' => $this->url(null,[],
             window.location.reload();
         });
     });
-
-    // $('select').selectpicker();
 </script>
 

@@ -2,10 +2,10 @@
 
 namespace Formation\Controller;
 
-use Application\Form\ApplicationElement\ApplicationElementForm;
-use Application\Form\CompetenceElement\CompetenceElementForm;
-use Application\Service\ApplicationElement\ApplicationElementService;
-use Application\Service\CompetenceElement\CompetenceElementService;
+use Element\Form\ApplicationElement\ApplicationElementForm;
+use Element\Form\CompetenceElement\CompetenceElementForm;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use Formation\Form\Formation\FormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Service\Formation\FormationService;

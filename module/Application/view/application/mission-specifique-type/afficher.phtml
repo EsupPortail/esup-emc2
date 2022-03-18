@@ -3,10 +3,12 @@
 use Application\Entity\Db\MissionSpecifiqueType;
 
 /**
- * @see \Application\Controller\MissionSpecifiqueController::afficherTypeAction()
+ * @see \Application\Controller\MissionSpecifiqueTypeController::afficherAction()
  * @var MissionSpecifiqueType $type
  */
 
+$modificateur = ($type->getHistoModificateur())?:$type->getHistoCreateur();
+$date = ($type->getHistoModification())?:$type->getHistoCreation();
 ?>
 
 <div class="row">
@@ -29,8 +31,8 @@ use Application\Entity\Db\MissionSpecifiqueType;
         <dl>
             <dt> Dernière modification </dt>
             <dd>
-                <?php echo $type->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                <?php echo $type->getHistoModificateur()->getDisplayName(); ?>
+                <?php echo $date->format('d/m/Y à H:i:s'); ?> <br/>
+                <?php echo $modificateur->getDisplayName(); ?>
             </dd>
         </dl>
 

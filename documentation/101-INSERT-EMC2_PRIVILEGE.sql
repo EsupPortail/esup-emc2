@@ -224,6 +224,68 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'competencetheme';
 
+-- MISSIONS SPECIFIQUE ----------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('missionspecifique', 'Gestion des missions spécifiques', 650, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'missionspecifique_index', 'Gestion - Affichage de l''index des missions specifiques', 100 UNION
+    SELECT 'missionspecifique_ajouter', 'Gestion - Ajouter une mission spécifiques', 120 UNION
+    SELECT 'missionspecifique_afficher', 'Gestion - Afficher une mission spécifique', 110 UNION
+    SELECT 'missionspecifique_modifier', 'Gestion - Modifier une mission spécifique', 130 UNION
+    SELECT 'missionspecifique_historiser', 'Gestion - Historiser/restaurer une mission spécifique', 140 UNION
+    SELECT 'missionspecifique_detruire', 'Gestion - Détruire une missions spécifique', 150
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifique';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('missionspecifiquetheme', 'Gestion des thèmes de mission spécifique', 660, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'missionspecifiquetheme_index', 'Gestion - Affichage de l''index des thèmes de mission specifique', 100 UNION
+    SELECT 'missionspecifiquetheme_afficher', 'Gestion - Afficher un thème de  mission spécifique', 110 UNION
+    SELECT 'missionspecifiquetheme_ajouter', 'Gestion - Ajouter un thème de mission spécifique', 120 UNION
+    SELECT 'missionspecifiquetheme_modifier', 'Gestion - Modifier un thème mission spécifique', 130 UNION
+    SELECT 'missionspecifiquetheme_historiser', 'Gestion - Historiser/restaurer un thème de mission spécifique', 140 UNION
+    SELECT 'missionspecifiquetheme_detruire', 'Gestion - Détruire un thème de  mission spécifique', 150
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiquetheme';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('missionspecifiquetype', 'Gestion des types de mission spécifique', 670, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'missionspecifiquetype_index', 'Gestion - Affichage de l''index des types de mission specifique', 100 UNION
+    SELECT 'missionspecifiquetypee_afficher', 'Gestion - Afficher un type de mission spécifique', 110 UNION
+    SELECT 'missionspecifiquetype_ajouter', 'Gestion - Ajouter un type de mission spécifique', 120 UNION
+    SELECT 'missionspecifiquetype_modifier', 'Gestion - Modifier un type de mission spécifique', 130 UNION
+    SELECT 'missionspecifiquetype_historiser', 'Gestion - Historiser/restaurer un type de mission spécifique', 140 UNION
+    SELECT 'missionspecifiquetype_detruire', 'Gestion - Détruire un type de missions spécifique', 150
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiquetype';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('missionspecifiqueaffectation', 'Gestion des affectations de mission spécifique', 680, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'missionspecifiqueaffectation_index', 'Affectation - Afficher l''index des affectation', 200 UNION
+    SELECT 'missionspecifiqueaffectation_afficher', 'Affectation - Afficher une affectations de missions spécifiques', 210 UNION
+    SELECT 'missionspecifiqueaffectation__ajouter', 'Affectation - Ajouter une affectation de mission spécifique', 220 UNION
+    SELECT 'missionspecifiqueaffectation_modifier', 'Affectation - Modifier une affectation de mission specifique', 230 UNION
+    SELECT 'missionspecifiqueaffectation_historiser', 'Affectation - Historiser/restaurer une affectation de mission spécifique', 240 UNION
+    SELECT 'missionspecifiqueaffectation_detruire', 'Affectation - Détruire une affectation de mission spécifique', 250
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiqueaffectation';
+
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;

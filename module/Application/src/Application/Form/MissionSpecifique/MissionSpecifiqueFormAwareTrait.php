@@ -10,7 +10,7 @@ trait MissionSpecifiqueFormAwareTrait {
     /**
      * @return MissionSpecifiqueForm
      */
-    public function getMissionSpecifiqueForm()
+    public function getMissionSpecifiqueForm() : MissionSpecifiqueForm
     {
         return $this->missionSpecifiqueForm;
     }
@@ -19,7 +19,7 @@ trait MissionSpecifiqueFormAwareTrait {
      * @param MissionSpecifiqueForm $missionSpecifiqueForm
      * @return MissionSpecifiqueForm
      */
-    public function setMissionSpecifiqueForm($missionSpecifiqueForm)
+    public function setMissionSpecifiqueForm(MissionSpecifiqueForm $missionSpecifiqueForm) : MissionSpecifiqueForm
     {
         $this->missionSpecifiqueForm = $missionSpecifiqueForm;
         return $this->missionSpecifiqueForm;

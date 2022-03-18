@@ -3,18 +3,21 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\MissionSpecifique;
-use Application\Entity\Db\MissionSpecifiqueTheme;
-use Application\Entity\Db\MissionSpecifiqueType;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Form\MissionSpecifique\MissionSpecifiqueFormAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
+use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class MissionSpecifiqueController extends AbstractActionController
 {
     use MissionSpecifiqueServiceAwareTrait;
+    use MissionSpecifiqueThemeServiceAwareTrait;
+    use MissionSpecifiqueTypeServiceAwareTrait;
 
     use MissionSpecifiqueFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
@@ -24,15 +27,15 @@ class MissionSpecifiqueController extends AbstractActionController
     public function indexAction() : ViewModel
     {
         $typeId = $this->params()->fromQuery('type');
-        $type = $this->getMissionSpecifiqueService()->getMissionSpecifiqueType(($typeId)?((int) $typeId):null);
+        $type = $this->getMissionSpecifiqueTypeService()->getMissionSpecifiqueType(($typeId)?((int) $typeId):null);
         $themeId = $this->params()->fromQuery('theme');
-        $theme = $this->getMissionSpecifiqueService()->getMissionSpecifiqueTheme(($themeId)?((int) $themeId):null);
+        $theme = $this->getMissionSpecifiqueThemeService()->getMissionSpecifiqueTheme(($themeId)?((int) $themeId):null);
 
         $missions = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
         if ($type !== null) $missions = array_filter($missions, function (MissionSpecifique $mission) use ($type) { return $mission->getType() === $type; });
         if ($theme !== null) $missions = array_filter($missions, function (MissionSpecifique $mission) use ($theme) { return $mission->getTheme() === $theme; });
-        $types = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesTypes();
-        $themes = $this->getMissionSpecifiqueService()->getMissionsSpecifiquesThemes();
+        $types = $this->getMissionSpecifiqueTypeService()->getMissionsSpecifiquesTypes();
+        $themes = $this->getMissionSpecifiqueThemeService()->getMissionsSpecifiquesThemes();
 
         return new ViewModel([
             'missions' => $missions,
@@ -44,7 +47,8 @@ class MissionSpecifiqueController extends AbstractActionController
 
     /** Missions */
 
-    public function afficherMissionAction() {
+    public function afficherAction() : ViewModel
+    {
         $mission = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifique($this);
 
         return new ViewModel([
@@ -53,11 +57,11 @@ class MissionSpecifiqueController extends AbstractActionController
         ]);
     }
 
-    public function ajouterMissionAction()
+    public function ajouterAction() : ViewModel
     {
         $mission = new MissionSpecifique();
         $form = $this->getMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/mission/ajouter'));
+        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/ajouter'));
         $form->bind($mission);
 
         /** @var Request $request */
@@ -79,11 +83,11 @@ class MissionSpecifiqueController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierMissionAction()
+    public function modifierAction() : ViewModel
     {
         $mission = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifique($this);
         $form = $this->getMissionSpecifiqueForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/mission/modifier', ['mission' => $mission->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/modifier', ['mission' => $mission->getId()], [], true));
         $form->bind($mission);
 
         /** @var Request $request */
@@ -105,21 +109,21 @@ class MissionSpecifiqueController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserMissionAction()
+    public function historiserAction() : Response
     {
         $mission = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifique($this);
         $this->getMissionSpecifiqueService()->historise($mission);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "mission"], true);
+        return $this->redirect()->toRoute('mission-specifique', [], [], true);
     }
 
-    public function restaurerMissionAction()
+    public function restaurerAction() : Response
     {
         $mission = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifique($this);
         $this->getMissionSpecifiqueService()->restore($mission);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "mission"], true);
+        return $this->redirect()->toRoute('mission-specifique', [], [], true);
     }
 
-    public function detruireMissionAction()
+    public function detruireAction() : ViewModel
     {
         $mission = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifique($this);
         /** @var Request $request */
@@ -136,210 +140,9 @@ class MissionSpecifiqueController extends AbstractActionController
             $vm->setVariables([
                 'title' => "Suppression de la mission spécifique  " . $mission->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('mission-specifique/mission/detruire', ["mission" => $mission->getId()], [], true),
+                'action' => $this->url()->fromRoute('mission-specifique/detruire', ["mission" => $mission->getId()], [], true),
             ]);
         }
         return $vm;
     }
-
-    /** Types *********************************************************************************************************/
-
-    public function afficherTypeAction() {
-        $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
-
-        return new ViewModel([
-            'title' => "Affichage d'un type de mission spécifique",
-            'type' => $type,
-        ]);
-    }
-
-    public function ajouterTypeAction()
-    {
-        $type = new MissionSpecifiqueType();
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/type/ajouter'));
-        $form->bind($type);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->createType($type);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'un type de mission spécifique",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierTypeAction()
-    {
-        $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/type/modifier', ['type' => $type->getId()], [], true));
-        $form->bind($type);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->updateType($type);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'un type de mission spécifique",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserTypeAction()
-    {
-        $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
-        $this->getMissionSpecifiqueService()->historiseType($type);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "type"], true);
-    }
-
-    public function restaurerTypeAction()
-    {
-        $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
-        $this->getMissionSpecifiqueService()->restoreType($type);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "type"], true);
-    }
-
-    public function detruireTypeAction()
-    {
-        $type = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueType($this);
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->deleteType($type);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($type !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression du type de mission spécifique  " . $type->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('mission-specifique/type/detruire', ["type" => $type->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
-    /** Thèmes ********************************************************************************************************/
-
-    public function afficherThemeAction() {
-        $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);
-
-        return new ViewModel([
-            'title' => "Affichage d'un theme de mission spécifique",
-            'theme' => $theme,
-        ]);
-    }
-
-    public function ajouterThemeAction()
-    {
-        $theme = new MissionSpecifiqueTheme();
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/theme/ajouter'));
-        $form->bind($theme);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->createTheme($theme);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'un thème de mission spécifique",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function modifierThemeAction()
-    {
-        $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);
-        $form = $this->getModifierLibelleForm();
-        $form->setAttribute('action', $this->url()->fromRoute('mission-specifique/theme/modifier', ['theme' => $theme->getId()], [], true));
-        $form->bind($theme);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getMissionSpecifiqueService()->updateTheme($theme);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification d'un thème de mission spécifique",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function historiserThemeAction()
-    {
-        $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);
-        $this->getMissionSpecifiqueService()->historiseTheme($theme);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "theme"], true);
-    }
-
-    public function restaurerThemeAction()
-    {
-        $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);
-        $this->getMissionSpecifiqueService()->restoreTheme($theme);
-        return $this->redirect()->toRoute('mission-specifique', [], ["fragment" => "theme"], true);
-    }
-
-    public function detruireThemeAction()
-    {
-        $theme = $this->getMissionSpecifiqueService()->getRequestedMissionSpecifiqueTheme($this);
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getMissionSpecifiqueService()->deleteTheme($theme);
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($theme !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression du thème de mission spécifique  " . $theme->getLibelle(),
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('mission-specifique/theme/detruire', ["theme" => $theme->getId()], [], true),
-            ]);
-        }
-        return $vm;
-    }
-
 }

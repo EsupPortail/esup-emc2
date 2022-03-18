@@ -249,6 +249,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoform'
 ;
 
+
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;

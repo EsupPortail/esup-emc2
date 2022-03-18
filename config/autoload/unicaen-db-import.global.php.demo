@@ -85,23 +85,6 @@ return [
                     'columns'            => ['code', 'libelle'],
                 ],
             ],
-            [
-                'name' => 'Import_STRUCTURE',
-                'source' => [
-                    'name'               => 'Agents geres par la DRH',
-                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, PARENT_ID, NIV2_ID FROM STRUCTURE',
-                    'connection'         => 'octopus',
-                    'source_code_column' => 'ID',
-                ],
-                'intermediate_table' => 'src_structure',
-                'destination' => [
-                    'name'               => 'Structure stockees dans octopus',
-                    'table'              => 'structure',
-                    'connection'         => 'default',
-                    'source_code_column' => 'id',
-                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'parent_id', 'niv2_id'],
-                ],
-            ],
         ],
     ],
 

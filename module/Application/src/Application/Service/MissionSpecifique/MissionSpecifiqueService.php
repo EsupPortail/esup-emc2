@@ -3,8 +3,7 @@
 namespace Application\Service\MissionSpecifique;
 
 use Application\Entity\Db\MissionSpecifique;
-use Application\Entity\Db\MissionSpecifiqueTheme;
-use Application\Entity\Db\MissionSpecifiqueType;
+use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -14,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 
 class MissionSpecifiqueService {
     use EntityManagerAwareTrait;
+    use MissionSpecifiqueThemeServiceAwareTrait;
 
     /** MISSION SPECIFIQUE ********************************************************************************************/
 
@@ -96,7 +96,7 @@ class MissionSpecifiqueService {
     /**
      * @return QueryBuilder
      */
-    private function createQueryBuilder()
+    private function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
             ->addSelect('type')->leftJoin('mission.type', 'type')
@@ -112,7 +112,8 @@ class MissionSpecifiqueService {
      * @param string $ordre
      * @return MissionSpecifique[]
      */
-    public function getMissionsSpecifiques(string $champ = 'theme.libelle', string $ordre='ASC') {
+    public function getMissionsSpecifiques(string $champ = 'theme.libelle', string $ordre='ASC') : array
+    {
         $qb = $this->createQueryBuilder()
             ->orderBy($champ, $ordre)
         ;
@@ -122,10 +123,11 @@ class MissionSpecifiqueService {
     }
 
     /**
-     * @param integer $id
+     * @param int|null $id
      * @return MissionSpecifique
      */
-    public function getMissionSpecifique($id) {
+    public function getMissionSpecifique(?int $id) : ?MissionSpecifique
+    {
 
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -145,7 +147,7 @@ class MissionSpecifiqueService {
      * @param string $paramName
      * @return MissionSpecifique
      */
-    public function getRequestedMissionSpecifique(AbstractActionController $controller, $paramName = 'mission')
+    public function getRequestedMissionSpecifique(AbstractActionController $controller, string $paramName = 'mission') : ?MissionSpecifique
     {
         $id = $controller->params()->fromRoute($paramName);
         $mission = $this->getMissionSpecifique($id);
@@ -158,9 +160,9 @@ class MissionSpecifiqueService {
      * @param string $ordre
      * @return MissionSpecifique[]
      */
-    public function getMisssionsSpecifiquesAsGroupOptions($historiser = false, $champ = 'libelle', $ordre = 'ASC')
+    public function getMisssionsSpecifiquesAsGroupOptions(bool $historiser = false, string $champ = 'libelle', string $ordre = 'ASC') : array
     {
-        $themes = $this->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
+        $themes = $this->getMissionSpecifiqueThemeService()->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
         $sanstheme = $this->getMissionsSpecifiquesSansTheme();
         $options = [];
 
@@ -196,7 +198,7 @@ class MissionSpecifiqueService {
     /**
      * @return array
      */
-    public function getMisssionsSpecifiquesAsOptions()
+    public function getMisssionsSpecifiquesAsOptions() : array
     {
         $missions = $this->getMissionsSpecifiques();
         $array = [];
@@ -209,7 +211,7 @@ class MissionSpecifiqueService {
     /**
      * @return MissionSpecifique[]
      */
-    private function getMissionsSpecifiquesSansTheme()
+    private function getMissionsSpecifiquesSansTheme() : array
     {
         $qb = $this->getEntityManager()->getRepository(MissionSpecifique::class)->createQueryBuilder('mission')
             ->orderBy('mission.libelle', 'ASC')
@@ -220,252 +222,4 @@ class MissionSpecifiqueService {
         return $result;
     }
 
-    /** MISSION SPECIFIQUE TYPE ***************************************************************************************/
-
-    /** GESTION ENTITES */
-
-    /**
-     * @param MissionSpecifiqueType $type
-     * @return MissionSpecifiqueType
-     */
-    public function createType(MissionSpecifiqueType $type)
-    {
-        $this->createFromTrait($type);
-        return $type;
-    }
-
-    /**
-     * @param MissionSpecifiqueType $type
-     * @return MissionSpecifiqueType
-     */
-    public function updateType(MissionSpecifiqueType $type)
-    {
-        $this->updateFromTrait($type);
-        return $type;
-    }
-
-    /**
-     * @param MissionSpecifiqueType $type
-     * @return MissionSpecifiqueType
-     */
-    public function historiseType(MissionSpecifiqueType $type)
-    {
-        $this->historiserFromTrait($type);
-        return $type;
-    }
-
-    /**
-     * @param MissionSpecifiqueType $type
-     * @return MissionSpecifiqueType
-     */
-    public function restoreType(MissionSpecifiqueType $type)
-    {
-        $this->restoreFromTrait($type);
-        return $type;
-    }
-
-    /**
-     * @param MissionSpecifiqueType $type
-     * @return MissionSpecifiqueType
-     */
-    public function deleteType(MissionSpecifiqueType $type)
-    {
-        $this->deleteFromTrait($type);
-        return $type;
-    }
-
-    /** REQUETAGE *****************************************************************************************************/
-
-    /**
-     * @param bool $historiser
-     * @param string $champ
-     * @param string $ordre
-     * @return MissionSpecifiqueType[]
-     */
-    public function getMissionsSpecifiquesTypes($historiser= true, $champ = 'libelle', $ordre ='ASC')
-    {
-        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
-            ->addSelect('mission')->leftJoin('type.missions', 'mission')
-            ->addSelect('modificateur')->join('type.histoModificateur', 'modificateur')
-            ->orderBy('type.' . $champ, $ordre)
-        ;
-
-        if ($historiser === false) {
-            $qb = $qb->andWhere('type.histoDestruction IS NULL');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param bool $historiser
-     * @param string $champ
-     * @param string $ordre
-     * @return array
-     */
-    public function getMissionsSpecifiquesTypesAsOptions($historiser= false, $champ = 'libelle', $ordre ='ASC')
-    {
-        $types = $this->getMissionsSpecifiquesTypes($historiser, $champ, $ordre);
-        $array = [];
-        foreach ($types as $type) {
-            $array[$type->getId()] = $type->getLibelle();
-        }
-        return $array;
-    }
-
-    /**
-     * @param integer $id
-     * @return MissionSpecifiqueType
-     */
-    public function getMissionSpecifiqueType(?int $id)
-    {
-        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueType::class)->createQueryBuilder('type')
-            ->andWhere('type.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException('Plusieurs MissionSpecifiqueType partagent le même id ['.$id.'].', $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return MissionSpecifiqueType
-     */
-    public function getRequestedMissionSpecifiqueType(AbstractActionController $controller, $paramName = 'type')
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getMissionSpecifiqueType($id);
-        return $result;
-    }
-
-    /** MISSION SPECIFIQUE THEME **************************************************************************************/
-
-    /** GESTION ENTITES */
-
-    /**
-     * @param MissionSpecifiqueTheme $theme
-     * @return MissionSpecifiqueTheme
-     */
-    public function createTheme(MissionSpecifiqueTheme $theme)
-    {
-        $this->createFromTrait($theme);
-        return $theme;
-    }
-
-    /**
-     * @param MissionSpecifiqueTheme $theme
-     * @return MissionSpecifiqueTheme
-     */
-    public function updateTheme(MissionSpecifiqueTheme $theme)
-    {
-        $this->updateFromTrait($theme);
-        return $theme;
-    }
-
-    /**
-     * @param MissionSpecifiqueTheme $theme
-     * @return MissionSpecifiqueTheme
-     */
-    public function historiseTheme(MissionSpecifiqueTheme $theme)
-    {
-        $this->historiserFromTrait($theme);
-        return $theme;
-    }
-
-    /**
-     * @param MissionSpecifiqueTheme $theme
-     * @return MissionSpecifiqueTheme
-     */
-    public function restoreTheme(MissionSpecifiqueTheme $theme)
-    {
-        $this->restoreFromTrait($theme);
-        return $theme;
-    }
-
-    /**
-     * @param MissionSpecifiqueTheme $theme
-     * @return MissionSpecifiqueTheme
-     */
-    public function deleteTheme(MissionSpecifiqueTheme $theme)
-    {
-        $this->deleteFromTrait($theme);
-        return $theme;
-    }
-
-    /** REQUETAGES */
-    /**
-     * @param bool $historiser
-     * @param string $champ
-     * @param string $ordre
-     * @return MissionSpecifiqueTheme[]
-     */
-    public function getMissionsSpecifiquesThemes(bool $historiser= true, string $champ = 'libelle', string $ordre ='ASC') : array
-    {
-        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('theme')
-            ->addSelect('mission')->leftJoin('theme.missions', 'mission')
-            ->addSelect('modificateur')->join('theme.histoModificateur', 'modificateur')
-            ->orderBy('theme.' . $champ, $ordre)
-        ;
-
-        if ($historiser === false) {
-            $qb = $qb->andWhere('theme.histoDestruction IS NULL');
-        }
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param bool $historiser
-     * @param string $champ
-     * @param string $ordre
-     * @return array
-     */
-    public function getMissionsSpecifiquesThemesAsOptions(bool $historiser= false, string $champ = 'libelle', string $ordre ='ASC') : array
-    {
-        $types = $this->getMissionsSpecifiquesThemes($historiser, $champ, $ordre);
-        $array = [];
-        foreach ($types as $type) {
-            $array[$type->getId()] = $type->getLibelle();
-        }
-        return $array;
-    }
-
-    /**
-     * @param int|null $id
-     * @return MissionSpecifiqueTheme|null
-     */
-    public function getMissionSpecifiqueTheme(?int $id) : ?MissionSpecifiqueTheme
-    {
-        $qb = $this->getEntityManager()->getRepository(MissionSpecifiqueTheme::class)->createQueryBuilder('type')
-            ->andWhere('type.id = :id')
-            ->setParameter('id', $id)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (ORMException $e) {
-            throw new RuntimeException('Plusieurs MissionSpecifiqueTheme partagent le même id ['.$id.'].', $e);
-        }
-        return $result;
-    }
-
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return MissionSpecifiqueTheme|null
-     */
-    public function getRequestedMissionSpecifiqueTheme(AbstractActionController $controller, string $paramName = 'theme') : ?MissionSpecifiqueTheme
-    {
-        $id = $controller->params()->fromRoute($paramName);
-        $result = $this->getMissionSpecifiqueTheme($id);
-        return $result;
-    }
 }

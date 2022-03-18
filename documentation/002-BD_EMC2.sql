@@ -630,6 +630,75 @@ create table activite_competence
     constraint activite_competence_pk primary key (activite_id, competence_element_id)
 );
 
+-- MISSIONS PRINCIPALES ------------------------------------------------------------------------------------------------
+-- MISSIONS SPECIFIQUES ------------------------------------------------------------------------------------------------
+
+create table mission_specifique_theme
+(
+    id serial not null constraint mission_specifique_theme_pk primary key,
+    libelle varchar(256) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint mission_specifique_theme_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint mission_specifique_theme_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint mission_specifique_theme_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index mission_specifique_theme_id_uindex on mission_specifique_theme (id);
+
+create table mission_specifique_type
+(
+    id serial not null constraint mission_specifique_type_pk primary key,
+    libelle varchar(256) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint mission_specifique_type_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint mission_specifique_type_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint mission_specifique_type_destructeur_fk references unicaen_utilisateur_user
+);
+
+create table mission_specifique
+(
+    id serial not null constraint mission_specifique_pk primary key,
+    libelle varchar(256) not null,
+    theme_id integer constraint mission_specifique_mission_specifique_theme_id_fk references mission_specifique_theme on delete set null,
+    type_id integer constraint mission_specifique_mission_specifique_type_id_fk references mission_specifique_type on delete set null,
+    description text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint mission_specifique_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint mission_specifique_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint mission_specifique_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index mission_specifique_id_uindex on mission_specifique (id);
+create unique index mission_specifique_type_id_uindex on mission_specifique_type (id);
+
+create table agent_missionspecifique
+(
+    id serial not null constraint agent_missionspecifique_pk primary key,
+    agent_id varchar(40) not null,
+    mission_id integer not null constraint agent_missionspecifique_mission_specifique_id_fk references mission_specifique on delete cascade,
+    structure_id integer constraint agent_missionspecifique_structure_source_id_fk references structure on delete set null,
+    date_debut timestamp,
+    date_fin timestamp,
+    commentaire varchar(2048),
+    decharge double precision,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint agent_missionspecifique_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint agent_missionspecifique_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint agent_missionspecifique_destructeur_fk references unicaen_utilisateur_user
+);
+
+alter table agent_missionspecifique owner to ad_preecog_prod;
+
+create unique index agent_missionspecifique_id_uindex
+    on agent_missionspecifique (id);
+
+
 
 -- FICHE_METIER --------------------------------------------------------------------------------------------------------
 

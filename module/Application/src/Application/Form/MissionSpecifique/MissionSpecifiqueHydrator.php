@@ -4,11 +4,15 @@ namespace Application\Form\MissionSpecifique;
 
 use Application\Entity\Db\MissionSpecifique;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
+use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceAwareTrait;
 use Zend\Hydrator\HydratorInterface;
 
 class MissionSpecifiqueHydrator implements HydratorInterface
 {
     use MissionSpecifiqueServiceAwareTrait;
+    use MissionSpecifiqueThemeServiceAwareTrait;
+    use MissionSpecifiqueTypeServiceAwareTrait;
 
     /**
      * @param MissionSpecifique $object
@@ -38,14 +42,14 @@ class MissionSpecifiqueHydrator implements HydratorInterface
         }
 
         if (isset($data['type']) AND $data['type'] != "") {
-            $type = $this->getMissionSpecifiqueService()->getMissionSpecifiqueType($data['type']);
+            $type = $this->getMissionSpecifiqueTypeService()->getMissionSpecifiqueType($data['type']);
             $object->setType($type);
         } else {
             $object->setType(null);
         }
 
         if (isset($data['theme']) AND $data['theme'] != "") {
-            $theme = $this->getMissionSpecifiqueService()->getMissionSpecifiqueTheme($data['theme']);
+            $theme = $this->getMissionSpecifiqueThemeService()->getMissionSpecifiqueTheme($data['theme']);
             $object->setTheme($theme);
         } else {
             $object->setTheme(null);

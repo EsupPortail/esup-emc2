@@ -3,10 +3,12 @@
 use Application\Entity\Db\MissionSpecifiqueTheme;
 
 /**
- * @see \Application\Controller\MissionSpecifiqueController::afficherThemeAction()
+ * @see \Application\Controller\MissionSpecifiqueThemeController::afficherAction()
  * @var MissionSpecifiqueTheme $theme
  */
 
+$modificateur = ($theme->getHistoModificateur())?:$theme->getHistoCreateur();
+$date = ($theme->getHistoModification())?:$theme->getHistoCreation();
 ?>
 
 <div class="row">
@@ -29,8 +31,8 @@ use Application\Entity\Db\MissionSpecifiqueTheme;
         <dl>
             <dt> Dernière modification </dt>
             <dd>
-                <?php echo $theme->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                <?php echo $theme->getHistoModificateur()->getDisplayName(); ?>
+                <?php echo $date->format('d/m/Y à H:i:s'); ?> <br/>
+                <?php echo $modificateur->getDisplayName(); ?>
             </dd>
         </dl>
 

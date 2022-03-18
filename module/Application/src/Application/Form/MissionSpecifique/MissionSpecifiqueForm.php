@@ -3,6 +3,8 @@
 namespace Application\Form\MissionSpecifique;
 
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
+use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -12,6 +14,8 @@ use Zend\InputFilter\Factory;
 class MissionSpecifiqueForm extends Form
 {
     use MissionSpecifiqueServiceAwareTrait;
+    use MissionSpecifiqueThemeServiceAwareTrait;
+    use MissionSpecifiqueTypeServiceAwareTrait;
 
     public function init()
     {
@@ -33,7 +37,7 @@ class MissionSpecifiqueForm extends Form
             'options' => [
                 'label' => "Type de la mission :",
                 'empty_option' => "Sélectionner le type de la mission ...",
-                'value_options' => $this->getMissionSpecifiqueService()->getMissionsSpecifiquesTypesAsOptions(),
+                'value_options' => $this->getMissionSpecifiqueTypeService()->getMissionsSpecifiquesTypesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'type',
@@ -48,7 +52,7 @@ class MissionSpecifiqueForm extends Form
             'options' => [
                 'label' => "Theme de la mission :",
                 'empty_option' => "Sélectionner le thème de la mission ...",
-                'value_options' => $this->getMissionSpecifiqueService()->getMissionsSpecifiquesThemesAsOptions(),
+                'value_options' => $this->getMissionSpecifiqueThemeService()->getMissionsSpecifiquesThemesAsOptions(),
             ],
             'attributes' => [
                 'id' => 'theme',

@@ -3,16 +3,20 @@
 namespace Carriere\Controller;
 
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class CorrespondanceController extends AbstractActionController
 {
     use CorrespondanceServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $correspondances = $this->getCorrespondanceService()->getCorrespondances();
+        $avecAgent = $this->getParametreService()->getParametreByCode('carriere','CorrespondanceAvecAgent');
+        $bool = ($avecAgent) && ($avecAgent->getValeur() === true);
+        $correspondances = $this->getCorrespondanceService()->getCorrespondances('libelleLong', 'ASC', $bool);
 
         return new ViewModel([
             'correspondances' => $correspondances,

@@ -2,11 +2,11 @@
 
 namespace Application\Service\Configuration;
 
-use Application\Service\ApplicationElement\ApplicationElementService;
-use Application\Service\CompetenceElement\CompetenceElementService;
+use Element\Service\ApplicationElement\ApplicationElementService;
+use Element\Service\CompetenceElement\CompetenceElementService;
 use Application\Service\FicheMetier\FicheMetierService;
-use Application\Service\HasApplicationCollection\HasApplicationCollectionService;
-use Application\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
+use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 

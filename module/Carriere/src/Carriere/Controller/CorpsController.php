@@ -6,6 +6,7 @@ use Carriere\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -14,11 +15,14 @@ class CorpsController extends AbstractActionController {
     use CategorieServiceAwareTrait;
     use CorpsServiceAwareTrait;
     use NiveauServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ModifierNiveauFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $corps = $this->getCorpsService()->getCorps();
+        $avecAgent = $this->getParametreService()->getParametreByCode('carriere','CorpsAvecAgent');
+        $bool = ($avecAgent) && ($avecAgent->getValeur() === true);
+        $corps = $this->getCorpsService()->getCorps('libelleLong', 'ASC', $bool);
 
         return new ViewModel([
             "corps" => $corps,

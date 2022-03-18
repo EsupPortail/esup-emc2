@@ -32,34 +32,24 @@ class MissionSpecifique implements HistoriqueAwareInterface {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return MissionSpecifique
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
     /**
-     * @param string $libelle
+     * @param string|null $libelle
      * @return MissionSpecifique
      */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle) : MissionSpecifique
     {
         $this->libelle = $libelle;
         return $this;
@@ -68,16 +58,16 @@ class MissionSpecifique implements HistoriqueAwareInterface {
     /**
      * @return MissionSpecifiqueTheme
      */
-    public function getTheme()
+    public function getTheme() : ?MissionSpecifiqueTheme
     {
         return $this->theme;
     }
 
     /**
-     * @param MissionSpecifiqueTheme $theme
+     * @param MissionSpecifiqueTheme|null $theme
      * @return MissionSpecifique
      */
-    public function setTheme($theme)
+    public function setTheme(?MissionSpecifiqueTheme $theme) : MissionSpecifique
     {
         $this->theme = $theme;
         return $this;
@@ -86,16 +76,16 @@ class MissionSpecifique implements HistoriqueAwareInterface {
     /**
      * @return MissionSpecifiqueType
      */
-    public function getType()
+    public function getType() : ?MissionSpecifiqueType
     {
         return $this->type;
     }
 
     /**
-     * @param MissionSpecifiqueType $type
+     * @param MissionSpecifiqueType|null $type
      * @return MissionSpecifique
      */
-    public function setType($type)
+    public function setType(?MissionSpecifiqueType $type) : MissionSpecifique
     {
         $this->type = $type;
         return $this;
