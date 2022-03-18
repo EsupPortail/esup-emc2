@@ -3,8 +3,8 @@
 namespace Application\Controller;
 
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierForm;
-use Application\Service\Application\ApplicationService;
-use Application\Service\Competence\CompetenceService;
+use Element\Service\Application\ApplicationService;
+use Element\Service\Competence\CompetenceService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Formation\Service\Formation\FormationService;
@@ -17,7 +17,7 @@ class ConfigurationControllerFactory {
      * @param ContainerInterface $container
      * @return ConfigurationController
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ConfigurationController
     {
         /**
          * @var ConfigurationService $configurationService

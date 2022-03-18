@@ -203,7 +203,6 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'definition'
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('etat', 'UnicaenEtat - Gestion des états', 20000, 'UnicaenEtat\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'etat_index', 'Afficher l''index des états', 10 UNION
@@ -249,6 +248,47 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoform'
 ;
 
+-- EVENEMENT --------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('evenementetat', 'Gestion des événements - État', 99991, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'etat_consultation', 'état - consultation', 10 UNION
+    SELECT 'etat_ajout', 'état - ajout', 20 UNION
+    SELECT 'etat_edition', 'état - édition', 30 UNION
+    SELECT 'etat_suppression', 'état - suppression', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementetat';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('evenementinstance', 'Gestion des événements - Instance', 99993, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'instance_consultation', 'instance - consultation', 10 UNION
+    SELECT 'instance_ajout', 'instance - ajout', 20 UNION
+    SELECT 'instance_edition', 'instance - édition', 30 UNION
+    SELECT 'instance_suppression', 'instance - suppression', 40 UNION
+    SELECT 'instance_traitement', 'instance - traitement', 100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementinstance';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('evenementtype', 'Gestion des événements - Type', 99992, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'type_consultation', 'type - consultation', 10 UNION
+    SELECT 'type_ajout', 'type - ajout', 20 UNION
+    SELECT 'type_edition', 'type - édition', 30 UNION
+    SELECT 'type_suppression', 'type - suppression', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
 
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
@@ -259,6 +299,5 @@ WITH d(privilege_id) AS (
 )
 SELECT d.privilege_id, cp.id
 FROM d
-JOIN unicaen_utilisateur_role cp ON cp.role_id = 'Administrateur·trice technique'
-;
+JOIN unicaen_utilisateur_role cp ON cp.role_id = 'Administrateur·trice technique';
 

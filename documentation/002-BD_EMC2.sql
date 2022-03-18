@@ -310,8 +310,105 @@ create table element_competence_element
 );
 create unique index competence_element_id_uindex on element_competence_element (id);
 
+-- ELEMENT -> FORMATION ------------------------------------------------------------------------------------------------
 
+create table formation_groupe
+(
+    id serial not null constraint formation_groupe_pk primary key,
+    libelle varchar(1024),
+    couleur varchar(255),
+    ordre integer default 9999,
+    source varchar(64),
+    id_source integer,
+    histo_createur_id integer not null constraint formation_groupe_createur_fk references unicaen_utilisateur_user,
+    histo_creation timestamp not null,
+    histo_modificateur_id integer constraint formation_groupe_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_destructeur_id integer constraint formation_groupe_destructeur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp
+);
+create unique index formation_groupe_id_uindex on formation_groupe (id);
 
+create table formation_theme
+(
+    id serial not null constraint formation_theme_pk primary key,
+    libelle varchar(1024) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_theme_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_theme_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_theme_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index formation_theme_id_uindex on formation_theme (id);
+
+create table formation
+(
+    id serial not null constraint formation_pk primary key,
+    libelle varchar(256) not null,
+    description text,
+    lien varchar(1024),
+    theme_id integer constraint formation_formation_theme_id_fk references formation_theme  on delete set null,
+    groupe_id integer constraint formation_formation_groupe_id_fk references formation_groupe on delete set null,
+    source varchar(64),
+    id_source integer,
+    histo_createur_id integer not null constraint formation_createur_fk references unicaen_utilisateur_user,
+    histo_creation timestamp not null,
+    histo_modificateur_id integer constraint formation_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_destructeur_id integer constraint formation_destructeur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp
+);
+create unique index formation_id_uindex on formation (id);
+
+create table formation_element
+(
+    id serial not null constraint formation_element_pk primary key,
+    formation_id integer not null constraint formation_element_formation_informations_id_fk references formation on delete cascade,
+    commentaire text,
+    validation_id integer constraint formation_element_unicaen_validation_instance_id_fk references unicaen_validation_instance on delete set null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_element_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_element_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_element_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_element_id_uindex on formation_element (id);
+
+create table formation_obtenue_application
+(
+    formation_id integer not null constraint formation_application_obtenue_formation_id_fk references formation on delete cascade,
+    application_element_id integer not null constraint formation_application_obtenue_application_element_id_fk references element_application_element on delete cascade,
+    constraint formation_application_obtenue_pk primary key (formation_id, application_element_id)
+);
+
+create table formation_obtenue_competence
+(
+    formation_id integer not null constraint formation_obtenue_competence_formation_id_fk references formation on delete cascade,
+    competence_element_id integer not null constraint formation_obtenue_competence_competence_element_id_fk references element_competence_element on delete cascade,
+    constraint formation_obtenue_competence_pk primary key (formation_id, competence_element_id)
+);
+
+-- COMPLEMENT --------------------------------------------------------------------------------------------------------
+
+create table complement
+(
+    id serial not null constraint complement_pk primary key,
+    attachment_type varchar(1024) not null,
+    attachment_id varchar(40) not null,
+    complement_type varchar(1024),
+    complement_id varchar(40),
+    complement_text text,
+    type varchar(1024) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint complement_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint complement_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint complement_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index complement_id_uindex on complement (id);
 
 -- AGENT -------------------------------------------------------------------------------------------------------------
 
@@ -449,6 +546,36 @@ create table agent_carriere_statut
     deleted_on timestamp(0)
 );
 
+create table agent_element_application
+(
+    agent_id varchar(40) not null constraint agent_application_agent_c_individu_fk references agent on delete cascade,
+    application_element_id integer not null constraint agent_application_application_element_id_fk references element_application_element on delete cascade,
+    constraint agent_application_pk primary key (agent_id, application_element_id)
+);
+
+create table agent_element_competence
+(
+    agent_id varchar(40) not null constraint agent_competence_agent_c_individu_fk references agent on delete cascade,
+    competence_element_id integer not null constraint agent_competence_competence_element_id_fk references element_competence_element on delete cascade,
+    constraint agent_competence_pk primary key (agent_id, competence_element_id)
+);
+
+create table agent_element_formation
+(
+    agent_id varchar(40) not null constraint agent_formation_agent_c_individu_fk references agent on delete cascade,
+    formation_element_id integer not null constraint agent_formation_formation_element_id_fk references formation_element on delete cascade,
+    constraint agent_formation_pk primary key (agent_id, formation_element_id)
+);
+
+create table agent_complement
+(
+    agent_id varchar(40) not null constraint agent_complement_agent_c_individu_fk references agent on delete cascade,
+    complement_id integer not null constraint agent_complement_complement_id_fk references complement on delete cascade,
+    constraint agent_complement_pk primary key (agent_id, complement_id)
+);
+
+
+
 -- STRUCTURE <-> AGENT -------------------------------------------------------------------------------------------------
 
 create table structure_gestionnaire
@@ -570,10 +697,7 @@ create table agent_ccc_accompagnement
 );
 create unique index agent_accompagnement_id_uindex on agent_ccc_accompagnement (id);
 
--- ELEMENTS -------------------------------------------------------------------------------------------------------------
-
-
--- ACTIVITE -------------------------------------
+-- MISSIONS PRINCIPALES ------------------------------------------------------------------------------------------------
 
 create table activite
 (
@@ -630,7 +754,20 @@ create table activite_competence
     constraint activite_competence_pk primary key (activite_id, competence_element_id)
 );
 
--- MISSIONS PRINCIPALES ------------------------------------------------------------------------------------------------
+create table activite_formation
+(
+    activite_id integer not null constraint activite_formation_activite_id_fk references activite on delete cascade,
+    formation_element_id integer not null constraint activite_formation_formation_element_id_fk references formation_element on delete cascade,
+    constraint activite_formation_pk primary key (activite_id, formation_element_id)
+);
+
+create table activite_domaine
+(
+    activite_id integer not null constraint activite_domaine_activite_id_fk references activite on delete cascade,
+    domaine_id integer not null constraint activite_domaine_domaine_id_fk references metier_domaine on delete cascade,
+    constraint activite_domaine_pk primary key (activite_id, domaine_id)
+);
+
 -- MISSIONS SPECIFIQUES ------------------------------------------------------------------------------------------------
 
 create table mission_specifique_theme
@@ -729,5 +866,16 @@ create table fichemetier_competence
     competence_element_id integer not null constraint fichemetier_competence_competence_element_id_fk references element_competence_element on delete cascade,
     constraint fichemetier_competence_pk primary key (fichemetier_id, competence_element_id)
 );
+
+create table fichemetier_activite
+(
+    id serial not null constraint fichemetier_activite_pkey primary key,
+    fiche integer not null constraint fichemetier_activite_fichemetier_id_fk references fichemetier on delete cascade,
+    activite integer not null constraint fichemetier_activite_activite_id_fk references activite on delete cascade,
+    position integer default 0 not null
+);
+create unique index fichemetier_activite_id_uindex on fichemetier_activite (id);
+
+
 
 

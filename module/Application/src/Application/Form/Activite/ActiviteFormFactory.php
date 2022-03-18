@@ -2,14 +2,14 @@
 
 namespace Application\Form\Activite;
 
-use Application\Service\Application\ApplicationService;
-use Application\Service\Competence\CompetenceService;
+use Element\Service\Application\ApplicationService;
+use Element\Service\Competence\CompetenceService;
 use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 
 class ActiviteFormFactory {
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ActiviteForm
     {
         /**
          * @var ApplicationService $applicationService

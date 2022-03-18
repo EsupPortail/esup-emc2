@@ -34,7 +34,7 @@ class NotificationService {
     {
         $vars = ['campagne' => $campagne];
 
-        $mail_DAC = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_DAC')->getValeur();
+        $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_DAC, $vars);
         $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
         $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -47,7 +47,7 @@ class NotificationService {
     {
         $vars = ['campagne' => $campagne];
 
-        $mail_BIATS = $this->parametreService->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
+        $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_BIATSS, $vars);
         $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
         $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);

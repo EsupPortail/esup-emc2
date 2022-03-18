@@ -204,8 +204,8 @@ create table unicaen_etat_etat_type
     couleur varchar(256),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint unicaen_content_content_user_id_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint unicaen_content_content_user_id_fk_3 references unicaen_utilisateur_user
 );
@@ -220,8 +220,8 @@ create table unicaen_etat_etat
     couleur varchar(256),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint unicaen_content_content_user_id_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint unicaen_content_content_user_id_fk_2 references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint unicaen_content_content_user_id_fk_3 references unicaen_utilisateur_user,
     ordre integer default 9999 not null
@@ -262,8 +262,8 @@ create table unicaen_validation_type
     refusable boolean default true not null,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint unicaen_validation_type_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint unicaen_validation_type_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint unicaen_validation_type_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint unicaen_validation_type_destructeur_fk references unicaen_utilisateur_user
 );

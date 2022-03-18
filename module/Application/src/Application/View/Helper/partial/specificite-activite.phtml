@@ -56,7 +56,7 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
                 </div>
             <?php endif; ?>
         </div>
-        <?php $domaines = $activite->getDomaines()->toArray(); ?>
+        <?php $domaines = $activite->getDomaines(); ?>
         <?php if (!empty($domaines)) : ?>
         <?php foreach ($domaines as $domaine) : ?>
             <?php /** @var Domaine $domaine */ ?>

@@ -224,6 +224,23 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'competencetheme';
 
+-- MISSIONS PRINCIPALES ---------------------------------------------------------------------------------------
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('activite', 'Gestion des missions principales', 600, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'activite_index', 'Accéder à l''index des missions principales', 0 UNION
+    SELECT 'activite_afficher', 'Afficher une mission principale', 10 UNION
+    SELECT 'activite_ajouter', 'Ajouter une mission principale', 20 UNION
+    SELECT 'activite_modifier', 'Modifier une mission principale ', 30 UNION
+    SELECT 'activite_historiser', 'Historiser/restaurer une mission principale', 40 UNION
+    SELECT 'activite_detruire', 'Détruire une activité', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'activite';
+
 -- MISSIONS SPECIFIQUE ----------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
