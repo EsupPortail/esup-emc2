@@ -120,6 +120,41 @@ return [
                 ],
             ],
             [
+                'name' => 'Import_AGENT_AFFECTATION',
+                'source' => [
+                    'name'               => 'Affectations des agents',
+                    'select'             => 'SELECT INDIVIDU_AFFECTATION.ID AS AFFECTATION_ID, INDIVIDU_AFFECTATION.individu_id as agent_id, INDIVIDU_AFFECTATION.structure_id, INDIVIDU_AFFECTATION.date_debut, INDIVIDU_AFFECTATION.date_fin, INDIVIDU_AFFECTATION.id_orig, INDIVIDU_AFFECTATION.t_principale FROM INDIVIDU_AFFECTATION JOIN V_AGENT on V_AGENT.C_INDIVIDU = INDIVIDU_AFFECTATION.INDIVIDU_ID',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'affectation_id',
+                    'columns'            => ['agent_id', 'STRUCTURE_ID', 'DATE_DEBUT', 'DATE_FIN', 'ID_ORIG', 'T_PRINCIPALE'],
+                ],
+                'destination' => [
+                    'name'               => 'Affectation des agents gérés par la DRH',
+                    'table'              => 'agent_carriere_affectation',
+                    'connection'         => 'default',
+                    'source_code_column' => 'affectation_id',
+                    'columns'            => ['agent_id', 'structure_id', 'date_debut', 'date_fin', 'id_orig', 't_principale'],
+                ],
+            ],
+            [
+                'name' => 'Import_AGENT_GRADE',
+                'source' => [
+                    'name'               => 'Grades liés aux agents de PreeCog',
+                    'select'             => 'SELECT ID, ID_ORIG, AGENT_ID, STRUCTURE_ID, CORPS_ID, GRADE_ID, CORRESPONDANCE_ID AS BAP_ID, D_DEBUT, D_FIN FROM INDIVIDU_GRADE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                    //'columns'            => ['AGENT_ID', 'STRUCTURE_ID', 'CORPS_ID', 'GRADE_ID', 'BAP_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'intermediate_table' => 'src_agent_grade',
+                'destination' => [
+                    'name'               => 'Grade des agents gérés par la DRH',
+                    'table'              => 'agent_carriere_grade',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['id_orig', 'agent_id', 'structure_id', 'corps_id', 'grade_id', 'bap_id', 'd_debut', 'd_fin'],
+                ],
+            ],
+            [
                 'name' => 'Import_AGENT_QUOTITE',
                 'source' => [
                     'name'               => 'Quotité travaillé par les agents',
