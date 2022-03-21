@@ -22,3 +22,8 @@ VALUES ('MISSION_SPECIFIQUE_LETTRE', '<p>Lettre associée à une mission spécif
         'pdf',
         'mission.pdf',
         'Contenu de Mission');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps)
+VALUES ('FICHE_METIER', '<p>Fiche métier</p>',
+        'pdf',
+        'fiche_metier.pdf',
+        'Contenu de FICHE METIER');

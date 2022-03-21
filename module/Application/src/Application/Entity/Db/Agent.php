@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\Niveau;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasComplementsInterface;

@@ -38,11 +38,15 @@ $canDetruire = $this->isAllowed(CompetencethemePrivileges::getResourceId(Compete
     </div>
     <div class="pull-right">
         <?php if ($canCompetenceIndex) : ?>
-            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-primary">Accéder aux compétences</a>
+            <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-primary">
+                <span class="icon acceder"></span>
+                Accéder aux compétences</a>
         <?php endif; ?>
 
         <?php if ($canCompetenceTypeIndex) : ?>
-            <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>" class="btn btn-primary">Accéder aux types</a>
+            <a href="<?php echo $this->url('element/competence-type', [], [], true); ?>" class="btn btn-primary">
+                <span class="icon acceder"></span>
+                Accéder aux types</a>
         <?php endif; ?>
     </div>
 </div>

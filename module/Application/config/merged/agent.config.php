@@ -628,7 +628,7 @@ return [
                                 'label'    => 'Agents',
                                 'route'    => 'agent',
                                 'resource' => PrivilegeController::getResourceId(AgentController::class, 'index') ,
-                                'order'    => 210,
+                                'order'    => 10,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

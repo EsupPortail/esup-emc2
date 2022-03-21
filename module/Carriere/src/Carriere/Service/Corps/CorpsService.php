@@ -104,7 +104,7 @@ class CorpsService {
     public function getRequestedCorps(AbstractActionController $controller, string $param = 'corps') : ?Corps
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getCorp($id);
+        $result = $this->getCorp( (int) $id, false);
         return $result;
     }
 

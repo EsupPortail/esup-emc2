@@ -84,7 +84,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
      * @param bool $has
      * @return $this
      */
-    public function setExpertise(bool $has) : FicheMetier
+    public function setExpertise(?bool $has = false) : FicheMetier
     {
         $this->hasExpertise = $has;
         return $this;

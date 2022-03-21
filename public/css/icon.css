@@ -92,6 +92,10 @@ span.icon.donnees:before {
     content: "\f2c2";
 }
 
+span.icon.acceder:before {
+    content: "\f064";
+}
+
 span.icon.power:before {
     content: "\f011";
 }
