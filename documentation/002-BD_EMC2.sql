@@ -421,7 +421,90 @@ create table formation_parcours_formation
 );
 create unique index formation_parcours_formation_id_uindex on formation_parcours_formation (id);
 
+create table formation_instance
+(
+    id serial not null constraint formation_instance_pk primary key,
+    formation_id integer not null constraint formation_instance_formation_id_fk references formation on delete cascade,
+    nb_place_principale integer default 0 not null,
+    nb_place_complementaire integer default 0 not null,
+    complement text,
+    lieu varchar(256),
+    type varchar(256),
+    etat_id integer constraint formation_instance_unicaen_etat_etat_id_fk references unicaen_etat_etat,
+    auto_inscription boolean default false not null,
+    source varchar(64),
+    id_source varchar(256),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_instance_user_id_fk_1 references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_id_uindex on formation_instance (id);
 
+create table formation_instance_inscrit
+(
+    id serial not null constraint formation_instance_inscrit_pk primary key,
+    instance_id integer not null constraint formation_instance_inscrit_formation_instance_id_fk references formation_instance on delete cascade,
+    agent_id varchar(40) not null constraint formation_instance_inscrit_agent_c_individu_fk references agent on delete cascade,
+    liste varchar(64),
+    questionnaire_id integer constraint formation_instance_inscrit_autoform_formulaire_instance_id_fk references unicaen_autoform_formulaire_instance on delete set null,
+    source varchar(64),
+    id_source integer,
+    etat_id integer constraint formation_instance_inscrit_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    complement text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_1 references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_inscrit_id_uindex on formation_instance_inscrit (id);
+
+create table formation_instance_frais
+(
+    id serial not null constraint formation_instance_frais_pk primary key,
+    inscrit_id integer not null constraint formation_instance_frais_formation_instance_inscrit_id_fk references formation_instance_inscrit on delete cascade,
+    frais_repas double precision default 0,
+    frais_hebergement double precision default 0,
+    frais_transport double precision default 0,
+    histo_creation timestamp not null,
+    source varchar(64),
+    id_source varchar(64),
+    histo_createur_id integer not null constraint formation_instance_frais_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_frais_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_frais_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_frais_id_uindex on formation_instance_frais (id);
+
+create table formation_instance_journee
+(
+    id serial not null
+        constraint formation_instance_journee_pk
+            primary key,
+    instance_id integer not null
+        constraint formation_instance_journee_formation_instance_id_fk
+            references formation_instance
+            on delete cascade,
+    jour timestamp not null,
+    debut varchar(64) not null,
+    fin varchar(64) not null,
+    lieu varchar(1024) not null,
+    remarque text,
+    source varchar(64),
+    id_source varchar(64),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null  constraint formation_instance_journee_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_journee_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_journee_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_journee_id_uindex on formation_instance_journee (id);
 
 
 
@@ -991,5 +1074,39 @@ create table ficheposte_fichetype
     activites varchar(128)
 );
 create unique index fiche_type_externe_id_uindex on ficheposte_fichetype (id);
+
+create table structure_ficheposte
+(
+    structure_id integer not null constraint structure_ficheposte_structure_id_fk references structure on delete cascade,
+    ficheposte_id integer not null constraint structure_ficheposte_fiche_poste_id_fk references ficheposte on delete cascade,
+    constraint structure_ficheposte_pk primary key (structure_id, ficheposte_id)
+);
+
+-- FICHE PROFIL ---------------
+
+create table ficheprofil
+(
+    id serial not null constraint ficheprofil_pk primary key,
+    ficheposte_id integer not null constraint ficheprofil_fiche_poste_id_fk references ficheposte on delete cascade,
+    contexte text,
+    mission text,
+    niveau text,
+    contrat text,
+    renumeration text,
+    date_dossier timestamp not null,
+    lieu text,
+    structure_id integer not null constraint ficheprofil_structure_id_fk references structure,
+    vacance_emploi boolean default false not null,
+    adresse varchar(1024) not null,
+    date_audition date,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint ficheprofil_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint ficheprofil_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint ficheprofil_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index ficheprofil_id_uindex on ficheprofil (id);
+
 
 

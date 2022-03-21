@@ -348,6 +348,26 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'fichemetier';
+
+-- FICHE POSTE ------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('ficheposte', 'Fiche de poste', 2, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'ficheposte_index', 'Accéder à l''index des fiches de poste', 0 UNION
+    SELECT 'ficheposte_afficher', 'Afficher une fiche de poste', 10 UNION
+    SELECT 'ficheposte_ajouter', 'Ajouter une fiche de poste', 20 UNION
+    SELECT 'ficheposte_modifier', 'Modifier une fiche de poste', 30 UNION
+    SELECT 'ficheposte_associeragent', 'Associer un agent à une fiche de poste', 31 UNION
+    SELECT 'ficheposte_historiser', 'Historiser/Restaurer une fiche de poste', 40 UNION
+    SELECT 'ficheposte_detruire', 'Détruire une fiche de poste ', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'ficheposte';
+
+
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;

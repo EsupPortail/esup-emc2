@@ -11,11 +11,11 @@ use Structure\Entity\Db\Structure;
 
 //TODO et les assertions qui vont bien : gestionnaire de la bonne structure pour les modifications
 
-$canVoirAffectation         = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
-$canAjouterAffectation      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AJOUTER));
-$canModifierAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_MODIFIER));
-$canHistoriserAffectation   = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_HISTORISER));
-$canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_DETRUIRE));
+$canVoirAffectation         = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFICHER));
+$canAjouterAffectation      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER));
+$canModifierAffectation     = $canAjouterAffectation;
+$canHistoriserAffectation   = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_HISTORISER));
+$canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_DETRUIRE));
 ?>
 
 <div class="row">
