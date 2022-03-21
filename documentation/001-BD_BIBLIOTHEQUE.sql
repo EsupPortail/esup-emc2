@@ -483,4 +483,28 @@ create table fichier_fichier
 create unique index fichier_fichier_id_uindex on fichier_fichier (id);
 create unique index fichier_fichier_nom_stockage_uindex on fichier_fichier (nom_stockage);
 
+-- UNICAEN INDICATEUR -------------------------------------------------------------------
+
+create table unicaen_indicateur
+(
+    id serial not null constraint indicateur_pk primary key,
+    titre varchar(256) not null,
+    description varchar(2048),
+    requete varchar(4096) not null,
+    dernier_rafraichissement timestamp,
+    view_id varchar(256),
+    entity varchar(256)
+);
+
+create table unicaen_indicateur_abonnement
+(
+    id serial not null constraint abonnement_pk primary key,
+    user_id integer not null constraint indicateur_abonnement_user_id_fk references unicaen_utilisateur_user on delete cascade,
+    indicateur_id integer not null constraint indicateur_abonnement_indicateur_definition_id_fk references unicaen_indicateur on delete cascade,
+    frequence varchar(256),
+    dernier_envoi timestamp
+);
+create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
+create unique index indicateur_id_uindex on unicaen_indicateur (id);
+
 

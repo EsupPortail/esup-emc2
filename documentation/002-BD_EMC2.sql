@@ -483,13 +483,8 @@ create unique index formation_instance_frais_id_uindex on formation_instance_fra
 
 create table formation_instance_journee
 (
-    id serial not null
-        constraint formation_instance_journee_pk
-            primary key,
-    instance_id integer not null
-        constraint formation_instance_journee_formation_instance_id_fk
-            references formation_instance
-            on delete cascade,
+    id serial not null constraint formation_instance_journee_pk primary key,
+    instance_id integer not null constraint formation_instance_journee_formation_instance_id_fk references formation_instance on delete cascade,
     jour timestamp not null,
     debut varchar(64) not null,
     fin varchar(64) not null,
@@ -505,6 +500,42 @@ create table formation_instance_journee
     histo_destructeur_id integer constraint formation_instance_journee_user_id_fk_3 references unicaen_utilisateur_user
 );
 create unique index formation_instance_journee_id_uindex on formation_instance_journee (id);
+
+create table formation_instance_formateur
+(
+    id serial not null constraint formation_instance_formateur_pk primary key,
+    instance_id integer not null constraint formation_instance_formateur_formation_instance_id_fk references formation_instance on delete cascade,
+    prenom varchar(256) not null,
+    nom varchar(256) not null,
+    email varchar(1024),
+    attachement varchar(1024),
+    volume double precision,
+    montant double precision,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_instance_formateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_formateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_formateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_formateur_id_uindex on formation_instance_formateur (id);
+
+create table formation_instance_presence
+(
+    id serial not null constraint formation_instance_presence_pk primary key,
+    journee_id integer not null constraint formation_instance_presence_formation_instance_journee_id_fk references formation_instance_journee on delete cascade,
+    inscrit_id integer not null constraint formation_instance_presence_formation_instance_inscrit_id_fk references formation_instance_inscrit on delete cascade,
+    presence_type varchar(256) not null,
+    presence_temoin boolean not null,
+    commentaire text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_instance_presence_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_instance_presence_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_instance_presence_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_instance_presence_id_uindex on formation_instance_presence (id);
 
 
 
@@ -1041,6 +1072,20 @@ create table ficheposte
 );
 create unique index fiche_metier_id_uindex on ficheposte (id);
 
+create table ficheposte_expertise
+(
+    id serial not null constraint expertise_pk primary key,
+    ficheposte_id integer not null constraint expertise_ficheposte_fk references ficheposte on delete cascade,
+    libelle text,
+    description text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint expertise_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint expertise_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint expertise_destructeur_fk references unicaen_utilisateur_user
+);
+
 create table ficheposte_specificite
 (
     id serial not null constraint ficheposte_specificite_pk primary key,
@@ -1055,6 +1100,24 @@ create table ficheposte_specificite
 );
 create unique index ficheposte_specificite_id_uindex on ficheposte_specificite (id);
 
+create table ficheposte_activite_specifique
+(
+    id serial not null constraint specificite_activite_pk primary key,
+    specificite_id integer not null constraint specificite_activite_specificite_poste_id_fk references ficheposte_specificite on delete cascade,
+    activite_id integer not null constraint specificite_activite_activite_id_fk references activite on delete cascade,
+    retrait varchar(1024),
+    description text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint specificite_activite_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint specificite_activite_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint specificite_activite_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index specificite_activite_id_uindex on ficheposte_activite_specifique (id);
+
+
+
 create table fichemetier_fichetype
 (
     id serial not null constraint fichemetier_fichetype_pkey primary key,
@@ -1062,13 +1125,13 @@ create table fichemetier_fichetype
     activite integer not null constraint fichemetier_fichetype_activite_id_fk references activite on delete cascade,
     position integer default 0 not null
 );
-create unique index fichemetier_fichetype_id_uindex on fichemetier_fichetype (id);
+create unique index fichemetier_fichetype_id_uindex on ficheposte_fichemetier (id);
 
 create table ficheposte_fichetype
 (
     id serial not null constraint fiche_type_externe_pk primary key,
     fiche_poste integer not null constraint fiche_type_externe_fiche_metier_id_fk references ficheposte on delete cascade,
-    fiche_type integer not null constraint fiche_type_externe_fiche_type_metier_id_fk references fichemetier_fichetype on delete cascade,
+    fiche_type integer not null constraint fiche_type_externe_fiche_type_metier_id_fk references ficheposte_fichemetier on delete cascade,
     quotite integer not null,
     principale boolean,
     activites varchar(128)
