@@ -201,8 +201,8 @@ class FicheMetierService {
     public function getFichesMetiersWithNiveau(int $niveau) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('niveaux.borneInferieure >= :niveau')
-            ->andWhere('niveaux.borneSuperieure <= :niveau')
+            ->andWhere('niveauxbas.niveau >= :niveau')
+            ->andWhere('niveauxhaut.niveau <= :niveau')
             ->setParameter('niveau', $niveau)
             ->andWhere('ficheMetier.histoDestruction IS NULL')
             ->andWhere('etat.code = :ok')

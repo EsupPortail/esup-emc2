@@ -19,6 +19,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
+use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FichePosteControllerFactory {
@@ -34,6 +35,7 @@ class FichePosteControllerFactory {
          * @var ActivitesDescriptionsRetireesService $activitesDescriptionsRetireesSercice
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
+         * @var EtatService $etatService
          * @var ExpertiseService $expertiseService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
@@ -47,6 +49,7 @@ class FichePosteControllerFactory {
         $activitesDescriptionsRetireesSercice = $container->get(ActivitesDescriptionsRetireesService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
+        $etatService = $container->get(EtatService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -77,6 +80,7 @@ class FichePosteControllerFactory {
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesSercice);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
+        $controller->setEtatService($etatService);
         $controller->setExpertiseService($expertiseService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);

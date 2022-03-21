@@ -1081,6 +1081,72 @@ create table structure_ficheposte
     ficheposte_id integer not null constraint structure_ficheposte_fiche_poste_id_fk references ficheposte on delete cascade,
     constraint structure_ficheposte_pk primary key (structure_id, ficheposte_id)
 );
+create table ficheposte_activitedescription_retiree
+(
+    id serial not null constraint ficheposte_activitedescription_retiree_pk primary key,
+    ficheposte_id integer not null constraint fadr_ficheposte_fk references ficheposte on delete cascade,
+    fichemetier_id integer not null constraint fadr_fichemetier_fk references fichemetier on delete cascade,
+    activite_id integer not null constraint fadr_activite_fk references activite on delete cascade,
+    description_id integer not null constraint fadr_description_fk references activite_description on delete cascade,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint fadr_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint fadr_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint fadr_destructeur_id references unicaen_utilisateur_user
+);
+create unique index ficheposte_activitedescription_retiree_id_uindex on ficheposte_activitedescription_retiree (id);
+
+create table ficheposte_application_retiree
+(
+    id serial not null constraint ficheposte_application_conservee_pk primary key,
+    ficheposte_id integer not null constraint fcc_ficheposte_fk references ficheposte on delete cascade,
+    application_id integer not null constraint fcc_application_fk references element_application on delete cascade,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint fcc_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint fcc_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint fcc_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index ficheposte_application_conservee_id_uindex on ficheposte_application_retiree (id);
+
+create table ficheposte_competence_retiree
+(
+    id serial not null constraint ficheposte_competence_conservee_pk primary key,
+    ficheposte_id integer not null constraint fcc_ficheposte_fk references ficheposte on delete cascade,
+    competence_id integer not null constraint fcc_competence_fk references element_competence on delete cascade,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint fcc_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint fcc_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint fcc_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index ficheposte_competence_conservee_id_uindex on ficheposte_competence_retiree (id);
+
+create table ficheposte_fichemetier_domaine
+(
+    id serial not null constraint ficheposte_fichemetier_domaine_pk primary key,
+    fichemetierexterne_id integer not null constraint ficheposte_fichemetier_domaine_fiche_type_externe_id_fk references ficheposte_fichetype on delete cascade,
+    domaine_id integer not null constraint ficheposte_fichemetier_domaine_domaine_id_fk references metier_domaine on delete cascade,
+    quotite integer default 100 not null
+);
+create unique index ficheposte_fichemetier_domaine_id_uindex on ficheposte_fichemetier_domaine (id);
+
+create table ficheposte_formation_retiree
+(
+    id serial not null constraint ficheposte_formation_conservee_pk primary key,
+    ficheposte_id integer not null constraint ffc_ficheposte_fk references ficheposte on delete cascade,
+    formation_id integer not null constraint ffc_formation_fk references formation on delete cascade,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint ffc_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer  constraint ffc_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint ffc_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index ficheposte_formation_conservee_id_uindex on ficheposte_formation_retiree (id);
 
 -- FICHE PROFIL ---------------
 

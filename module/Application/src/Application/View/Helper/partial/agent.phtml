@@ -12,7 +12,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
 
 $canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canLettre              = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFECTATION_AFFICHER));
+$canLettre              = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFICHER));
 $canAjouterMission      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canModifierMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canHistoriserMission   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));

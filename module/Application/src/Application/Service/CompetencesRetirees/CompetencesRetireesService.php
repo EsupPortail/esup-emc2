@@ -2,11 +2,11 @@
 
 namespace Application\Service\CompetencesRetirees;
 
-use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Element\Entity\Db\Competence;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -66,7 +66,7 @@ class CompetencesRetireesService {
      * @param Competence $competence
      * @return FicheposteCompetenceRetiree
      */
-    public function getCompetenceRetiree(FichePoste $ficheposte, Competence $competence) : FicheposteCompetenceRetiree
+    public function getCompetenceRetiree(FichePoste $ficheposte, Competence $competence) : ?FicheposteCompetenceRetiree
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteCompetenceRetiree::class)->createQueryBuilder('retiree')
             ->andWhere('retiree.fichePoste = :ficheposte')

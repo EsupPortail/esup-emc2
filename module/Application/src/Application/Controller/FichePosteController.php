@@ -29,6 +29,7 @@ use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use Zend\Http\Request;
@@ -43,18 +44,19 @@ class FichePosteController extends AbstractActionController {
     /** Trait utilitaire */
 
     /** Service **/
-    use AgentServiceAwareTrait;
-    use RenduServiceAwareTrait;
-    use FicheMetierServiceAwareTrait;
-    use FichePosteServiceAwareTrait;
-    use StructureServiceAwareTrait;
     use ActiviteServiceAwareTrait;
     use ActivitesDescriptionsRetireesServiceAwareTrait;
+    use AgentServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
-    use SpecificitePosteServiceAwareTrait;
+    use FicheMetierServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use RenduServiceAwareTrait;
+    use StructureServiceAwareTrait;
+    use SpecificitePosteServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -99,6 +101,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         $fiche = new FichePoste();
+        $fiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
         $fiche->setAgent($agent);
         $this->getFichePosteService()->create($fiche);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);

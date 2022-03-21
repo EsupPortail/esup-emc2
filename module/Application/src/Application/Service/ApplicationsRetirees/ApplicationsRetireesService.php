@@ -69,7 +69,7 @@ class ApplicationsRetireesService {
      * @param Application $application
      * @return FicheposteApplicationRetiree
      */
-    public function getApplicationRetiree(FichePoste $ficheposte, Application $application) : FicheposteApplicationRetiree
+    public function getApplicationRetiree(FichePoste $ficheposte, Application $application) : ?FicheposteApplicationRetiree
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteApplicationRetiree::class)->createQueryBuilder('retiree')
             ->andWhere('retiree.fichePoste = :ficheposte')

@@ -33,20 +33,17 @@ $gestionnaires = $structure->getGestionnaires();
                     data-event="modification"
                 >
                     <span class="icon editer" data-toggle="tooltip" data-html="true"
-                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
-                    </span></a>
+                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
                 <a
                     <?php /** @see \Application\Controller\StructureController::toggleResumeMereAction() */ ?>
                         href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
                 >
                     <?php if ($structure->getRepriseResumeMere()) : ?>
                         <span class="icon ko" data-toggle="tooltip" data-html="true"
-                              title="Ne plus réutiliser le résumé de la structure mère">
-                        </span></a>
+                              title="Ne plus réutiliser le résumé de la structure mère"></span></a>
                     <?php else : ?>
                         <span class="icon ok" data-toggle="tooltip" data-html="true"
-                          title="Réutiliser le résumé de la structure mère">
-                        </span></a>
+                          title="Réutiliser le résumé de la structure mère"></span></a>
                     <?php endif; ?>
 
             <?php endif; ?>

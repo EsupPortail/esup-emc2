@@ -2,6 +2,7 @@
 
 namespace Carriere\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use UnicaenApp\Entity\HistoriqueAwareInterface;
 use UnicaenApp\Entity\HistoriqueAwareTrait;
 
