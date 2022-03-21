@@ -36,8 +36,8 @@ if ($mode === 'edition-fiche-metier') {
                 </a>
 
                 <?php if ($actions['modifier'] === true) : ?>
-                    <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */ ?>
-                    <a href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()],
+                    <?php /** @see \Application\Controller\ElementController::ajouterCompetenceElementAction() */ ?>
+                    <a href="<?php echo $this->url('element_/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()],
                         ['query' => ['multiple' => true]], true); ?>"
                        class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
                        data-event="modification"

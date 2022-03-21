@@ -95,16 +95,16 @@ ksort($groupes);
             <?php if ($canAjouter) : ?>
                 <br/>
                 <?php if ($objet instanceof Agent) : ?>
-                <a
-                    <?php /** @see \Application\Controller\CompetenceController::ajouterCompetenceElementAction() */?>
+                    <a
+                        <?php /** @see \Application\Controller\ElementController::ajouterCompetenceElementAction() */?>
                         <?php //todo ... Agent::class => get_class($objet) ... ?>
-                        href="<?php echo $this->url('competence/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
-                        class="ajax-modal btn btn-primary action"
-                        data-event="modification"
-                >
-                    <span class="icon ajouter" title="Ajouter une compétence"></span>
-                    Ajouter une compétence
-                </a>
+                            href="<?php echo $this->url('application/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                            class="ajax-modal btn btn-primary action"
+                            data-event="modification"
+                    >
+                        <span class="icon ajouter" title="Ajouter une application"></span>
+                        Ajouter une application
+                    </a>
                 <?php endif; ?>
                 <?php if ($objet instanceof Formation) : ?>
                     <a
@@ -181,7 +181,7 @@ ksort($groupes);
 <!--                            --><?php //endif; ?>
                             <?php if ($canModifier) : ?>
                                 <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
-                                        href="<?php echo $this->url("element/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                        href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                         class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
                                         title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
                                     <span class="icon editer"></span></a>
@@ -189,7 +189,7 @@ ksort($groupes);
                             <?php if ($canSupprimer) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
-                                        href="<?php echo $this->url('element/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"
                                 >

@@ -390,6 +390,42 @@ create table formation_obtenue_competence
     constraint formation_obtenue_competence_pk primary key (formation_id, competence_element_id)
 );
 
+create table formation_parcours
+(
+    id serial not null constraint formation_parcours_pk primary key,
+    type varchar(255),
+    reference_id integer,
+    libelle varchar(1024),
+    description text,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null,
+    histo_modification timestamp,
+    histo_modificateur_id integer,
+    histo_destruction timestamp,
+    histo_destructeur_id integer
+);
+create unique index formation_parcours_id_uindex on formation_parcours (id);
+
+create table formation_parcours_formation
+(
+    id serial not null constraint formation_parcours_formation_pk primary key,
+    parcours_id integer not null constraint formation_parcours_formation_formation_parcours_id_fk references formation_parcours on delete cascade,
+    formation_id integer constraint formation_parcours_formation_formation_id_fk references formation on delete cascade,
+    ordre integer,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
+);
+create unique index formation_parcours_formation_id_uindex on formation_parcours_formation (id);
+
+
+
+
+
+
 -- COMPLEMENT --------------------------------------------------------------------------------------------------------
 
 create table complement
@@ -887,6 +923,21 @@ create table fichemetier_formation
     formation_id integer not null constraint fiche_metier_formation_formation_id_fk references formation on delete cascade,
     constraint fiche_metier_formation_pk primary key (fiche_metier_id, formation_id)
 );
+
+create table configuration_fichemetier
+(
+    id serial not null constraint configuration_fichemetier_pk primary key,
+    operation varchar(64) not null,
+    entity_type varchar(255),
+    entity_id varchar(255),
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint configuration_fichemetier_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint configuration_fichemetier_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint configuration_fichemetier_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index configuration_fichemetier_id_uindex on configuration_fichemetier (id);
 
 -- FICHE POSTE -------------------------------------------------------------------------------------------
 

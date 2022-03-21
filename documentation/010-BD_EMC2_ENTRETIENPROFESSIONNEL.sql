@@ -90,3 +90,16 @@ create table entretienprofessionnel_validation
     constraint entretienprofessionnel_validation_pk primary key (entretien_id, validation_id)
 );
 
+create table configuration_entretienpro
+(
+    id serial not null constraint configuration_entretienpro_pk primary key,
+    operation varchar(64) not null,
+    valeur varchar(128) not null,
+    histo_creation timestamp not null,
+    histo_createur_id integer not null constraint configuration_entretienpro_createur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint configuration_entretienpro_modificateur_fk references unicaen_utilisateur_user,
+    histo_destruction timestamp,
+    histo_destructeur_id integer constraint configuration_entretienpro_destructeur_fk references unicaen_utilisateur_user
+);
+create unique index configuration_entretienpro_id_uindex on configuration_entretienpro (id);

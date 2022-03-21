@@ -76,16 +76,6 @@ return [
                         ApplicationPrivileges::APPLICATION_EFFACER,
                     ],
                 ],
-                [
-                    'controller' => ApplicationController::class,
-                    'action' => [
-                        'ajouter-application-element',
-                    ],
-                    'privileges' => [
-//                        AgentPrivileges::AGENT_ACQUIS_MODIFIER,
-//                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
-                    ],
-                ],
             ],
         ],
     ],
@@ -161,17 +151,6 @@ return [
                                         'action' => 'afficher',
                                     ],
                                 ],
-                            ],
-                            'ajouter-application-element' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/ajouter-application-element/:type/:id[/:clef]',
-                                    'defaults' => [
-                                        'controller' => ApplicationController::class,
-                                        'action'     => 'ajouter-application-element',
-                                    ],
-                                ],
-                                'may_terminate' => true,
                             ],
                             'changer-status' => [
                                 'type' => Segment::class,

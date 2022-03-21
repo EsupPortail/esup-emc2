@@ -155,6 +155,28 @@ return [
                 ],
             ],
             [
+                'name' => 'Import_AGENT_STATUT',
+                'source' => [
+                    'name'               => 'Statut des agents geres par la DRH',
+                    'select'             => 'SELECT ID, ID_ORIG, C_SOURCE, INDIVIDU_ID AS AGENT_ID, STRUCTURE_ID, D_DEBUT, D_FIN, T_TITULAIRE, T_CDI, T_CDD, T_VACATAIRE, T_ENSEIGNANT, T_ADMINISTRATIF, T_CHERCHEUR, T_ETUDIANT, T_AUDITEUR_LIBRE, T_DOCTORANT, T_DETACHE_IN, T_DETACHE_OUT, T_DISPO, T_HEBERGE, T_EMERITE, T_RETRAITE    FROM INDIVIDU_STATUT',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+//                    'columns'            => ['ID_ORIG', 'C_SOURCE', 'INDIVIDU_ID', 'STRUCTURE_ID', 'D_DEBUT', 'D_FIN', 'T_TITULAIRE', 'T_CDI', 'T_CDD', 'T_VACATAIRE', 'T_ENSEIGNANT', 'T_ADMINISTRATIF', 'T_CHERCHEUR', 'T_ETUDIANT', 'T_AUDITEUR_LIBRE', 'T_DOCTORANT', 'T_DETACHE_IN', 'T_DETACHE_OUT', 'T_DISPO', 'T_HEBERGE', 'T_EMERITE', 'T_RETRAITE', 'T_CLD', 'T_CLM'],
+                ],
+                'intermediate_table' => 'src_agent_statut',
+                'destination' => [
+                    'name'               => 'Statut des agents geres par la DRH',
+                    'table'              => 'agent_carriere_statut',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['id_orig', 'c_source', 'individu_id', 'structure_id', 'd_debut', 'd_fin', 't_titulaire', 't_cdi', 't_cdd', 't_vacataire', 't_enseignant', 't_administratif', 't_chercheur', 't_etudiant', 't_auditeur_libre', 't_doctorant', 't_detache_in', 't_detache_out', 't_dispo', 't_heberge', 't_emerite', 't_retraite', 't_cld', 't_clm'],
+                    'columns_to_char' => [
+                        'd_debut' => "TO_CHAR(%s,'YYYY-MM-DD')",
+                        'd_fin'   => "TO_CHAR(%s,'YYYY-MM-DD')",
+                    ],
+                ],
+            ],
+            [
                 'name' => 'Import_AGENT_QUOTITE',
                 'source' => [
                     'name'               => 'Quotité travaillé par les agents',
