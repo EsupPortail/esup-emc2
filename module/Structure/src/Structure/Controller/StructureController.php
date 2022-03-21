@@ -18,8 +18,12 @@ use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
+use Structure\Entity\Db\StructureGestionnaire;
+use Structure\Entity\Db\StructureResponsable;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
+use Structure\Form\AjouterResponsable\AjouterResponsableForm;
+use Structure\Form\AjouterResponsable\AjouterResponsableFormAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -50,6 +54,7 @@ class StructureController extends AbstractActionController {
 
     use AgentMissionSpecifiqueFormAwareTrait;
     use AjouterGestionnaireFormAwareTrait;
+    use AjouterResponsableFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use HasDescriptionFormAwareTrait;
 
@@ -169,23 +174,78 @@ class StructureController extends AbstractActionController {
 
     /** GESTION DES RESPONSABLES ET GESTIONNAIRES *******************************************************************/
 
-    public function ajouterGestionnaireAction() : ViewModel
+    public function ajouterResponsableAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
 
-        /** @var AjouterGestionnaireForm $form */
-        $form = $this->getAjouterGestionnaireForm();
-        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
+        $responsable = new StructureResponsable();
+        $responsable->setStructure($structure);
+
+        /** @var AjouterResponsableForm $form */
+        $form = $this->getAjouterResponsableForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
+        $form->bind($responsable);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $gestionnaire = $this->getAgentService()->getAgent($data['gestionnaire']['id']);
-            if ($gestionnaire === null) throw new RuntimeException("Aucun agent pour l'identifiant [".$data['gestionnaire']['id']."/".$data['gestionnaire']['label']."]");
-            $structure->addGestionnaire($gestionnaire);
-            $this->getStructureService()->update($structure);
+            $form->setData($data);
+            if ($form->isValid()) {
+                $responsable->setCreatedOn();
+                $responsable->setImported(false);
+                $this->getStructureService()->getEntityManager()->persist($responsable);
+                $this->getStructureService()->getEntityManager()->flush($responsable);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate("application/default/default-form");
+        $vm->setVariables([
+            'title' => "Ajout d'un responsable à une structure",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerResponsableAction() : Response
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $responsable = $this->getAgentService()->getEntityManager()->getRepository(StructureResponsable::class)->find($this->params()->fromRoute('responsable'));
+
+        if ($responsable) {
+            $this->getStructureService()->getEntityManager()->remove($responsable);
+            $this->getStructureService()->getEntityManager()->flush($responsable);
+        }
+
+        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+    }
+
+    public function ajouterGestionnaireAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
+
+        $gestionnaire = new StructureGestionnaire();
+        $gestionnaire->setStructure($structure);
+
+        /** @var AjouterGestionnaireForm $form */
+        $form = $this->getAjouterGestionnaireForm();
+        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
+        $form->bind($gestionnaire);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $gestionnaire->setCreatedOn();
+                $gestionnaire->setImported(false);
+                $this->getStructureService()->getEntityManager()->persist($gestionnaire);
+                $this->getStructureService()->getEntityManager()->flush($gestionnaire);
+            }
         }
 
         $vm = new ViewModel();
@@ -200,10 +260,12 @@ class StructureController extends AbstractActionController {
     public function retirerGestionnaireAction() : Response
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $gestionnaire = $this->getAgentService()->getAgent($this->params()->fromRoute('gestionnaire'));
+        $gestionnaire = $this->getAgentService()->getEntityManager()->getRepository(StructureGestionnaire::class)->find($this->params()->fromRoute('gestionnaire'));
 
-        $structure->removeGestionnaire($gestionnaire);
-        $this->getStructureService()->update($structure);
+        if ($gestionnaire) {
+            $this->getStructureService()->getEntityManager()->remove($gestionnaire);
+            $this->getStructureService()->getEntityManager()->flush($gestionnaire);
+        }
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }

@@ -1,16 +1,16 @@
 <?php 
 
-namespace Structure\Form\AjouterGestionnaire;
+namespace Structure\Form\AjouterResponsable;
 
 use Interop\Container\ContainerInterface;
 use Zend\View\Helper\Url;
 use Zend\View\HelperPluginManager;
 
-class AjouterGestionnaireFormFactory {
+class AjouterResponsableFormFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return AjouterGestionnaireForm
+     * @return AjouterResponsableForm
      */
     public function __invoke(ContainerInterface $container)
     {
@@ -19,14 +19,14 @@ class AjouterGestionnaireFormFactory {
         /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
         /** @see AgentController::rechercherAction() */
-        $urlGestionnaire =  $urlManager->__invoke('agent/rechercher', [], [], true);
+        $urlResponsable =  $urlManager->__invoke('agent/rechercher', [], [], true);
 
-        /** @var AjouterGestionnaireHydrator $hydrator */
-        $hydrator = $container->get('HydratorManager')->get(AjouterGestionnaireHydrator::class);
+        /** @var AjouterResponsableHydrator $hydrator */
+        $hydrator = $container->get('HydratorManager')->get(AjouterResponsableHydrator::class);
 
-        /** @var AjouterGestionnaireForm $form */
-        $form = new AjouterGestionnaireForm();
-        $form->setUrlGestionnaire($urlGestionnaire);
+        /** @var AjouterResponsableForm $form */
+        $form = new AjouterResponsableForm();
+        $form->setUrlResponsable($urlResponsable);
         $form->setHydrator($hydrator);
         return $form;
     }

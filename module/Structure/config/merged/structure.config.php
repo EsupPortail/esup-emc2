@@ -8,6 +8,12 @@ use Structure\Controller\StructureController;
 use Structure\Controller\StructureControllerFactory;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireFormFactory;
+use Structure\Form\AjouterGestionnaire\AjouterGestionnaireHydrator;
+use Structure\Form\AjouterGestionnaire\AjouterGestionnaireHydratorFactory;
+use Structure\Form\AjouterResponsable\AjouterResponsableForm;
+use Structure\Form\AjouterResponsable\AjouterResponsableFormFactory;
+use Structure\Form\AjouterResponsable\AjouterResponsableHydrator;
+use Structure\Form\AjouterResponsable\AjouterResponsableHydratorFactory;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\Structure\StructureServiceFactory;
@@ -95,7 +101,7 @@ return [
                         'retirer-responsable',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
-                    'assertion'  => StructureAssertion::class,
+                    //'assertion'  => StructureAssertion::class,
 
                 ],
                 [
@@ -351,7 +357,6 @@ return [
         ],
     ],
 
-
     'service_manager' => [
         'factories' => [
             StructureService::class => StructureServiceFactory::class,
@@ -368,10 +373,14 @@ return [
     'form_elements' => [
         'factories' => [
             AjouterGestionnaireForm::class => AjouterGestionnaireFormFactory::class,
+            AjouterResponsableForm::class => AjouterResponsableFormFactory::class,
         ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            AjouterGestionnaireHydrator::class => AjouterGestionnaireHydratorFactory::class,
+            AjouterResponsableHydrator::class => AjouterResponsableHydratorFactory::class,
+        ],
     ]
 
 ];

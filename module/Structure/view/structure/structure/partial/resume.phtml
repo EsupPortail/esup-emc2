@@ -6,16 +6,19 @@
  */
 
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Privilege\StructurePrivileges;
 
 $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
 $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+$canEditerResponsable  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
 $responsables = $structure->getResponsables();
 $responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted(); });
 
 $gestionnaires = $structure->getGestionnaires();
+$gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted(); });
 
 ?>
 
@@ -87,7 +90,18 @@ $gestionnaires = $structure->getGestionnaires();
         <h3>
             Responsables
             <span class="badge"><?php echo count($responsables); ?></span>
-            <span class="icon synchoniser" title="Synchronisé depuis OCTOPUS"></span>
+            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <?php if ($canEditerResponsable) : ?>
+                <a
+                    <?php /** @see \Application\Controller\StructureController::ajouterResponsable() */ ?>
+                        href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                >
+                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                              title="Ajouter un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                        </span></a>
+            <?php endif; ?>
         </h3>
         <ul>
             <?php foreach ($responsables as $responsable) : ?>
@@ -95,6 +109,13 @@ $gestionnaires = $structure->getGestionnaires();
                     <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
                         <?php echo $responsable->getAgent()->getDenomination(); ?>
                     </span>
+                    <?php if (! $responsable->isImported() AND $canEditerResponsable) : ?>
+                        <?php /** @see \Structure\Controller\StructureController::retirerResponsableAction()  */?>
+                        <a href="<?php echo $this->url('structure/retirer-responsable', ['structure'=>$structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>">
+                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                                  title="Retirer un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
+                        </a>
+                    <?php endif ?>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -102,35 +123,35 @@ $gestionnaires = $structure->getGestionnaires();
         <h3>
             Gestionnaires
             <span class="badge"><?php echo count($gestionnaires); ?></span>
-            <?php if ($canEditerGestionnaire) : ?>
-                <a
-                    <?php /** @see \Application\Controller\StructureController::ajouterGestionnaireAction() */ ?>
-                    href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
-                    class="ajax-modal"
-                    data-event="modification"
-                >
-                    <span class="icon ajouter" data-toggle="tooltip" data-html="true"
-                          title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
-                    </span></a>
-            <?php endif; ?>
+            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+                <?php if ($canEditerGestionnaire) : ?>
+                    <a
+                        <?php /** @see \Structure\Controller\StructureController::ajouterGestionnaireAction() */ ?>
+                        href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                        class="ajax-modal"
+                        data-event="modification"
+                    >
+                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                              title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                        </span></a>
+                <?php endif; ?>
         </h3>
         <ul>
             <?php foreach ($gestionnaires as $gestionnaire) : ?>
                 <li>
-                    <?php echo $gestionnaire->getDenomination(); ?>
-                    <?php if ($canEditerGestionnaire) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\StructureController::retirerGestionnaireAction() */ ?>
-                            href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure' => $structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>"
-                        >
-                            <span class="icon detruire"  data-toggle="tooltip" data-html="true"
-                                  title="Supprimer la gestion de structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span> au gestionnaire <span class='highlight user'><?php echo $gestionnaire->getDenomination(); ?></span>">
-                            </span></a>
-                    <?php endif; ?>
+                    <span title="Responsabilité valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
+                    </span>
+                    <?php if (! $gestionnaire->isImported() AND $canEditerGestionnaire) : ?>
+                        <?php /** @see \Structure\Controller\StructureController::retirerGestionnaireAction()  */?>
+                        <a href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure'=>$structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>">
+                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                                  title="Retirer un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
+                        </a>
+                    <?php endif ?>
                 </li>
             <?php endforeach; ?>
         </ul>
-
         <h2 style="border-bottom:1px solid black;">
             Structures
             <span class="icon information" style="color:var(--content-background)"></span>

@@ -193,6 +193,41 @@ return [
                     'columns'            => ['agent_id', 'debut', 'fin', 'quotite'],
                 ],
             ],
+            [
+                'name' => 'Import_STRUCTURE_RESPONSABLE',
+                'source' => [
+                    'name'               => 'Responsables des structures',
+                    'select'             => 'SELECT ID, STRUCTURE_ID, INDIVIDU_ID AS AGENT_ID, FONCTION_ID, DATE_DEBUT, DATE_FIN FROM STRUCTURE_RESPONSABLE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+//                    'columns'            => ['STRUCTURE_ID', 'AGENT_ID', 'FONCTION_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'destination' => [
+                    'name'               => 'Responsables des strucures',
+                    'table'              => 'structure_responsable',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['structure_id', 'agent_id', 'fonction_id', 'date_debut', 'date_fin'],
+                ],
+            ],
+            [
+                'name' => 'Import_STRUCTURE_GESTIONNAIRE',
+                'source' => [
+                    'name'               => 'Responsables des structures',
+                    'select'             => 'SELECT ID, STRUCTURE_ID, INDIVIDU_ID AS AGENT_ID, FONCTION_ID, DATE_DEBUT, DATE_FIN FROM STRUCTURE_GESTIONNAIRE',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+//                    'columns'            => ['STRUCTURE_ID', 'AGENT_ID', 'FONCTION_ID', 'DATE_DEBUT', 'DATE_FIN'],
+                ],
+                'destination' => [
+                    'name'               => 'Gestionnaire des strucures',
+                    'table'              => 'structure_gestionnaire',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['structure_id', 'agent_id', 'fonction_id', 'date_debut', 'date_fin'],
+                ],
+            ],
+
         ],
     ],
 

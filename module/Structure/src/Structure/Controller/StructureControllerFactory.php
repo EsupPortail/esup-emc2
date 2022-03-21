@@ -18,6 +18,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
+use Structure\Form\AjouterResponsable\AjouterResponsableForm;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -58,11 +59,13 @@ class StructureControllerFactory {
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
          * @var AjouterGestionnaireForm $ajouterGestionnaire
+         * @var AjouterResponsableForm $ajouterResponsable
          * @var SelectionAgentForm $selectionAgentForm
          * @var HasDescriptionFormAwareTrait $hasDescriptionForm
          */
         $affectationForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
         $ajouterGestionnaire = $container->get('FormElementManager')->get(AjouterGestionnaireForm::class);
+        $ajouterResponsable = $container->get('FormElementManager')->get(AjouterResponsableForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
         $hasDescriptionForm = $container->get('FormElementManager')->get(HasDescriptionForm::class);
 
@@ -85,6 +88,7 @@ class StructureControllerFactory {
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setAjouterGestionnaireForm($ajouterGestionnaire);
+        $controller->setAjouterResponsableForm($ajouterResponsable);
         $controller->setSelectionAgentForm($selectionAgentForm);
         $controller->setHasDescriptionForm($hasDescriptionForm);
 

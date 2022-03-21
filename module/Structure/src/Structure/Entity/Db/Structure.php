@@ -164,13 +164,24 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
 
     /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/
 
+//    /**
+//     * @return StructureGestionnaire[]
+//     */
+//    public function getGestionnaires() : array
+//    {
+//        if ($this->gestionnaires === null) return [];
+//        return $this->gestionnaires->toArray();
+//    }
+
     /**
-     * @return Agent[]
+     * @return StructureGestionnaire[]
      */
     public function getGestionnaires() : array
     {
         if ($this->gestionnaires === null) return [];
-        return $this->gestionnaires->toArray();
+        $array = $this->gestionnaires->toArray();
+        $array = array_filter($array, function (StructureGestionnaire $a) { return !$a->isDeleted();});
+        return $array;
     }
 
     /**

@@ -740,12 +740,27 @@ create table structure_responsable
     id integer not null constraint structure_responsable_pk primary key,
     structure_id integer not null,
     agent_id varchar(40) not null,
-    fonction_id integer not null,
+    fonction_id integer,
     date_debut timestamp,
     date_fin timestamp,
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
-    deleted_on timestamp(0)
+    deleted_on timestamp(0),
+    imported boolean default true
+);
+
+create table structure_gestionnaire
+(
+    id integer not null constraint structure_gestionnaire_pk primary key,
+    structure_id integer not null,
+    agent_id varchar(40) not null,
+    fonction_id integer,
+    date_debut timestamp,
+    date_fin timestamp,
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0),
+    imported boolean default true
 );
 
 create table structure_agent_force

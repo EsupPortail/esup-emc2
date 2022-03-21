@@ -1,6 +1,6 @@
 <?php
 
-namespace Structure\Form\AjouterGestionnaire;
+namespace Structure\Form\AjouterResponsable;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use UnicaenApp\Form\Element\SearchAndSelect;
@@ -8,33 +8,33 @@ use Zend\Form\Element\Button;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
 
-class AjouterGestionnaireForm extends Form {
+class AjouterResponsableForm extends Form {
 
     /** @var string */
-    private $urlGestionnaire;
+    private $urlResponsable;
 
     /**
-     * @param string $urlGestionnaire
-     * @return AjouterGestionnaireForm
+     * @param string $urlResponsable
+     * @return AjouterResponsableForm
      */
-    public function setUrlGestionnaire(string $urlGestionnaire)
+    public function setUrlResponsable(string $urlResponsable)
     {
-        $this->urlGestionnaire = $urlGestionnaire;
+        $this->urlResponsable = $urlResponsable;
         return $this;
     }
 
     public function init()
     {
         //Agent
-        $gestionnaire = new SearchAndSelect('gestionnaire', ['label' => "Gestionnaire * :"]);
-        $gestionnaire
-            ->setAutocompleteSource($this->urlGestionnaire)
+        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable * :"]);
+        $responsable
+            ->setAutocompleteSource($this->urlResponsable)
             ->setSelectionRequired(true)
             ->setAttributes([
-                'id' => 'gestionnaire',
+                'id' => 'responsable',
                 'placeholder' => "Agent à ajouter comme gestionnaire...",
             ]);
-        $this->add($gestionnaire);
+        $this->add($responsable);
 
         // periode
         $this->add([
@@ -62,8 +62,8 @@ class AjouterGestionnaireForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'gestionnaire'      => [ 'required' => true,  ],
-            'HasPeriode' => ['required' => false, ],
+            'responsable' => [ 'required' => true,  ],
+            'HasPeriode'  => ['required' => false, ],
         ]));
     }
 

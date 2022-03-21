@@ -20,16 +20,7 @@
 
         <one-to-many target-entity="Structure\Entity\Db\StructureAgentForce" mapped-by="structure" field="agentsForces"/>
 
-        <many-to-many field="gestionnaires" target-entity="Application\Entity\Db\Agent" inversed-by="gestionnaire" fetch="LAZY">
-            <join-table name="structure_gestionnaire">
-                <join-columns>
-                    <join-column name="structure_id" referenced-column-name="id"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="agent_id" referenced-column-name="c_individu"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
+        <one-to-many field="gestionnaires"  target-entity="Structure\Entity\Db\StructureGestionnaire" mapped-by="structure"/>
         <one-to-many field="responsables"  target-entity="Structure\Entity\Db\StructureResponsable" mapped-by="structure"/>
 
         <many-to-many field="fichesPostesRecrutements" target-entity="Application\Entity\Db\FichePoste" inversed-by="structure" fetch="LAZY">

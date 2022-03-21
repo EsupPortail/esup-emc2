@@ -7,7 +7,7 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 
-class StructureResponsable implements HasPeriodeInterface {
+class StructureGestionnaire implements HasPeriodeInterface {
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
 
@@ -38,9 +38,9 @@ class StructureResponsable implements HasPeriodeInterface {
 
     /**
      * @param Structure $structure
-     * @return StructureResponsable
+     * @return StructureGestionnaire
      */
-    public function setStructure(Structure $structure): StructureResponsable
+    public function setStructure(Structure $structure): StructureGestionnaire
     {
         $this->structure = $structure;
         return $this;
@@ -56,9 +56,9 @@ class StructureResponsable implements HasPeriodeInterface {
 
     /**
      * @param Agent $agent
-     * @return StructureResponsable
+     * @return StructureGestionnaire
      */
-    public function setAgent(Agent $agent): StructureResponsable
+    public function setAgent(Agent $agent): StructureGestionnaire
     {
         $this->agent = $agent;
         return $this;
@@ -74,9 +74,9 @@ class StructureResponsable implements HasPeriodeInterface {
 
     /**
      * @param int|null $fonctionId
-     * @return StructureResponsable
+     * @return StructureGestionnaire
      */
-    public function setFonctionId(?int $fonctionId): StructureResponsable
+    public function setFonctionId(?int $fonctionId): StructureGestionnaire
     {
         $this->fonctionId = $fonctionId;
         return $this;
@@ -99,5 +99,4 @@ class StructureResponsable implements HasPeriodeInterface {
         $this->imported = $imported;
         return $this;
     }
-
 }
