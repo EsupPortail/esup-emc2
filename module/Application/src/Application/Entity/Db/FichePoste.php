@@ -312,22 +312,22 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Fonctions pour simplifier  */
 
     /**
-     * @param FicheMetierTypeActivite $activite
+     * @param FicheMetierActivite $activite
      * @param DateTime $date
      * @return ActiviteDescription[]
      */
-    public function getDescriptions(FicheMetierTypeActivite $activite, DateTime $date)
+    public function getDescriptions(FicheMetierActivite $activite, DateTime $date) : array
     {
         $dictionnaire = $activite->getActivite()->getDescriptions($date);
         return $dictionnaire;
     }
 
     /**
-     * @param FicheMetierTypeActivite $FTActivite
+     * @param FicheMetierActivite $FTActivite
      * @param DateTime $date
      * @return ActiviteDescription[]
      */
-    public function getDescriptionsConservees(FicheMetierTypeActivite $FTActivite, DateTime $date)
+    public function getDescriptionsConservees(FicheMetierActivite $FTActivite, DateTime $date) : array
     {
         /** @var ActiviteDescription[] $descriptions */
         $descriptions = $FTActivite->getActivite()->getDescriptions($date);
@@ -346,7 +346,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $dictionnaire;
     }
 
-    public function isComplete()
+    public function isComplete() : bool
     {
         if (! $this->getAgent()) return false;
 //        if (! $this->getPoste()) return false;
@@ -354,7 +354,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return true;
     }
 
-    public function isVide()
+    public function isVide() : bool
     {
         if ( $this->getAgent()) return false;
 //        if ( $this->getPoste()) return false;

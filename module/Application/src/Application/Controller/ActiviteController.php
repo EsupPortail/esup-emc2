@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheMetierActivite;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
@@ -453,7 +453,7 @@ class ActiviteController  extends AbstractActionController {
             if ($activite->getNiveaux() === null) {
                 $inferieure = null;
                 $superieure = null;
-                /** @var FicheMetierTypeActivite $ficheMetier */
+                /** @var FicheMetierActivite $ficheMetier */
                 foreach ($activite->getFichesMetiers() as $ficheMetier) {
                     $niveaux = $ficheMetier->getFiche()->getMetier()->getNiveaux();
                     if ($niveaux) {

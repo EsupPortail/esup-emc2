@@ -8,7 +8,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheMetierActivite;
 use Formation\Entity\Db\Formation;
 
 
@@ -23,7 +23,7 @@ use Formation\Entity\Db\Formation;
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;
-            case $raison instanceof FicheMetierTypeActivite :
+            case $raison instanceof FicheMetierActivite :
                 $ac = $raison;
                 $text = $ac->getActivite()->getLibelle();
                 $label = "Activité";

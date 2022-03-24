@@ -21,3 +21,26 @@ services:
       - .:/var/www/html
       - /tmp:/tmp
     working_dir: /var/www/html
+#    networks :
+#      - emc2net
+#    depends_on:
+#      - sygal-db
+#
+#  emc2-db:
+#    image: registre.unicaen.fr:5000/sygal-db-image
+#    container_name: emc2-db-container
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: admin
+#      SYGAL_DB: emc2
+#      SYGAL_USER: ad_emc2
+#      SYGAL_PASSWORD: azerty
+#    ports:
+#      - 5432:5432
+#    volumes:
+#      # Base de dev
+#      - ./tmp/docker/db/dev/sql/:/sql          # Scripts de création/init
+#      - ./data/db/dev:/var/lib/postgresql/data # Données persistées.
+#    networks:
+#      - emc2net

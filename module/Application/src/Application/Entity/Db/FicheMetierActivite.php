@@ -2,7 +2,7 @@
 
 namespace Application\Entity\Db;
 
-class FicheMetierTypeActivite {
+class FicheMetierActivite {
 
     /** @var int */
     private $id;
@@ -17,7 +17,7 @@ class FicheMetierTypeActivite {
     /**
      * @return int
      */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -25,16 +25,16 @@ class FicheMetierTypeActivite {
     /**
      * @return FicheMetier
      */
-    public function getFiche()
+    public function getFiche() : ?FicheMetier
     {
         return $this->fiche;
     }
 
     /**
      * @param FicheMetier $fiche
-     * @return FicheMetierTypeActivite
+     * @return FicheMetierActivite
      */
-    public function setFiche($fiche)
+    public function setFiche(FicheMetier $fiche) : FicheMetierActivite
     {
         $this->fiche = $fiche;
         return $this;
@@ -43,16 +43,16 @@ class FicheMetierTypeActivite {
     /**
      * @return Activite
      */
-    public function getActivite()
+    public function getActivite() : ?Activite
     {
         return $this->activite;
     }
 
     /**
      * @param Activite $activite
-     * @return FicheMetierTypeActivite
+     * @return FicheMetierActivite
      */
-    public function setActivite($activite)
+    public function setActivite(Activite $activite) : ?FicheMetierActivite
     {
         $this->activite = $activite;
         return $this;
@@ -61,16 +61,16 @@ class FicheMetierTypeActivite {
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition() : ?int
     {
         return $this->position;
     }
 
     /**
      * @param int $position
-     * @return FicheMetierTypeActivite
+     * @return FicheMetierActivite
      */
-    public function setPosition($position)
+    public function setPosition(int $position) : FicheMetierActivite
     {
         $this->position = $position;
         return $this;

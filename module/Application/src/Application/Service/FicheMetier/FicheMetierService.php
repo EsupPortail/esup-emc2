@@ -5,7 +5,7 @@ namespace Application\Service\FicheMetier;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheMetierActivite;
 use Application\Form\EntityFormManagmentTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
@@ -458,9 +458,9 @@ class FicheMetierService {
         $this->create($duplicata);
 
         //missions principales
-        /** @var FicheMetierTypeActivite $activite */
+        /** @var FicheMetierActivite $activite */
         foreach ($fiche->getActivites() as $activite) {
-            $activiteDuplicata = new FicheMetierTypeActivite();
+            $activiteDuplicata = new FicheMetierActivite();
             $activiteDuplicata->setActivite($activite->getActivite());
             $activiteDuplicata->setPosition($activite->getPosition());
             $activiteDuplicata->setFiche($duplicata);

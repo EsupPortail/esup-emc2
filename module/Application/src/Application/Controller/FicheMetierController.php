@@ -281,7 +281,7 @@ class FicheMetierController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getActiviteService()->create($activite);
                 $this->getActiviteService()->updateLibelle($activite, $data);
-                $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
+                $this->getActiviteService()->createFicheMetierActivite($fiche, $activite);
             }
         }
 
@@ -304,7 +304,7 @@ class FicheMetierController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             $activite = $this->getActiviteService()->getActivite($data['activite']["id"]);
-            $this->getActiviteService()->createFicheMetierTypeActivite($fiche, $activite);
+            $this->getActiviteService()->createFicheMetierActivite($fiche, $activite);
         }
 
         return new ViewModel([
@@ -316,9 +316,9 @@ class FicheMetierController extends AbstractActionController
     public function retirerActiviteAction() : Response
     {
         $coupleId = $this->params()->fromRoute('id');
-        $couple = $this->getActiviteService()->getFicheMetierTypeActivite($coupleId);
+        $couple = $this->getActiviteService()->getFicheMetierActivite($coupleId);
 
-        $this->getActiviteService()->removeFicheMetierTypeActivite($couple);
+        $this->getActiviteService()->removeFicheMetierActivite($couple);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }
@@ -327,12 +327,12 @@ class FicheMetierController extends AbstractActionController
     {
         $direction = $this->params()->fromRoute('direction');
         $coupleId = $this->params()->fromRoute('id');
-        $couple = $this->getActiviteService()->getFicheMetierTypeActivite($coupleId);
+        $couple = $this->getActiviteService()->getFicheMetierActivite($coupleId);
 
         if ($direction === 'up') $this->getActiviteService()->moveUp($couple);
         if ($direction === 'down') $this->getActiviteService()->moveDown($couple);
 
-        $this->getActiviteService()->updateFicheMetierTypeActivite($couple);
+        $this->getActiviteService()->updateFicheMetierActivite($couple);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $couple->getFiche()->getId()], [], true);
     }

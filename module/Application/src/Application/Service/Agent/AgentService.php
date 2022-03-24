@@ -211,7 +211,8 @@ EOS;
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.harpId = :supannId')
-            ->setParameter('supannId', $supannId);
+            ->setParameter('supannId', $supannId)
+            ->andWhere('agent.deleted_on IS NULL');
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();

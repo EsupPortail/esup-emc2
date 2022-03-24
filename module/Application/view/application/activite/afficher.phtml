@@ -1,7 +1,7 @@
 <?php
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Privilege\ActivitePrivileges;
 
 /**
@@ -30,7 +30,7 @@ $this->headTitle($titre  . " : " .($activite !== null and $activite->getCurrentA
 <?php echo $this->activite($activite, $mode); ?>
 
 <?php
-    /** @var FicheMetierTypeActivite[] $ficheMetiers */
+    /** @var FicheMetierActivite[] $ficheMetiers */
     $ficheMetiers = $activite->getFichesMetiers()->toArray();
 ?>
 

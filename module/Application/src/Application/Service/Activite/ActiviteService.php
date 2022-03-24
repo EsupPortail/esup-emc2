@@ -5,7 +5,7 @@ namespace Application\Service\Activite;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteLibelle;
 use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierTypeActivite;
+use Application\Entity\Db\FicheMetierActivite;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -196,11 +196,11 @@ class ActiviteService {
 
     /**
      * @param int $id
-     * @return FicheMetierTypeActivite|null
+     * @return FicheMetierActivite|null
      */
-    public function getFicheMetierTypeActivite(int $id) : ?FicheMetierTypeActivite
+    public function getFicheMetierActivite(int $id) : ?FicheMetierActivite
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('activite')
+        $qb = $this->getEntityManager()->getRepository(FicheMetierActivite::class)->createQueryBuilder('activite')
             ->andWhere('activite.id = :id')
             ->setParameter('id', $id)
         ;
@@ -215,11 +215,11 @@ class ActiviteService {
 
     /**
      * @param FicheMetier $fiche
-     * @return FicheMetierTypeActivite[]
+     * @return FicheMetierActivite[]
      */
     public function getActivitesByFicheMetierType(FicheMetier $fiche) : array
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetierTypeActivite::class)->createQueryBuilder('couple')
+        $qb = $this->getEntityManager()->getRepository(FicheMetierActivite::class)->createQueryBuilder('couple')
             ->addSelect('fiche')
             ->join('couple.fiche', 'fiche')
             ->addSelect('activite')
@@ -234,9 +234,9 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierTypeActivite $couple
+     * @param FicheMetierActivite $couple
      */
-    public function moveUp(FicheMetierTypeActivite $couple) {
+    public function moveUp(FicheMetierActivite $couple) {
         $currentPosition = $couple->getPosition();
         if ($currentPosition !== 1) {
             $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
@@ -252,16 +252,16 @@ class ActiviteService {
             if ($swapWith) {
                 $swapWith->setPosition($currentPosition);
                 $couple->setPosition($currentPosition-1);
-                $this->updateFicheMetierTypeActivite($swapWith);
-                $this->updateFicheMetierTypeActivite($couple);
+                $this->updateFicheMetierActivite($swapWith);
+                $this->updateFicheMetierActivite($couple);
             }
         }
     }
 
     /**
-     * @param FicheMetierTypeActivite $couple
+     * @param FicheMetierActivite $couple
      */
-    public function moveDown(FicheMetierTypeActivite $couple) {
+    public function moveDown(FicheMetierActivite $couple) {
         $currentPosition = $couple->getPosition();
         $activites = $this->getActivitesByFicheMetierType($couple->getFiche());
 
@@ -278,8 +278,8 @@ class ActiviteService {
             if ($swapWith) {
                 $swapWith->setPosition($currentPosition);
                 $couple->setPosition($currentPosition+1);
-                $this->updateFicheMetierTypeActivite($swapWith);
-                $this->updateFicheMetierTypeActivite($couple);
+                $this->updateFicheMetierActivite($swapWith);
+                $this->updateFicheMetierActivite($couple);
             }
         }
     }
@@ -293,7 +293,7 @@ class ActiviteService {
         $position = 1;
         foreach ($activites as $activite) {
             $activite->setPosition($position);
-            $this->updateFicheMetierTypeActivite($activite);
+            $this->updateFicheMetierActivite($activite);
             $position++;
         }
     }
@@ -301,13 +301,13 @@ class ActiviteService {
     /**
      * @param FicheMetier $fiche
      * @param Activite $activite
-     * @return FicheMetierTypeActivite
+     * @return FicheMetierActivite
      */
-    public function createFicheMetierTypeActivite(FicheMetier $fiche, Activite $activite) : FicheMetierTypeActivite
+    public function createFicheMetierActivite(FicheMetier $fiche, Activite $activite) : FicheMetierActivite
     {
         $activites = $this->getActivitesByFicheMetierType($fiche);
 
-        $couple = new FicheMetierTypeActivite();
+        $couple = new FicheMetierActivite();
         $couple->setFiche($fiche);
         $couple->setActivite($activite);
         $couple->setPosition(count($activites) + 1);
@@ -322,10 +322,10 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierTypeActivite $couple
-     * @return FicheMetierTypeActivite
+     * @param FicheMetierActivite $couple
+     * @return FicheMetierActivite
      */
-    public function updateFicheMetierTypeActivite(FicheMetierTypeActivite $couple) : FicheMetierTypeActivite
+    public function updateFicheMetierActivite(FicheMetierActivite $couple) : FicheMetierActivite
     {
         try {
             $this->getEntityManager()->flush($couple);
@@ -337,9 +337,9 @@ class ActiviteService {
     }
 
     /**
-     * @param FicheMetierTypeActivite $couple
+     * @param FicheMetierActivite $couple
      */
-    public function removeFicheMetierTypeActivite(FicheMetierTypeActivite $couple)
+    public function removeFicheMetierActivite(FicheMetierActivite $couple)
     {
         try {
             $this->getEntityManager()->remove($couple);

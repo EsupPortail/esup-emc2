@@ -47,7 +47,7 @@ $query = ['retour' => $this->url(null,[],
             <a href="<?php
                 $params = [];
                 if ($structure !== null) $params['structure'] = $structure->getId();
-                echo $this->url('mission-specifique/affectation-ajouter', [], ["query" => $params], true);
+                echo $this->url('mission-specifique-affectation/ajouter', [], ["query" => $params], true);
                 ?>"
                 class="btn btn-primary ajax-modal action"
                 data-event="modification">

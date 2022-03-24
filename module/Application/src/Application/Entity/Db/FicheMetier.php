@@ -97,7 +97,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     {
         $texte = '<ul>';
         $activites = $this->getActivites();
-        usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) {return $a->getPosition() > $b->getPosition();});
+        usort($activites, function (FicheMetierActivite $a, FicheMetierActivite $b) {return $a->getPosition() > $b->getPosition();});
         foreach ($activites as $activite) {
             $texte .= '<li>'.$activite->getActivite()->getLibelle().'</li>';
         }
@@ -109,12 +109,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
 
     /**
      * Pour simplifier le tri selon la position est fait à ce niveau
-     * @return FicheMetierTypeActivite[]
+     * @return FicheMetierActivite[]
      */
     public function getActivites() : array
     {
         $activites =  $this->activites->toArray();
-        usort($activites, function (FicheMetierTypeActivite $a, FicheMetierTypeActivite $b) { return $a->getPosition() > $b->getPosition();});
+        usort($activites, function (FicheMetierActivite $a, FicheMetierActivite $b) { return $a->getPosition() > $b->getPosition();});
         return $activites;
     }
 
