@@ -13,7 +13,7 @@
         </one-to-one>
 
         <one-to-one target-entity="Application\Entity\Db\Activite" field="activite">
-            <join-column name="activite" referenced-column-name="id" />
+            <join-column name="activite_id" referenced-column-name="id" />
         </one-to-one>
 
     </entity>
