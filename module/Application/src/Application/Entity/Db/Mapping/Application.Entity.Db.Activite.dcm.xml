@@ -8,7 +8,7 @@
 
         <one-to-many field="libelles" target-entity="Application\Entity\Db\ActiviteLibelle" mapped-by="activite"/>
         <one-to-many field="descriptions" target-entity="Application\Entity\Db\ActiviteDescription" mapped-by="activite"/>
-        <one-to-many target-entity="Application\Entity\Db\FicheMetierTypeActivite" mapped-by="activite" field="fiches"/>
+        <one-to-many target-entity="Application\Entity\Db\FicheMetierActivite" mapped-by="activite" field="fiches"/>
         <many-to-many field="domaines" target-entity="Metier\Entity\Db\Domaine">
             <join-table name="activite_domaine">
                 <join-columns>
