@@ -528,7 +528,7 @@ EOS;
         $users = [];
         foreach ($ids as $id) {
             if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-            else {var_dump("No agent with id = ".$id);}
+            //else {var_dump("No agent with id = ".$id);}
         }
 
         return $users;
