@@ -12,9 +12,7 @@ $ficheposte = $fiche->getFichePoste();
 
 $agent = $ficheposte->getAgent();
 
-var_dump($fichemetier->getActivites());
 $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->getActivites());
-var_dump($activitesConservees);
 ?>
 
 <div class="panel panel-info">

@@ -18,6 +18,7 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Metier\Entity\Db\Domaine;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -850,19 +851,27 @@ EOS;
     {
         /** @var DomaineRepartition[] $repartitions */
         $repartitions = $fichetype->getDomaineRepartitions()->toArray();
-        foreach ($repartitions as $repartition) {
-            $domaineId = $repartition->getDomaine()->getId();
-            $value = isset($data[$domaineId])?$data[$domaineId]:0;
 
-            $repartition->setQuotite($value);
-        }
-
-        try {
+        foreach ($data as $domaineId => $value) {
+            $found = null;
+            /** @var Domaine $domaine */
+            $domaine = $this->getEntityManager()->getRepository(Domaine::class)->find($domaineId);
             foreach ($repartitions as $repartition) {
-                $this->getEntityManager()->flush($repartition);
+                if ($repartition->getDomaine()->getId() == $domaineId) {
+                    $found = $repartition;
+                    break;
+                }
             }
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu lors de l'enregistrement de la répartition.",0,$e);
+            if ($found === null) {
+                $found = new DomaineRepartition();
+                $found->setFicheMetierExterne($fichetype);
+                $found->setDomaine($domaine);
+                $found->setQuotite(0);
+                $this->getEntityManager()->persist($found);
+            }
+            $value = isset($data[$domaineId]) ? $data[$domaineId] : 0;
+            $found->setQuotite($value);
+            $this->getEntityManager()->flush($found);
         }
     }
 
