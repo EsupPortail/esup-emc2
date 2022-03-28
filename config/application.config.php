@@ -25,6 +25,7 @@ $modules = [
     'UnicaenApp',
     //'UnicaenAuth',
     'UnicaenLdap', 'UnicaenDbImport',
+    'Octopus',
 
     'UnicaenPrivilege',
     'UnicaenAuthentification',
