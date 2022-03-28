@@ -495,7 +495,7 @@ class EntretienProfessionnelService {
     public function initialiser(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         $entretien_instance = $this->getFormulaireInstanceService()->createInstance('CREP');
-        $formation_instance = $this->getFormulaireInstanceService()->createInstance('CRF');
+        $formation_instance = $this->getFormulaireInstanceService()->createInstance('CREF');
         $entretien->setFormulaireInstance($entretien_instance);
         $entretien->setFormationInstance($formation_instance);
         $this->create($entretien);
