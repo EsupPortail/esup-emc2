@@ -505,7 +505,6 @@ EOS;
                 if ($niveauA === null or $niveauA >= ($niveau - 1)) $result[] = $fiche;
             }
         }
-
         return $result;
     }
 
