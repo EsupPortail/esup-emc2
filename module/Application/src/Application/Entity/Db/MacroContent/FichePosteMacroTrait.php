@@ -2,10 +2,9 @@
 
 namespace Application\Entity\Db\MacroContent;
 
-use Application\Entity\Db\CompetenceType;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\ParcoursDeFormation;
+use Element\Entity\Db\CompetenceType;
 use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Reference;
 
