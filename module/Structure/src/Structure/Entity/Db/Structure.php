@@ -180,7 +180,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     {
         if ($this->gestionnaires === null) return [];
         $array = $this->gestionnaires->toArray();
-        $array = array_filter($array, function (StructureGestionnaire $a) { return !$a->isDeleted();});
+        $array = array_filter($array, function (StructureGestionnaire $a) { return !$a->isDeleted() or !$a->isImported();});
         return $array;
     }
 
@@ -211,7 +211,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     {
         if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
-        $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted();});
+        $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted() or !$a->isImported();});
         return $array;
     }
 
