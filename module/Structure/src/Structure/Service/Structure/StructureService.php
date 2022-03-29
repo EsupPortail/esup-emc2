@@ -5,6 +5,7 @@ namespace Structure\Service\Structure;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -132,7 +133,8 @@ class StructureService
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->join('structure.gestionnaires', 'gestionnaireSelection')
             ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
-            ->andWhere('gestionnaire.utilisateur = :user')
+            ->addSelect('agent')->join('gestionnaire.agent', 'agent')
+            ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
             ->orderBy('structure.libelleCourt')
         ;
@@ -216,7 +218,16 @@ class StructureService
      */
     public function isGestionnaire(Structure $structure, Agent $agent) : bool
     {
-        if (array_search($agent, $structure->getGestionnaires()) !== false) return true;
+        $date = (new DateTime());
+
+        $gestionnaires = $structure->getGestionnaires();
+        foreach ($gestionnaires as $gestionnaire) {
+            if (    ($gestionnaire->getAgent() === $agent)
+                AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
+                AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
+                AND (!$gestionnaire->isImported() OR !$gestionnaire->isDeleted())
+            ) return true;
+        }
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
         return false;
     }
@@ -228,9 +239,15 @@ class StructureService
      */
     public function isResponsable(Structure $structure, Agent $agent)  : bool
     {
+        $date = (new DateTime());
+
         $responsables = $structure->getResponsables();
         foreach ($responsables as $responsable) {
-            if ($responsable->getAgent() === $agent) return true;
+            if (    ($responsable->getAgent() === $agent)
+                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
+                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
+                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+            ) return true;
         }
         if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
         return false;

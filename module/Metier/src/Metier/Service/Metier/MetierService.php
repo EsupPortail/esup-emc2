@@ -298,16 +298,16 @@ select m.id, m.libelle_default,
        g.id as g_id, g.lib_court, ag.d_debut as g_debut, ag.d_fin as g_fin,
        cp.categorie as categorie,
        s.id as s_id, s.libelle_court, aa.date_debut as s_debut, aa.date_fin as s_fin
-from metier m
-left join metier_domaine md on m.id = md.metier_id
-left join domaine d on md.domaine_id = d.id
+from metier_metier m
+left join metier_metier_domaine md on m.id = md.metier_id
+left join metier_domaine d on md.domaine_id = d.id
 left join fichemetier f on m.id = f.metier_id
 left join ficheposte_fichetype fte on f.id = fte.fiche_type
 left join ficheposte fp on fte.fiche_poste = fp.id
 left join agent a on fp.agent = a.c_individu
 left join agent_carriere_grade ag on a.c_individu=ag.agent_id
-left join grade g on ag.grade_id = g.id
-left join corps cp on ag.corps_id = cp.id
+left join carriere_grade g on ag.grade_id = g.id
+left join carriere_corps cp on ag.corps_id = cp.id
 left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
 where m.id = :metier

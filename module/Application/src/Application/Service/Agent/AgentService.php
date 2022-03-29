@@ -12,6 +12,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationElement;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -463,7 +464,8 @@ EOS;
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
             ->andWhere('sr.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sr.deleted_on IS NULL')
+            ->andWhere('sr.deleted_on IS NULL or sr.imported = :false')
+            ->setParameter('false', false)
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -477,11 +479,11 @@ EOS;
     {
         if ($agent === null) return null;
 
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->join('structure.gestionnaires', 'gestionnaire')
-            ->andWhere('gestionnaire.id = :agentId')
-            ->setParameter('agentId', $agent->getId())
-            //->andWhere('structure.deleted_on IS NULL')
+        $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('sg')
+            ->andWhere('sg.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('sg.deleted_on IS NULL or sg.imported = :false')
+            ->setParameter('false', false)
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

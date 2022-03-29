@@ -32,7 +32,7 @@ class NotificationService {
 
     public function triggerCampagneOuvertureDirections(Campagne $campagne) : Mail
     {
-        $vars = ['campagne' => $campagne];
+        $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_DAC, $vars);
@@ -45,7 +45,7 @@ class NotificationService {
 
     public function triggerCampagneOuverturePersonnels(Campagne $campagne) : Mail
     {
-        $vars = ['campagne' => $campagne];
+        $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_BIATSS, $vars);
@@ -63,7 +63,7 @@ class NotificationService {
         $agent = $delegue->getAgent();
         $campagne = $delegue->getCampagne();
         $structure = $delegue->getStructure();
-        $vars = ['campagne' => $campagne, 'agent' => $agent, 'structure' => $structure];
+        $vars = ['campagne' => $campagne, 'agent' => $agent, 'structure' => $structure, 'UrlService' => $this->getUrlService()];
 
         $email = $agent->getEmail();
         $rendu = $this->getRenduService()->generateRenduByTemplateCode('CAMPAGNE_DELEGUE', $vars);
