@@ -14,7 +14,7 @@ class GradeController extends AbstractActionController {
     public function indexAction() : ViewModel
     {
         $avecAgent = $this->getParametreService()->getParametreByCode('carriere','GradeAvecAgent');
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === true);
+        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
         $grades = $this->getGradeService()->getGrades('libelleLong', 'ASC', $bool);
 
         return new ViewModel([

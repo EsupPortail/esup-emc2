@@ -15,7 +15,7 @@ class CorrespondanceController extends AbstractActionController
     public function indexAction() : ViewModel
     {
         $avecAgent = $this->getParametreService()->getParametreByCode('carriere','CorrespondanceAvecAgent');
-        $bool = ($avecAgent) && ($avecAgent->getValeur() === true);
+        $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
         $correspondances = $this->getCorrespondanceService()->getCorrespondances('libelleLong', 'ASC', $bool);
 
         return new ViewModel([
