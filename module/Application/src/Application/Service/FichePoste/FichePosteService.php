@@ -491,7 +491,7 @@ EOS;
      * @param Agent|null $agent
      * @return FichePoste[]
      */
-    public function getFichesPostesByStructuresAndAgent(array $structures = [], bool $sousstructure = false, Agent $agent = null)
+    public function getFichesPostesByStructuresAndAgent(array $structures = [], bool $sousstructure = false, Agent $agent = null) : array
     {
         $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
         $niveau = $agent->getMeilleurNiveau()->getNiveau();

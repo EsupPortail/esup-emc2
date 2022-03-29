@@ -176,6 +176,7 @@ class AjouterFicheMetierForm extends Form {
         /** @var array $fiches */
         $fiches = $this->getFicheMetierService()->getFichesMetiersWithNiveau($niveau);
 
+
         $options = [];
         $dictionnaire = [];
         foreach ($fiches as $ficheMetier) {
