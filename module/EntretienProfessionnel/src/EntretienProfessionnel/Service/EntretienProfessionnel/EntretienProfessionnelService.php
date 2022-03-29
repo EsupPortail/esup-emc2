@@ -24,7 +24,6 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
@@ -452,7 +451,7 @@ class EntretienProfessionnelService {
         return $result_resp;
     }
 
-    public function findDeleguePourEntretien(?Structure $structure, Campagne $campagne, $term)
+    public function findDeleguePourEntretien(?Structure $structure, Campagne $campagne, $term) : array
     {
         $result_dele = array_map(
             function (Delegue $a) { return $a->getAgent(); },
@@ -472,7 +471,7 @@ class EntretienProfessionnelService {
      * @param string $term
      * @return Agent[]|null[]
      */
-    public function findSuperieurPourEntretien(Agent $agent, string $term)
+    public function findSuperieurPourEntretien(Agent $agent, string $term) : array
     {
         $superieurs = [];
 
