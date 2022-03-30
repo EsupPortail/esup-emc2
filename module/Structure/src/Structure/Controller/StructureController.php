@@ -28,6 +28,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -57,6 +58,14 @@ class StructureController extends AbstractActionController {
     use AjouterResponsableFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use HasDescriptionFormAwareTrait;
+
+
+    private $renderer;
+
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function indexAction() : ViewModel
     {
@@ -480,6 +489,53 @@ class StructureController extends AbstractActionController {
         $CSV->setData($result);
         $CSV->setFilename($filename);
         return $CSV;
+    }
+
+    public function organigrammeAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
+
+        foreach ($structure->getEnfants() as $enfant) {
+            $agents[$enfant->getId()] = $this->getAgentService()->getAgentsByStructures([$enfant]);
+            foreach ($enfant->getEnfants() as $petitenfant) {
+                $sub = $this->getStructureService()->getSousStructures($petitenfant);
+                $sub[] = $petitenfant;
+                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures([$sub]);
+            }
+        }
+
+        return new ViewModel([
+            'structure' => $structure,
+            'agents' => $agents,
+        ]);
+    }
+
+    public function organigrammePdfAction()
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
+
+        foreach ($structure->getEnfants() as $enfant) {
+            $agents[$enfant->getId()] = $this->getAgentService()->getAgentsByStructures([$enfant]);
+            foreach ($enfant->getEnfants() as $petitenfant) {
+                $sub = $this->getStructureService()->getSousStructures($petitenfant);
+                $sub[] = $petitenfant;
+                $agents[$petitenfant->getId()] = $this->getAgentService()->getAgentsByStructures([$sub]);
+            }
+        }
+
+        $vars = [
+            'structure' => $structure,
+            'agents' => $agents,
+        ];
+
+        $pdf = new PdfExporter();
+        $pdf->setRenderer($this->renderer);
+        $pdf->setHeaderScript('structure/structure/header.phtml');
+        $pdf->setFooterScript('structure/structure/footer.phtml');
+        $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
+        return $pdf->export("temp.pdf");
     }
 
 }

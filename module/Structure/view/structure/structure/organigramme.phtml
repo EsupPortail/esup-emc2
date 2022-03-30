@@ -1,0 +1,153 @@
+<?php
+
+/**
+ * @see \Structure\Controller\StructureController::organigrammeAction()
+ * @var Structure $structure
+ * @var Agent[] $agents
+ */
+
+use Application\Entity\Db\Agent;
+use Structure\Entity\Db\Structure;
+
+$this->headTitle("Organigramme de ". $structure->getLibelleLong());
+
+$masque_structure_vide = true;
+?>
+
+<h1 class="page-header">
+    Organigramme de <?php echo $structure->getLibelleLong(); ?>
+</h1>
+
+<span class="structure_nom">
+    <strong><?php echo $structure->getLibelleCourt(); ?></strong> <?php echo $structure->getLibelleLong(); ?>
+</span>
+
+<div class="structure_bloc">
+
+    <div class="row">
+        <div class="col-md-4">
+            <?php $responsables = $structure->getResponsables(); ?>
+            <?php if (!empty($responsables)) : ?>
+                <span class="rubrique">Responsable<?php if (count($responsables) > 1) echo "s"; ?></span>
+                <ul>
+                <?php foreach ($responsables as $responsable) : ?>
+                    <li> <?php echo $responsable->getAgent()->getDenomination(); ?> </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <div class="col-md-4">
+            <?php $gestionnaires = $structure->getGestionnaires(); ?>
+            <?php if (!empty($gestionnaires)) : ?>
+                <span class="rubrique">Gestionnaire<?php if (count($gestionnaires) > 1) echo "s"; ?></span>
+                <ul>
+                    <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                        <li> <?php echo $gestionnaire->getAgent()->getDenomination(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php
+        $effectifs = array_map(function($a) {return $a->getDenomination();}, $agents[$structure->getId()]);
+        $agents_responsable = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $responsables);
+        $agents_gestionnaire = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $gestionnaires);
+        $true_effectifs = array_diff($effectifs, $agents_responsable, $agents_gestionnaire);
+    ?>
+    <ul>
+    <?php foreach ($true_effectifs as $agent) : ?>
+        <li> <?php echo $agent; ?> </li>
+    <?php endforeach; ?>
+    </ul>
+
+</div>
+
+<?php foreach ($structure->getEnfants() as $enfant) : ?>
+
+    <?php
+        $responsables = $enfant->getResponsables();
+        $gestionnaires = $enfant->getGestionnaires();
+
+        $effectifs = array_map(function($a) {return $a->getDenomination();}, $agents[$enfant->getId()]);
+        $agents_responsable = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $responsables);
+        $agents_gestionnaire = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $gestionnaires);
+        $true_effectifs = array_diff($effectifs, $agents_responsable, $agents_gestionnaire);
+    ?>
+
+    <div class="structure_bloc">
+        <span class="structure_e_nom"> <?php  echo $enfant->getLibelleLong(); ?> </span>
+
+
+        <?php if (!empty($responsables)) : ?>
+            <span class="rubrique">Responsable<?php if (count($responsables) > 1) echo "s"; ?></span>
+            <ul>
+                <?php foreach ($responsables as $responsable) : ?>
+                    <li> <?php echo $responsable->getAgent()->getDenomination(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        <?php if (!empty($gestionnaires)) : ?>
+            <span class="rubrique">Gestionnaire<?php if (count($gestionnaires) > 1) echo "s"; ?></span>
+            <ul>
+                <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                    <li> <?php echo $gestionnaire->getAgent()->getDenomination(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <?php
+        $effectifs = array_map(function($a) {return $a->getDenomination();}, $agents[$enfant->getId()]);
+        $agents_responsable = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $responsables);
+        $agents_gestionnaire = array_map(function($a) { return $a->getAgent()->getDenomination(); }, $gestionnaires);
+        $true_effectifs = array_diff($effectifs, $agents_responsable, $agents_gestionnaire);
+        ?>
+        <ul>
+            <?php foreach ($true_effectifs as $agent) : ?>
+                <li> <?php echo $agent; ?> </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <?php foreach ($enfant->getEnfants() as $petitenfant) : ?>
+
+            <?php if (!empty($agents[$petitenfant->getId()]) OR !$masque_structure_vide) : ?>
+                <span class="structure_pe_nom"><?php echo $petitenfant->getLibelleLong(); ?></span>
+
+                <ul>
+                    <?php foreach ($agents[$petitenfant->getId()] as $agent) : ?>
+                        <li> <?php echo $agent->getDenomination(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+
+    </div>
+<?php endforeach; ?>
+
+<style>
+    .header{
+        border-bottom: 1px solid black;
+    }
+
+    .structure_nom {
+        font-size: xx-large;
+    }
+
+    .structure_e_nom {
+        text-transform: uppercase;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .structure_pe_nom {
+        font-variant: all-small-caps;
+        display: block;
+        border-bottom: 2px dotted black;
+    }
+
+    .structure_bloc {
+        border-top: 2px solid black;
+    }
+</style>

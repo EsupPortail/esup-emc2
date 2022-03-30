@@ -55,6 +55,8 @@ return [
                         'index',
                         'extraction-listing-fiche-poste',
                         'extraction-listing-mission-specifique',
+                        'organigramme',
+                        'organigramme-pdf',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                 ],
@@ -156,6 +158,30 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'organigramme' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/organigramme/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'organigramme',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'organigramme-pdf' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/organigramme-pdf/:structure',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'organigramme-pdf',
                             ],
                         ],
                         'may_terminate' => true,

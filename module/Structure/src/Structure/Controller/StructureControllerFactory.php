@@ -92,6 +92,7 @@ class StructureControllerFactory {
         $controller->setSelectionAgentForm($selectionAgentForm);
         $controller->setHasDescriptionForm($hasDescriptionForm);
 
+        $controller->setRenderer($container->get('ViewRenderer'));
         return $controller;
     }
 }
