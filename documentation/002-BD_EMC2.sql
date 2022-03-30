@@ -1142,7 +1142,7 @@ create table fichemetier_fichetype
 );
 create unique index fichemetier_fichetype_id_uindex on ficheposte_fichemetier (id);
 
-create table ficheposte_fichetype
+create table ficheposte_fichemetier
 (
     id serial not null constraint fiche_type_externe_pk primary key,
     fiche_poste integer not null constraint fiche_type_externe_fiche_metier_id_fk references ficheposte on delete cascade,
@@ -1151,7 +1151,7 @@ create table ficheposte_fichetype
     principale boolean,
     activites varchar(128)
 );
-create unique index fiche_type_externe_id_uindex on ficheposte_fichetype (id);
+create unique index fiche_type_externe_id_uindex on ficheposte_fichemetier (id);
 
 create table structure_ficheposte
 (
@@ -1206,7 +1206,7 @@ create unique index ficheposte_competence_conservee_id_uindex on ficheposte_comp
 create table ficheposte_fichemetier_domaine
 (
     id serial not null constraint ficheposte_fichemetier_domaine_pk primary key,
-    fichemetierexterne_id integer not null constraint ficheposte_fichemetier_domaine_fiche_type_externe_id_fk references ficheposte_fichetype on delete cascade,
+    fichemetierexterne_id integer not null constraint ficheposte_fichemetier_domaine_fiche_type_externe_id_fk references ficheposte_fichemetier on delete cascade,
     domaine_id integer not null constraint ficheposte_fichemetier_domaine_domaine_id_fk references metier_domaine on delete cascade,
     quotite integer default 100 not null
 );

@@ -302,7 +302,7 @@ from metier_metier m
 left join metier_metier_domaine md on m.id = md.metier_id
 left join metier_domaine d on md.domaine_id = d.id
 left join fichemetier f on m.id = f.metier_id
-left join ficheposte_fichetype fte on f.id = fte.fiche_type
+left join ficheposte_fichemetier fte on f.id = fte.fiche_type
 left join ficheposte fp on fte.fiche_poste = fp.id
 left join agent a on fp.agent = a.c_individu
 left join agent_carriere_grade ag on a.c_individu=ag.agent_id

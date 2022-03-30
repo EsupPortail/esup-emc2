@@ -304,7 +304,7 @@ from ficheposte f
 left join agent a on f.agent = a.c_individu
 left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 left join structure s on aa.structure_id = s.id
-left join ficheposte_fichetype fte on f.id = fte.fiche_poste
+left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on f.etat_id = e.id
@@ -347,7 +347,7 @@ from ficheposte f
 join agent a on f.agent = a.c_individu
 join agent_carriere_affectation aa on a.c_individu = aa.agent_id
 join structure s on aa.structure_id = s.id
-left join ficheposte_fichetype fte on f.id = fte.fiche_poste
+left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
 left join unicaen_etat_etat e on e.id = f.etat_id
