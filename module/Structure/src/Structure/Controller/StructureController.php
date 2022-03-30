@@ -505,13 +505,16 @@ class StructureController extends AbstractActionController {
             }
         }
 
-        return new ViewModel([
+        $vm = new ViewModel();
+        //$vm->setTemplate('blank');
+        $vm->setVariables([
             'structure' => $structure,
             'agents' => $agents,
         ]);
+        return $vm;
     }
 
-    public function organigrammePdfAction()
+    public function organigrammePdfAction() : string
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $agents[$structure->getId()] = $this->getAgentService()->getAgentsByStructures([$structure]);
