@@ -8,10 +8,11 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\AgentPrivileges;
 
-$canDetruireFichier     = $droits['detruire'];
-$canVoirFichier         = $droits['voir'];
-$canAjouterFichier      = $droits['ajouter'];
+$canDetruireFichier     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+$canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
+$canAjouterFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
 
 $retour = $this->url(null, [], [], true);
 

@@ -64,8 +64,8 @@ class AgentAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
                         return true;
-                    case RoleConstant::PERSONNEL:
-                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
+//                    case RoleConstant::PERSONNEL:
+//                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
                     case RoleProvider::GESTIONNAIRE:
                             return $isGestionnaire;
                     case RoleProvider::RESPONSABLE:

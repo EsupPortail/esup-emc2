@@ -138,8 +138,8 @@ class AgentController extends AbstractActionController
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
         $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
 
-        $fichespostes = []; //$this->getFichePosteService()->getFichesPostesByAgents([$agent]);
-        $fichePosteActive = null; //$this->getFichePosteService()->getFichePosteActiveByAgent($agent);
+        $fichespostes = $this->getFichePosteService()->getFichesPostesByAgents([$agent]);
+        $fichePosteActive = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
 
         $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichePosteActive);
 //        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);

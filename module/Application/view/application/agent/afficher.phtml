@@ -139,7 +139,8 @@ if ($agent !== null) {
     <div>
         <div class="tab-content">
             <div id="informations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/informations-generales', ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,  'canInfoSource' => $canInfoSource]); ?>
+                <?php echo $this->partial('partial/informations-generales',
+                    ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,  'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',
