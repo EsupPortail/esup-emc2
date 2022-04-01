@@ -13,7 +13,7 @@ class ComplementForm extends Form {
     {
         //Search & Select
         /**
-         * SearchAndSelect sur les Individus de la structure fictives
+         * SearchAndSelect sur les Individus de la structure fictive
          */
         $sas = new SearchAndSelect('sas', ['label' => "Recherche dans les données de EMC2 :"]);
         $sas

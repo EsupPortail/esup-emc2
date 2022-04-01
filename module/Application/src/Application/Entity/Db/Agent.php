@@ -21,6 +21,7 @@ use Exception;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
+use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenUtilisateur\Entity\Db\User;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -75,6 +76,8 @@ class Agent implements
     private $affectations;
     /** @var ArrayCollection (AgentGrade) */
     private $grades;
+    /** @var ArrayCollection (AgentEchelon) */
+    private $echelons;
     /** @var ArrayCollection (AgentStatut) */
     private $statuts;
 
@@ -97,6 +100,7 @@ class Agent implements
         $this->statuts = new ArrayCollection();
         $this->missionsSpecifiques = new ArrayCollection();
         $this->fichiers = new ArrayCollection();
+        $this->echelons = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
     }
@@ -373,6 +377,29 @@ class Agent implements
             if ($grade->estEnCours()) $grades[] = $grade;
         }
         return $grades;
+    }
+
+    /** ECHELONS ********************************************************************************************************/
+
+    /** @return AgentEchelon[] */
+    public function getEchelons() : array
+    {
+        $echelons = $this->echelons->toArray();
+        $grades = array_filter($echelons, function (AgentEchelon $ag) { return !$ag->isDeleted();});
+        usort($grades, function (AgentEchelon $a, AgentEchelon $b) {
+            return $a->getDate() > $b->getDate();
+        });
+        return $grades;
+    }
+
+    /**
+     * @return AgentEchelon|null
+     */
+    public function getEchelonActif() : ?AgentEchelon
+    {
+        $echelons = $this->getEchelons();
+        $echelon = (!empty($echelons))?$echelons[0]:null;
+        return $echelon;
     }
 
     /** FICHES POSTES *************************************************************************************************/

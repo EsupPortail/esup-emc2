@@ -3,6 +3,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAccompagnement;
 use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\AgentPPP;
@@ -28,6 +29,7 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @var AgentStatut[] $statuts
  * @var AgentGrade[] $grades
  * @var AgentQuotite|null $quotite
+ * @var AgentEchelon|null $echelon
  *
  * @var array $applications
  * @var string $intranet
@@ -139,8 +141,13 @@ if ($agent !== null) {
     <div>
         <div class="tab-content">
             <div id="informations" class="tab-pane " role="tabpanel">
+
                 <?php echo $this->partial('partial/informations-generales',
-                    ['agent' => $agent, 'affectations' => $affectations, 'statuts' => $statuts, 'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,  'canInfoSource' => $canInfoSource]); ?>
+                    ['agent' => $agent,
+                        'affectations' => $affectations,
+                        'statuts' => $statuts, 'echelon' => $echelon,
+                        'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,
+                        'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',

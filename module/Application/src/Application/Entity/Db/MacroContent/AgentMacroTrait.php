@@ -316,4 +316,28 @@ trait AgentMacroTrait
         if ($quotite === null) return "100 %";
         return $quotite->getQuotite() . " %";
     }
+
+    public function toStringEchelon() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $echelon = $agent->getEchelonActif();
+
+        if ($echelon) {
+            return "".$echelon->getEchelon();
+        }
+        return "";
+    }
+
+    public function toStringEchelonPassage() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $echelon = $agent->getEchelonActif();
+
+        if ($echelon) {
+            return $echelon->getDate()->format('d/m/Y');
+        }
+        return "";
+    }
 }

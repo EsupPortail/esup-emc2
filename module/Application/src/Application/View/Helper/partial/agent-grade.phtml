@@ -7,10 +7,13 @@
  * @var array $options
  */
 
+use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentGrade;
 
 $debug = false;
 
+/** @var AgentEchelon $echelon */
+$echelon            = ($options['echelon'])??null;
 $displayStructure   = (isset($options['structure']) AND $options['structure'] !== false);
 $displayPeriode     = (isset($options['periode']) AND $options['periode'] !== false);
 $displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
@@ -100,6 +103,10 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
                     Non renseignée
                 <?php endif; ?>
             </dd>
+            <?php if ($echelon) : ?>
+                <dt> Échelon </dt>
+                <dd> <?php echo $echelon->getEchelon(); ?> (date de passage : <?php echo $echelon->getDate()->format('d/m/Y'); ?>)</dd>
+            <?php endif; ?>
     </dl>
     <?php endif; ?>
 </div>

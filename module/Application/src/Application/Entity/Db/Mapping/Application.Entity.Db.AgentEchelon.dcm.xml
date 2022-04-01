@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Application\Entity\Db\AgentEchelon" table="agent_carriere_echelon">
+
+        <id name="id" type="string" column="id" />
+
+        <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
+            <join-column name="agent_id" referenced-column-name="c_individu"/>
+        </many-to-one>
+
+        <field name="date"          type="datetime"                 column="date_passage"        nullable="false"/>
+        <field name="echelon"       type="integer"                  column="echelon"             nullable="false"/>
+
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+
+    </entity>
+</doctrine-mapping>
