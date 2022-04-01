@@ -139,7 +139,7 @@ class FichePosteController extends AbstractActionController {
             }
 
             $nouvelleFiche->setAgent($agent);
-            $fiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
+            $nouvelleFiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
             $this->getFichePosteService()->update($nouvelleFiche);
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
