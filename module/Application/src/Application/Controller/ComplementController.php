@@ -73,6 +73,7 @@ class ComplementController extends AbstractActionController {
         $vm->setTemplate('application/complement/formulaire');
         $vm->setVariables([
             'title' => "Ajout d'un complement pour [".$attachment->toString()."]",
+            'type' => $type,
             'form' => $form,
         ]);
         return $vm;
@@ -114,6 +115,7 @@ class ComplementController extends AbstractActionController {
         $vm->setVariables([
             'title' => "Modification d'un complement pour [".$attachment->toString()."]",
             'form' => $form,
+            'type' => $complement->getType(),
         ]);
         return $vm;
     }

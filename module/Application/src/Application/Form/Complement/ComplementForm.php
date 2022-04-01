@@ -15,12 +15,12 @@ class ComplementForm extends Form {
         /**
          * SearchAndSelect sur les Individus de la structure fictives
          */
-        $sas = new SearchAndSelect('sas', ['label' => "Complément :"]);
+        $sas = new SearchAndSelect('sas', ['label' => "Recherche dans les données de EMC2 :"]);
         $sas
             ->setSelectionRequired(true)
             ->setAttributes([
                 'id' => 'sas',
-                'placeholder' => "Sélectionner votre compléments ... ",
+                //'placeholder' => "Sélectionner votre complément ... ",
             ]);
         $this->add($sas);
 
@@ -29,7 +29,7 @@ class ComplementForm extends Form {
             'type' => Text::class,
             'name' => 'text',
             'options' => [
-                'label' => 'Complément textuel <span class="icon information" title="Complément en cas d\'échec de la recherche ci-dessus"> </span>:',
+                'label' => 'Saisie libre en cas de manque dans les données de EMC2 :',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

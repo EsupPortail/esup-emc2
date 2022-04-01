@@ -110,7 +110,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php endforeach; ?>
                 <?php if ($canComplement) : ?>
                     <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                        <span class="icon ajouter"></span> Ajouter un responsable
+                        <span class="icon ajouter"></span> Ajouter un&middot;e supérieur&middot;e
                     </a>
                 <?php endif; ?>
             </td>
