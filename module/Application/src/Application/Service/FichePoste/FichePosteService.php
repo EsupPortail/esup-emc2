@@ -928,9 +928,9 @@ EOS;
         $nouvelleFiche = $this->create($nouvelleFiche);
 
         if ($fiche->getSpecificite()) {
-            $specifite = $fiche->getSpecificite()->clone_it();
-            $this->getSpecificitePosteService()->create($specifite);
             if ($dupliquer_specificite) {
+                $specifite = $fiche->getSpecificite()->clone_it();
+                $this->getSpecificitePosteService()->create($specifite);
                 $nouvelleFiche->setSpecificite($specifite);
             }
         }

@@ -139,6 +139,7 @@ class FichePosteController extends AbstractActionController {
             }
 
             $nouvelleFiche->setAgent($agent);
+            $fiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
             $this->getFichePosteService()->update($nouvelleFiche);
 
             /**  Commenter pour eviter perte de temps et clignotement de la modal */
@@ -147,7 +148,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => "Duplication d'une fiche de poste pour ".$agent->getDenomination()."",
+            'title' => "Duplication d'une fiche de poste pour [".$agent->getDenomination()."]",
             'structure' => $structure,
             'agent' => $agent,
             'fiches' => $fiches,
