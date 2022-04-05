@@ -20,6 +20,7 @@ $responsables = array_filter($responsables, function (StructureResponsable $r) {
 $gestionnaires = $structure->getGestionnaires();
 $gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted() OR !$r->isImported(); });
 
+$filles = array_filter($filles, function (Structure $s) { return ! $s->isDeleted(); });
 ?>
 
 <div class="row">

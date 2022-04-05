@@ -53,6 +53,7 @@ class StructureService
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->addSelect('type')->join('structure.type', 'type')
+            ->andWhere('structure.deleted_on IS NULL')
             ->orderBy('structure.code')
         ;
         return $qb;
@@ -200,7 +201,7 @@ class StructureService
             $current = array_shift($aTraitees);
             $result = $this->getSousStructures($current);
             foreach ($result as $item) {
-                if (! isset($dejaTraitees[$item->getId()])) {
+                if (!$item->isDeleted() AND !isset($dejaTraitees[$item->getId()])) {
                     $filles[] = $item;
                     $dejaTraitees[$item->getId()] = true;
                     $aTraitees[] = $item;
