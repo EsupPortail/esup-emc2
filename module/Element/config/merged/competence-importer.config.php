@@ -2,7 +2,6 @@
 
 namespace Element;
 
-use Application\Constant\RoleConstant;
 use Element\Controller\CompetenceImporterController;
 use Element\Controller\CompetenceImporterControllerFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -19,7 +18,7 @@ return [
                         'importer',
                     ],
                     'role' => [
-                        RoleConstant::ADMIN_TECH,
+                        'Administrateur·trice technique',
                     ],
                 ],
             ],
