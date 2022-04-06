@@ -290,6 +290,29 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
 
+-- indicateur -----------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('indicateur', 'Gestion des indicateurs', 99992, 'Indicateur\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'afficher-indicateur', 'Afficher un indicateur', 10 UNION
+    SELECT 'editer-indicateur', 'Modifier un indicateur', 20 UNION
+    SELECT 'detruire-indicateur', 'Supprimer un indicateur', 30
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'afficher-abonnement', 'Afficher un abonnement', 110 UNION
+    SELECT 'editer-abonnement', 'Modifier un abonnement', 120 UNION
+    SELECT 'detruire-abonnement', 'Supprimer un abonnement', 130
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
+
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;
