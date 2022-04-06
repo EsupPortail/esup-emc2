@@ -66,6 +66,6 @@ class CompetenceImporterController extends AbstractActionController {
             }
         }
 
-        return $this->redirect()->toRoute('competence',[],[], true);
+        return $this->redirect()->toRoute('element/competence',[],[], true);
     }
 }
