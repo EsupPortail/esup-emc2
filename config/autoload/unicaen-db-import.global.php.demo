@@ -193,6 +193,23 @@ return [
                     'columns'            => ['agent_id', 'debut', 'fin', 'quotite'],
                 ],
             ],
+            [
+                'name' => 'Import_AGENT_ECHELON',
+                'source' => [
+                    'name'               => 'Echelon des agents',
+                    'select'             => 'SELECT ID, INDIVIDU_ID AS AGENT_ID, ECHELEON, DATE_PASSAGE FROM INDIVIDU_ECHELON JOIN V_AGENT on V_AGENT.C_INDIVIDU = INDIVIDU_ECHELON.INDIVIDU_ID',
+                    'connection'         => 'octopus',
+                    'source_code_column' => 'ID',
+                ],
+                'intermediate_table' => 'src_agent_echelon',
+                'destination' => [
+                    'name'               => 'Grade des agents gérés par la DRH',
+                    'table'              => 'agent_carriere_echelon',
+                    'connection'         => 'default',
+                    'source_code_column' => 'id',
+                    'columns'            => ['agent_id', 'echelon', 'date_passage'],
+                ],
+            ],
         ],
     ],
 

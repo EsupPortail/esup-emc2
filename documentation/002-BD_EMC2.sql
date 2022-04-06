@@ -696,6 +696,19 @@ create table agent_carriere_statut
     deleted_on timestamp(0)
 );
 
+create table agent_carriere_echelon
+(
+    id  serial constraint agent_carriere_echelon_pk primary key,
+    agent_id varchar(40) not null constraint agent_carriere_echelon_agent_c_individu_fk references agent on delete cascade,
+    echelon      integer                        not null,
+    date_passage date                           not null,
+    created_on   timestamp default CURRENT_DATE not null,
+    updated_on   timestamp,
+    deleted_on   timestamp
+);
+create unique index agent_carriere_echelon_id_uindex on agent_carriere_echelon (id);
+
+
 create table agent_element_application
 (
     agent_id varchar(40) not null constraint agent_application_agent_c_individu_fk references agent on delete cascade,
