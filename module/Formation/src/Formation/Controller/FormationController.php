@@ -2,11 +2,11 @@
 
 namespace Formation\Controller;
 
-use Application\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
+use Element\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Entity\Db\Formation;
