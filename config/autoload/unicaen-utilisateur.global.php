@@ -74,6 +74,7 @@ return [
         'identity-provider' => [
             IdentityProvider::class,
             \EntretienProfessionnel\Provider\IdentityProvider::class,
+            \Structure\Provider\IdentityProvider::class,
         ],
     ],
 

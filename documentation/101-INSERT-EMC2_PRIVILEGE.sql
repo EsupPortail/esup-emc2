@@ -367,6 +367,21 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'ficheposte';
 
+-- CONFIGURATION ---------------------------------------------------------------------------------------------
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+    VALUES ('configuration', 'Configuration de l''application', 1100, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'configuration_afficher', 'Afficher la configuration de l''application', 1 UNION
+    SELECT 'configuration_ajouter', 'Ajouter des éléments à la configuration', 2 UNION
+    SELECT 'configuration_detruire', 'Rétirer des éléments à la configuration', 3 UNION
+    SELECT 'configuration_reappliquer', 'Ré-appliquer les éléments à ajouter ', 4
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'configuration';
+
 
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 

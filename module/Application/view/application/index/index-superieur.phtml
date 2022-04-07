@@ -109,9 +109,12 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                         <a href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
                             <span class="icon voir"></span></a>
-                        <a href="<?php echo $this->url('entretien-professionnel/exporter', ['entretien' => $entretien->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
-                            <span class="icon pdf"></span></a>
+                            <span class="icon pdf"></span><span class="small-lettrine">CREP</span></a>
+                        <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
+                           target="_blank">
+                            <span class="icon pdf"></span><span class="small-lettrine">CREF</span></a>
                     <?php else : ?>
                         Aucun entretien
                     <?php endif; ?>

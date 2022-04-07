@@ -2,7 +2,6 @@
 
 namespace Structure\Service\Structure;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use DateTime;
@@ -12,6 +11,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
@@ -125,49 +125,6 @@ class StructureService
     }
 
     /**
-     * @param User $user
-     * @param bool $ouverte
-     * @return Structure[]
-     */
-    public function getStructuresByGestionnaire(User $user,  bool $ouverte = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->join('structure.gestionnaires', 'gestionnaireSelection')
-            ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
-            ->addSelect('agent')->join('gestionnaire.agent', 'agent')
-            ->andWhere('agent.utilisateur = :user')
-            ->setParameter('user', $user)
-            ->orderBy('structure.libelleCourt')
-        ;
-        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param User $user
-     * @param bool $ouverte
-     * @return Structure[]
-     */
-    public function getStructuresByResponsable(User $user, bool $ouverte = true) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
-            ->join('structure.responsables', 'responsableSelection')
-            ->addSelect('responsable')->join('structure.responsables', 'responsable')
-            ->addSelect('agent')->join('responsable.agent', 'agent')
-            ->andWhere('agent.utilisateur = :user')
-            ->setParameter('user', $user)
-            ->orderBy('structure.libelleCourt')
-        ;
-        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-
-    /**
      * @param Structure $structure
      * @param bool $ouverte
      * @return Structure[]
@@ -212,81 +169,6 @@ class StructureService
         return $filles;
     }
 
-    /**
-     * @param Structure $structure
-     * @param Agent $agent
-     * @return boolean
-     */
-    public function isGestionnaire(Structure $structure, Agent $agent) : bool
-    {
-        $date = (new DateTime());
-
-        $gestionnaires = $structure->getGestionnaires();
-        foreach ($gestionnaires as $gestionnaire) {
-            if (    ($gestionnaire->getAgent() === $agent)
-                AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
-                AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
-                AND (!$gestionnaire->isImported() OR !$gestionnaire->isDeleted())
-            ) return true;
-        }
-        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
-        return false;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param Agent $agent
-     * @return boolean
-     */
-    public function isResponsable(Structure $structure, Agent $agent)  : bool
-    {
-        $date = (new DateTime());
-
-        $responsables = $structure->getResponsables();
-        foreach ($responsables as $responsable) {
-            if (    ($responsable->getAgent() === $agent)
-                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
-                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isImported() OR !$responsable->isDeleted())
-            ) return true;
-        }
-        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
-        return false;
-    }
-
-    /**
-     * @param Structure $structure
-     * @param bool $filles
-     * @return User[]
-     */
-    public function getGestionnairesByStructure(Structure $structure, bool $filles = true) : array
-    {
-        $gestionnaires = [];
-        $vue = [];
-
-        $structures = [];
-        $structures[] = $structure;
-        $vue[$structure->getId()] = true;
-
-        while (! empty($structures)) {
-            $current = array_shift($structures);
-            foreach ($current->getGestionnaires() as $gestionnaire) {
-                $gestionnaires[$gestionnaire->getId()] = $gestionnaire;
-            }
-            foreach ($current->getResponsables() as $responsable) {
-                $gestionnaires[$responsable->getId()] = $responsable;
-            }
-            if ($filles) {
-                foreach ($current->getEnfants() as $enfant) {
-                    if ($vue[$enfant->getId()] !== true) {
-                        $structures[] = $enfant;
-                        $vue[$enfant->getId()] = true;
-                    }
-                }
-            }
-        }
-        return $gestionnaires;
-    }
 
     /**
      * @param Structure[] $structures
@@ -392,22 +274,139 @@ EOS;
      */
     public function getUsersInGestionnaires() : array
     {
-        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder("s")
-            ->join('s.gestionnaires', 'gestionnaire')->addSelect('gestionnaire')
-            ->orderBy('gestionnaire.nomUsuel, gestionnaire.prenom' , 'ASC')
+        $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder("sg")
+            ->join('sg.agent', 'agent')->addSelect('agent')
+            ->orderBy('agent.nomUsuel, agent.prenom' , 'ASC')
         ;
         $result = $qb->getQuery()->getResult();
 
-        /** @var Structure[] $result */
+        /** @var StructureGestionnaire[] $result */
         $users = [];
-        foreach ($result as $structure) {
-            foreach ($structure->getGestionnaires() as $gestionnaire) {
-                $user = $gestionnaire->getUtilisateur();
-                if ($user !== null) $users[$user->getId()] = $user;
-            }
+        foreach ($result as $responsable) {
+            $user = $responsable->getAgent()->getUtilisateur();
+            if ($user !== null) $users[$user->getId()] = $user;
         }
         return $users;
     }
+
+    /**
+     * @param User $user
+     * @param bool $ouverte
+     * @return Structure[]
+     */
+    public function getStructuresByGestionnaire(User $user,  bool $ouverte = true) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.gestionnaires', 'gestionnaireSelection')
+            ->addSelect('gestionnaire')->join('structure.gestionnaires', 'gestionnaire')
+            ->addSelect('agent')->join('gestionnaire.agent', 'agent')
+            ->andWhere('agent.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->orderBy('structure.libelleCourt')
+        ;
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param User $user
+     * @param bool $ouverte
+     * @return Structure[]
+     */
+    public function getStructuresByResponsable(User $user, bool $ouverte = true) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->join('structure.responsables', 'responsableSelection')
+            ->addSelect('responsable')->join('structure.responsables', 'responsable')
+            ->addSelect('agent')->join('responsable.agent', 'agent')
+            ->andWhere('agent.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->orderBy('structure.libelleCourt')
+        ;
+        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param Agent $agent
+     * @return boolean
+     */
+    public function isGestionnaire(Structure $structure, Agent $agent) : bool
+    {
+        $date = (new DateTime());
+
+        $gestionnaires = $structure->getGestionnaires();
+        foreach ($gestionnaires as $gestionnaire) {
+            if (    ($gestionnaire->getAgent() === $agent)
+                AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
+                AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
+                AND (!$gestionnaire->isImported() OR !$gestionnaire->isDeleted())
+            ) return true;
+        }
+        if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
+        return false;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param Agent $agent
+     * @return boolean
+     */
+    public function isResponsable(Structure $structure, Agent $agent)  : bool
+    {
+        $date = (new DateTime());
+
+        $responsables = $structure->getResponsables();
+        foreach ($responsables as $responsable) {
+            if (    ($responsable->getAgent() === $agent)
+                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
+                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
+                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+            ) return true;
+        }
+        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
+        return false;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param bool $filles
+     * @return User[]
+     */
+    public function getGestionnairesByStructure(Structure $structure, bool $filles = true) : array
+    {
+        $gestionnaires = [];
+        $vue = [];
+
+        $structures = [];
+        $structures[] = $structure;
+        $vue[$structure->getId()] = true;
+
+        while (! empty($structures)) {
+            $current = array_shift($structures);
+            foreach ($current->getGestionnaires() as $gestionnaire) {
+                $gestionnaires[$gestionnaire->getId()] = $gestionnaire;
+            }
+            foreach ($current->getResponsables() as $responsable) {
+                $gestionnaires[$responsable->getId()] = $responsable;
+            }
+            if ($filles) {
+                foreach ($current->getEnfants() as $enfant) {
+                    if ($vue[$enfant->getId()] !== true) {
+                        $structures[] = $enfant;
+                        $vue[$enfant->getId()] = true;
+                    }
+                }
+            }
+        }
+        return $gestionnaires;
+    }
+
 
     /**
      * @return Structure[]
