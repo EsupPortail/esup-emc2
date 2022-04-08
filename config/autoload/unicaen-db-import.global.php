@@ -45,7 +45,7 @@ return [
                 'name' => 'Import_AFFECTATION',
                 'source' => [
                     'name'               => 'Affectations des agents',
-                    'select'             => 'SELECT * FROM V_PREECOG_AFFECTATION',
+                    'select'             => 'SELECT * FROM V_INDIVIDU_AFFECTATION_EMC2 JOIN V_INDIVIDU_AFFECTATION_EMC2 ON V_INDIVIDU_AFFECTATION_EMC2.INDIVIDU_ID = V_PREECOG_AGENT.C_INDIVIDU',
                     'connection'         => 'octopus',
                     'source_code_column' => 'AFFECTATION_ID',
                     'columns'            => ['INDIVIDU_ID', 'STRUCTURE_ID', 'DATE_DEBUT', 'DATE_FIN', 'ID_ORIG', 'T_PRINCIPALE'],
