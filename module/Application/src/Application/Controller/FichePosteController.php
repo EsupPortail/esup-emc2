@@ -13,6 +13,7 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Expertise\ExpertiseFormAwareTrait;
+use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -61,9 +62,10 @@ class FichePosteController extends AbstractActionController {
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
     use AssocierTitreFormAwareTrait;
+    use ExpertiseFormAwareTrait;
+    use RifseepFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
-    use ExpertiseFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -784,6 +786,34 @@ class FichePosteController extends AbstractActionController {
                 'action' => $this->url()->fromRoute('fiche-poste/supprimer-expertise', ["expertise" => $expertise->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** RIFSEEP ET NBI  ***********************************************************************************************/
+
+    public function editerRifseepAction() : ViewModel
+    {
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
+
+        $form = $this->getRifseepForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/editer-rifseep', ['fiche' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFichePosteService()->update($fiche);
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => 'Renseignement du RIFSEEP et du NBI',
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 

@@ -1,111 +1,48 @@
 <?php
 
-namespace Application\Form\SpecificitePoste;
+namespace Application\Form\Rifseep;
 
 use Zend\Form\Element\Button;
+use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
+use Zend\InputFilter\Factory;
 
-class SpecificitePosteForm extends Form {
+class RifseepForm extends Form {
 
     public function init()
     {
         // specificite
         $this->add([
-            'name' => 'specificite',
-            'type' => 'textarea',
+            'name' => 'rifseep',
+            'type' => Select::class,
             'options' => [
-                'label' => 'Spécificités du poste : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
+                'label' => "Groupe de RIFSEEP :",
+                'value_options' => [
+                    null => "Inconnu",
+                    1 => "Groupe 1",
+                    2 => "Groupe 2",
+                    3 => "Groupe 3",
                 ],
             ],
             'attributes' => [
-                'class' => 'type2 form-control specificite',
-            ]
+                'id' => 'rifseep',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
+            ],
         ]);
-        // encadrement
         $this->add([
-            'name' => 'encadrement',
-            'type' => 'textarea',
+            'name' => 'nbi',
+            'type' => Number::class,
             'options' => [
-                'label' => 'Encadrement : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
+                'label' => "Nombre de points de NBI :",
             ],
             'attributes' => [
-                'class' => 'type2 form-control encadrement',
-            ]
-        ]);
-        // relations internes
-        $this->add([
-            'name' => 'relations_internes',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Relations internes à l\'unicaen : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
+                'id' => 'nbi',
+                'min'  => '0',
+                'max'  => '20',
+                'step' => '1',
             ],
-            'attributes' => [
-                'class' => 'type2 form-control relations_internes',
-            ]
-        ]);
-        // relation externes
-        $this->add([
-            'name' => 'relations_externes',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Relations externes à l\'unicaen ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'type2 form-control relations_externes',
-            ]
-        ]);
-        // contraintes
-        $this->add([
-            'name' => 'contraintes',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Sujétions ou conditions particulières : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'type2 form-control contraintes',
-            ]
-        ]);
-        // moyens
-        $this->add([
-            'name' => 'moyens',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Les moyens et outils mis à disposition : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'type2 form-control moyens',
-            ]
-        ]);
-        // moyens
-        $this->add([
-            'name' => 'formations',
-            'type' => 'textarea',
-            'options' => [
-                'label' => 'Formations et qualifications nécessaires : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
-            ],
-            'attributes' => [
-                'class' => 'type2 form-control formations',
-            ]
         ]);
         // button
         $this->add([
@@ -122,5 +59,10 @@ class SpecificitePosteForm extends Form {
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'rifseep'               => [ 'required' => false,  ],
+            'nbi'                   => [ 'required' => false,  ],
+        ]));
     }
 }

@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Expertise\ExpertiseForm;
+use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
@@ -57,15 +58,18 @@ class FichePosteControllerFactory {
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
          * @var AssocierTitreForm $associerTitreForm
+         * @var ExpertiseForm $expertiseForm
+         * @var RifseepForm $rifseepForm
          * @var SelectionEtatForm $selectionEtatForm
          * @var SpecificitePosteForm $specificiftePosteForm
-         * @var ExpertiseForm $expertiseForm
          */
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
+        $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
+        $rifseepForm = $container->get('FormElementManager')->get(RifseepForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
-        $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
+
 
 
         /** @var FichePosteController $controller */
@@ -87,9 +91,10 @@ class FichePosteControllerFactory {
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);
+        $controller->setExpertiseForm($expertiseForm);
+        $controller->setRifseepForm($rifseepForm);
         $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);
-        $controller->setExpertiseForm($expertiseForm);
 
         return $controller;
     }

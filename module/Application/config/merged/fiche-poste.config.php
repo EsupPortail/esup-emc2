@@ -22,6 +22,10 @@ use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Expertise\ExpertiseFormFactory;
 use Application\Form\Expertise\ExpertiseHydrator;
 use Application\Form\Expertise\ExpertiseHydratorFactory;
+use Application\Form\Rifseep\RifseepForm;
+use Application\Form\Rifseep\RifseepFormFactory;
+use Application\Form\Rifseep\RifseepHydrator;
+use Application\Form\Rifseep\RifseepHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
@@ -106,6 +110,7 @@ return [
 
                         'associer-agent',
                         'associer-titre',
+                        'editer-rifseep',
                         'editer-specificite',
                         'ajouter-fiche-metier',
                         'retirer-fiche-metier',
@@ -370,6 +375,17 @@ return [
                             ],
                         ],
                     ],
+                    'editer-rifseep' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/editer-rifseep/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'editer-rifseep',
+                            ],
+                        ],
+                    ],
                     'editer-specificite' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
@@ -509,6 +525,7 @@ return [
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
             ExpertiseForm::class => ExpertiseFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
+            RifseepForm::class => RifseepFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -520,6 +537,7 @@ return [
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
+            RifseepHydrator::class => RifseepHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

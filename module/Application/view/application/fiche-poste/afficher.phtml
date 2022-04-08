@@ -147,6 +147,9 @@ $canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHE
     <!-- EXPERTISES LIEES A LA FICHE DE POSTE ------------------------------------------------------------------------->
     <?php echo $this->partial('partial/expertise', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
 
+    <!-- RIFSEEP et NBI ----------------------------------------------------------------------------------------------->
+    <?php echo $this->partial('partial/rifseep', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
+
     <!-- SPECIFICITE DU POSTE ----------------------------------------------------------------------------------------->
     <?php echo $this->partial('partial/specificite', ['fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
 

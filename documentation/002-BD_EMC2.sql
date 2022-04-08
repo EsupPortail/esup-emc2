@@ -1091,6 +1091,8 @@ create table ficheposte
     octo_id varchar(40),
     preecog_id varchar(40),
     etat_id integer constraint ficheposte_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
+    rifseep integer,
+    nbi integer,
     histo_creation timestamp not null,
     histo_modification timestamp,
     histo_destruction timestamp,

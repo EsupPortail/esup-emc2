@@ -1,28 +1,28 @@
 <?php
 
-namespace Application\Form\SpecificitePoste;
+namespace Application\Form\Rifseep;
 
-trait SpecificitePosteFormAwareTrait {
+trait RifseepFormAwareTrait {
 
-    /** @var SpecificitePosteForm $specificitePosteForm */
-    private $specificitePosteForm;
+    /** @var RifseepForm $rifseepForm */
+    private $rifseepForm;
 
     /**
-     * @return SpecificitePosteForm
+     * @return RifseepForm
      */
-    public function getSpecificitePosteForm()
+    public function getRifseepForm() : RifseepForm
     {
-        return $this->specificitePosteForm;
+        return $this->rifseepForm;
     }
 
     /**
-     * @param SpecificitePosteForm $specificitePosteForm
-     * @return SpecificitePosteForm
+     * @param RifseepForm $rifseepForm
+     * @return RifseepForm
      */
-    public function setSpecificitePosteForm($specificitePosteForm)
+    public function setRifseepForm(RifseepForm $rifseepForm) : RifseepForm
     {
-        $this->specificitePosteForm = $specificitePosteForm;
-        return $this->specificitePosteForm;
+        $this->rifseepForm = $rifseepForm;
+        return $this->rifseepForm;
     }
 
 

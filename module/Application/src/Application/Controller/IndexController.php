@@ -99,11 +99,12 @@ class IndexController extends AbstractActionController
         $complements = $this->getAgentService()->getSuperieurByUser($user);
 
         $agents = [];
-        foreach ($complements as $complement) {
-            $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
-            if ($agent !== null) $agents[$agent->getId()] = $agent;
+        if ($complements) {
+            foreach ($complements as $complement) {
+                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
+                if ($agent !== null) $agents[$agent->getId()] = $agent;
+            }
         }
-
 
         return new ViewModel([
             'agents' => $agents,
@@ -112,5 +113,4 @@ class IndexController extends AbstractActionController
             'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
         ]);
     }
-
 }

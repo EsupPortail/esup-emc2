@@ -205,6 +205,9 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
     <!-- EXPERTISES LIEES A LA FICHE DE POSTE ----------------------------------------------------------------------------->
     <?php echo $this->partial('partial/expertise', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>
 
+    <!-- RIFSEEP et NBI ----------------------------------------------------------------------------------------------->
+    <?php echo $this->partial('partial/rifseep', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>
+
     <!-- SPECIFICITE DU POSTE --------------------------------------------------------------------------------------------->
     <?php echo $this->partial('partial/specificite', ['fiche' => $fiche, 'mode' => 'edition'], [], true); ?>
 

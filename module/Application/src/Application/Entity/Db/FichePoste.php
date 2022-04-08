@@ -46,6 +46,10 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** @var Poste */
     private $poste;
+    /** @var int */
+    private $rifseep;
+    /** @var int */
+    private $nbi;
 
     /** @var ArrayCollection (FicheTypeExterne)*/
     private $fichesMetiers;
@@ -141,6 +145,42 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function setPoste($poste)
     {
         $this->poste = $poste;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRifseep(): ?int
+    {
+        return $this->rifseep;
+    }
+
+    /**
+     * @param int|null $rifseep
+     * @return FichePoste
+     */
+    public function setRifseep(?int $rifseep): FichePoste
+    {
+        $this->rifseep = $rifseep;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbi(): ?int
+    {
+        return $this->nbi;
+    }
+
+    /**
+     * @param int|null $nbi
+     * @return FichePoste
+     */
+    public function setNbi(?int $nbi): FichePoste
+    {
+        $this->nbi = $nbi;
         return $this;
     }
 

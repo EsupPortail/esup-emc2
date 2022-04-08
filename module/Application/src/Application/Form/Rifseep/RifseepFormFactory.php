@@ -1,18 +1,17 @@
 <?php
 
-namespace Application\Form\SpecificitePoste;
+namespace Application\Form\Rifseep;
 
 use Interop\Container\ContainerInterface;
 
-class SpecificitePosteFormFactory{
+class RifseepFormFactory{
 
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : RifseepForm
     {
-        /** @var SpecificitePosteHydrator $hydrator */
-        $hydrator = $container->get('HydratorManager')->get(SpecificitePosteHydrator::class);
+        /** @var RifseepHydrator $hydrator */
+        $hydrator = $container->get('HydratorManager')->get(RifseepHydrator::class);
 
-        /** @var SpecificitePosteForm $form */
-        $form = new SpecificitePosteForm();
+        $form = new RifseepForm();
         $form->setHydrator($hydrator);
         $form->init();
 
