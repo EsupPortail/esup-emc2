@@ -45,10 +45,10 @@ return [
                 'name' => 'Import_AFFECTATION',
                 'source' => [
                     'name'               => 'Affectations des agents',
-                    'select'             => 'SELECT * FROM V_INDIVIDU_AFFECTATION_EMC2 JOIN V_INDIVIDU_AFFECTATION_EMC2 ON V_INDIVIDU_AFFECTATION_EMC2.INDIVIDU_ID = V_PREECOG_AGENT.C_INDIVIDU',
+                    'select'             => 'SELECT INDIVIDU_ID AS AGENT_ID, STRUCTURE_ID, ID AS AFFECTATION_ID, ID_ORIG AS ID_ORIG, T_PRINCIPALE, DATE_DEBUT, CASE DATE_FIN WHEN TO_DATE(\'2999-12-31\', \'YYYY-MM-DD HH24:MI:SS\') THEN NULL ELSE DATE_FIN END AS DATE_FIN FROM V_INDIVIDU_AFFECTATION_EMC2 WHERE SOURCE_ID IN (\'SIHAM\', \'HARP\', \'EMC2\')',
                     'connection'         => 'octopus',
                     'source_code_column' => 'AFFECTATION_ID',
-                    'columns'            => ['INDIVIDU_ID', 'STRUCTURE_ID', 'DATE_DEBUT', 'DATE_FIN', 'ID_ORIG', 'T_PRINCIPALE'],
+                    'columns'            => ['AGENT_ID', 'STRUCTURE_ID', 'DATE_DEBUT', 'DATE_FIN', 'ID_ORIG', 'T_PRINCIPALE'],
                 ],
 //                'intermediate_table' => 'src_agent',
                 'destination' => [
@@ -56,7 +56,7 @@ return [
                     'table'              => 'agent_carriere_affectation',
                     'connection'         => 'default',
                     'source_code_column' => 'affectation_id',
-                    'columns'            => ['individu_id', 'structure_id', 'date_debut', 'date_fin', 'id_orig', 't_principale'],
+                    'columns'            => ['agent_id', 'structure_id', 'date_debut', 'date_fin', 'id_orig', 't_principale'],
                 ],
             ],
             [
