@@ -40,7 +40,7 @@ class RifseepForm extends Form {
             'attributes' => [
                 'id' => 'nbi',
                 'min'  => '0',
-                'max'  => '20',
+                'max'  => '50',
                 'step' => '1',
             ],
         ]);
