@@ -57,6 +57,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     private $parent;
     /** @var Structure|null */
     private $niv2;
+    /** @var Structure|null */
+    private $niv2OverWriten;
     /** @var ArrayCollection (Structure) */
     private $enfants;
 
@@ -303,7 +305,16 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
      */
     public function getNiv2() : ?Structure
     {
+        if ($this->getNiv2OW() !== null) return $this->getNiv2OW();
         return $this->niv2;
+    }
+
+    /**
+     * @return Structure|null
+     */
+    public function getNiv2OW() : ?Structure
+    {
+        return $this->niv2OverWriten;
     }
 
     /**

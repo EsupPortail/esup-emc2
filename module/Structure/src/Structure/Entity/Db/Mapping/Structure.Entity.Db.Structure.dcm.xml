@@ -44,6 +44,9 @@
         <many-to-one target-entity="Structure\Entity\Db\Structure" field="niv2">
             <join-column name="niv2_id" referenced-column-name="id" />
         </many-to-one>
+        <many-to-one target-entity="Structure\Entity\Db\Structure" field="niv2OverWriten">
+            <join-column name="niv2_id_ow" referenced-column-name="id" />
+        </many-to-one>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
