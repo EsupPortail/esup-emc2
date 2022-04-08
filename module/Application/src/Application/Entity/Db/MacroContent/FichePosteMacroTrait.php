@@ -569,7 +569,7 @@ trait FichePosteMacroTrait {
         /** @var FichePoste $fiche */
         $fiche = $this;
 
-        $activites = $fiche->getSpecificite()->getActivites();
+        $activites = ($fiche->getSpecificite())?$fiche->getSpecificite()->getActivites():null;
         if ($activites === null or $activites === []) return "";
 
 
