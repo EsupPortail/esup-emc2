@@ -39,11 +39,9 @@ class CampagneController extends AbstractActionController {
                 $this->getCampagneService()->create($campagne);
                 $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être créée.");
 
-               $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
-               $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                $this->getRappelCampagneAvancementService()->creer($campagne);
-
-
+               $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
+               $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
             }
         }
 
