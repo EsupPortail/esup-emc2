@@ -51,6 +51,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     private $ouverture;
     /** @var DateTime */
     private $fermeture;
+    /** @var DateTime */
+    private $fermetureOW;
     /** @var Boolean */
     private $repriseResumeMere;
     /** @var Structure */
@@ -139,7 +141,16 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
      */
     public function getFermeture() : ?DateTime
     {
+        if ($this->getFermetureOW() !== null) return $this->getFermetureOW();
         return $this->fermeture;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getFermetureOW() : ?DateTime
+    {
+        return $this->fermetureOW;
     }
 
     /**
@@ -149,7 +160,9 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     public function isOuverte(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->ouverture <= $date AND ($this->fermeture === null OR $this->fermeture >= $date));
+        if ($this->ouverture > $date) return false;
+        if ($this->getFermeture() !== null AND $this->getFermeture() <= $date) return false;
+        return true;
     }
 
     /**
