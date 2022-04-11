@@ -293,7 +293,7 @@ EOS;
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND statut.detacheOut = :false)')
+            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND statut.detacheOut = :false AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
             //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
