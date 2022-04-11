@@ -24,9 +24,9 @@ class AgentGradeService {
         $qb = $this->getEntityManager()->getRepository(AgentGrade::class)->createQueryBuilder('agentgrade')
             ->join('agentgrade.agent', 'agent')->addSelect('agent')
             ->join('agentgrade.structure', 'structure')->addSelect('structure')
-            ->join('agentgrade.grade', 'grade')->addSelect('grade')
-            ->join('agentgrade.corps', 'corps')->addSelect('corps')
-            ->join('agentgrade.bap', 'correspondance')->addSelect('correspondance')
+            ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
+            ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
+            ->leftjoin('agentgrade.bap', 'correspondance')->addSelect('correspondance')
             ->andWhere('agentgrade.deleted_on IS NULL')
         ;
         return $qb;

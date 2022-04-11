@@ -611,6 +611,7 @@ create table structure
     type_id integer constraint structure_structure_type_id_fk references structure_type on delete set null,
     parent_id integer constraint structure_structure_source_id_fk references structure on delete set null,
     niv2_id integer constraint structure_structure_id_fk references structure on delete set null,
+    niv2_id_ow integer constraint structure_structure_id_fk references structure on delete set null,
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
     deleted_on timestamp(0)
