@@ -58,7 +58,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     <div class="col-md-6">
         <h3> Grades actifs</h3>
         <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
+            <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => false, 'temoin' => true, 'echelon' => $agent->getEchelonActif()]); ?>
         <?php endforeach; ?>
     </div>
 </div>
