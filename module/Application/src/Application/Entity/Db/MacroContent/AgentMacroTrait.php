@@ -3,8 +3,6 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FichePoste;
-use Zend\Http\Header\Age;
 
 /**
  * Trait AgentMacroTrait
