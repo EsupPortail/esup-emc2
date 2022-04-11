@@ -297,7 +297,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretien'                 => $entretien,
 
             'agent'                     => $agent,
-            'fichesposte'               => $fichesposte,
+            'ficheposte'               => $fichesposte,
             'fichesmetiers'             => $fichesmetiers,
             'parcours'                  => $parcours,
             'mails'                     => $mails,
