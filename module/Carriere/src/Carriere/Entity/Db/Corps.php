@@ -3,7 +3,6 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\AgentGrade;
-use Carriere\Entity\Db\Niveau;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,6 +25,8 @@ class Corps
     private $histo;
     /** @var Niveau */
     private $niveau;
+    /** @var NiveauEnveloppe */
+    private $niveaux;
 
     /** @var ArrayCollection (AgentGrade) */
     private $agentGrades;
@@ -105,16 +106,16 @@ class Corps
     /**
      * @return string
      */
-    public function getCategorie()
+    public function getCategorie() : ?string
     {
         return $this->categorie;
     }
 
     /**
-     * @param string $categorie
+     * @param string|null $categorie
      * @return Corps
      */
-    public function setCategorie($categorie)
+    public function setCategorie(?string $categorie) : Corps
     {
         $this->categorie = $categorie;
         return $this;
@@ -135,6 +136,24 @@ class Corps
     public function setNiveau(?Niveau $niveau) : Corps
     {
         $this->niveau = $niveau;
+        return $this;
+    }
+
+    /**
+     * @return NiveauEnveloppe
+     */
+    public function getNiveaux(): ?NiveauEnveloppe
+    {
+        return $this->niveaux;
+    }
+
+    /**
+     * @param NiveauEnveloppe|null $niveaux
+     * @return Corps
+     */
+    public function setNiveaux(?NiveauEnveloppe $niveaux): Corps
+    {
+        $this->niveaux = $niveaux;
         return $this;
     }
 
