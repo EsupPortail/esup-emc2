@@ -11,6 +11,7 @@ use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
+use Carriere\Entity\Db\NiveauEnveloppe;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -494,18 +495,15 @@ EOS;
     public function getFichesPostesByStructuresAndAgent(array $structures = [], bool $sousstructure = false, Agent $agent = null) : array
     {
         $fiches = $this->getFichesPostesByStructures($structures, $sousstructure);
-        $niveau = $agent->getMeilleurNiveau()->getNiveau();
+        $fiches = array_filter($fiches, function (FichePoste $a) use ($agent) {
+            return (
+                $a->estNonHistorise() AND
+                $a->isComplete() AND
+                $a->getEtat()->getCode() === FichePoste::ETAT_CODE_OK AND
+                ($a->getAgent()->getNiveauEnveloppe() !== null AND $agent->getNiveauEnveloppe() !== null AND NiveauEnveloppe::isCompatible($a->getAgent()->getNiveauEnveloppe(), $agent->getNiveauEnveloppe())));
+        });
+        return $fiches;
 
-        if ($niveau === null) return $fiches;
-
-        $result = [];
-        foreach ($fiches as $fiche) {
-            if ($fiche->isComplete()) {
-                $niveauA = $fiche->getAgent()->getMeilleurNiveau()->getNiveau();
-                if ($niveauA === null or $niveauA >= ($niveau - 1)) $result[] = $fiche;
-            }
-        }
-        return $result;
     }
 
     /**

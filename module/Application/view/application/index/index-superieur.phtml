@@ -124,7 +124,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                 <?php if ($campagnesCurrents !== null or $campagnesCurrents !== []) : ?>
                     <?php /** @var Campagne $campagneCurrent */ ?>
                     <?php foreach ($campagnesCurrents as $campagneCurrent) : ?>
-                        Courrant (<?php echo $campagneCurrent->getAnnee(); ?>):
+                        Courant (<?php echo $campagneCurrent->getAnnee(); ?>):
                         <?php $entretien = $agent->getEntretienProfessionnelByCampagne($campagneCurrent); ?>
                         <?php if ($entretien !== null) : ?>
                             Entretien du <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
@@ -141,7 +141,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                                target="_blank">
                                 <span class="icon pdf"></span><span class="small-lettrine">CREF</span></a>
                         <?php else : ?>
-                            Aucune entretien
+                            Aucun entretien
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                             <a href="<?php echo $this->url('entretien-professionnel/creer', ["campagne" => $campagneCurrent->getId()], ["query" => ["agent" => $agent->getId(), 'structure' => $affectation->getStructure()->getId()]]); ?>"
                                class="ajax-modal" data-event="modification">

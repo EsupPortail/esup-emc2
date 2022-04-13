@@ -107,13 +107,23 @@ class NiveauEnveloppe implements HistoriqueAwareInterface {
     public function getDeltaWithAgent(?Agent $agent = null) : ?int
     {
         if ($agent === null) { return null; }
-        $niveauAgent = ($agent->getMeilleurNiveau())?$agent->getMeilleurNiveau()->getNiveau():null;
+        $niveauxAgent = $agent->getNiveauEnveloppe();
         $niveauSup = $this->getBorneSuperieure()->getNiveau();
         $niveauInf = $this->getBorneInferieure()->getNiveau();
 
-        if ($niveauAgent >= $niveauSup AND $niveauAgent <= $niveauInf) return 0;
-        if ($niveauAgent < $niveauInf) return ($niveauSup - $niveauAgent);
-        if ($niveauAgent > $niveauInf) return ($niveauAgent - $niveauInf);
-        return null;
+        if ($niveauxAgent->getBorneSuperieure()->getNiveau() >= $niveauSup AND $niveauxAgent->getBorneInferieure()->getNiveau() <= $niveauInf) return 0;
+        return max (($niveauSup - $niveauxAgent->getBorneSuperieure()->getNiveau()), ($niveauxAgent->getBorneInferieure()->getNiveau() - $niveauInf));
+    }
+
+    /**
+     * @param NiveauEnveloppe $niveauA
+     * @param NiveauEnveloppe $niveauB
+     * @return bool
+     */
+    static public function isCompatible(NiveauEnveloppe $niveauA, NiveauEnveloppe $niveauB) : bool
+    {
+        if ($niveauA->getBorneInferieure()->getNiveau() < $niveauB->getBorneSuperieure()->getNiveau()) return false;
+        if ($niveauA->getBorneSuperieure()->getNiveau() > $niveauB->getBorneInferieure()->getNiveau()) return false;
+        return true;
     }
 }

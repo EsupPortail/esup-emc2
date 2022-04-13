@@ -36,7 +36,7 @@ return [
                 [
                     'controller' => CorpsController::class,
                     'action' => [
-                        'modifier-niveau',
+                        'modifier-niveaux',
                     ],
                     'privileges' => [
                         CorpsPrivileges::CORPS_MODIFIER,
@@ -90,13 +90,13 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'modifier-niveau' => [
+                    'modifier-niveaux' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-niveau/:corps',
+                            'route'    => '/modifier-niveaux/:corps',
                             'defaults' => [
                                 'controller' => CorpsController::class,
-                                'action'     => 'modifier-niveau',
+                                'action'     => 'modifier-niveaux',
                             ],
                         ],
                         'may_terminate' => true,

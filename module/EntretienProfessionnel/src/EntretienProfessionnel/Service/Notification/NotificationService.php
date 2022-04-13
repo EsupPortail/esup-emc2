@@ -92,7 +92,12 @@ class NotificationService {
 
     public function triggerConvocationAcceptation(EntretienProfessionnel $entretien) : Mail
     {
-        $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne(), 'agent' => $entretien->getAgent()];
+        $vars = [
+            'entretien' => $entretien,
+            'campagne' => $entretien->getCampagne(),
+            'agent' => $entretien->getAgent(),
+            'UrlService' => $this->getUrlService()
+        ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ACCEPTER", $vars);
         $mail = $this->getMailService()->sendMail($entretien->getResponsable()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);

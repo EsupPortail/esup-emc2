@@ -37,7 +37,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
         <th style="width:70%;"> Libellé</th>
         <th> #Agent/Grade </th>
         <th> Catégorie </th>
-        <th> Niveau </th>
+        <th> Niveaux </th>
         <th style="width:3rem;"> Action </th>
     </tr>
     </thead>
@@ -54,24 +54,25 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             </td>
             <td> <?php echo count($corp->getAgentGrades()); ?> </td>
             <td> <?php echo $corp->getCategorie(); ?> </td>
-            <td> <?php if ($corp->getNiveau()) : ?>
-                    <span
-                            data-toggle="tooltip" data-html="true"
-                            title="<?php echo $corp->getNiveau()->getLibelle(); ?> : Niveau <?php echo $corp->getNiveau()->getNiveau(); ?>">
-                    <?php echo $corp->getNiveau()->getEtiquette(); ?>
-                    </span>
+            <td>
+                <?php echo $this->niveauEnveloppe($corp->getNiveaux()) ?>
+                <?php if ($canModifier) : ?>
+                    <?php if ($corp->getNiveaux()) : ?>
+                        <?php /**  @see \Carriere\Controller\CorpsController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon editer"></span></a>
+                    <?php else : ?>
+                        <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
+                        <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon ajouter"></span></a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </td>
             <td>
-                <?php if ($canModifier) : ?>
-                    <a
-                        <?php /** @see \Carriere\Controller\CorpsController::modifierNiveauAction() */ ?>
-                        href="<?php echo $this->url('corps/modifier-niveau', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
-                        class="ajax-modal" data-event="modification"
-                    >
-                                    <span class="icon editer" data-toggle="tooltip" data-html="true"
-                                          title="Modifier le niveu du corps"></span></a>
-                <?php endif; ?>
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\CorpsController::afficherAgentsAction() */ ?>

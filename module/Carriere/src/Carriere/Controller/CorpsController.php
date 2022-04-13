@@ -2,10 +2,11 @@
 
 namespace Carriere\Controller;
 
-use Carriere\Form\ModifierNiveau\ModifierNiveauFormAwareTrait;
+use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
-use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -14,9 +15,9 @@ use Zend\View\Model\ViewModel;
 class CorpsController extends AbstractActionController {
     use CategorieServiceAwareTrait;
     use CorpsServiceAwareTrait;
-    use NiveauServiceAwareTrait;
+    use NiveauEnveloppeServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use ModifierNiveauFormAwareTrait;
+    use NiveauEnveloppeFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -29,33 +30,6 @@ class CorpsController extends AbstractActionController {
         ]);
     }
 
-    public function modifierNiveauAction() : ViewModel
-    {
-        $corps = $this->getCorpsService()->getRequestedCorps($this);
-
-        $form = $this->getModifierNiveauForm();
-        $form->setAttribute('action', $this->url()->fromRoute('corps/modifier-niveau', ['corps' => $corps->getId()], ['fragment' => 'corps'], true));
-        $form->bind($corps);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getCorpsService()->update($corps);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Modification du niveau du corps ".$corps->getLibelleLong(),
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
     public function afficherAgentsAction() : ViewModel
     {
         $corps = $this->getCorpsService()->getRequestedCorps($this);
@@ -64,5 +38,44 @@ class CorpsController extends AbstractActionController {
             'title' => 'Agents ayant le corps ['. $corps->getLibelleCourt().']',
             'corps' => $corps,
         ]);
+    }
+
+    /** GESTION DES NIVEAUX *******************************************************************************************/
+
+
+    public function modifierNiveauxAction() : ViewModel
+    {
+        $corps = $this->getCorpsService()->getRequestedCorps($this);
+
+        $niveaux = $corps->getNiveaux();
+        if ($niveaux === null) {
+            $niveaux = new NiveauEnveloppe();
+        }
+
+        $form = $this->getNiveauEnveloppeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('corps/modifier-niveaux', ['corps' => $corps->getId()], [], true));
+        $form->bind($niveaux);
+
+        $request = $this->getRequest();
+        if($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($niveaux->getHistoCreation()) {
+                    $this->getNiveauEnveloppeService()->update($niveaux);
+                } else {
+                    $this->getNiveauEnveloppeService()->create($niveaux);
+                    $corps->setNiveaux($niveaux);
+                    $this->getCorpsService()->update($corps);
+                }
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier les niveaux du corps [".$corps->getLibelleLong()."]",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('metier/default/default-form');
+        return $vm;
     }
 }

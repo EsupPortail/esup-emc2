@@ -2,10 +2,10 @@
 
 namespace Carriere\Controller;
 
-use Carriere\Form\ModifierNiveau\ModifierNiveauForm;
+use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Corps\CorpsService;
-use Carriere\Service\Niveau\NiveauService;
+use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -20,26 +20,26 @@ class CorpsControllerFactory {
         /**
          * @var CategorieService $categorieService
          * @var CorpsService $corpsService
-         * @var NiveauService $niveauService
+         * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ParametreService $parametreService
          */
         $categorieService = $container->get(CategorieService::class);
         $corpsService = $container->get(CorpsService::class);
-        $niveauService = $container->get(NiveauService::class);
+        $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
         $parametreService = $container->get(ParametreService::class);
 
         /**
-         * @var ModifierNiveauForm $modifierNiveauForm
+         * @var NiveauEnveloppeForm $niveauEnveloppeForm
          */
-        $modifierNiveauForm = $container->get('FormElementManager')->get(ModifierNiveauForm::class);
+        $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
 
         /** @var CorpsController $controller */
         $controller = new CorpsController();
         $controller->setCategorieService($categorieService);
         $controller->setCorpsService($corpsService);
-        $controller->setNiveauService($niveauService);
+        $controller->setNiveauEnveloppeService($niveauEnveloppeService);
         $controller->setParametreService($parametreService);
-        $controller->setModifierNiveauForm($modifierNiveauForm);
+        $controller->setNiveauEnveloppeForm($niveauEnveloppeForm);
         return $controller;
     }
 }

@@ -13,6 +13,16 @@ use Structure\Entity\Db\Structure;
 
 ?>
 
+<div class="alert alert-info">
+    <span class="icon information"></span>
+    Les fiches listées ci-dessous ne correspondent qu'aux fiches de postes :
+    <ul>
+        <li> qui sont complètes ;</li>
+        <li> qui sont dans l'état validée <?php echo $this->etatbadge(FichePoste::ETAT_CODE_OK); ?> ;</li>
+        <li> associées à un·e agent·e de niveau compatible. </li>
+    </ul>
+</div>
+
 <form
     method="post"
     action="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"

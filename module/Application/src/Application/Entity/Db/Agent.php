@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Carriere\Entity\Db\Niveau;
+use Carriere\Entity\Db\NiveauEnveloppe;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasComplementsInterface;
@@ -584,17 +585,30 @@ class Agent implements
     }
 
     /**
-     * @return Niveau
+     * @return NiveauEnveloppe
      */
-    public function getMeilleurNiveau() : ?Niveau
+    public function getNiveauEnveloppe() : ?NiveauEnveloppe
     {
-        $niveau = 999;
+        $inferieure = null;
+        $superieure = null;
+
         $grades = $this->getGradesActifs();
         foreach ($grades as $grade) {
-            $level = $grade->getCorps()->getNiveau();
-            if ($level !== null and $level <= $niveau) $niveau = $level;
+            $level = $grade->getCorps()->getNiveaux();
+
+            $_inferieure = ($level !== null)?$level->getBorneInferieure():null;
+            $_superieure = ($level !== null)?$level->getBorneSuperieure():null;
+
+            if ($inferieure === null OR ($_inferieure AND $_inferieure->getNiveau() < $inferieure->getNiveau())) $inferieure = $_inferieure;
+            if ($superieure === null OR ($_superieure AND $_superieure->getNiveau() > $superieure->getNiveau())) $superieure = $_superieure;
         }
-        return ($niveau !== 999)?$niveau:null;
+
+        if ($inferieure === null OR $superieure === null) return null;
+
+        $enveloppe = new NiveauEnveloppe();
+        $enveloppe->setBorneInferieure($inferieure);
+        $enveloppe->setBorneSuperieure($superieure);
+        return $enveloppe;
     }
 
     /** QUOTITES *****************************************************************************************/
