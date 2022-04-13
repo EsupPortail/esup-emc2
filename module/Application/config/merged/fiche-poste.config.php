@@ -44,6 +44,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelper;
+use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Zend\Router\Http\Literal;
@@ -542,9 +543,11 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'fichesPostesAsArray' => FichesPostesAsArrayViewHelper::class,
             'fichePosteGraph' => FichePosteGraphViewHelper::class,
         ],
+        'factories' => [
+            'fichesPostesAsArray' => FichesPostesAsArrayViewHelperFactory::class,
+        ]
     ],
 
 ];
