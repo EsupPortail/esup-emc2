@@ -130,16 +130,6 @@ class Corps
     }
 
     /**
-     * @param Niveau|null $niveau
-     * @return Corps
-     */
-    public function setNiveau(?Niveau $niveau) : Corps
-    {
-        $this->niveau = $niveau;
-        return $this;
-    }
-
-    /**
      * @return NiveauEnveloppe
      */
     public function getNiveaux(): ?NiveauEnveloppe

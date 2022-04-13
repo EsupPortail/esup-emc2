@@ -73,12 +73,12 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
             <dd>
                 <?php $corps = $grade->getCorps(); ?>
                 <?php if ($corps !== null) : ?>
-                    <?php $niveau = $corps->getNiveau(); ?>
-                    <?php if ($niveau) : ?>
-                        <span data-toggle="tooltip" data-html="true" title="<?php echo $niveau->getLibelle(); ?> <strong><?php echo $niveau->getNiveau(); ?></strong>">
+                    <?php $niveaux = $corps->getNiveaux(); ?>
+                    <?php if ($niveaux) : ?>
+                        <span data-toggle="tooltip" data-html="true" title="<strong>[ <?php echo $niveaux->getBorneInferieure()->getLibelle(); ?> <?php echo $niveaux->getBorneInferieure()->getNiveau(); ?>: <?php echo $niveaux->getBorneSuperieure()->getLibelle(); ?> <?php echo $niveaux->getBorneSuperieure()->getNiveau(); ?>]</strong>">
                     <?php endif; ?>
                     <?php echo $corps->getLibelleLong(); ?>
-                    <?php if ($niveau) : ?>
+                    <?php if ($niveaux) : ?>
                         </span>
                     <?php endif; ?>
                 <?php else : ?>
