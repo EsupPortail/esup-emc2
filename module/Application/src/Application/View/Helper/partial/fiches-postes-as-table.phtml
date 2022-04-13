@@ -26,6 +26,7 @@ if ($retour)    $query['retour'] = $retour;
 
 ?>
 
+
 <table class="table table-condensed datatable">
     <thead>
     <tr>
@@ -136,7 +137,7 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['action']) : ?>
                     <td>
-                        <?php if ($fiche['etat_code'] === FichePoste::ETAT_CODE_OK OR $canEditer) : ?>
+                        <?php if ($fiche['etat_code'] === FichePoste::ETAT_CODE_OK OR $canEditer  OR $displays['isObservateur']) : ?>
                             <?php if ($canVoir) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
@@ -146,7 +147,7 @@ if ($retour)    $query['retour'] = $retour;
                                        data-toggle="tooltip" data-html="true"
                                        title="Afficher la fiche de poste"></span></a>
                             <?php endif; ?>
-                            <?php if ($canExport) : ?>
+                            <?php if ($canExport  OR $displays['isObservateur']) : ?>
                                 <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' =>  $fiche['id']], [], true); ?>"
                                    target="_blank"
                                 ><span

@@ -2,7 +2,9 @@
 
 namespace Application\View\Helper;
 
+use Application\Constant\RoleConstant;
 use Application\Entity\Db\FichePoste;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Partial;
 use Zend\View\Renderer\PhpRenderer;
@@ -12,6 +14,8 @@ use Zend\View\Resolver\TemplatePathStack;
 
 class FichesPostesAsArrayViewHelper extends AbstractHelper
 {
+    use UserServiceAwareTrait;
+
     /**
      * @param FichePoste[] $fiches
      * @param array $options
@@ -23,7 +27,6 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-
         $displays = [
             'id' => false,
             'agent' => true,
@@ -33,6 +36,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'fiche-principale' => true,
             'modification' => false,
             'action' => true,
+            'isObservateur' => ($this->getUserService()->getConnectedRole()->getRoleId() === RoleConstant::OBSERVATEUR),
         ];
         if (isset($options['displays']) AND isset($options['displays']['id'])) $displays['id'] = ($options['displays']['id'] === true);
         if (isset($options['displays']) AND isset($options['displays']['agent'])) $displays['agent'] = ($options['displays']['agent'] !== false);
