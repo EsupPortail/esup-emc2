@@ -14,7 +14,6 @@ class TreeRouteStackConsoleDelegatorFactory implements DelegatorFactoryInterface
         /** @var TreeRouteStack $treeRouteStack */
         $treeRouteStack = $callback();
 
-        echo $container->get('config')['server_url'];
         if (!$treeRouteStack->getRequestUri()) {
             $treeRouteStack->setRequestUri(
                 new Http($container->get('config')['server_url'])
