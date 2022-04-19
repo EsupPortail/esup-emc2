@@ -128,7 +128,7 @@ ksort($groupes);
 <div class="listing">
     <table>
     <?php foreach ($types as $type) : ?>
-        <?php $groupe = $groupes[$type->getLibelle()]; ?>
+        <?php $groupe = $groupes[$type->getLibelle()]??null; ?>
         <?php if ($groupe !== null AND !empty($groupe)) : ?>
             <tr>
                 <th colspan="5">
