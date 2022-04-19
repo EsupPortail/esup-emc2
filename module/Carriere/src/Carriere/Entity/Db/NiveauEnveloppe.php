@@ -108,6 +108,7 @@ class NiveauEnveloppe implements HistoriqueAwareInterface {
     {
         if ($agent === null) { return null; }
         $niveauxAgent = $agent->getNiveauEnveloppe();
+        if ($niveauxAgent === null) return null;
         $niveauSup = $this->getBorneSuperieure()->getNiveau();
         $niveauInf = $this->getBorneInferieure()->getNiveau();
 
