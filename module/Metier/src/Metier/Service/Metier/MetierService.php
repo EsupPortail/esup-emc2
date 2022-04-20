@@ -248,8 +248,12 @@ class MetierService {
         public static function computeEcritureInclusive(string $feminin, string $masculin) : ?string
     {
         $split_inclusif = [];
-        $split_feminin = explode(" ",$feminin);
-        $split_masculin = explode(" ",$masculin);
+        $split_feminin_ = explode(" ",$feminin);
+        $split_feminin = []; foreach ($split_feminin_ as $item) { if ($item !== '') $split_feminin[] = $item; }
+//        var_dump($split_feminin);
+        $split_masculin_ = explode(" ",$masculin);
+        $split_masculin = []; foreach ($split_masculin_ as $item) { if ($item !== '') $split_masculin[] = $item; }
+//        var_dump($split_masculin);
 
         if (count($split_feminin) !== count($split_masculin)) return null;
         $nbElement = count($split_feminin);
