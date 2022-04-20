@@ -27,3 +27,29 @@ use Structure\Entity\Db\Structure;
 >
     <span class="icon csv"></span> Extraire au format CSV
 </a>
+
+<h2> Organigrammes </h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3> Organigramme structurel </h3>
+    </div>
+    <div class="col-md-4">
+        <a
+            <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
+                href="<?php echo $this->url('structure/organigramme', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary action"
+        >
+            <span class="icon csv"></span> Version WEB
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a
+            <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
+                href="<?php echo $this->url('structure/organigramme-pdf', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary action" target="_blank"
+        >
+            <span class="icon csv"></span> Version PDF
+        </a>
+    </div>
+</div>

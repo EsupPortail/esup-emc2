@@ -4,10 +4,12 @@
  * @see \Structure\Controller\StructureController::organigrammeAction()
  * @var Structure $structure
  * @var Agent[] $agents
+ * @var array $secondaires
  */
 
 use Application\Entity\Db\Agent;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
 
 $this->headTitle("Organigramme de ". $structure->getLibelleLong());
 
@@ -63,8 +65,9 @@ $masque_structure_vide = true;
 
 </div>
 
+<div class="structures-filles">
 <?php foreach ($structure->getEnfants() as $enfant) : ?>
-
+    <div class="structure-fille">
     <?php
         $responsables = $enfant->getResponsables();
         $gestionnaires = $enfant->getGestionnaires();
@@ -83,7 +86,9 @@ $masque_structure_vide = true;
             <span class="rubrique">Responsable<?php if (count($responsables) > 1) echo "s"; ?></span>
             <ul>
                 <?php foreach ($responsables as $responsable) : ?>
-                    <li> <?php echo $responsable->getAgent()->getDenomination(); ?> </li>
+                    <li>
+                        <?php echo $responsable->getAgent()->getDenomination(); ?>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
@@ -113,17 +118,46 @@ $masque_structure_vide = true;
             <?php if (!empty($agents[$petitenfant->getId()]) OR !$masque_structure_vide) : ?>
                 <span class="structure_pe_nom"><?php echo $petitenfant->getLibelleLong(); ?></span>
 
+                <?php $responsables = array_map(function (StructureResponsable $sr) { return $sr->getAgent(); }, ($petitenfant->getResponsables())); ?>
+
                 <ul>
                     <?php foreach ($agents[$petitenfant->getId()] as $agent) : ?>
-                        <li> <?php echo $agent->getDenomination(); ?> </li>
+                        <li>
+                            <?php echo $agent->getDenomination(); ?>
+                            <?php if (in_array($agent, $responsables) !== false) : ?>
+                                <span class="badge responsable" title="Responsable">R</span>
+                            <?php endif; ?>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
         <?php endforeach; ?>
-
-
+    </div>
     </div>
 <?php endforeach; ?>
+</div>
+
+<?php if ($secondaires AND !empty($secondaires)) : ?>
+<div class="structure_bloc">
+    <span class="structure_e_nom"> En affectation secondaire </span>
+
+    <div class="multicol">
+    <?php ksort($secondaires); ?>
+    <?php foreach ($secondaires as $structureS => $agentsS) : ?>
+    <div style="display:inline-block;width:100%;">
+        <span class="structure_pe_nom"><?php echo ($structureS !== "ZZZ")?$structureS:"Sans affectation principale"; ?></span>
+        <ul>
+            <?php sort($agentsS); ?>
+            <?php foreach ($agentsS as $agentS) : ?>
+                <li> <?php echo $agentS; ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
+
 
 <style>
     .header{
@@ -149,5 +183,33 @@ $masque_structure_vide = true;
 
     .structure_bloc {
         border-top: 2px solid black;
+    }
+
+    span.responsable {
+        background: darkseagreen;
+    }
+    span.adjoint {
+        background: #ffac48;
+    }
+
+    div#contenu-principal {
+        /*background: pink;*/
+        width:95%;
+    }
+    div.structures-filles {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    div.structure-fille {
+        padding: 1rem 1rem 1rem 2rem;
+        margin-top: 1rem;
+        width: max(30%,300px);
+    }
+
+    div.multicol {
+        column-count: 3;
     }
 </style>

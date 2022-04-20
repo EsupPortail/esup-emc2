@@ -505,11 +505,14 @@ class StructureController extends AbstractActionController {
             }
         }
 
+        $affectationsSecondaires = $this->getStructureService()->getAgentsEnAffectationSecondaire($structure);
+
         $vm = new ViewModel();
         //$vm->setTemplate('blank');
         $vm->setVariables([
             'structure' => $structure,
             'agents' => $agents,
+            'secondaires' => $affectationsSecondaires,
         ]);
         return $vm;
     }

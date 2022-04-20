@@ -3,6 +3,7 @@
 namespace Structure\Service\Structure;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\FichePoste;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -426,5 +427,41 @@ EOS;
         }
 
         return $selecteur;
+    }
+
+    /** Fonctions pour l'organigramme *********************************************************************************/
+
+    public function getAgentsEnAffectationSecondaire(Structure $structure, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+        $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
+//            ->join('affectation.agent', 'agent')->addSelect('agent')
+            // affecation en cours non principale dans la structure
+            ->andWhere('affectation.structure = :structure')
+            ->setParameter('structure', $structure)
+            ->andWhere('affectation.principale IS NULL OR affectation.principale = :N')
+            ->setParameter('N', 'N')
+            ->andWhere('affectation.dateDebut <= :currentdate')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :currentdate')
+            ->andWhere('affectation.deleted_on IS NULL')
+            ->setParameter('currentdate', $date)
+//            ->orderBy('agent.nomUsuel, agent.prenom')
+        ;
+
+        /** @var AgentAffectation[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $listing = [];
+        foreach ($result as $affectation) {
+            $agent = $affectation->getAgent();
+            $affectationPrincipale = $agent->getAffectationPrincipale($date);
+            if ($affectationPrincipale) {
+                $structurePrincipale = $affectationPrincipale->getStructure();
+                $listing[$structurePrincipale->getLibelleLong()][] = $agent->getDenomination();
+            } else {
+                $listing["ZZZ"][] = $agent->getDenomination();
+            }
+        }
+        return $listing;
     }
 }
