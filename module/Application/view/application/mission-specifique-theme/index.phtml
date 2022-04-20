@@ -29,10 +29,12 @@ $canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(M
 
 <div class="row">
     <div class="col-md-4">
-        <a href="<?php echo $this->url('mission-specifique-theme/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
-            <span class="icon ajouter"></span>
-            Ajouter un thème de mission
-        </a>
+        <?php if ($canAjouter) : ?>
+            <a href="<?php echo $this->url('mission-specifique-theme/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter un thème de mission
+            </a>
+        <?php endif; ?>
     </div>
     <div class="pull-right">
         <?php if ($canIndexMissionSpecifique) : ?>

@@ -29,10 +29,12 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
 
 <div class="row">
     <div class="col-md-4">
-        <a href="<?php echo $this->url('mission-specifique/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
-            <span class="icon ajouter"></span>
-            Ajouter une mission spécifique
-        </a>
+        <?php if ($canAjouter) : ?>
+            <a href="<?php echo $this->url('mission-specifique/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon ajouter"></span>
+                Ajouter une mission spécifique
+            </a>
+        <?php endif; ?>
     </div>
     <div class="pull-right">
         <?php if ($canIndexMissionSpecifiqueTheme) : ?>
@@ -61,8 +63,8 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
     <?php foreach ($missions as $mission) : ?>
         <tr class="<?php if ($mission->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $mission->getLibelle(); ?> </td>
-            <td> <?php echo $mission->getType()->getLibelle(); ?> </td>
-            <td> <?php echo $mission->getTheme()->getLibelle(); ?> </td>
+            <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"<span class='text-danger'>Aucun type</span>"; ?> </td>
+            <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='text-danger'>Aucun thème</span>"; ?> </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a href="<?php echo $this->url('mission-specifique/afficher', ['mission' => $mission->getId()], [], true); ?>"

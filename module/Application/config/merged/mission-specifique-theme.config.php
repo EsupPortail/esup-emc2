@@ -36,8 +36,8 @@ return [
                 [
                     'controller' => MissionSpecifiqueThemeController::class,
                     'action' => [
-                        'historiser',
-                        'restaurer',
+                        'ajouter',
+                        'modifier',
                     ],
                     'privileges' => [
                         MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_MODIFIER,
