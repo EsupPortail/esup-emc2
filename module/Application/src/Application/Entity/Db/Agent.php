@@ -713,4 +713,16 @@ class Agent implements
         }
         return false;
     }
+
+    /**
+     * @param Agent $autorite
+     * @return bool
+     */
+    public function hasAutoriteHierarchique(Agent $autorite) : bool
+    {
+        foreach ($this->getComplements() as $complement) {
+            if ($complement->getType() === Complement::COMPLEMENT_TYPE_AUTORITE AND $complement->getComplementId() == $autorite->getId()) return true;
+        }
+        return false;
+    }
 }

@@ -20,7 +20,8 @@ use UnicaenUtilisateur\Entity\Db\User;
  * @see AgentController::afficherAction()
  * @var Agent   $agent
  * @var EntretienProfessionnel[] $entretiens
- * @var User[]  $responsables
+ * @var Agent[]  $responsables
+ * @var Agent[]  $autorites
  * @var array $parcoursArray
  * @var FichePoste[] $fichespostes
  * @var FichePoste $ficheposte
@@ -145,8 +146,8 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/informations-generales',
                     ['agent' => $agent,
                         'affectations' => $affectations,
-                        'statuts' => $statuts, 'echelon' => $echelon,
-                        'grades' => $grades, 'responsables' => $responsables, 'quotite' => $quotite,
+                        'responsables' => $responsables, 'autorites' => $autorites,
+                        'statuts' => $statuts, 'echelon' => $echelon, 'grades' => $grades, 'quotite' => $quotite,
                         'canInfoSource' => $canInfoSource]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
