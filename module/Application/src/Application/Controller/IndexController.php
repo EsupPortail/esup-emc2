@@ -68,7 +68,11 @@ class IndexController extends AbstractActionController
                     return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
                     break;
                 case Agent::ROLE_SUPERIEURE :
+                    /** @see IndexController::indexSuperieurAction() */
                     return $this->redirect()->toRoute('index-superieur', [], [], true);
+                case Agent::ROLE_AUTORITE :
+                    /** @see IndexController::indexAutoriteAction() */
+                    return $this->redirect()->toRoute('index-autorite', [], [], true);
             }
         }
 
@@ -112,5 +116,28 @@ class IndexController extends AbstractActionController
             'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
             'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
         ]);
+    }
+
+    public function indexAutoriteAction() : ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $complements = $this->getAgentService()->getAutoriteByUser($user);
+
+        $agents = [];
+        if ($complements) {
+            foreach ($complements as $complement) {
+                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
+                if ($agent !== null) $agents[$agent->getId()] = $agent;
+            }
+        }
+
+        $vm =  new ViewModel();
+        $vm->setVariables([
+            'agents' => $agents,
+            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
+            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
+            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
+        ]);
+        return $vm;
     }
 }

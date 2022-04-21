@@ -6,7 +6,8 @@
  * @var AgentAffectation[] $affectations
  * @var AgentGrade[] $grades
  * @var AgentEchelon|null $echelon
- * @var User[] $responsables
+ * @var Agent[] $responsables
+ * @var Agent[] $autorites
  * @var AgentQuotite $quotite
  * @var bool $canInfoSource
  */
@@ -67,11 +68,10 @@ use UnicaenUtilisateur\Entity\Db\User;
             <dt> Autorité hiérarchique </dt>
             <dd>
                 <?php if ($niveau2) : ?>
-                    <?php $responsables = $niveau2->getResponsables(); ?>
-                    <?php if (! empty($responsables)) : ?>
+                    <?php if ($autorites AND !empty($autorites)) : ?>
                         <ul>
-                        <?php foreach ($responsables as $responsable) : ?>
-                            <li> <?php echo $responsable->getAgent()->getDenomination(); ?> </li>
+                        <?php foreach ($autorites as $autorite) : ?>
+                            <li> <?php echo $autorite->getDenomination(); ?> </li>
                         <?php endforeach; ?>
                         </ul>
                     <?php else : ?>
@@ -89,11 +89,10 @@ use UnicaenUtilisateur\Entity\Db\User;
             </dd>
             <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
             <dd>
-                <?php $superieurs = $affectation->getStructure()->getResponsables(); ?>
-                <?php if (! empty($superieurs)) : ?>
+                <?php if ($responsables AND !empty($responsables)) : ?>
                     <ul>
-                        <?php foreach ($superieurs as $superieur) : ?>
-                            <li> <?php echo $superieur->getAgent()->getDenomination(); ?> </li>
+                        <?php foreach ($responsables as $responsable) : ?>
+                            <li> <?php echo $responsable->getDenomination(); ?> </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php else : ?>

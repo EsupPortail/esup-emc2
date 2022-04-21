@@ -387,7 +387,7 @@ EOS;
 
     /**
      * @param Agent $agent
-     * @return User[]|null
+     * @return Agent[]|null
      */
     public function getResponsablesHierarchiques(Agent $agent) : ?array
     {
@@ -396,12 +396,30 @@ EOS;
         $structure = $affectationPrincipale->getStructure();
         if ($structure === null) return null;
 
-
-        while($structure->getParent() AND $structure->getParent()->getParent()) {
-            $structure = $structure->getParent();
+        $structureResponsables = $structure->getResponsables();
+        $responsables = [];
+        foreach ($structureResponsables as $structureResponsable) {
+            $responsables[] = $structureResponsable->getAgent();
         }
 
-        $structureResponsables = $structure->getResponsables();
+        if ($responsables !== []) return $responsables;
+        return null;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return Agent[]|null
+     */
+    public function getAutoritesHierarchiques(Agent $agent) : ?array
+    {
+        $affectationPrincipale = $agent->getAffectationPrincipale();
+        if ($affectationPrincipale === null) return null;
+        $structure = $affectationPrincipale->getStructure();
+        if ($structure === null) return null;
+        $niv2 = $structure->getNiv2();
+        if ($niv2 === null) return null;
+
+        $structureResponsables = $niv2->getResponsables();
         $responsables = [];
         foreach ($structureResponsables as $structureResponsable) {
             $responsables[] = $structureResponsable->getAgent();
@@ -556,5 +574,103 @@ EOS;
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param Agent|null $agent
+     * @return Agent[]
+     */
+    public function getSuperieursByAgent(?Agent $agent) : array
+    {
+        if ($agent === null) return [];
+
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
+            ->andWhere('complement.type = :SUPERIEUR')
+            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
+            ->andWhere('complement.attachmentId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $superieurs = [];
+        /** @var Complement $item */
+        foreach ($result as $item) {
+            $superieur = $this->getAgent($item->getComplementId());
+            if ($superieur) $superieurs[] = $superieur;
+        }
+        return $superieurs;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInAutorites() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder("complement")
+            ->andWhere('complement.histoDestruction IS NULL')
+            ->andWhere('complement.type = :AUTORITE')
+            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        /** @var Complement[] $result */
+
+        $ids = [];
+        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
+
+        $users = [];
+        foreach ($ids as $id) {
+            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
+            //else {var_dump("No agent with id = ".$id);}
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param User|null $user
+     * @return Complement[]|null
+     */
+    public function getAutoriteByUser(?User $user) : ?array
+    {
+        if ($user === null) return null;
+
+        $agent = $this->getAgentByUser($user);
+        if ($agent === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
+            ->andWhere('complement.type = :AUTORITE')
+            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
+            ->andWhere('complement.complementId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent|null $agent
+     * @return Agent[]
+     */
+    public function getAutoritesByAgent(?Agent $agent) : array
+    {
+        if ($agent === null) return [];
+
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
+            ->andWhere('complement.type = :AUTORITE')
+            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
+            ->andWhere('complement.attachmentId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $superieurs = [];
+        /** @var Complement $item */
+        foreach ($result as $item) {
+            $superieur = $this->getAgent($item->getComplementId());
+            if ($superieur) $superieurs[] = $superieur;
+        }
+        return $superieurs;
     }
 }

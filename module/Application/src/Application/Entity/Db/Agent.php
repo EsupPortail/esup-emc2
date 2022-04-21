@@ -40,6 +40,7 @@ class Agent implements
 
     const ROLE_AGENT         = 'Agent';
     const ROLE_SUPERIEURE    = 'Supérieur·e hiérarchique direct·e';
+    const ROLE_AUTORITE      = 'Autorité hiérarchique';
 
     public function getResourceId() : string
     {
@@ -311,11 +312,12 @@ class Agent implements
     }
 
     /**
+     * @param DateTime|null $date
      * @return AgentAffectation[]
      */
-    public function getAffectationsActifs() : array
+    public function getAffectationsActifs(?DateTime $date = null) : array
     {
-        $date = (new DateTime());
+        if ($date === null) $date = (new DateTime());
 
         $affectations = [];
         /** @var AgentAffectation $affectation */
@@ -323,6 +325,26 @@ class Agent implements
             if ($affectation->estEnCours($date)) $affectations[] = $affectation;
         }
         return $affectations;
+    }
+
+    /** STRUCTURE *****************************************************************************************************/
+
+    /**
+     * @param DateTime|null $date
+     * @return Structure[]
+     */
+    public function getStructures(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+
+        $structures = [];
+        foreach ($this->getAffectationsActifs($date) as $affectation) {
+            $structures[$affectation->getStructure()->getId()] = $affectation->getStructure();
+        }
+        foreach ($this->getStructuresForcees() as $structuresForcee) {
+            $structures[$structuresForcee->getStructure()->getId()] = $structuresForcee->getStructure();
+        }
+        return $structures;
     }
 
     /** STATUTS *******************************************************************************************************/
@@ -423,24 +445,6 @@ class Agent implements
             }
         }
         return $ficheposte;
-    }
-
-    /** STRUCTURES  ***************************************************************************************************/
-
-    /**
-     * Les structures d'un agents correspondent à la liste des structures de ses affectations actives.
-     * /!\ une structure peut être répétée
-     * @return Structure[]
-     */
-    public function getStructures() : array
-    {
-        $structures = [];
-        $affectations = $this->getAffectationsActifs();
-        foreach ($affectations as $affectation) {
-            $structure = $affectation->getStructure();
-            $structures[$structure->getId()] = $structure;
-        }
-        return $structures;
     }
 
     /** Éléments non importés *****************************************************************************************/
@@ -706,6 +710,18 @@ class Agent implements
     {
         foreach ($this->getComplements() as $complement) {
             if ($complement->getType() === Complement::COMPLEMENT_TYPE_RESPONSABLE AND $complement->getComplementId() == $superieur->getId()) return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Agent $autorite
+     * @return bool
+     */
+    public function hasAutoriteHierarchique(Agent $autorite) : bool
+    {
+        foreach ($this->getComplements() as $complement) {
+            if ($complement->getType() === Complement::COMPLEMENT_TYPE_AUTORITE AND $complement->getComplementId() == $autorite->getId()) return true;
         }
         return false;
     }
