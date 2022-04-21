@@ -2,6 +2,7 @@
 
 namespace Application\Service\Complement;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -126,6 +127,40 @@ class ComplementService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function isAutorite(Agent $autorite, Agent $agent) : bool
+    {
+       $qb =  $this->createQueryBuilder()
+           ->andWhere('complement.type = :type')
+           ->setParameter('type', Complement::COMPLEMENT_TYPE_AUTORITE)
+           ->andWhere('complement.attachmentType = :agentClass')
+           ->andWhere('complement.complementType = :agentClass')
+           ->setParameter('agentClass', Agent::class)
+           ->andWhere('complement.attachmentId = :agentId')
+           ->setParameter('agentId', $agent->getId())
+           ->andWhere('complement.complementId = :autoriteId')
+           ->setParameter('autoriteId', $autorite->getId())
+       ;
+       $result = $qb->getQuery()->getResult();
+       return (!empty($result));
+    }
+
+    public function isSuperieur(Agent $superieur, Agent $agent) : bool
+    {
+        $qb =  $this->createQueryBuilder()
+            ->andWhere('complement.type = :type')
+            ->setParameter('type', Complement::COMPLEMENT_TYPE_RESPONSABLE)
+            ->andWhere('complement.attachmentType = :agentClass')
+            ->andWhere('complement.complementType = :agentClass')
+            ->setParameter('agentClass', Agent::class)
+            ->andWhere('complement.attachmentId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+            ->andWhere('complement.complementId = :superieurId')
+            ->setParameter('superieurId', $superieur->getId())
+        ;
+        $result = $qb->getQuery()->getResult();
+        return (!empty($result));
     }
 
     /** FACADE ********************************************************************************************************/

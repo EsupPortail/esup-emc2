@@ -557,4 +557,52 @@ EOS;
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInAutorites() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder("complement")
+            ->andWhere('complement.histoDestruction IS NULL')
+            ->andWhere('complement.type = :AUTORITE')
+            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        /** @var Complement[] $result */
+
+        $ids = [];
+        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
+
+        $users = [];
+        foreach ($ids as $id) {
+            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
+            //else {var_dump("No agent with id = ".$id);}
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param User|null $user
+     * @return Complement[]|null
+     */
+    public function getAutoriteByUser(?User $user) : ?array
+    {
+        if ($user === null) return null;
+
+        $agent = $this->getAgentByUser($user);
+        if ($agent === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
+            ->andWhere('complement.type = :AUTORITE')
+            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
+            ->andWhere('complement.complementId = :agentId')
+            ->setParameter('agentId', $agent->getId())
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

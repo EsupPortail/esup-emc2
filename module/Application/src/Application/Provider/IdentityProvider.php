@@ -34,6 +34,9 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
             case Agent::ROLE_SUPERIEURE :
                 $user = $this->getAgentService()->getUsersInSuperieurs();
                 return $user;
+            case Agent::ROLE_AUTORITE :
+                $user = $this->getAgentService()->getUsersInAutorites();
+                return $user;
         }
         return null;
     }
@@ -59,6 +62,12 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
             if ($superieurs !== null AND $superieurs !== []) {
                 $roleSuperieur = $this->getRoleService()->findByRoleId(Agent::ROLE_SUPERIEURE);
                 $roles[] = $roleSuperieur;
+            }
+
+            $autorites = $this->getAgentService()->getAutoriteByUser($user);
+            if ($autorites !== null AND $autorites !== []) {
+                $roleAutorite = $this->getRoleService()->findByRoleId(Agent::ROLE_AUTORITE);
+                $roles[] = $roleAutorite;
             }
         }
         return $roles;
