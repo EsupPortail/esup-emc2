@@ -44,11 +44,11 @@ class AgentAssertion extends AbstractAssertion {
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];
-            foreach ($entity->getGrades() as $grade) {
-                $structures[] = $grade->getStructure();
+            foreach ($entity->getAffectations() as $affectation) {
+                $structures[] = $affectation->getStructure();
             }
             foreach ($structures as $structure) {
-                $isResponsable = $this->getStructureService()->isResponsable($structure, $entity);
+                $isResponsable = $this->getStructureService()->isResponsable($structure, $agent);
                 if ($isResponsable) break;
             }
         }
