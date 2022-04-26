@@ -76,6 +76,10 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                 <dt> Date de fermeture </dt>
                 <dd> <?php echo $structure->getFermeture()->format('d/m/Y'); ?></dd>
             <?php endif; ?>
+            <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
+                <dt> Adresse de contact </dt>
+                <dd> <?php echo $structure->getAdresseFonctionnelle(); ?></dd>
+            <?php endif; ?>
         </dl>
     </div>
 
