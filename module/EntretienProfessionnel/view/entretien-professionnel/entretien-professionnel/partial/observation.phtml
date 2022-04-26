@@ -9,15 +9,17 @@
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Entity\Db\Observation;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
 
+$canAfficherObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_AFFICHER));
 $canAjouterObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_AJOUTER));
 $canModifierObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_MODIFIER));
 $canHistoriserObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_HISTORISER));
 $canDetruireObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_SUPPRIMER));
 
-$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
-$canValiderObservation  = true; //$this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
+$validationObservation  = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+$canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
@@ -43,9 +45,6 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
     <div class="alert alert-danger"> Date de dépôt des observations dépassée.</div>
 <?php endif; ?>
 
-
-<?php if ($source !== 'afficherAction') : ?>
-<?php endif; ?>
 
 <!-- Observation de l'agent : CONTROLE -------------------------------------------------------------------------------->
 
@@ -108,37 +107,45 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
 
 <!-- Observation de l'agent : AFFICHAGE ------------------------------------------------------------------------------->
 
-<dl class="dl-horizontal">
-    <dt> Dernière modification </dt>
-    <dd>
-        <?php if ($observation === null) : ?>
-            Aucune observation.
-        <?php else: ?>
-            <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i:s'); ?>
-        <?php endif; ?>
-    </dd>
-</dl>
-
-<?php if ($observation !== null) : ?>
-        <div class="entretien-professionnel-observation">
-            <h3 class="reponse_categorie"> Observation sur l'entretien </h3>
-
-            <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
-                <div class="reponse_textarea">
-                    <?php echo $observation->getObservationAgentEntretien(); ?>
-                </div>
-            <?php else : ?>
-                Aucune observation
+<?php if ($canAfficherObservation) : ?>
+    <dl class="dl-horizontal">
+        <dt> Dernière modification </dt>
+        <dd>
+            <?php if ($observation === null) : ?>
+                Aucune observation.
+            <?php else: ?>
+                <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i:s'); ?>
             <?php endif; ?>
-            <h3 class="reponse_categorie"> Observation sur les perspectives </h3>
-            <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
-                <div class="reponse_textarea">
-                    <?php echo $observation->getObservationAgentPerspective(); ?>
-                </div>
-            <?php else : ?>
-                Aucune observation
-            <?php endif; ?>
-        </div>
+        </dd>
+    </dl>
+
+    <?php if ($observation !== null) : ?>
+            <div class="entretien-professionnel-observation">
+                <h3 class="reponse_categorie"> Observation sur l'entretien </h3>
+
+                <?php if ($observation->getObservationAgentEntretien() !== null) : ?>
+                    <div class="reponse_textarea">
+                        <?php echo $observation->getObservationAgentEntretien(); ?>
+                    </div>
+                <?php else : ?>
+                    Aucune observation
+                <?php endif; ?>
+                <h3 class="reponse_categorie"> Observation sur les perspectives </h3>
+                <?php if ($observation->getObservationAgentPerspective() !== null) : ?>
+                    <div class="reponse_textarea">
+                        <?php echo $observation->getObservationAgentPerspective(); ?>
+                    </div>
+                <?php else : ?>
+                    Aucune observation
+                <?php endif; ?>
+            </div>
+    <?php endif; ?>
+<?php else : ?>
+
+<div class="alert alert-danger">
+    Vous n'êtes pas habilité·e·s à voir cette observation.
+</div>
+
 <?php endif; ?>
 
 <?php if ($canValiderObservation AND $validationHierarchie === null AND $date_non_depassee === true) : ?>

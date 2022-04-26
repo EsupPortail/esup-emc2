@@ -18,6 +18,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 $agent = $entretien->getAgent();
 
 $isAgent        = $entretien->getAgent()->getUtilisateur() === $connectedUser;
+$isConducteur           = $entretien->getResponsable()->getUtilisateur() === $connectedUser;
 $canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
 $canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
 $canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
@@ -28,7 +29,7 @@ $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDE
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
-$canRenseigner = ($canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
+$canRenseigner = ($canValiderDrh OR $isConducteur OR $canValiderResponsable OR $canValiderAgent);
 
 $droits = [
     'afficher' => $canVoir,

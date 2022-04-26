@@ -90,16 +90,16 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <th> Responsable </th>
         <?php endif; ?>
         <?php if ($displayDate) : ?>
-            <th> Date</th>
+            <th style="width:13rem;"> Date</th>
         <?php endif; ?>
         <?php if ($displayLieu) : ?>
             <th> Lieu</th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <th style="min-width:6rem;"> État </th>
+            <th style="min-width:9rem;"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
-            <th style="min-width:16rem;"> Action </th>
+            <th style="min-width:22rem;"> Action </th>
         <?php endif; ?>
     </tr>
     </thead>
@@ -132,9 +132,9 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
         <?php if ($displayDate) : ?>
             <td>
                 <?php if ($sursis = $entretien->getSursisActif()) : ?>
-                    <i><?php echo $entretien->getSursisActif()->getSursis()->format('d/m/Y à H:i'); ?></i>
+                    <i><?php echo $entretien->getSursisActif()->getSursis()->format('d/m/Y H:i'); ?></i>
                 <?php else : ?>
-                    <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?>
+                    <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
                 <?php endif; ?>
             </td>
         <?php endif; ?>

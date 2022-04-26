@@ -14,7 +14,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenUtilisateur\Entity\Db\User;
 
 $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser;
-$isConducteur           = $entretien->getResponsable() === $connectedUser;
+$isConducteur           = $entretien->getResponsable()->getUtilisateur() === $connectedUser;
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);

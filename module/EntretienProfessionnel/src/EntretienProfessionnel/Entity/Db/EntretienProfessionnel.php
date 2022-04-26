@@ -424,6 +424,26 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $this;
     }
 
+    /** PREDICATS *****************************************************************************************************/
+
+    /**
+     * @param Agent $agent
+     * @return bool
+     */
+    public function isAgent(Agent $agent) : bool
+    {
+        return $agent === $this->getAgent();
+    }
+
+    /**
+     * @param Agent $agent
+     * @return bool
+     */
+    public function isReponsable(Agent $agent) : bool
+    {
+        return $agent === $this->getResponsable();
+    }
+
     /** MACROS ********************************************************************************************/
 
     public function toStringLieu() : string {

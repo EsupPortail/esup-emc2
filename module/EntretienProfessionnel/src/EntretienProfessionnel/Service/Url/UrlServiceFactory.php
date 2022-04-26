@@ -15,7 +15,6 @@ class UrlServiceFactory {
     {
         /* @var PhpRenderer $renderer  */
         $renderer = $container->get('ViewRenderer');
-        $renderer = new PhpRenderer();
 
         $service = new UrlService();
         $service->setRenderer($renderer);

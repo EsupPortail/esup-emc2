@@ -35,12 +35,8 @@ $canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTOR
 $canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
-$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
-$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
-$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
-
-$canExporter = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
-
+$canExporterEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
+$canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER);
 $droits = [
     'afficher' => $canVoir,
     'ajouter' => $canAjouter,
@@ -60,7 +56,7 @@ $droits = [
             <?php echo $agent->getNomUsuel(); ?>
         </h1>
     </div>
-    <?php if ($canExporter) : ?>
+    <?php if ($canExporterEP) : ?>
         <div class="pull-right">
             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
             <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
