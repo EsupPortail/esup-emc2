@@ -33,10 +33,13 @@ return [
                         'privileges' => [
                             EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                             EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
+                            EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
+                            EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
+                            EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION,
                         ],
                         'resources' => ['EntretienProfessionnel'],
                         'assertion' => EntretienProfessionnelAssertion::class
@@ -92,14 +95,20 @@ return [
                         'modifier',
                         'find-responsable-pour-entretien',
                     ],
-                    'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
-                    ],
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
+                    'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'renseigner',
+                    ],
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
+                    'assertion' => EntretienProfessionnelAssertion::class,
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'valider-element',
                         'revoquer-validation',
                     ],

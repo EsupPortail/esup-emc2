@@ -24,6 +24,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
@@ -247,17 +248,17 @@ class EntretienProfessionnelService {
     }
 
     /**
-     * @param integer $id
+     * @param int|null $id
      * @return EntretienProfessionnel|null
      */
-    public function getEntretienProfessionnel(int $id) : ?EntretienProfessionnel
+    public function getEntretienProfessionnel(?int $id) : ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
             ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
-            ->addSelect('formulaire')->join('formulaireInstance.formulaire', 'formulaire')
-            ->addSelect('categorie')->join('formulaire.categories', 'categorie')
-            ->addSelect('champ')->join('categorie.champs', 'champ')
+            ->addSelect('formulaire')->leftJoin('formulaireInstance.formulaire', 'formulaire')
+            ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
+            ->addSelect('champ')->leftJoin('categorie.champs', 'champ')
             ->andWhere('entretien.id = :id')
             ->setParameter('id', $id);
 
@@ -483,6 +484,7 @@ class EntretienProfessionnelService {
                 $superieurs[$superieur->getId()] = $superieur;
             }
         }
+
 
         $result = array_filter($superieurs,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
         return $result;

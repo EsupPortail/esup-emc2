@@ -73,15 +73,28 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             </div>
         </div>
     <?php else : ?>
-        <a
-            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_RESPONSABLE], [], true); ?>"
-                class="btn btn-success action ajax-modal"
-                data-event="modification"
-        >
-            <span class="icon validation-do"></span>
-            Validation du responsable
-        </a>
+        <?php if ($canValiderResponsable) : ?>
+            <a
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_RESPONSABLE], [], true); ?>"
+                    class="btn btn-success action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Validation du responsable
+            </a>
+        <?php else : ?>
+            <div class="alert alert-warning">
+                <p class="lead"><span class="icon attention"></span> Vous n'êtes pas habilité·e pour réaliser cette validation.</p>
+                <p> <span class="icon information"></span> La personne autorisée a effectué cette validation est  le responsable de l'entretien professionnel avec l'un des rôles suivants :
+                    <ul>
+                        <li> Responsable de structure ; </li>
+                        <li> Supérierur·e hiérarchique direct·e' ; </li>
+                        <li> Autorité Hiérarchique. </li>
+                    </ul>
+                </p>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
@@ -186,7 +199,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
             </div>
         </div>
    <?php else : ?>
-        <?php if ($validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
+        <?php if ($canValiderDrh AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_DRH], [], true); ?>"
@@ -194,7 +207,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                     data-event="modification"
             >
                 <span class="icon validation-do"></span>
-                Validation du responsable
+                Validation de l'autorité
             </a>
         <?php endif; ?>
     <?php endif; ?>

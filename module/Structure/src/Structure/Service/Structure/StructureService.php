@@ -354,6 +354,20 @@ EOS;
     }
 
     /**
+     * @param Structure[] $structures
+     * @param Agent $agent
+     * @return boolean
+     */
+    public function isGestionnaireS(array $structures, Agent $agent)  : bool
+    {
+        foreach ($structures as $structure) {
+            $result = $this->isGestionnaire($structure, $agent);
+            if ($result) return true;
+        }
+        return false;
+    }
+
+    /**
      * @param Structure $structure
      * @param Agent $agent
      * @return boolean
@@ -371,6 +385,57 @@ EOS;
             ) return true;
         }
         if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
+        return false;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @param Agent $agent
+     * @return boolean
+     */
+    public function isResponsableS(array $structures, Agent $agent)  : bool
+    {
+        foreach ($structures as $structure) {
+            $result = $this->isResponsable($structure, $agent);
+            if ($result) return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Structure $structure
+     * @param Agent $agent
+     * @return bool
+     */
+    public function isAutorite(Structure $structure, Agent $agent) : bool
+    {
+        $date = (new DateTime());
+        $structure = $structure->getNiv2();
+
+        if ($structure === null) return false;
+
+        $responsables = $structure->getResponsables();
+        foreach ($responsables as $responsable) {
+            if (    ($responsable->getAgent() === $agent)
+                AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
+                AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
+                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+            ) return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Structure[] $structures
+     * @param Agent $agent
+     * @return boolean
+     */
+    public function isAutoriteS(array $structures, Agent $agent)  : bool
+    {
+        foreach ($structures as $structure) {
+            $result = $this->isAutorite($structure, $agent);
+            if ($result) return true;
+        }
         return false;
     }
 

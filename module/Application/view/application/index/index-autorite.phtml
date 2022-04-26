@@ -24,6 +24,8 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
     Ici ne figurent que les agents pour lesquels vous avez été désigné manuellement en tant qu'autorité hiérarchique
 </div>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <table class="table table-condensed table-hover">
     <thead>
         <tr>
