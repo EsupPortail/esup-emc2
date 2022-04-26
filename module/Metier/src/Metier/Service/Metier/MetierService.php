@@ -219,7 +219,8 @@ class MetierService {
 
                 $entry = [
                     'metier' => $metier->__toString(),
-                    'niveau' => $metier->getNiveau(),
+
+                    'niveau' => ($metier->getNiveaux())?"[".$metier->getNiveaux()->getBorneInferieure()->getEtiquette().":".$metier->getNiveaux()->getBorneSuperieure()->getEtiquette()."]":"---",
                     'références' => implode("<br/>", $references),
                     'domaine' => ($domaine) ? $domaine->__toString() : "---",
                     'fonction' => ($fonction) ?: "---",
