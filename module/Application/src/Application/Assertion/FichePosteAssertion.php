@@ -51,7 +51,11 @@ class FichePosteAssertion extends AbstractAssertion {
                         $superieur = $this->getAgentService()->getAgentByUser($user);
                         $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
                         return $isSuperieur;
-
+                    case Agent::ROLE_AUTORITE:
+                        $agent = $entity->getAgent();
+                        $autorite = $this->getAgentService()->getAgentByUser($user);
+                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
+                        return $isAutorite;
                     case RoleConstant::PERSONNEL:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
                         return $isAgent;
@@ -74,6 +78,11 @@ class FichePosteAssertion extends AbstractAssertion {
                         $superieur = $this->getAgentService()->getAgentByUser($user);
                         $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
                         return $isSuperieur;
+                    case Agent::ROLE_AUTORITE:
+                        $agent = $entity->getAgent();
+                        $autorite = $this->getAgentService()->getAgentByUser($user);
+                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
+                        return $isAutorite;
                     default:
                         return false;
                 }
