@@ -49,6 +49,14 @@ $masque_structure_vide = true;
                 </ul>
             <?php endif; ?>
         </div>
+        <div class="col-md-4">
+            <?php if ($structure->getAdresseFonctionnelle() !== null) : ?>
+                <span class="rubrique">Adresse de contact : </span>
+                <ul>
+                    <li><a href="mailto:<?php echo $structure->getAdresseFonctionnelle(); ?>" target="_blank"><?php echo $structure->getAdresseFonctionnelle(); ?></a></li>
+                </ul>
+            <?php endif; ?>
+        </div>
     </div>
 
     <?php

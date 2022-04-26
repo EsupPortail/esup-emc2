@@ -53,6 +53,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     private $fermeture;
     /** @var DateTime */
     private $fermetureOW;
+    /** @var string|null */
+    private $adresseFonctionnelle;
     /** @var Boolean */
     private $repriseResumeMere;
     /** @var Structure */
@@ -175,6 +177,24 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
             $text .= $this->parent->getDescriptionComplete() . "<br/>";
         }
         return $text . $this->description ;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAdresseFonctionnelle(): ?string
+    {
+        return $this->adresseFonctionnelle;
+    }
+
+    /**
+     * @param string|null $adresseFonctionnelle
+     * @return Structure
+     */
+    public function setAdresseFonctionnelle(?string $adresseFonctionnelle): Structure
+    {
+        $this->adresseFonctionnelle = $adresseFonctionnelle;
+        return $this;
     }
 
     /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/

@@ -606,8 +606,10 @@ create table structure
     histo timestamp,
     ouverture timestamp,
     fermeture timestamp,
+    fermeture_ow timestamp,
     resume_mere boolean default false,
     description text,
+    adresse_fonctionnel varchar(1024),
     type_id integer constraint structure_structure_type_id_fk references structure_type on delete set null,
     parent_id integer constraint structure_structure_source_id_fk references structure on delete set null,
     niv2_id integer constraint structure_structure_id_fk references structure on delete set null,
@@ -742,12 +744,6 @@ create table agent_complement
 
 -- STRUCTURE <-> AGENT -------------------------------------------------------------------------------------------------
 
-create table structure_gestionnaire
-(
-    agent_id varchar(40) not null constraint structure_gestionnaire_agent_c_individu_fk references agent on delete cascade,
-    structure_id integer not null constraint structure_gestionnaire_structure_source_id_fk references structure on delete cascade,
-    constraint structure_gestionnaire_pk primary key (agent_id, structure_id)
-);
 
 create table structure_responsable
 (

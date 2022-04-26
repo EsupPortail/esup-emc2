@@ -210,7 +210,7 @@ return [
                 'name' => 'Import_STRUCTURE',
                 'source' => [
                     'name'               => 'Agents geres par la DRH',
-                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, PARENT_ID, NIV2_ID FROM V_PREECOG_STRUCTURE',
+                    'select'             => 'SELECT ID, CODE, LIBELLE_COURT, LIBELLE_LONG, TYPE_ID, DATE_OUVERTURE AS OUVERTURE, DATE_FERMETURE AS FERMETURE, PARENT_ID, NIV2_ID, EMAIL AS ADRESSE_FONCTIONNELLE FROM V_PREECOG_STRUCTURE',
                     'connection'         => 'octopus',
                     'source_code_column' => 'ID',
                 ],
@@ -220,7 +220,7 @@ return [
                     'table'              => 'structure',
                     'connection'         => 'default',
                     'source_code_column' => 'id',
-                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'parent_id', 'niv2_id'],
+                    'columns'            => ['code', 'libelle_court', 'libelle_long', 'type_id', 'ouverture', 'fermeture', 'parent_id', 'niv2_id', 'adresse_fonctionnelle'],
                 ],
             ],
             [
