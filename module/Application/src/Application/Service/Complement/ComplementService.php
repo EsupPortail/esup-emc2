@@ -129,8 +129,9 @@ class ComplementService {
         return $result;
     }
 
-    public function isAutorite(Agent $autorite, Agent $agent) : bool
+    public function isAutorite(?Agent $autorite, Agent $agent) : bool
     {
+        if ($autorite === null) return false;
        $qb =  $this->createQueryBuilder()
            ->andWhere('complement.type = :type')
            ->setParameter('type', Complement::COMPLEMENT_TYPE_AUTORITE)
@@ -146,8 +147,9 @@ class ComplementService {
        return (!empty($result));
     }
 
-    public function isSuperieur(Agent $superieur, Agent $agent) : bool
+    public function isSuperieur(?Agent $superieur, Agent $agent) : bool
     {
+        if ($superieur === null) return false;
         $qb =  $this->createQueryBuilder()
             ->andWhere('complement.type = :type')
             ->setParameter('type', Complement::COMPLEMENT_TYPE_RESPONSABLE)
