@@ -162,24 +162,27 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
         </div>
     <?php else : ?>
         <div class="pull-right">
-            <a
-                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
-                    class="btn btn-success action ajax-modal"
-                    data-event="modification"
-            >
-                <span class="icon validation-do"></span>
-                Valider les observations
-            </a>
-            <a
-                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
-                    class="btn btn-success action ajax-modal"
-                    data-event="modification"
-            >
-                <span class="icon validation-do"></span>
-                Je ne fais pas d'observation
-            </a>
+            <?php if ($observation !== null) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                        href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                        class="btn btn-success action ajax-modal"
+                        data-event="modification"
+                >
+                    <span class="icon validation-do"></span>
+                    Valider les observations
+                </a>
+            <?php else : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                        href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                        class="btn btn-success action ajax-modal"
+                        data-event="modification"
+                >
+                    <span class="icon validation-do"></span>
+                    Je ne fais pas d'observation
+                </a>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 <?php endif; ?>
