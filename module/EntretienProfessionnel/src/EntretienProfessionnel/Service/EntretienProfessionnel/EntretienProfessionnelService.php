@@ -24,7 +24,6 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
@@ -514,6 +513,7 @@ class EntretienProfessionnelService {
     public function addValidation(string $type, ?EntretienProfessionnel $entretien, ?string $value = null) : ValidationInstance
     {
         $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
+
         $validation = new ValidationInstance();
         $validation->setEntity($entretien);
         $validation->setType($vtype);

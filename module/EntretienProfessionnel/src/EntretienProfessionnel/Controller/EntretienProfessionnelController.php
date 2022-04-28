@@ -403,8 +403,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
-                        $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
-                        if ($entretien->getObservationActive() !== null) $this->getNotificationService()->triggerObservations($entretien);
+                        $this->getNotificationService()->triggerObservations($entretien);
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_DRH :
