@@ -430,7 +430,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param Agent $agent
      * @return bool
      */
-    public function isAgent(Agent $agent) : bool
+    public function isAgent(?Agent $agent) : bool
     {
         return $agent === $this->getAgent();
     }
@@ -439,7 +439,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      * @param Agent $agent
      * @return bool
      */
-    public function isReponsable(Agent $agent) : bool
+    public function isReponsable(?Agent $agent) : bool
     {
         return $agent === $this->getResponsable();
     }
