@@ -334,11 +334,12 @@ EOS;
 
     /**
      * @param Structure $structure
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return boolean
      */
     public function isGestionnaire(Structure $structure, ?Agent $agent) : bool
     {
+        if ($agent === null) return false;
         $date = (new DateTime());
 
         $gestionnaires = $structure->getGestionnaires();
@@ -355,7 +356,7 @@ EOS;
 
     /**
      * @param Structure[] $structures
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return boolean
      */
     public function isGestionnaireS(array $structures, ?Agent $agent)  : bool
@@ -369,11 +370,12 @@ EOS;
 
     /**
      * @param Structure $structure
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return boolean
      */
     public function isResponsable(Structure $structure, ?Agent $agent)  : bool
     {
+        if ($agent === null) return false;
         $date = (new DateTime());
 
         $responsables = $structure->getResponsables();
@@ -390,7 +392,7 @@ EOS;
 
     /**
      * @param Structure[] $structures
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return boolean
      */
     public function isResponsableS(array $structures, ?Agent $agent)  : bool
@@ -404,11 +406,12 @@ EOS;
 
     /**
      * @param Structure $structure
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return bool
      */
     public function isAutorite(Structure $structure, ?Agent $agent) : bool
     {
+        if ($agent === null) return false;
         $date = (new DateTime());
         $structure = $structure->getNiv2();
 
@@ -427,7 +430,7 @@ EOS;
 
     /**
      * @param Structure[] $structures
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return boolean
      */
     public function isAutoriteS(array $structures, ?Agent $agent)  : bool
