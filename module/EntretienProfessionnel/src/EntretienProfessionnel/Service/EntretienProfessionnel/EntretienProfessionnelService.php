@@ -125,10 +125,12 @@ class EntretienProfessionnelService {
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->addSelect('agent')->join('entretien.agent', 'agent')
+            ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('astructure')->join('affectation.structure', 'astructure')
 
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
+            ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
             ->addSelect('campagne')->join('entretien.campagne', 'campagne')
             ->addSelect('validation')->leftjoin('entretien.validations','validation')
         ;
