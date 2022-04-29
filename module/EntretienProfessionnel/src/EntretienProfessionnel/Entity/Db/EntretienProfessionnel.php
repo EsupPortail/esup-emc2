@@ -524,6 +524,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
         if ($fiche === null) return "Aucune fiche de poste EMC2";
         $metier  = $fiche->getLibelleMetierPrincipal();
+        if ($metier === null) return "Aucun métier principal dans la fiche";
         $complement = $fiche->getLibelle();
 
         if ($complement) return $metier . " rattaché à " . $complement;
