@@ -174,6 +174,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $predicats = [];
         if ($entretien AND $agent) $predicats = $this->computePredicats($entretien, $agent);
 
+//        var_dump($predicats);
+
         switch ($action) {
             case 'afficher' :
             case 'exporter-crep' :
@@ -198,7 +200,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case Agent::ROLE_SUPERIEURE :
                     case Agent::ROLE_AUTORITE :
                         return true;
-                    case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
+                    case RoleProvider::GESTIONNAIRE : return true;
                 }
                 return false;
             case 'modifier' :
@@ -209,6 +211,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC :
                         return true;
                     case RoleProvider::RESPONSABLE :  return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
+                    case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
                     case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
                 }
