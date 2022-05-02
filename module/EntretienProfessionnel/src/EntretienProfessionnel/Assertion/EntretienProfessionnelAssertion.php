@@ -198,6 +198,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case Agent::ROLE_SUPERIEURE :
                     case Agent::ROLE_AUTORITE :
                         return true;
+                    case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                 }
                 return false;
             case 'modifier' :
