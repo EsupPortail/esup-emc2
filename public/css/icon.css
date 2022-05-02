@@ -345,3 +345,8 @@ span.icon.defusionner:before
 {
     content: "\f248";
 }
+
+span.icon.dots:before,
+span.icon.actions:before {
+    content: "\f141";
+}

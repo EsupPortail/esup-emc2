@@ -29,9 +29,16 @@ class FichePosteAssertion extends AbstractAssertion {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
+//        $agentFiche = $entity->getAgent();
+//        $agentConnecte = $this->getAgentService()->getAgentByUser($user);
+
         $isGestionnaire = false;
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE || $role->getRoleId() === RoleProvider::RESPONSABLE) {
+        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
             $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
+        }
+        $isResponsable = false;
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
+            $isResponsable = $this->getFichePosteService()->isGererPar($entity, $user);
         }
 
         switch($privilege) {
@@ -71,8 +78,9 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
-                    case RoleProvider::RESPONSABLE:
                         return $isGestionnaire;
+                    case RoleProvider::RESPONSABLE:
+                        return $isResponsable;
                     case Agent::ROLE_SUPERIEURE:
                         $agent = $entity->getAgent();
                         $superieur = $this->getAgentService()->getAgentByUser($user);
