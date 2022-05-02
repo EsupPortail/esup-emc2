@@ -26,7 +26,7 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
         </span>
 </h2>
 
-<?php echo $this->fichesPostesAsArray($fichesCompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesCompletes, $structure, ['retour' => $this->url("structure/afficher", ["structure" => $structure->getId()])]); ?>
 
 <h2>
     Fiches de postes incomplètes
@@ -35,5 +35,5 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
         </span>
 </h2>
 
-<?php echo $this->fichesPostesAsArray($fichesIncompletes); ?>
+<?php echo $this->fichesPostesAsArray($fichesIncompletes, $structure, ['retour' => $this->url("structure/afficher", ["structure" => $structure->getId()])]); ?>
 
