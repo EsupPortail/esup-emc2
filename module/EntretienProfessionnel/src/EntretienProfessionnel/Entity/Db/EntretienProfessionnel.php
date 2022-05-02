@@ -518,13 +518,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function toStringReponsableIntitulePoste() : string
     {
-        /** @var Agent $agent */
-        $agent = $this->getResponsable();
-        $fiche = $agent->getFichePosteActive();
+        /** @var Agent $responsble */
+        $responsble = $this->getResponsable();
+        $fiche = $responsble->getFichePosteActive();
 
         if ($fiche === null) return "Aucune fiche de poste EMC2";
         $metier  = $fiche->getLibelleMetierPrincipal();
         $complement = $fiche->getLibelle();
+        if ($metier === null) return "Aucun métier principal dans la fiche [".$complement."]";
 
         if ($complement) return $metier . " rattaché à " . $complement;
         return $metier;

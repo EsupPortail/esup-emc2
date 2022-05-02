@@ -145,7 +145,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                         <?php else : ?>
                             Aucun entretien
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                            <a href="<?php echo $this->url('entretien-professionnel/creer', ["campagne" => $campagneCurrent->getId()], ["query" => ["agent" => $agent->getId(), 'structure' => $affectation->getStructure()->getId()]]); ?>"
+                            <a href="<?php echo $this->url('entretien-professionnel/creer', ["campagne" => $campagneCurrent->getId()], ["query" => ["agent" => $agent->getId(), 'structure' => ($affectation->getStructure())?$affectation->getStructure()->getId():null]], true); ?>"
                                class="ajax-modal" data-event="modification">
                                 <span class="icon ajouter"></span></a>
                         <?php endif; ?>
