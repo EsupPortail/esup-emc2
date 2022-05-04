@@ -876,4 +876,13 @@ class FichePosteController extends AbstractActionController {
             'repartitions' => $repartitions,
         ]);
     }
+
+    public function actionAction() : ViewModel
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+
+        return new ViewModel([
+            'ficheposte' => $ficheposte,
+        ]);
+    }
 }

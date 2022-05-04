@@ -265,9 +265,10 @@ class NotificationService {
         $allAgents = array_merge($agents, $agentsForces);
 
 
-        $entretiensProgrammes = $this->getCampagneService()->getAgentsAvecEntretiensEnCours($campagne, $allAgents);
+        $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);
+        $entretiensFaits  = $this->getCampagneService()->getAgentsAvecEntretiensFaits($campagne, $allAgents);
         $entretiensFinalises  = $this->getCampagneService()->getAgentsAvecEntretiensFinalises($campagne, $allAgents);
-        $entretiensAucuns     = count($allAgents) - count($entretiensFinalises) - count($entretiensProgrammes);
+        $entretiensAucuns     = count($allAgents) - count($entretiensFinalises) - count($entretiensPlanifies) - count($entretiensFaits);
         $total = count($allAgents);
 
         $texte = "";
@@ -276,10 +277,17 @@ class NotificationService {
             $texte .= "<caption> Avancement de la campagne ".$campagne->getAnnee()."</caption>";
             $texte .= "<tr>";
             $texte .= "<td style='background: lightgreen; width:" . (count($entretiensFinalises) / $total * 100)  . "%;'>" . count($entretiensFinalises) . "/" . $total . "</td>";
-            $texte .= "<td style='background: #ffff9e; width:" .    (count($entretiensProgrammes) / $total * 100) . "%;'>" . count($entretiensProgrammes) . "/" . $total . "</td>";
+            $texte .= "<td style='background: #ffff9e; width:" .    (count($entretiensFaits) / $total * 100) . "%;'>" . count($entretiensFaits) . "/" . $total . "</td>";
+            $texte .= "<td style='background: #ffb939; width:" .    (count($entretiensPlanifies) / $total * 100) . "%;'>" . count($entretiensPlanifies) . "/" . $total . "</td>";
             $texte .= "<td style='background: salmon; width:" .     ($entretiensAucuns / $total * 100)     . "%;'>" . $entretiensAucuns . "/" . $total . "</td>";
             $texte .= "</tr>";
             $texte .= "</table>";
+            $texte .= "<br/>";
+            $texte .= "<table><tr><td style='background: lightgreen; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens finalisés </td></tr></table>";
+            $texte .= "<table><tr><td style='background: #ffff9e; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens faits </td></tr></table>";
+            $texte .= "<table><tr><td style='background: #ffb939; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens planifiés </td></tr></table>";
+            $texte .= "<table><tr><td style='background: salmon; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens manquants </td></tr></table>";
+
         }
 
 
