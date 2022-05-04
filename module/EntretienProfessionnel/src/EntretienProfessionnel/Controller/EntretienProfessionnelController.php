@@ -550,4 +550,13 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
+    public function actionAction() : ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+
+        return new ViewModel([
+            'entretien' => $entretien,
+        ]);
+    }
+
 }

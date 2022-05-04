@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::actionAction()
+ * @var EntretienProfessionnel $entretien
+ */
+
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+
+$canAfficher    =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+$canExporter    =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
+$canModifier    =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER);
+$canHistoriser  =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_HISTORISER);
+$canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
+
+?>
+
+<?php if ($canAfficher) : ?>
+    <li><a class="dropdown-item"
+           href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
+        >
+            <span class="icon editer"></span>
+            Accéder à l'entretien
+        </a></li>
+<?php endif; ?>
+<?php if ($canExporter) : ?>
+    <li><a class="dropdown-item"
+           href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
+        >
+            <span class="icon pdf"></span>
+            Exporter le CREP
+        </a></li>
+    <li><a class="dropdown-item"
+           href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
+        >
+            <span class="icon pdf"></span>
+            Exporter le CREF
+        </a></li>
+<?php endif; ?>
+<?php if ($canModifier) : ?>
+    <li><a class="dropdown-item"
+           href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
+        >
+            <span class="icon gerer"></span>
+            Modifier la convocation
+        </a></li>
+<?php endif; ?>
+<?php if ($canHistoriser) : ?>
+    <?php if ($entretien->estNonHistorise()) : ?>
+        <li><a class="dropdown-item"
+               href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
+            >
+                <span class="icon historiser"></span>
+                Supprimer l'entretien
+            </a></li>
+    <?php else : ?>
+        <li><a class="dropdown-item"
+               href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
+            >
+                <span class="icon restaurer"></span>
+                Restaurer l'entretien
+            </a></li>
+    <?php endif; ?>
+<?php endif; ?>
+<?php if ($canDetruire) : ?>
+    <li class="bg-danger"><a class="dropdown-item"
+           href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
+        >
+            <span class="icon detruire"></span>
+            Détruire l'entretien
+        </a></li>
+<?php endif; ?>
+
