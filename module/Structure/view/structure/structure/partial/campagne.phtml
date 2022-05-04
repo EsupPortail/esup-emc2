@@ -4,6 +4,7 @@ use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use Structure\Entity\Db\Structure;
@@ -62,6 +63,17 @@ foreach ($agents as $agent) {
 }
 
 $enCours = $campagne->estEnCours();
+
+
+$planifie = [];
+$fait = [];
+foreach ($encours as $epro) {
+    if ($epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION || $epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) {
+        $planifie[] = $epro;
+    } else {
+        $fait[] = $epro;
+    }
+}
 ?>
 
 <h2> Informations sur la campagne </h2>
@@ -129,17 +141,21 @@ $enCours = $campagne->estEnCours();
             $nbTotal =  $nbComplete + $nbEncours + $nbSans;
 
             $ratioComplete =  $nbComplete / $nbTotal * 100;
-            $ratioEncours = $nbEncours / $nbTotal * 100;
-            $ratioSans = 100 - ($ratioComplete + $ratioEncours);
+            $ratioPlanifie = count($planifie) / $nbTotal * 100;
+            $ratioFait = count($fait) / $nbTotal * 100;
+            $ratioSans = 100 - ($ratioComplete + $ratioPlanifie + $ratioFait);
         ?>
 
         <div class="progress">
             <div class="progress-bar complete" role="progressbar" style="width: <?php echo $ratioComplete; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens complétés <?php echo $nbComplete; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioComplete); ?>%</div>
-            <div class="progress-bar encours" role="progressbar" style="width: <?php echo $ratioEncours; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                 title="Entretiens en cours <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioEncours); ?>%</div>
+            <div class="progress-bar fait" role="progressbar" style="width: <?php echo $ratioFait; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en cours <?php echo count($fait); ?>/<?php echo $nbTotal; ?>">
+            <?php echo round($ratioFait); ?>%</div>
+            <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en cours <?php echo count($planifie); ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioPlanifie); ?>%</div>
             <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
             <?php echo round($ratioSans); ?>%</div>
@@ -310,8 +326,11 @@ $enCours = $campagne->estEnCours();
     div.sans {
         background-color: #960000;
     }
-    div.encours {
-        background-color: #db9a00;
+    div.planifie {
+        background-color: #ff6c0a;
+    }
+    div.fait {
+        background-color: #9dc500;
     }
 </style>
 

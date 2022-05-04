@@ -238,6 +238,43 @@ class CampagneService {
         return $result;
     }
 
+    public function getAgentsAvecEntretiensPlanifies(Campagne $campagne, array $agents)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.etat','etat')->addSelect('etat')
+            ->andWhere('etat.code = :CONVOCATION OR etat.code = :ACCEPTER')
+            ->andWhere('entretien.campagne = :campagne')
+            ->andWhere('agent in (:agents)')
+            ->setParameter('CONVOCATION', EntretienProfessionnel::ETAT_ACCEPTATION)
+            ->setParameter('ACCEPTER', EntretienProfessionnel::ETAT_ACCEPTER)
+            ->setParameter('campagne', $campagne)
+            ->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getAgentsAvecEntretiensFaits(Campagne $campagne, array $agents)
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.etat','etat')->addSelect('etat')
+            ->andWhere('etat.code = :RESPONSABLE OR etat.code = :OBSERVATION OR etat.code = :AUTORITE')
+            ->andWhere('entretien.campagne = :campagne')
+            ->andWhere('agent in (:agents)')
+            ->setParameter('RESPONSABLE', EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE)
+            ->setParameter('OBSERVATION', EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION)
+            ->setParameter('AUTORITE', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('campagne', $campagne)
+            ->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     public function getAgentsAvecEntretiensFinalises(Campagne $campagne, array $agents)
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
@@ -246,7 +283,7 @@ class CampagneService {
             ->andWhere('etat.code = :code')
             ->andWhere('entretien.campagne = :campagne')
             ->andWhere('agent in (:agents)')
-            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_AGENT)
             ->setParameter('campagne', $campagne)
             ->setParameter('agents', $agents)
         ;
