@@ -219,9 +219,33 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                 >
                     <span class="icon detruire" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span></a>
             <?php endif; ?>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" onclick="setActions(<?php echo $entretien->getId(); ?>)">
+                    <span class="icon actions" title="Actions possible pour l'entretien #<?php echo $entretien->getId(); ?>"></span>
+                </button>
+                <ul id="drop_<?php echo $entretien->getId(); ?>" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                </ul>
+            </div>
         </td>
         <?php endif; ?>
     </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    function setActions(id) {
+        let url = '../../entretien-professionnel/action/' + id;
+        // console.log(url);
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function (retour) {
+                    // console.log(retour);
+                    $("ul#drop_"+id).html(retour);
+                }
+        });
+        // alert(ficheId);
+    }
+</script>

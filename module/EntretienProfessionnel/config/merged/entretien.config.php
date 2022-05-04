@@ -52,6 +52,13 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
+                        'action',
+                    ],
+                    'role' => 'user',
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
                         'accepter-entretien',
                         'rechercher-agent',
                         'rechercher-responsable',
@@ -226,6 +233,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'creer',
+                            ],
+                        ],
+                    ],
+                    'action' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/action/:entretien-professionnel',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'action',
                             ],
                         ],
                     ],
