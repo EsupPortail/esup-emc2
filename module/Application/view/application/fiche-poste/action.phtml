@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @see \Application\Controller\FichePosteController::actionAction()
+ * @var FichePoste $ficheposte
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+$canAfficher = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canExporter = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canModifier = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+$canHistoriser = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+$canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+
+?>
+
+<!--<div class="dropdown">-->
+<!--    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+<!--        <span class="icon actions" title="Actions possible pour la fiche de poste #--><?php //echo $ficheposte->getId(); ?><!--"></span>-->
+<!--    </button>-->
+<!--    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+        <?php if ($canAfficher) : ?>
+            <li><a class="dropdown-item"
+               href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+            >
+                <span class="icon voir"></span>
+                Afficher
+            </a></li>
+        <?php endif; ?>
+        <?php if ($canExporter) : ?>
+            <li><a class="dropdown-item"
+                   href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                >
+                    <span class="icon pdf"></span>
+                    Exporter
+                </a></li>
+        <?php endif; ?>
+        <?php if ($canModifier) : ?>
+            <li><a class="dropdown-item"
+               href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+            >
+                <span class="icon editer"></span>
+                Modifier
+            </a></li>
+        <?php endif; ?>
+        <?php if ($canHistoriser) : ?>
+            <li><a class="dropdown-item"
+                   href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                >
+                    <span class="icon historiser"></span>
+                    Supprimer
+                </a></li>
+        <?php endif; ?>
+        <?php if ($canDetruire) : ?>
+            <li id="test" class="bg-danger"><a class="dropdown-item"
+                   href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                >
+                    <span class="icon detruire"></span>
+                    Détruire
+                </a></li>
+        <?php endif; ?>
+<!--    </ul>-->
+<!--</div>-->

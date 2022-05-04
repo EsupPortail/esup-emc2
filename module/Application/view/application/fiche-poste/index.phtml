@@ -56,7 +56,33 @@ $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePost
 
 <?php echo $this->fichesPostesAsArray($fichesVides); ?>
 
+
+<?php $ficheId=791; ?>
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" onclick="setActions(<?php echo $ficheId; ?>)">
+        <span class="icon actions" title="Actions possible pour la fiche de poste #<?php echo $ficheId; ?>"></span>
+    </button>
+    <ul id="drop_791" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    </ul>
+</div>
+
+
 <script>
+    function setActions(ficheId) {
+        let url = 'fiche-poste/action/' + ficheId;
+        // console.log(url);
+        $.ajax({
+            type: "POST",
+            url: url,
+            success:
+                function (retour) {
+                    // console.log(retour);
+                    $("ul#drop_"+ficheId).html(retour);
+                }
+        });
+        // alert(ficheId);
+    }
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

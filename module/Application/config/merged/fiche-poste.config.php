@@ -80,6 +80,13 @@ return [
                 [
                     'controller' => FichePosteController::class,
                     'action' => [
+                        'action',
+                    ],
+                    'role' => 'user',
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
                         'index',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_INDEX,
@@ -219,6 +226,17 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'action' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/action/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'action',
                             ],
                         ],
                     ],
