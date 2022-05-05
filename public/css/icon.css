@@ -350,3 +350,7 @@ span.icon.dots:before,
 span.icon.actions:before {
     content: "\f141";
 }
+
+span.icon.hourglass:before {
+    content: "\f254";
+}

@@ -40,6 +40,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     {
         if ($this->lastAgent === $connectedAgent AND $this->lastEntretien === $entretienProfessionnel) return $this->predicats;
 
+//        var_dump((new \DateTime())->format('H:i:s:u ')." "."PREDICAT");
         $this->lastAgent = $connectedAgent;
         $this->lastEntretien = $entretienProfessionnel;
 
@@ -59,15 +60,21 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
     protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
     {
+//        var_dump((new \DateTime())->format('H:i:s:u ')." ".$privilege);
         /** @var EntretienProfessionnel $entity */
         if (!$entity instanceof EntretienProfessionnel) {
             return false;
         }
 
         /** @var EntretienProfessionnel $entity */
+        $role = $this->getUserService()->getConnectedRole();
+        if ($role->getRoleId() === RoleConstant::ADMIN_TECH) return true;
+
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
-        $role = $this->getUserService()->getConnectedRole();
+
+
+
 
         $predicats = $this->computePredicats($entity, $agent);
 
