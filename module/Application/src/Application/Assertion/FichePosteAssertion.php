@@ -51,8 +51,9 @@ class FichePosteAssertion extends AbstractAssertion {
                     case RoleConstant::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
-                    case RoleProvider::RESPONSABLE:
                         return $isGestionnaire;
+                    case RoleProvider::RESPONSABLE:
+                        return $isResponsable;
                     case Agent::ROLE_SUPERIEURE:
                         $agent = $entity->getAgent();
                         $superieur = $this->getAgentService()->getAgentByUser($user);
