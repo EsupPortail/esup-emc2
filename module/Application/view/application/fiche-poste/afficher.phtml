@@ -10,17 +10,18 @@
  */
 
 use Element\Entity\Db\Application;
-use Application\Entity\Db\Competence;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Element\Entity\Db\Competence;
 use Structure\Entity\Db\Structure;
 
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
 
 $canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
-$canExport   = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canExport   = $canAfficher;
+
 ?>
 
 <div class="row">

@@ -10,6 +10,8 @@ use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
  * @var array $options
  */
 
+$dropdowns = false;
+
 // recuperation des données à afficher
 $displayAnnee = true;
 if (isset($options['affichages']) AND isset($options['affichages']['annee']))       $displayAnnee = $options['affichages']['annee'];
@@ -99,7 +101,11 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <th style="min-width:9rem;"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
+        <?php if (!$dropdowns) : ?>
             <th style="min-width:22rem;"> Action </th>
+        <?php else : ?>
+                <th style="min-width:6rem;"> Action </th>
+        <?php endif; ?>
         <?php endif; ?>
     </tr>
     </thead>
@@ -146,14 +152,14 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td>
-            <?php if ($canAfficher) : ?>
+            <?php if ($canAfficher and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
                 >
                     <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
             <?php endif; ?>
-            <?php if ($canExporter) : ?>
+            <?php if ($canExporter  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
@@ -167,21 +173,21 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                     <span class="icon pdf" title="Exporter  le compte-rendu d'entretien de formation">
                         <span class="small-lettrine">CREF</span></a>
             <?php endif; ?>
-            <?php if ($canRenseigner) : ?>
+            <?php if ($canRenseigner and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true) ?>"
                 >
                     <span class="icon editer" title="Renseigner le compte-rendu de l'entretien professionnel"></a>
             <?php endif; ?>
-            <?php if ($canModifier) : ?>
+            <?php if ($canModifier  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
                     class="ajax-modal" data-event="modification"
                 >
                     <span class="icon gerer" title="Modifier l'entretien professionnel (convocation)"></span></a>
-                <?php if ($canSursis) : ?>
+                <?php if ($canSursis and !$dropdowns) : ?>
                     <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::modifierAction() */ ?>
                             href="<?php
                                 if ($entretien->getSursisActif())
@@ -194,7 +200,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                         <span class="icon sursis"></span></a>
                 <?php endif; ?>
             <?php endif; ?>
-            <?php if ($canHistoriser) : ?>
+            <?php if ($canHistoriser  and !$dropdowns) : ?>
                 <?php if ($entretien->estNonHistorise()) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */?>
@@ -210,7 +216,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                 <?php endif; ?>
             <?php endif; ?>
 
-            <?php if ($canSupprimer) : ?>
+            <?php if ($canSupprimer and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
@@ -219,19 +225,30 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                 >
                     <span class="icon detruire" title="Supprimer définitivement le compte-rendu de l'entretien professionnel"></span></a>
             <?php endif; ?>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" onclick="setActions(<?php echo $entretien->getId(); ?>)">
-                    <span class="icon actions" title="Actions possible pour l'entretien #<?php echo $entretien->getId(); ?>"></span>
-                </button>
-                <ul id="drop_<?php echo $entretien->getId(); ?>" class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                </ul>
-            </div>
+            <?php if ($dropdowns) : ?>
+                <div class="dropdown action-dd">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" onclick="setActions(<?php echo $entretien->getId(); ?>)">
+                        <span class="icon actions" title="Actions possible pour l'entretien #<?php echo $entretien->getId(); ?>"></span>
+                    </button>
+                    <ul id="drop_<?php echo $entretien->getId(); ?>" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    </ul>
+                </div>
+            <?php endif; ?>
         </td>
         <?php endif; ?>
     </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<style>
+    div.action-dd button {
+        border: none;
+        color: rgb(51, 122, 183);
+        width:50px;
+        margin: 0;
+    }
+</style>
 
 <script>
     function setActions(id) {
@@ -240,6 +257,11 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
         $.ajax({
             type: "POST",
             url: url,
+            beforeSend:
+                function () {
+                    // console.log(retour);
+                    $("ul#drop_"+id).html("<center><span class='icon hourglass'></span> Calcul en cours</center>");
+                },
             success:
                 function (retour) {
                     // console.log(retour);

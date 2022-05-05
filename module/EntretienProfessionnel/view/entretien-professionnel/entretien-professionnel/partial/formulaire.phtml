@@ -45,24 +45,32 @@ $date_depassee = (($isAgent) AND ($now > $date));
     <?php endif; ?>
 <?php endif; ?>
 
-<!-- Formulaire ------------------------------------------------------------------------------------------------------->
+<?php if ($isAgent AND (
+        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
+        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
 
-<h3 class="categorie"> Missions du poste </h3>
+    <div class="alert alert-info">
+        Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.
+    </div>
 
-<?php if ($fichePoste !== null) : ?>
-    <ul>
-    <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
-        <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
-                <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
-        </li>
-    <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+<?php else : ?>
 
-<br/>
-<br/>
+    <h3 class="categorie"> Missions du poste </h3>
 
-<?php
+    <?php if ($fichePoste !== null) : ?>
+        <ul>
+            <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
+                <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+                    <?php echo $ficheTypeExterne->getFicheType()->getMissionsPrincipales(); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <br/>
+    <br/>
+
+    <?php
     $instance = $entretien->getFormulaireInstance();
     $formulaire = $instance->getFormulaire();
     $reponses = $instance->getReponses();
@@ -72,22 +80,24 @@ $date_depassee = (($isAgent) AND ($now > $date));
     foreach ($reponses as $reponse) {
         $data[$reponse->getChamp()->getId()] = $reponse;
     }
-?>
+    ?>
 
-<?php if ($canRenseigner) : ?>
-    <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
-        <?php
-            /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-            $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
-            echo $this->instanceAsFormulaire()->render($instance, $url, $data);
-        ?>
+    <?php if ($canRenseigner) : ?>
+        <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
+            <?php
+                /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+                $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+                $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+                echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+            ?>
+        <?php else : ?>
+            <?php echo $this->instanceAsText()->render($instance); ?>
+        <?php endif; ?>
     <?php else : ?>
-        <?php echo $this->instanceAsText()->render($instance); ?>
+        <div class="alert alert-danger">
+            Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
+        </div>
     <?php endif; ?>
-<?php else : ?>
-    <div class="alert alert-danger">
-        Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
-    </div>
 <?php endif; ?>
