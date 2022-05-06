@@ -257,9 +257,9 @@ class EntretienProfessionnelService {
         $qb = $this->createQueryBuilder()
             ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
+            ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
+            ->addSelect('categorie')->leftJoin('champ.categorie', 'categorie')
             ->addSelect('formulaire')->leftJoin('formulaireInstance.formulaire', 'formulaire')
-            ->addSelect('categorie')->leftJoin('formulaire.categories', 'categorie')
-            ->addSelect('champ')->leftJoin('categorie.champs', 'champ')
             ->andWhere('entretien.id = :id')
             ->setParameter('id', $id);
 
