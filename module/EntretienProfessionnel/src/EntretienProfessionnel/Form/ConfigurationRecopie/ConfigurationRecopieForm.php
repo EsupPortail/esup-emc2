@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Hidden;
@@ -15,7 +16,7 @@ class ConfigurationRecopieForm extends Form {
     public function init()
     {
         //id => code
-        $formulaire = $this->getFormulaireService()->getFormulaire(1);
+        $formulaire = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
         $options = $this->getFormulaireService()->getChampsAsOptions($formulaire);
 
         //operation
