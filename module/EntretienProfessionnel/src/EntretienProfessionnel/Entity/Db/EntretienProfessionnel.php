@@ -21,6 +21,9 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     use HistoriqueAwareTrait;
     use HasEtatTrait;
 
+    const FORMULAIRE_CREP                   = 'CREP';
+    const FORMULAIRE_CREF                   = 'CREF';
+
     const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
     const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
     const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
