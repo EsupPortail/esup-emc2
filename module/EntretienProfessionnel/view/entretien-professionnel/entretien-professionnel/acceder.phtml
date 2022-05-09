@@ -45,6 +45,14 @@ $droits = [
     'detruire' => $canDetruire,
     'valider' => $canValider,
 ];
+
+$step = 0;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE) $step = 1;
+//TODO PREVOIR step 1 and delai obs depasse !!!
+if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION) $step = 2;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)  $step = 3;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_AGENT)       $step = 4;
+
 ?>
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
@@ -107,13 +115,8 @@ $droits = [
         </li>
         <?php endif ?>
         <li>
-            <a href="#avis" aria-controls="avis" role="tab" data-toggle="tabz" >
-                <br/> &nbsp; Observations <br/> &nbsp;
-            </a>
-        </li>
-        <li>
             <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
-                <br/> &nbsp; Validations <br/> &nbsp;
+                Observations et <br/> validations <br/> <span class="badge" style="margin-left:7rem;"><?php echo $step; ?>/4</span>
             </a>
         </li>
         <li class="pull-right">
@@ -145,10 +148,6 @@ $droits = [
                 <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
             <?php endif; ?>
-
-            <div id="avis" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
-            </div>
 
             <div id="validation" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction']); ?>

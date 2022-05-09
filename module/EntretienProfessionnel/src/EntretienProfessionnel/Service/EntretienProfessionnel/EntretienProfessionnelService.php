@@ -133,6 +133,7 @@ class EntretienProfessionnelService {
             ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
             ->addSelect('campagne')->join('entretien.campagne', 'campagne')
             ->addSelect('validation')->leftjoin('entretien.validations','validation')
+            ->addSelect('vtype')->leftjoin('validation.type','vtype')
         ;
 
         $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
