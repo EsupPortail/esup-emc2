@@ -205,6 +205,26 @@ EOS;
     }
 
     /**
+     * @param string|null $unsername
+     * @return Agent|null
+     */
+    public function getAgentByUsername(?string $username) : ?Agent
+    {
+        if ($username === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.login = :username')
+            ->setParameter('username', $username)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Agent liés au même Username [".$username."]", $e);
+        }
+        return $result;
+    }
+
+    /**
      * @param int $supannId
      * @return Agent|null
      */

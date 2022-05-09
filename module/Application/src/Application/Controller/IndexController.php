@@ -33,8 +33,7 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
 
         if ($this->getServiceUserContext()->getLdapUser()) {
-            $supannId = ((int) $this->getServiceUserContext()->getLdapUser()->getSupannEmpId());
-            $agent = $this->getAgentService()->getAgentBySupannId($supannId);
+            $agent = $this->getAgentService()->getAgentByUsername($connectedUser->getUsername());
 
             if ($connectedUser !== null && $agent !== null && $agent->getUtilisateur() === null) {
                 $agent->setUtilisateur($connectedUser);
