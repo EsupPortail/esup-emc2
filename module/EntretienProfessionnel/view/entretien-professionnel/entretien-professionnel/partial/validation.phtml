@@ -115,12 +115,14 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
         </div>
     <?php endif; ?>
 
+    <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
+
     <?php if ($validationObservation !== null) : ?>
         <div class="row">
             <div class="col-md-8">
                 <div class="alert alert-success">
                     <div class="col-md-5">
-                        <strong>Observations faites</strong>
+                        <strong>Observations validées</strong>
                     </div>
                     <div class="col-md-7">
                         <dl class="dl-horizontal">
@@ -135,23 +137,44 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($canValiderAgent and $validationHierarchie === null) : ?>
-                        <a
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
-                                class="btn btn-danger action"
-                        >
-                            <span class="icon validation-undo"></span>
-                            Révoquer la validation
-                        </a>
+                <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
+                    <?php if ($validationObservation !== null) : ?>
+                        <div class="pull-right">
+                            <a
+                                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
+                                    class="btn btn-danger action"
+                            >
+                                <span class="icon validation-undo"></span>
+                                Révoquer la validation
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
     <?php else :?>
-            <p>
-                Pour exprimer et valider vos observations (facultatives) rendez vous dans l'onglet
-                <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'avis'], true); ?>"><em>Observations</em></a>.
-            </p>
+        <?php if ($entretien->getObservationActive()) : ?>
+            <a
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                    class="btn btn-success action ajax-modal"
+                    data-event="modification"
+            >
+                <span class="icon validation-do"></span>
+                Valider les observations
+            </a>
+        <?php else : ?>
+            <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
+                        href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                        class="btn btn-success action ajax-modal"
+                        data-event="modification"
+                >
+                    <span class="icon validation-do"></span>
+                    Je ne fais pas d'observation
+                </a>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
