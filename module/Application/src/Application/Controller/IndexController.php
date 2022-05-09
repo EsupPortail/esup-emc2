@@ -37,9 +37,6 @@ class IndexController extends AbstractActionController
         if ($agent !== null && $agent->getUtilisateur() === null) {
             $agent->setUtilisateur($connectedUser);
             $this->getAgentService()->update($agent);
-//            $personnel = $this->getRoleService()->findByRoleId(RoleConstant::PERSONNEL);
-//            $hasAgent = $connectedUser->hasRole($personnel);
-//            if (! $hasAgent) $this->getUserService()->addRole($connectedUser, $personnel);
             return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
         }
 
@@ -63,7 +60,6 @@ class IndexController extends AbstractActionController
                     break;
                 case EntretienProfessionnelConstant::ROLE_DELEGUE :
                     return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
-                    break;
                 case Agent::ROLE_SUPERIEURE :
                     /** @see IndexController::indexSuperieurAction() */
                     return $this->redirect()->toRoute('index-superieur', [], [], true);
