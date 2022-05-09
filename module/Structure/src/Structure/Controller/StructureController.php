@@ -27,6 +27,7 @@ use Structure\Form\AjouterResponsable\AjouterResponsableFormAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenApp\Form\Element\Date;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -123,6 +124,8 @@ class StructureController extends AbstractActionController {
             'selecteur' => $selecteur,
 
             'structure' => $structure,
+            'responsables' => $this->getStructureService()->getResponsables($structure, new DateTime()),
+            'gestionnaires' => $this->getStructureService()->getGestionnaires($structure, new DateTime()),
             'filles' =>   $structure->getEnfants(),
 
             'missions' => $missionsSpecifiques,
