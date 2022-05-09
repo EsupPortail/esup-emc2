@@ -87,7 +87,6 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
-                        'afficher',
                         'exporter-crep',
                         'exporter-cref',
                     ],
@@ -108,6 +107,7 @@ return [
                 [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
+                        'acceder',
                         'renseigner',
                     ],
                     'privileges' => EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
@@ -258,17 +258,6 @@ return [
                             ],
                         ],
                     ],
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/afficher/:entretien',
-                            'defaults' => [
-                                'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'afficher',
-                            ],
-                        ],
-                    ],
                     'exporter-crep' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
@@ -288,6 +277,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'exporter-cref',
+                            ],
+                        ],
+                    ],
+                    'acceder' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/acceder/:entretien',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'acceder',
                             ],
                         ],
                     ],

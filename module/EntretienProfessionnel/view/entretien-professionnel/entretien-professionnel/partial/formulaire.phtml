@@ -20,7 +20,7 @@ $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::E
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 $canRenseigner          = ($isAgent OR $isConducteur OR $canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
 
-$retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+$retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
@@ -87,7 +87,7 @@ $date_depassee = (($isAgent) AND ($now > $date));
         <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
             <?php
                 /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-                $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+                $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
                 $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
                 echo $this->instanceAsFormulaire()->render($instance, $url, $data);

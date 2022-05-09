@@ -18,7 +18,7 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
 
 <?php if ($canAfficher) : ?>
     <li><a class="dropdown-item"
-           href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true); ?>"
+           href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>"
         >
             <span class="icon editer"></span>
             Accéder à l'entretien
