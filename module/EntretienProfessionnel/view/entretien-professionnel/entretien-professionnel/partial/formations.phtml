@@ -43,7 +43,7 @@ $options = [];
 $options['mode'] = 'modification';
 $options['modification'] = $canModifier;
 $options['droits'] = $droits;
-$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'formations'], true);
+$options['retour'] = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['fragment' => 'formations'], true);
 
 $DEBUG = false;
 
@@ -93,7 +93,7 @@ foreach ($reponses as $reponse) {
     <?php if (!$date_depassee AND ($validationReponsable === null OR $validationReponsable->estHistorise())) : ?>
         <?php
         /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-        $retour = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+        $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
         $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
         echo $this->instanceAsFormulaire()->render($instance, $url, $data);

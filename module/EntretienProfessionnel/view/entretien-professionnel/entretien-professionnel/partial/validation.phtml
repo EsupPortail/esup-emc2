@@ -150,7 +150,7 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
     <?php else :?>
             <p>
                 Pour exprimer et valider vos observations (facultatives) rendez vous dans l'onglet
-                <a href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'avis'], true); ?>"><em>Observations</em></a>.
+                <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'avis'], true); ?>"><em>Observations</em></a>.
             </p>
     <?php endif; ?>
 </div>

@@ -10,7 +10,7 @@ use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
  * @var array $options
  */
 
-$dropdowns = true;
+$dropdowns = false;
 
 // recuperation des données à afficher
 $displayAnnee = true;
@@ -31,12 +31,6 @@ $displayAction = true;
 if (isset($options['affichages']) AND isset($options['affichages']['action']))      $displayAction = $options['affichages']['action'];
 
 // recuperation des droits pour les actions
-$canAfficher  = false;
-if (!isset($options['droits']) OR !isset($options['droits']['afficher'])) {
-    $canAfficher = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
-} else {
-    $canAfficher = $options['droits']['afficher'];
-}
 $canExporter  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['exporter'])) {
     $canExporter = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
@@ -152,13 +146,6 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td>
-            <?php if ($canAfficher and !$dropdowns) : ?>
-                <a
-                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::afficherAction() */?>
-                    href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true) ?>"
-                >
-                    <span class="icon voir" title="Voir le compte-rendu de l'entretien professionnel"></a>
-            <?php endif; ?>
             <?php if ($canExporter  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
@@ -175,14 +162,14 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <?php endif; ?>
             <?php if ($canRenseigner and !$dropdowns) : ?>
                 <a
-                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
-                    href="<?php echo $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], [], true) ?>"
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
+                    href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true) ?>"
                 >
-                    <span class="icon editer" title="Renseigner le compte-rendu de l'entretien professionnel"></a>
+                    <span class="icon editer" title="Accéder à l'entretien professionnel"></a>
             <?php endif; ?>
             <?php if ($canModifier  and !$dropdowns) : ?>
                 <a
-                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::renseignerAction() */?>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
                     class="ajax-modal" data-event="modification"
                 >

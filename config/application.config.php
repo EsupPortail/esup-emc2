@@ -54,7 +54,7 @@ $modules = [
 
 
 
-//    'ZendDeveloperTools',
+    'ZendDeveloperTools',
 
 ];
 

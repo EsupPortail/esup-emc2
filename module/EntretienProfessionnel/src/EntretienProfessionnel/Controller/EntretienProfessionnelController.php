@@ -186,8 +186,8 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretien = null;
         if ($agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) {
-            /** @see EntretienProfessionnelController::afficherAction() */
-            return $this->redirect()->toRoute('entretien-professionnel/afficher', ["entretien" => $entretien->getId()], [], true);
+            /** @see EntretienProfessionnelController::accederAction() */
+            return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien" => $entretien->getId()], [], true);
         }
 
         $entretien = new EntretienProfessionnel();
@@ -278,35 +278,7 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
-    public function afficherAction() : ViewModel
-    {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
-        $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
-
-        $fichesposte = ($agent) ? $this->getFichePosteService()->getFichePosteActiveByAgent($agent) : [];
-        $fichesmetiers = [];
-        if ($fichesposte) {
-            foreach ($fichesposte->getFichesMetiers() as $fiche) {
-                $fichesmetiers[] = $fiche->getFicheType();
-            }
-        }
-        $parcours = ($fichesposte) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichesposte) : null;
-
-        return new ViewModel([
-            'title'                     => 'Entretien professionnel ' . $entretien->getCampagne()->getAnnee() . ' de ' . $entretien->getAgent()->getDenomination(),
-            'entretien'                 => $entretien,
-
-            'agent'                     => $agent,
-            'ficheposte'               => $fichesposte,
-            'fichesmetiers'             => $fichesmetiers,
-            'parcours'                  => $parcours,
-            'mails'                     => $mails,
-            'documents'                 => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
-        ]);
-    }
-
-    public function renseignerAction() : ViewModel
+    public function accederAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
@@ -461,7 +433,8 @@ class EntretienProfessionnelController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
-        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
+        /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
     public function exporterCrepAction() : string

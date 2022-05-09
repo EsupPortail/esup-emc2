@@ -80,14 +80,14 @@ class ObservationController extends AbstractActionController {
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->historise($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
     public function restaurerAction() : Response
     {
         $observation = $this->getObservationService()->getRequestedObservation($this);
         $this->getObservationService()->restore($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/renseigner', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
     }
 
     public function supprimerAction() : ViewModel

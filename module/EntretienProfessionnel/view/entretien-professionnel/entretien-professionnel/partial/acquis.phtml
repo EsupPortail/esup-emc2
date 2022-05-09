@@ -37,7 +37,7 @@ $options = [];
 $options['mode'] = 'modification';
 $options['modification'] = $canModifier;
 $options['droits'] = $droits;
-$options['retour'] = $this->url('entretien-professionnel/renseigner', ['entretien' => $entretien->getId()], ['fragment' => 'acquis'], true);
+$options['retour'] = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['fragment' => 'acquis'], true);
 $options['actions'] = [
     'afficher' => true, 'ajouter' => $canAjouter, 'modifier' => $canModifier, 'supprimer' => $canDetruire, 'valider' => $canValider
 ];

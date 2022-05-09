@@ -9,9 +9,11 @@ use Application\Service\Complement\ComplementServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Structure\Entity\Db\Structure;
 use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -28,39 +30,46 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     private $lastAgent;
     /** @var EntretienProfessionnel */
     private $lastEntretien;
+    /** @var Role */
+    private $lastRole;
     /** @var array */
     private $predicats;
 
     /**
      * @param EntretienProfessionnel|null $entretienProfessionnel
      * @param Agent|null $connectedAgent
+     * @param Role|null $role
      * @return array
      */
-    private function computePredicats(?EntretienProfessionnel $entretienProfessionnel, ?Agent $connectedAgent) : array
+    private function computePredicats(?EntretienProfessionnel $entretienProfessionnel, ?Agent $connectedAgent, ?Role $role) : array
     {
-        if ($this->lastAgent === $connectedAgent AND $this->lastEntretien === $entretienProfessionnel) return $this->predicats;
+        if (
+            $this->lastAgent === $connectedAgent AND
+            $this->lastEntretien === $entretienProfessionnel AND
+            $this->lastRole === $role
+        ) return $this->predicats;
 
-//        var_dump((new \DateTime())->format('H:i:s:u ')." "."PREDICAT");
+//        var_dump("Recalcul des prédicats : ".(new \DateTime())->format('H:i:s:u '));
         $this->lastAgent = $connectedAgent;
         $this->lastEntretien = $entretienProfessionnel;
+        $this->lastRole = $role;
 
         $structures = $entretienProfessionnel->getAgent()->getStructures();
         $this->predicats = [
             'isAgentEntretien'          => $entretienProfessionnel->isAgent($connectedAgent),
             'isResponsableEntretien'    => $entretienProfessionnel->isReponsable($connectedAgent),
-            'isGestionnaireStructure'   => $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
-            'isResponsableStructure'    => $this->getStructureService()->isResponsableS($structures, $connectedAgent),
+            'isGestionnaireStructure'   => ($role->getRoleId() === Structure::ROLE_GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
+            'isResponsableStructure'    => ($role->getRoleId() === Structure::ROLE_RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
             'isSuperieureHierarchique'  => $this->getComplementService()->isSuperieur($connectedAgent, $entretienProfessionnel->getAgent()),
             'isAutoriteHierarchique'    => $this->getComplementService()->isAutorite($connectedAgent, $entretienProfessionnel->getAgent()),
         ];
-
+//        var_dump("Fin du calcul : ".(new \DateTime())->format('H:i:s:u '));
         return $this->predicats;
     }
 
     protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
     {
-//        var_dump((new \DateTime())->format('H:i:s:u ')." ".$privilege);
         /** @var EntretienProfessionnel $entity */
         if (!$entity instanceof EntretienProfessionnel) {
             return false;
@@ -76,7 +85,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
 
 
-        $predicats = $this->computePredicats($entity, $agent);
+        $predicats = $this->computePredicats($entity, $agent, $role);
 
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
@@ -168,23 +177,21 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
      */
     protected function assertController($controller, $action = null, $privilege = null) : bool
     {
-
-//       var_dump($this->getMvcEvent()->getRouteMatch());
-       $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
-       $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
-
         /** @var EntretienProfessionnel $entity */
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-        $predicats = [];
-        if ($entretien AND $agent) $predicats = $this->computePredicats($entretien, $agent);
 
-//        var_dump($predicats);
+        $predicats = [];
+        if ($agent) {
+            $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
+            $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
+            if ($entretien) $predicats = $this->computePredicats($entretien, $agent, $role);
+        }
+
 
         switch ($action) {
-            case 'afficher' :
             case 'exporter-crep' :
             case 'exporter-cref' :
                 switch ($role->getRoleId()) {
@@ -223,7 +230,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
                 }
                 return false;
-            case 'renseigner' :
+            case 'acceder' :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_TECH :
                     case RoleConstant::ADMIN_FONC :

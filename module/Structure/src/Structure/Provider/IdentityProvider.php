@@ -53,7 +53,6 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
 
         $agent = $this->getAgentService()->getAgentByUser($user);
         if ($agent !== null) {
-
             $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
             if ($responsabilites !== null and $responsabilites !== []) {
                 $roleResponsable = $this->getRoleService()->findByRoleId(Structure::ROLE_RESPONSABLE);
@@ -65,7 +64,6 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
                 $roleGestionnaire = $this->getRoleService()->findByRoleId(Structure::ROLE_GESTIONNAIRE);
                 $roles[] = $roleGestionnaire;
             }
-
         }
         return $roles;
     }
