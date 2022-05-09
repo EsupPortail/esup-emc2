@@ -32,17 +32,14 @@ class IndexController extends AbstractActionController
         /** @var User $connectedUser */
         $connectedUser = $this->getUserService()->getConnectedUser();
 
-        if ($this->getServiceUserContext()->getLdapUser()) {
-            $agent = $this->getAgentService()->getAgentByUsername($connectedUser->getUsername());
-
-            if ($connectedUser !== null && $agent !== null && $agent->getUtilisateur() === null) {
-                $agent->setUtilisateur($connectedUser);
-                $this->getAgentService()->update($agent);
-                $personnel = $this->getRoleService()->findByRoleId(RoleConstant::PERSONNEL);
-                $hasAgent = $connectedUser->hasRole($personnel);
-                if (! $hasAgent) $this->getUserService()->addRole($connectedUser, $personnel);
-                return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-            }
+        $agent = $this->getAgentService()->getAgentByUsername($connectedUser->getUsername());
+        if ($agent !== null && $agent->getUtilisateur() === null) {
+            $agent->setUtilisateur($connectedUser);
+            $this->getAgentService()->update($agent);
+//            $personnel = $this->getRoleService()->findByRoleId(RoleConstant::PERSONNEL);
+//            $hasAgent = $connectedUser->hasRole($personnel);
+//            if (! $hasAgent) $this->getUserService()->addRole($connectedUser, $personnel);
+            return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
         }
 
         /** @var Role $connectedRole */
