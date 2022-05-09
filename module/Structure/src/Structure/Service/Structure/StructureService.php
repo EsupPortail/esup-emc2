@@ -532,4 +532,44 @@ EOS;
         }
         return $listing;
     }
+
+    //TODO RESPONSABLE_SERVICE ???
+
+    /**
+     * @param Structure|null $structure
+     * @param DateTime|null $date
+     * @return StructureResponsable[]
+     */
+    public function getResponsables(?Structure $structure, ?DateTime $date = null) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('responsable')
+            ->join('responsable.agent', 'agent')->addSelect('agent')
+            ->andWhere('responsable.structure = :structure')
+            ->setParameter('structure', $structure)
+            ->orderBy('agent.nomUsuel, agent.prenom')
+        ;
+        if ($date !== null) $qb = StructureResponsable::decorateWithActif($qb, 'responsable', $date);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Structure|null $structure
+     * @param DateTime|null $date
+     * @return StructureGestionnaire[]
+     */
+    public function getGestionnaires(?Structure $structure, ?DateTime $date = null) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('gestionnaire')
+            ->join('gestionnaire.agent', 'agent')->addSelect('agent')
+            ->andWhere('gestionnaire.structure = :structure')
+            ->setParameter('structure', $structure)
+            ->orderBy('agent.nomUsuel, agent.prenom')
+        ;
+        if ($date !== null) $qb = StructureGestionnaire::decorateWithActif($qb, 'gestionnaire', $date);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

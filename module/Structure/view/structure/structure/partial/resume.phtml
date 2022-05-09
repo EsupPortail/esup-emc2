@@ -3,6 +3,8 @@
 /**
  * @var Structure $structure
  * @var Structure[] $filles
+ * @var StructureResponsable[] $responsables
+ * @var StructureGestionnaire[] $gestionnaires
  */
 
 use Structure\Entity\Db\Structure;
@@ -14,10 +16,7 @@ $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRU
 $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 $canEditerResponsable  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
-$responsables = $structure->getResponsables();
 $responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted() OR !$r->isImported(); });
-
-$gestionnaires = $structure->getGestionnaires();
 $gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted() OR !$r->isImported(); });
 
 $date = new DateTime();

@@ -4,6 +4,8 @@
  * @see StructureController::afficherAction()
  * @var Structure[] $selecteur
  * @var Structure $structure
+ * @var StructureResponsable[] $responsables
+ * @var StructureGestionnaire[] $gestionnaires
  * @var Structure[] $filles
  * @var AgentMissionSpecifique[] $missions
  * @var FichePoste[] $fiches
@@ -30,6 +32,8 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureGestionnaire;
+use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Privilege\StructurePrivileges;
 
 $this->headTitle($structure->getLibelleLong());
@@ -77,7 +81,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
     <div class="main">
 
-        <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles]); ?>
+        <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles, 'responsables' => $responsables, 'gestionnaires' => $gestionnaires]); ?>
 
         <div role="tabpanel">
             <ul class="nav nav-tabs" role="tablist">
