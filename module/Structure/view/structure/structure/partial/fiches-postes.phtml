@@ -1,11 +1,22 @@
 <?php
 
 /**
- * @see \Application\Controller\StructureController::afficherAction()
+ * @see \Structure\Controller\StructureController::afficherAction()
  * @var Structure $structure
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
  */
+
+usort($fichesCompletes,
+    function ( $a,  $b) {
+    $denA = $a['nom_usage'] . " ".$a['prenom'];
+    $denB = $b['nom_usage'] . " ".$b['prenom'];
+    return $denA > $denB;});
+usort($fichesIncompletes,
+    function ( $a,  $b) {
+        $denA = $a['nom_usage'] . " ".$a['prenom'];
+        $denB = $b['nom_usage'] . " ".$b['prenom'];
+        return $denA > $denB;});
 
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
