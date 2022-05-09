@@ -41,7 +41,7 @@ $canAfficherEntretien = true;
                 <td> <?php echo $entretien->getHistoModification()->format('d/m/Y'); ?> </td>
                 <td>
                     <?php if ($canAfficherEntretien) : ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/afficher', ['entretien' => $entretien->getId()], [], true); ?>" class="ajax-modal">
+                        <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>" class="ajax-modal">
                             <span class="icon voir"></span></a>
                     <?php endif; ?>
 <!--                    --><?php //if ($entretien->estNonHistorise()) : ?>
