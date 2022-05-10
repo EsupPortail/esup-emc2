@@ -151,7 +151,7 @@ foreach ($encours as $epro) {
                  title="Entretiens complétés <?php echo $nbComplete; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioComplete); ?>%</div>
             <div class="progress-bar fait" role="progressbar" style="width: <?php echo $ratioFait; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                 title="Entretiens en cours <?php echo count($fait); ?>/<?php echo $nbTotal; ?>">
+                 title="Entretiens effectués <?php echo count($fait); ?>/<?php echo $nbTotal; ?>">
             <?php echo round($ratioFait); ?>%</div>
             <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens en cours <?php echo count($planifie); ?>/<?php echo $nbTotal; ?>">
