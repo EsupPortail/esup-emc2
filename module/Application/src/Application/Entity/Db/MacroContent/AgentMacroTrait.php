@@ -3,6 +3,7 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMissionSpecifique;
 
 /**
  * Trait AgentMacroTrait
@@ -337,5 +338,32 @@ trait AgentMacroTrait
             return $echelon->getDate()->format('d/m/Y');
         }
         return "";
+    }
+
+    public function toStringMissionsSpecifiques() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $missions = array_filter($agent->getMissionsSpecifiques(), function (AgentMissionSpecifique $a) { return $a->estEnCours(); });
+
+        if (empty($missions)) {
+            return "";
+        } else {
+            $texte  = "<h2>Missions spécifiques de l'agent</h2>";
+            $texte .= "<ul>";
+            foreach ($missions as $mission) {
+                $texte .= "<li>";
+                $texte .= $mission->getMission()->getLibelle();
+                if ($mission->getStructure()) {
+                    $texte .= " - " . $mission->getStructure()->getLibelleLong();
+                    if ($mission->getStructure()->getNiv2() !== null AND $mission->getStructure()->getNiv2() !== $mission->getStructure()) {
+                        $texte .= " (" . $mission->getStructure()->getNiv2()->getLibelleLong() . ")";
+                    }
+                }
+                $texte .= "</li>";
+            }
+            $texte .= "</ul>";
+        }
+        return $texte;
     }
 }
