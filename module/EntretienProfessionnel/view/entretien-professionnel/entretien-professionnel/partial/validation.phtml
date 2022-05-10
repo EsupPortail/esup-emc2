@@ -2,6 +2,7 @@
 
 /**
  * @var EntretienProfessionnel $entretien
+ * @var array $droits
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -19,6 +20,13 @@ $validationResponsable   = $entretien->getValidationByType(EntretienProfessionne
 $validationObservation   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
 $validationHierarchie    = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
 $validationAgent         = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
+
+
+$now = new DateTime();
+
+$date = $entretien->getMaxSaisiObservation();
+$depasse = ($date === null or $date < $now);
+
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -35,8 +43,14 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
 
     <?php if ($validationResponsable === null) : ?>
         <div class="alert alert-info">
-           <span class="icon information"></span>
-            Le reponsable de l'entretien est soit le&middot;a supérieur&middot;e hiérarchique direct&middot;e de l'agent soit une personne nommée en remplacement de le&middot;a supérieur&middot;e hiérarchique direct&middot;e.
+            <strong><span class="icon information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
+            <br/><br/>
+            Cette validation :
+            <ul>
+                <li> fige les compte-rendus d'entretien professionnel et de formation ;</li>
+                <li> rend visible les compte-rendus d'entretien professionnel et de formation à l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>);</li>
+                <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) que la phase d'observation est ouverte.</li>
+            </ul>
         </div>
     <?php endif; ?>
 
@@ -72,7 +86,6 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 <?php endif; ?>
             </div>
         </div>
-    <?php else : ?>
         <?php if ($canValiderResponsable) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
@@ -83,35 +96,28 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
                 <span class="icon validation-do"></span>
                 Validation du responsable
             </a>
-        <?php else : ?>
-            <div class="alert alert-warning">
-                <p class="lead"><span class="icon attention"></span> Vous n'êtes pas habilité·e pour réaliser cette validation.</p>
-                <p> <span class="icon information"></span> La personne autorisée a effectué cette validation est  le responsable de l'entretien professionnel avec l'un des rôles suivants :
-                    <ul>
-                        <li> Responsable de structure ; </li>
-                        <li> Supérierur·e hiérarchique direct·e' ; </li>
-                        <li> Autorité Hiérarchique. </li>
-                    </ul>
-                </p>
-            </div>
         <?php endif; ?>
     <?php endif; ?>
 </div>
 
-<?php
-    // délai ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $now = new DateTime();
-    $date = $entretien->getMaxSaisiObservation();
-    $depasse = ($date === null OR $date < $now);
-?>
-
 <div>
     <h3 class="categorie"> Expression des observations </h3>
 
-    <?php if ($validationObservation === null) :?>
+    <?php if ($validationResponsable !== null AND $validationObservation === null) : ?>
         <div class="alert alert-info">
-            <span class="icon information"></span>
-            L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable.
+            <strong><span class="icon information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
+            <br/><br/>
+            Une fois les observations faites, en validant l'agent :
+            <ul>
+                <li> fige ses observations ;</li>
+                <li> notifie son responsable d'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) des observations apportées ;</li>
+                <li> notifie ses autorités hiérarchiques pour validation auprès d'eux de l'entretien professionnel.</li>
+            </ul>
+            Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
+            <br/><br/>
+            <strong><span class="icon information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
+                (<?php echo $entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"); ?>).
+            </strong>
         </div>
     <?php endif; ?>
 
@@ -182,10 +188,14 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
 <div>
     <h3 class="categorie"> Validation de l'autorité hiérarchique </h3>
 
-    <?php if ($validationHierarchie === null) : ?>
+    <?php if (($validationObservation !== null OR $depasse) AND $validationHierarchie === null) : ?>
         <div class="alert alert-info">
-            <span class="icon information"></span>
-            La validation de l'entretien professionnel par l'autorité hérarchique n'est possible d'après la validation des observations (ou un délai de 8 jours depuis la validation de l'entretien professionnel par son responsable).
+            <strong><span class="icon information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
+            <br/><br/>
+            Une fois cette validation faite :
+            <ul>
+                <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) de la validation.</li>
+            </ul>
         </div>
     <?php endif; ?>
 
@@ -239,10 +249,19 @@ $validationAgent         = $entretien->getValidationByType(EntretienProfessionne
 <div>
     <h3 class="categorie"> Validation de l'agent </h3>
 
-    <?php if ($validationAgent === null) : ?>
+    <?php if ($validationHierarchie !== null AND $validationAgent === null) : ?>
         <div class="alert alert-info">
-            <span class="icon information"></span>
-            La validation de l'entretien professionnel par l'agent n'est possible qu'après la validation de l'autorité hiérarchique.
+            <strong>
+                <span class="icon information"></span>
+                L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant valider son entretien professionnel.
+            </strong>
+            <br/><br/>
+
+            Cette validation :
+            <ul>
+                <li> clôture l'entretien professionnel ; </li>
+                <li> permet l'ouverture des procédures de recours (hors de cette application). </li>
+            </ul>
         </div>
     <?php endif; ?>
 

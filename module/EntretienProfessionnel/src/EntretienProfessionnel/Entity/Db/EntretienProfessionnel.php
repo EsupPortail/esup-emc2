@@ -330,9 +330,10 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
-        $date = $validation->getHistoCreation();
+        $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
         try {
-            $date->add(new DateInterval('P' . EntretienProfessionnel::DELAI_OBSERVATION . 'D'));
+            $tmp = 'P' . EntretienProfessionnel::DELAI_OBSERVATION . 'D';
+            $date->add(new DateInterval($tmp));
         } catch (Exception $e) {
             throw new RuntimeException("Problème de création du DateInterval",0,$e);
         }
