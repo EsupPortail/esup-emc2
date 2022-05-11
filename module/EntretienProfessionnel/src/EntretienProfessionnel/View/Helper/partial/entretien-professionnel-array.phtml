@@ -146,7 +146,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td>
-            <?php if ($canExporter  and !$dropdowns) : ?>
+            <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
