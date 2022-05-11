@@ -536,22 +536,25 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationAgent() : string {
-        if ($this->validationAgent !== null) {
-            return $this->validationAgent->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationAgent->getHistoCreateur()->getDisplayName();
+        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
+        if ($validation !== null) {
+            return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation de l'agent";
     }
 
     public function  toStringValidationResponsable() : string {
-        if ($this->validationResponsable !== null) {
-            return $this->validationResponsable->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationResponsable->getHistoCreateur()->getDisplayName();
+        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+        if ($validation !== null) {
+            return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation du responsable d'entretien";
     }
 
     public function  toStringValidationHierarchie() : string {
-        if ($this->validationDRH !== null) {
-            return $this->validationDRH->getHistoCreation()->format('d/m/Y à H:i'). " par " .$this->validationDRH->getHistoCreateur()->getDisplayName();
+        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
+        if ($validation !== null) {
+            return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation du responsable hiérarchique";
     }
