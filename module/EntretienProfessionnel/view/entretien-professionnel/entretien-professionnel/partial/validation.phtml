@@ -86,6 +86,7 @@ $depasse = ($date === null or $date < $now);
                 <?php endif; ?>
             </div>
         </div>
+    <?php else : ?>
         <?php if ($canValiderResponsable) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>

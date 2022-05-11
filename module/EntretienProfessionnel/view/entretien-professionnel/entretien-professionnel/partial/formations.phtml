@@ -58,18 +58,6 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
 
 
-<!-- Formation de l'agent : WARNING ----------------------------------------------------------------------------------->
-
-<?php if ($validationReponsable !== null) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-    <?php endif; ?>
-<?php endif; ?>
-
-<?php if ($date_depassee) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-    <?php endif; ?>
-<?php endif; ?>
-
 <!-- Formulaire ------------------------------------------------------------------------------------------------------->
 
 <h3> Formations suivies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
@@ -77,34 +65,45 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
 
-<?php
-$instance = $entretien->getFormationInstance();
-$formulaire = $instance->getFormulaire();
-$reponses = $instance->getReponses();
+<?php if ($isAgent AND (
+    $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
+    $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
 
-/** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
-$data = [];
-foreach ($reponses as $reponse) {
-    $data[$reponse->getChamp()->getId()] = $reponse;
-}
-?>
-
-<?php if ($canRenseigner) : ?>
-    <?php if (!$date_depassee AND ($validationReponsable === null OR $validationReponsable->estHistorise())) : ?>
-        <?php
-        /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
-        $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-        $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
-
-        echo $this->instanceAsFormulaire()->render($instance, $url, $data);
-        ?>
-    <?php else : ?>
-        <?php echo $this->instanceAsText()->render($instance); ?>
-    <?php endif; ?>
-<?php else : ?>
-    <div class="alert alert-danger">
-        Vous ne pouvez saisir le formulaire d'entretien de formation.
+    <div class="alert alert-info">
+        Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.
     </div>
+
+<?php else : ?>
+
+    <?php
+    $instance = $entretien->getFormationInstance();
+    $formulaire = $instance->getFormulaire();
+    $reponses = $instance->getReponses();
+
+    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
+    $data = [];
+    foreach ($reponses as $reponse) {
+        $data[$reponse->getChamp()->getId()] = $reponse;
+    }
+    ?>
+
+    <?php if ($canRenseigner) : ?>
+        <?php if (!$date_depassee AND ($validationReponsable === null OR $validationReponsable->estHistorise())) : ?>
+            <?php
+            /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+            $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+            echo $this->instanceAsFormulaire()->render($instance, $url, $data);
+            ?>
+        <?php else : ?>
+            <?php echo $this->instanceAsText()->render($instance); ?>
+        <?php endif; ?>
+    <?php else : ?>
+        <div class="alert alert-danger">
+            Vous ne pouvez saisir le formulaire d'entretien de formation.
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 
 
