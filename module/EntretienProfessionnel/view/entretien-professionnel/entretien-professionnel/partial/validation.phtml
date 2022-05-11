@@ -3,6 +3,7 @@
 /**
  * @var EntretienProfessionnel $entretien
  * @var array $droits
+ * @var int $step
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -41,7 +42,7 @@ $depasse = ($date === null or $date < $now);
 <div>
     <h3 class="categorie"> Validation du responsable de l'entretien professionnel </h3>
 
-    <?php if ($validationResponsable === null) : ?>
+    <?php if ($step === 0) : ?>
         <div class="alert alert-info">
             <strong><span class="icon information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
             <br/><br/>
@@ -104,7 +105,7 @@ $depasse = ($date === null or $date < $now);
 <div>
     <h3 class="categorie"> Expression des observations </h3>
 
-    <?php if ($validationResponsable !== null AND $validationObservation === null) : ?>
+    <?php if ($step === 1) : ?>
         <div class="alert alert-info">
             <strong><span class="icon information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
             <br/><br/>
@@ -122,6 +123,14 @@ $depasse = ($date === null or $date < $now);
         </div>
     <?php endif; ?>
 
+    <?php if ($step < 1) : ?>
+        <div class="alert alert-warning">
+            <strong>
+                <span class="icon information"></span>
+                Ne sera disponible qu'après la validation du responsable d'entretien professionnel
+            </strong>
+        </div>
+    <?php endif; ?>
     <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
 
     <?php if ($validationObservation !== null) : ?>
@@ -161,6 +170,7 @@ $depasse = ($date === null or $date < $now);
             </div>
         </div>
     <?php else :?>
+    <?php if ($step >= 1) : ?>
         <?php if ($entretien->getObservationActive()) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
@@ -183,13 +193,14 @@ $depasse = ($date === null or $date < $now);
                 </a>
         <?php endif; ?>
     <?php endif; ?>
+    <?php endif; ?>
 </div>
 
 
 <div>
     <h3 class="categorie"> Validation de l'autorité hiérarchique </h3>
 
-    <?php if (($validationObservation !== null OR $depasse) AND $validationHierarchie === null) : ?>
+    <?php if ($step === 2) : ?>
         <div class="alert alert-info">
             <strong><span class="icon information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
             <br/><br/>
@@ -197,6 +208,15 @@ $depasse = ($date === null or $date < $now);
             <ul>
                 <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) de la validation.</li>
             </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($step < 2) : ?>
+        <div class="alert alert-warning">
+            <strong>
+                <span class="icon information"></span>
+                Ne sera disponible qu'après la validation des observations ou le dépassement du délai d'expression des observations.
+            </strong>
         </div>
     <?php endif; ?>
 
@@ -250,7 +270,7 @@ $depasse = ($date === null or $date < $now);
 <div>
     <h3 class="categorie"> Validation de l'agent </h3>
 
-    <?php if ($validationHierarchie !== null AND $validationAgent === null) : ?>
+    <?php if ($step === 3) : ?>
         <div class="alert alert-info">
             <strong>
                 <span class="icon information"></span>
@@ -263,6 +283,15 @@ $depasse = ($date === null or $date < $now);
                 <li> clôture l'entretien professionnel ; </li>
                 <li> permet l'ouverture des procédures de recours (hors de cette application). </li>
             </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($step < 3) : ?>
+        <div class="alert alert-warning">
+            <strong>
+                <span class="icon information"></span>
+                Ne sera disponible qu'après la validation de l'autorité hiérarchique.
+            </strong>
         </div>
     <?php endif; ?>
 
