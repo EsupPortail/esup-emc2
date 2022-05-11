@@ -47,6 +47,7 @@ INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'entretienpro_index', 'Afficher l''index des entretiens professionnels', 0 UNION
     SELECT 'entretienpro_afficher', 'Afficher les entretiens professionnels', 10 UNION
+    SELECT 'entretienpro_exporter', 'Exporter les entretiens professionnels', 15 UNION
     SELECT 'entretienpro_ajouter', 'Ajouter un entretien professionnel', 20 UNION
     SELECT 'entretienpro_modifier', 'Modifier un entretien professionnel', 30 UNION
     SELECT 'entretienpro_historiser', 'Historiser/restaurer un entretien professionnel', 40 UNION

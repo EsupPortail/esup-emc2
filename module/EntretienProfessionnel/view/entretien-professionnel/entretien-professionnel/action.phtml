@@ -14,6 +14,7 @@ $canModifier    =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETI
 $canHistoriser  =   $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_HISTORISER);
 $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 
+$empty = true;
 ?>
 
 <?php if ($canAfficher) : ?>
@@ -23,6 +24,7 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
             <span class="icon editer"></span>
             Accéder à l'entretien
         </a></li>
+    <?php $empty = false; ?>
 <?php endif; ?>
 <?php if ($canExporter) : ?>
     <li><a class="dropdown-item"
@@ -37,6 +39,7 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
             <span class="icon pdf"></span>
             Exporter le CREF
         </a></li>
+    <?php $empty = false; ?>
 <?php endif; ?>
 <?php if ($canModifier) : ?>
     <li><a class="dropdown-item"
@@ -45,6 +48,7 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
             <span class="icon gerer"></span>
             Modifier la convocation
         </a></li>
+    <?php $empty = false; ?>
 <?php endif; ?>
 <?php if ($canHistoriser) : ?>
     <?php if ($entretien->estNonHistorise()) : ?>
@@ -62,6 +66,7 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
                 Restaurer l'entretien
             </a></li>
     <?php endif; ?>
+    <?php $empty = false; ?>
 <?php endif; ?>
 <?php if ($canDetruire) : ?>
     <li class="bg-danger"><a class="dropdown-item"
@@ -70,5 +75,12 @@ $canDetruire    =   $this->isAllowed(EntretienproPrivileges::getResourceId(Entre
             <span class="icon detruire"></span>
             Détruire l'entretien
         </a></li>
+    <?php $empty = false; ?>
+<?php endif; ?>
+
+<?php if ($empty) : ?>
+    <ul class="dropdown-item">
+        <li> Aucune action disponible </li>
+    </ul>
 <?php endif; ?>
 

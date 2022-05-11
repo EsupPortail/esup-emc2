@@ -91,7 +91,7 @@ return [
                         'exporter-cref',
                     ],
                     'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
+                        EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
                     ],
                 ],
                 [
