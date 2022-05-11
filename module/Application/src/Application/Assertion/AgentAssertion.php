@@ -39,9 +39,27 @@ class AgentAssertion extends AbstractAssertion {
         if ($role->getRoleId() === RoleProvider::RESPONSABLE)  $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
         if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)     $isSuperieur = $entity->hasSuperieurHierarchique($agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE)       $isAutorite = $entity->hasSuperieurHierarchique($agent);
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE)       $isAutorite = $entity->hasAutoriteHierarchique($agent);
 
         switch($privilege) {
+            case AgentPrivileges::AGENT_AFFICHER :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::OBSERVATEUR:
+                        return true;
+                    case RoleProvider::RESPONSABLE:
+                        return $isResponsable;
+                    case RoleProvider::GESTIONNAIRE:
+                        return $isGestionnaire;
+                    case Agent::ROLE_SUPERIEURE:
+                        return $isSuperieur;
+                    case Agent::ROLE_AUTORITE:
+                        return $isAutorite;
+                    case Agent::ROLE_AGENT :
+                        return $entity === $agent;
+                }
+                return false;
             case AgentPrivileges::AGENT_ACQUIS_AFFICHER:
                 case true;
             case AgentPrivileges::AGENT_ACQUIS_MODIFIER:

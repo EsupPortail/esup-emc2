@@ -72,6 +72,7 @@ return [
                 'allow' => [
                     [
                         'privileges' => [
+                            AgentPrivileges::AGENT_AFFICHER,
                             AgentPrivileges::AGENT_ELEMENT_VOIR,
                             AgentPrivileges::AGENT_ELEMENT_AJOUTER,
                             AgentPrivileges::AGENT_ELEMENT_MODIFIER,
