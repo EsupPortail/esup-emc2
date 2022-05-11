@@ -34,16 +34,6 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
-<?php if ($validationResponsable !== null) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-    <?php endif; ?>
-<?php endif; ?>
-
-<?php if ($date_depassee) : ?>
-    <?php if ($source === 'renseignerAction') : ?>
-    <?php endif; ?>
-<?php endif; ?>
-
 <?php if ($isAgent AND (
         $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
         $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
