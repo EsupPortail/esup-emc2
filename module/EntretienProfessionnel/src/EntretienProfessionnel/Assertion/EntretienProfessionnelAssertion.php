@@ -199,7 +199,10 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::ADMIN_FONC :
                     case RoleConstant::OBSERVATEUR :
                         return true;
-                    case Agent::ROLE_AGENT : return $predicats['isAgentEntretien'];
+                    case Agent::ROLE_AGENT :
+                        if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
+                        if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        return $predicats['isAgentEntretien'];
                     case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSupe rieureHierarchique'];
