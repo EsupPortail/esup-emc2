@@ -90,9 +90,8 @@ return [
                         'exporter-crep',
                         'exporter-cref',
                     ],
-                    'privileges' => [
-                        EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
-                    ],
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
+                    'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,
