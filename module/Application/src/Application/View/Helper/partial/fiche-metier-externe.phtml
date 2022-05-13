@@ -6,6 +6,7 @@
  */
 
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Provider\Privilege\FichePostePrivileges;
 
 $fichemetier = $fiche->getFicheType();
 $ficheposte = $fiche->getFichePoste();
@@ -82,6 +83,11 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
                 </div>
             </div>
         </div>
+        <?php if ($this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_GRAPHIQUE))) : ?>
+            <div class="pull-right">
+                <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary ajax-modal">Compétences métier/agent</a>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="panel-body">
         <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>

@@ -91,9 +91,9 @@ ksort($groupes);
                     <br/>
                     <?php if ($objet instanceof Agent) : ?>
                         <a
-                            <?php /** @see \Application\Controller\ElementController::ajouterApplicationElementAction() */?>
+                            <?php /** @see \Element\Controller\ElementController::ajouterApplicationElementAction() */?>
                             <?php //todo ... Agent::class => get_class($objet) ... ?>
-                                href="<?php echo $this->url('application/ajouter-application-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                href="<?php echo $this->url('element_/ajouter-application-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                 class="ajax-modal btn btn-primary action"
                                 data-event="modification"
                         >

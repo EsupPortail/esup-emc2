@@ -197,17 +197,17 @@ if ($agent !== null) {
                     Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
                 </div>
 
-                <?php if ($displayAcquis === true) : ?>
+<!--                --><?php //if ($displayAcquis === true) : ?>
                     <!-- APPLICATION ------------------------------------------------------------------------------------------------------>
                     <?php echo $this->applicationBloc($agent->getApplicationDictionnaireComplet(), $agent, $options); ?>
 
                     <!-- COMPETENCE ------------------------------------------------------------------------------------------------------->
                     <?php echo $this->competenceBloc($agent->getCompetenceDictionnaireComplet(), $agent, $options); ?>
-                <?php endif; ?>
+<!--                --><?php //endif; ?>
 
                 <!-- FORMATION ------------------------------------------------------------------------------------------------------->
                 <?php //echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
-                Formation desactiver pour le moment
+<!--                Formation desactiver pour le moment-->
             </div>
             <div id="portfolio" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>

@@ -13,4 +13,5 @@ class FichePostePrivileges extends Privileges
     const FICHEPOSTE_HISTORISER = 'ficheposte-ficheposte_historiser';
     const FICHEPOSTE_DETRUIRE   = 'ficheposte-ficheposte_detruire';
     const FICHEPOSTE_ASSOCIERAGENT = 'ficheposte-ficheposte_associeragent';
+    const FICHEPOSTE_GRAPHIQUE = 'ficheposte-ficheposte_graphique';
 }
