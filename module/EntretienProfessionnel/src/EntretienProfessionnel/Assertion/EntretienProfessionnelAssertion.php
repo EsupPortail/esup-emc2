@@ -205,7 +205,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
-                    case Agent::ROLE_SUPERIEURE : return $predicats['isSupe rieureHierarchique'];
+                    case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
                     case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
                 }
                 return false;
