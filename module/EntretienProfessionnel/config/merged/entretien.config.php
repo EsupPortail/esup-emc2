@@ -297,7 +297,18 @@ return [
                             'route'    => '/renseigner/:entretien',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'renseigner',
+                                'action'     => 'acceder',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/afficher/:entretien',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'acceder',
                             ],
                         ],
                     ],
