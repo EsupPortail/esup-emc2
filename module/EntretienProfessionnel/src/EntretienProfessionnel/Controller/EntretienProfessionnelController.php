@@ -15,11 +15,11 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
-use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use Exception;
@@ -64,6 +64,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use RappelEntretienProfessionnelServiceAwareTrait;
+    use RappelPasObservationServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
@@ -369,7 +370,7 @@ class EntretienProfessionnelController extends AbstractActionController
                         $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
 
                         $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
-                        $this->getRappelEntretienProfessionnelService()->creer($entretien, $dateNotification);
+                        $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
                         break;
 
                     case EntretienProfessionnelConstant::VALIDATION_OBSERVATION:
