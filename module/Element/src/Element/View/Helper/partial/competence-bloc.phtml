@@ -98,7 +98,7 @@ ksort($groupes);
                     <a
                         <?php /** @see \Application\Controller\ElementController::ajouterCompetenceElementAction() */?>
                         <?php //todo ... Agent::class => get_class($objet) ... ?>
-                            href="<?php echo $this->url('application/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                            href="<?php echo $this->url('element_/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                             class="ajax-modal btn btn-primary action"
                             data-event="modification"
                     >
