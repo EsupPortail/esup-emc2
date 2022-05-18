@@ -226,7 +226,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'competencetheme';
 
 -- MISSIONS PRINCIPALES ---------------------------------------------------------------------------------------
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('activite', 'Gestion des missions principales', 600, 'Application\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -305,7 +305,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiqueaffectation';
 
 -- AGENT ------------------------------------------------------------------------------------------------------
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('agent', 'Gestion des agents', 500, 'Application\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -369,7 +369,7 @@ FROM d
 
 -- CONFIGURATION ---------------------------------------------------------------------------------------------
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('configuration', 'Configuration de l''application', 1100, 'Application\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
