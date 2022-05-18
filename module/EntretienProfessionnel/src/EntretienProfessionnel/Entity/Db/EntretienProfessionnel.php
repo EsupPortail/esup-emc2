@@ -388,6 +388,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->getHistoDestruction() === null;});
 
         if ($validations === []) return null;
+        $validations = array_filter($validations, function (ValidationInstance $a) {return $a->estNonHistorise();});
         usort($validations, function (ValidationInstance $a, ValidationInstance $b) { return $a->getHistoCreation() > $b->getHistoCreation();});
         return $validations[0];
     }

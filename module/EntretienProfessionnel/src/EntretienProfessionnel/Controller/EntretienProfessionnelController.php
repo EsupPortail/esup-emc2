@@ -423,7 +423,11 @@ class EntretienProfessionnelController extends AbstractActionController
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_DRH) {
-            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
+            if ($entity->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION) !== null) {
+                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION));
+            } else {
+                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
+            }
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_AGENT) {
             $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));

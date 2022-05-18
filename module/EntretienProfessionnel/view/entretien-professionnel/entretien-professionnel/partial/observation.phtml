@@ -81,7 +81,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                 <?php endif; ?>
             <?php endif; ?>
         <?php else : ?>
-            <?php if ($validationResponsable !== null AND $canModifierObservation AND $date_non_depassee) : ?>
+            <?php if ($validationResponsable !== null AND $validationObservation === null AND $canModifierObservation AND $date_non_depassee) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"

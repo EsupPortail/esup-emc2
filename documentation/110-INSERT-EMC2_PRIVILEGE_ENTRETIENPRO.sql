@@ -1,4 +1,4 @@
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('campagne', 'Gestion des campagnes d''entretiens professionnels', 1050, 'EntretienProfessionnel\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -13,7 +13,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'campagne';
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('observation', 'Gestion des observation d''entretien professionnel', 1010, 'EntretienProfessionnel\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -27,7 +27,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observation';
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('sursis', 'Gestion des sursis d''entretien professionnel', 1020, 'EntretienProfessionnel\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -41,7 +41,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'sursis';
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
     VALUES ('entretienpro', 'Gestion des entretiens professionnels', 1000, 'EntretienProfessionnel\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
