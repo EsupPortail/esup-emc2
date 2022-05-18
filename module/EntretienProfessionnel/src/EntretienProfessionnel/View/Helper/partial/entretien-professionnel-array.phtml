@@ -160,7 +160,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                     <span class="icon pdf" title="Exporter  le compte-rendu d'entretien de formation">
                         <span class="small-lettrine">CREF</span></a>
             <?php endif; ?>
-            <?php if ($canRenseigner and !$dropdowns) : ?>
+            <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER)  and !$dropdowns and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true) ?>"

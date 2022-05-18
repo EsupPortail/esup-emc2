@@ -51,7 +51,7 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
 
             <?= $this->appLink($this->appInfos()->nom);?>
             <br/>
-            <?php echo $env; ?>
+            <?php if ($env !== 'production') echo $env; ?>
         </div>
 
         <div class="navbar-collapse bs-navbar-collapse collapse">
