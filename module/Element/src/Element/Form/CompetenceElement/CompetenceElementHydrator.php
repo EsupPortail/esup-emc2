@@ -18,8 +18,8 @@ class CompetenceElementHydrator implements HydratorInterface {
     public function extract($object)
     {
         $data = [
-            'competence'   => ($object->getCompetence())?$object->getCompetence()->getId():null,
-            'niveau'       => ($object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,
+            'competence'   => ($object AND $object->getCompetence())?$object->getCompetence()->getId():null,
+            'niveau'       => ($object AND $object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,
             'clef'         => $object->isClef(),
         ];
         return $data;
