@@ -296,9 +296,9 @@ EOS;
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructures(array $structures) : array
+    public function getAgentsByStructures(array $structures, ?DateTime $date = null) : array
     {
-        $today = new DateTime();
+        if ($date === null) $date = new DateTime();
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //AFFECTATION
@@ -327,7 +327,7 @@ EOS;
             //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
 
-            ->setParameter('today', $today)
+            ->setParameter('today', $date)
             ->setParameter('true', 'O')
             ->setParameter('false', 'N')
             ->andWhere('agent.deleted_on IS NULL')

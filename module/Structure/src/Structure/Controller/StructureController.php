@@ -113,6 +113,11 @@ class StructureController extends AbstractActionController {
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
+        /** Récupération des agents et postes liés aux structures */
+        $agentsLast = $this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut());
+        $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
+        $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
+
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
 
@@ -140,6 +145,7 @@ class StructureController extends AbstractActionController {
             'postes' => $postes,
 
             'last' => $last,
+            'agentsLast' => $allAgentsLast,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
             'delegues' => $delegues,
