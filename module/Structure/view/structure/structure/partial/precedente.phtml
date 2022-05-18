@@ -1,0 +1,59 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\Delegue;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
+
+/**
+ * @var Structure $structure
+ * @var Campagne $campagne
+ * @var Agent[] $agents
+ */
+
+$entretiens = [];
+
+foreach ($agents as $agent) {
+    $entretien = $agent->getEntretienProfessionnelByCampagne($campagne);
+    if ($entretien !== null) $entretiens[$agent->getId()] = $entretien;
+}
+
+?>
+
+<h2> Informations sur la campagne </h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt> Année </dt>
+            <dd> <?php echo $campagne->getAnnee(); ?> </dd>
+            <dt> Début de la campagne </dt>
+            <dd> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
+            <dt> Fin de la campagne </dt>
+            <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
+            <dt> En cours </dt>
+            <dd>
+                <?php if ($campagne->estEnCours()) : ?>
+                    <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
+                <?php else : ?>
+                    <span style="color:darkred;"><span class="icon ko"></span>Non</span>
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<h2> Entretiens professionnels des agents actuellements dans la structure </h2>
+
+<?php
+    echo $this->entretienProfessionnelArray($entretiens, [
+        'affichages' => ['annee' => false, 'structure' => true, 'lieu' => false, 'width' => '8rem'],
+        'droits' => ['modifier' => false, 'sursis' => false, 'historiser' => false, 'supprimer' => false],
+    ]);
+?>
+

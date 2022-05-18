@@ -31,6 +31,12 @@ $displayAction = true;
 if (isset($options['affichages']) AND isset($options['affichages']['action']))      $displayAction = $options['affichages']['action'];
 
 // recuperation des droits pour les actions
+$canAcceder  = false;
+if (!isset($options['droits']) OR !isset($options['droits']['acceder'])) {
+    $canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
+} else {
+    $canAcceder = $options['droits']['acceder'];
+}
 $canExporter  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['exporter'])) {
     $canExporter = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
@@ -68,6 +74,9 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
     $canSupprimer = $options['droits']['supprimer'];
 }
 
+$width = '22rem';
+if ($options['affichages'] AND $options['affichages']['width']) $width = $options['affichages']['width'];
+
 ?>
 
 <table class="table table-condensed table-hover" style="margin:1rem 0;">
@@ -92,11 +101,11 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <th> Lieu</th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <th style="min-width:9rem;"> État </th>
+            <th style="min-width:6rem;"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <?php if (!$dropdowns) : ?>
-            <th style="min-width:22rem;"> Action </th>
+            <th style="min-width:<?php echo $width; ?>;"> Action </th>
         <?php else : ?>
                 <th style="min-width:6rem;"> Action </th>
         <?php endif; ?>
@@ -142,11 +151,18 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
             <td> <?php echo $entretien->getLieu(); ?> </td>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
+            <td style="text-align: center;"> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td>
-            <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)  and !$dropdowns) : ?>
+            <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)  and !$dropdowns) : ?>
+                <a
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
+                        href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true) ?>"
+                >
+                    <span class="icon editer" title="Accéder à l'entretien professionnel"></a>
+            <?php endif; ?>
+            <?php if ($canExporter AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER)  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                     href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>"
@@ -159,13 +175,6 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
                 >
                     <span class="icon pdf" title="Exporter  le compte-rendu d'entretien de formation">
                         <span class="small-lettrine">CREF</span></a>
-            <?php endif; ?>
-            <?php if ($this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER)  and !$dropdowns and !$dropdowns) : ?>
-                <a
-                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
-                    href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true) ?>"
-                >
-                    <span class="icon editer" title="Accéder à l'entretien professionnel"></a>
             <?php endif; ?>
             <?php if ($canModifier  and !$dropdowns) : ?>
                 <a
