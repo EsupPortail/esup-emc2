@@ -103,6 +103,7 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'rechercher',
+                        'rechercher-large',
                         'rechercher-with-structure-mere',
                         'rechercher-responsable',
                         'rechercher-gestionnaire',
@@ -226,6 +227,16 @@ return [
                             'defaults' => [
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
+                    'rechercher-large' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher-large',
+                            'defaults' => [
+                                'controller' => AgentController::class,
+                                'action'     => 'rechercher-large',
                             ],
                         ],
                     ],

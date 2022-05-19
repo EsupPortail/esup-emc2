@@ -49,7 +49,8 @@ class ComplementController extends AbstractActionController {
             case Complement::COMPLEMENT_TYPE_RESPONSABLE :
             case Complement::COMPLEMENT_TYPE_AUTORITE :
                 $complement->setComplementType(Agent::class);
-                $form->get('sas')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher', [], [], true));
+                /** @see AgentController::rechercherAction() */
+                $form->get('sas')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
                 break;
             case Complement::COMPLEMENT_TYPE_STRUCTURE :
                 $complement->setComplementType(Structure::class);
