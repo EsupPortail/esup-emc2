@@ -6,6 +6,7 @@ use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
+use Zend\Mvc\Application;
 
 class AgentAssertionFactory {
 
@@ -30,6 +31,10 @@ class AgentAssertionFactory {
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
+        /* @var $application Application */
+        $application = $container->get('Application');
+        $mvcEvent    = $application->getMvcEvent();
+        $assertion->setMvcEvent($mvcEvent);
         return $assertion;
     }
 }
