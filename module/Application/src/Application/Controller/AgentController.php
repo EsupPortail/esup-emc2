@@ -395,6 +395,16 @@ class AgentController extends AbstractActionController
 
     /** Recherche d'agent  ********************************************************************************************/
 
+    public function rechercherLargeAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getAgentService()->getAgentsLargeByTerm($term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
     public function rechercherAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {

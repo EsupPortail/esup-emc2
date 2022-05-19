@@ -153,6 +153,22 @@ EOS;
     }
 
     /**
+     * @param string|null $term
+     * @return Agent[]
+     */
+    public function getAgentsLargeByTerm(?string $term) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+        ;
+
+        $result =  $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
+    /**
      * @param string|null $id
      * @return Agent|null
      */
