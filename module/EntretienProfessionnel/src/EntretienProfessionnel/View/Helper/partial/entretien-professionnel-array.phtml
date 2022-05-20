@@ -255,13 +255,12 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
             url: url,
             beforeSend:
                 function () {
-                    // console.log(retour);
-                    $("ul#drop_"+id).html("<center><span class='icon hourglass'></span> Calcul en cours</center>");
+                    let date = new Date();
+                    $("ul#drop_"+id).html(date.getMinutes() +":" + date.getSeconds() + "." + date.getMilliseconds()+  "<center><span class='icon hourglass'></span> Calcul en cours</center>");
                 },
             success:
                 function (retour) {
-                    // console.log(retour);
-                    $("ul#drop_"+id).html(retour);
+                    $("ul#drop_"+id).html($("ul#drop_"+id).html() + retour);
                 }
         });
         // alert(ficheId);
