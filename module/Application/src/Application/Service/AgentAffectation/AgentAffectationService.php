@@ -36,6 +36,7 @@ class AgentAffectationService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentaffectation.agent = :agent')
             ->setParameter('agent', $agent)
+            ->orderBy('agentaffectation.dateDebut', 'DESC')
         ;
 
         if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
