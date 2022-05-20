@@ -171,7 +171,7 @@ class EtatService {
      * @param EtatType $type
      * @return Etat[]
      */
-    public function getEtatsByType(EtatType $type)
+    public function getEtatsByType(EtatType $type) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.type = :type')
@@ -180,6 +180,22 @@ class EtatService {
         ;
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param string $code
+     * @return Etat[]
+     */
+    public function getEtatsByTypeCode(string $code) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('etat.type', 'type')->addSelect('type')
+            ->andWhere('type.code = :code')
+            ->setParameter('code', $code)
+            ->orderBy('etat.ordre', 'ASC')
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
 
     public function getEtatsAsOption(?EtatType $type = null)
     {
