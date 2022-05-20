@@ -36,6 +36,7 @@ class AgentStatutService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentstatut.agent = :agent')
             ->setParameter('agent', $agent)
+            ->orderBy('agentstatut.dateDebut', 'DESC')
         ;
 
         if ($actif === true) $qb = AgentStatut::decorateWithActif($qb, 'agentstatut');

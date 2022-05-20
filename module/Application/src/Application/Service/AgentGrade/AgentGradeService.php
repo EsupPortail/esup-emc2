@@ -42,6 +42,7 @@ class AgentGradeService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.agent = :agent')
             ->setParameter('agent', $agent)
+            ->orderBy('agentgrade.dateDebut', 'DESC')
         ;
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
