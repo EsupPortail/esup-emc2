@@ -54,7 +54,6 @@ return [
                     'action' => [
                         'action',
                     ],
-                    'role' => 'user',
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,

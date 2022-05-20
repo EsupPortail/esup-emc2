@@ -3,39 +3,29 @@
 namespace EntretienProfessionnel\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
-use Application\Service\RendererAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
-use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
-use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
-use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use Exception;
-use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
-use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -48,30 +38,22 @@ use Zend\View\Model\ViewModel;
 class EntretienProfessionnelController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use ConfigurationServiceAwareTrait;
     use RenduServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
-    use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use CampagneServiceAwareTrait;
-    use ObservationServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use ParcoursDeFormationServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
-    use ValidationTypeServiceAwareTrait;
     use RappelEntretienProfessionnelServiceAwareTrait;
     use RappelPasObservationServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
-    use CampagneFormAwareTrait;
-    use ObservationFormAwareTrait;
 
-    use RendererAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -84,8 +66,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
 
         $campagnes = $this->getCampagneService()->getCampagnes();
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('ENTRETIEN_PROFESSIONNEL');
-        $etats = $this->getEtatService()->getEtatsByType($type);
+        $etats = $this->getEtatService()->getEtatsByTypeCode('ENTRETIEN_PROFESSIONNEL');
 
         return new ViewModel([
             'entretiens' => $entretiens,
@@ -286,7 +267,6 @@ class EntretienProfessionnelController extends AbstractActionController
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
         $ficheposte = ($agent) ? $this->getFichePosteService()->getFichePosteActiveByAgent($agent) : null;
         $fichesmetiers = [];
-        $parcours = ($ficheposte) ? $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte) : null;
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
 
         $fiches = ($ficheposte)?$ficheposte->getFichesMetiers():[];
@@ -296,10 +276,9 @@ class EntretienProfessionnelController extends AbstractActionController
 
         return new ViewModel([
             'entretien' => $entretien,
-            'parcours' => $parcours,
 
             'agent' => $agent,
-            'ficheposte' => $this->getFichePosteService()->getFichePosteActiveByAgent($agent),
+            'ficheposte' => $ficheposte,
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
             'mails'                     => $mails,
@@ -446,34 +425,19 @@ class EntretienProfessionnelController extends AbstractActionController
     public function exporterCrepAction() : string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
-
         $vars= [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
-            'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREP, $vars);
-
-        try {
-            $exporter = new PdfExporter();
-            $exporter->setRenderer($this->renderer);
-            $exporter->getMpdf()->SetTitle($rendu->getSujet());
-            $exporter->setHeaderScript('/entretien-professionnel/pdf/header');
-            $exporter->setFooterScript('/entretien-professionnel/pdf/footer');
-            $exporter->addBodyHtml($rendu->getCorps());
-            return $exporter->export($rendu->getSujet());
-        } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est survenue lors de la génértion du PDF", null, $e);
-        }
+        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
     }
 
     public function exporterCrefAction() : string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
-
         $vars= [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
@@ -481,18 +445,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREF, $vars);
-
-        try {
-            $exporter = new PdfExporter();
-            $exporter->setRenderer($this->renderer);
-            $exporter->getMpdf()->SetTitle($rendu->getSujet());
-            $exporter->setHeaderScript('/entretien-professionnel/pdf/header');
-            $exporter->setFooterScript('/entretien-professionnel/pdf/footer');
-            $exporter->addBodyHtml($rendu->getCorps());
-            return $exporter->export($rendu->getSujet());
-        } catch (MpdfException $e) {
-            throw new RuntimeException("Un problème est survenue lors de la génértion du PDF", null, $e);
-        }
+        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
     }
 
     public function accepterEntretienAction() : ViewModel
@@ -531,6 +484,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function actionAction() : ViewModel
     {
+        var_dump((new DateTime())->format('i:s.u'));
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
 
         return new ViewModel([

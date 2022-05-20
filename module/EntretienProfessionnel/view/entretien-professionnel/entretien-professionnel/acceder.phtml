@@ -3,7 +3,6 @@
 /**
  * @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction()
  * @var EntretienProfessionnel $entretien
- * @var array $parcours
  * @var Agent $agent
  * @var FichePoste[] $ficheposte
  * @var FicheMetier[] $fichesmetiers
@@ -141,11 +140,11 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
                 <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
             </div>
 
-            <?php if ($displayParcours === true) : ?>
-                <div id="parcours" class="tab-pane " role="tabpanel">
-                    <?php echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
-                </div>
-            <?php endif; ?>
+<!--            --><?php //if ($displayParcours === true) : ?>
+<!--                <div id="parcours" class="tab-pane " role="tabpanel">-->
+<!--                    --><?php //echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
+<!--                </div>-->
+<!--            --><?php //endif; ?>
             <?php if ($displayAcquis === true) : ?>
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
