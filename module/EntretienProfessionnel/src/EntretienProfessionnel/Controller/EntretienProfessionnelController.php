@@ -233,7 +233,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $form->bind($entretien);
         /** @var SearchAndSelect $element */
         $element = $form->get('responsable');
-        $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], ["query" => ["agent" => $agent->getId()]], true));
+        if ($structure !== null) {
+            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], ["query" => ["agent" => $agent->getId()]], true));
+        } else {
+            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', [], ['query' => ['agent' => $agent->getId()]], true));
+        }
         $element = $form->get('agent');
         $element->setAttribute('readonly', true);
 
