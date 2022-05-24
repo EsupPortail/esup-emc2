@@ -10,7 +10,7 @@ trait SelectionAgentFormAwareTrait {
     /**
      * @return SelectionAgentForm
      */
-    public function getSelectionAgentForm()
+    public function getSelectionAgentForm() : SelectionAgentForm
     {
         return $this->selectionAgentForm;
     }
@@ -19,7 +19,7 @@ trait SelectionAgentFormAwareTrait {
      * @param SelectionAgentForm $selectionAgentForm
      * @return SelectionAgentForm
      */
-    public function setSelectionAgentForm($selectionAgentForm)
+    public function setSelectionAgentForm(SelectionAgentForm $selectionAgentForm) : SelectionAgentForm
     {
         $this->selectionAgentForm = $selectionAgentForm;
         return $this->selectionAgentForm;
