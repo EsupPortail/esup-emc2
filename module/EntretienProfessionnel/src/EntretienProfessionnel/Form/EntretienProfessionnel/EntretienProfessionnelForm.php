@@ -2,7 +2,6 @@
 
 namespace EntretienProfessionnel\Form\EntretienProfessionnel;
 
-use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -145,7 +144,7 @@ class EntretienProfessionnelForm extends Form {
                         'name' => Callback::class,
                         'options' => [
                             'messages' => [
-                                Callback::INVALID_VALUE => "Veuillez sélectionnez un responsable dans la liste déroulante.",
+                                Callback::INVALID_VALUE => "Veuillez sélectionner un responsable dans la liste déroulante.",
                             ],
                             'callback' => function ($value, $context = []) {
                                 $hasResponsable = (isset($context['responsable']) AND isset($context['responsable']['id']) AND trim($context['responsable']['id']) !== '');
