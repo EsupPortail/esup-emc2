@@ -183,12 +183,16 @@ class AgentController extends AbstractActionController
         $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, false);
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, false);
 
+        $param = $this->getParametreService()->getParametreByCode('GLOBAL', 'CODE_UNIV');
+        $codeEtabPrincipal = ($param)?$param->getValeur():null;
+
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
             'agent' => $agent,
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
+            'codeEtabPrincipal' => $codeEtabPrincipal,
         ]);
     }
 
