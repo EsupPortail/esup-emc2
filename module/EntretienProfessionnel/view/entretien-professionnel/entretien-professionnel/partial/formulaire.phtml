@@ -20,6 +20,8 @@ $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::E
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
 $canRenseigner          = ($isAgent OR $isConducteur OR $canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
 
+$canAfficherEntretien = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+
 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
 $now = new DateTime();
@@ -81,12 +83,14 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
                 echo $this->instanceAsFormulaire()->render($instance, $url, $data);
             ?>
-        <?php else : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
         <?php endif; ?>
     <?php else : ?>
-        <div class="alert alert-danger">
-            Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
-        </div>
+        <?php if ($canAfficherEntretien) : ?>
+            <?php echo $this->instanceAsText()->render($instance); ?>
+        <?php else : ?>
+            <div class="alert alert-danger">
+                Vous ne pouvez pas saisir le formulaire d'entretien professionnel.
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
