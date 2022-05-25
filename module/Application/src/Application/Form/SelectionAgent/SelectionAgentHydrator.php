@@ -28,7 +28,9 @@ class SelectionAgentHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $agent = $this->getAgentService()->getAgent($data['agent']['id']);
+        var_dump($data);
+        $agent = $this->getAgentService()->getAgent($data['agent']['id'], true);
+        var_dump($agent);
         $object->setAgent($agent);
         return $object;
     }

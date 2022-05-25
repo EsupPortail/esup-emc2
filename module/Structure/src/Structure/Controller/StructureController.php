@@ -329,9 +329,6 @@ class StructureController extends AbstractActionController {
         $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
         $form->bind($structureAgentForce);
 
-
-
-
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
