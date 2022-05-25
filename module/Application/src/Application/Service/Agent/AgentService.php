@@ -152,31 +152,21 @@ EOS;
         return $result;
     }
 
-    /**
-     * @param string|null $term
-     * @return Agent[]
-     */
-    public function getAgentsLargeByTerm(?string $term) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($term).'%')
-        ;
-
-        $result =  $qb->getQuery()->getResult();
-        return $result;
-    }
-
 
     /**
      * @param string|null $id
+     * @param bool $enlarge (si mis à TRUE alors pas d'obligation de donnée minimum)
      * @return Agent|null
      */
-    public function getAgent(?string $id) : ?Agent
+    public function getAgent(?string $id, bool $enlarge = false) : ?Agent
     {
         if ($id === null) return null;
-        $qb = $this->createQueryBuilder()
-            ->andWhere('agent.id = :id')
+
+        $qb = $this->createQueryBuilder();
+        if ($enlarge === true) {
+            $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
+        }
+        $qb = $qb->andWhere('agent.id = :id')
             ->setParameter('id', $id)
         ;
 
@@ -188,6 +178,17 @@ EOS;
         return $result;
     }
 
+    public function getAgentsLargeByTerm(?string $term) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+        ;
+
+        $result =  $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /**
      * @param AbstractActionController $controller
      * @param string $paramName
@@ -196,7 +197,7 @@ EOS;
     public function getRequestedAgent(AbstractActionController $controller, string $paramName = 'agent') : ?Agent
     {
         $id = $controller->params()->fromRoute($paramName);
-        $agent = $this->getAgent($id);
+        $agent = $this->getAgent($id, true);
         return $agent;
     }
 
