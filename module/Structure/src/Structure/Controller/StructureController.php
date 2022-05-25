@@ -325,8 +325,12 @@ class StructureController extends AbstractActionController {
         $structureAgentForce->setStructure($structure);
 
         $form = $this->getSelectionAgentForm();
+        $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
         $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
         $form->bind($structureAgentForce);
+
+
+
 
         $request = $this->getRequest();
         if ($request->isPost()) {
