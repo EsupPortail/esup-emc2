@@ -34,7 +34,7 @@ class AjouterResponsableHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object)
     {
-        $agent = (isset($data['responsable']) AND isset($data['responsable']['id']) AND trim($data['responsable']['id']) !== '')?$this->getAgentService()->getAgent($data['responsable']['id']):null;
+        $agent = (isset($data['responsable']) AND isset($data['responsable']['id']) AND trim($data['responsable']['id']) !== '')?$this->getAgentService()->getAgent($data['responsable']['id'], true):null;
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
 

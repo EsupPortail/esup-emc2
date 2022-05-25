@@ -202,6 +202,7 @@ class StructureController extends AbstractActionController {
 
         /** @var AjouterResponsableForm $form */
         $form = $this->getAjouterResponsableForm();
+        $form->get('responsable')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
         $form->bind($responsable);
 
@@ -250,6 +251,7 @@ class StructureController extends AbstractActionController {
 
         /** @var AjouterGestionnaireForm $form */
         $form = $this->getAjouterGestionnaireForm();
+        $form->get('gestionnaire')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
         $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
         $form->bind($gestionnaire);
 
