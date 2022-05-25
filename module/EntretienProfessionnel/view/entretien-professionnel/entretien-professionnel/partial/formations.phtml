@@ -26,6 +26,8 @@ $canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTOR
 $canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
 $canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
+$canAfficherEntretien = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
@@ -96,15 +98,14 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
             echo $this->instanceAsFormulaire()->render($instance, $url, $data);
             ?>
-        <?php else : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
         <?php endif; ?>
     <?php else : ?>
-        <div class="alert alert-danger">
-            Vous ne pouvez saisir le formulaire d'entretien de formation.
-        </div>
+        <?php if ($canAfficherEntretien) : ?>
+            <?php echo $this->instanceAsText()->render($instance); ?>
+        <?php else : ?>
+            <div class="alert alert-danger">
+                Vous ne pouvez saisir le formulaire d'entretien de formation.
+            </div>
+         <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
-
-
-
