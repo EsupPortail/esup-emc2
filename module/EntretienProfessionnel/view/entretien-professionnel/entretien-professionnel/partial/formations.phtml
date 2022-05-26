@@ -98,6 +98,8 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
             echo $this->instanceAsFormulaire()->render($instance, $url, $data);
             ?>
+        <?php else : ?>
+            <?php echo $this->instanceAsText()->render($instance); ?>
         <?php endif; ?>
     <?php else : ?>
         <?php if ($canAfficherEntretien) : ?>
