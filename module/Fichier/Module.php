@@ -2,12 +2,11 @@
 
 namespace Fichier;
 
-use Zend\Http\Request as HttpRequest;
+use Zend\Config\Factory as ConfigFactory;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\Glob;
-use Zend\Config\Factory as ConfigFactory;
 
 class Module
 {
@@ -17,14 +16,6 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-        $eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
-            function (MvcEvent $e) {
-                $request = $e->getRequest();
-                if ($request instanceof HttpRequest && $request->isXmlHttpRequest()) {
-                    $e->getTarget()->layout('layout/ajax.phtml');
-                }
-            }
-        );
     }
 
     public function getConfig()

@@ -2,7 +2,6 @@
 
 namespace Formation;
 
-use Zend\Http\Request as HttpRequest;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ArrayUtils;
@@ -17,14 +16,6 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-        $eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
-            function (MvcEvent $e) {
-                $request = $e->getRequest();
-                if ($request instanceof HttpRequest && $request->isXmlHttpRequest()) {
-                    $e->getTarget()->layout('layout/ajax.phtml');
-                }
-            }
-        );
     }
 
     public function getConfig()
