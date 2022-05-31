@@ -48,7 +48,9 @@ foreach ($agents as $agent) {
     }
 
     if ($entretien === null) {
-        if ($agent->isContratLong()) {
+        $date = new DateTime();
+        $date = $date->sub(new DateInterval('P6M'));
+        if ($agent->isContratLong() AND !empty($agent->getAffectationsActifs($date))) {
             $sans[$agent->getDenomination()] = $agent;
         } else {
             $facultatifs[$agent->getDenomination()] = $agent;
