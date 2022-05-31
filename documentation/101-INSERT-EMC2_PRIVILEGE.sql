@@ -361,7 +361,10 @@ WITH d(code, lib, ordre) AS (
     SELECT 'ficheposte_modifier', 'Modifier une fiche de poste', 30 UNION
     SELECT 'ficheposte_associeragent', 'Associer un agent à une fiche de poste', 31 UNION
     SELECT 'ficheposte_historiser', 'Historiser/Restaurer une fiche de poste', 40 UNION
-    SELECT 'ficheposte_detruire', 'Détruire une fiche de poste ', 50
+    SELECT 'ficheposte_detruire', 'Détruire une fiche de poste ', 50 UNION
+    SELECT 'ficheposte_etat', 'Modifier l''état', 200 UNION
+    SELECT 'ficheposte_valider_responsable', 'Valider en tant que responsable', 250 UNION
+    SELECT 'ficheposte_valider_agent', 'Valider en tant qu''agent', 260
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

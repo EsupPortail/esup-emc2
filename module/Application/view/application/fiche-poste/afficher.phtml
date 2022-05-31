@@ -31,7 +31,6 @@ $canExport   = $canAfficher;
         <!--    Fiche de poste #--><?php //echo $fiche->getId(); ?><!-- <br/>-->
             <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
         </h1>
-        État de la fiche de poste : <?php echo $this->etatbadge($fiche->getEtat()); ?>
     </div>
 
     <div class="pull-right">
@@ -47,6 +46,9 @@ $canExport   = $canAfficher;
         <?php endif; ?>
     </div>
 </div>
+
+<?php echo $this->partial("partial/validations.phtml"); ?>
+
 
 <?php if (! $canAfficher) : ?>
 

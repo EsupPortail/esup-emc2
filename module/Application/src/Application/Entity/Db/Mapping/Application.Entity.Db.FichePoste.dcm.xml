@@ -31,6 +31,17 @@
         <field name="rifseep"           type="integer"      column="rifseep"            nullable="true"/>
         <field name="nbi"               type="integer"      column="nbi"                nullable="true"/>
 
+        <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
+            <join-table name="ficheposte_validation">
+                <join-columns>
+                    <join-column name="ficheposte_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="validation_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

@@ -137,7 +137,7 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['action']) : ?>
                     <td>
-                        <?php if ($fiche['etat_code'] === FichePoste::ETAT_CODE_OK OR $canEditer  OR $displays['isObservateur']) : ?>
+                        <?php if (($fiche['etat_code'] === FichePoste::ETAT_CODE_OK OR $fiche['etat_code'] === FichePoste::ETAT_CODE_SIGNEE) OR $canEditer  OR $displays['isObservateur']) : ?>
                             <?php if ($canVoir) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>

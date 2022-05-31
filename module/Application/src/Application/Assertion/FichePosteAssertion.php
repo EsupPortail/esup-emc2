@@ -104,10 +104,40 @@ class FichePosteAssertion extends AbstractAssertion {
                     default:
                         return false;
                 }
+            case FichePostePrivileges::FICHEPOSTE_ETAT :
+                return true;
+            case FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                        return true;
+                    case Agent::ROLE_AUTORITE:
+                        $agent = $entity->getAgent();
+                        $autorite = $this->getAgentService()->getAgentByUser($user);
+                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
+                        return $isAutorite;
+                    case Agent::ROLE_SUPERIEURE:
+                        $agent = $entity->getAgent();
+                        $superieur = $this->getAgentService()->getAgentByUser($user);
+                        $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
+                        return $isSuperieur;
+                    case RoleProvider::RESPONSABLE:
+                        return $isResponsable;
+                    default:
+                        return false;
+                }
+            case FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT :
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                        return true;
+                    case RoleConstant::PERSONNEL:
+                        $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
+                        return $isAgent;
+                    default:
+                        return false;
+                }
         }
-
         return true;
     }
-
-
 }

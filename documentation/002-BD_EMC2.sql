@@ -1238,6 +1238,13 @@ create table ficheposte_formation_retiree
 );
 create unique index ficheposte_formation_conservee_id_uindex on ficheposte_formation_retiree (id);
 
+create table ficheposte_validation
+(
+    ficheposte_id integer not null constraint ficheposte_validations_ficheposte_id_fk references ficheposte on delete cascade,
+    validation_id integer not null constraint ficheposte_validations_unicaen_validation_instance_id_fk references unicaen_validation_instance on delete cascade,
+    constraint ficheposte_validations_pk primary key (ficheposte_id, validation_id)
+);
+
 -- FICHE PROFIL ---------------
 
 create table ficheprofil

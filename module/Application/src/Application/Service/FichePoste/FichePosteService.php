@@ -25,13 +25,18 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
+use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
     use EntityManagerAwareTrait;
-    use StructureServiceAwareTrait;
-    use SpecificitePosteServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use SpecificitePosteServiceAwareTrait;
+    use StructureServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
+    use ValidationTypeServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -944,5 +949,25 @@ EOS;
         }
 
         return $nouvelleFiche;
+    }
+
+    /**
+     * @param string $type
+     * @param FichePoste|null $ficheposte
+     * @param string|null $value
+     * @return ValidationInstance
+     */
+    public function addValidation(string $type, ?FichePoste $ficheposte, ?string $value = null) : ValidationInstance
+    {
+        $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
+
+        $validation = new ValidationInstance();
+        $validation->setEntity($ficheposte);
+        $validation->setType($vtype);
+        $validation->setValeur($value);
+        $this->getValidationInstanceService()->create($validation);
+        $ficheposte->addValidation($validation);
+        $this->update($ficheposte);
+        return $validation;
     }
 }

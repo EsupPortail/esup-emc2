@@ -34,6 +34,7 @@ $date = new DateTime();
 
 $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
 
+
 $this->headTitle("Modification de la fiche de poste #".$ficheId);
 ?>
 
@@ -61,7 +62,6 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
             <h1 class="page-header">
                 <?php echo $this->partial('partial/intitule', ['ficheposte' => $fiche], [], true); ?>
             </h1>
-            État de la fiche de poste : <?php echo $this->etatbadge($fiche->getEtat()); ?>
         </div>
         <div class="pull-right">
             <a
@@ -73,20 +73,16 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                 <span class="icon editer"></span>
                 Modifier le titre
             </a>
-            <br/>
-            <a
-                <?php /** @see \Application\Controller\FichePosteController::changerEtatAction() */ ?>
-                    href="<?php echo $this->url('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                    class="btn btn-primary action ajax-modal"
-                    data-event="modification"
-            >
-                <span class="icon editer"></span>
-                Changer l'état de la fiche
-            </a>
+
+            <?php echo $this->partial("partial/retour-structure.phtml"); ?>
+
         </div>
     </div>
 
-    <?php echo $this->partial("partial/retour-structure.phtml"); ?>
+
+    <?php echo $this->partial("partial/validations.phtml"); ?>
+
+
 
     <div class="panel panel-info">
         <div class="panel-heading">

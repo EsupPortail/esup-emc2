@@ -24,6 +24,7 @@ use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Notification\NotificationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Mpdf\MpdfException;
@@ -33,6 +34,7 @@ use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -54,10 +56,12 @@ class FichePosteController extends AbstractActionController {
     use ExpertiseServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
 
     /** Form **/
     use AjouterFicheMetierFormAwareTrait;
@@ -875,6 +879,70 @@ class FichePosteController extends AbstractActionController {
             'domaines' => $domaines,
             'repartitions' => $repartitions,
         ]);
+    }
+
+    public function validerAction() : ViewModel
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $type = $this->params()->fromRoute('type');
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $validation = $ficheposte->getValidationByTypeCode($type);
+            if ($validation === null) {
+                if ($data["reponse"] === "oui") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte);
+                if ($data["reponse"] === "non") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte, 'Refus');
+            }
+            switch($type) {
+                case FichePoste::VALIDATION_RESPONSABLE :
+                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_OK));
+                    $this->getFichePosteService()->update($ficheposte);
+
+                    $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
+                    break;
+
+                case FichePoste::VALIDATION_AGENT :
+                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_SIGNEE));
+                    $this->getFichePosteService()->update($ficheposte);
+
+                    $this->getNotificationService()->triggerValidationAgentFichePoste($ficheposte, $validation);
+                    break;
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
+        $vm->setVariables([
+            'title' => "Validation de la fiche de poste",
+            'text' => "Validation de la fiche de poste",
+            'action' => $this->url()->fromRoute('fiche-poste/valider', ["type" => $type, "fiche-poste" => $ficheposte->getId()], [], true),
+            'refus' => false,
+        ]);
+        return $vm;
+    }
+
+    public function revoquerAction() : Response
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
+        $this->getValidationInstanceService()->historise($validation);
+
+        switch ($validation->getType()->getCode()) {
+            case FichePoste::VALIDATION_RESPONSABLE :
+                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION));
+                $this->getFichePosteService()->update($ficheposte);
+                break;
+            case FichePoste::VALIDATION_AGENT :
+                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_OK));
+                $this->getFichePosteService()->update($ficheposte);
+                break;
+        }
+
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true);
+
     }
 
     public function actionAction() : ViewModel

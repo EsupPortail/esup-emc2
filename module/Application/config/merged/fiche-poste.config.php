@@ -43,7 +43,6 @@ use Application\Service\FichePoste\FichePosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
-use Application\View\Helper\FichesPostesAsArrayViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
@@ -68,6 +67,9 @@ return [
                             FichePostePrivileges::FICHEPOSTE_MODIFIER,
                             FichePostePrivileges::FICHEPOSTE_HISTORISER,
                             FichePostePrivileges::FICHEPOSTE_DETRUIRE,
+                            FichePostePrivileges::FICHEPOSTE_ETAT,
+                            FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE,
+                            FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT,
                         ],
                         'resources' => ['FichePoste'],
                         'assertion' => FichePosteAssertion::class
@@ -136,10 +138,28 @@ return [
                         'historiser-expertise',
                         'restaurer-expertise',
                         'supprimer-expertise',
-
-                        'changer-etat',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
+                        'changer-etat',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_ETAT,
+                    'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
+                        'valider',
+                        'revoquer',
+                    ],
+                    'privileges' => [
+                        FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT,
+                        FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE,
+                    ],
                     'assertion'  => FichePosteAssertion::class,
                 ],
                 [
@@ -237,6 +257,28 @@ return [
                             'defaults' => [
                                 'controller' => FichePosteController::class,
                                 'action'     => 'action',
+                            ],
+                        ],
+                    ],
+                    'valider' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/valider/:fiche-poste/:type',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'valider',
+                            ],
+                        ],
+                    ],
+                    'revoquer' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/revoquer/:fiche-poste/:validation',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'revoquer',
                             ],
                         ],
                     ],

@@ -15,6 +15,7 @@ use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FicheMetier\FicheMetierService;
 use Application\Service\FichePoste\FichePosteService;
+use Application\Service\Notification\NotificationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Interop\Container\ContainerInterface;
@@ -22,6 +23,7 @@ use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenRenderer\Service\Rendu\RenduService;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class FichePosteControllerFactory {
 
@@ -38,8 +40,10 @@ class FichePosteControllerFactory {
          * @var CompetencesRetireesService $competencesRetireesService
          * @var EtatService $etatService
          * @var ExpertiseService $expertiseService
+         * @var NotificationService $notificationService
          * @var SpecificitePosteService $specificitePosteService
          * @var ParcoursDeFormationService $parcoursService
+         * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
         $renduService = $container->get(RenduService::class);
@@ -52,8 +56,10 @@ class FichePosteControllerFactory {
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $etatService = $container->get(EtatService::class);
         $expertiseService = $container->get(ExpertiseService::class);
+        $notificationService = $container->get(NotificationService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
+        $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
@@ -86,8 +92,10 @@ class FichePosteControllerFactory {
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setEtatService($etatService);
         $controller->setExpertiseService($expertiseService);
+        $controller->setNotificationService($notificationService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);
+        $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);

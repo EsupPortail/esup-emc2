@@ -18,6 +18,8 @@ use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
+use Application\Service\Notification\NotificationService;
+use Application\Service\Notification\NotificationServiceFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
@@ -253,6 +255,7 @@ return [
         ],
         'factories' => [
 //            RoleService::class => RoleServiceFactory::class,
+            NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 
             SynchroOctopusService::class => SynchroOctopusServiceFactory::class,

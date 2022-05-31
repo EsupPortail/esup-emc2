@@ -49,4 +49,14 @@ class UrlService {
         $url = $this->renderer->url('home', [], ['force_canonical' => true], true);
         return $url;
     }
+    /**
+     * @return string
+     */
+    public function getUrlFichePoste() : string
+    {
+        $ficheposte = $this->variables['ficheposte'];
+        $url = $this->renderer->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], ['force_canonical' => true], true);
+        return $url;
+    }
+
 }
