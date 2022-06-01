@@ -133,4 +133,9 @@ class IndexController extends AbstractActionController
         ]);
         return $vm;
     }
+
+    public function infosAction()
+    {
+        return new ViewModel();
+    }
 }

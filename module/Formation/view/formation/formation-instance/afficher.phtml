@@ -143,7 +143,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             </li>
             <li>
                 <a href="#presences" aria-controls="presences" role="tab" data-toggle="tabz">
-                    Présences aux scéances
+                    Présences aux séances
                 </a>
             </li>
             <li class="pull-right">
@@ -251,14 +251,14 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             <div class="row">
                 <div class="col-md-8">
                     <h3>
-                        Scéance(s) de formation
+                        séance(s) de formation
                         <span class="badge"> <?php echo count($journees); ?></span>
                     </h3>
 
                     <dl class="dl-horizontal">
-                        <dt>Première scéance </dt>
+                        <dt>Première séance </dt>
                         <dd><?php echo $instance->getDebut(); ?></dd>
-                        <dt>Dernière scéance </dt>
+                        <dt>Dernière séance </dt>
                         <dd><?php echo $instance->getFin(); ?></dd>
                         <dt>Durée de la formation</dt>
                         <dd><?php echo $instance->getDuree(); ?></dd>
@@ -271,7 +271,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                         <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
                                 class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon ajouter"></span>
-                            Ajouter une scéance
+                            Ajouter une séance
                         </a>
                     <br/>
                         <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
@@ -307,28 +307,28 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     <?php if ($canJourneeModifier) : ?>
                         <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
-                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la scéance de formation" target="_blank">
+                                data-toggle="tooltip" data-html="true" title="Exporter l'émargement de la séance de formation" target="_blank">
                             <span class="icon pdf"></span><span class="lettrine">E</span></a>
                         <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-toggle="tooltip" data-html="true" title="Modifier l'émargement de la scéance de formation">
+                                data-toggle="tooltip" data-html="true" title="Modifier l'émargement de la séance de formation">
                             <span class="icon editer"></span></a>
                         <?php if ($journee->estNonHistorise()) : ?>
                             <?php /** @see FormationInstanceJourneeController::historiserJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true" title="Historiser l'émargement de la scéance de formation">
+                                    data-toggle="tooltip" data-html="true" title="Historiser l'émargement de la séance de formation">
                                 <span class="icon historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see FormationInstanceJourneeController::restaurerJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true" title="Restaurer l'émargement de la scéance de formation">
+                                    data-toggle="tooltip" data-html="true" title="Restaurer l'émargement de la séance de formation">
                                 <span class="icon restaurer"></span></a>
                         <?php endif; ?>
                         <?php /** @see FormationInstanceJourneeController::supprimerJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-toggle="tooltip" data-html="true" title="Supprimer définitivement l'émargement de la scéance de formation">
+                                data-toggle="tooltip" data-html="true" title="Supprimer définitivement l'émargement de la séance de formation">
                             <span class="icon detruire"></span></a>
                     <?php endif; ?>
                 </td>
@@ -596,7 +596,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     </div>
 
     <div id="presences" class="tab-pane " role="tabpanel">
-        <h2> Présence aux scéances</h2>
+        <h2> Présence aux séances</h2>
 
         <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'titre' => false], [], true); ?>
     </div>

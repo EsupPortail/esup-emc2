@@ -7,6 +7,7 @@ use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
 use Application\Provider\Privilege\ActivitePrivileges;
+use Application\Provider\Privilege\AdministrationPrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
@@ -96,6 +97,15 @@ return [
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'infos',
+                    ],
+                    'privileges' => [
+                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
                     ],
                 ],
             ],
@@ -212,6 +222,17 @@ return [
                     'defaults' => [
                         'controller' => 'Application\Controller\Index', // <-- change here
                         'action'     => 'index-autorite',
+                    ],
+                ],
+            ],
+            'infos' => [
+                'type'          => Literal::class,
+                'may_terminate' => true,
+                'options' => [
+                    'route'    => '/infos',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Index', // <-- change here
+                        'action'     => 'infos',
                     ],
                 ],
             ],
