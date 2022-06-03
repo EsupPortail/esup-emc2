@@ -52,9 +52,7 @@ $modules = [
     'Element',
     'Application',
 
-
-
-    'ZendDeveloperTools',
+//    'ZendDeveloperTools',
 
 ];
 
