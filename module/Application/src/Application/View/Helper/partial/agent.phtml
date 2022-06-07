@@ -9,6 +9,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
 
 $canVoirMission         = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -16,7 +17,7 @@ $canLettre              = $this->isAllowed(MissionspecifiquePrivileges::getResou
 $canAjouterMission      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canModifierMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canHistoriserMission   = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
-$canDetruireMission     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EFFACER));
+$canDetruireMission     = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 
 $now = new DateTime();
 
@@ -107,77 +108,78 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
             foreach ($agent->getMissionsSpecifiques() as $mission) :
                 $structure = $mission->getStructure();
             ?>
-            <tr
-                <?php if (!$mission->estEnCours()) : ?>
-                    class="historise"
-                <?php endif; ?>
-            >
-                <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
-                <td> <?php echo ($structure)?$structure->getLibelleLong():"Aucune structure"; ?> </td>
-                <td> <?php echo ($mission->getDateDebut())?$mission->getDateDebut()->format('d/m/Y'):"---"; ?> </td>
-                <td> <?php echo ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"---"; ?> </td>
-                <td>
-                    <?php if ($mission->getDecharge() !== null) : ?>
-                        <?php echo $mission->getDecharge(); ?> h.
-                        <?php if ($mission->estEnCours()) $cumulDecharge += $mission->getDecharge(); ?>
-                    <?php else : ?>
-                        Aucun
-                    <?php endif; ?>
-                </td>
-                <?php if ($mode === 'edition' OR $mode === 'affichage') : ?>
-                    <td>
-                        <?php if ($canVoirMission) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::afficherAction() */?>
-                                    href="<?php echo $this->url('mission-specifique-affectation/afficher', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                            >
-                                <span class="icon voir"></span></a>
-                            <?php if ($canLettre AND $mission->estEnCours()) : ?>
-                                <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
-                                <a href="<?php echo $this->url('mission-specifique-affectation/generer-lettre-type', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
-                                   target="_blank"
-                                >
-                                <span class="icon pdf"  data-toggle="tooltip" data-html="true"
-                                      title="Générer la lettre type associée l'affectation"></span></a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($mode === 'edition' AND$canModifierMission) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
-                                    href="<?php echo $this->url('mission-specifique-affectation/modifier', ['agent-mission-specifique' => $mission->getId()], ['query' => ['agent' => $agent->getId()]], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon editer"></span></a>
-                        <?php endif; ?>
-                        <?php if ($mode === 'edition' AND $canHistoriserMission) : ?>
-                            <?php if ($mission->estNonHistorise()) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
-                                        href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
-                                >
-                                    <span class="icon historiser"></span></a>
+                <?php if ($canDetruireMission OR $mission->estNonHistorise()) : ?>
+                        <tr class="
+                        <?php if (!$mission->estEnCours()) echo " termine "; ?>
+                        <?php if ($mission->estHistorise()) echo " historise "; ?>
+                    ">
+                        <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
+                        <td> <?php echo ($structure)?$structure->getLibelleLong():"Aucune structure"; ?> </td>
+                        <td> <?php echo ($mission->getDateDebut())?$mission->getDateDebut()->format('d/m/Y'):"---"; ?> </td>
+                        <td> <?php echo ($mission->getDateFin())?$mission->getDateFin()->format('d/m/Y'):"---"; ?> </td>
+                        <td>
+                            <?php if ($mission->getDecharge() !== null) : ?>
+                                <?php echo $mission->getDecharge(); ?> h.
+                                <?php if ($mission->estEnCours()) $cumulDecharge += $mission->getDecharge(); ?>
                             <?php else : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
-                                        href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
-                                >
-                                    <span class="icon restaurer"></span></a>
+                                Aucun
                             <?php endif; ?>
-                        <?php endif; ?>
-                        <?php if ($mode === 'edition' AND $canDetruireMission) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
-                                    href="<?php echo $this->url('mission-specifique-affectation/detruire', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
-                                    class="ajax-modal"
-                                    data-event="modification"
-                            >
-                                <span class="icon detruire"></span></a>
-                        <?php endif; ?>
-                    </td>
-                <?php endif;?>
-            </tr>
+                        </td>
+                        <?php if ($mode === 'edition' OR $mode === 'affichage') : ?>
+                            <td>
+                                <?php if ($canVoirMission) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::afficherAction() */?>
+                                            href="<?php echo $this->url('mission-specifique-affectation/afficher', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                    >
+                                        <span class="icon voir"></span></a>
+                                    <?php if ($canLettre AND $mission->estEnCours()) : ?>
+                                        <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                                        <a href="<?php echo $this->url('mission-specifique-affectation/generer-lettre-type', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                           target="_blank"
+                                        >
+                                        <span class="icon pdf"  data-toggle="tooltip" data-html="true"
+                                              title="Générer la lettre type associée l'affectation"></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($mode === 'edition' AND$canModifierMission) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+                                            href="<?php echo $this->url('mission-specifique-affectation/modifier', ['agent-mission-specifique' => $mission->getId()], ['query' => ['agent' => $agent->getId()]], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon editer"></span></a>
+                                <?php endif; ?>
+                                <?php if ($mode === 'edition' AND $canHistoriserMission) : ?>
+                                    <?php if ($mission->estNonHistorise()) : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
+                                                href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
+                                        >
+                                            <span class="icon historiser"></span></a>
+                                    <?php else : ?>
+                                        <a
+                                            <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
+                                                href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $options["retour"]]], true); ?>"
+                                        >
+                                            <span class="icon restaurer"></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($mode === 'edition' AND $canDetruireMission) : ?>
+                                    <a
+                                        <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::detruireAction() */?>
+                                            href="<?php echo $this->url('mission-specifique-affectation/detruire', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
+                                            class="ajax-modal"
+                                            data-event="modification"
+                                    >
+                                        <span class="icon detruire"></span></a>
+                                <?php endif; ?>
+                            </td>
+                        <?php endif;?>
+                    </>
+                <?php endif; ?>
             <?php endforeach; ?>
             </tbody>
             </table>
