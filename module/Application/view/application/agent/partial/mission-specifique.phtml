@@ -2,20 +2,19 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 
 /**
  * @var AgentMissionSpecifique[] $missions
  * @var Agent $agent
- * @var array $droits
- * @var array $droits
  */
 
-$canVoirMission         = $droits['afficherMission'];
-$canExporterMission     = $droits['afficherMission'];
-$canAjouterMission      = $droits['ajouter'];
-$canModifierMission     = $droits['modifier'];
-$canHistoriserMission   = $droits['historiser'];
-$canDetruireMission     = $droits['detruire'];
+$canVoirMission         = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canExporterMission     = $canVoirMission;
+$canAjouterMission      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
+$canModifierMission     = $canAjouterMission;
+$canHistoriserMission   = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
+$canDetruireMission     = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 
 ?>
 
@@ -65,10 +64,11 @@ $canDetruireMission     = $droits['detruire'];
     <tbody>
     <?php $cumulDecharge = 0; ?>
     <?php foreach ($missions as $mission) : ?>
-        <tr
-            <?php if (!$mission->estEnCours()) : ?>
-                class="historise"
-            <?php endif; ?>
+        <?php if ($canDetruireMission OR $mission->estNonHistorise()) : ?>
+            <tr class="
+            <?php if (!$mission->estEnCours()) echo " termine "; ?>
+            <?php if ($mission->estHistorise()) echo " historise "; ?>
+            "
         >
             <td> <?php echo $mission->getMission()->getLibelle(); ?> </td>
             <td>
@@ -140,11 +140,12 @@ $canDetruireMission     = $droits['detruire'];
                 <?php endif; ?>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>
 
 <?php if ($cumulDecharge !== 0) : ?>
-    <u>Cumul des décharges associés aux missions spécifiques :</u> &nbsp;
+    <u>Cumul des décharges associées aux missions spécifiques :</u> &nbsp;
     <?php echo $cumulDecharge; ?> heures
 <?php endif; ?>

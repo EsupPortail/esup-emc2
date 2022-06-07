@@ -153,7 +153,7 @@ if ($agent !== null) {
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',
                     ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
-                <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent,  "droits" => $droits, "options" => $options['actions']], []); ?>
+                <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
             </div>
             <div id="entretiens" class="tab-pane " role="tabpanel">
                 <h2> Entretiens professionnels </h2>
