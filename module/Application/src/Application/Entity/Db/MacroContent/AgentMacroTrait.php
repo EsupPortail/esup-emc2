@@ -344,7 +344,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $missions = array_filter($agent->getMissionsSpecifiques(), function (AgentMissionSpecifique $a) { return $a->estEnCours(); });
+        $missions = array_filter($agent->getMissionsSpecifiques(), function (AgentMissionSpecifique $a) { return $a->estEnCours() AND $a->estNonHistorise(); });
 
         if (empty($missions)) {
             return "";
