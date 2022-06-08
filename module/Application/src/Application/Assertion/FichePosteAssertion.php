@@ -105,7 +105,13 @@ class FichePosteAssertion extends AbstractAssertion {
                         return false;
                 }
             case FichePostePrivileges::FICHEPOSTE_ETAT :
-                return true;
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                        return true;
+                    default :
+                        return false;
+                }
             case FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
