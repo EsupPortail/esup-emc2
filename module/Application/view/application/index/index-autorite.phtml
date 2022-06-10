@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \Application\Controller\IndexController::indexSuperieurAction()
+ * @see \Application\Controller\IndexController::indexAutoriteAction()
  * @var Agent $connectedAgent
  * @var Agent[] $agents
  * @var Campagne $campagnePrevious
@@ -29,8 +29,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 <table class="table table-condensed table-hover">
     <thead>
         <tr>
-            <th> Agent </th>
-            <th> Affectation </th>
+            <th> Agent & Affectation </th>
             <th> Fiche de poste </th>
             <th> Entretien professionnel </th>
         </tr>
@@ -45,13 +44,12 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                         <span class="icon voir" title="Afficher les informations de l'agent"></span>
                     </a>
                 <?php endif; ?>
-            </td>
-            <td>
+                <br/>
                 <?php $affectation = $agent->getAffectationPrincipale(); ?>
                 <?php if ($affectation) : ?>
                     <?php $niveau2 = $affectation->getStructure()->getNiv2(); ?>
                     <?php if ($niveau2 !== null) : ?>
-                        <?php echo $niveau2->getLibelleLong(); ?> <br/>
+                        [<?php echo $niveau2->getLibelleCourt(); ?>]
                     <?php endif; ?>
                     <?php echo $affectation->getStructure()->getLibelleLong(); ?>
                 <?php else : ?>
@@ -60,44 +58,30 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
             </td>
             <td>
                 <?php $fichePoste = $agent->getFichePosteBest(); ?>
+                <?php $canVoirFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_AFFICHER); ?>
                 <?php if ($fichePoste) : ?>
-                    <?php
-                        $canVoirFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_AFFICHER);
-                        $canExporterFichePoste = $canVoirFichePoste;
-                        $canModifierFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_MODIFIER);
-                        $canHistoriserFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_HISTORISER);
-                    ?>
-                    <?php echo ($fichePoste->getLibelleMetierPrincipal())?:"Aucune fiche métier principale"; ?>
-                    <?php if ($canVoirFichePoste) : ?>
-                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fichePoste->getId()], [], true); ?>" target="_blank">
-                            <span class="icon voir"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canExporterFichePoste) : ?>
-                        <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fichePoste->getId()], [], true); ?>" target="_blank">
-                            <span class="icon pdf"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canExporterFichePoste) : ?>
-                        <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fichePoste->getId()], [], true); ?>" target="_blank">
-                            <span class="icon editer"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canExporterFichePoste) : ?>
-                      <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $fichePoste->getId()], ['query' => ['retour' => $this->url()]], true); ?>">
-                          <span class="icon historiser"></span></a>
+                    <?php echo $this->etatbadge($fichePoste->getEtat()); ?>
+                    <?php echo $fichePoste->getLibelleMetierPrincipal(); ?>
+                    <?php if ($fichePoste->getLibelle()) : ?>
+                        <br/>
+                        <?php echo $fichePoste->getLibelle; ?>
                     <?php endif; ?>
                 <?php else : ?>
                     Aucune fiche de poste
-                    <?php
-                        $canAjouterFichePoste = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
-                        $isResponsable = $agent->hasSuperieurHierarchique($connectedAgent);
-                    ?>
-
-                    <?php if ( $canAjouterFichePoste AND $isResponsable) : ?>
-                        <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
-                           title="Ajouter une fiche de poste"
-                        >
-                            <span class="icon ajouter"></span>
-                        </a>
-                    <?php endif; ?>
+                <?php endif; ?>
+                <br/>
+                <?php if ($canVoirAgent) : ?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'fiches'], true); ?>">
+                        <span class="icon gerer" title="Accéder à la gestion des fiches postes"></span>
+                        <span class="small-lettrine">FP</span></a>
+                <?php endif; ?>
+                <?php if ($fichePoste AND $canVoirFichePoste) : ?>
+                    <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
+                        <span class="icon voir" title="Afficher la fiche de poste"></span>
+                        <span class="small-lettrine">FP</span></a>
+                    <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
+                        <span class="icon pdf" title="Exporter la fiche de poste"></span>
+                        <span class="small-lettrine">FP</span></a>
                 <?php endif; ?>
             </td>
             <td>

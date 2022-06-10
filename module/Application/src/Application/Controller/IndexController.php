@@ -123,6 +123,11 @@ class IndexController extends AbstractActionController
                 if ($agent !== null) $agents[$agent->getId()] = $agent;
             }
         }
+        usort($agents, function (Agent $a, Agent $b) {
+            $aaa = $a->getNomUsuel() . " "  . $a->getPrenom();
+            $bbb = $b->getNomUsuel() . " "  . $b->getPrenom();
+            return $aaa > $bbb;
+        });
 
         $vm =  new ViewModel();
         $vm->setVariables([
