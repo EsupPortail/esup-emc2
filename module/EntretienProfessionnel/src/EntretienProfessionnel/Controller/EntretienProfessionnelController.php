@@ -286,12 +286,12 @@ class EntretienProfessionnelController extends AbstractActionController
         return new ViewModel([
             'entretien' => $entretien,
 
-            'agent' => $agent,
-            'ficheposte' => $ficheposte,
+            'agent'         => $agent,
+            'ficheposte'    => $ficheposte,
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
-            'mails'                     => $mails,
-            'documents'                 => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
+            'mails'         => $mails,
+            'documents'     => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
         ]);
     }
 

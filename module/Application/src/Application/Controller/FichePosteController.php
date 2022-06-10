@@ -202,7 +202,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function editerAction() : ViewModel
+    public function editerAction()
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
@@ -210,6 +210,8 @@ class FichePosteController extends AbstractActionController {
         /** @var FichePoste $fiche */
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
+
+        if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
         $agent = $fiche->getAgent();
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);

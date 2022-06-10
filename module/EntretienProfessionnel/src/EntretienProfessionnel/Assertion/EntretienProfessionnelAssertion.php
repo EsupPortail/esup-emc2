@@ -182,7 +182,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-
         $predicats = [];
         if ($agent) {
             $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
@@ -234,6 +233,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 }
                 return false;
             case 'acceder' :
+            case 'renseigner' :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_TECH :
                     case RoleConstant::ADMIN_FONC :
@@ -241,7 +241,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case Agent::ROLE_AGENT : return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableEntretien'] OR $predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
-                    case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
+                    case Agent::ROLE_AUTORITE :
+                        return $predicats['isAutoriteHierarchique'];
                 }
                 return false;
         }

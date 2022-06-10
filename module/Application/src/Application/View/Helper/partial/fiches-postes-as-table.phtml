@@ -43,7 +43,7 @@ if ($retour)    $query['retour'] = $retour;
             <th> Fiche principale </th>
         <?php endif; ?>
         <?php if ($displays['en-cours']) : ?>
-            <th style="min-width: 6rem;width: 6rem;"> En&nbsp;cours </th>
+            <th style="min-width: 8rem;width: 8rem;"> Validité </th>
         <?php endif; ?>
         <?php if ($displays['modification']) : ?>
             <th> Modification </th>
@@ -169,7 +169,11 @@ if ($retour)    $query['retour'] = $retour;
                             <?php if ($isEnCours) : ?>
                                 <span class="icon ok" style="color:darkgreen;" title="Fiche en cours de validité"></span>
                             <?php else : ?>
-                                <span class="icon ko" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
+                                <?php if ($fiche instanceof FichePoste) : ?>
+                                    <span style="color:darkred;"><?php echo $fiche->getFinValidite()->format('d/m/Y'); ?></span>
+                                <?php else : ?>
+                                    <span class="icon ko" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
                             <span class="icon sursis" style="color:cadetblue;" title="Fiche non totalement validée"></span>
