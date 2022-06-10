@@ -21,10 +21,33 @@ foreach ($agent->getFichiers() as $fichier) {
     if ($fichier->getNature()->getCode() === 'FICHE_POSTE' AND $fichier->estNonHistorise()) $fichesPDF[] = $fichier;
 }
 
+$canAjouterFichePoste = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
+$affectation = $agent->getAffectationPrincipale();
+$structure = ($affectation)?$affectation->getStructure():null;
 ?>
 
-
-<h2> Fiches de poste </h2>
+<div class="row">
+    <div class="col-md-4">
+        <h2> Fiches de poste </h2>
+    </div>
+    <div class="pull-right">
+        <br/>
+        <?php if ($canAjouterFichePoste) : ?>
+            <?php /** @see \Application\Controller\FichePosteController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+                <span class="icon ajouter"></span>
+                Ajouter une fiche de poste
+            </a>
+            <?php if ($structure ) : ?>
+            <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
+            <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+                <span class="icon cloner"></span>
+                Cloner une fiche de poste
+            </a>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
 
 <div>
     <div class="alert alert-info">
