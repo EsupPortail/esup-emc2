@@ -725,4 +725,22 @@ class Agent implements
         }
         return false;
     }
+
+    /**
+     * @return FichePoste|null
+     */
+    public function getFichePosteBest() : ?FichePoste
+    {
+        $best = null;
+        /** @var FichePoste $fiche */
+        foreach ($this->fiches as $fiche) {
+            if ($fiche->isEnCours() AND $fiche->estNonHistorise()) {
+                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE)) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_OK))) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
+            }
+        }
+        return $best;
+    }
 }

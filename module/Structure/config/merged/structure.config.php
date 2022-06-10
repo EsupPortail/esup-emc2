@@ -40,6 +40,7 @@ return [
                             StructurePrivileges::STRUCTURE_DESCRIPTION,
                             StructurePrivileges::STRUCTURE_GESTIONNAIRE,
                             StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
+                            StructurePrivileges::STRUCTURE_AGENT_FORCE,
                         ],
                         'resources' => ['Structure'],
                         'assertion' => StructureAssertion::class
@@ -112,7 +113,7 @@ return [
                         'ajouter-manuellement-agent',
                         'retirer-manuellement-agent',
                     ],
-                    'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+                    'privileges' => StructurePrivileges::STRUCTURE_AGENT_FORCE,
                     'assertion'  => StructureAssertion::class,
                 ],
             ],

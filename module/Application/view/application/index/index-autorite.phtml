@@ -59,7 +59,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                 <?php endif; ?>
             </td>
             <td>
-                <?php $fichePoste = $agent->getFichePosteActive(true); ?>
+                <?php $fichePoste = $agent->getFichePosteBest(); ?>
                 <?php if ($fichePoste) : ?>
                     <?php
                         $canVoirFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_AFFICHER);

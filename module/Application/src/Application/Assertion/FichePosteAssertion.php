@@ -66,13 +66,15 @@ class FichePosteAssertion extends AbstractAssertion {
                         return $isAutorite;
                     case RoleConstant::PERSONNEL:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
-                        return $isAgent;
+                        return $isAgent AND ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE);
                     default:
                         return false;
                 }
             case FichePostePrivileges::FICHEPOSTE_AJOUTER :
             case FichePostePrivileges::FICHEPOSTE_MODIFIER :
             case FichePostePrivileges::FICHEPOSTE_HISTORISER :
+                // REMARQUE on ne peut plus agir sur une fiche signée et plus active
+                if ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) return false;
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:

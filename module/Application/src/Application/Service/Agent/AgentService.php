@@ -510,6 +510,34 @@ EOS;
 
     /**
      * @param Agent|null $agent
+     * @return Agent[]
+     */
+    function getResponsables(?Agent $agent) : ?array
+    {
+        if ($agent === null) return null;
+
+        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
+            ->andWhere('sr.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('sr.deleted_on IS NULL or sr.imported = :false')
+            ->setParameter('false', false)
+        ;
+        $result = $qb->getQuery()->getResult();
+        $result = array_map(function (StructureResponsable $a) { return $a->getAgent();}, $result);
+        $result = array_filter($result, function (Agent $a) use ($agent) { return $a !== $agent;});
+        if (!empty(($result))) return $result;
+
+        $complements = $agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE);
+        foreach ($complements as $complement) {
+            $responsable = $this->getAgent($complement->getComplementId());
+            if ($responsable) $result[] = $responsable;
+        }
+        return $result;
+
+    }
+
+    /**
+     * @param Agent|null $agent
      * @return StructureResponsable[]
      */
     public function getResposabiliteStructure(?Agent $agent) : ?array

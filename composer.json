@@ -9,7 +9,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "unicaen/app": "3.1.20",
+    "unicaen/app": "3.2.0",
     "unicaen/authentification": "dev-master",
     "unicaen/utilisateur": "dev-master",
     "unicaen/privilege": "dev-master",

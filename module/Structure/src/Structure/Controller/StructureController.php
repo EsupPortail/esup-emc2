@@ -27,7 +27,6 @@ use Structure\Form\AjouterResponsable\AjouterResponsableFormAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Form\Element\Date;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -97,17 +96,40 @@ class StructureController extends AbstractActionController {
         $allAgents = array_merge($agents, $agentsForces);
 
         /** Récupération des fiches de postes liées aux structures */
-        $fichesPostes = $this->getFichePosteService()->getFichesPostesByAgents($allAgents);
+//        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructures($structures);
         $fichesCompletes = []; $fichesIncompletes = [];
-        foreach ($fichesPostes as $fichePoste) {
-            if ($fichePoste['agent_id'] !== null AND $fichePoste['fiche_principale']) {
-                $fichesCompletes[] = $fichePoste;
-            } else {
-                $fichesIncompletes[] = $fichePoste;
-            }
-        }
+//        var_dump($fichesPostes);
+//        foreach ($fichesPostes as $agentId => $fiches) {
+//            $best = $fiches[0];
+//            var_dump($fiches);
+//            foreach ($fiches as $fiche) {
+//                var_dump($fiche);
+//                if ($fiche['etat'] === FichePoste::ETAT_CODE_SIGNEE) {
+//                    $best = $fiche;
+//                    break;
+//                }
+//            }
+//            if ($best['agent_id'] !== null AND $best['fiche_principale']) {
+//                $fichesCompletes[] = $best;
+//            } else {
+//                $fichesIncompletes[] = $best;
+//            }
+//        }
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
 
+        $ficheBestByAgent = [];
+        foreach ($allAgents as $agent) {
+            $ficheBestByAgent[$agent->getId()] = $agent->getFichePosteBest();
+            if ($ficheBestByAgent[$agent->getId()] !== null) {
+                if ($ficheBestByAgent[$agent->getId()]->isComplete()) {
+                    $fichesCompletes[] = $ficheBestByAgent[$agent->getId()];
+                } else {
+                    $fichesIncompletes[] = $ficheBestByAgent[$agent->getId()];
+                }
+            } else {
+                $agentsSansFiche[] = $agent;
+            }
+        }
 
         $postes = $this->getPosteService()->getPostesByStructures($structures);
 
@@ -134,7 +156,7 @@ class StructureController extends AbstractActionController {
             'filles' =>   $structure->getEnfants(),
 
             'missions' => $missionsSpecifiques,
-            'fiches' => $fichesPostes,
+            'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
             'fichesCompletes' => $fichesCompletes,
             'fichesIncompletes' => $fichesIncompletes,
             'fichesRecrutements' => $fichesRecrutements,
@@ -142,6 +164,7 @@ class StructureController extends AbstractActionController {
             'inscriptions' => $inscriptions,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
+            'agentsAll' => $allAgents,
             'postes' => $postes,
 
             'last' => $last,

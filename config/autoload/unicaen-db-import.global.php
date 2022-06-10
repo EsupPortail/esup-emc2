@@ -31,14 +31,14 @@ return [
                     'select'             => 'SELECT * FROM V_PREECOG_AGENT',
                     'connection'         => 'octopus',
                     'source_code_column' => 'C_INDIVIDU',
-                    'columns'            => ['PRENOM', 'NOM_USAGE'],
+//                    'columns'            => ['PRENOM', 'NOM_USAGE'],
                 ],
                 'destination' => [
                     'name'               => 'Agents gérés par la DRH',
                     'table'              => 'agent',
                     'connection'         => 'default',
                     'source_code_column' => 'c_individu',
-                    'columns'            => ['prenom', 'nom_usage', 'harp_id'],
+//                    'columns'            => ['prenom', 'nom_usage', 'harp_id'],
                 ],
             ],
             [

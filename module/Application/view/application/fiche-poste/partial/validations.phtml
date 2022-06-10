@@ -80,6 +80,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
     <div class="col-md-6">
         <h2>État de la fiche de poste</h2>
         <?php echo $this->etatbadge($fiche->getEtat()); ?>
+         Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
 
         <br/>
         <?php if ($canFichePosteModifierEtat) : ?>

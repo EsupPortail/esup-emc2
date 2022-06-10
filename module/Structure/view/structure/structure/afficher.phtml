@@ -8,13 +8,14 @@
  * @var StructureGestionnaire[] $gestionnaires
  * @var Structure[] $filles
  * @var AgentMissionSpecifique[] $missions
- * @var FichePoste[] $fiches
+ * @var FichePoste[] $fichespostes
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
  * @var FichePoste[] $fichesRecrutements
  * @var Poste[] $postes
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
+ * @var Agent[] $agentsAll
  * @var FicheProfil[] $profils
  * @var FormationInstanceInscrit[] $inscriptions
  *
@@ -157,7 +158,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         </div>
                     </div>
 
-                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'fichespostes' => $fiches]); ?>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -175,14 +176,14 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                             </a>
                         </div>
                     </div>
-                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'fichespostes' => $fiches, 'options' => ['force' => true]]); ?>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
 
                 </div>
 
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="informations" class="tab-pane " role="tabpanel">
 
-                    <?php echo $this->partial('partial/fiches-postes', ['structure' => $structure, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
+                    <?php echo $this->partial('partial/fiches-postes', ['agents' => $agentsAll, 'structure' => $structure, 'fichespostes' => $fichespostes, 'fichesCompletes' => $fichesCompletes, 'fichesIncompletes' => $fichesIncompletes]); ?>
 
 
                 </div>

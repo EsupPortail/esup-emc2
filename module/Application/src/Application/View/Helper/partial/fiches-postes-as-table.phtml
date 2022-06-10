@@ -13,10 +13,7 @@ use Structure\Entity\Db\Structure;
 
 $canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
 $canVoir        = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
-$canHistoriser  = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
-$canEditer      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
 
-$canExport      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
 $canDetruire    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
 
 $retour = null;
@@ -27,7 +24,7 @@ if ($retour)    $query['retour'] = $retour;
 ?>
 
 
-<table class="table table-condensed datatable">
+<table class="table table-condensed table-hover datatable">
     <thead>
     <tr>
         <?php if ($displays['id']) : ?>
@@ -45,6 +42,9 @@ if ($retour)    $query['retour'] = $retour;
         <?php if ($displays['fiche-principale']) : ?>
             <th> Fiche principale </th>
         <?php endif; ?>
+        <?php if ($displays['en-cours']) : ?>
+            <th style="min-width: 6rem;width: 6rem;"> En&nbsp;cours </th>
+        <?php endif; ?>
         <?php if ($displays['modification']) : ?>
             <th> Modification </th>
         <?php endif; ?>
@@ -58,17 +58,59 @@ if ($retour)    $query['retour'] = $retour;
     </thead>
     <tbody>
     <?php foreach ($fiches as $fiche) : ?>
-        <?php if ($fiche['etat_code'] !== FichePoste::ETAT_CODE_MASQUEE OR $canEditer) : ?>
-            <tr <?php if ($fiche['histo_destruction'] !== null) echo 'class="historise"'; ?>>
+        <?php
+        if ($fiche instanceof FichePoste) {
+            $id = $fiche->getId();
+            $etat = $fiche->getEtat()->getCode();
+            $destruction = $fiche->getHistoDestruction();
+            $agentId = ($fiche->getAgent())?$fiche->getAgent()->getId():null;
+            $agent = ($fiche->getAgent())?$fiche->getAgent()->getDenomination():null;
+            $structureId = ($fiche->getAgent())?$fiche->getAgent()->getAffectationPrincipale()->getStructure()->getId():null;
+            $structure = ($fiche->getAgent())?$fiche->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleCourt():null;
+            $fichePrincipale = ($fiche->toStringFicheMetierPrincipal() !== '')?$fiche->toStringFicheMetierPrincipal():null;
+            $ficheLibelle = ($fiche->getLibelle() !== '')?$fiche->getLibelle():null;
+            $isEnCours = $fiche->isEnCours();
+
+            $canAfficher    = $this->isAllowed($fiche,FichePostePrivileges::FICHEPOSTE_AFFICHER);
+            $canExporter    = $canAfficher;
+            $canModifier    = $this->isAllowed($fiche,FichePostePrivileges::FICHEPOSTE_MODIFIER);
+            $canHistoriser  = $this->isAllowed($fiche,FichePostePrivileges::FICHEPOSTE_HISTORISER);
+            $canDetruire    = $this->isAllowed($fiche,FichePostePrivileges::FICHEPOSTE_DETRUIRE);
+
+        } else {
+            $id = $fiche['id'];
+            $etat = $fiche['etat_code'];
+            $destruction = $fiche['histo_destruction'];
+            $agentId = $fiche['agent_id'];
+            $agent = $fiche['prenom'] . " " . $fiche['nom_usage'];
+            $structureId = $fiche['structure_id'];
+            $structure = $fiche['structure'];
+            $fichePrincipale = $fiche['fiche_principale'];
+            $ficheLibelle = $fiche['fiche_libelle'];
+            $isEnCours = ($fiche['en_cours'] === true) ? true : false;
+
+            $canAfficher   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
+            $canExporter   = $canAfficher;
+            $canModifier   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));;
+            $canHistoriser = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));;
+            $canDetruire   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));;
+        }
+
+        ?>
+        <?php if ($etat !== FichePoste::ETAT_CODE_MASQUEE AND $canAfficher) : ?>
+            <tr class="
+                <?php if ($destruction !== null) echo ' historise '; ?>
+                <?php if ($isEnCours === false) echo ' termine '; ?>
+            ">
                 <?php if ($displays['id']) : ?>
                     <td>
-                        <?php echo $fiche['id']; ?>
+                        <?php echo $id; ?>
                     </td>
                 <?php endif; ?>
                 <?php if ($displays['agent']) : ?>
                     <td>
-                        <?php if ($fiche['agent_id'] !== null ) : ?>
-                            <?php echo $fiche['prenom']; ?> <?php echo $fiche['nom_usage']; ?>
+                        <?php if ($agentId !== null ) : ?>
+                            <?php echo $agent; ?>
                         <?php else : ?>
                             <span class="probleme">
                                <span class='icon attention'></span>
@@ -79,8 +121,8 @@ if ($retour)    $query['retour'] = $retour;
                 <?php endif; ?>
                 <?php if ($displays['structure']) : ?>
                     <td>
-                        <?php if ($fiche['agent_id'] !== null ) : ?>
-                            <?php echo $fiche['structure']; ?>
+                        <?php if ($structure !== null ) : ?>
+                            <?php echo $structure ?>
                         <?php else : ?>
                             <span class="probleme">
                                <span class='icon attention'></span>
@@ -107,17 +149,30 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['fiche-principale']) : ?>
                     <td>
-                        <?php if ($fiche['fiche_principale']) : ?>
-                            <?php echo $fiche['fiche_principale']; ?>
-                            <?php if ($fiche['fiche_libelle'] !== null) : ?>
+                        <?php if ($fichePrincipale) : ?>
+                            <?php echo $fichePrincipale; ?>
+                            <?php if ($ficheLibelle !== null) : ?>
                                 <br/>
-                                <?php echo $fiche['fiche_libelle']; ?>
+                                <?php echo $ficheLibelle; ?>
                             <?php endif; ?>
                         <?php else :?>
                             <span class="probleme">
                                <span class='icon attention'></span>
                                 Aucun métier principal
                             </span>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
+                <?php if ($displays['en-cours']) : ?>
+                    <td style="text-align: center;">
+                        <?php if ($etat === FichePoste::ETAT_CODE_SIGNEE) : ?>
+                            <?php if ($isEnCours) : ?>
+                                <span class="icon ok" style="color:darkgreen;" title="Fiche en cours de validité"></span>
+                            <?php else : ?>
+                                <span class="icon ko" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <span class="icon sursis" style="color:cadetblue;" title="Fiche non totalement validée"></span>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
@@ -131,65 +186,82 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['action']) : ?>
                     <td>
-                            <?php echo $this->etatbadge($fiche['etat']); ?>
+                            <?php echo $this->etatbadge($etat); ?>
                     </td>
                 <?php endif; ?>
 
                 <?php if ($displays['action']) : ?>
                     <td>
-                        <?php if (($fiche['etat_code'] === FichePoste::ETAT_CODE_OK OR $fiche['etat_code'] === FichePoste::ETAT_CODE_SIGNEE) OR $canEditer  OR $displays['isObservateur']) : ?>
-                            <?php if ($canVoir) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                                        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche['id']], [], true); ?>"
-                                        target="_blank"
-                                ><span class="icon voir"
-                                       data-toggle="tooltip" data-html="true"
-                                       title="Afficher la fiche de poste"></span></a>
-                            <?php endif; ?>
-                            <?php if ($canExport  OR $displays['isObservateur']) : ?>
-                                <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' =>  $fiche['id']], [], true); ?>"
-                                   target="_blank"
-                                ><span
-                                            data-toggle="tooltip" data-html="true"
-                                            title="Exporter en PDF la fiche de poste"
-                                            class="icon pdf"></span><span class="lettrine">P</span></a>
-                            <?php endif; ?>
-                            <?php if ($canEditer) : ?>
-                                <a
-                                    <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                                        href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $fiche['id']], ['query' => ['structure' =>  $fiche['structure_id']??null]], true); ?>"
-                                        target="_blank"
-                                ><span class="icon editer"
-                                       data-toggle="tooltip" data-html="true"
-                                       title="Modifier la fiche de poste"></span></a>
-                            <?php endif; ?>
-                            <?php if ($canHistoriser) : ?>
-                                <?php if ($fiche['histo_destruction'] === null) : ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
-                                            href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $fiche['id']], ["query" => $query], true); ?>"
-                                    ><span class="icon historiser"
-                                           data-toggle="tooltip" data-html="true"
-                                           title="Historiser la fiche de poste"></span></a>
-                                <?php else: ?>
-                                    <a
-                                        <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
-                                            href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $fiche['id']], ["query" => $query], true); ?>"
-                                    ><span class="icon restaurer"
-                                           data-toggle="tooltip" data-html="true"
-                                           title="Restaurer la fiche de poste"></span></a>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                            <?php if ($canDetruire) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
-                                    href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $fiche['id']], [], true); ?>"
-                                    class="ajax-modal" data-event="modification"
-                            ><span class="icon detruire"
+                        <!--  AFFICHAGE ------------------------------------------------------------------------------->
+                        <?php if ($canAfficher) : ?>
+                            <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $id], [], true); ?>"
+                                    target="_blank"
+                            ><span class="icon voir"
                                    data-toggle="tooltip" data-html="true"
-                                   title="Supprimer la fiche de poste"></span></a>
+                                   title="Afficher la fiche de poste"></span></a>
+                        <?php else : ?>
+                            <span class="icon voir nope" ></span>
                         <?php endif; ?>
+
+                        <!--  EXPORTATION ----------------------------------------------------------------------------->
+                        <?php if ($canExporter) : ?>
+                            <?php /** @see \Application\Controller\FichePosteController::exporterAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' =>  $id], [], true); ?>"
+                               target="_blank"
+                            ><span
+                                        data-toggle="tooltip" data-html="true"
+                                        title="Exporter en PDF la fiche de poste"
+                                        class="icon pdf"></span><span class="lettrine">P</span></a>
+                        <?php else : ?>
+                            <span class="icon pdf nope" ></span><span class="lettrine nope">P</span>
+                        <?php endif; ?>
+
+                        <!-- MODIFICATION ----------------------------------------------------------------------------->
+                        <?php if ($canModifier) : ?>
+                            <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $id], ['query' => ['structure' =>  $structureId??null]], true); ?>"
+                                    target="_blank"
+                            ><span class="icon editer"
+                                   data-toggle="tooltip" data-html="true"
+                                   title="Modifier la fiche de poste"></span></a>
+                        <?php else : ?>
+                            <span class="icon editer" style="color:lightgrey;"></span>
+                        <?php endif; ?>
+
+                        <!-- HISTORISER ------------------------------------------------------------------------------->
+                        <?php if ($canHistoriser) : ?>
+                            <?php if ($destruction === null) : ?>
+                                <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
+                                    <span class="icon historiser"
+                                       data-toggle="tooltip" data-html="true"
+                                       title="Historiser la fiche de poste"></span></a>
+                            <?php else : ?>
+                                <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
+                                            <span class="icon restaurer"
+                                                  data-toggle="tooltip" data-html="true"
+                                                  title="Restaurer la fiche de poste"></span></a>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <?php if ($destruction === null) : ?>
+                                <span class="icon historiser nope"></span>
+                            <?php else : ?>
+                                <span class="icon restaurer nope"></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <!-- DETRUIRE ------------------------------------------------------------------------------->
+                        <?php if ($canDetruire) : ?>
+                            <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $id], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                        ><span class="icon detruire"
+                               data-toggle="tooltip" data-html="true"
+                               title="Supprimer la fiche de poste"></span></a>
+                        <?php else : ?>
+                            <span class="icon detruire nope"></span>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
@@ -198,3 +270,7 @@ if ($retour)    $query['retour'] = $retour;
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<style>
+    span.nope { color: lightgrey; }
+</style>

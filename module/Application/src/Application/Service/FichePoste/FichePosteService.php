@@ -149,6 +149,7 @@ class FichePosteService {
             ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
+            ->addSelect('etat')->leftJoin('fiche.etat', 'etat')
             ;
         return $qb;
     }
@@ -215,9 +216,10 @@ class FichePosteService {
             ->andWhere('fiche.agent = :agent')
             ->setParameter('agent', $agent)
             ->orderBy('fiche.id', 'ASC');
-
+        /** @var FichePoste[] $result */
         $result = $qb->getQuery()->getResult();
-        return $result;
+
+       return $result;
     }
 
     /**
@@ -234,7 +236,10 @@ class FichePosteService {
             ->setParameter('agent', $agent)
             ->andWhere('fiche.histoCreation <= :date')
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
+            ->andWhere('etat.code = :OK AND etat.code = :SIGNEE')
             ->setParameter('date', $date)
+            ->setParameter('OK', FichePoste::ETAT_CODE_OK)
+            ->setParameter('SIGNEE', FichePoste::ETAT_CODE_SIGNEE)
             ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -305,7 +310,8 @@ select
     s.id as structure_id, s.libelle_court as structure,
     m.libelle_default as fiche_principale,
     e.id as etat,
-    e.code as etat_code
+    e.code as etat_code,
+   (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours
 from ficheposte f
 left join agent a on f.agent = a.c_individu
 left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
@@ -348,7 +354,8 @@ select
        s.id as structure_id, s.libelle_court as structure, 
        m.libelle_default as fiche_principale, f.libelle as fiche_libelle, f.histo_destruction,
        e.id as etat,
-       e.code as etat_code
+       e.code as etat_code,
+       (f.fin_validite) as en_cours
 from ficheposte f
 join agent a on f.agent = a.c_individu
 join agent_carriere_affectation aa on a.c_individu = aa.agent_id
@@ -360,7 +367,6 @@ left join unicaen_etat_etat e on e.id = f.etat_id
 where a.c_individu in (:agent_ids)
   and aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null
   and (fte.principale = true OR fte IS NULL)
-  and f.histo_destruction IS NULL
 EOS;
 
         $tmp = null;
@@ -375,7 +381,7 @@ EOS;
 
         $array = [];
         foreach ($tmp as $fiche) {
-            $array[$fiche['agent_id']] = $fiche;
+            $array[$fiche['agent_id']][] = $fiche;
         }
         return $array;
     }
@@ -648,7 +654,12 @@ EOS;
         return $result;
     }
 
-    public function isGererPar(FichePoste $fiche, User $user)
+    /**
+     * @param FichePoste $fiche
+     * @param User $user
+     * @return bool
+     */
+    public function isGererPar(FichePoste $fiche, User $user) : bool
     {
         $agent = $this->getAgentService()->getAgentByUser($user);
 
@@ -935,6 +946,7 @@ EOS;
                 $specifite = $fiche->getSpecificite()->clone_it();
                 $this->getSpecificitePosteService()->create($specifite);
                 $nouvelleFiche->setSpecificite($specifite);
+
             }
         }
 
@@ -969,5 +981,22 @@ EOS;
         $ficheposte->addValidation($validation);
         $this->update($ficheposte);
         return $validation;
+    }
+
+    /**
+     * @param Agent|null $agent
+     * @return FichePoste[]
+     */
+    public function getFichesPostesSigneesActives(?Agent $agent) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fiche.finValidite IS NULL')
+            ->andWhere('fiche.agent =  :agent')
+            ->andWhere('etat.code = :SIGNE')
+            ->setParameter('agent', $agent)
+            ->setParameter('SIGNE', FichePoste::ETAT_CODE_SIGNEE);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
     }
 }

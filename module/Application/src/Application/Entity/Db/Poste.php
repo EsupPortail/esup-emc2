@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Carriere\Entity\Db\Correspondance;
 use Metier\Entity\Db\Domaine;
+use Structure\Entity\Db\Structure;
 
 class Poste {
 

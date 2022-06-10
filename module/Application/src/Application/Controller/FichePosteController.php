@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
@@ -27,6 +28,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Notification\NotificationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
+use DateTime;
 use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -884,6 +886,7 @@ class FichePosteController extends AbstractActionController {
     public function validerAction() : ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+        $agent = $ficheposte->getAgent();
         $type = $this->params()->fromRoute('type');
 
         /** @var Request $request */
@@ -904,8 +907,20 @@ class FichePosteController extends AbstractActionController {
                     break;
 
                 case FichePoste::VALIDATION_AGENT :
+                    $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
                     $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_SIGNEE));
                     $this->getFichePosteService()->update($ficheposte);
+
+                    $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
+                    $newFiche->setAgent($ficheposte->getAgent());
+                    $newFiche->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION));
+                    $this->getFichePosteService()->update($newFiche);
+
+                    $date = new DateTime();
+                    foreach ($oldFiches as $fiche) {
+                        $fiche->setFinValidite($date);
+                        $this->getFichePosteService()->update($fiche);
+                    }
 
                     $this->getNotificationService()->triggerValidationAgentFichePoste($ficheposte, $validation);
                     break;
@@ -913,11 +928,33 @@ class FichePosteController extends AbstractActionController {
             exit();
         }
 
+        $titre = "Validation de la fiche de poste";
+        $texte = "Validation de la fiche de poste";
+        switch($type) {
+            case FichePoste::VALIDATION_RESPONSABLE :
+                $titre  = "Validation du responsable de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
+                $texte  = "Cette validation rendra visible la fiche de poste à l'agent (".$ficheposte->getAgent()->getDenomination().").<br/>";
+                $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (".$ficheposte->getAgent()->getDenomination().") afin qu'il puisse valider à son tour celle-ci.<br/>";
+                break;
+            case FichePoste::VALIDATION_AGENT :
+                $responsables = $this->getAgentService()->getResponsables($ficheposte->getAgent());
+                usort($responsables, function (Agent $a, Agent $b) {
+                    $aaa = $a->getNomUsuel() . " " . $a->getPrenom();
+                    $bbb = $b->getNomUsuel() . " " . $b->getPrenom();
+                    return $aaa > $bbb;
+                });
+                $responsables = array_map(function (Agent $a) { return $a->getDenomination();} , $responsables);
+                $responsables = implode(', ', $responsables);
+                $titre  = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
+                $texte  = "Cette validation finalise la fiche de poste de l'agent.<br/>";
+                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérachique·s direct·e·s de l'agent (".$responsables.") pour le·s informer de la validation de celle-ci.<br/>";
+                break;
+        }
         $vm = new ViewModel();
         $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
         $vm->setVariables([
-            'title' => "Validation de la fiche de poste",
-            'text' => "Validation de la fiche de poste",
+            'title' => $titre,
+            'text' => $texte,
             'action' => $this->url()->fromRoute('fiche-poste/valider', ["type" => $type, "fiche-poste" => $ficheposte->getId()], [], true),
             'refus' => false,
         ]);

@@ -274,7 +274,7 @@ class EntretienProfessionnelController extends AbstractActionController
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
         $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
-        $ficheposte = ($agent) ? $this->getFichePosteService()->getFichePosteActiveByAgent($agent) : null;
+        $ficheposte = $agent->getFichePosteBest();
         $fichesmetiers = [];
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
 

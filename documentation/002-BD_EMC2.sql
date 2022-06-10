@@ -1090,6 +1090,7 @@ create table ficheposte
     etat_id integer constraint ficheposte_unicaen_etat_etat_id_fk references unicaen_etat_etat on delete set null,
     rifseep integer,
     nbi integer,
+    fin_validite timestamp,
     histo_creation timestamp not null,
     histo_modification timestamp,
     histo_destruction timestamp,

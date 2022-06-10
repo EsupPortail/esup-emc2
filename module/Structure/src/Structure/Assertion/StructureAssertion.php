@@ -59,6 +59,7 @@ class StructureAssertion extends AbstractAssertion {
             case StructurePrivileges::STRUCTURE_DESCRIPTION:
             case StructurePrivileges::STRUCTURE_GESTIONNAIRE:
             case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
+            case StructurePrivileges::STRUCTURE_AGENT_FORCE:
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:

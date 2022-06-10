@@ -34,6 +34,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'poste' => false,
             'etat' => true,
             'fiche-principale' => true,
+            'en-cours' => true,
             'modification' => false,
             'action' => true,
             'isObservateur' => ($this->getUserService()->getConnectedRole()->getRoleId() === RoleConstant::OBSERVATEUR),

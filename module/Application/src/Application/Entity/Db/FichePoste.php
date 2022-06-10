@@ -58,6 +58,9 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** @var int */
     private $nbi;
 
+    /** @var DateTime|null  */
+    private $finValidite;
+
     /** @var ArrayCollection (FicheTypeExterne)*/
     private $fichesMetiers;
     /** @var ArrayCollection (FicheposteActiviteDescriptionRetiree) */
@@ -190,6 +193,34 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     {
         $this->nbi = $nbi;
         return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getFinValidite(): ?DateTime
+    {
+        return $this->finValidite;
+    }
+
+    /**
+     * @param DateTime|null $finValidite
+     * @return FichePoste
+     */
+    public function setFinValidite(?DateTime $finValidite): FichePoste
+    {
+        $this->finValidite = $finValidite;
+        return $this;
+    }
+
+    /**
+     * @param DateTime|null $date
+     * @return bool
+     */
+    public function isEnCours(?DateTime $date = null) : bool
+    {
+        if ($date === null) $date = new DateTime();
+        return ($this->finValidite === null OR $date < $this->getFinValidite());
     }
 
     /**

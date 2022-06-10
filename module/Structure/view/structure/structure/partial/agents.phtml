@@ -3,7 +3,6 @@
 /**
  * @var Structure $structure
  * @var Agent[] $agents
- * @var FichePoste[] $fichespostes
  * @var array $options
  */
 
@@ -11,17 +10,12 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\FichePostePrivileges;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
-$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
-$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
-$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
-$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
-$canRetirerAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+$canAjouterAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AGENT_FORCE);
+$canRetirerAgentForce       = $canAjouterAgentForce;
 
 $canComplement              =
     $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT))
@@ -33,20 +27,13 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 
 <table class="datatable table table-condensed" style="font-size: 14px;">
     <thead>
-    <tr>
-        <th style="width:17%; min-width: 17%;">Dénomination</th>
-        <th style="width:20%; min-width: 20%;">Structures fines</th>
-        <th style="width:22%; min-width: 22%;">
-            Supérieur&middot;e hiérarchique direct&middot;e
-<!--            <span class="icon information" data-toggle="tooltip" data-html="true" title="Responsable directe de l'agent">-->
-        </th>
-        <th style="width:22%; min-width: 22%;">
-            Autorité hiérarchique
-<!--            <span class="icon information"  data-toggle="tooltip" data-html="true"title="Responsable de la structure de l'agent">-->
-        </th>
-<!--        <th>Grade & statuts</th>-->
-        <th style="width:8rem; min-width: 8rem;"> Action </th>
-    </tr>
+        <tr>
+            <th> Dénomination</th>
+            <th> Structures fines</th>
+            <th> Supérieur&middot;e hiérarchique direct&middot;e </th>
+            <th> Autorité hiérarchique </th>
+            <th style="width:5rem; min-width: 5rem;"> Action </th>
+        </tr>
     </thead>
     <tbody>
     <?php foreach ($agents as $agent) :?>
@@ -61,6 +48,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                         href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                         target="_blank"
+                        title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>" data-toggle="tooltip" data-html="true"
                     >
                         <?php echo $agent->getDenomination(); ?></a>
                 <?php else : ?>
@@ -139,50 +127,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     </a>
                 <?php endif; ?>
             </td>
-<!--            <td>-->
-<!--                --><?php ///** @var AgentGrade $grade */ ?>
-<!--                --><?php //foreach ($agent->getGradesActifs() as $grade) : ?>
-<!--                    BAP --><?php //echo ($grade->getBap())?$grade->getBap()->getCategorie():"???"; ?><!-- --->
-<!--                        --><?php //echo ($grade->getGrade())?$grade->getGrade()->getLibelleCourt():"N.C."; ?><!-- <br/>-->
-<!--                --><?php //endforeach; ?>
-<!---->
-<!--                --><?php //$temoins = []; ?>
-<!--                --><?php //foreach ($agent->getStatutsActifs() as $statut) : ?>
-<!--                    --><?php //if ($statut->isAdministratif()) $temoins['Administratif'] = true ; ?>
-<!--                    --><?php //if ($statut->isTitulaire()) $temoins['Titulaire'] = true; ?>
-<!--                    --><?php //if ($statut->isCdi()) $temoins['C.D.I.'] = true; ?>
-<!--                    --><?php //if ($statut->isCdd()) $temoins['C.D.D.'] = true; ?>
-<!--                --><?php //endforeach; ?>
-<!--                <ul>-->
-<!--                    --><?php //foreach ($temoins as $temoin => $valeur) : ?>
-<!--                        --><?php //if ($valeur === true) : ?>
-<!--                            <li style="margin-left:-2rem;"> --><?php //echo $temoin; ?><!--</li>-->
-<!--                        --><?php //endif; ?>
-<!--                    --><?php //endforeach; ?>
-<!--                </ul>-->
-<!--            </td>-->
-<!--            <td>-->
-                <?php $fiche = $fichespostes[$agent->getId()]; ?>
-<!--                --><?php //if ($fiche !== null) : ?>
-<!--                --><?php //if ($fiche["fiche_principale"] !== null) : ?>
-<!--                    <span-->
-<!--                        class="icon ok" style="color:darkgreen;"-->
-<!--                        data-toggle="tooltip" data-html="true"-->
-<!--                        title="--><?php //echo $fiche["fiche_principale"]; ?><!--"-->
-<!--                    >-->
-<!---->
-<!--                                        </span>-->
-<!--                --><?php //else: ?>
-<!--                <span-->
-<!--                    class="icon question" style="color:orangered;"-->
-<!--                    data-toggle="tooltip" data-html="true"-->
-<!--                    title="Fiche incomplète"-->
-<!--                >-->
-<!--                                    --><?php //endif; ?>
-<!--                    --><?php //else : ?>
-<!--                        <span class="icon ko" style="color:darkred;"></span>-->
-<!--                    --><?php //endif; ?>
-<!--            </td>-->
             <td>
                 <?php if ($canVoirAgent) : ?>
                     <a
@@ -191,47 +135,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                             target="_blank"
                     >
                         <span class="icon personnel" data-toggle="tooltip" data-html="true" title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>"></span></a>
-                <?php endif; ?>
-                <?php if($fiche === null) : ?>
-                    <?php if ($canAjouterFichePoste) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::ajouterAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
-                            target="_blank"
-                        ><span class="icon ajouter"
-                               data-toggle="tooltip" data-html="true"
-                               title="Ajouter la fiche de poste"></span></a>
-                    <?php endif; ?>
-                    <?php if ($canAjouterFichePoste) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="duplication"
-                        ><span class="icon cloner"
-                               data-toggle="tooltip" data-html="true"
-                               title="Dupliquer une fiche existante"></span></a>
-                    <?php endif; ?>
-                <?php else  :?>
-                    <?php if ($canVoirFichePoste) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fiche['id']], [], true); ?>"
-                            target="_blank"
-                        ><span class="icon fiche-poste"
-                               data-toggle="tooltip" data-html="true"
-                               title="Afficher la fiche de poste"></span></a>
-                    <?php endif; ?>
-
-                    <?php if ($canModifierFichePoste) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                            href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $fiche['id']], [], true); ?>"
-                            target="_blank"
-                        ><span class="icon editer"
-                               data-toggle="tooltip" data-html="true"
-                               title="Modifier la fiche de poste"></span></a>
-                    <?php endif; ?>
-
                 <?php endif; ?>
 
                 <?php if ($isForce AND $canRetirerAgentForce) : ?>
