@@ -63,12 +63,15 @@ $date = new DateTime();
                     <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank">
                         <span class="icon ajouter" data-toggle="tooltip" data-html="true" title="Ajouter la fiche de poste"></span></a>
+                <?php else : ?>
+                    <span class="icon ajouter nope"></span>
+                <?php endif; ?>
+                <?php if ($structure AND $canAjouterFichePoste) : ?>
                     <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="duplication" >
                         <span class="icon cloner" data-toggle="tooltip" data-html="true" title="Dupliquer une fiche existante"></span></a>
                 <?php else : ?>
-                    <span class="icon ajouter nope"></span>
                     <span class="icon cloner nope"></span>
                 <?php endif; ?>
 
