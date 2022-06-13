@@ -510,7 +510,7 @@ EOS;
             return (
                 $a->estNonHistorise() AND
                 $a->isComplete() AND
-                $a->getEtat()->getCode() === FichePoste::ETAT_CODE_OK AND
+                $a->getEtat()->getCode() !== FichePoste::ETAT_CODE_MASQUEE AND
                 ($a->getAgent()->getNiveauEnveloppe() !== null AND $agent->getNiveauEnveloppe() !== null AND NiveauEnveloppe::isCompatible($a->getAgent()->getNiveauEnveloppe(), $agent->getNiveauEnveloppe())));
         });
         return $fiches;
