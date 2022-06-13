@@ -4,20 +4,7 @@
  * @see \Structure\Controller\StructureController::afficherAction()
  * @var Agent[] $agents
  * @var Structure $structure
- * @var FichePoste[] $fichesCompletes
- * @var FichePoste[] $fichesIncompletes
  */
-
-//usort($fichesCompletes,
-//    function ( $a,  $b) {
-//    $denA = $a['nom_usage'] . " ".$a['prenom'];
-//    $denB = $b['nom_usage'] . " ".$b['prenom'];
-//    return $denA > $denB;});
-//usort($fichesIncompletes,
-//    function ( $a,  $b) {
-//        $denA = $a['nom_usage'] . " ".$a['prenom'];
-//        $denB = $b['nom_usage'] . " ".$b['prenom'];
-//        return $denA > $denB;});
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
@@ -34,6 +21,8 @@ $canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResource
 $date = new DateTime();
 ?>
 
+<h2> Agents et fiches de poste </h2>
+
 <table class="table table-condensed">
     <thead>
     <tr>
@@ -48,8 +37,8 @@ $date = new DateTime();
                 <strong><?php echo $agent->getDenomination(); ?></strong> <br/>
                 <?php
                     $affectation = $agent->getAffectationPrincipale();
-                    $structure = ($affectation !== null)?$affectation->getStructure():null;
-                    echo ($structure !== null)?$structure->getLibelleCourt():"Aucune affectation principale";
+                    $structure_ = ($affectation !== null)?$affectation->getStructure():null;
+                    echo ($structure_ !== null)?$structure_->getLibelleCourt():"Aucune affectation principale";
                 ?>
             </td>
             <td>
@@ -79,7 +68,7 @@ $date = new DateTime();
                 <table class="fichespostes">
                 <?php foreach ($fichespostes[$agent->getId()] as $ficheposte) : ?>
                     <tr class="
-                        <?php if ($fichespostes['destruction']) echo " historise " ?>
+                        <?php if ($ficheposte['histo_destruction']) echo " historise " ?>
                     ">
                     <?php //var_dump($ficheposte); ?>
 <!--                    <td class="structure">--><?php //echo $ficheposte['structure']; ?><!-- </td>-->
@@ -93,7 +82,7 @@ $date = new DateTime();
                     <td class="encours">
                         <?php $fin = ($ficheposte["en_cours"] !== null)?DateTime::createFromFormat('Y-m-d H:i:s', $ficheposte["en_cours"]):null; ?>
                         <?php if (($fin === null OR $fin >= $date) AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon ok' style='color:darkgreen;'></span>"; ?>
-                        <?php if ($fin !== null AND $fin < $date AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon ko' style='color:darkred;' title='Fin de validité au ".$fin->format('d/m/Y')."'></span>"; ?>
+                        <?php if ($fin !== null AND $fin < $date AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;'>".$fin->format('d/m/Y')."</span>"; ?>
                         <?php if ($fin === null AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;'></span>"; ?>
                     </td>
                     <td class="etat">
@@ -125,13 +114,13 @@ $date = new DateTime();
                             <span class="icon editer nope"></span>
                         <?php endif; ?>
                         <?php if ($canHistoriserFichePoste AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE) : ?>
-                            <?php if ($fichespostes['destruction']) : ?>
+                            <?php if ($ficheposte['histo_destruction']) : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>" >
+                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
                                     <span class="icon restaurer" data-toggle="tooltip" data-html="true" title="Restaurer la fiche de poste"></span></a>
                             <?php else : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>" >
+                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
                                     <span class="icon historiser" data-toggle="tooltip" data-html="true" title="Historiser la fiche de poste"></span></a>
                             <?php endif; ?>
                         <?php else : ?>

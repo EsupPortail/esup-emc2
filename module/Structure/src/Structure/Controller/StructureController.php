@@ -2,6 +2,7 @@
 
 namespace Structure\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
@@ -95,43 +96,9 @@ class StructureController extends AbstractActionController {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgents = array_merge($agents, $agentsForces);
 
-        /** Récupération des fiches de postes liées aux structures */
-//        $fichesPostes = $this->getFichePosteService()->getFichesPostesByStructures($structures);
-        $fichesCompletes = []; $fichesIncompletes = [];
-//        var_dump($fichesPostes);
-//        foreach ($fichesPostes as $agentId => $fiches) {
-//            $best = $fiches[0];
-//            var_dump($fiches);
-//            foreach ($fiches as $fiche) {
-//                var_dump($fiche);
-//                if ($fiche['etat'] === FichePoste::ETAT_CODE_SIGNEE) {
-//                    $best = $fiche;
-//                    break;
-//                }
-//            }
-//            if ($best['agent_id'] !== null AND $best['fiche_principale']) {
-//                $fichesCompletes[] = $best;
-//            } else {
-//                $fichesIncompletes[] = $best;
-//            }
-//        }
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
-
-        $ficheBestByAgent = [];
-        foreach ($allAgents as $agent) {
-            $ficheBestByAgent[$agent->getId()] = $agent->getFichePosteBest();
-            if ($ficheBestByAgent[$agent->getId()] !== null) {
-                if ($ficheBestByAgent[$agent->getId()]->isComplete()) {
-                    $fichesCompletes[] = $ficheBestByAgent[$agent->getId()];
-                } else {
-                    $fichesIncompletes[] = $ficheBestByAgent[$agent->getId()];
-                }
-            } else {
-                $agentsSansFiche[] = $agent;
-            }
-        }
-
         $postes = $this->getPosteService()->getPostesByStructures($structures);
+        usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
@@ -139,6 +106,8 @@ class StructureController extends AbstractActionController {
         $agentsLast = $this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut());
         $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
+
+
 
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         $entretiens = [];
@@ -157,8 +126,6 @@ class StructureController extends AbstractActionController {
 
             'missions' => $missionsSpecifiques,
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
-            'fichesCompletes' => $fichesCompletes,
-            'fichesIncompletes' => $fichesIncompletes,
             'fichesRecrutements' => $fichesRecrutements,
             'profils' => $profils,
             'inscriptions' => $inscriptions,
