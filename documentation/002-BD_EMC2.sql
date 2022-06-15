@@ -46,22 +46,24 @@ create table carriere_categorie
 );
 create unique index categorie_code_uindex on carriere_categorie (code);
 create unique index categorie_id_uindex on carriere_categorie (id);
-
 create table carriere_corps
 (
-    id integer not null constraint corps_pk primary key,
-    lib_court varchar(20),
-    lib_long varchar(200),
-    code varchar(10) not null,
-    categorie varchar(10),
-    histo timestamp,
+    id         integer not null constraint corps_pk  primary key,
+    lib_court  varchar(20),
+    lib_long   varchar(200),
+    code       varchar(10)                                                        not null,
+    categorie  varchar(10),
+    histo      timestamp,
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
     deleted_on timestamp(0),
-    niveau integer,
-    niveau_id integer constraint corps_niveau_definition_id_fk references carriere_niveau on delete set null
+    niveau     integer,
+    niveau_id  integer  constraint corps_niveau_definition_id_fk references carriere_niveau on delete set null,
+    niveaux_id integer constraint carriere_corps_carriere_niveau_enveloppe_id_fk references carriere_niveau_enveloppe on delete set null
 );
 create unique index corps_code_uindex on carriere_corps (code);
+
+
 
 create table carriere_correspondance
 (

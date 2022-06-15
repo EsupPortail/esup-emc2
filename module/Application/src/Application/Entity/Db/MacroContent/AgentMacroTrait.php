@@ -264,7 +264,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $fiche = $agent->getFichePosteActive();
+        $fiche = $agent->getFichePosteBest();
 
         if ($fiche === null) return "Aucune fiche de poste EMC2";
         $metier  = $fiche->getLibelleMetierPrincipal();
@@ -278,7 +278,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $fiche = $agent->getFichePosteActive();
+        $fiche = $agent->getFichePosteBest();
 
         if ($fiche === null) return 'Aucune fiche de poste EMC2';
         if ($fiche->getFicheTypeExternePrincipale() === null) return 'Aucune fiche de métier EMC2 principale';
@@ -298,7 +298,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $fiche = $agent->getFichePosteActive();
+        $fiche = $agent->getFichePosteBest();
 
         if ($fiche === null) return "Aucune fiche de poste EMC2";
         $metier  = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getReferencesAffichage();
