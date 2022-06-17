@@ -300,7 +300,9 @@ trait AgentMacroTrait
         $agent = $this;
         $fiche = $agent->getFichePosteBest();
 
+        //todo /!\ overlap avec les champs manuels du CREP
         if ($fiche === null) return "Aucune fiche de poste EMC2";
+        if ($fiche->getFicheTypeExternePrincipale() === null) return "";
         $metier  = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getReferencesAffichage();
 
         return $metier;
