@@ -242,7 +242,7 @@ $depasse = ($date === null or $date < $now);
                 </div>
             </div>
             <div class="pull-right">
-                <?php if ($validationAgent === null) : ?>
+                <?php if ($canValiderDrh AND $validationAgent === null) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationHierarchie->getId()], [], true); ?>"
