@@ -354,3 +354,7 @@ span.icon.actions:before {
 span.icon.hourglass:before {
     content: "\f254";
 }
+
+span.icon.obligatoire:before {
+    content: "\f069";
+}

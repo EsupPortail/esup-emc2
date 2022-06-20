@@ -44,20 +44,22 @@ class EntretienProfessionnelForm extends Form {
     public function init()
     {
         //Responsable
-        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel * :"]);
+        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $responsable
             ->setAutocompleteSource($this->urlResponsable)
             ->setSelectionRequired(true)
+            ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'responsable',
                 'placeholder' => "Nom du responsable de l'entretien professionnel ...",
             ]);
         $this->add($responsable);
         //Agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
+            ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'agent',
                 'placeholder' => "Nom de l'agent ...",
@@ -68,10 +70,11 @@ class EntretienProfessionnelForm extends Form {
             'name' => 'campagne',
             'type' => Select::class,
             'options' => [
-                'label' => 'Campagne * : ',
+                'label' => "Campagne  <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner une campagne ... ",
                 'value_options' => $this->getCampagneService()->getCampagnesAsOptions(),
             ],
@@ -87,7 +90,8 @@ class EntretienProfessionnelForm extends Form {
             'type' => Date::class,
             'name' => 'date_entretien',
             'options' => [
-                'label' => "Date de l'entretien* :",
+                'label' => "Date de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
 //                'format' => 'd/m/Y',
             ],
             'attributes' => [
@@ -100,7 +104,8 @@ class EntretienProfessionnelForm extends Form {
             'type' => Time::class,
             'name' => 'heure_entretien',
             'options' => [
-                'label' => "Heure de l'entretien* :",
+                'label' => "Heure de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'format' => 'H:i',
             ],
             'attributes' => [
@@ -113,7 +118,8 @@ class EntretienProfessionnelForm extends Form {
             'type' => Text::class,
             'name' => 'lieu_entretien',
             'options' => [
-                'label' => "Lieu de l'entretien * :",
+                'label' => "Lieu de l'entretien <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'lieu_entretien',
