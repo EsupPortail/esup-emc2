@@ -116,6 +116,11 @@ class StructureController extends AbstractActionController {
         $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
         $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
+        $fichespostes_pdf = [];
+        foreach ($allAgents as $agent) {
+            $fichespostes_pdf[$agent->getId()] = $agent->getFichiersByCode("FICHE_POSTE");
+        }
+
         return new ViewModel([
             'selecteur' => $selecteur,
 
@@ -126,6 +131,7 @@ class StructureController extends AbstractActionController {
 
             'missions' => $missionsSpecifiques,
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
+            'fichespostes_pdf' => $fichespostes_pdf,
             'fichesRecrutements' => $fichesRecrutements,
             'profils' => $profils,
             'inscriptions' => $inscriptions,

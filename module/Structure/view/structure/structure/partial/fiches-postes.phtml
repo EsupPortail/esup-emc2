@@ -4,11 +4,14 @@
  * @see \Structure\Controller\StructureController::afficherAction()
  * @var Agent[] $agents
  * @var Structure $structure
+ * @var array $fichespostes_pdf
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Fichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
@@ -64,7 +67,50 @@ $date = new DateTime();
                     <span class="icon cloner nope"></span>
                 <?php endif; ?>
 
-                <?php if (!empty($fichespostes[$agent->getId()])) : ?>
+                <?php if (!empty($fichespostes_pdf[$agent->getId()]) ) : ?>
+                <?php
+                    $canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
+                    $canDetruireFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+                ?>
+                <table class="fichespostes">
+                    <?php /** @var Fichier $fichier */ ?>
+                    <?php foreach ($fichespostes_pdf[$agent->getId()] as $fichier) : ?>
+                    <tr class="
+                        <?php if ($fichier->estHistorise()) echo " historise " ?>
+                    ">
+                        <td class="libelle"> <?php echo $fichier->getNomOriginal(); ?> </td>
+                        <td class="encours"></td>
+                        <td class="etat"><span class="text-danger">PDF</span></td>
+                        <td class="action">
+                            <span class="icon voir nope"></span>
+                            <?php if ($canVoirFichier) : ?>
+                                <a
+                                    <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
+                                        href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+                                    <span class="icon pdf" title="voir le fichier"></span>
+                                </a>
+                            <?php else : ?>
+                                <span class="icon pdf nope"></span>
+                            <?php endif; ?>
+                            <span class="icon editer nope"></span>
+                            <span class="icon historiser nope"></span>
+                            <?php if ($canDetruireFichier) : ?>
+                                <a
+                                    <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
+                                        href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], true)]], true); ?>"
+                                >
+                                    <span class="icon detruire" title="supprimer le fichier"></span></a>
+                            <?php else : ?>
+                            ..
+                            <?php endif; ?>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </table>
+                <?php endif; ?>
+
+                <?php if (!empty($fichespostes[$agent->getId()]) ) : ?>
                 <table class="fichespostes">
                 <?php foreach ($fichespostes[$agent->getId()] as $ficheposte) : ?>
                     <tr class="
@@ -72,7 +118,7 @@ $date = new DateTime();
                     ">
                     <?php //var_dump($ficheposte); ?>
 <!--                    <td class="structure">--><?php //echo $ficheposte['structure']; ?><!-- </td>-->
-                    <td class="libelle">
+                    <td >
                         [<?php echo $ficheposte['structure']; ?>]
                         <?php echo ($ficheposte['fiche_principale'])?:"<span style='color:darkred;'>Aucun métier principal</span>"; ?>
                         <?php if ($ficheposte['fiche_libelle']) : ?>

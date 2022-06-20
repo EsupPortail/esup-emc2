@@ -743,4 +743,14 @@ class Agent implements
         }
         return $best;
     }
+
+    public function getFichiersByCode(string $code) : array
+    {
+        $result = [];
+        /** @var Fichier $fichier */
+        foreach ($this->getFichiers() as $fichier) {
+            if ($fichier->getNature()->getCode() === $code) $result[] = $fichier;
+        }
+        return $result;
+    }
 }
