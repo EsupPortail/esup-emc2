@@ -271,6 +271,7 @@ trait AgentMacroTrait
         $complement = $fiche->getLibelle();
 
         if ($complement) return $complement . " rattaché à " . $metier;
+        if ($metier === null) return "Aucun metier principal dans la fiche de poste";
         return $metier;
     }
 
