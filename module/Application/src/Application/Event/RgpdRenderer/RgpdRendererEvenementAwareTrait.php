@@ -1,8 +1,6 @@
 <?php
 
-namespace Application\Service\RgpdRenderer;
-
-use Application\Event\RgpdRenderer\RgpdRendererEvenement;
+namespace Application\Event\RgpdRenderer;
 
 trait RgpdRendererEvenementAwareTrait {
 

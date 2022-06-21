@@ -1,5 +1,7 @@
 <?php
 
+use Application\Event\RgpdRenderer\RgpdRendererEvenement;
+use Application\Provider\EvenementProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
 use Formation\Provider\EvenementProvider as FormationEvenementProvider;
@@ -19,6 +21,7 @@ return [
             Type::COLLECTION => EvenementCollectionService::class,
 
             ApplicationEvenementProvider::SYNCHRO_OCTOPUS                                               => SynchroOctopusService::class,
+            EvenementProvider::RGPD_UNICAEN_RENDERER                                                    => RgpdRendererEvenement::class,
 
             FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE                                  => NotificationFormationsOuvertesService::class,
             FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT                                    => RappelAgentAvantFormationService::class,

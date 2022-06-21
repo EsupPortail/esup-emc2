@@ -1,9 +1,7 @@
 <?php
 
-namespace Application\Service\RgpdRenderer;
+namespace Application\Event\RgpdRenderer;
 
-use Application\Event\RgpdRenderer\RgpdRendererEvenement;
-use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenDbImport\Service\SynchroService;
 use UnicaenEvenement\Service\Type\TypeService;
@@ -21,7 +19,7 @@ class RgpdRendererEvenementFactory {
          * @var RenduService $renduService
          * @var TypeService $typeService
          */
-        $renduService = $container->get(SynchroService::class);
+        $renduService = $container->get(RenduService::class);
         $typeService = $container->get(TypeService::class);
 
         $service = new RgpdRendererEvenement();

@@ -4,6 +4,7 @@ namespace Application;
 
 use Application\Controller\IndexController;
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
+use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
@@ -22,7 +23,6 @@ use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Notification\NotificationService;
 use Application\Service\Notification\NotificationServiceFactory;
-use Application\Service\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Service\Url\UrlService;
 use Application\Service\Url\UrlServiceFactory;
 use Application\View\Helper\ActionIconViewHelper;
