@@ -525,7 +525,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         /** @var Agent $responsble */
         $responsble = $this->getResponsable();
-        $fiche = $responsble->getFichePosteActive();
+        $fiche = $responsble->getFichePosteBest();
 
         if ($fiche === null) return "Aucune fiche de poste EMC2";
         $metier  = $fiche->getLibelleMetierPrincipal();
