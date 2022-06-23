@@ -421,7 +421,7 @@ class StructureController extends AbstractActionController {
             'fichespostes' => $fichespostes,
             'url' => $this->url()->fromRoute('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true),
         ]);
-        $vm->setTemplate('application/structure/dupliquer-fiche-poste');
+        $vm->setTemplate('structure/structure/dupliquer-fiche-poste');
         return $vm;
     }
 

@@ -432,7 +432,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** PREDICATS *****************************************************************************************************/
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return bool
      */
     public function isAgent(?Agent $agent) : bool
@@ -441,7 +441,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /**
-     * @param Agent $agent
+     * @param Agent|null $agent
      * @return bool
      */
     public function isReponsable(?Agent $agent) : bool

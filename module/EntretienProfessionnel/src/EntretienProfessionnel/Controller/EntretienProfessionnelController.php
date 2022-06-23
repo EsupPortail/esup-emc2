@@ -493,12 +493,12 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function actionAction() : ViewModel
     {
-        var_dump((new DateTime())->format('i:s.u'));
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
 
-        return new ViewModel([
+        $vm =  new ViewModel([
             'entretien' => $entretien,
         ]);
+        return $vm;
     }
 
 }
