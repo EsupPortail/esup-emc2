@@ -42,7 +42,7 @@ if ($retour)    $query['retour'] = $retour;
         <?php if ($displays['fiche-principale']) : ?>
             <th> Fiche principale </th>
         <?php endif; ?>
-        <?php if ($displays['en-cours']) : ?>
+        <?php if ($displays['en-cours'] AND $displays['validite']) : ?>
             <th style="min-width: 8rem;width: 8rem;"> Validité </th>
         <?php endif; ?>
         <?php if ($displays['modification']) : ?>
@@ -100,7 +100,7 @@ if ($retour)    $query['retour'] = $retour;
         <?php if ($etat !== FichePoste::ETAT_CODE_MASQUEE AND $canAfficher) : ?>
             <tr class="
                 <?php if ($destruction !== null) echo ' historise '; ?>
-                <?php if ($isEnCours === false) echo ' termine '; ?>
+                <?php if ($isEnCours === false AND $displays['validite']) echo ' termine '; ?>
             ">
                 <?php if ($displays['id']) : ?>
                     <td>
@@ -163,7 +163,7 @@ if ($retour)    $query['retour'] = $retour;
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
-                <?php if ($displays['en-cours']) : ?>
+                <?php if ($displays['en-cours'] AND $displays['validite']) : ?>
                     <td style="text-align: center;">
                         <?php if ($etat === FichePoste::ETAT_CODE_SIGNEE) : ?>
                             <?php if ($isEnCours) : ?>
@@ -188,7 +188,7 @@ if ($retour)    $query['retour'] = $retour;
                     </td>
                 <?php endif; ?>
 
-                <?php if ($displays['action']) : ?>
+                <?php if ($displays['etat']) : ?>
                     <td>
                             <?php echo $this->etatbadge($etat); ?>
                     </td>

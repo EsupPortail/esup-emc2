@@ -787,7 +787,7 @@ class FichePosteController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($expertise !== null) {
-            $vm->setTemplate('unicaen-utilisateur/default/confirmation');
+            $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de l'expertise " . $expertise->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

@@ -156,7 +156,7 @@ class FicheProfilController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($ficheprofil !== null) {
-            $vm->setTemplate('unicaen-utilisateur/default/confirmation');
+            $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du profil de recrutement",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

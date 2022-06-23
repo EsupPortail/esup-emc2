@@ -24,6 +24,7 @@ use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -33,6 +34,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class FichePosteService {
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -950,6 +952,8 @@ EOS;
             }
         }
 
+        $etat = $this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION);
+        $nouvelleFiche->setEtat($etat);
         $nouvelleFiche = $this->update($nouvelleFiche);
 
 

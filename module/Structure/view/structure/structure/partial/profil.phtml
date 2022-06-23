@@ -32,7 +32,7 @@ ksort($fichesRecrutements)
 <div class="row">
     <div class="col-md-6">
         <h2>
-            Fiches de postes pour profils de recrutement
+            Fiches de postes pour recrutement
             <span class="badge">
                     <?php echo count($fichesRecrutements); ?>
             </span>
@@ -56,7 +56,7 @@ ksort($fichesRecrutements)
     </div>
 </div>
 
-<?php echo $this->fichesPostesAsArray($fichesRecrutements, $structure, ['displays' => ['id' => true, 'structure' => false]]); ?>
+<?php echo $this->fichesPostesAsArray($fichesRecrutements, $structure, ['displays' => ['id' => true, 'structure' => false, 'validite' => false, 'etat' => false]]); ?>
 
 <div class="row">
     <div class="col-md-6">

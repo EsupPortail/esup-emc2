@@ -7,6 +7,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
@@ -17,6 +18,7 @@ class FichePosteServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
+         * @var EtatService $etatService
          * @var SpecificitePosteService $specificitePosteService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
@@ -24,6 +26,7 @@ class FichePosteServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
+        $etatService = $container->get(EtatService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -33,6 +36,7 @@ class FichePosteServiceFactory {
         $service = new FichePosteService();
         $service->setEntityManager($entityManager);
         $service->setAgentService($agentService);
+        $service->setEtatService($etatService);
         $service->setSpecificitePosteService($specificitePosteService);
         $service->setStructureService($structureService);
         $service->setValidationInstanceService($validationInstanceService);

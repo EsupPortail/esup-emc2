@@ -33,6 +33,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'structure' => true,
             'poste' => false,
             'etat' => true,
+            'validite' => true,
             'fiche-principale' => true,
             'en-cours' => true,
             'modification' => false,
@@ -42,6 +43,8 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
         if (isset($options['displays']) AND isset($options['displays']['id'])) $displays['id'] = ($options['displays']['id'] === true);
         if (isset($options['displays']) AND isset($options['displays']['agent'])) $displays['agent'] = ($options['displays']['agent'] !== false);
         if (isset($options['displays']) AND isset($options['displays']['structure'])) $displays['structure'] = ($options['displays']['structure'] !== false);
+        if (isset($options['displays']) AND isset($options['displays']['etat'])) $displays['etat'] = ($options['displays']['etat'] !== false);
+        if (isset($options['displays']) AND isset($options['displays']['validite'])) $displays['validite'] = ($options['displays']['validite'] !== false);
 
         return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'structure' => $structure, 'displays' => $displays, 'options' => $options]);
     }

@@ -66,7 +66,15 @@ $date = new DateTime();
                 <?php else : ?>
                     <span class="icon cloner nope"></span>
                 <?php endif; ?>
-
+                <?php $canAjouterPdf      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER); ?>
+                <?php if ($canAjouterPdf) : ?>
+                    <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                       title="Ajouter une fiche PDF <br/> <strong><span class='text-danger'><span class='icon attention'></span>Il est préférable de modéliser la fiche de poste dans EMC2</span></strong>" data-toggle="tooltip" data-html="true">
+                    <span class="icon pdf"></span><span class="lettrine">+</span></a>
+                <?php else : ?>
+                    <span class="icon pdf nope"></span><span class="lettrine nope">+</span>
+                <?php endif; ?>
                 <?php if (!empty($fichespostes_pdf[$agent->getId()]) ) : ?>
                 <?php
                     $canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
@@ -127,9 +135,9 @@ $date = new DateTime();
                     </td>
                     <td class="encours">
                         <?php $fin = ($ficheposte["en_cours"] !== null)?DateTime::createFromFormat('Y-m-d H:i:s', $ficheposte["en_cours"]):null; ?>
-                        <?php if (($fin === null OR $fin >= $date) AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon ok' style='color:darkgreen;'></span>"; ?>
-                        <?php if ($fin !== null AND $fin < $date AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;'>".$fin->format('d/m/Y')."</span>"; ?>
-                        <?php if ($fin === null AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;'></span>"; ?>
+                        <?php if (($fin === null OR $fin >= $date) AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon ok' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
+                        <?php if ($fin !== null AND $fin < $date AND $ficheposte['etat_code'] === FichePoste::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
+                        <?php if ($fin === null AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
                     </td>
                     <td class="etat">
                         <?php echo $this->etatbadge($ficheposte['etat_code']); ?>

@@ -15,84 +15,88 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Validations associées à la fiche de poste</h2>
+        <?php if ($fiche->getAgent() !== null) : ?>
+            <h2>Validations associées à la fiche de poste</h2>
 
-        <dl>
-            <dt> Validation du responsable </dt>
-            <dd>
-                <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_RESPONSABLE); ?>
+            <dl>
+                <dt> Validation du responsable </dt>
+                <dd>
+                    <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_RESPONSABLE); ?>
+                    <?php if ($validationResponsable === null) : ?>
+                        Aucune validation
+                    <?php else : ?>
+                        Validée
+                        par <?php echo $validationResponsable->getHistoCreateur()->getDisplayName(); ?>
+                        le <?php echo $validationResponsable->getHistoCreation()->format('d/m/Y H:i'); ?>.
+                    <?php endif; ?>
+                </dd>
+                <dt> Validation de l'agent </dt>
+                <dd>
+                    <?php $validationAgent = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_AGENT); ?>
+                    <?php if ($validationAgent === null) : ?>
+                        Aucune validation
+                    <?php else : ?>
+                        Validée
+                        par <?php echo $validationAgent->getHistoCreateur()->getDisplayName(); ?>
+                        le <?php echo $validationAgent->getHistoCreation()->format('d/m/Y H:i'); ?>.
+                    <?php endif; ?>
+                </dd>
+            </dl>
+
+            <?php if ($canFichePosteValiderResponsable AND $validationAgent === null) :?>
                 <?php if ($validationResponsable === null) : ?>
-                    Aucune validation
+                    <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_RESPONSABLE], [], true); ?>"
+                       class="btn btn-success action ajax-modal" data-event="modification">
+                        <span class="icon ok"></span>
+                        Valider la fiche de poste (responsable)
+                    </a>
                 <?php else : ?>
-                    Validée
-                    par <?php echo $validationResponsable->getHistoCreateur()->getDisplayName(); ?>
-                    le <?php echo $validationResponsable->getHistoCreation()->format('d/m/Y H:i'); ?>.
+                    <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
+                       class="btn btn-danger action">
+                        <span class="icon ko"></span>
+                        Révoquer la validation (responsable)
+                    </a>
                 <?php endif; ?>
-            </dd>
-            <dt> Validation de l'agent </dt>
-            <dd>
-                <?php $validationAgent = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_AGENT); ?>
+            <?php endif ;?>
+            <?php if ($canFichePosteValiderAgent AND $validationResponsable !== null) :?>
                 <?php if ($validationAgent === null) : ?>
-                    Aucune validation
+                    <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_AGENT], [], true); ?>"
+                       class="btn btn-success action ajax-modal" data-event="modification">
+                        <span class="icon ok"></span>
+                        Valider la fiche de poste (agent)
+                    </a>
                 <?php else : ?>
-                    Validée
-                    par <?php echo $validationAgent->getHistoCreateur()->getDisplayName(); ?>
-                    le <?php echo $validationAgent->getHistoCreation()->format('d/m/Y H:i'); ?>.
+                    <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
+                       class="btn btn-danger action">
+                        <span class="icon ko"></span>
+                        Révoquer la validation (agent)
+                    </a>
                 <?php endif; ?>
-            </dd>
-        </dl>
-
-        <?php if ($canFichePosteValiderResponsable AND $validationAgent === null) :?>
-            <?php if ($validationResponsable === null) : ?>
-                <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
-                <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_RESPONSABLE], [], true); ?>"
-                   class="btn btn-success action ajax-modal" data-event="modification">
-                    <span class="icon ok"></span>
-                    Valider la fiche de poste (responsable)
-                </a>
-            <?php else : ?>
-                <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
-                <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
-                   class="btn btn-danger action">
-                    <span class="icon ko"></span>
-                    Révoquer la validation (responsable)
-                </a>
-            <?php endif; ?>
-        <?php endif ;?>
-        <?php if ($canFichePosteValiderAgent AND $validationResponsable !== null) :?>
-            <?php if ($validationAgent === null) : ?>
-                <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
-                <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_AGENT], [], true); ?>"
-                   class="btn btn-success action ajax-modal" data-event="modification">
-                    <span class="icon ok"></span>
-                    Valider la fiche de poste (agent)
-                </a>
-            <?php else : ?>
-                <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
-                <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
-                   class="btn btn-danger action">
-                    <span class="icon ko"></span>
-                    Révoquer la validation (agent)
-                </a>
-            <?php endif; ?>
-        <?php endif ;?>
+            <?php endif ;?>
+        <?php endif; ?>
     </div>
     <div class="col-md-6">
-        <h2>État de la fiche de poste</h2>
-        <?php echo $this->etatbadge($fiche->getEtat()); ?>
-         Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
+        <?php if ($fiche->getAgent() !== null) : ?>
+            <h2>État de la fiche de poste</h2>
+            <?php echo $this->etatbadge($fiche->getEtat()); ?>
+             Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
 
-        <br/>
-        <?php if ($canFichePosteModifierEtat) : ?>
-            <a
-                <?php /** @see \Application\Controller\FichePosteController::changerEtatAction() */ ?>
-                href="<?php echo $this->url('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true); ?>"
-                class="btn btn-primary action ajax-modal"
-                data-event="modification"
-            >
-                <span class="icon editer"></span>
-                Changer l'état de la fiche
-            </a>
+            <br/>
+            <?php if ($canFichePosteModifierEtat) : ?>
+                <a
+                    <?php /** @see \Application\Controller\FichePosteController::changerEtatAction() */ ?>
+                    href="<?php echo $this->url('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                    class="btn btn-primary action ajax-modal"
+                    data-event="modification"
+                >
+                    <span class="icon editer"></span>
+                    Changer l'état de la fiche
+                </a>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>
