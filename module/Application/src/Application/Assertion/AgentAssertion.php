@@ -36,6 +36,10 @@ class AgentAssertion extends AbstractAssertion
         foreach ($entity->getAffectations() as $affectation) {
             $structures[] = $affectation->getStructure();
         }
+        foreach ($entity->getStructuresForcees(false) as $structureAgentForce) {
+            $structures[] = $structureAgentForce->getStructure();
+        }
+
         $isResponsable = false;
         $isGestionnaire = false;
         $isSuperieur = false;
@@ -133,6 +137,10 @@ class AgentAssertion extends AbstractAssertion
         foreach ($entity->getAffectations() as $affectation) {
             $structures[] = $affectation->getStructure();
         }
+        foreach ($entity->getStructuresForcees(false) as $structureAgentForce) {
+            $structures[] = $structureAgentForce->getStructure();
+        }
+
         $isResponsable = false;
         $isGestionnaire = false;
         $isSuperieur = false;
