@@ -83,14 +83,38 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $agent = $this->getAgentService()->getAgentByUser($user);
 
 
-
+        $isAgent = ($agent === $entity->getAgent());
 
         $predicats = $this->computePredicats($entity, $agent, $role);
 
         switch($privilege) {
+            case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
+                if ($isAgent AND (
+                    $entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
+                    $entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) return false;
+                switch ($role->getRoleId()) {
+                    case RoleConstant::ADMIN_FONC:
+                    case RoleConstant::ADMIN_TECH:
+                    case RoleConstant::DRH:
+                    case RoleConstant::OBSERVATEUR:
+                        return true;
+                    case RoleConstant::PERSONNEL:
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        return $predicats['isAgentEntretien'];
+                    case RoleProvider::GESTIONNAIRE:
+                        return $predicats['isGestionnaireStructure'];
+                    case RoleProvider::RESPONSABLE:
+                        return $predicats['isResponsableStructure'];
+                    case Agent::ROLE_SUPERIEURE:
+                        return $predicats['isSuperieureHierarchique'];
+                    case Agent::ROLE_AUTORITE:
+                        return $predicats['isAutoriteHierarchique'];
+                    default:
+                        return false;
+                }
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
             case EntretienproPrivileges::ENTRETIENPRO_AJOUTER :
-            case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
             case EntretienproPrivileges::ENTRETIENPRO_MODIFIER :
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
