@@ -47,11 +47,19 @@ trait FichePosteMacroTrait {
         /** @var FichePoste $ficheposte */
         $ficheposte = $this;
 
-        $texte  = "";
+        $quotiteTotal = 0;
+        foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
+            $quotiteTotal += $ficheTypeExterne->getQuotite();
+        }
+
+        $texte  = $quotiteTotal. " %";
         $texte .= "<ul>";
         foreach ($ficheposte->getFichesMetiers() as $ficheTypeExterne) {
             $texte .= "<li>";
             $texte .= $ficheTypeExterne->getFicheType()->getMetier()->getLibelleGenre($ficheposte->getAgent());
+//            foreach ($ficheTypeExterne->getFicheType()->getMetier()->getReferences() as $reference) {
+//                $texte .= $reference->getUrl();
+//            }
             $texte .= " (" .$ficheTypeExterne->getQuotite(). "%)";
             $texte .= "</li>";
         }
