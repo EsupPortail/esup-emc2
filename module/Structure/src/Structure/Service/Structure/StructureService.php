@@ -12,6 +12,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\RoleProvider;
@@ -569,6 +570,42 @@ EOS;
         ;
         if ($date !== null) $qb = StructureGestionnaire::decorateWithActif($qb, 'gestionnaire', $date);
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** GESTION DES AGENTS FORCES *************************************************************************************/
+
+    /**
+     * @param Structure $structure
+     * @param DateTime|null $date
+     * @return StructureAgentForce[]
+     */
+    public function getAgentsForces(Structure $structure, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getEntityManager()->getRepository(StructureAgentForce::class)->createQueryBuilder('af')
+            ->join('af.agent', 'af_agent')->addSelect('af_agent')
+            ->join('af.structure', 'af_structure')->addSelect('af_structure')
+            ->leftjoin('af_agent.affectations', 'af_affectation')->addSelect('af_affectation')
+            ->leftjoin('af_affectation.structure', 'affectation_structure')->addSelect('affectation_structure')
+//            ->leftJoin('affectation_structure.responsables', 'structure_responsable')->addSelect('structure_responsable')
+//            ->leftJoin('structure_responsable.agent', 'structure_responsable_agent')->addSelect('structure_responsable_agent')
+            ->leftjoin('affectation_structure.niv2', 'affectation_niv2')->addSelect('affectation_niv2')
+//            ->leftJoin('affectation_niv2.responsables', 'niv2_responsable')->addSelect('niv2_responsable')
+//            ->leftJoin('niv2_responsable.agent', 'niv2_responsable_agent')->addSelect('niv2_responsable_agent')
+
+            ->andWhere('af.structure = :structure')
+            ->setParameter('structure', $structure)
+            ->andWhere('af_affectation.dateDebut IS NULL or af_affectation.dateDebut <= :date')
+            ->andWhere('af_affectation.dateFin IS NULL or af_affectation.dateFin >= :date')
+//            ->andWhere('structure_responsable.dateDebut IS NULL or structure_responsable.dateDebut <= :date')
+//            ->andWhere('structure_responsable.dateFin IS NULL or structure_responsable.dateFin >= :date')
+//            ->andWhere('niv2_responsable.dateDebut IS NULL or niv2_responsable.dateDebut <= :date')
+//            ->andWhere('niv2_responsable.dateFin IS NULL or niv2_responsable.dateFin >= :date')
+            ->setParameter('date', $date)
+        ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }

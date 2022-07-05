@@ -93,7 +93,8 @@ class StructureController extends AbstractActionController {
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
+        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
