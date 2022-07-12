@@ -31,7 +31,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_DEMANDE_AGENT", $vars);
 
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','EMAIL')->getValeur();
+        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_CCC')->getValeur();
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -44,7 +44,7 @@ class NotificationService {
         $instance = $inscription->getInstance();
         $agent = $inscription->getAgent();
 
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','EMAIL')->getValeur();
+        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_CCC')->getValeur();
         $email .= ",";
         $email .= $agent->getEmail();
 

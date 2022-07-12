@@ -187,7 +187,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
 
             <div class="row">
                 <div class="col-sm-6 col-md-8">
-                    <h3>Formateurs <span class="badge"><?php echo count($formateurs); ?></span> </h3>
+                    <h3>Formateurs </h3>
                 </div>
                 <div class="pull-right">
                     <?php if ($canFormateurModifier) : ?>
@@ -207,7 +207,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 <tr>
                     <th> Dénomination </th>
                     <th> Structure de rattachement </th>
-                    <th> Volume </th>
                     <th> Action </th>
                 </tr>
                 </thead>
@@ -216,7 +215,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
                         <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
                         <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
-                        <td> <?php echo ($formateur->getVolume())?:"Non renseigné"; ?> </td>
                         <td>
                             <?php if ($canFormateurModifier) : ?>
                                 <a  <?php /** @see FormationInstanceFormateurController::modifierFormateurAction() */ ?>
@@ -244,9 +242,6 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 <?php endforeach; ?>
                 </tbody>
             </table>
-            <?php if ($canJourneeModifier) : ?>
-                <strong>Volume horaire sommé :</strong> <?php echo $instance->getVolumeHoraireSomme(); ?> heures.
-            <?php endif; ?>
 
             <div class="row">
                 <div class="col-md-8">

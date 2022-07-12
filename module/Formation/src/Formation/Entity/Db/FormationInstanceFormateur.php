@@ -21,10 +21,6 @@ class FormationInstanceFormateur implements HistoriqueAwareInterface
     private $email;
     /** @var string */
     private $attachement;
-    /** @var float */
-    private $volume;
-    /** @var float */
-    private $montant;
 
     /**
      * @return int
@@ -124,39 +120,4 @@ class FormationInstanceFormateur implements HistoriqueAwareInterface
         return $this;
     }
 
-    /**
-     * @return float|null
-     */
-    public function getVolume(): ?float
-    {
-        return $this->volume;
-    }
-
-    /**
-     * @param float|null $volume
-     * @return FormationInstanceFormateur
-     */
-    public function setVolume(?float $volume): FormationInstanceFormateur
-    {
-        $this->volume = $volume;
-        return $this;
-    }
-
-    /**
-     * @return float|null
-     */
-    public function getMontant(): ?float
-    {
-        return $this->montant;
-    }
-
-    /**
-     * @param float|null $montant
-     * @return FormationInstanceFormateur
-     */
-    public function setMontant(?float $montant): FormationInstanceFormateur
-    {
-        $this->montant = $montant;
-        return $this;
-    }
 }

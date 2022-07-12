@@ -7,6 +7,7 @@ use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurFormAwar
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceAwareTrait;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -16,7 +17,7 @@ class FormationInstanceFormateurController extends AbstractActionController
     use FormationInstanceFormateurServiceAwareTrait;
     use FormationInstanceFormateurFormAwareTrait;
 
-    public function ajouterFormateurAction()
+    public function ajouterFormateurAction() : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -45,7 +46,7 @@ class FormationInstanceFormateurController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierFormateurAction()
+    public function modifierFormateurAction() : ViewModel
     {
         $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
 
@@ -71,21 +72,21 @@ class FormationInstanceFormateurController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserFormateurAction()
+    public function historiserFormateurAction() : Response
     {
         $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
         $this->getFormationInstanceFormateurService()->historise($formateur);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
     }
 
-    public function restaurerFormateurAction()
+    public function restaurerFormateurAction() : Response
     {
         $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
         $this->getFormationInstanceFormateurService()->restore($formateur);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
     }
 
-    public function supprimerFormateurAction()
+    public function supprimerFormateurAction() : ViewModel
     {
         $formateur = $this->getFormationInstanceFormateurService()->getRequestedFormationInstanceFormateur($this);
 

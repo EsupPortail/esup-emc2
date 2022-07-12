@@ -628,7 +628,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     public function toStringCREP_Champ($motsClefs)
     {
         $mots = explode(";", $motsClefs);
-        return $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
+        $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
+        return str_replace("_"," ",$texte);
     }
 
     /** MACRO du CREF *************************************************************************************************/

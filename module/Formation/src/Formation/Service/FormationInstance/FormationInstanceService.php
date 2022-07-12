@@ -254,7 +254,7 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
         $this->update($instance);
 
-        $email = $this->getParametreService()->getParametreByCode('GLOBAL', 'MAIL_LISTE_BIATS')->getValeur();
+        $email = $this->getParametreService()->getParametreByCode('FORMATION', 'MAIL_PERSONNEL')->getValeur();
         $vars = [
             'instance' => $instance,
             'UrlService' => $this->getUrlService(),

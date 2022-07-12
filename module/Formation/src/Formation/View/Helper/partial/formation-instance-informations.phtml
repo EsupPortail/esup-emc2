@@ -37,6 +37,14 @@ use Formation\Entity\Db\FormationInstance;
                 Non (les agents doivent notifier les gestionnaires de formation)
             <?php endif; ?>
         </dd>
+        <?php if ($instance->getCoutHt() !== null) : ?>
+            <dt> Coût HT </dt>
+            <dd> <?php echo $instance->getCoutHt(); ?>€</dd>
+        <?php endif; ?>
+        <?php if ($instance->getCoutTtc() !== null) : ?>
+            <dt> Coût TTC </dt>
+            <dd> <?php echo $instance->getCoutTtc(); ?>€</dd>
+        <?php endif; ?>
     </dl>
 <?php endif; ?>
 

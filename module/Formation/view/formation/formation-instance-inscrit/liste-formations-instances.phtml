@@ -3,8 +3,10 @@
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::listeFormationsInstancesAction()
  * @var FormationInstance[] $instances
+ * @var FormationInstance[] $formations
  * @var FormationInstanceInscrit[] $inscriptions
  * @var Agent $agent
+ * @var string $texteParcours
  */
 
 use Application\Entity\Db\Agent;
@@ -44,6 +46,22 @@ $this->headTitle("Liste des actions de formations proposées");
                 </span>
                 </a>
             </li>
+            <li>
+                <a href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
+                    Mes formations suivies
+                    <span class="badge">
+                    <?php echo count($formations); ?>
+                </span>
+                </a>
+            </li>
+            <li class="pull-right">
+                <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz" >
+                    Mon parcours d'entrée
+<!--                <span class="badge">-->
+                        <?php //echo count($inscriptions); ?>
+<!--                </span>-->
+                </a>
+            </li>
         </ul>
     </div>
 </div>
@@ -60,6 +78,16 @@ $this->headTitle("Liste des actions de formations proposées");
         <!-- Type---------------------------------------------------------------------------------------------->
         <div id="inscriptions" class="tab-pane " role="tabpanel">
             <?php echo $this->partial('partial/inscriptions', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
+        </div>
+
+        <!-- Type---------------------------------------------------------------------------------------------->
+        <div id="formations" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/formations', ['formations' => $formations, 'agent' => $agent]); ?>
+        </div>
+
+        <!-- Type---------------------------------------------------------------------------------------------->
+        <div id="parcours" class="tab-pane " role="tabpanel">
+            <?php echo $this->partial('partial/parcours-entree', ['description' => $texteParcours, 'agent' => $agent]); ?>
         </div>
 
     </div>

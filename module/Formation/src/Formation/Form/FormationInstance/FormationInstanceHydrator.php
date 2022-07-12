@@ -12,15 +12,17 @@ class FormationInstanceHydrator implements HydratorInterface
      * @param FormationInstance $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object) : array
     {
         $data = [
-            'description' => ($object->getComplement()) ?: null,
-            'principale' => ($object->getNbPlacePrincipale()) ?: 0,
-            'complementaire' => ($object->getNbPlaceComplementaire()) ?: 0,
-            'lieu' => ($object->getLieu()) ?: null,
-            'type' => ($object->getType()) ?: null,
-            'inscription' => $object->isAutoInscription(),
+            'description' => ($object AND $object->getComplement()) ?: null,
+            'principale' => ($object AND $object->getNbPlacePrincipale()) ?: 0,
+            'complementaire' => ($object AND $object->getNbPlaceComplementaire()) ?: 0,
+            'lieu' => ($object AND $object->getLieu()) ?: null,
+            'type' => ($object AND $object->getType()) ?: null,
+            'inscription' => ($object) ? $object->isAutoInscription() : null,
+            'cout_ht' => ($object) ? $object->getCoutHt() : null,
+            'cout_ttc' => ($object) ? $object->getCoutTtc() : null,
         ];
         return $data;
     }
@@ -38,6 +40,8 @@ class FormationInstanceHydrator implements HydratorInterface
         $lieu = (isset($data['lieu']) and trim($data['lieu']) !== "") ? trim($data['lieu']) : null;
         $type = (isset($data['type']) and trim($data['type']) !== "") ? trim($data['type']) : null;
         $inscription = (isset($data['inscription']))?$data['inscription'] : false;
+        $coutHt = (isset($data['cout_ht']) and trim($data['cout_ht']) !== "") ? trim($data['cout_ht']) : null;
+        $coutTtc = (isset($data['cout_ttc']) and trim($data['cout_ttc']) !== "") ? trim($data['cout_ttc']) : null;
 
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);
@@ -45,6 +49,8 @@ class FormationInstanceHydrator implements HydratorInterface
         $object->setLieu($lieu);
         $object->setType($type);
         $object->setAutoInscription($inscription);
+        $object->setCoutHt($coutHt);
+        $object->setCoutTtc($coutTtc);
 
         return $object;
     }

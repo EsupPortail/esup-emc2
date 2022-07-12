@@ -46,9 +46,9 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
     <thead>
     <tr>
         <th> Libellé </th>
-        <th style="width: 12rem;"> #Formation </th>
-        <th style="width: 12rem;"> Source </th>
-        <th style="width: 12rem;"> Action </th>
+        <th style="width: 10rem;"> #Formation </th>
+        <th style="width: 14rem;"> Source </th>
+        <th style="width: 9rem;"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -99,15 +99,17 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                         <span class="icon restaurer" style="color:lightgrey;"></span>
                     <?php endif; ?>
                 <?php endif; ?>
+                <?php if (false) : ?>
                 <?php if ($canDedoublonner) : ?>
-                    <a
-                        <?php /** @see FormationGroupeController::dedoublonnerAction() */ ?>
-                            href="<?php  echo $this->url('formation-groupe/dedoublonner', ['formation-groupe' => $groupe->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon fusionner" title="Dedoublonner le groupe"></span></a>
-                <?php else : ?>
-                    <span class="icon fusionner" style="color:lightgrey;"></span>
+                        <a
+                            <?php /** @see FormationGroupeController::dedoublonnerAction() */ ?>
+                                href="<?php  echo $this->url('formation-groupe/dedoublonner', ['formation-groupe' => $groupe->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon fusionner" title="Dedoublonner le groupe"></span></a>
+                    <?php else : ?>
+                        <span class="icon fusionner" style="color:lightgrey;"></span>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <a
@@ -115,7 +117,7 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                         href="<?php  echo $this->url('formation-groupe/detruire', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire" title="Afficher le groupe"></span></a>
+                        <span class="icon detruire text-danger" title="Supprimer le groupe"></span></a>
                 <?php else : ?>
                     <span class="icon detruire" style="color:lightgrey;"></span>
                 <?php endif; ?>

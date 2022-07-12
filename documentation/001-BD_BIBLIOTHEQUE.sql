@@ -453,7 +453,7 @@ create table unicaen_autoform_validation_reponse
 
 create unique index validation_reponse_id_uindex on unicaen_autoform_validation_reponse (id);
 
--- ---------------------------------------------------------------------------------------------------------------------
+-- FICHIER -------------------------------------------------------------------------------------------------------------
 
 create table fichier_nature
 (

@@ -123,7 +123,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'formation_' => [
-                                'label'    => 'Formations',
+                                'label'    => 'Actions de formation',
                                 'route'    => 'formation',
                                 'resource' => PrivilegeController::getResourceId(FormationController::class, 'index') ,
                                 'order'    => 310,

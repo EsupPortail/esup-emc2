@@ -33,7 +33,7 @@ return [
                 [
                     'controller' => FormationGroupeController::class,
                     'action' => [
-                        'afficher-groupe',
+                        'afficher',
                     ],
                     'privileges' => [
                         FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER,
@@ -120,7 +120,7 @@ return [
                             'route'    => '/afficher/:formation-groupe',
                             'defaults' => [
                                 'controller' => FormationGroupeController::class,
-                                'action'     => 'afficher-groupe',
+                                'action'     => 'afficher',
                             ],
                         ],
                     ],

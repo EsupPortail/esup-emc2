@@ -4,6 +4,8 @@ namespace Element;
 
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\ApplicationElement\ApplicationElementFormFactory;
+use Element\Form\ApplicationElement\ApplicationElementHydrator;
+use Element\Form\ApplicationElement\ApplicationElementHydratorFactory;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\ApplicationElement\ApplicationElementServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -39,7 +41,9 @@ return [
         ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            ApplicationElementHydrator::class => ApplicationElementHydratorFactory::class,
+        ],
     ]
 
 ];

@@ -36,7 +36,6 @@ class StructureControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var PosteService $posteService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
@@ -50,7 +49,6 @@ class StructureControllerFactory {
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $posteService = $container->get(PosteService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
@@ -80,7 +78,6 @@ class StructureControllerFactory {
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setPosteService($posteService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);

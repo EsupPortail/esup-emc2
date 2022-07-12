@@ -183,6 +183,25 @@ class FormationInstanceInscritService
     }
 
     /**
+     * @param Agent $agent
+     * @return FormationInstanceInscrit[]
+     */
+    public function getFormationsBySuivies(Agent $agent) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscrit.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->andWhere('instanceetat.code = :retour OR instanceetat.code = :close')
+            ->setParameter('retour', FormationInstance::ETAT_ATTENTE_RETOURS)
+            ->setParameter('close', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->andWhere('inscrit.histoDestruction IS NULL')
+            ->orderBy('formation.libelle', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param Structure $structure
      * @param bool $avecStructuresFilles
      * @param bool $anneeCourrante

@@ -154,11 +154,15 @@ class FormationInstanceInscritController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
 
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
+        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
+            'formations' => $formations,
             'agent' => $agent,
+            'texteParcours' => $rendu->getCorps(),
         ]);
     }
 

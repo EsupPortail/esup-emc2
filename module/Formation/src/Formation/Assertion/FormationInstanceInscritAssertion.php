@@ -19,7 +19,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null, $privilege = null)
+    protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
         if (!$entity instanceof FormationInstanceInscrit) {
             return false;
@@ -82,7 +82,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
                 }
         }
 
-        return false;
+        return true;
     }
 }
 

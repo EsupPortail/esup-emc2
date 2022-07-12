@@ -54,6 +54,11 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** @var ArrayCollection (FormationInstanceFormateur) */
     private $formateurs;
 
+    /** @var float|null */
+    private $coutHt;
+    /** @var float|null */
+    private $coutTtc;
+
     /**
      * @return string
      */
@@ -208,19 +213,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         if ($this->formateurs === null) return null;
         return $this->formateurs->toArray();
-    }
-
-    /**
-     * @return float
-     */
-    public function getVolumeHoraireSomme() : float
-    {
-        $somme = 0;
-        /** @var FormationInstanceFormateur $formateur */
-        foreach ($this->formateurs as $formateur) {
-            if ($formateur->estNonHistorise() and $formateur->getVolume()) $somme += $formateur->getVolume();
-        }
-        return $somme;
     }
 
     /** JOURNEE *******************************************************************************************************/
@@ -389,6 +381,40 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return false;
     }
 
+    /** COUT DE LA FORMATION *********************************************************************************/
+
+    /**
+     * @return float|null
+     */
+    public function getCoutHt(): ?float
+    {
+        return $this->coutHt;
+    }
+
+    /**
+     * @param float|null $coutHt
+     */
+    public function setCoutHt(?float $coutHt): void
+    {
+        $this->coutHt = $coutHt;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getCoutTtc(): ?float
+    {
+        return $this->coutTtc;
+    }
+
+    /**
+     * @param float|null $coutTtc
+     */
+    public function setCoutTtc(?float $coutTtc): void
+    {
+        $this->coutTtc = $coutTtc;
+    }
+
     /** Fonctions pour les macros **********************************************************************************/
 
     public function getInstanceLibelle() : string
@@ -414,7 +440,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
         $text .= "<th>Structure de rattachement  </th>";
-        $text .= "<th>Volume  </th>";
         $text .= "</tr>";
         $text .= "</thead>";
         $text .= "<tbody>";
@@ -422,7 +447,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $text .= "<tr>";
             $text .= "<td>" . $formateur->getPrenom() . " " . $formateur->getNom() . "</td>";
             $text .= "<td>" . $formateur->getAttachement() . "</td>";
-            $text .= "<td>" . (($formateur->getVolume()) ?: "N.C.") . "</td>";
             $text .= "</tr>";
         }
         $text .= "</tbody>";

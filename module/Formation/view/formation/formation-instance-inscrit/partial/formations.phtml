@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @var FormationInstanceInscrit[] $formations
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
+
+$retours = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS;} );
+$closes  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_CLOTURE_INSTANCE;} );
+?>
+
+<h2>
+    Formations en attentes de retour
+    <span class="badge"><?php echo count($retours); ?></span>
+</h2>
+
+<?php if (empty($retours)) : ?>
+    <em> Aucune formation en attente de retour </em>
+<?php else : ?>
+    <?php foreach ($retours as $inscription) : ?>
+        <div class="row formation-inscription">
+            <div class="col-md-8 description">
+                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
+                <br/>
+                <br/>
+            </div>
+            <div class="pull-right">
+                <a
+                    <?php /** @see \Formation\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
+                        href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscription->getId()], [], true); ?>"
+                        class="btn btn-primary action"
+                >
+                    <span class="icon editer"> Je complète le formulaire</span>
+                </a>
+                <br/>
+                <a
+                    <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
+                        href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                        class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
+                >
+                    <span class="icon pdf"> Je télécharge mon attestation</span>
+                </a>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<h2>
+    Formations closes
+    <span class="badge"><?php echo count($closes); ?></span>
+</h2>
+
+<?php if (empty($closes)) : ?>
+    <em> Aucune formation close </em>
+<?php else : ?>
+    <?php foreach ($closes as $inscription) : ?>
+        <div class="row formation-inscription">
+            <div class="col-md-8 description">
+                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
+                <br/>
+                <br/>
+            </div>
+            <div class="pull-right">
+                <a
+                <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
+                    href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                    class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
+                >
+                    <span class="icon pdf"> Je télécharge mon attestation</span>
+                </a>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

@@ -511,8 +511,6 @@ create table formation_instance_formateur
     nom varchar(256) not null,
     email varchar(1024),
     attachement varchar(1024),
-    volume double precision,
-    montant double precision,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint formation_instance_formateur_user_id_fk references unicaen_utilisateur_user,
     histo_modification timestamp,

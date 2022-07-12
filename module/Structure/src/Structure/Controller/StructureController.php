@@ -11,7 +11,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
-use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -43,7 +42,6 @@ class StructureController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
-    use PosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -98,7 +96,6 @@ class StructureController extends AbstractActionController {
         $allAgents = array_merge($agents, $agentsForces);
 
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
-        $postes = $this->getPosteService()->getPostesByStructures($structures);
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         /** Campagne */
@@ -108,10 +105,7 @@ class StructureController extends AbstractActionController {
         $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
 
-
-
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $entretiens = [];
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
         $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
@@ -139,12 +133,10 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
-            'postes' => $postes,
 
             'last' => $last,
             'agentsLast' => $allAgentsLast,
             'campagnes' => $campagnes,
-            'entretiens' => $entretiens,
             'delegues' => $delegues,
         ]);
     }

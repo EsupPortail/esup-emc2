@@ -4,6 +4,8 @@ namespace Element;
 
 use Element\Form\CompetenceElement\CompetenceElementForm;
 use Element\Form\CompetenceElement\CompetenceElementFormFactory;
+use Element\Form\CompetenceElement\CompetenceElementHydrator;
+use Element\Form\CompetenceElement\CompetenceElementHydratorFactory;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceElement\CompetenceElementServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -38,7 +40,9 @@ return [
         ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            CompetenceElementHydrator::class => CompetenceElementHydratorFactory::class,
+        ],
     ]
 
 ];

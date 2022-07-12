@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
@@ -77,7 +78,7 @@ class FormationController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFormationService()->create($formation);
-                $formation->setSource(Formation::SOURCE_EMC2);
+                $formation->setSource(HasSourceInterface::SOURCE_EMC2);
                 $formation->setIdSource($formation->getId());
                 $this->getFormationService()->update($formation);
                 exit;
@@ -196,7 +197,6 @@ class FormationController extends AbstractActionController
     {
         $type = $this->params()->fromRoute('type');
         $hasApplicationElement = $this->getFormationService()->getRequestedFormation($this);
-        $clef='masquer';
 
         if ($hasApplicationElement !== null) {
             $element = new ApplicationElement();
@@ -204,7 +204,7 @@ class FormationController extends AbstractActionController
             $form = $this->getApplicationElementForm();
             $form->setAttribute('action', $this->url()->fromRoute('formation/ajouter-application-element', ['type' => $type, 'id' => $hasApplicationElement->getId()], [], true));
             $form->bind($element);
-            if ($clef === 'masquer') $form->masquerClef();
+            $form->masquerClef();
 
             $request = $this->getRequest();
             if ($request->isPost()) {
@@ -231,7 +231,6 @@ class FormationController extends AbstractActionController
     {
         $type = $this->params()->fromRoute('type');
         $hasCompetenceElement = $this->getFormationService()->getRequestedFormation($this);
-        $clef='masquer';
 
         if ($hasCompetenceElement !== null) {
             $element = new CompetenceElement();
@@ -239,7 +238,7 @@ class FormationController extends AbstractActionController
             $form = $this->getCompetenceElementForm();
             $form->setAttribute('action', $this->url()->fromRoute('formation/ajouter-competence-element', ['type' => $type, 'id' => $hasCompetenceElement->getId()], [], true));
             $form->bind($element);
-            if ($clef === 'masquer') $form->masquerClef();
+            $form->masquerClef();
 
             $request = $this->getRequest();
             if ($request->isPost()) {
@@ -301,8 +300,6 @@ class FormationController extends AbstractActionController
                     $instance->setFormation($formationSub);
                     $this->getFormationInstanceService()->update($instance);
                 }
-                //décalage des parcours
-                // TODO décaler dans les parcours de formations
 
                 //decalage des applications acquises
                 $applications = $formation->getApplicationCollection();

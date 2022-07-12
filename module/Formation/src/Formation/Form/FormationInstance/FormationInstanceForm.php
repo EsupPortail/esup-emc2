@@ -10,6 +10,7 @@ use Zend\Form\Element\Text;
 use Zend\Form\Element\Textarea;
 use Zend\Form\Form;
 use Zend\InputFilter\Factory;
+use Zend\Validator\Regex;
 
 class FormationInstanceForm extends Form
 {
@@ -97,6 +98,28 @@ class FormationInstanceForm extends Form
                 'id' => 'lieu',
             ],
         ]);
+        //cout ht
+        $this->add([
+            'type' => Text::class,
+            'name' => 'cout_ht',
+            'options' => [
+                'label' => "Coût HT :",
+            ],
+            'attributes' => [
+                'id' => 'cout_ht',
+            ],
+        ]);
+        //cout ht
+        $this->add([
+            'type' => Text::class,
+            'name' => 'cout_ttc',
+            'options' => [
+                'label' => "Coût TTC :",
+            ],
+            'attributes' => [
+                'id' => 'cout_ttc',
+            ],
+        ]);
         //button
         $this->add([
             'type' => Button::class,
@@ -120,6 +143,37 @@ class FormationInstanceForm extends Form
             'inscription' => ['required' => true,],
             'lieu' => ['required' => true,],
             'type' => ['required' => true,],
+            'cout_ht' => [
+                'required' => false,
+                'validators' => [
+                    [
+                        'name' => Regex::class,
+                        'options' => [
+                            'pattern' => '/[0-9]*\.?[0-9]*/',
+                            'messages' => [
+                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
+                            ],
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
+            'cout_ttc' => [
+                'required' => false,
+                'validators' => [
+                    [
+                        'name' => Regex::class,
+                        'options' => [
+                            'pattern' => '/[0-9]*\.?[0-9]*/',
+                            'messages' => [
+                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
+                            ],
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
+
         ]));
     }
 }

@@ -20,8 +20,6 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeFormAwareTrait;
     use SelectionFormationGroupeFormAwareTrait;
 
-    /** CRUD **********************************************************************************************************/
-
     public function indexAction() : ViewModel
     {
         $source = $this->params()->fromQuery('source');
@@ -42,7 +40,9 @@ class FormationGroupeController extends AbstractActionController
         ]);
     }
 
-    public function afficherGroupeAction() : ViewModel
+    /** CRUD **********************************************************************************************************/
+
+    public function afficherAction() : ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
@@ -110,14 +110,20 @@ class FormationGroupeController extends AbstractActionController
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->historise($groupe);
-        return $this->redirect()->toRoute('formation', [], [], true);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('formation-groupe', [], [], true);
     }
 
     public function restaurerGroupeAction() : Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->restore($groupe);
-        return $this->redirect()->toRoute('formation', [], [], true);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('formation-groupe', [], [], true);
     }
 
     public function detruireGroupeAction() : ViewModel

@@ -19,8 +19,6 @@ class FormationInstanceFormateurHydrator implements HydratorInterface
             'nom' => ($object) ? $object->getNom() : null,
             'email' => ($object) ? $object->getEmail() : null,
             'attachement' => ($object) ? $object->getAttachement() : null,
-            'volume' => ($object) ? $object->getVolume() : null,
-            'montant' => ($object) ? $object->getMontant() : null,
         ];
         return $data;
     }
@@ -36,15 +34,11 @@ class FormationInstanceFormateurHydrator implements HydratorInterface
         $nom = (isset($data['nom']) and trim($data['nom']) !== "") ? trim($data['nom']) : null;
         $email = (isset($data['email']) and trim($data['email']) !== "") ? trim($data['email']) : null;
         $attachement = (isset($data['attachement']) and trim($data['attachement']) !== "") ? trim($data['attachement']) : null;
-        $volume = (isset($data['volume']) and trim($data['volume']) !== "") ? trim($data['volume']) : null;
-        $montant = (isset($data['montant']) and trim($data['montant']) !== "") ? trim($data['montant']) : null;
 
         $object->setPrenom($prenom);
         $object->setNom($nom);
         $object->setEmail($email);
         $object->setAttachement($attachement);
-        $object->setVolume($volume);
-        $object->setMontant($montant);
         return $object;
     }
 

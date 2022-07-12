@@ -57,28 +57,6 @@ class FormationInstanceFormateurForm extends Form
                 'id' => 'attachement',
             ],
         ]);
-        //volume
-        $this->add([
-            'type' => Text::class,
-            'name' => 'volume',
-            'options' => [
-                'label' => "Volume horaire dispensé :",
-            ],
-            'attributes' => [
-                'id' => 'volume',
-            ],
-        ]);
-        //montant
-        $this->add([
-            'type' => Text::class,
-            'name' => 'montant',
-            'options' => [
-                'label' => "Montant horaire :",
-            ],
-            'attributes' => [
-                'id' => 'montant',
-            ],
-        ]);
         //button
         $this->add([
             'type' => Button::class,
@@ -101,36 +79,6 @@ class FormationInstanceFormateurForm extends Form
             'nom' => ['required' => true],
             'email' => ['required' => true],
             'attachement' => ['required' => false],
-            'volume' => [
-                'required' => false,
-                'validators' => [
-                    [
-                        'name' => Regex::class,
-                        'options' => [
-                            'pattern' => '/[0-9]*\.?[0-9]*/',
-                            'messages' => [
-                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
-                            ],
-                            //'break_chain_on_failure' => true,
-                        ],
-                    ],
-                ],
-            ],
-            'montant' => [
-                'required' => false,
-                'validators' => [
-                    [
-                        'name' => Regex::class,
-                        'options' => [
-                            'pattern' => '/[0-9]*\.?[0-9]*/',
-                            'messages' => [
-                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
-                            ],
-                            //'break_chain_on_failure' => true,
-                        ],
-                    ],
-                ],
-            ],
         ]));
     }
 }
