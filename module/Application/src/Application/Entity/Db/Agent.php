@@ -25,7 +25,7 @@ use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenUtilisateur\Entity\Db\User;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Agent implements
     ResourceInterface,

@@ -15,8 +15,8 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class EntretienProfessionnelAssertion extends AbstractAssertion {
 

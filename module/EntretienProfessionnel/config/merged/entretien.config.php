@@ -16,8 +16,8 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHyd
 use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

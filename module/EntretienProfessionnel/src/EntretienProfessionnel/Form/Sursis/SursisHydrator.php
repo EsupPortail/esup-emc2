@@ -4,7 +4,7 @@ namespace EntretienProfessionnel\Form\Sursis;
 
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Sursis;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class SursisHydrator implements HydratorInterface {
 
@@ -12,7 +12,7 @@ class SursisHydrator implements HydratorInterface {
      * @param Sursis $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'date' => ($object->getSursis())?$object->getSursis()->format('Y-m-d'):null,

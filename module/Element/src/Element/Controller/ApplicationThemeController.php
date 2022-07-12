@@ -5,10 +5,10 @@ namespace Element\Controller;
 use Element\Form\ApplicationTheme\ApplicationThemeFormAwareTrait;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
 use Element\Entity\Db\ApplicationTheme;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ApplicationThemeController extends AbstractActionController {
     use ApplicationThemeServiceAwareTrait;

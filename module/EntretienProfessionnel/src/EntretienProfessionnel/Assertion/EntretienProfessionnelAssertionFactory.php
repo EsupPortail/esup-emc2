@@ -8,7 +8,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
-use Zend\Mvc\Application;
+use Laminas\Mvc\Application;
 
 class EntretienProfessionnelAssertionFactory {
 

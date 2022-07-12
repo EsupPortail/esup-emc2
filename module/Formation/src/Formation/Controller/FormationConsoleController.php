@@ -9,7 +9,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 /**
  * Controleur pour gérer les routes 'console' du module de formation

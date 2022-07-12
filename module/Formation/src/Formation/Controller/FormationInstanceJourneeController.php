@@ -6,9 +6,9 @@ use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Form\FormationJournee\FormationJourneeFormAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class FormationInstanceJourneeController extends AbstractActionController
 {

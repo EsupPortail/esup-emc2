@@ -3,7 +3,7 @@
 namespace Metier\Form\Referentiel;
 
 use Metier\Entity\Db\Referentiel;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ReferentielHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ReferentielHydrator implements HydratorInterface {
      * @param Referentiel $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle_court' => $object->getLibelleCourt(),

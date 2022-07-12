@@ -6,7 +6,7 @@ use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Structure\Entity\Db\StructureResponsable;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AjouterResponsableHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -15,7 +15,7 @@ class AjouterResponsableHydrator implements HydratorInterface {
      * @param StructureResponsable $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'responsable'             => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,

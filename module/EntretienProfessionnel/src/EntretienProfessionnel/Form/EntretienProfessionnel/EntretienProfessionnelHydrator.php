@@ -7,7 +7,7 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class EntretienProfessionnelHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -18,7 +18,7 @@ class EntretienProfessionnelHydrator implements HydratorInterface {
      * @param EntretienProfessionnel $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'responsable' => ($object->getResponsable())?['id' => $object->getResponsable()->getId(), 'label' => $object->getResponsable()->getDenomination()]:null,

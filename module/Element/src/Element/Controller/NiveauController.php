@@ -5,8 +5,8 @@ namespace Element\Controller;
 use Element\Entity\Db\Niveau;
 use Element\Form\Niveau\NiveauFormAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class NiveauController extends AbstractActionController
 {

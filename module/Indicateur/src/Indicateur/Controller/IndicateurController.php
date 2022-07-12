@@ -9,9 +9,9 @@ use Indicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class IndicateurController extends AbstractActionController {
     use IndicateurServiceAwareTrait;

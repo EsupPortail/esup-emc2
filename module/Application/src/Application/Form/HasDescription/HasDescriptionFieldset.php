@@ -2,7 +2,7 @@
 
 namespace Application\Form\HasDescription;
 
-use Zend\Form\Fieldset;
+use Laminas\Form\Fieldset;
 
 class HasDescriptionFieldset extends Fieldset {
 

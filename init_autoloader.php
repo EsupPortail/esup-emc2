@@ -1,9 +1,9 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
+ * Laminas Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/LaminasSkeletonApplication for the canonical source repository
+ * @copyright Copyright (c) 2005-2012 Laminas Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -33,17 +33,17 @@ if (is_dir('vendor/ZF2/library')) {
 
 if ($zf2Path) {
     if (isset($loader)) {
-        $loader->add('Zend', $zf2Path);
+        $loader->add('Laminas', $zf2Path);
     } else {
-        include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-        Zend\Loader\AutoloaderFactory::factory(array(
-            'Zend\Loader\StandardAutoloader' => array(
+        include $zf2Path . '/Laminas/Loader/AutoloaderFactory.php';
+        Laminas\Loader\AutoloaderFactory::factory(array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'autoregister_zf' => true
             )
         ));
     }
 }
 
-if (!class_exists('Zend\Loader\AutoloaderFactory')) {
+if (!class_exists('Laminas\Loader\AutoloaderFactory')) {
     throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
 }

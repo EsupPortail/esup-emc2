@@ -4,7 +4,7 @@ namespace Application\Form\FicheMetier;
 
 use Application\Entity\Db\FicheMetier;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class LibelleHydrator implements HydratorInterface {
     use MetierServiceAwareTrait;
@@ -13,7 +13,7 @@ class LibelleHydrator implements HydratorInterface {
      * @param FicheMetier $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'metier' => ($object->getMetier())?$object->getMetier()->getLibelle():null,

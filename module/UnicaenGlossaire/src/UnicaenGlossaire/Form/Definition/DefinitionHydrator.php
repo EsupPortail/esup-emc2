@@ -3,7 +3,7 @@
 namespace UnicaenGlossaire\Form\Definition;
 
 use UnicaenGlossaire\Entity\Db\Definition;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class DefinitionHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class DefinitionHydrator implements HydratorInterface {
      * @param Definition $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'terme' => $object->getTerme(),

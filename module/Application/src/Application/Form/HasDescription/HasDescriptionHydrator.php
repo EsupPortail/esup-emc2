@@ -3,7 +3,7 @@
 namespace Application\Form\HasDescription;
 
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class HasDescriptionHydrator implements HydratorInterface {
 

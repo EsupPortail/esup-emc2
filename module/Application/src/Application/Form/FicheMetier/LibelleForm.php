@@ -3,9 +3,9 @@
 namespace Application\Form\FicheMetier;
 
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
 
 class LibelleForm extends Form
 {

@@ -4,7 +4,7 @@ namespace Formation\Form\FormationElement;
 
 use Formation\Entity\Db\FormationElement;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FormationElementHydrator implements HydratorInterface {
     use FormationServiceAwareTrait;
@@ -13,7 +13,7 @@ class FormationElementHydrator implements HydratorInterface {
      * @param FormationElement $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $commentaires = $object->getCommentaire();
         $niveau = null;

@@ -7,8 +7,8 @@ use Application\Entity\Db\FonctionDestination;
 use Application\Form\FonctionActivite\FonctionActiviteFormAwareTrait;
 use Application\Form\FonctionDestination\FonctionDestinationFormAwareTrait;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class FonctionController extends AbstractActionController {
     use FonctionServiceAwareTrait;

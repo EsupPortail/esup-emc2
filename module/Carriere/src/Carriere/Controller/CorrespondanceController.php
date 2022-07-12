@@ -4,8 +4,8 @@ namespace Carriere\Controller;
 
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class CorrespondanceController extends AbstractActionController
 {

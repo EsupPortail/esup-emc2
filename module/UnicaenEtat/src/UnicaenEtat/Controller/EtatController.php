@@ -5,9 +5,9 @@ namespace UnicaenEtat\Controller;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Form\Etat\EtatFormAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class EtatController extends AbstractActionController
 {

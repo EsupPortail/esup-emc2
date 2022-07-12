@@ -19,8 +19,8 @@ use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceFact
 use Element\View\Helper\ApplicationBlocViewHelper;
 use Element\View\Helper\ApplicationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

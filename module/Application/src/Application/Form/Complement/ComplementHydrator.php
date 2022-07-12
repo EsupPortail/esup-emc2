@@ -4,7 +4,7 @@ namespace Application\Form\Complement;
 
 use Application\Entity\Db\Complement;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ComplementHydrator implements HydratorInterface {
     use EntityManagerAwareTrait;
@@ -13,7 +13,7 @@ class ComplementHydrator implements HydratorInterface {
      * @param Complement $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $complement = null;
         if ($object->getComplementType() AND $object->getComplementId() ) $complement = $this->getEntityManager()->getRepository($object->getComplementType())->find($object->getComplementId());

@@ -4,7 +4,7 @@ namespace UnicaenValidation\Form\ValidationInstance;
 
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ValidationInstanceHydrator implements HydratorInterface {
     use ValidationTypeServiceAwareTrait;
@@ -13,7 +13,7 @@ class ValidationInstanceHydrator implements HydratorInterface {
      * @param ValidationInstance $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'type'          => ($object AND $object->getType())?$object->getType()->getId():null,

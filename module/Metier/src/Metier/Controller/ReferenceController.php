@@ -6,10 +6,10 @@ use Metier\Entity\Db\Reference;
 use Metier\Form\Reference\ReferenceFormAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Reference\ReferenceServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ReferenceController extends AbstractActionController {
     use MetierServiceAwareTrait;

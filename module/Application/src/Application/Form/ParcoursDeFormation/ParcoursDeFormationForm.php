@@ -6,13 +6,13 @@ use Application\Entity\Db\ParcoursDeFormation;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Element\Textarea;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Callback;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class ParcoursDeFormationForm extends Form {
     use CategorieServiceAwareTrait;

@@ -22,8 +22,8 @@ use Application\View\Helper\ParcoursApplicationViewHelperFactory;
 use Application\View\Helper\ParcoursDeFormationViewHelperFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

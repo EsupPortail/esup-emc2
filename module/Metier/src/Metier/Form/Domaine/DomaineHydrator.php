@@ -4,7 +4,7 @@ namespace Metier\Form\Domaine;
 
 use Metier\Entity\Db\Domaine;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class DomaineHydrator implements HydratorInterface {
     use FamilleProfessionnelleServiceAwareTrait;

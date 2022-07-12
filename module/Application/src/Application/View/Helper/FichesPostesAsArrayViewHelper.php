@@ -5,10 +5,10 @@ namespace Application\View\Helper;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\FichePoste;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\TemplatePathStack;
 
 //TODO parametrer ALLOWED
 

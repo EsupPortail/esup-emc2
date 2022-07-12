@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\Form\Observation;
 
 use EntretienProfessionnel\Entity\Db\Observation;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ObservationHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ObservationHydrator implements HydratorInterface {
      * @param Observation $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'obs-entretien' => $object->getObservationAgentEntretien(),

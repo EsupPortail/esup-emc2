@@ -2,7 +2,7 @@
 
 namespace Application\Service;
 
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 trait RendererAwareTrait {
 

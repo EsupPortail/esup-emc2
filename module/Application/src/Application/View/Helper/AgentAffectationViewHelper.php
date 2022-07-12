@@ -4,10 +4,10 @@ namespace Application\View\Helper;
 
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentStatut;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\TemplatePathStack;
 
 /**
  * Note : les clefs du tableau options sont les suivantes :

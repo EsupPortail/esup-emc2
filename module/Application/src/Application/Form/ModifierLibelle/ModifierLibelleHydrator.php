@@ -4,7 +4,7 @@
 
 namespace Application\Form\ModifierLibelle;
 
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ModifierLibelleHydrator implements HydratorInterface {
 
@@ -17,7 +17,7 @@ class ModifierLibelleHydrator implements HydratorInterface {
      * @param object $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle' => html_entity_decode(strip_tags($object->getLibelle())),

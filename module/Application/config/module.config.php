@@ -40,7 +40,7 @@ use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
-use Zend\Router\Http\Literal;
+use Laminas\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [

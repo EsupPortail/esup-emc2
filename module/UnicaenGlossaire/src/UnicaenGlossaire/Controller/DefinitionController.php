@@ -5,9 +5,9 @@ namespace UnicaenGlossaire\Controller;
 use UnicaenGlossaire\Entity\Db\Definition;
 use UnicaenGlossaire\Form\Definition\DefinitionFormAwareTrait;
 use UnicaenGlossaire\Service\Definition\DefinitionServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class DefinitionController extends AbstractActionController {
     use DefinitionServiceAwareTrait;

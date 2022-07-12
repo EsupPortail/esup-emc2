@@ -3,9 +3,9 @@
 namespace EntretienProfessionnel\Form\Sursis;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
-use Zend\Form\Element\Date;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Date;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class SursisForm extends Form
 {

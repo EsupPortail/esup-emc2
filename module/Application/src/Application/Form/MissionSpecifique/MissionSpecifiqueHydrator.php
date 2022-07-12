@@ -6,7 +6,7 @@ use Application\Entity\Db\MissionSpecifique;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
 use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class MissionSpecifiqueHydrator implements HydratorInterface
 {
@@ -18,7 +18,7 @@ class MissionSpecifiqueHydrator implements HydratorInterface
      * @param MissionSpecifique $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [];
         $data['libelle'] = $object->getLibelle();

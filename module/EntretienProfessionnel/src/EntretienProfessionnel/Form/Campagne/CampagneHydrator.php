@@ -5,7 +5,7 @@ namespace EntretienProfessionnel\Form\Campagne;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class  CampagneHydrator implements HydratorInterface {
     use CampagneServiceAwareTrait;
@@ -14,7 +14,7 @@ class  CampagneHydrator implements HydratorInterface {
      * @param Campagne $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'annee' => $object->getAnnee(),

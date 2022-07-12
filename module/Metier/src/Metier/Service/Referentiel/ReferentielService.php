@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Metier\Entity\Db\Referentiel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class ReferentielService {
     use EntityManagerAwareTrait;

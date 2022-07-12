@@ -14,10 +14,10 @@ RUN echo $PHP_VERSION
 RUN php --version
 
 ## Installation de packages requis.
-RUN apt-get update -qq && \
-    apt-get install -y \
-        ghostscript-x \
-        php${PHP_VERSION}-imagick
+#RUN apt-get update -qq && \
+#    apt-get install -y \
+#        ghostscript-x \
+#        php${PHP_VERSION}-imagick
 
 # Nettoyage
 RUN apt-get autoremove -y && apt-get clean && rm -rf /tmp/* /var/tmp/*

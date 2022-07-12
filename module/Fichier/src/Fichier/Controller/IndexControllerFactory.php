@@ -3,7 +3,7 @@
 namespace Fichier\Controller;
 
 use Interop\Container\ContainerInterface;
-use Zend\Mvc\Controller\ControllerManager;
+use Laminas\Mvc\Controller\ControllerManager;
 
 class IndexControllerFactory {
 

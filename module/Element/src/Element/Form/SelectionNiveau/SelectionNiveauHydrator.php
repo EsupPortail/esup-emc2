@@ -4,7 +4,7 @@ namespace Element\Form\SelectionNiveau;
 
 use Element\Entity\Db\Interfaces\HasNiveauInterface;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class SelectionNiveauHydrator implements HydratorInterface {
     use NiveauServiceAwareTrait;
@@ -13,7 +13,7 @@ class SelectionNiveauHydrator implements HydratorInterface {
      * @param HasNiveauInterface $object
      * @return array|void
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'niveau' => ($object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,

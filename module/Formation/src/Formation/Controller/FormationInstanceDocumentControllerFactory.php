@@ -8,7 +8,7 @@ use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Interop\Container\ContainerInterface;
 use UnicaenDocument\Service\Exporter\ExporterService;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class FormationInstanceDocumentControllerFactory
 {

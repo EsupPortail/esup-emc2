@@ -3,7 +3,7 @@
 namespace Element\Form\CompetenceTheme;
 
 use Element\Entity\Db\CompetenceTheme;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class CompetenceThemeHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class CompetenceThemeHydrator implements HydratorInterface {
      * @var CompetenceTheme $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle' => $object->getLibelle(),

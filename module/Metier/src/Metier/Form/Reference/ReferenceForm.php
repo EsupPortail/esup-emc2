@@ -4,12 +4,12 @@ namespace Metier\Form\Reference;
 
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class ReferenceForm extends Form {
     use MetierServiceAwareTrait;

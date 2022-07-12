@@ -12,8 +12,8 @@ use UnicaenValidation\Form\ValidationType\ValidationTypeHydratorFactory;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceFactory;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

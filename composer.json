@@ -1,6 +1,6 @@
 {
-  "name": "unicaen/skeleton-application",
-  "description": "PrEECoG :  outils pour la GPEEC",
+  "name": "unicaen/preecog",
+  "description": "EMC2 : Emploi Mobilité Carrière Compétences ",
   "repositories": [
     {
       "type": "composer",
@@ -9,26 +9,27 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "unicaen/app": "3.2.0",
-    "unicaen/authentification": "^1.1.0",
-    "unicaen/utilisateur": "dev-master",
-    "unicaen/privilege": "dev-master",
-    "unicaen/renderer": "dev-master",
-    "unicaen/pdf": "dev-master",
-    "unicaen/mail": "dev-master",
-    "unicaen/parametre": "dev-main",
-    "unicaen/bjy-authorize": "^3.0",
-    "unicaen/ldap": "3.2.0",
-    "unicaen/db-import": "3.0.1",
-    "graphp/graphviz": "^0.2.2",
-    "curl/curl": "^2.3",
-    "unicaen/octopus": "dev-master",
-    "unicaen/evenement": "dev-master",
-    "ext-json": "*",
-    "unicaen/autoform": "dev-master"
-
+    "unicaen/app": "^4.0.4",
+    "unicaen/authentification": "^4.0.0",
+    "unicaen/utilisateur": "^4.0.0",
+    "unicaen/privilege": "^4.0.0",
+    "unicaen/renderer": "^4.0.0",
+    "unicaen/pdf": "^4.0.0",
+    "unicaen/mail": "^4.0.0",
+    "unicaen/parametre": "^4.0.0",
+    "unicaen/bjy-authorize": "^4.0.0",
+    "unicaen/ldap": "^4.0.0",
+    "unicaen/octopus": "^4.0.0",
+    "unicaen/evenement": "^4.0.0",
+    "unicaen/autoform": "^4.0",
+    "ext-json": "*"
   },
   "require-dev": {
-    "zendframework/zend-developer-tools": ">=1.0"
+    "laminas/laminas-developer-tools": ">=1.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "laminas/laminas-dependency-plugin": true
+    }
   }
 }

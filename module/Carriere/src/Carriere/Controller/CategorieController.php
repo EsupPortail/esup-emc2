@@ -5,10 +5,10 @@ namespace Carriere\Controller;
 use Carriere\Entity\Db\Categorie;
 use Carriere\Form\Categorie\CategorieFormAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class CategorieController extends AbstractActionController
 {

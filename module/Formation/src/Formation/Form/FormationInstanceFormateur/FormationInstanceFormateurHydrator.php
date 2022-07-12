@@ -3,7 +3,7 @@
 namespace Formation\Form\FormationInstanceFormateur;
 
 use Formation\Entity\Db\FormationInstanceFormateur;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FormationInstanceFormateurHydrator implements HydratorInterface
 {
@@ -12,7 +12,7 @@ class FormationInstanceFormateurHydrator implements HydratorInterface
      * @param FormationInstanceFormateur $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'prenom' => ($object) ? $object->getPrenom() : null,

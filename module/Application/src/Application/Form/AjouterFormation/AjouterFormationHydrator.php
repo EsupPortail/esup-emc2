@@ -2,11 +2,11 @@
 
 namespace Application\Form\AjouterFormation;
 
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AjouterFormationHydrator implements HydratorInterface {
 
-    public function extract($object)
+    public function extract($object): array
     {
         return [];
     }

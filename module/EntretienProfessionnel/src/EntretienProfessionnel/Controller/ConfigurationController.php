@@ -5,10 +5,10 @@ namespace EntretienProfessionnel\Controller;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieFormAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ConfigurationController extends AbstractActionController
 {

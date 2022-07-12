@@ -5,7 +5,7 @@ namespace Metier\Form\Reference;
 use Metier\Entity\Db\Reference;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ReferenceHydrator implements HydratorInterface {
     use MetierServiceAwareTrait;
@@ -15,7 +15,7 @@ class ReferenceHydrator implements HydratorInterface {
      * @param Reference $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'metier' => ($object->getMetier())?$object->getMetier()->getId():null,

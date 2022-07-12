@@ -12,7 +12,7 @@ use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Structure implements ResourceInterface, HasDescriptionInterface {
     use DbImportableAwareTrait;

@@ -4,7 +4,7 @@ namespace UnicaenEtat\Form\Etat;
 
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class EtatHydrator implements HydratorInterface {
     use EtatTypeServiceAwareTrait;
@@ -13,7 +13,7 @@ class EtatHydrator implements HydratorInterface {
      * @param Etat $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'code' => ($object)?$object->getCode():null,

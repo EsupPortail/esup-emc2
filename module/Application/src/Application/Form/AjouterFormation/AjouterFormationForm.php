@@ -3,10 +3,10 @@
 namespace Application\Form\AjouterFormation;
 
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class AjouterFormationForm extends Form
 {

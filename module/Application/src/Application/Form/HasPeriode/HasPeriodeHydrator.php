@@ -5,7 +5,7 @@ namespace Application\Form\HasPeriode;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use DateTime;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class HasPeriodeHydrator implements HydratorInterface {
 

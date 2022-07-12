@@ -3,7 +3,7 @@
  * Configuration globale du module UnicaenApp.
  */
 
-use Zend\Session\Storage\SessionArrayStorage;
+use Laminas\Session\Storage\SessionArrayStorage;
 
 return [
     'session_config' => [

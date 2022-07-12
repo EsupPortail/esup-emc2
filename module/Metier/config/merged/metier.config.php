@@ -16,8 +16,8 @@ use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -23,7 +23,7 @@ use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractController;
+use Laminas\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
     use ApplicationServiceAwareTrait;

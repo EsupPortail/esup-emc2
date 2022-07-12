@@ -9,7 +9,7 @@ use Element\Entity\Db\Competence;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class CompetenceService {
     use EntityManagerAwareTrait;

@@ -5,10 +5,10 @@ namespace Metier\Controller;
 use Metier\Entity\Db\Referentiel;
 use Metier\Form\Referentiel\ReferentielFormAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ReferentielController extends AbstractActionController
 {

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ZendSkeletonApplication\n"
+"Project-Id-Version: LaminasSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:32-0700\n"
 "PO-Revision-Date: 2012-07-05 23:36-0700\n"
@@ -31,17 +31,17 @@ msgstr "Tous droits réservés."
 
 #: ../view/application/index/index.phtml:2
 #, php-format
-msgid "Welcome to %sZend Framework 2%s"
-msgstr "Bienvenue dans le %sZend Framework 2%s"
+msgid "Welcome to %sLaminas Framework 2%s"
+msgstr "Bienvenue dans le %sLaminas Framework 2%s"
 
 #: ../view/application/index/index.phtml:3
 #, php-format
-msgid "Congratulations! You have successfully installed the %sZF2 Skeleton Application%s. You are currently running Zend Framework version %s. This skeleton can serve as a simple starting point for you to begin building your application on ZF2."
-msgstr "Félicitations ! Vous avez installé avec succès le %sZF2 Skeleton Application%s. Vous utilisez actuellement Zend Framework version %s. Cette structure peut vous servir comme un point de départ simple pour démarrer la construction de votre application avec ZF2."
+msgid "Congratulations! You have successfully installed the %sZF2 Skeleton Application%s. You are currently running Laminas Framework version %s. This skeleton can serve as a simple starting point for you to begin building your application on ZF2."
+msgstr "Félicitations ! Vous avez installé avec succès le %sZF2 Skeleton Application%s. Vous utilisez actuellement Laminas Framework version %s. Cette structure peut vous servir comme un point de départ simple pour démarrer la construction de votre application avec ZF2."
 
 #: ../view/application/index/index.phtml:4
-msgid "Fork Zend Framework 2 on GitHub"
-msgstr "Faites un Fork de Zend Framework 2 sur GitHub"
+msgid "Fork Laminas Framework 2 on GitHub"
+msgstr "Faites un Fork de Laminas Framework 2 sur GitHub"
 
 #: ../view/application/index/index.phtml:10
 msgid "Follow Development"
@@ -49,8 +49,8 @@ msgstr "Suivre le développement"
 
 #: ../view/application/index/index.phtml:11
 #, php-format
-msgid "Zend Framework 2 is under active development. If you are interested in following the development of ZF2, there is a special ZF2 portal on the official Zend Framework website which provides links to the ZF2 %swiki%s, %sdev blog%s, %sissue tracker%s, and much more. This is a great resource for staying up to date with the latest developments!"
-msgstr "Zend Framework 2 est en cours de développement. Si vous êtes intéressé pour suivre l'évolution de ZF2, il existe un portail dédié à ZF2 sur le site officiel Zend Framework qui propose des liens vers le %swiki%s ZF2, %sdev blog%s, %ssuivi des problèmes%s, et bien plus encore. Il s'agit d'une excellente ressource pour rester à jour sur les dernières évolutions !"
+msgid "Laminas Framework 2 is under active development. If you are interested in following the development of ZF2, there is a special ZF2 portal on the official Laminas Framework website which provides links to the ZF2 %swiki%s, %sdev blog%s, %sissue tracker%s, and much more. This is a great resource for staying up to date with the latest developments!"
+msgstr "Laminas Framework 2 est en cours de développement. Si vous êtes intéressé pour suivre l'évolution de ZF2, il existe un portail dédié à ZF2 sur le site officiel Laminas Framework qui propose des liens vers le %swiki%s ZF2, %sdev blog%s, %ssuivi des problèmes%s, et bien plus encore. Il s'agit d'une excellente ressource pour rester à jour sur les dernières évolutions !"
 
 #: ../view/application/index/index.phtml:12
 msgid "ZF2 Development Portal"

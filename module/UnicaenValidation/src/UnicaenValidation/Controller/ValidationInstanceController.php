@@ -6,9 +6,9 @@ use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Form\ValidationInstance\ValidationInstanceFormAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ValidationInstanceController extends AbstractActionController {
     use ValidationInstanceServiceAwareTrait;

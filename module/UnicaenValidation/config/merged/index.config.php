@@ -7,8 +7,8 @@ use UnicaenValidation\Controller\IndexController;
 use UnicaenValidation\Controller\IndexControllerFactory;
 use UnicaenValidation\Provider\Privilege\ValidationinstancePrivileges;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

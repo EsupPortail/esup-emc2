@@ -3,7 +3,7 @@
 namespace Application\Form\ModifierRattachement;
 
 use Application\Entity\Db\ParcoursDeFormation;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ModifierRattachementHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ModifierRattachementHydrator implements HydratorInterface {
      * @param ParcoursDeFormation $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'type'        => $object->getType(),

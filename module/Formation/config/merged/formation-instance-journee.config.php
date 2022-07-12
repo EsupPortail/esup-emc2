@@ -12,7 +12,7 @@ use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

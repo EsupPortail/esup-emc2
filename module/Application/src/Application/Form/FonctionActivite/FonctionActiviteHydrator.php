@@ -4,7 +4,7 @@ namespace Application\Form\FonctionActivite;
 
 use Application\Entity\Db\FonctionActivite;
 use Application\Service\Fonction\FonctionServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FonctionActiviteHydrator implements HydratorInterface {
     use FonctionServiceAwareTrait;
@@ -13,7 +13,7 @@ class FonctionActiviteHydrator implements HydratorInterface {
      * @param FonctionActivite $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'code' => $object->getCode(),

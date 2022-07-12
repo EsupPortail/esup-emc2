@@ -4,7 +4,7 @@ namespace Fichier\View\Helper;
 
 use Fichier\Entity\Db\Fichier;
 use UnicaenApp\Filter\BytesFormatter;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 class FichierViewHelper extends AbstractHelper
 {

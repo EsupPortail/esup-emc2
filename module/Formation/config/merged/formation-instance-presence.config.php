@@ -8,7 +8,7 @@ use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
 use Formation\Service\FormationInstancePresence\FormationInstancePresenceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

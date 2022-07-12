@@ -4,13 +4,13 @@ namespace UnicaenEtat\Form\EtatType;
 
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenPrivilege\Entity\Db\Privilege;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Color;
-use Zend\Form\Element\Hidden;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Callback;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Color;
+use Laminas\Form\Element\Hidden;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class EtatTypeForm extends Form {
     use EntityManagerAwareTrait;

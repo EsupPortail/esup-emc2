@@ -6,7 +6,7 @@ use Formation\Controller\FormationInstanceDocumentController;
 use Formation\Controller\FormationInstanceDocumentControllerFactory;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

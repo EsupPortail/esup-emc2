@@ -4,11 +4,11 @@ namespace Metier\Form\Referentiel;
 
 use Metier\Entity\Db\Referentiel;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Radio;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Radio;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class ReferentielForm extends Form {
     use DomaineServiceAwareTrait;

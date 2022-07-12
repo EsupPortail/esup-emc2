@@ -3,7 +3,7 @@
 namespace Formation\Service\Url;
 
 use Interop\Container\ContainerInterface;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class UrlServiceFactory {
 

@@ -5,7 +5,7 @@ namespace Application\Form\SpecificitePoste;
 
 
 use Application\Entity\Db\SpecificitePoste;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class SpecificitePosteHydrator implements HydratorInterface {
 
@@ -13,7 +13,7 @@ class SpecificitePosteHydrator implements HydratorInterface {
      * @param SpecificitePoste $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             "specificite" => $object->getSpecificite(),

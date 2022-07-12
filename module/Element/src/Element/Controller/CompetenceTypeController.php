@@ -5,10 +5,10 @@ namespace Element\Controller;
 use Element\Entity\Db\CompetenceType;
 use Element\Form\CompetenceType\CompetenceTypeFormAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class CompetenceTypeController extends AbstractActionController {
     use CompetenceTypeServiceAwareTrait;

@@ -14,8 +14,8 @@ use UnicaenGlossaire\Service\Definition\DefinitionServiceFactory;
 use UnicaenGlossaire\View\Helper\DictionnaireGenerationViewHelper;
 use UnicaenGlossaire\View\Helper\DictionnaireGenerationViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -3,7 +3,7 @@
 namespace Formation\Form\FormationGroupe;
 
 use Formation\Entity\Db\FormationGroupe;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FormationGroupeHydrator implements HydratorInterface
 {
@@ -12,7 +12,7 @@ class FormationGroupeHydrator implements HydratorInterface
      * @param FormationGroupe $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle' => ($object->getLibelle()) ?: null,

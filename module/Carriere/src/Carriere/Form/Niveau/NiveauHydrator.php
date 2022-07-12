@@ -3,7 +3,7 @@
 namespace Carriere\Form\Niveau;
 
 use Carriere\Entity\Db\Niveau;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class NiveauHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class NiveauHydrator implements HydratorInterface {
      * @param Niveau $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'niveau' => $object->getNiveau(),

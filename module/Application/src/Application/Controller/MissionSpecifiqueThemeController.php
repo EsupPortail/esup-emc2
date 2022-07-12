@@ -5,10 +5,10 @@ namespace Application\Controller;
 use Application\Entity\Db\MissionSpecifiqueTheme;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class MissionSpecifiqueThemeController extends AbstractActionController {
     use MissionSpecifiqueThemeServiceAwareTrait;

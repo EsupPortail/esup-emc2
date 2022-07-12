@@ -4,7 +4,7 @@ namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\FicheTypeExterne;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AjouterFicheMetierHydrator implements HydratorInterface {
     use FicheMetierServiceAwareTrait;
@@ -13,7 +13,7 @@ class AjouterFicheMetierHydrator implements HydratorInterface {
      * @param FicheTypeExterne $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object) : array
     {
         $data = [
             'fiche_type'        => ($object->getFicheType())?$object->getFicheType()->getId():null,

@@ -5,7 +5,7 @@ namespace Element\Form\CompetenceElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class CompetenceElementHydrator implements HydratorInterface {
     use CompetenceServiceAwareTrait;
@@ -15,7 +15,7 @@ class CompetenceElementHydrator implements HydratorInterface {
      * @param CompetenceElement $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'competence'   => ($object AND $object->getCompetence())?$object->getCompetence()->getId():null,

@@ -2,9 +2,9 @@
 
 namespace Application\Form\HasPeriode;
 
-use Zend\Form\Element\Date;
-use Zend\Form\Element\DateTime;
-use Zend\Form\Fieldset;
+use Laminas\Form\Element\Date;
+use Laminas\Form\Element\DateTime;
+use Laminas\Form\Fieldset;
 
 class HasPeriodeFieldset extends Fieldset {
 

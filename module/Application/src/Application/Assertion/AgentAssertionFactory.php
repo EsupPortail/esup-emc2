@@ -6,7 +6,7 @@ use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
-use Zend\Mvc\Application;
+use Laminas\Mvc\Application;
 
 class AgentAssertionFactory {
 

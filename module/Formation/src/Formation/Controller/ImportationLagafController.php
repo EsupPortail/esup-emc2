@@ -23,8 +23,8 @@ use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTr
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ImportationLagafController extends AbstractActionController {
     use EtatServiceAwareTrait;

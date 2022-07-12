@@ -12,7 +12,7 @@ use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurService;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -19,8 +19,8 @@ use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceFactor
 use Element\View\Helper\CompetenceBlocViewHelper;
 use Element\View\Helper\CompetenceBlocViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

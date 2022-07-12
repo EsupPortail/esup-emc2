@@ -5,9 +5,9 @@ namespace UnicaenValidation\Controller;
 use UnicaenValidation\Entity\Db\ValidationType;
 use UnicaenValidation\Form\ValidationType\ValidationTypeFormAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ValidationTypeController extends AbstractActionController
 {

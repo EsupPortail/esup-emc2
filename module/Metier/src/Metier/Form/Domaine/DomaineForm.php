@@ -3,10 +3,10 @@
 namespace Metier\Form\Domaine;
 
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
 
 class DomaineForm extends Form {
     use FamilleProfessionnelleServiceAwareTrait;

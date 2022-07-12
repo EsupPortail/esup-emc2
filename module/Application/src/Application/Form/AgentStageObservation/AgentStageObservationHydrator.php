@@ -8,7 +8,7 @@ use DateTime;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AgentStageObservationHydrator implements HydratorInterface {
     use StructureServiceAwareTrait;
@@ -19,7 +19,7 @@ class AgentStageObservationHydrator implements HydratorInterface {
      * @param AgentStageObservation $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object) : array
     {
         $data = [
             'structure'         => ($object->getStructure())?($object->getStructure())->getId():null,

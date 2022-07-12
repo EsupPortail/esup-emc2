@@ -4,7 +4,7 @@ namespace Application\Form\SelectionAgent;
 
 use Application\Entity\HasAgentInterface;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class SelectionAgentHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -13,7 +13,7 @@ class SelectionAgentHydrator implements HydratorInterface {
      * @param HasAgentInterface $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,

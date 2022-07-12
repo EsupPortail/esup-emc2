@@ -7,7 +7,7 @@ use Doctrine\ORM\ORMException;
 use Element\Entity\Db\CompetenceTheme;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class CompetenceThemeService {
     use EntityManagerAwareTrait;

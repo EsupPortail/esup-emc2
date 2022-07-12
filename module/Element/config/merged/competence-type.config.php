@@ -12,8 +12,8 @@ use Element\Provider\Privilege\CompetencetypePrivileges;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\CompetenceType\CompetenceTypeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

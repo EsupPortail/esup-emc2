@@ -3,8 +3,8 @@
 namespace Structure\Form\AjouterGestionnaire;
 
 use Interop\Container\ContainerInterface;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
 
 class AjouterGestionnaireFormFactory {
 

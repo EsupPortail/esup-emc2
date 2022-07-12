@@ -9,7 +9,7 @@ use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use DateTime;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AgentAccompagnementHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -21,7 +21,7 @@ class AgentAccompagnementHydrator implements HydratorInterface {
      * @param AgentAccompagnement $object
      * @return array
      */
-    public function extract($object)
+    public function extract(object $object) : array
     {
         $data = [
             'cible'             => ($object->getCible())?['id' => $object->getCible()->getId(), 'label' => $object->getCible()->getDenomination()]:null,
@@ -45,7 +45,7 @@ class AgentAccompagnementHydrator implements HydratorInterface {
      * @param AgentAccompagnement $object
      * @return AgentAccompagnement
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, object $object)
     {
         $cible = (isset($data['cible']) AND isset($data['cible']['id']) AND trim($data['cible']['id']) !== '')?$this->getAgentService()->getAgent($data['cible']['id']):null;
         $bap = (isset($data['bap']) AND trim($data['bap']) !== '')?$this->getCorrespondanceService()->getCorrespondance($data['bap']):null;

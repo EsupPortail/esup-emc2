@@ -8,8 +8,8 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Structure\Service\Structure\StructureService;
-use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
+use Laminas\View\Helper\Url;
+use Laminas\View\HelperPluginManager;
 
 class PosteFormFactory {
 

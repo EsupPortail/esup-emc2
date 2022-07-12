@@ -5,8 +5,8 @@ namespace Element;
 use Element\Controller\CompetenceImporterController;
 use Element\Controller\CompetenceImporterControllerFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

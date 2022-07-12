@@ -3,10 +3,10 @@
 namespace Fichier\Form\Upload;
 
 use Fichier\Service\Nature\NatureServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\File;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\File;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
 
 class UploadForm extends Form {
     use NatureServiceAwareTrait;

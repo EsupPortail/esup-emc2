@@ -3,7 +3,7 @@
 namespace Application\Form\FonctionDestination;
 
 use Application\Entity\Db\FonctionDestination;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FonctionDestinationHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class FonctionDestinationHydrator implements HydratorInterface {
      * @param FonctionDestination $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'code' => $object->getCode(),

@@ -13,11 +13,11 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
-use Zend\Form\Element\Select;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\Form\Element\Select;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 

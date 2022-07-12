@@ -3,11 +3,11 @@
 namespace Carriere\Form\Niveau;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class NiveauForm extends Form {
 

@@ -8,10 +8,10 @@ use Formation\Form\FormationGroupe\FormationGroupeFormAwareTrait;
 use Formation\Form\SelectionFormationGroupe\SelectionFormationGroupeFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class FormationGroupeController extends AbstractActionController
 {

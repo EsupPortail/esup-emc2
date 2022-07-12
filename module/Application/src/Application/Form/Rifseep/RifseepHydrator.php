@@ -3,7 +3,7 @@
 namespace Application\Form\Rifseep;
 
 use Application\Entity\Db\FichePoste;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class RifseepHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class RifseepHydrator implements HydratorInterface {
      * @param FichePoste $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             "rifseep" => $object->getRifseep(),

@@ -3,9 +3,9 @@
 namespace EntretienProfessionnel\Service\Url;
 
 use Interop\Container\ContainerInterface;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\ServiceManager\Factory\DelegatorFactoryInterface;
-use Zend\Uri\Http;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
+use Laminas\Uri\Http;
 
 class TreeRouteStackConsoleDelegatorFactory implements DelegatorFactoryInterface
 {

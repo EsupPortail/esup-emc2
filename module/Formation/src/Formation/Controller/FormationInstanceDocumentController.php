@@ -12,7 +12,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceDocumentController extends AbstractActionController
 {

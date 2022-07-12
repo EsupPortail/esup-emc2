@@ -3,9 +3,9 @@
 namespace Carriere\View\Helper;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Resolver\TemplatePathStack;
 
 class NiveauEnveloppeViewHelper extends AbstractHelper
 {

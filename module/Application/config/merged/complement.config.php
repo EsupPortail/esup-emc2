@@ -13,8 +13,8 @@ use Application\Service\Complement\ComplementService;
 use Application\Service\Complement\ComplementServiceFactory;
 use Application\View\Helper\ComplementViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

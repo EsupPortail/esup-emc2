@@ -3,7 +3,7 @@
 namespace UnicaenEtat\Form\EtatType;
 
 use UnicaenEtat\Entity\Db\EtatType;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class EtatTypeHydrator implements HydratorInterface
 {
@@ -11,7 +11,7 @@ class EtatTypeHydrator implements HydratorInterface
      * @param EtatType $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'code' => $object->getCode(),

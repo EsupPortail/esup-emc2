@@ -3,7 +3,7 @@
 namespace Carriere\Form\Categorie;
 
 use Carriere\Entity\Db\Categorie;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class CategorieHydrator implements HydratorInterface {
 

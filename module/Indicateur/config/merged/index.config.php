@@ -6,7 +6,7 @@ use Indicateur\Controller\IndexController;
 use Indicateur\Controller\IndexControllerFactory;
 use Indicateur\Provider\Privilege\IndicateurPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
+use Laminas\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [

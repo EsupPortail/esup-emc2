@@ -4,7 +4,7 @@ namespace Formation\Form\FormationJournee;
 
 use DateTime;
 use Formation\Entity\Db\FormationInstanceJournee;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FormationJourneeHydrator implements HydratorInterface
 {
@@ -13,7 +13,7 @@ class FormationJourneeHydrator implements HydratorInterface
      * @param FormationInstanceJournee $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $jour = ($object->getJour())?$object->getJour()->format('d/m/Y'):null;
         $data = [

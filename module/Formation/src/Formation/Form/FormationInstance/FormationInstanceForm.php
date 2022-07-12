@@ -3,14 +3,14 @@
 namespace Formation\Form\FormationInstance;
 
 use Formation\Entity\Db\FormationInstance;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Element\Textarea;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Regex;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Regex;
 
 class FormationInstanceForm extends Form
 {

@@ -2,7 +2,7 @@
 
 namespace Application\Service\Url;
 
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class UrlService {
 

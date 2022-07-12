@@ -3,9 +3,9 @@
 namespace Application\View\Helper;
 
 use Application\View\Renderer\PhpRenderer;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Resolver\TemplatePathStack;
 
 class SynchorniserIconViewHelper extends AbstractHelper
 {

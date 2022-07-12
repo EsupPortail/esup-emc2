@@ -2,8 +2,8 @@
 
 namespace Application\Form\SpecificitePoste;
 
-use Zend\Form\Element\Button;
-use Zend\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Form;
 
 class SpecificitePosteForm extends Form {
 

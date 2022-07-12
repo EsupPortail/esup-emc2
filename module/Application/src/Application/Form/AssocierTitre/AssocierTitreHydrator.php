@@ -3,7 +3,7 @@
 namespace Application\Form\AssocierTitre;
 
 use Application\Entity\Db\FichePoste;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AssocierTitreHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class AssocierTitreHydrator implements HydratorInterface {
      * @param FichePoste $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'titre' => $object->getLibelle(),

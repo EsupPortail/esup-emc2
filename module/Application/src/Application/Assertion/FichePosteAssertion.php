@@ -11,7 +11,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Structure\Provider\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePosteAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
