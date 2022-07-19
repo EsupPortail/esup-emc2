@@ -4,6 +4,8 @@ namespace Application\Assertion;
 
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
 use Laminas\Mvc\Application;
@@ -13,8 +15,10 @@ class AgentAssertionFactory {
     /**
      * @param ContainerInterface $container
      * @return AgentAssertion
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function  __invoke(ContainerInterface $container)
+    public function  __invoke(ContainerInterface $container): AgentAssertion
     {
         /**
          * @var AgentService $agentService

@@ -76,6 +76,7 @@ return [
             \EntretienProfessionnel\Provider\IdentityProvider::class,
             \Structure\Provider\IdentityProvider::class,
         ],
+        'application-username' => 'preecog',
     ],
 
     // pour la mise a jour des champs d'historisation ...
