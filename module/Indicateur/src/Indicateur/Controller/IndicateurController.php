@@ -37,15 +37,18 @@ class IndicateurController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
         $indicateur = $this->getIndicateurService()->getRequestedIndicateur($this);
-        $result = $this->getIndicateurService()->getIndicateurData($indicateur);
+
+        $exists = $this->getIndicateurService()->verifierExistanceMaterializedView($indicateur->getViewId());
+        if ($exists === true) $result = $this->getIndicateurService()->getIndicateurData($indicateur);
 
         return new ViewModel([
             'indicateur' => $indicateur,
-            'header' => $result[0],
-            'data' => $result[1],
+            'exists' => $exists,
+            'header' => ($exists)?$result[0]:null,
+            'data' =>   ($exists)?$result[1]:null,
         ]);
     }
 

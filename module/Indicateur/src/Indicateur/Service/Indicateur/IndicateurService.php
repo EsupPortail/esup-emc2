@@ -7,6 +7,7 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\DBAL\Driver\Exception as DBA_Driver_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Indicateur\Entity\Db\Indicateur;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -63,11 +64,29 @@ class IndicateurService {
 
     /** GESTION DES VUES **********************************************************************************************/
 
+    public function verifierExistanceMaterializedView($viewname) : bool
+    {
+        try {
+            $sql = "SELECT EXISTS (SELECT FROM pg_matviews WHERE matviewname='" . $viewname . "')";
+            $query = $this->getEntityManager()->getConnection()->prepare($sql);
+            $query->execute();
+            $value = $query->fetchOne();
+        } catch (Exception $e) {
+            return false;
+        }
+        return $value;
+    }
+
     /**
      * @param Indicateur $indicateur
-     * @return array
+     * @return array|null
      */
-    public function fetch(Indicateur $indicateur) : array {
+    public function fetch(Indicateur $indicateur) : ?array {
+
+        $exist = $this->verifierExistanceMaterializedView($indicateur->getViewId());
+        if ($exist === false) return null;
+
+
         $sql = "SELECT * FROM " . $indicateur->getViewId();
         try {
             $query = $this->getEntityManager()->getConnection()->prepare($sql);
@@ -108,7 +127,7 @@ class IndicateurService {
      */
     public function dropView(Indicateur $indicateur)
     {
-        $sql = "DROP MATERIALIZED VIEW " . $indicateur->getViewId();
+        $sql = "DROP MATERIALIZED VIEW IF EXISTS " . $indicateur->getViewId();
         try {
             $query = $this->getEntityManager()->getConnection()->prepare($sql);
         } catch (DBA_Exception $e) {
@@ -198,12 +217,13 @@ class IndicateurService {
 
     /** RECUPERATION DONNEES *****************************************************************************************
      * @param Indicateur $indicateur
-     * @return array
+     * @return array|null
      */
 
-    public function getIndicateurData(Indicateur $indicateur)
+    public function getIndicateurData(Indicateur $indicateur) : ?array
     {
         $rawdata = $this->fetch($indicateur);
+        if ($rawdata === null) return null;
         $rubriques = [];
 
         if ($indicateur->getEntity() === Indicateur::ENTITY_LIBRE) {

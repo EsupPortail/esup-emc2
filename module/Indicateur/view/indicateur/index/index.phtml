@@ -21,7 +21,7 @@ $canDesabonnement = true;
 <?php if ($canLister) : ?>
     <a href="<?php echo $this->url('mes-indicateurs/abonnement', [], [], true); ?>"
        class="btn btn-primary action ajax-modal" data-event="modification">
-        <span class="icon ajouter"></span>
+        <span class="icon icon-ajouter"></span>
         S'abonner à un indicateur
     </a>
 <?php endif; ?>
@@ -45,12 +45,12 @@ $canDesabonnement = true;
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Indicateur\Controller\IndicateurController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('indicateur/afficher', ['indicateur' => $abonnement->getIndicateur()->getId()], [], true); ?>">
-                        <span class="icon voir"></span></a>
+                        <span class="icon icon-voir"></span></a>
                 <?php endif; ?>
                 <?php if ($canDesabonnement) : ?>
                     <?php /** @see \Indicateur\Controller\AbonnementController::resilierAction() */ ?>
                     <a href="<?php echo $this->url('abonnement/resilier', ['indicateur' => $abonnement->getIndicateur()->getId()], ['query' => ['retour' => $this->url('mes-indicateurs', [], [], true)]], true); ?>">
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>
