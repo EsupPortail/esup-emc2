@@ -51,7 +51,7 @@ $query = ['retour' => $this->url(null,[],
                 ?>"
                 class="btn btn-primary ajax-modal action"
                 data-event="modification">
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter une mission spécifique
             </a>
         <?php endif; ?>
@@ -88,7 +88,7 @@ $query = ['retour' => $this->url(null,[],
                             <a href="<?php echo $this->url('mission-specifique-affectation/afficher', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
                                class="ajax-modal"
                             >
-                                <span class="icon voir"  data-toggle="tooltip" data-html="true"
+                                <span class="icon icon-voir"  data-toggle="tooltip" data-html="true"
                                       title="Affecter l'affectation"></span></a>
                         <?php endif; ?>
 
@@ -97,7 +97,7 @@ $query = ['retour' => $this->url(null,[],
                             <a href="<?php echo $this->url('mission-specifique-affectation/generer-lettre-type', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
                                target="_blank"
                             >
-                                <span class="icon pdf"  data-toggle="tooltip" data-html="true"
+                                <span class="icon icon-pdf"  data-toggle="tooltip" data-html="true"
                                       title="Générer la lettre type associée l'affectation"></span></a>
                         <?php endif; ?>
 
@@ -107,7 +107,7 @@ $query = ['retour' => $this->url(null,[],
                             <a href="<?php echo $this->url('mission-specifique-affectation/modifier', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
                                class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon editer" data-toggle="tooltip" data-html="true"
+                                <span class="icon icon-editer" data-toggle="tooltip" data-html="true"
                                       title="Modifier l'affectation"></span></a>
                         <?php endif; ?>
 
@@ -115,14 +115,14 @@ $query = ['retour' => $this->url(null,[],
                             <?php if ($canhistoriser) : ?>
                                 <?php /** @see MissionSpecifiqueAffectationController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $affectation->getId()], ["query" => $query], true); ?>">
-                                    <span class="icon historiser"  data-toggle="tooltip" data-html="true"
+                                    <span class="icon icon-historiser"  data-toggle="tooltip" data-html="true"
                                           title="Historiser l'affectation"></span></a>
                             <?php endif; ?>
                         <?php else : ?>
                             <?php if ($canhistoriser) : ?>
                                 <?php /** @see MissionSpecifiqueAffectationController::restaurerAction() */ ?>
                                 <a href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $affectation->getId()],  ["query" => $query], true); ?>">
-                                    <span class="icon restaurer" data-toggle="tooltip" data-html="true"
+                                    <span class="icon icon-restaurer" data-toggle="tooltip" data-html="true"
                                           title="Restaurer l'affectation"></span></a>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -132,7 +132,7 @@ $query = ['retour' => $this->url(null,[],
                             <a href="<?php echo $this->url('mission-specifique-affectation/detruire', ['agent-mission-specifique' => $affectation->getId()], [], true); ?>"
                                class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon detruire"  data-toggle="tooltip" data-html="true"
+                                <span class="icon icon-retirer"  data-toggle="tooltip" data-html="true"
                                       title="Détruire l'affectation"></span></a>
                         <?php endif; ?>
                     </td>

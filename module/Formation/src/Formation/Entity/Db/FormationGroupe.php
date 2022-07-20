@@ -5,8 +5,8 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class FormationGroupe implements HistoriqueAwareInterface, HasSourceInterface
 {

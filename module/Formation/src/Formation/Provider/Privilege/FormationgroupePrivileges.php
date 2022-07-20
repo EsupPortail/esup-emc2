@@ -6,9 +6,9 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FormationgroupePrivileges extends Privileges
 {
-    const FORMATIONGROUPE_AFFICHER = 'FormationGroupe-FormationGroupe_afficher';
-    const FORMATIONGROUPE_MODIFIER = 'FormationGroupe-FormationGroupe_modifier';
-    const FORMATIONGROUPE_AJOUTER = 'FormationGroupe-FormationGroupe_ajouter';
-    const FORMATIONGROUPE_HISTORISER = 'FormationGroupe-FormationGroupe_historiser';
-    const FORMATIONGROUPE_SUPPRIMER = 'FormationGroupe-FormationGroupe_supprimer';
+    const FORMATIONGROUPE_AFFICHER =    'formationgroupe-formationgroupe_afficher';
+    const FORMATIONGROUPE_MODIFIER =    'formationgroupe-formationgroupe_modifier';
+    const FORMATIONGROUPE_AJOUTER =     'formationgroupe-formationgroupe_ajouter';
+    const FORMATIONGROUPE_HISTORISER =  'formationgroupe-formationgroupe_historiser';
+    const FORMATIONGROUPE_SUPPRIMER =   'formationgroupe-formationgroupe_supprimer';
 }

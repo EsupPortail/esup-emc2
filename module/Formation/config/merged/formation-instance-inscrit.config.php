@@ -6,6 +6,7 @@ use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -27,7 +28,7 @@ return [
                         'envoyer-liste-complementaire',
                     ],
                     'privileges' => [
-                        FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
                 ],
                 [
@@ -48,7 +49,7 @@ return [
                         'valider-drh',
                     ],
                     'privileges' => [
-                        FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
                 ],
             ],

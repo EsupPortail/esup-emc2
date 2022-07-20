@@ -73,7 +73,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        --><?php ///** @see FicheMetierController::editerLibelleAction() */ ?>
 <!--        <a  class="btn btn-primary action ajax-modal" data-event="modification"-->
 <!--            href="--><?php //echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fichemetier->getId()], [] , true); ?><!--">-->
-<!--            <span class="icon editer"></span>-->
+<!--            <span class="icon icon-editer"></span>-->
 <!--            Modifier libellé-->
 <!--        </a>-->
 <!---->
@@ -86,7 +86,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                <span class="icon retirer"></span>-->
 <!--                Retirer expertise-->
 <!--            --><?php //else: ?>
-<!--                <span class="icon ajouter"></span>-->
+<!--                <span class="icon icon-ajouter"></span>-->
 <!--                Ajouter expertise-->
 <!--            --><?php //endif; ?>
 <!--        </a>-->
@@ -129,7 +129,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                        href="--><?php //echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fichemetier->getId()], [] , true); ?><!--"-->
 <!--                        data-event="modification"-->
 <!--                    >-->
-<!--                        <span class="icon ajouter"></span>-->
+<!--                        <span class="icon icon-ajouter"></span>-->
 <!--                        Ajouter une nouvelle activité-->
 <!--                    </a>-->
 <!--                    --><?php ///** @see FicheMetierController::ajouterActiviteExistanteAction() */ ?>
@@ -156,7 +156,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                    href="--><?php //echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $ficheposte->getId(), 'fiche-type-externe' => $ficheexterne->getId()], [], true); ?><!--"-->
 <!--                                    class="ajax-modal" data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon listing" title="Sélectionner les activités associées"></span></a>-->
+<!--                                <span class="icon icon-listing" title="Sélectionner les activités associées"></span></a>-->
 <!--                        --><?php //endif; ?>
 <!--                    </div>-->
 <!--                </div>-->
@@ -204,7 +204,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                <a href="--><?php //echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--                                   class="btn btn-primary action ajax-modal"-->
 <!--                                >-->
-<!--                                    <span class="icon graphique"></span>-->
+<!--                                    <span class="icon icon-diagramme"></span>-->
 <!--                                    Afficher les compétences-->
 <!--                                </a>-->
 <!--                            --><?php //endif; ?>
@@ -220,7 +220,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                               class="btn btn-primary action ajax-modal"-->
 <!--                               data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon ajouter"></span>-->
+<!--                                <span class="icon icon-ajouter"></span>-->
 <!--                                Ajouter une compétence-->
 <!--                            </a>-->
 <!--                        --><?php //endif; ?>
@@ -259,7 +259,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                <a href="--><?php //echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--                                   class="btn btn-primary action ajax-modal"-->
 <!--                                >-->
-<!--                                    <span class="icon graphique"></span>-->
+<!--                                    <span class="icon icon-diagramme"></span>-->
 <!--                                    Afficher les applications-->
 <!--                                </a>-->
 <!--                            --><?php //endif; ?>
@@ -275,7 +275,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                               class="btn btn-primary action ajax-modal"-->
 <!--                               data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon ajouter"></span>-->
+<!--                                <span class="icon icon-ajouter"></span>-->
 <!--                                Ajouter une application-->
 <!--                            </a>-->
 <!--                        --><?php //endif; ?>
@@ -330,7 +330,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        <a href="--><?php //echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--           class="btn btn-primary action ajax-modal"-->
 <!--        >-->
-<!--            <span class="icon graphique"></span>-->
+<!--            <span class="icon icon-diagramme"></span>-->
 <!--            Afficher les compétences-->
 <!--        </a>-->
 <!---->
@@ -338,7 +338,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        <a href="--><?php //echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--           class="btn btn-primary action ajax-modal"-->
 <!--        >-->
-<!--            <span class="icon graphique"></span>-->
+<!--            <span class="icon icon-diagramme"></span>-->
 <!--            Afficher les applications-->
 <!--        </a>-->
 <?php //endif; ?>

@@ -76,14 +76,14 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                 <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                    class="btn btn-primary action">
-                    <span class="icon pdf"></span>
+                    <span class="icon icon-pdf"></span>
                     Exporter le CREP
                 </a>
                 <br/>
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
                 <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                    class="btn btn-primary action">
-                    <span class="icon pdf"></span>
+                    <span class="icon icon-pdf"></span>
                     Exporter le CREF
                 </a>
             </div>

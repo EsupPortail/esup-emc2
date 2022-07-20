@@ -8,7 +8,7 @@ use Formation\Form\FormationJournee\FormationJourneeForm;
 use Formation\Form\FormationJournee\FormationJourneeFormFactory;
 use Formation\Form\FormationJournee\FormationJourneeHydrator;
 use Formation\Form\FormationJournee\FormationJourneeHydratorFactory;
-use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -28,7 +28,7 @@ return [
                         'supprimer-journee',
                     ],
                     'privileges' => [
-                        FormationinstancejourneePrivileges::FORMATIONINSTANCEJOURNEE_MODIFIER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE,
                     ],
                 ],
             ],

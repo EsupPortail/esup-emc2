@@ -31,7 +31,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
     <div class="col-md-4">
         <?php if ($canAjouter) : ?>
             <a href="<?php echo $this->url('mission-specifique/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter une mission spécifique
             </a>
         <?php endif; ?>
@@ -70,30 +70,30 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
                     <a href="<?php echo $this->url('mission-specifique/afficher', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal"
                     >
-                        <span class="icon voir" title="Afficher la mission spécifique"></span></a>
+                        <span class="icon icon-voir" title="Afficher la mission spécifique"></span></a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
                     <a href="<?php echo $this->url('mission-specifique/modifier', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier la mission spécifique"></span></a>
+                        <span class="icon icon-editer" title="Modifier la mission spécifique"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($mission->estNonHistorise()) : ?>
                         <a href="<?php echo $this->url('mission-specifique/historiser', ['mission' => $mission->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser la mission spécifique"></span></a>
+                            <span class="icon icon-historiser" title="Historiser la mission spécifique"></span></a>
                     <?php else : ?>
                         <a href="<?php echo $this->url('mission-specifique/restaurer', ['mission' => $mission->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer la mission spécifique"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer la mission spécifique"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
                     <a href="<?php echo $this->url('mission-specifique/detruire', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire" title="Supprimer la mission spécifique"></span></a>
+                        <span class="icon icon-retirer" title="Supprimer la mission spécifique"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

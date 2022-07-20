@@ -6,6 +6,8 @@
  * @var Role $role
  */
 
+use UnicaenDbImport\Privilege\ImportPrivilege;
+use UnicaenDbImport\Privilege\LogPrivilege;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -49,7 +51,7 @@ use UnicaenUtilisateur\Entity\Db\User;
     <?php else: ?>
 
         <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="icon icon-user"></span>
             <?php echo $this->translate('Se connecter') ?>
         </a>
 
@@ -109,3 +111,7 @@ use UnicaenUtilisateur\Entity\Db\User;
         }
     }
 </style>
+
+
+<?php var_dump($this->isAllowed(ImportPrivilege::getResourceId(ImportPrivilege::LISTER))); ?>
+<?php var_dump($this->isAllowed(LogPrivilege::getResourceId(LogPrivilege::LISTER))); ?>

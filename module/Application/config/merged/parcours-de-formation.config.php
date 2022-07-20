@@ -55,32 +55,32 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'parcours-de-formation' => [
-                                'label'    => 'Parcours de formation',
-                                'route'    => 'parcours-de-formation',
-                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
-                                'order'    => 340,
-                                'icon' => 'fas fa-angle-right',
-                                'pages' => [
-                                    'modifier-parcours-de-foamtion' => [
-                                        'label'    => 'Parcours de formation',
-                                        'route'    => 'parcours-de-formation/modifier',
-                                        'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
-                                    ]
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'parcours-de-formation' => [
+//                                'label'    => 'Parcours de formation',
+//                                'route'    => 'parcours-de-formation',
+//                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+//                                'order'    => 340,
+//                                'icon' => 'fas fa-angle-right',
+//                                'pages' => [
+//                                    'modifier-parcours-de-foamtion' => [
+//                                        'label'    => 'Parcours de formation',
+//                                        'route'    => 'parcours-de-formation/modifier',
+//                                        'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+//                                    ]
+//                                ],
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

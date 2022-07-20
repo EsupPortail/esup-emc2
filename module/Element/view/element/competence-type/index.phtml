@@ -33,7 +33,7 @@ $canDetruire = $this->isAllowed(CompetencethemePrivileges::getResourceId(Compete
         <?php if ($canAjouter) : ?>
             <a href="<?php echo $this->url('element/competence-type/ajouter', [], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="modification">
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter un type
             </a>
         <?php endif; ?>
@@ -75,42 +75,42 @@ $canDetruire = $this->isAllowed(CompetencethemePrivileges::getResourceId(Compete
                     <?php /** @see CompetenceController::afficherCompetenceTypeAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/afficher', ['competence-type' => $type->getId()], [], true); ?>"
                        class="ajax-modal">
-                        <span class="icon voir" title="Afficher le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                        <span class="icon icon-voir" title="Afficher le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
                 <?php else : ?>
-                    <span class="icon voir" style="color: lightgrey"></span>
+                    <span class="icon icon-voir" style="color: lightgrey"></span>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
                     <?php /** @see CompetenceController::modifierCompetenceTypeAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/modifier', ['competence-type' => $type->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon editer" title="Modifier le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                        <span class="icon icon-editer" title="Modifier le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
                 <?php else : ?>
-                    <span class="icon editer" style="color: lightgrey"></span>
+                    <span class="icon icon-editer" style="color: lightgrey"></span>
                 <?php endif; ?>
                 <?php if ($canHistoriser): ?>
                     <?php if($type->estNonHistorise()) : ?>
                         <?php /** @see CompetenceController::historiserCompetenceTypeAction() */?>
                         <a href="<?php echo $this->url('element/competence-type/historiser', ['competence-type' => $type->getId()], [], true); ?>">
-                            <span class="icon historiser" title="Historiser le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                            <span class="icon icon-historiser" title="Historiser le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
                     <?php else : ?>
                         <?php /** @see CompetenceController::restaurerCompetenceTypeAction() */?>
                         <a href="<?php echo $this->url('element/competence-type/restaurer', ['competence-type' => $type->getId()], [], true); ?>">
-                            <span class="icon restaurer" title="Restaurer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
                     <?php endif; ?>
                 <?php else: ?>
                     <?php if($type->estNonHistorise()) : ?>
-                        <span class="icon historiser" style="color:lightgray;"></span>
+                        <span class="icon icon-historiser" style="color:lightgray;"></span>
                     <?php else : ?>
-                        <span class="icon restaurer" style="color:lightgray;"></span>
+                        <span class="icon icon-restaurer" style="color:lightgray;"></span>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
                     <?php /** @see CompetenceController::detruireCompetenceTypeAction() */ ?>
                     <a href="<?php echo $this->url('element/competence-type/detruire', ['competence-type' => $type->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon detruire" title="Supprimer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
+                        <span class="icon icon-retirer" title="Supprimer le type de compétence [<?php echo $type->getLibelle(); ?>]"></span></a>
                 <?php else : ?>
-                    <span class="icon detruire" style="color: lightgrey"></span>
+                    <span class="icon icon-retirer" style="color: lightgrey"></span>
                 <?php endif; ?>
             </td>
         </tr>

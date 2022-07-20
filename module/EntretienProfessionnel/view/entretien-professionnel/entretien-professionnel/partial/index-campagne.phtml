@@ -27,7 +27,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                 href="<?php echo $this->url('entretien-professionnel/campagne/ajouter', [], [], true); ?>"
                 class="btn btn-primary action ajax-modal" data-event="modification"
                 >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter une campagne
             </a>
         <?php endif; ?>
@@ -62,7 +62,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                             data-toggle="tooltip" data-html="true"
                             title="Modification de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                         >
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                     <?php endif; ?>
                     <?php if ($canHistoriser) : ?>
                         <?php if ($campagne->estNonHistorise()) : ?>
@@ -72,7 +72,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                                     data-toggle="tooltip" data-html="true"
                                     title="Historisation de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                             >
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::restaurerAction() */?>
@@ -80,7 +80,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                                     data-toggle="tooltip" data-html="true"
                                     title="Restauration de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                             >
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canDetruire) : ?>
@@ -91,7 +91,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                                 data-toggle="tooltip" data-html="true"
                                 title="Suppression de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                         >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>

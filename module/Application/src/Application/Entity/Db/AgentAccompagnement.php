@@ -7,8 +7,8 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
 use UnicaenEtat\Entity\Db\Etat;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class AgentAccompagnement implements HasPeriodeInterface, HistoriqueAwareInterface {
     use HasPeriodeTrait;

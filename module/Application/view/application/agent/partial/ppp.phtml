@@ -31,7 +31,7 @@ $canDetruirePPP     = $canAjouterPPP;
             <a href="<?php echo $this->url('agent/ppp/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="modification"
             >
-                <span class="icon ajouter"> </span>
+                <span class="icon icon-ajouter"> </span>
                 Ajouter un PPP
             </a>
         <?php endif; ?>
@@ -78,19 +78,19 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/ppp/modifier', ['ppp' => $ppp->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriserPPP) : ?>
                     <?php if ($ppp->estNonHistorise()) : ?>
                         <?php /** @see \Application\Controller\AgentController::historiserPppAction() */ ?>
                         <a href="<?php echo $this->url('agent/ppp/historiser', ['ppp' => $ppp->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\AgentController::restaurerPppAction() */ ?>
                         <a href="<?php echo $this->url('agent/ppp/restaurer', ['ppp' => $ppp->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruirePPP) : ?>
@@ -98,7 +98,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/ppp/detruire', ['ppp' => $ppp->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -119,7 +119,7 @@ $canDetruirePPP     = $canAjouterPPP;
             <a href="<?php echo $this->url('agent/stageobs/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="modification"
             >
-                <span class="icon ajouter"> </span>
+                <span class="icon icon-ajouter"> </span>
                 Ajouter un stage
             </a>
         <?php endif; ?>
@@ -155,19 +155,19 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/stageobs/modifier', ['stageobs' => $stage->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriserPPP) : ?>
                     <?php if ($stage->estNonHistorise()) : ?>
                         <?php /** @see \Application\Controller\AgentController::historiserStageObservationAction() */ ?>
                         <a href="<?php echo $this->url('agent/stageobs/historiser', ['stageobs' => $stage->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\AgentController::restaurerStageObservationAction() */ ?>
                         <a href="<?php echo $this->url('agent/stageobs/restaurer', ['stageobs' => $stage->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruirePPP) : ?>
@@ -175,7 +175,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/stageobs/detruire', ['stageobs' => $stage->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

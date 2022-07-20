@@ -57,7 +57,7 @@ $canAfficherInformationMetier = (
                                     Fiche de poste #<?php echo $ficheposte->getId();?>
                                 </a>
                             <?php else : ?>
-                                <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche de poste</span>
+                                <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche de poste</span>
                             <?php endif; ?>
                         </dd>
                         <dt> Fiche(s) métier(s)</dt>
@@ -78,7 +78,7 @@ $canAfficherInformationMetier = (
                                     </a>
                                 <?php endforeach; ?>
                             <?php else : ?>
-                                <span style="color: darkred;"><span class="icon attention"></span> Aucune fiche métier </span>
+                                <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche métier </span>
                             <?php endif; ?>
                         </dd>
 
@@ -166,14 +166,14 @@ $canAfficherInformationMetier = (
             <div class="panel-body">
                 <dl class="dl-horizontal">
                     <dt>Confirmation</dt>
-                    <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon ok" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
+                    <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon icon-checked" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
                     <dt>Responsable d'entretien </dt>
                     <dd>
                         <?php $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE); ?>
                         <?php if ($validationResponsable !== null) : ?>
                             <div>
                                 <div style="display: inline-block; vertical-align: top;">
-                                    <span class="icon ok" style="color:darkgreen;"></span>
+                                    <span class="icon icon-checked" style="color:darkgreen;"></span>
                                 </div>
                                 <div style="display: inline-block;">
                                     <?php echo $validationResponsable->getHistoModificateur()->getDisplayName(); ?>
@@ -189,7 +189,7 @@ $canAfficherInformationMetier = (
                         <?php $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH); ?>
                         <?php if ($validationHierarchie !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
-                                <span class="icon ok" style="color:darkgreen;"></span>
+                                <span class="icon icon-checked" style="color:darkgreen;"></span>
                             </div>
                             <div style="display: inline-block;">
                                 <?php echo $validationHierarchie->getHistoModificateur()->getDisplayName(); ?>
@@ -208,7 +208,7 @@ $canAfficherInformationMetier = (
 
                         <?php if ($validationAgent !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
-                                <span class="icon ok" style="color:darkgreen;"></span>
+                                <span class="icon icon-checked" style="color:darkgreen;"></span>
                             </div>
                             <div style="display: inline-block;">
                                 <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?>

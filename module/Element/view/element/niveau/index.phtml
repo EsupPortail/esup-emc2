@@ -28,7 +28,7 @@ $canSupprimer = true;
 <a href="<?php echo $this->url('element/niveau/ajouter', [], [], true); ?>"
    class="btn btn-primary ajax-modal" data-event="modification"
 >
-    <span class="icon ajouter"></span>
+    <span class="icon icon-ajouter"></span>
     Ajouter un niveau
 </a>
 
@@ -59,21 +59,21 @@ $canSupprimer = true;
             <?php if ($canModifier) : ?>
                 <?php /** @see NiveauController::modifierAction() */?>
                 <a href="<?php echo $this->url('element/niveau/modifier', ['maitrise' => $element->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon editer"></span></a>
+                    <span class="icon icon-editer"></span></a>
             <?php endif; ?>
             <?php if ($canHistoriser) : ?>
                 <?php if ($element->estNonHistorise()) : ?>
                     <?php /** @see NiveauController::historiserAction() */?>
                     <a href="<?php echo $this->url('element/niveau/historiser', ['maitrise' => $element->getId()], ['query' => ['retour' => $this->url('element/niveau', [], [], true)]], true); ?>">
-                        <span class="icon historiser"></span></a>
+                        <span class="icon icon-historiser"></span></a>
                 <?php else : ?>
                     <a href="<?php echo $this->url('element/niveau/restaurer', ['maitrise' => $element->getId()], ['query' => ['retour' => $this->url('element/niveau', [], [], true)]], true); ?>">
-                        <span class="icon restaurer"></span></a>
+                        <span class="icon icon-restaurer"></span></a>
                 <?php endif; ?>
             <?php endif; ?>
             <?php if ($canSupprimer) : ?>
                 <a href="<?php echo $this->url('element/niveau/supprimer', ['maitrise' => $element->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                    <span class="icon detruire"></span></a>
+                    <span class="icon icon-retirer"></span></a>
             <?php endif; ?>
         </td>
     </tr>

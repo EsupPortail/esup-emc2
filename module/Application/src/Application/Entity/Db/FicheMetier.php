@@ -14,8 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Entity\Db\Metier;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {

@@ -92,9 +92,9 @@ foreach ($encours as $epro) {
         <dt> En cours </dt>
         <dd>
             <?php if ($enCours) : ?>
-                <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
+                <span style="color:darkgreen;"><span class="icon icon-checked"></span>Oui</span>
             <?php else : ?>
-                <span style="color:darkred;"><span class="icon ko"></span>Non</span>
+                <span style="color:darkred;"><span class="icon icon-retirer"></span>Non</span>
             <?php endif; ?>
         </dd>
     </dl>
@@ -106,7 +106,7 @@ foreach ($encours as $epro) {
                 <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
                    data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon ajouter"></span>
+                    <span class="icon icon-ajouter"></span>
                 </a>
             <?php endif; ?>
         </h3>
@@ -123,7 +123,7 @@ foreach ($encours as $epro) {
                         <?php if ($canGererDelegue AND $enCours) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\DelegueController::retirerAction() */ ?>
                             <a href="<?php echo $this->url('entretien-professionnel/retirer-delegue', ['delegue' => $delegue->getId()], [], true); ?>">
-                                <span class="icon detruire"></span>
+                                <span class="icon icon-retirer"></span>
                             </a>
                         <?php endif; ?>
                     </li>
@@ -250,7 +250,7 @@ foreach ($encours as $epro) {
                                 class="ajax-modal" data-event="entretien"
                                 data-toggle="tooltip" data-html="true"
                             >
-                                <span class="icon ajouter"></span></a>
+                                <span class="icon icon-ajouter"></span></a>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
@@ -312,7 +312,7 @@ foreach ($encours as $epro) {
                                 class="ajax-modal" data-event="entretien"
                                 data-toggle="tooltip" data-html="true"
                         >
-                            <span class="icon ajouter"></span></a>
+                            <span class="icon icon-ajouter"></span></a>
                     <?php endif; ?>
                 </td>
             <?php endif; ?>

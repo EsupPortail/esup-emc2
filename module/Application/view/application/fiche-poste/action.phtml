@@ -20,7 +20,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li><a class="dropdown-item"
        href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
     >
-        <span class="icon voir"></span>
+        <span class="icon icon-voir"></span>
         Afficher
     </a></li>
 <?php endif; ?>
@@ -28,7 +28,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li><a class="dropdown-item"
            href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
         >
-            <span class="icon pdf"></span>
+            <span class="icon icon-pdf"></span>
             Exporter
         </a></li>
 <?php endif; ?>
@@ -36,7 +36,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li><a class="dropdown-item"
        href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
     >
-        <span class="icon editer"></span>
+        <span class="icon icon-editer"></span>
         Modifier
     </a></li>
 <?php endif; ?>
@@ -44,7 +44,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li><a class="dropdown-item"
            href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
         >
-            <span class="icon historiser"></span>
+            <span class="icon icon-historiser"></span>
             Supprimer
         </a></li>
 <?php endif; ?>
@@ -52,7 +52,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li id="test" class="bg-danger"><a class="dropdown-item"
            href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
         >
-            <span class="icon detruire"></span>
+            <span class="icon icon-retirer"></span>
             Détruire
         </a></li>
 <?php endif; ?>

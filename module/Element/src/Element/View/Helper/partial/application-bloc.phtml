@@ -97,7 +97,7 @@ ksort($groupes);
                                 class="ajax-modal btn btn-primary action"
                                 data-event="modification"
                         >
-                            <span class="icon ajouter" title="Ajouter une application"></span>
+                            <span class="icon icon-ajouter" title="Ajouter une application"></span>
                             Ajouter une application
                         </a>
                     <?php endif; ?>
@@ -109,7 +109,7 @@ ksort($groupes);
                                 class="ajax-modal btn btn-primary action"
                                 data-event="modification"
                         >
-                            <span class="icon ajouter" title="Ajouter une application"></span>
+                            <span class="icon icon-ajouter" title="Ajouter une application"></span>
                             Ajouter une application
                         </a>
                     <?php endif; ?>
@@ -154,7 +154,7 @@ ksort($groupes);
                 </td>
                 <td class="clef">
                     <?php if ($isClef) : ?>
-                        <span class="icon star"></span>
+                        <span class="icon icon-star"></span>
                     <?php endif; ?>
                 </td>
                 <?php if ($displayValidation) : ?>
@@ -171,14 +171,14 @@ ksort($groupes);
 <!--                                    href="--><?php //echo $this->url("element/afficher", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId()], [], true); ?><!--"-->
 <!--                                    class="ajax-modal" data-toggle="tooltip" data-html="true"-->
 <!--                                    title="Afficher l'application <span class='highlight application'>--><?php //echo $application->getLibelle(); ?><!--</span>">-->
-<!--                                <span class="icon voir"></span></a>-->
+<!--                                <span class="icon icon-voir"></span></a>-->
 <!--                        --><?php //endif; ?>
                         <?php if ($canModifier) : ?>
                             <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
                                     href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                     class="ajax-modal" data-event="modification" data-toggle="tooltip" data-html="true"
                                     title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                <span class="icon editer"></span></a>
+                                <span class="icon icon-editer"></span></a>
                         <?php endif; ?>
                         <?php if ($canSupprimer) : ?>
                             <a
@@ -187,7 +187,7 @@ ksort($groupes);
                                     class="ajax-modal"
                                     data-event="modification"
                             >
-                                <span class="icon detruire" title="Supprimer définitivement une application liées à l'agent"></span></a>
+                                <span class="icon icon-retirer" title="Supprimer définitivement une application liées à l'agent"></span></a>
                         <?php endif; ?>
                         <?php if ($canValider) : ?>
                             <?php if ($entite->getValidation() === null) : ?>

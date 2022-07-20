@@ -39,7 +39,7 @@ $this->headTitle('Liste des domaines')
                 class="btn btn-primary action ajax-modal"
                 data-event="modification"
             >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter un domaine
             </a>
         <?php endif;?>
@@ -76,19 +76,19 @@ $this->headTitle('Liste des domaines')
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier le domaine"></span></a>
+                        <span class="icon icon-editer" title="Modifier le domaine"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($domaine->estNonHistorise()) : ?>
                         <a  <?php /** @see \Metier\Controller\DomaineController::historiserAction() */ ?>
                             href="<?php echo $this->url('domaine/historiser', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser le domaine"></span></a>
+                            <span class="icon icon-historiser" title="Historiser le domaine"></span></a>
                     <?php else : ?>
                         <a  <?php /** @see \Metier\Controller\DomaineController::restaurerAction() */ ?>
                             href="<?php echo $this->url('domaine/restaurer', ['domaine' => $domaine->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer le domaine"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le domaine"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
@@ -96,7 +96,7 @@ $this->headTitle('Liste des domaines')
                         href="<?php echo $this->url('domaine/effacer', ['domaine' => $domaine->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"  title="Supprimer le domaine"></span></a>
+                        <span class="icon icon-retirer"  title="Supprimer le domaine"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

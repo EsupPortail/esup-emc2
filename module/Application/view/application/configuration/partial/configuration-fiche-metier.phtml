@@ -27,7 +27,7 @@ use Application\Entity\Db\ConfigurationFicheMetier;
             <?php /**  @see \Application\Controller\ConfigurationController::ajouterConfigurationFicheMetierAction() */ ?>
             <a href="<?php echo $this->url('configuration/ajouter-configuration-fiche-metier', ['type' => $type], [], true); ?>"
                class="btn btn-primary ajax-modal action" data-event="modification">
-                <span class="icon ajouter">Ajouter une <?php echo $type; ?></a>
+                <span class="icon icon-ajouter">Ajouter une <?php echo $type; ?></a>
         <?php endif; ?>
     </div>
 </div>
@@ -50,9 +50,9 @@ use Application\Entity\Db\ConfigurationFicheMetier;
                     <?php /**  @see \Application\Controller\ConfigurationController::detruireConfigurationFicheMetierAction() */ ?>
                     <a href="<?php echo $this->url('configuration/detruire-configuration-fiche-metier', ['configuration' => $element->getId()], [] , true); ?>"
                        title="retirer cet élément de la configuration">
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php else : ?>
-                        <span class="icon detruire" style="color:lightgrey;"></span>
+                        <span class="icon icon-retirer" style="color:lightgrey;"></span>
                 <?php endif; ?>
             </td>
         </tr>

@@ -36,17 +36,17 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     class="ajax-modal"
                     data-event="modification"
                 >
-                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                    <span class="icon icon-editer" data-toggle="tooltip" data-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
                 <a
                     <?php /** @see \Application\Controller\StructureController::toggleResumeMereAction() */ ?>
                         href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
                 >
                     <?php if ($structure->getRepriseResumeMere()) : ?>
-                        <span class="icon ko" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-retirer" data-toggle="tooltip" data-html="true"
                               title="Ne plus réutiliser le résumé de la structure mère"></span></a>
                     <?php else : ?>
-                        <span class="icon ok" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-checked" data-toggle="tooltip" data-html="true"
                           title="Réutiliser le résumé de la structure mère"></span></a>
                     <?php endif; ?>
 
@@ -63,7 +63,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <?php if ($structure->getDescriptionComplete()) : ?>
             <?php echo $structure->getDescriptionComplete(); ?>
         <?php else : ?>
-            <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
+            <span class="probleme"> <span class="icon icon-attention"></span> Aucune description. </span>
         <?php endif; ?>
 
         <dl class="dl-horizontal">
@@ -95,7 +95,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Responsables
             <span class="badge"><?php echo count($responsables); ?></span>
-            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
             <?php if ($canEditerResponsable) : ?>
                 <a
                     <?php /** @see \Application\Controller\StructureController::ajouterResponsable() */ ?>
@@ -103,7 +103,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                         class="ajax-modal"
                         data-event="modification"
                 >
-                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-toggle="tooltip" data-html="true"
                               title="Ajouter un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
             <?php endif; ?>
@@ -128,7 +128,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Gestionnaires
             <span class="badge"><?php echo count($gestionnaires); ?></span>
-            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
                 <?php if ($canEditerGestionnaire) : ?>
                     <a
                         <?php /** @see \Structure\Controller\StructureController::ajouterGestionnaireAction() */ ?>
@@ -136,7 +136,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-toggle="tooltip" data-html="true"
                               title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
                 <?php endif; ?>

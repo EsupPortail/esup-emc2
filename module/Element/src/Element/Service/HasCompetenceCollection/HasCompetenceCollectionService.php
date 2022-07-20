@@ -10,7 +10,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class HasCompetenceCollectionService

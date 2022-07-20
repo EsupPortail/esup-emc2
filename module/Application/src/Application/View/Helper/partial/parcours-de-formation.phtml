@@ -63,7 +63,7 @@ usort($formationArray,
                 <?php /** @see \Application\Controller\ParcoursDeFormationController::ajouterFormationAction() */?>
                 <a href="<?php echo $this->url('parcours-de-formation/ajouter-formation', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
                    class="btn btn-primary action ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span>Ajouter des formations </a>
+                    <span class="icon icon-ajouter"></span>Ajouter des formations </a>
             <?php endif; ?>
         </div>
     <?php endif; ?>
@@ -129,7 +129,7 @@ usort($formationArray,
                                             class="ajax-modal"
                                             data-event="modification"
                                     >
-                                        <span class="icon ajouter"
+                                        <span class="icon icon-ajouter"
                                               data-toggle="tooltip" data-html="true"
                                               title="Ajouter une formation"
                                         ></span>
@@ -147,29 +147,29 @@ usort($formationArray,
                                     <?php /** @see \Application\Controller\ParcoursDeFormationController::bougerFormationAction() */ ?>
                                     <a href="<?php echo $this->url('parcours-de-formation/bouger-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formationP->getId(), 'direction' => 'up'], [], true); ?>"
                                     >
-                                        <span class="icon monter" data-toogle="tooltip" data-html="true" title="Bouger vers le haut la formation"></span>
+                                        <span class="icon icon-monter" data-toogle="tooltip" data-html="true" title="Bouger vers le haut la formation"></span>
                                     </a>
                                 <?php else : ?>
-                                    <span class="icon monter" style="color:white;"></span>
+                                    <span class="icon icon-monter" style="color:white;"></span>
                                 <?php endif ?>
                                 <?php if ($position !== $nbElement) : ?>
                                     <?php /** @see \Application\Controller\ParcoursDeFormationController::bougerFormationAction() */ ?>
                                     <a href="<?php echo $this->url('parcours-de-formation/bouger-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formationP->getId(), 'direction' => 'down'], [], true); ?>"
                                     >
-                                        <span class="icon descendre" data-toogle="tooltip" data-html="true" title="Bouger vers le bas la formation"></span>
+                                        <span class="icon icon-descendre" data-toogle="tooltip" data-html="true" title="Bouger vers le bas la formation"></span>
                                     </a>
                                 <?php else : ?>
-                                    <span class="icon descendre" style="color:white;"></span>
+                                    <span class="icon icon-descendre" style="color:white;"></span>
                                 <?php endif; ?>
                             <?php else : ?>
-                                <span class="icon monter" style="color:white;"></span>
-                                <span class="icon descendre" style="color:white;"></span>
+                                <span class="icon icon-monter" style="color:white;"></span>
+                                <span class="icon icon-descendre" style="color:white;"></span>
                             <?php endif; ?>
 
                             <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
                             <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formationP->getId()], [], true); ?>"
                             >
-                                <span class="icon detruire" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
+                                <span class="icon icon-retirer" data-toogle="tooltip" data-html="true" title="Retirer la formation"></span>
                             </a>
 
                         <?php endif; ?>

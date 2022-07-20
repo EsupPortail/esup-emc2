@@ -33,7 +33,7 @@ $canDetruirePPP     = $canAjouterPPP;
             <a href="<?php echo $this->url('agent/tutorat/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="modification"
             >
-                <span class="icon ajouter"> </span>
+                <span class="icon icon-ajouter"> </span>
                 Ajouter un tutorat
             </a>
         <?php endif; ?>
@@ -66,9 +66,9 @@ $canDetruirePPP     = $canAjouterPPP;
             <td>
                 <?php if ($accompagnement->getFormation() !== null) : ?>
                         <?php if ($accompagnement->getFormation() === true) : ?>
-                            <span style="color:darkgreen;"><span class="icon ok" ></span> Formé&middot;e</span>
+                            <span style="color:darkgreen;"><span class="icon icon-checked" ></span> Formé&middot;e</span>
                         <?php else: ?>
-                            <span style="color:darkred;"><span class="icon ko" ></span> Non formé&middot;e</span>
+                            <span style="color:darkred;"><span class="icon icon-retirer" ></span> Non formé&middot;e</span>
                         <?php endif; ?>
                 <?php else : ?>
                     Non renseigné
@@ -81,19 +81,19 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/tutorat/modifier', ['tutorat' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriserPPP) : ?>
                     <?php if ($accompagnement->estNonHistorise()) : ?>
                         <?php /** @see \Application\Controller\AgentController::historiserTutoratAction() */ ?>
                         <a href="<?php echo $this->url('agent/tutorat/historiser', ['tutorat' => $accompagnement->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\AgentController::restaurerTutoratAction() */ ?>
                         <a href="<?php echo $this->url('agent/tutorat/restaurer', ['tutorat' => $accompagnement->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruirePPP) : ?>
@@ -101,7 +101,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/tutorat/detruire', ['tutorat' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -124,7 +124,7 @@ $canDetruirePPP     = $canAjouterPPP;
             <a href="<?php echo $this->url('agent/accompagnement/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="modification"
             >
-                <span class="icon ajouter"> </span>
+                <span class="icon icon-ajouter"> </span>
                 Ajouter un accompagnement
             </a>
         <?php endif; ?>
@@ -159,9 +159,9 @@ $canDetruirePPP     = $canAjouterPPP;
             <td>
                 <?php if ($accompagnement->getResultat() !== null) : ?>
                     <?php if ($accompagnement->getResultat() === true) : ?>
-                        <span style="color:darkgreen;"><span class="icon ok" ></span> Réussi</span>
+                        <span style="color:darkgreen;"><span class="icon icon-checked" ></span> Réussi</span>
                     <?php else: ?>
-                        <span style="color:darkred;"><span class="icon ko" ></span> Échoué</span>
+                        <span style="color:darkred;"><span class="icon icon-retirer" ></span> Échoué</span>
                     <?php endif; ?>
                 <?php else : ?>
                     Non renseigné
@@ -174,19 +174,19 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/accompagnement/modifier', ['accompagnement' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriserPPP) : ?>
                     <?php if ($accompagnement->estNonHistorise()) : ?>
                         <?php /** @see \Application\Controller\AgentController::historiserAccompagnementAction() */ ?>
                         <a href="<?php echo $this->url('agent/accompagnement/historiser', ['accompagnement' => $accompagnement->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\AgentController::restaurerAccompagnementAction() */ ?>
                         <a href="<?php echo $this->url('agent/accompagnement/restaurer', ['accompagnement' => $accompagnement->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruirePPP) : ?>
@@ -194,7 +194,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/accompagnement/detruire', ['accompagnement' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

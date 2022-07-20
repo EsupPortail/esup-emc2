@@ -60,9 +60,9 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="reponse">
                             <?php if ($inscrit->wasPresent($journee)) : ?>
-                                <span class="icon ok" style="color:darkgreen;" ></span>
+                                <span class="icon icon-checked" style="color:darkgreen;" ></span>
                             <?php else : ?>
-                                <span class="icon ko" style="color:darkred;" ></span>
+                                <span class="icon icon-retirer" style="color:darkred;" ></span>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>

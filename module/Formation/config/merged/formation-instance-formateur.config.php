@@ -9,6 +9,7 @@ use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFact
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
 use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurService;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -28,7 +29,7 @@ return [
                         'supprimer-formateur',
                     ],
                     'privileges' => [
-                        FormationinstanceformateurPrivileges::FORMATIONINSTANCEFORMATEUR_MODIFIER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR,
                     ],
                 ],
             ],

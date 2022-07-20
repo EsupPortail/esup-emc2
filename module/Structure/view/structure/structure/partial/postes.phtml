@@ -39,12 +39,12 @@ use Application\Entity\Db\Poste;
                 ?>
                 <?php if ($agent) : ?>
                     <span
-                        class="icon ok" style="color: darkgreen;"
+                        class="icon icon-checked" style="color: darkgreen;"
                         data-toggle="tooltip" data-html="true"
                         title="Occupé par <span class='user'><?php echo $agent->getDenomination(); ?></span>"
                     ></span>
                 <?php else: ?>
-                    <span class="icon ko" style="color: darkred;"></span>
+                    <span class="icon icon-retirer" style="color: darkred;"></span>
                 <?php endif; ?>
             </td>
         </tr>

@@ -2,8 +2,8 @@
 
 namespace UnicaenEtat\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class EtatType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

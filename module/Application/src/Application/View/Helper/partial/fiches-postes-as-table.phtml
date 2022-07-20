@@ -113,7 +113,7 @@ if ($retour)    $query['retour'] = $retour;
                             <?php echo $agent; ?>
                         <?php else : ?>
                             <span class="probleme">
-                               <span class='icon attention'></span>
+                               class="icon icon-attention"</span>
                                 Aucun agent
                             </span>
                         <?php endif; ?>
@@ -125,7 +125,7 @@ if ($retour)    $query['retour'] = $retour;
                             <?php echo $structure ?>
                         <?php else : ?>
                             <span class="probleme">
-                               <span class='icon attention'></span>
+                               class="icon icon-attention"</span>
                                 Aucune structure
                             </span>
                         <?php endif; ?>
@@ -140,7 +140,7 @@ if ($retour)    $query['retour'] = $retour;
                             <?php echo $fiche->getPoste()->getNumeroPoste(); ?>
                         <?php else : ?>
                             <span class="probleme">
-                               <span class='icon attention'></span>
+                               class="icon icon-attention"</span>
                                 Aucun poste
                             </span>
                         <?php endif; ?>
@@ -157,7 +157,7 @@ if ($retour)    $query['retour'] = $retour;
                             <?php endif; ?>
                         <?php else :?>
                             <span class="probleme">
-                               <span class='icon attention'></span>
+                               class="icon icon-attention"</span>
                                 Aucun métier principal
                             </span>
                         <?php endif; ?>
@@ -167,12 +167,12 @@ if ($retour)    $query['retour'] = $retour;
                     <td style="text-align: center;">
                         <?php if ($etat === FichePoste::ETAT_CODE_SIGNEE) : ?>
                             <?php if ($isEnCours) : ?>
-                                <span class="icon ok" style="color:darkgreen;" title="Fiche en cours de validité"></span>
+                                <span class="icon icon-checked" style="color:darkgreen;" title="Fiche en cours de validité"></span>
                             <?php else : ?>
                                 <?php if ($fiche instanceof FichePoste) : ?>
                                     <span style="color:darkred;"><?php echo $fiche->getFinValidite()->format('d/m/Y'); ?></span>
                                 <?php else : ?>
-                                    <span class="icon ko" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
+                                    <span class="icon icon-retirer" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
@@ -201,11 +201,11 @@ if ($retour)    $query['retour'] = $retour;
                             <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $id], [], true); ?>"
                                     target="_blank"
-                            ><span class="icon voir"
+                            ><span class="icon icon-voir"
                                    data-toggle="tooltip" data-html="true"
                                    title="Afficher la fiche de poste"></span></a>
                         <?php else : ?>
-                            <span class="icon voir nope" ></span>
+                            <span class="icon icon-voir nope" ></span>
                         <?php endif; ?>
 
                         <!--  EXPORTATION ----------------------------------------------------------------------------->
@@ -216,9 +216,9 @@ if ($retour)    $query['retour'] = $retour;
                             ><span
                                         data-toggle="tooltip" data-html="true"
                                         title="Exporter en PDF la fiche de poste"
-                                        class="icon pdf"></span><span class="lettrine">P</span></a>
+                                        class="icon icon-pdf"></span><span class="lettrine">P</span></a>
                         <?php else : ?>
-                            <span class="icon pdf nope" ></span><span class="lettrine nope">P</span>
+                            <span class="icon icon-pdf nope" ></span><span class="lettrine nope">P</span>
                         <?php endif; ?>
 
                         <!-- MODIFICATION ----------------------------------------------------------------------------->
@@ -226,11 +226,11 @@ if ($retour)    $query['retour'] = $retour;
                             <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $id], ['query' => ['structure' =>  $structureId??null]], true); ?>"
                                     target="_blank"
-                            ><span class="icon editer"
+                            ><span class="icon icon-editer"
                                    data-toggle="tooltip" data-html="true"
                                    title="Modifier la fiche de poste"></span></a>
                         <?php else : ?>
-                            <span class="icon editer" style="color:lightgrey;"></span>
+                            <span class="icon icon-editer" style="color:lightgrey;"></span>
                         <?php endif; ?>
 
                         <!-- HISTORISER ------------------------------------------------------------------------------->
@@ -238,19 +238,19 @@ if ($retour)    $query['retour'] = $retour;
                             <?php if ($destruction === null) : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
-                                    <span class="icon historiser"
+                                    <span class="icon icon-historiser"
                                        data-toggle="tooltip" data-html="true"
                                        title="Historiser la fiche de poste"></span></a>
                             <?php else : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
-                                            <span class="icon restaurer"
+                                            <span class="icon icon-restaurer"
                                                   data-toggle="tooltip" data-html="true"
                                                   title="Restaurer la fiche de poste"></span></a>
                             <?php endif; ?>
                         <?php else : ?>
                             <?php if ($destruction === null) : ?>
-                                <span class="icon historiser nope"></span>
+                                <span class="icon icon-historiser nope"></span>
                             <?php else : ?>
                                 <span class="icon restaurer nope"></span>
                             <?php endif; ?>
@@ -261,11 +261,11 @@ if ($retour)    $query['retour'] = $retour;
                             <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $id], [], true); ?>"
                                class="ajax-modal" data-event="modification"
-                        ><span class="icon detruire"
+                        ><span class="icon icon-retirer"
                                data-toggle="tooltip" data-html="true"
                                title="Supprimer la fiche de poste"></span></a>
                         <?php else : ?>
-                            <span class="icon detruire nope"></span>
+                            <span class="icon icon-retirer nope"></span>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>

@@ -42,14 +42,14 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 <a      <?php /** @see FormationInstanceController::afficherAction() */?>
                         href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-info action">
-                    <span class="icon retour"></span>
+                    <span class="icon icon-retour"></span>
                     Retour à l'instance de la formation
                 </a>
                 <br/>
                 <a      <?php /** @see FormationController::editerAction() */?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                         class="btn btn-info action">
-                    <span class="icon retour-double"></span>
+                    <span class="icon icon-retour"></span>
                     Retour à la formation associée
                 </a>
             </div>
@@ -92,9 +92,9 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             <?php foreach ($journees as $journee) : ?>
                 <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
                     <?php if ($presences[$journee->getId()][$inscrit->getId()] && $presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
-                        <span class="icon ok" style="color:darkgreen;" title="Présent"></span>
+                        <span class="icon icon-checked" style="color:darkgreen;" title="Présent"></span>
                     <?php else : ?>
-                        <span class="icon detruire" style="color:darkred;" title="Non présent"></span>
+                        <span class="icon icon-retirer" style="color:darkred;" title="Non présent"></span>
                     <?php endif; ?>
                 </td>
             <?php endforeach; ?>

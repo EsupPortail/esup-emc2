@@ -30,7 +30,7 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
                 class="btn btn-primary action ajax-modal"
                 data-event="modification"
             >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter un référentiel
             </a>
         <?php endif;?>
@@ -55,9 +55,9 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
             </td>
             <td>
                 <?php if ($referentiel->getPrefix()) : ?>
-                    <span class="icon ok" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
+                    <span class="icon icon-checked" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
                 <?php else: ?>
-                    <span class="icon ko" style="color:darkred"></span>
+                    <span class="icon icon-retirer" style="color:darkred"></span>
                 <?php endif; ?>
             </td>
             <td>
@@ -71,19 +71,19 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier le référentiel métier"></span></a>
+                        <span class="icon icon-editer" title="Modifier le référentiel métier"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($referentiel->estNonHistorise()) : ?>
                         <a  <?php /** @see \Metier\Controller\ReferentielController::historiserAction() */ ?>
                             href="<?php echo $this->url('metier/referentiel/historiser', ['referentiel' => $referentiel->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser le référentiel métier"></span></a>
+                            <span class="icon icon-historiser" title="Historiser le référentiel métier"></span></a>
                     <?php else : ?>
                         <a  <?php /** @see \Metier\Controller\ReferentielController::restaurerAction() */ ?>
                             href="<?php echo $this->url('metier/referentiel/restaurer', ['referentiel' => $referentiel->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer le référentiel métier"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le référentiel métier"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
@@ -91,7 +91,7 @@ $canEffacer        = $this->isAllowed(ReferentielmetierPrivileges::getResourceId
                         href="<?php echo $this->url('metier/referentiel/supprimer', ['referentiel' => $referentiel->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"  title="Supprimer le référentiel métier"></span></a>
+                        <span class="icon icon-retirer"  title="Supprimer le référentiel métier"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

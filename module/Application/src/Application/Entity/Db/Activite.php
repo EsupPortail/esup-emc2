@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Metier\Entity\Db\Domaine;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class Activite implements HistoriqueAwareInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface

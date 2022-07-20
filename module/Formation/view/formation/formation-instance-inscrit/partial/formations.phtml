@@ -34,7 +34,7 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                         href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscription->getId()], [], true); ?>"
                         class="btn btn-primary action"
                 >
-                    <span class="icon editer"> Je complète le formulaire</span>
+                    <span class="icon icon-editer"> Je complète le formulaire</span>
                 </a>
                 <br/>
                 <a
@@ -42,7 +42,7 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                         href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
                         class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
                 >
-                    <span class="icon pdf"> Je télécharge mon attestation</span>
+                    <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
             </div>
         </div>
@@ -70,7 +70,7 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                     href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
                     class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
                 >
-                    <span class="icon pdf"> Je télécharge mon attestation</span>
+                    <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
             </div>
         </div>

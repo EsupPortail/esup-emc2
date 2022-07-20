@@ -67,14 +67,14 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
                     <?php if ($canComplement) : ?>
-                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
                 <?php if ($canComplement) : ?>
                     <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_STRUCTURE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                        <span class="icon ajouter"></span> Ajouter une structure
+                        <span class="icon icon-ajouter"></span> Ajouter une structure
                     </a>
                 <?php endif; ?>
             </td>
@@ -91,15 +91,15 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
                     <?php if ($canComplement) : ?>
-                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
                 <?php if ($canComplement) : ?>
                     <?php /** @see \Application\Controller\ComplementController::ajouterAction() */ ?>
                     <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                        <span class="icon ajouter"></span> Ajouter un&middot;e supérieur&middot;e
+                        <span class="icon icon-ajouter"></span> Ajouter un&middot;e supérieur&middot;e
                     </a>
                 <?php endif; ?>
             </td>
@@ -116,14 +116,14 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                     <span class="icon formation" title="Manuellement indiqué"></span>
                     <?php echo $this->complement($complement); ?>
                     <?php if ($canComplement) : ?>
-                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon editer"></span></a>
-                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon detruire"></span></a>
+                        <a href="<?php echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-editer"></span></a>
+                        <a href="<?php echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                     <br/>
                 <?php endforeach; ?>
                 <?php if ($canComplement) : ?>
                     <a href="<?php echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_AUTORITE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
-                        <span class="icon ajouter"></span> Ajouter une autorité
+                        <span class="icon icon-ajouter"></span> Ajouter une autorité
                     </a>
                 <?php endif; ?>
             </td>

@@ -54,7 +54,7 @@ $date = new DateTime();
                     <?php /** @see \Application\Controller\FichePosteController::ajouterAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank">
-                        <span class="icon ajouter" data-toggle="tooltip" data-html="true" title="Ajouter la fiche de poste"></span></a>
+                        <span class="icon icon-ajouter" data-toggle="tooltip" data-html="true" title="Ajouter la fiche de poste"></span></a>
                 <?php else : ?>
                     <span class="icon ajouter nope"></span>
                 <?php endif; ?>
@@ -70,10 +70,10 @@ $date = new DateTime();
                 <?php if ($canAjouterPdf) : ?>
                     <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
-                       title="Ajouter une fiche PDF <br/> <strong><span class='text-danger'><span class='icon attention'></span>Il est préférable de modéliser la fiche de poste dans EMC2</span></strong>" data-toggle="tooltip" data-html="true">
-                    <span class="icon pdf"></span><span class="lettrine">+</span></a>
+                       title="Ajouter une fiche PDF <br/> <strong><span class='text-danger'><span class='icon icon-attention'></span>Il est préférable de modéliser la fiche de poste dans EMC2</span></strong>" data-toggle="tooltip" data-html="true">
+                    <span class="icon icon-pdf"></span><span class="lettrine">+</span></a>
                 <?php else : ?>
-                    <span class="icon pdf nope"></span><span class="lettrine nope">+</span>
+                    <span class="icon icon-pdf nope"></span><span class="lettrine nope">+</span>
                 <?php endif; ?>
                 <?php if (!empty($fichespostes_pdf[$agent->getId()]) ) : ?>
                 <?php
@@ -90,24 +90,24 @@ $date = new DateTime();
                         <td class="encours"></td>
                         <td class="etat"><span class="text-danger">PDF</span></td>
                         <td class="action">
-                            <span class="icon voir nope"></span>
+                            <span class="icon icon-voir nope"></span>
                             <?php if ($canVoirFichier) : ?>
                                 <a
                                     <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
                                         href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
-                                    <span class="icon pdf" title="voir le fichier"></span>
+                                    <span class="icon icon-pdf" title="voir le fichier"></span>
                                 </a>
                             <?php else : ?>
-                                <span class="icon pdf nope"></span>
+                                <span class="icon icon-pdf nope"></span>
                             <?php endif; ?>
                             <span class="icon editer nope"></span>
-                            <span class="icon historiser nope"></span>
+                            <span class="icon icon-historiser nope"></span>
                             <?php if ($canDetruireFichier) : ?>
                                 <a
                                     <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
                                         href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], true)]], true); ?>"
                                 >
-                                    <span class="icon detruire" title="supprimer le fichier"></span></a>
+                                    <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
                             <?php else : ?>
                             ..
                             <?php endif; ?>
@@ -147,23 +147,23 @@ $date = new DateTime();
                             <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte['id']], [], true); ?>"
                                 target="_blank">
-                                <span class="icon voir" data-toggle="tooltip" data-html="true" title="Afficher la fiche de poste"></span></a>
+                                <span class="icon icon-voir" data-toggle="tooltip" data-html="true" title="Afficher la fiche de poste"></span></a>
                         <?php else :?>
-                            <span class="icon voir nope" ></span>
+                            <span class="icon icon-voir nope" ></span>
                         <?php endif; ?>
                         <?php if ($canExporterFichePoste) : ?>
                             <?php /** @see \Application\Controller\FichePosteController::exporterAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte['id']], [], true); ?>"
                                target="_blank">
-                                <span class="icon pdf" data-toggle="tooltip" data-html="true" title="Exporter la fiche de poste"></span></a>
+                                <span class="icon icon-pdf" data-toggle="tooltip" data-html="true" title="Exporter la fiche de poste"></span></a>
                         <?php else :?>
-                            <span class="icon pdf nope" ></span>
+                            <span class="icon icon-pdf nope" ></span>
                         <?php endif; ?>
                         <?php if ($canModifierFichePoste AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE) : ?>
                             <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>"
                                 target="_blank">
-                                <span class="icon editer" data-toggle="tooltip" data-html="true" title="Modifier la fiche de poste"></span></a>
+                                <span class="icon icon-editer" data-toggle="tooltip" data-html="true" title="Modifier la fiche de poste"></span></a>
                         <?php else :?>
                             <span class="icon editer nope"></span>
                         <?php endif; ?>
@@ -171,22 +171,22 @@ $date = new DateTime();
                             <?php if ($ficheposte['histo_destruction']) : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
-                                    <span class="icon restaurer" data-toggle="tooltip" data-html="true" title="Restaurer la fiche de poste"></span></a>
+                                    <span class="icon icon-restaurer" data-toggle="tooltip" data-html="true" title="Restaurer la fiche de poste"></span></a>
                             <?php else : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
-                                    <span class="icon historiser" data-toggle="tooltip" data-html="true" title="Historiser la fiche de poste"></span></a>
+                                    <span class="icon icon-historiser" data-toggle="tooltip" data-html="true" title="Historiser la fiche de poste"></span></a>
                             <?php endif; ?>
                         <?php else : ?>
-                            <span class="icon historiser nope"></span>
+                            <span class="icon icon-historiser nope"></span>
                         <?php endif; ?>
                         <?php if ($canDetruireFichePoste) : ?>
                             <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>"
                                 class="ajax-modal" data-event="modification">
-                                <span class="icon detruire"></span></a>
+                                <span class="icon icon-retirer"></span></a>
                         <?php else : ?>
-                            <span class="icon detruire nope"></span>
+                            <span class="icon icon-retirer nope"></span>
                         <?php endif; ?>
                     </td>
                     </tr>

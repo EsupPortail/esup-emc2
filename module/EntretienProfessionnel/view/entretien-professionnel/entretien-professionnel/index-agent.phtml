@@ -42,17 +42,17 @@ $canAfficherEntretien = true;
                 <td>
                     <?php if ($canAfficherEntretien) : ?>
                         <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>" class="ajax-modal">
-                            <span class="icon voir"></span></a>
+                            <span class="icon icon-voir"></span></a>
                     <?php endif; ?>
 <!--                    --><?php //if ($entretien->estNonHistorise()) : ?>
 <!--                    <a href="--><?php //echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
-<!--                        <span class="icon historiser"></span></a>-->
+<!--                        <span class="icon icon-historiser"></span></a>-->
 <!--                    --><?php //else : ?>
 <!--                        <a href="--><?php //echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
-<!--                            <span class="icon restaurer"></span></a>-->
+<!--                            <span class="icon icon-restaurer"></span></a>-->
 <!--                    --><?php //endif; ?>
 <!--                    <a href="--><?php //echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?><!--">-->
-<!--                        <span class="icon detruire"></span></a>-->
+<!--                        <span class="icon icon-retirer"></span></a>-->
                 </td>
             </tr>
             <?php endforeach; ?>

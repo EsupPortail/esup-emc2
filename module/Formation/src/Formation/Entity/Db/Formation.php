@@ -12,8 +12,8 @@ use Application\Entity\Db\Traits\HasSourceTrait;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class Formation implements HistoriqueAwareInterface,
     HasDescriptionInterface, HasSourceInterface,

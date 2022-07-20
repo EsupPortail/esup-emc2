@@ -46,7 +46,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 
         <?php if ($agent->isContratLong() !== true) : ?>
             <div class="alert alert-warning">
-                <span class="icon attention"></span> En contrat de moins de 12 mois.
+                <span class="icon icon-attention"></span> En contrat de moins de 12 mois.
             </div>
         <?php endif; ?>
     </div>
@@ -76,13 +76,13 @@ use UnicaenUtilisateur\Entity\Db\User;
                         </ul>
                     <?php else : ?>
                         <span class="probleme">
-                            <span class="icon attention"></span>
+                            <span class="icon icon-attention"></span>
                             Aucune responsable pour la structure de niveau 2 <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
                         </span>
                     <?php endif; ?>
                 <?php else : ?>
                     <span class="probleme">
-                        <span class="icon attention"></span>
+                        <span class="icon icon-attention"></span>
                         Aucune structure de niveau 2 de trouvée pour <?php echo $affectation->getStructure()->getLibelleLong(); ?>
                     </span>
                 <?php endif; ?>
@@ -97,7 +97,7 @@ use UnicaenUtilisateur\Entity\Db\User;
                     </ul>
                 <?php else : ?>
                     <span class="probleme">
-                        <span class="icon attention"></span>
+                        <span class="icon icon-attention"></span>
                         Aucune responsable pour la structure <?php echo $affectation->getStructure()->getLibelleLong(); ?>
                     </span>
                 <?php endif; ?>
@@ -122,7 +122,7 @@ use UnicaenUtilisateur\Entity\Db\User;
                         Utilisateur : <?php echo $agent->getUtilisateur()->getUsername(); ?> <br/> &Rightarrow;<?php echo $agent->getUtilisateur()->getEmail(); ?>
                     <?php else: ?>
                         <span class="probleme">
-                                <span class="icon attention"></span>
+                                <span class="icon icon-attention"></span>
                                 Aucun compte lié à l'agent
                             </span>
                     <?php endif; ?>
@@ -157,5 +157,5 @@ use UnicaenUtilisateur\Entity\Db\User;
     href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
     class="ajax-modal"
 >
-    <span class="icon voir"></span> Listing de toutes les affectations, statuts et grades
+    <span class="icon icon-voir"></span> Listing de toutes les affectations, statuts et grades
 </a>

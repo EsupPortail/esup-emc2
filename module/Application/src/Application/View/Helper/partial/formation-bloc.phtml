@@ -88,7 +88,7 @@ ksort($groupes);
                         class="ajax-modal btn btn-primary action"
                         data-event="modification"
                 >
-                    <span class="icon ajouter" title="Ajouter une formation"></span>
+                    <span class="icon icon-ajouter" title="Ajouter une formation"></span>
                     Ajouter une formation
                 </a>
             <?php endif; ?>
@@ -144,7 +144,7 @@ ksort($groupes);
                                     href="<?php echo $this->url("element/afficher", ['type' => ElementController::TYPE_FORMATION, 'id' => $entite->getId()], [], true); ?>"
                                     class="ajax-modal" data-toggle="tooltip" data-html="true"
                                     title="Afficher l'application <span class='highlight formation'><?php echo $entite->getLibelle(); ?></span>">
-                                <span class="icon voir"></span></a>
+                                <span class="icon icon-voir"></span></a>
                             <?php endif; ?>
                             <?php if ($canModifier) : ?>
                                 <a <?php /** TODO provient de l'ancien agent-formation  */?>
@@ -153,7 +153,7 @@ ksort($groupes);
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
-                                    <span class="icon editer" title="Modifier une formation liée à l'agent"></span></a>
+                                    <span class="icon icon-editer" title="Modifier une formation liée à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canSupprimer) : ?>
                                 <a
@@ -162,7 +162,7 @@ ksort($groupes);
                                         class="ajax-modal"
                                         data-event="modification"
                                 >
-                                    <span class="icon detruire" title="Supprimer définitivement une formation liées à l'agent"></span></a>
+                                    <span class="icon icon-retirer" title="Supprimer définitivement une formation liées à l'agent"></span></a>
                             <?php endif; ?>
                             <?php if ($canValider) : ?>
                                 <?php if ($entite->getValidation() === null) : ?>

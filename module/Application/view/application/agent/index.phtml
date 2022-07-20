@@ -25,7 +25,7 @@ $this->headTitle("Index des agents")
     <div class="pull-right col-md-5">
         <br/>
         <div class=" alert alert-info">
-            <span class="icon synchoniser"></span>
+            <span class="icon icon-synchroniser"></span>
             Les agents sont synchronisés depuis Octopus.
         </div>
     </div>
@@ -50,9 +50,9 @@ $this->headTitle("Index des agents")
                     <td> <?php echo $agent['prenom']; ?> <?php echo $agent['nom_usage']; ?> </td>
                     <td>
                         <?php if ($agent['utilisateur'] !== null) : ?>
-                            <span class="icon ok" style="color:darkgreen;" title="<?php echo $agent['utilisateur']; ?>"></span>
+                            <span class="icon icon-checked" style="color:darkgreen;" title="<?php echo $agent['utilisateur']; ?>"></span>
                         <?php else: ?>
-                            <span class="icon ko" style="color:darkred;"></span>
+                            <span class="icon icon-retirer" style="color:darkred;"></span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -61,7 +61,7 @@ $this->headTitle("Index des agents")
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent['id']], [], true); ?>"
                             >
-                                <span class="icon voir"  title="Afficher l'agent"></span></a>
+                                <span class="icon icon-voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -3,8 +3,8 @@
 namespace Element\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
 
 class ApplicationTheme implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

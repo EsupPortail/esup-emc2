@@ -48,14 +48,14 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                     <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_RESPONSABLE], [], true); ?>"
                        class="btn btn-success action ajax-modal" data-event="modification">
-                        <span class="icon ok"></span>
+                        <span class="icon icon-checked"></span>
                         Valider la fiche de poste (responsable)
                     </a>
                 <?php else : ?>
                     <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
                        class="btn btn-danger action">
-                        <span class="icon ko"></span>
+                        <span class="icon icon-retirer"></span>
                         Révoquer la validation (responsable)
                     </a>
                 <?php endif; ?>
@@ -65,14 +65,14 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                     <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_AGENT], [], true); ?>"
                        class="btn btn-success action ajax-modal" data-event="modification">
-                        <span class="icon ok"></span>
+                        <span class="icon icon-checked"></span>
                         Valider la fiche de poste (agent)
                     </a>
                 <?php else : ?>
                     <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
                        class="btn btn-danger action">
-                        <span class="icon ko"></span>
+                        <span class="icon icon-retirer"></span>
                         Révoquer la validation (agent)
                     </a>
                 <?php endif; ?>
@@ -93,7 +93,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                     class="btn btn-primary action ajax-modal"
                     data-event="modification"
                 >
-                    <span class="icon editer"></span>
+                    <span class="icon icon-editer"></span>
                     Changer l'état de la fiche
                 </a>
             <?php endif; ?>

@@ -45,7 +45,7 @@ class FichierViewHelper extends AbstractHelper
         $text .= "</div>";
         $text .= "<div class='col-md-6'>";
         $text .= "<a href='".$this->getView()->url('download-fichier', ['fichier' => $fichier->getId()], [], true)."' class='btn btn-success action pull-right'>";
-        $text .= "<span class='icon telecharger'></span> Télécharger le fichier </a>";
+        $text .= "<span class='icon icon-telecharger'></span> Télécharger le fichier </a>";
         $text .= "<a href='".$this->getView()->url('delete-fichier', ['fichier' => $fichier->getId()], [ 'query' => ['retour' => $retour]], true)."'";
         $text .= " class='btn btn-danger action pull-right'>";
         $text .= " <span class='icon detruire'></span> Effacer le fichier </a>";

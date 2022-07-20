@@ -35,7 +35,7 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
             <div class="col-md-10">
                 <h3><?php echo $activite->getLibelle(); ?>
                     <?php if ($delta AND $delta !== 0) : ?>
-                        <span class="icon attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
+                        <span class="icon icon-attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
                     <?php endif; ?>
                 </h3>
             </div>
@@ -46,12 +46,12 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
                         <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon listing"></span></a>
+                            <span class="icon icon-listing"></span></a>
                     <?php endif; ?>
                     <?php if ($canRetirerActivite) : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
                         <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>">
-                            <span class="icon detruire"></span></a>
+                            <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

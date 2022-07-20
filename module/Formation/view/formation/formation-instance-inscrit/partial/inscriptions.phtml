@@ -39,7 +39,7 @@ $canInscrire = true;
                     href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
                     class="btn btn-danger action ajax-modal" data-event="modification"
             >
-                <span class="icon detruire"> J'annule mon inscription </span>
+                <span class="icon icon-retirer"> J'annule mon inscription </span>
             </a>
             <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
             <br/>
@@ -47,7 +47,7 @@ $canInscrire = true;
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                 >
-                    <span class="icon pdf"> Je télécharge ma convocation</span>
+                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                 </a>
             <?php endif; ?>
         </div>

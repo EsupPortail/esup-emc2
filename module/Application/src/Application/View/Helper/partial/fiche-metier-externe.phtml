@@ -35,12 +35,12 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
                         href="<?php echo $this->url("fiche-poste/modifier-repartition", ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type' => $fiche->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier la répartition par domaine"></span>
+                        <span class="icon icon-editer" title="Modifier la répartition par domaine"></span>
                     </a>
                     <ul>
                     <?php $repartitions = $fiche->getDomaineRepartitionsAsArray(); ?>
                         <?php if($repartitions === null OR empty($repartitions)) : ?>
-                            <span class="alert-danger"><span class="icon attention"></span>Aucune répartition de faite</span>
+                            <span class="alert-danger"><span class="icon icon-attention"></span>Aucune répartition de faite</span>
                         <?php else: ?>
                             <?php $somme = 0; ?>
                             <?php foreach ($fichemetier->getMetier()->getDomaines() as $domaine) : ?>
@@ -52,7 +52,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
                                 </li>
                             <?php endforeach; ?>
                             <?php if ($somme !== 100) : ?>
-                                <span class="alert-danger"><span class="icon attention"></span>Quotité incorrecte (<strong><?php echo $somme; ?>%</strong> &ne; 100%)</span>
+                                <span class="alert-danger"><span class="icon icon-attention"></span>Quotité incorrecte (<strong><?php echo $somme; ?>%</strong> &ne; 100%)</span>
                             <?php endif; ?>
                         <?php endif; ?>
                     </ul>
@@ -65,12 +65,12 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
                                 href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer" title="Modifier la fiche métier"></span></a>
+                            <span class="icon icon-editer" title="Modifier la fiche métier"></span></a>
                         <a
                             <?php /** @see \Application\Controller\FichePosteController::retirerFicheMetierAction() */ ?>
                                 href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                         >
-                            <span class="icon detruire" title="Retirer la fiche métier"></span></a>
+                            <span class="icon icon-retirer" title="Retirer la fiche métier"></span></a>
                     <?php endif; ?>
                     <ul>
                         <li>

@@ -30,14 +30,14 @@ $this->headTitle('Modification du parcours de formation : ' . ($parcours->getLib
         <dd> <?php if ($parcours->getLibelle() !== null) : ?>
                 <?php echo $parcours->getLibelle(); ?>
             <?php else : ?>
-                <span style="color: darkred;"><span class="icon attention"></span> Aucun intitulé pour ce parcours de formation.</span>
+                <span style="color: darkred;"><span class="icon icon-attention"></span> Aucun intitulé pour ce parcours de formation.</span>
             <?php endif; ?>
             <?php if ($canModifier) : ?>
                 <?php /** @see \Application\Controller\ParcoursDeFormationController::modifierLibelleAction() */ ?>
                 <a href="<?php echo $this->url('parcours-de-formation/modifier-libelle', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon editer" data-toogle="tooltip" data-html="true" title="Modifier l'intitulé du parcours de formation"></span>
+                    <span class="icon icon-editer" data-toogle="tooltip" data-html="true" title="Modifier l'intitulé du parcours de formation"></span>
                 </a>
             <?php endif; ?>
         </dd>
@@ -48,14 +48,14 @@ $this->headTitle('Modification du parcours de formation : ' . ($parcours->getLib
                 [<?php echo $parcours->getType(); ?>]
                 <?php echo $reference->getLibelle(); ?>
             <?php else : ?>
-                <span style="color: darkred;"><span class="icon attention"></span> Aucun rattachement pour ce parcours de formation.</span>
+                <span style="color: darkred;"><span class="icon icon-attention"></span> Aucun rattachement pour ce parcours de formation.</span>
             <?php endif; ?>
             <?php if ($canModifier) : ?>
                 <?php /** @see \Application\Controller\ParcoursDeFormationController::modifierRattachementAction() */ ?>
                 <a href="<?php echo $this->url('parcours-de-formation/modifier-rattachement', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon editer" data-toogle="tooltip" data-html="true" title="Modifier le rattachement du parcours de formation"></span>
+                    <span class="icon icon-editer" data-toogle="tooltip" data-html="true" title="Modifier le rattachement du parcours de formation"></span>
                 </a>
             <?php endif; ?>
         </dd>

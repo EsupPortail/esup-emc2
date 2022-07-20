@@ -25,7 +25,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
     </div>
     <div class="col-md-4">
         <div class="alert alert-info">
-            <span class="icon synchroniser"></span>
+            <span class="icon icon-synchroniser"></span>
             Synchoniser depuis Octopus
         </div>
     </div>
@@ -62,13 +62,13 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                         <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer"></span></a>
+                            <span class="icon icon-editer"></span></a>
                     <?php else : ?>
                         <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
                         <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon ajouter"></span></a>
+                            <span class="icon icon-ajouter"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
@@ -79,7 +79,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                         href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon voir" data-toggle="tooltip" data-html="true"
+                                        <span class="icon icon-voir" data-toggle="tooltip" data-html="true"
                                               title="Afficher les agents ayant ce corps"></span></a>
                 <?php endif; ?>
             </td>
