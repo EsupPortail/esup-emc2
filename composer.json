@@ -9,7 +9,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "unicaen/app": "^4.0.4",
+    "unicaen/app": "4.0.5",
     "unicaen/authentification": "^4.0.0",
     "unicaen/utilisateur": "^4.0.0",
     "unicaen/privilege": "^4.0.0",

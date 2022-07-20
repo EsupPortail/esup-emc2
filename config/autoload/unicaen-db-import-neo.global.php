@@ -2,9 +2,53 @@
 
 namespace Application;
 
+use UnicaenDbImport\Privilege\ImportPrivilege;
+use UnicaenDbImport\Privilege\LogPrivilege;
+use UnicaenDbImport\Privilege\ObservationPrivilege;
+use UnicaenDbImport\Privilege\SynchroPrivilege;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'unicaen-db-import' => [
+                        'label' => "Import/Synchro",
+                        'route' => 'unicaen-db-import/import',
+                        'resource' => ImportPrivilege::getResourceId(ImportPrivilege::LISTER),
+                        'order' => 100,
+                        'pages' => [
+                            'import' => [
+                                'label' => "Imports",
+                                'route' => 'unicaen-db-import/import',
+                                'resource' => ImportPrivilege::getResourceId(ImportPrivilege::LISTER),
+                                'order' => 10,
+                            ],
+                            'synchro' => [
+                                'label' => "Synchros",
+                                'route' => 'unicaen-db-import/synchro',
+                                'resource' => SynchroPrivilege::getResourceId(SynchroPrivilege::LISTER),
+                                'order' => 20,
+                            ],
+                            'log' => [
+                                'label' => "Logs",
+                                'route' => 'unicaen-db-import/log',
+                                'resource' => LogPrivilege::getResourceId(LogPrivilege::LISTER),
+                                'order' => 30,
+                            ],
+                            'observ' => [
+                                'label' => "Observations",
+                                'route' => 'unicaen-db-import/observ',
+                                'resource' => ObservationPrivilege::getResourceId(ObservationPrivilege::LISTER),
+                                'order' => 40,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     /**
      * Configuration globale du module UnicaenDbImport.
      */
