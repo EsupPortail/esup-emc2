@@ -37,7 +37,7 @@ $this->headTitle('Modification du parcours de formation : ' . ($parcours->getLib
                 <a href="<?php echo $this->url('parcours-de-formation/modifier-libelle', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon icon-editer" data-toogle="tooltip" data-html="true" title="Modifier l'intitulé du parcours de formation"></span>
+                    <span class="icon icon-editer" data-toogle="tooltip" data-bs-html="true" title="Modifier l'intitulé du parcours de formation"></span>
                 </a>
             <?php endif; ?>
         </dd>
@@ -55,7 +55,7 @@ $this->headTitle('Modification du parcours de formation : ' . ($parcours->getLib
                 <a href="<?php echo $this->url('parcours-de-formation/modifier-rattachement', ['parcours-de-formation' => $parcours->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon icon-editer" data-toogle="tooltip" data-html="true" title="Modifier le rattachement du parcours de formation"></span>
+                    <span class="icon icon-editer" data-toogle="tooltip" data-bs-html="true" title="Modifier le rattachement du parcours de formation"></span>
                 </a>
             <?php endif; ?>
         </dd>

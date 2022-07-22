@@ -104,7 +104,7 @@ foreach ($encours as $epro) {
             <?php if ($canGererDelegue AND $enCours) : ?>
                 <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
-                   data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
+                   data-bs-toggle="tooltip" data-bs-html="true" class="ajax-modal" data-event="modification"
                 >
                     <span class="icon icon-ajouter"></span>
                 </a>
@@ -117,7 +117,7 @@ foreach ($encours as $epro) {
             <ul>
                 <?php foreach ($deleguesCampagne as $delegue) : ?>
                     <li>
-                        <span title="<?php echo $delegue->getDescription(); ?>" data-toggle="tooltip" data-html="true">
+                        <span title="<?php echo $delegue->getDescription(); ?>" data-bs-toggle="tooltip" data-bs-html="true">
                             <?php echo $delegue->getAgent()->getDenomination(); ?>
                         </span>
                         <?php if ($canGererDelegue AND $enCours) : ?>
@@ -238,7 +238,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                                 target="_blank"
                                 title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                             >
                                 <span class="icon personnel"></span></a>
                         <?php endif; ?>
@@ -248,7 +248,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
                                 title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                 class="ajax-modal" data-event="entretien"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                             >
                                 <span class="icon icon-ajouter"></span></a>
                         <?php endif; ?>
@@ -300,7 +300,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                                 target="_blank"
                                 title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon personnel"></span></a>
                     <?php endif; ?>
@@ -310,7 +310,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
                                 title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                 class="ajax-modal" data-event="entretien"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon icon-ajouter"></span></a>
                     <?php endif; ?>

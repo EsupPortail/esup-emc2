@@ -11,15 +11,15 @@ use Application\Entity\Db\FicheMetier;
 
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="card info">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-6"> <h2> Missions principales </h2> </div>
             <div class="col-md-6">
                 <?php if ($mode === 'edition-fiche-metier') : ?>
 
                     <?php /** @see FicheMetierController::ajouterActiviteExistanteAction() */ ?>
-                    <a class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
+                    <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
                        data-event="modification"
                     href="<?php echo $this->url('fiche-metier-type/ajouter-activite-existante', ['id' => $fichemetier->getId()], [], true); ?>">
                     <span class="icon selectionner"></span>
@@ -27,7 +27,7 @@ use Application\Entity\Db\FicheMetier;
                     </a>
 
                     <?php /** @see FicheMetierController::ajouterNouvelleActiviteAction() */ ?>
-                    <a class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
+                    <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
                        href="<?php echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fichemetier->getId()], [], true); ?>"
                        data-event="modification"
                     >
@@ -39,7 +39,7 @@ use Application\Entity\Db\FicheMetier;
             </div>
         </div>
     </div>
-    <div class="panel-body" style="color:rgb(80,80,80);">
+    <div class="card-body" style="color:rgb(80,80,80);">
         <?php foreach ($missionsprincipales as $missionprincipale) : ?>
             <?php echo $this->activite($missionprincipale, $mode, ['fichemetier' => $fichemetier]); ?>
         <?php endforeach; ?>

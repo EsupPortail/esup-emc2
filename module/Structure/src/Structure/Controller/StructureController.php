@@ -95,13 +95,21 @@ class StructureController extends AbstractActionController {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
+        $superieurs = []; $autorites = [];
+        foreach ($allAgents as $agent) {
+            $sup = $this->getAgentService()->computeSuperieures($agent);
+            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
+            $superieurs[$agent->getId()] = $sup;
+            $autorites[$agent->getId()] = $aut;
+        }
+
         $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
         /** Récupération des agents et postes liés aux structures */
-        $agentsLast = $this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut());
+        $agentsLast = ($last !== null)?$this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut()):[];
         $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
 
@@ -133,6 +141,8 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
+            'superieurs' => $superieurs,
+            'autorites' => $autorites,
 
             'last' => $last,
             'agentsLast' => $allAgentsLast,

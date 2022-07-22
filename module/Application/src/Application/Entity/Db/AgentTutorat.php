@@ -6,8 +6,8 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Metier\Entity\Db\Metier;
 use UnicaenEtat\Entity\Db\Etat;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class AgentTutorat implements HistoriqueAwareInterface, HasPeriodeInterface {
     use HasPeriodeTrait;

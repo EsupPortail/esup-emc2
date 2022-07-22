@@ -76,7 +76,7 @@ $this->headTitle("Liste des compétences");
                 <td> <?php echo $competence->getLibelle(); ?>
                     <?php if ($competence->getDescription() !== null AND trim($competence->getDescription() !== '')) : ?>
                         <span class="icon information" title="<?php echo $competence->getDescription(); ?>"
-                              data-toggle="tooltip" data-html="true"
+                              data-bs-toggle="tooltip" data-bs-html="true"
                         ></span>
                     <?php endif; ?>
                 </td>

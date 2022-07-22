@@ -142,7 +142,7 @@ ksort($groupes);
                             <?php if ($canAfficher) : ?>
                                 <a  <?php /** @see \Application\Controller\ElementController::afficherAction() */ ?>
                                     href="<?php echo $this->url("element/afficher", ['type' => ElementController::TYPE_FORMATION, 'id' => $entite->getId()], [], true); ?>"
-                                    class="ajax-modal" data-toggle="tooltip" data-html="true"
+                                    class="ajax-modal" data-bs-toggle="tooltip" data-bs-html="true"
                                     title="Afficher l'application <span class='highlight formation'><?php echo $entite->getLibelle(); ?></span>">
                                 <span class="icon icon-voir"></span></a>
                             <?php endif; ?>

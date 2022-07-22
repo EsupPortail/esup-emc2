@@ -3,8 +3,8 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\Agent;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class NiveauEnveloppe implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

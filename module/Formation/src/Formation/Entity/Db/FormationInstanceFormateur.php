@@ -2,8 +2,8 @@
 
 namespace Formation\Entity\Db;
 
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FormationInstanceFormateur implements HistoriqueAwareInterface
 {

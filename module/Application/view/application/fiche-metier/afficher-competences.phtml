@@ -11,7 +11,7 @@ use Application\Entity\Db\FicheMetier;
 
 ?>
 
-<div class="panel-body">
+<div class="card-body">
     <?php echo $this->competenceBloc($competences, $fichemetier,
         ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
             'actions' => ['modifier' => false, 'supprimer' => false, 'valider' => false]]); ?>

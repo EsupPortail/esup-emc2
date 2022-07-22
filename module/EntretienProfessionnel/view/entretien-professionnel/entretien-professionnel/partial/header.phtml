@@ -102,7 +102,7 @@ $canAfficherInformationMetier = (
                                 $canAfficherStructure = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER);
                             ?>
                                 <?php if ($canAfficherStructure) : ?>
-                                    <a href="<?php echo $structureUrl; ?>" target="_blank" title="Affichage de la structure" data-toggle="tooltip" data-html="true">
+                                    <a href="<?php echo $structureUrl; ?>" target="_blank" title="Affichage de la structure" data-bs-toggle="tooltip" data-bs-html="true">
                                         <?php echo $structureLibelle; ?>
                                     </a>
                                 <?php else : ?>

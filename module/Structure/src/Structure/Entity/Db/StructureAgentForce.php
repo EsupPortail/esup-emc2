@@ -4,8 +4,8 @@ namespace Structure\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class StructureAgentForce implements HistoriqueAwareInterface, HasAgentInterface {
     use HistoriqueAwareTrait;

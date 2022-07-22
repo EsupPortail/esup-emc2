@@ -12,11 +12,8 @@ $(function ()
     $(document).ajaxComplete(function (event, xhr, settings)
     {
         if (xhr.status === 403) {
-            if (confirm("Votre session a expiré, vous devez vous reconnecter.\n\nCliquez sur OK pour être redirigé(e) vers la page de connexion...")) {
-                var pne = window.location.pathname.split('/');
-                var url = "/" + (pne[0] ? pne[0] : pne[1]) + "/auth/connexion?redirect=" + $(location).attr('href');
-                $(location).attr('href', url);
-            }
+            alert("Opération non autorisée ou session expirée.");
+            xhr.abort();
         }
     });
 
@@ -27,7 +24,7 @@ $(function ()
     if ($(window).scrollTop() > 100) {
         $('.scrollup').fadeIn();
     }
-    $(window).scroll(function ()
+    $(window).on("scroll", function ()
     {
         if ($(this).scrollTop() > 100) {
             $('.scrollup').fadeIn();
@@ -36,7 +33,7 @@ $(function ()
             $('.scrollup').fadeOut();
         }
     });
-    $('.scrollup').click(function ()
+    $('.scrollup').on("click", function ()
     {
         $("html, body").animate({scrollTop: 0}, 300);
         return false;
@@ -255,7 +252,7 @@ IntraNavigator = {
 
         //$('body').one("click", ".intranavigator .btn-primary", IntraNavigator.btnPrimaryClickListener);
         // Réglage du focus sur le champ de formulaire ayant l'attribut 'autofocus'
-        $('.intranavigator [autofocus]').focus();
+        $('.intranavigator [autofocus]').trigger("focus");
     },
 
     /**
@@ -350,7 +347,7 @@ $.fn.autocompleteUnicaen = function (options)
         highlight(element.val(), li, 'sas-highlight');
         // si l'item ne possède pas d'id, on fait en sorte qu'il ne soit pas sélectionnable
         if (!item.id) {
-            li.click(function () { return false; });
+            li.on("click", function () { return false; });
         }
         return li;
     };
@@ -591,7 +588,9 @@ AjaxModalListener.prototype.start = function ()
     this.eventListener.on("click", "#" + this.modalContainerId + " a:not([download])", $.proxy(this.innerAnchorClickListener, this));
 
     // le formulaire éventuel est soumis lorsque le bouton principal de la fenêtre modale est cliqué
-    this.eventListener.on("click", this.getSubmitButton().selector, $.proxy(this.btnPrimaryClickListener, this));
+    if (this.getSubmitButton().length) {
+        this.eventListener.on("click", this.getSubmitButton().selector, $.proxy(this.btnPrimaryClickListener, this));
+    }
 
     // interception la soumission classique du formulaire pour le faire à la sauce AJAX
     this.eventListener.on("submit", "#" + this.modalContainerId + " form", $.proxy(this.formSubmitListener, this));
@@ -840,7 +839,7 @@ $.widget("unicaen.tabAjax", {
         tab = this.getTab(tab);
         if (tab.attr('href')[0] !== '#' && (!this.getIsLoaded(tab) || this.getForceRefresh(tab))) {
             var loadurl = tab.attr('href'),
-                tid = tab.attr('data-target');
+                tid = tab.attr('data-bs-target');
 
             that.element.find(".tab-pane" + tid).html("<div class=\"loading\">&nbsp;</div>");
             IntraNavigator.add(that.element.find(".tab-pane" + tid));
@@ -860,7 +859,7 @@ $.widget("unicaen.tabAjax", {
         var that = this;
 
         tab = this.getTab(tab);
-        tid = tab.attr('data-target');
+        tid = tab.attr('data-bs-target');
         return that.element.find(".tab-pane" + tid).html();
     },
 
@@ -908,8 +907,8 @@ $.widget("unicaen.popAjax", {
         url: undefined,
         content: undefined,
         confirm: false,
-        confirmButton: '<span class="glyphicon glyphicon-ok"></span> OK',
-        cancelButton: '<span class="glyphicon glyphicon-remove"></span> Annuler',
+        confirmButton: '<span class="fas fa-check"></span> OK',
+        cancelButton: '<span class="fas fa-ban"></span> Annuler',
         animation: true,
         delay: 200,
         placement: 'auto',
@@ -933,14 +932,14 @@ $.widget("unicaen.popAjax", {
         var that = this;
 
 
-        this.element.click(function ()
+        this.element.on("click", function ()
         {
             that.showHide();
 
             return false;
         });
 
-        $('html').click(function (e)
+        $('html').on("click", function (e)
         {
             that.htmlClick(e);
         });
@@ -1115,7 +1114,7 @@ $.widget("unicaen.popAjax", {
         var c = '<form action="' + this.options.url + '" method="post">' + content +
             '<div class="btn-goup" style="text-align:right;padding-top: 10px" role="group">';
         if (this.options.cancelButton) {
-            c += '<button type="button" class="btn btn-default pop-ajax-hide">' + this.options.cancelButton + '</button>';
+            c += '<button type="button" class="btn btn-secondary pop-ajax-hide">' + this.options.cancelButton + '</button>';
         }
         if (this.options.confirmButton && this.options.cancelButton) {
             c += '&nbsp;';
@@ -1159,7 +1158,7 @@ $.widget("unicaen.popAjax", {
                 'top': '-80000px'
             });
 
-            var contentDiv = '<div class="arrow"></div>';
+            var contentDiv = '<div class="popover-arrow"></div>';
             if (title) {
                 contentDiv += '<h3 class="popover-title">' + title + '</h3>';
             } else {
@@ -1169,7 +1168,7 @@ $.widget("unicaen.popAjax", {
 
             this.popDiv.html(contentDiv);
             this.popDiv.appendTo("body");
-            this.popDiv.find('.pop-ajax-hide').click(function () { that.hide();});
+            this.popDiv.find('.pop-ajax-hide').on("click", function () { that.hide();});
             IntraNavigator.run(); // navigateur interne!!
 
             if (this.options.content !== undefined) {
@@ -1192,7 +1191,7 @@ $.widget("unicaen.popAjax", {
                     });
             }
 
-            this.getContent().bind('DOMNodeInserted DOMNodeRemoved', function ()
+            this.getContent().on('DOMNodeInserted DOMNodeRemoved', function ()
             {
                 that.posPop();
             });
@@ -1214,7 +1213,7 @@ $.widget("unicaen.popAjax", {
             pc.hide();
 
             pc.html(content);
-            pc.find('.pop-ajax-hide').click(function () { that.hide();});
+            pc.find('.pop-ajax-hide').on("click", function () { that.hide();});
             this.extractTitle();
             this._trigger('change', null, this);
 
@@ -1321,7 +1320,7 @@ $.widget("unicaen.popAjax", {
                 if (pos < 20) pos = 20;
                 if (pos > (pop.width - 20)) pos = pop.width - 20;
 
-                this.popDiv.find('.arrow').css({left: pos});
+                this.popDiv.find('.popover-arrow').css({left: pos});
                 break;
             case 'left':
             case 'right':
@@ -1332,7 +1331,7 @@ $.widget("unicaen.popAjax", {
                 if (pos < 20) pos = 20;
                 if (pos > (pop.height - 20)) pos = pop.height - 20;
 
-                this.popDiv.find('.arrow').css({top: pos});
+                this.popDiv.find('.popover-arrow').css({top: pos});
                 break;
         }
         return this;
@@ -1557,7 +1556,7 @@ $.widget("unicaen.instadia", {
         var buttons = [];
         if (!this.options.readOnly) {
             buttons.push({
-                html: "<span class='glyphicon glyphicon-send'></span> Poster le message",
+                html: "<span class='fas fa-paper-plane'></span> Poster le message",
                 class: "btn btn-primary",
                 icons: {
                     primary: "ui-icon-heart"
@@ -1571,7 +1570,7 @@ $.widget("unicaen.instadia", {
 
         buttons.push({
             text: "Fermer",
-            class: "btn btn-default",
+            class: "btn btn-secondary",
             click: function ()
             {
                 $(this).dialog("close");

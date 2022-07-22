@@ -5,8 +5,8 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use UnicaenEtat\Entity\Db\Etat;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class AgentPPP implements HasPeriodeInterface, HistoriqueAwareInterface {
     use HasPeriodeTrait;

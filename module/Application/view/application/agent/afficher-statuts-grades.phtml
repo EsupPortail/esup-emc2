@@ -29,9 +29,9 @@ $this->headTitle($title)
     <div class="col-md-3">
         <h2> Statuts <span class="icon information" title="Attention ici ne sont affichés que les statuts associées à la structure principale"></span></h2>
         <?php foreach ($statuts as $statut) : ?>
-                <?php if ($statut->getStructure()->getCode() === $codeEtabPrincipal) : ?>
+<!--                --><?php //if ($statut->getStructure()->getCode() === $codeEtabPrincipal) : ?>
                     <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-                <?php endif; ?>
+<!--                --><?php //endif; ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">

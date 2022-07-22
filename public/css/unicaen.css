@@ -27,7 +27,7 @@
     --default-background-hover : var(--header-background-hover);
     --primary-background : var(--header-background);
     --primary-background-hover : var(--header-background-hover);
-    --information-background : #000050;
+    --information-background : #6a6aff;
     --information-background-back : #d0e7ff;
     --information-background-hover : #00278b;
     --success-background-hover : #008b00;
@@ -43,7 +43,7 @@
 
 :root {
     --header-height: 70px;
-    --footer-height: 200px;
+    --footer-height: 150px;
 }
 
 /** GENERAL ***********************************************************************************************************/
@@ -64,7 +64,7 @@ header {
     height: var(--header-height);
 }
 
-div.navbar {
+nav {
     position: fixed;
     z-index: 1030;
     background: var(--header-background);
@@ -77,7 +77,7 @@ div.navbar {
     text-shadow: none;
 }
 
-div.navbar a {
+.navbar a {
     color: var(--header-color);
     font-weight: bold;
 }
@@ -112,21 +112,21 @@ a.navbar-brand h1 {
 
 /** menu ----------------------------------------------------------------------------------------------------------- **/
 
-.navbar .nav > li.dropdown {
+nav > li.dropdown {
     /*border-right: 2px solid var(--header-color);*/
 }
 
-.navbar .nav > li.dropdown:first-child {
+nav > li.dropdown:first-child {
     /*border-left: 2px solid var(--header-color);*/
 }
 
-.navbar .nav > li.active,
-.navbar .nav > li:focus,
-.navbar .nav > li:hover {
+nav > li.active,
+nav > li:focus,
+nav > li:hover {
     background: var(--header-background-hover);
 }
 
-.navbar .nav > li.dropdown > a {
+nav > li.dropdown > a {
     padding-top: 0;
     text-transform: uppercase;
     background: none;
@@ -134,7 +134,7 @@ a.navbar-brand h1 {
     line-height: var(--header-height);
 }
 
-.navbar .nav > li > a {
+nav > li > a {
     padding-top: 0;
     text-transform: uppercase;
     background: none;
@@ -142,36 +142,48 @@ a.navbar-brand h1 {
     line-height: var(--header-height);
     border-right: 2px solid var(--header-color);
 }
-.navbar .nav > li:first-child {
+nav > li:first-child {
     border-left: 2px solid var(--header-color);
 }
 
-.navbar .nav > li.open {
+nav > li.open {
     background: var(--header-background-hover);
 }
 
-.navbar .nav .dropdown-menu {
+nav .dropdown-menu {
     font-size: 14px;
     background: var(--header-background-hover);
 }
 
-.navbar .nav .dropdown-menu > li > a {
-    color: var(--color-medium);
-    padding: 2px 15px;
+nav .dropdown-menu > li{
+    color: var(--information-background);
+    font-weight: bold;
 }
-.navbar .nav .dropdown-menu > li > a:focus, .navbar .nav .dropdown-menu > li > a:hover {
-    color: var(--header-color);
-    background-color: var(--header-background);
-}
-header ul.dropdown-menu > li a:hover {
-    background: darkred;
+header ul.dropdown-menu > li:hover {
+    background: var(--header-background-hover);
+    color: var(--information-background);
 }
 
-.navbar .nav .dropdown-menu > li.active  a {
+nav .dropdown-menu > li > a {
+    color: var(--color-light-bis);
+    padding: 2px 15px;
+    font-weight: 500;
+}
+nav .dropdown-menu > li > a:focus, .navbar .nav .dropdown-menu > li > a:hover {
     color: var(--header-color);
     background-color: var(--header-background);
 }
-.navbar .nav .dropdown-menu > li.dropdown-header {
+
+
+header ul.dropdown-menu > li a:hover {
+    background: var(--color-medium-bis);
+}
+
+nav .dropdown-menu > li.active  a {
+    color: var(--header-color);
+    background-color: var(--header-background);
+}
+nav .dropdown-menu > li.dropdown-header {
     font-size: 14px;
     color: var(--content-background);
     font-weight: bold;
@@ -264,6 +276,11 @@ img.footer-logo-normandie-universite {
 
 /**********************************************************************************************************/
 
+span.badge {
+    background-color: #6c757d !important;
+}
+/**********************************************************************************************************/
+
 /*img.footer-logo-republique-francaise {*/
 /*    display: inline-block;*/
 /*    height: calc(2 / 3 * 85px);*/
@@ -309,7 +326,7 @@ img.footer-logo-normandie-universite {
         letter-spacing: 0.10rem;
     }
 
-    .navbar .nav > li.dropdown,
+    nav > li.dropdown,
     div.navbar-connection
     {
         font-size: 12px;
@@ -477,63 +494,39 @@ div.alert.alert-success {
     color:  var(--success-background);
 }
 
-div.panel {
-    border-radius: 0;
+/** CARD ----------------------------------------------------------------------------------------------------------  **/
+
+div.card {
+    margin: 0.25rem;
+    border-color:  var(--header-background-hover);
 }
 
-div.panel div.panel-heading{
-    border-radius: 0;
+div.card div.card-header{
+    border-color:  var(--header-background-hover);
 }
 
-div.panel div.panel-body{
-    border-radius: 0;
-}
 
-div.panel.panel-info {
-    border-color:  var(--information-background);
+div.card.info div.card-header {
+    background:  var(--information-background-back);
     color:  var(--information-background);
 }
 
-div.panel.panel-info div.panel-heading{
-    background: var(--information-background-back);
-    border-color:  var(--information-background);
-    color:  var(--information-background);
-}
-
-div.panel.panel-warning {
+div.card.warning div.card-header {
     border-color:  var(--warning-background);
     color:  var(--warning-background);
 }
 
-div.panel.panel-warning div.panel-heading{
-    background: var(--warning-background-back);
-    border-color:  var(--warning-background);
-    color:  var(--warning-background);
-}
-
-div.panel.panel-danger {
+div.card.danger div.card-header {
     border-color:  var(--danger-background);
     color:  var(--danger-background);
 }
 
-div.panel.panel-danger div.panel-heading{
-    background: var(--danger-background-back);
-    border-color:  var(--danger-background);
-    color:  var(--danger-background);
-}
-
-div.panel.panel-success {
-    border-color:  var(--success-background);
+div.card.success div.card-header {
+    border-color:  var(--success-background-hover);
     color:  var(--success-background);
 }
 
-div.panel.panel-success div.panel-heading{
-    background: var(--success-background-back);
-    border-color:  var(--success-background);
-    color:  var(--success-background);
-}
-
-div.panel.panel-default {
+div.card.default div.card-header  {
     border-color:  var(--color-dark);
     color:  var(--default-background);
 }
@@ -568,10 +561,12 @@ table.table tbody tr td {
 ul.nav-tabs {
     padding: 0.5rem 0.5rem 0 0.5rem;
     border-bottom: 1px solid var(--content-color);
+    margin-bottom: 0.5rem   ;
 }
 
-ul.nav-tabs li a, ul.nav-tabs li a:hover {
-    border: 1px solid var(--color-medium-bis);
+ul.nav-tabs li.nav-item a.nav-link,
+ul.nav-tabs li.nav-item a.nav-link:hover {
+    border: 1px solid var(--color-medium);
     border-bottom: none;
     border-radius: 0;
     color: var(--body-color);
@@ -582,8 +577,9 @@ ul.nav-tabs li a:hover {
     border-bottom: none;
 }
 
-ul.nav-tabs li.active a, ul.nav-tabs li.active a:hover {
-    border: 1px solid var(--content-color);
+ul.nav-tabs li.nav-item a.nav-link.active,
+ul.nav-tabs li.nav-item a.nav-link.active:hover {
+    border: 1px solid black;
     border-bottom: none;
     border-radius: 0;
     color: var(--body-color);

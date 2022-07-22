@@ -222,6 +222,9 @@ class IndicateurService {
 
     public function getIndicateurData(Indicateur $indicateur) : ?array
     {
+        $exist = $this->verifierExistanceMaterializedView($indicateur->getViewId());
+        if (!$exist) return null;
+
         $rawdata = $this->fetch($indicateur);
         if ($rawdata === null) return null;
         $rubriques = [];

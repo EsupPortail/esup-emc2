@@ -14,8 +14,8 @@ $date = new DateTime();
 ?>
 
 <?php if ($fiche->getSpecificite() !== NULL OR  $mode === 'edition') : ?>
-    <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="card panel-info">
+        <div class="card-header">
             <div class="row">
                 <div class="col-md-6">
                     <h2> Spécificités du poste </h2>
@@ -35,7 +35,7 @@ $date = new DateTime();
                 </div>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <?php if ($mode === 'edition') : ?>
             <?php endif; ?>
             <?php echo $this->specificitePoste($fiche, $fiche->getSpecificite(), ["mode" => $mode]); ?>

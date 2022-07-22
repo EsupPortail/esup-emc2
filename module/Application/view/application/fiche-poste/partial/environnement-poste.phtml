@@ -17,15 +17,15 @@ $canModifier = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIE
 $poste = $fiche->getPoste();
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="card panel-info">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-6">
                 <h2> Environnement du poste de travail </h2>
             </div>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <?php
             $structures = [];
             if ($agent !== null) $structures = $agent->getStructures();

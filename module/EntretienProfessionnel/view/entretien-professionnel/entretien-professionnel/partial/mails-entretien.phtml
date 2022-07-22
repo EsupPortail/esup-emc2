@@ -40,14 +40,14 @@ $canReEnvoyerMail = $this->isAllowed(MailingPrivileges::getResourceId(MailingPri
                         <a <?php /** @see \Mailing\Controller\MailingController::afficherAction() */?>
                             href="<?php echo $this->url('mailing/afficher',  ['id' => $mail->getId()], [], true); ?>"
                             class="ajax-modal"
-                            title="Affichage du mail" data-toggle="tooltip" data-html="true"
+                            title="Affichage du mail" data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon icon-voir"></span></a>
                     <?php endif; ?>
                     <?php if($canReEnvoyerMail) : ?>
                         <a <?php /** @see \Mailing\Controller\MailingController::reEnvoiAction() */?>
                                 href="<?php echo $this->url('mailing/re-envoi',  ['id' => $mail->getId()], ['query' => ['retour' => $retour]], true); ?>"
-                                title="Re-envoi du mail" data-toggle="tooltip" data-html="true"
+                                title="Re-envoi du mail" data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon courrier"></span></a>
                     <?php endif; ?>

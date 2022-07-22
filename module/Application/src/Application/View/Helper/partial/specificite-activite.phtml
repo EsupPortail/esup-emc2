@@ -86,11 +86,11 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
         </div>
         <div class="col-md-4" style="margin-top: 0.5rem;">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card panel-default">
+                <div class="card-header">
                     Métiers associés
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <?php $count = 0; ?>
                     <ul>
                         <?php foreach ($activite->getFichesMetiers() as $ficheMetier) : ?>

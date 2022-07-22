@@ -53,7 +53,7 @@ $canSupprimerNiveau = true;
                     <?php echo $niveau->getLibelle(); ?>
                     <?php if ($niveau->getDescription()) : ?>
                         <span class="icon information" title="<?php echo $niveau->getDescription(); ?> "
-                              data-toggle="tooltip" data-html="true"
+                              data-bs-toggle="tooltip" data-bs-html="true"
                         ></span>
                     <?php endif; ?>
                 </td>
@@ -62,7 +62,7 @@ $canSupprimerNiveau = true;
                         <?php /** @see \Element\Controller\NiveauController::modifierAction() */?>
                         <a href="<?php echo $this->url('element/niveau/modifier', ['maitrise' => $niveau->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
-                           data-toogle="tooltip" data-html="true" title="Modifier le niveau <?php echo $niveau->getEtiquette(); ?>"
+                           data-toogle="tooltip" data-bs-html="true" title="Modifier le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
                             <span class="icon icon-editer"></span></a>
                     <?php endif; ?>
@@ -70,13 +70,13 @@ $canSupprimerNiveau = true;
                         <?php if($niveau->estNonHistorise()) : ?>
                             <?php /** @see \Element\Controller\NiveauController::historiserAction() */?>
                             <a href="<?php echo $this->url('element/niveau/historiser', ['maitrise' => $niveau->getId()], [], true); ?>"
-                               data-toogle="tooltip" data-html="true" title="Historiser le niveau <?php echo $niveau->getEtiquette(); ?>"
+                               data-toogle="tooltip" data-bs-html="true" title="Historiser le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see \Element\Controller\NiveauController::restaurerAction() */?>
                             <a href="<?php echo $this->url('element/niveau/restaurer', ['maitrise' => $niveau->getId()], [], true); ?>"
-                               data-toogle="tooltip" data-html="true" title="Rstaurer le niveau <?php echo $niveau->getEtiquette(); ?>"
+                               data-toogle="tooltip" data-bs-html="true" title="Rstaurer le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
@@ -85,7 +85,7 @@ $canSupprimerNiveau = true;
                         <?php /** @see \Element\Controller\NiveauController::supprimerAction() */?>
                         <a href="<?php echo $this->url('element/niveau/supprimer', ['maitrise' => $niveau->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
-                           data-toogle="tooltip" data-html="true" title="Supprimer le niveau <?php echo $niveau->getEtiquette(); ?>"
+                           data-toogle="tooltip" data-bs-html="true" title="Supprimer le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
                             <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>

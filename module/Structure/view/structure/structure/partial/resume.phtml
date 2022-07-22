@@ -36,17 +36,17 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     class="ajax-modal"
                     data-event="modification"
                 >
-                    <span class="icon icon-editer" data-toggle="tooltip" data-html="true"
+                    <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
                 <a
                     <?php /** @see \Application\Controller\StructureController::toggleResumeMereAction() */ ?>
                         href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
                 >
                     <?php if ($structure->getRepriseResumeMere()) : ?>
-                        <span class="icon icon-retirer" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-retirer" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ne plus réutiliser le résumé de la structure mère"></span></a>
                     <?php else : ?>
-                        <span class="icon icon-checked" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Réutiliser le résumé de la structure mère"></span></a>
                     <?php endif; ?>
 
@@ -103,7 +103,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                         class="ajax-modal"
                         data-event="modification"
                 >
-                        <span class="icon icon-ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ajouter un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
             <?php endif; ?>
@@ -117,7 +117,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <?php if (! $responsable->isImported() AND $canEditerResponsable) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerResponsableAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-responsable', ['structure'=>$structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>">
-                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
                                   title="Retirer un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
                         </a>
                     <?php endif ?>
@@ -136,7 +136,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon icon-ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
                 <?php endif; ?>
@@ -150,7 +150,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <?php if (! $gestionnaire->isImported() AND $canEditerGestionnaire) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerGestionnaireAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure'=>$structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>">
-                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
                                   title="Retirer un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
                         </a>
                     <?php endif ?>

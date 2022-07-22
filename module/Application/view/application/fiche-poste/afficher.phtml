@@ -40,7 +40,7 @@ $canExport   = $canAfficher;
             <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fiche->getId()], [], true); ?>"
                class="btn btn-primary action" target="_blank"
             ><span
-                        data-toggle="tooltip" data-html="true"
+                        data-bs-toggle="tooltip" data-bs-html="true"
                         title="Exporter en PDF la fiche de poste"
                         class="icon icon-pdf"></span> Exporter au format PDF </a>
         <?php endif; ?>
@@ -61,12 +61,12 @@ $canExport   = $canAfficher;
 
 <?php else : ?>
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="card panel-info">
+        <div class="card-header">
             <h2> Agent occupant le poste </h2>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
 
             <?php $agent = $fiche->getAgent(); ?>
 
@@ -97,8 +97,8 @@ $canExport   = $canAfficher;
     ?>
 
     <?php /** @var FicheTypeExterne $ficheType **/ ?>
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card panel-default">
+        <div class="card-header">
             <div class="row">
                 <h2>Fiche composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) type(s).</h2>
                 <ul>
@@ -120,11 +120,11 @@ $canExport   = $canAfficher;
     <?php endforeach; ?>
 
     <!-- REGROUPE DES COMPETENCES, APPLICATIONS ET DES FORMATIONS ----------------------------------------------------->
-    <div class="panel panel-info">
-        <div class="panel-heading">
+    <div class="card panel-info">
+        <div class="card-header">
             <h2>Compétences attendues - Formations proposées</h2>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'affichage'], [], true); ?>
             <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'affichage'], [], true); ?>
 <!--            --><?php //echo $this->partial('partial/formations',   ['fiche' => $fiche, 'formations' => $formations,     'mode' => 'affichage'], [], true); ?>

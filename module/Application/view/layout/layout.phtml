@@ -31,41 +31,29 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
 </head>
 
 <body class="<?php  echo getenv('APPLICATION_ENV'); ?>">
+
+    <!-- HEADER -------------------------------------->
+
     <header>
-    <div id="navbar" class="navbar" >
-        <?php $connecte = $this->appConnection()->getView()->plugin('userCurrent')->getIdentity(); ?>
-        <div class="navbar-element" id="navbar-logo"
-             <?php if ($connecte !== null) : ?>
-                style="display:none;"
-             <?php endif; ?>
-        >
-            <img src='/img/unicaen-logo-blanc.svg' alt='Logo UniCaen' class='navbar-logo-unicaen' />
-        </div>
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".bs-navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+    <nav id="navbar" class="navbar navbar-dark fixed-top navbar-expand-lg" role="navigation">
+        <div class="container-fluid">
+            <?php echo $this->appLink($this->appInfos()->nom) ?>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipalNavbar" aria-controls="menuPrincipalNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-
-            <?= $this->appLink($this->appInfos()->nom);?>
-            <br/>
-            <?php if ($env !== 'production') echo $env; ?>
+            <div class="collapse navbar-collapse" id="menuPrincipalNavbar">
+                <?php echo $navigationHelper
+                    ->menu('navigation')
+                    ->setUlClass('navbar-nav me-auto')
+                    ->setPartial('layout/menu-principal.phtml'); ?>
+                <div class="navbar-text text-end">
+                    <?php echo $this->appConnection(); ?>
+                </div>
+                <!--<p class="navbar-text navbar-right"><?php /*echo $this->languageSelector(); */?></p>-->
+            </div>
         </div>
-
-        <div class="navbar-collapse bs-navbar-collapse collapse">
-            <?php echo $navigationHelper
-                ->menu()
-                ->setUlClass('nav navbar-nav')
-                ->setPartial('layout/navigation-octopus.phtml');
-            ?>
-            <p class="navbar-element navbar-connection">
-                <?php echo $this->appConnection(); ?>
-            </p>
-        </div>
-</div>
-</header>
+    </nav>
+    </header>
 
 <div style="display: flex; flex-wrap: nowrap;">
     <div id="contenu-principal" class="container">
@@ -100,6 +88,6 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
         $('[data-toggle="popover"]').popover({ html: true});
     });
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip({});
+        $('[data-bs-toggle="tooltip"]').tooltip({});
     });
 </script>

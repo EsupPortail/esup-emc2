@@ -66,7 +66,7 @@ $this->headTitle("Liste des catégories");
                     <a
                         <?php /** @see \Application\Controller\CategorieController::afficherMetiersAction() */ ?>
                             href="<?php echo $this->url('categorie/afficher-metiers', ['categorie' => $categorie->getId()], [], true); ?>"
-                            title="Afficher la liste des métiers" data-toggle="tooltip" data-html="true"
+                            title="Afficher la liste des métiers" data-bs-toggle="tooltip" data-bs-html="true"
                             class="ajax-modal"
                     >
                         <span class="icon users"></span></a>
@@ -75,7 +75,7 @@ $this->headTitle("Liste des catégories");
                     <a
                             <?php /** @see \Application\Controller\CategorieController::modifierAction() */ ?>
                             href="<?php echo $this->url('categorie/modifier', ['categorie' => $categorie->getId()], [], true); ?>"
-                            title="Modification de la catégorie" data-toggle="tooltip" data-html="true"
+                            title="Modification de la catégorie" data-bs-toggle="tooltip" data-bs-html="true"
                             class="ajax-modal" data-event="modification"
                         >
                     <span class="icon icon-editer"></span></a>
@@ -85,14 +85,14 @@ $this->headTitle("Liste des catégories");
                         <a
                             <?php /** @see \Application\Controller\CategorieController::restaurerAction() */ ?>
                                 href="<?php echo $this->url('categorie/restaurer', ['categorie' => $categorie->getId()], [], true); ?>"
-                                title="Restauration de la catégorie" data-toggle="tooltip" data-html="true"
+                                title="Restauration de la catégorie" data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon icon-restaurer"></span></a>
                     <?php else: ?>
                         <a
                             <?php /** @see \Application\Controller\CategorieController::historiserAction() */ ?>
                                 href="<?php echo $this->url('categorie/historiser', ['categorie' => $categorie->getId()], [], true); ?>"
-                                title="Historisation de la catégorie" data-toggle="tooltip" data-html="true"
+                                title="Historisation de la catégorie" data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon icon-historiser"></span></a>
                     <?php endif; ?>
@@ -101,7 +101,7 @@ $this->headTitle("Liste des catégories");
                     <a
                         <?php /** @see \Application\Controller\CategorieController::supprimerAction() */ ?>
                             href="<?php echo $this->url('categorie/supprimer', ['categorie' => $categorie->getId()], [], true); ?>"
-                            title="Destruction de la catégorie" data-toggle="tooltip" data-html="true"
+                            title="Destruction de la catégorie" data-bs-toggle="tooltip" data-bs-html="true"
                             class="ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-retirer"></span></a>

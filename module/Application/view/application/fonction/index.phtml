@@ -63,10 +63,10 @@ $canModifier = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivil
                         <br/>
                         <a href="<?php echo $this->url('fonction/destination/modifier', ['destination' => $destination->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
-                           data-toggle="tooltip" data-html="true" title="Modifier la destination">
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Modifier la destination">
                             <span class="icon icon-editer"></span></a>
                         <a href="<?php echo $this->url('fonction/destination/supprimer', ['destination' => $destination->getId()], [], true); ?>"
-                           data-toggle="tooltip" data-html="true" title="Supprimer la destination">
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Supprimer la destination">
                             <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                 </td>
@@ -87,10 +87,10 @@ $canModifier = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivil
                                 <br/>
                                 <a href="<?php echo $this->url('fonction/activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
                                    class="ajax-modal" data-event="modification"
-                                   data-toggle="tooltip" data-html="true" title="Modifier l'activité">
+                                   data-bs-toggle="tooltip" data-bs-html="true" title="Modifier l'activité">
                                     <span class="icon icon-editer"></span></a>
                                 <a href="<?php echo $this->url('fonction/activite/supprimer', ['activite' => $activite->getId()], [], true); ?>"
-                                   data-toggle="tooltip" data-html="true" title="Supprimer l'activité">
+                                   data-bs-toggle="tooltip" data-bs-html="true" title="Supprimer l'activité">
                                     <span class="icon icon-retirer"></span></a>
                                 <?php endif; ?>
                             </td>

@@ -59,7 +59,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                             <?php /** @see \EntretienProfessionnel\Controller\CampagneController::modifierAction() */?>
                             href="<?php echo $this->url('entretien-professionnel/campagne/modifier', ['campagne' => $campagne->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
-                            data-toggle="tooltip" data-html="true"
+                            data-bs-toggle="tooltip" data-bs-html="true"
                             title="Modification de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                         >
                         <span class="icon icon-editer"></span></a>
@@ -69,7 +69,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::historiserAction() */?>
                                     href="<?php echo $this->url('entretien-professionnel/campagne/historiser', ['campagne' => $campagne->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true"
+                                    data-bs-toggle="tooltip" data-bs-html="true"
                                     title="Historisation de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                             >
                             <span class="icon icon-historiser"></span></a>
@@ -77,7 +77,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::restaurerAction() */?>
                                     href="<?php echo $this->url('entretien-professionnel/campagne/restaurer', ['campagne' => $campagne->getId()], [], true); ?>"
-                                    data-toggle="tooltip" data-html="true"
+                                    data-bs-toggle="tooltip" data-bs-html="true"
                                     title="Restauration de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                             >
                             <span class="icon icon-restaurer"></span></a>
@@ -88,7 +88,7 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
                             <?php /** @see \EntretienProfessionnel\Controller\CampagneController::detruireAction() */?>
                                 href="<?php echo $this->url('entretien-professionnel/campagne/detruire', ['campagne' => $campagne->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                                 title="Suppression de la campagne <span class='highlight campagne'><?php echo $campagne->getAnnee(); ?></span>"
                         >
                         <span class="icon icon-retirer"></span></a>

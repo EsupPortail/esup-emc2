@@ -6,6 +6,7 @@
  * @var AgentAffectation[] $affectations
  * @var AgentGrade[] $grades
  * @var AgentEchelon|null $echelon
+ * @var Agent[] $superieures
  * @var Agent[] $responsables
  * @var Agent[] $autorites
  * @var AgentQuotite $quotite
@@ -70,8 +71,13 @@ use UnicaenUtilisateur\Entity\Db\User;
                 <?php if ($niveau2) : ?>
                     <?php if ($autorites AND !empty($autorites)) : ?>
                         <ul>
-                        <?php foreach ($autorites as $autorite) : ?>
-                            <li> <?php echo $autorite->getDenomination(); ?> </li>
+                        <?php foreach ($autorites as $key => $autorite) : ?>
+                            <li>
+                                <?php echo $autorite->getDenomination(); ?>
+                                <?php if (substr($key, 0, 10) === "complement") : ?>
+                                    <span class="icon icon-information" title="Complément non déduit de la structure"></span>
+                                <?php endif; ?>
+                            </li>
                         <?php endforeach; ?>
                         </ul>
                     <?php else : ?>
@@ -83,22 +89,26 @@ use UnicaenUtilisateur\Entity\Db\User;
                 <?php else : ?>
                     <span class="probleme">
                         <span class="icon icon-attention"></span>
-                        Aucune structure de niveau 2 de trouvée pour <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                        Aucun·e autorité hiérarchique
                     </span>
                 <?php endif; ?>
             </dd>
             <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
             <dd>
-                <?php if ($responsables AND !empty($responsables)) : ?>
+                <?php if (!empty($superieures)) : ?>
                     <ul>
-                        <?php foreach ($responsables as $responsable) : ?>
-                            <li> <?php echo $responsable->getDenomination(); ?> </li>
+                        <?php foreach ($superieures as $key => $superieure) : ?>
+                            <li> <?php echo $superieure->getDenomination(); ?>
+                                <?php if (substr($key, 0, 10) === "complement") : ?>
+                                    <span class="icon icon-information" title="Complément non déduit de la structure"></span>
+                                <?php endif; ?>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php else : ?>
                     <span class="probleme">
                         <span class="icon icon-attention"></span>
-                        Aucune responsable pour la structure <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                        Aucun·e supérieur·e hiérarchique direct·e
                     </span>
                 <?php endif; ?>
             </dd>
@@ -132,23 +142,25 @@ use UnicaenUtilisateur\Entity\Db\User;
     </div>
 </div>
 
+<h2>Carrière et positionnement dans la structure</h2>
+
 <div class="row">
     <div class="col-md-3">
-        <h2>Affectation(s)</h2>
+        <h3>Affectation</h3>
         <?php foreach ($affectations as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
-        <h2>Statut(s)</h2>
+        <h3>Statut</h3>
         <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
-        <h2>Grade(s)</h2>
+        <h3>Grade</h3>
         <?php foreach ($grades as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => true, 'temoin' => true]); ?>
+            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => false, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
 </div>

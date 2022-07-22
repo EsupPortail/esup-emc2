@@ -19,6 +19,9 @@
  * @var FicheProfil[] $profils
  * @var FormationInstanceInscrit[] $inscriptions
  *
+ * @var Agent[] $autorites;
+ * @var Agent[] $superieurs;
+ *
  * @var Campagne $last
  * @var Agent[] $agentsLast
  * @var Campagne[] $campagnes
@@ -86,25 +89,25 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
         <div role="tabpanel">
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation">
-                    <a href="#agents" aria-controls="agents" role="tab" data-toggle="tabz">
+                <li class="nav-item" role="presentation">
+                    <a href="#agents" class="nav-link" aria-controls="agents" role="tab" data-toggle="tabz">
                         Agents <br/> &nbsp;
                     </a>
                 </li>
-                <li role="presentation">
-                    <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
+                <li class="nav-item" role="presentation">
+                    <a href="#informations" class="nav-link" aria-controls="informations" role="tab" data-toggle="tabz">
                         Fiches de  <br/> poste
                     </a>
                 </li>
-                <li role="presentation">
-                    <a href="#missions" aria-controls="missions" role="tab" data-toggle="tabz">
+                <li class="nav-item" role="presentation">
+                    <a href="#missions" class="nav-link" aria-controls="missions" role="tab" data-toggle="tabz">
                         Missions <br/> spécifiques
                     </a>
                 </li>
 
                 <?php if ($last !== null) : ?>
                     <li role="presentation">
-                        <a href="#campagne_<?php echo $last->getId(); ?>" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
+                        <a href="#campagne_<?php echo $last->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
                             Entretien professionnel  <br/>
                             <strong><?php echo $last->getAnnee(); ?></strong>
                         </a>
@@ -113,7 +116,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <?php foreach ($campagnes as $campagne) : ?>
                     <li role="presentation">
-                        <a href="#campagne_<?php echo $campagne->getId(); ?>" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
+                        <a href="#campagne_<?php echo $campagne->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
                             Entretien professionnel <br/>
                             <strong><?php echo $campagne->getAnnee(); ?></strong>
                         </a>
@@ -121,20 +124,20 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <?php endforeach;?>
 
                 <li role="presentation">
-                    <a href="#profil" aria-controls="profil" role="tab" data-toggle="tabz" >
+                    <a href="#profil" class="nav-link" aria-controls="profil" role="tab" data-toggle="tabz" >
                         Profil de  <br/>
                         recrutement
                     </a>
                 </li>
 
                 <li role="presentation">
-                    <a href="#formation" aria-controls="formation" role="tab" data-toggle="tabz" >
+                    <a href="#formation" class="nav-link" aria-controls="formation" role="tab" data-toggle="tabz" >
                         Demande de <br/> Formation
                     </a>
                 </li>
 
                 <li role="presentation">
-                    <a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tabz" >
+                    <a href="#extraction" class="nav-link" aria-controls="extraction" role="tab" data-toggle="tabz" >
                         Extractions  <br/> &nbsp;
                     </a>
                 </li>
@@ -157,7 +160,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                         </div>
                     </div>
 
-                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents]); ?>
+                    <?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites]); ?>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -188,6 +191,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <div id="missions" class="tab-pane " role="tabpanel">
                     <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
                 </div>
+
                 <!-- Campagne ------------------------------------------------------------------------------------->
                 <?php $allAgents = array_merge($agents, $agentsForces); ?>
 

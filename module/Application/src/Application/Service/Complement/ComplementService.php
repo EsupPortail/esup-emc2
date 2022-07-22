@@ -109,7 +109,7 @@ class ComplementService {
      * @param string $attachmentType
      * @param string $attachmentId
      * @param string|null $type
-     * @return array
+     * @return Complement[]
      */
     public function getCompelementsByAttachement(string $attachmentType, string $attachmentId, ?string $type = null) : array
     {

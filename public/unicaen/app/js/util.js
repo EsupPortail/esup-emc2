@@ -26,11 +26,11 @@ function durationInWords(milliseconds)
 
     function substitute(stringOrFunction, number)
     {
-        var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, milliseconds) : stringOrFunction;
+        var string = typeof stringOrFunction === "function" ? stringOrFunction(number, milliseconds) : stringOrFunction;
         return number ? (string.replace(/%d/i, number) + (number > 1 ? "s" : "") + " ") : "";
     }
 
-    return $.trim(substitute(l.years, years) + (substitute(l.months, month)) + (substitute(l.days, days)) + (substitute(l.hours, hours)) + (substitute(l.minutes, minutes)) + (substitute(l.seconds, seconds)) + (substitute(l.milliseconds, ms)));
+    return (substitute(l.years, years) + (substitute(l.months, month)) + (substitute(l.days, days)) + (substitute(l.hours, hours)) + (substitute(l.minutes, minutes)) + (substitute(l.seconds, seconds)) + (substitute(l.milliseconds, ms))).trim();
 }
 
 /**
@@ -178,6 +178,8 @@ function installIconsJQuery(options)
 }
 function installIcons(options)
 {
+    console.log("ATTENTION Appel de code obsolète ! Les glyphicon disparaissent dans Bootstrap 4.");
+
     var defaults = {
         'action-ajouter': 'glyphicon-plus',
         'action-apercu': 'glyphicon-image',
@@ -196,7 +198,7 @@ function installIcons(options)
             if (!$(this).attr('title')) {
                 $(this).attr('title', $(this).text());
             }
-            $(this).html('<button type="button" class="btn btn-link btn-xs"><span class="glyphicon ' + classes[c] + '"></span></button>');
+            $(this).html('<button type="button" class="btn btn-link btn-sm"><span class="glyphicon ' + classes[c] + '"></span></button>');
         });
     }
 }
@@ -216,11 +218,11 @@ function installConfirm()
             message = $(this).attr('title');
             message = "Êtes-vous sûr(e) de vouloir " + message.substr(0, 1).toLowerCase() + message.substr(1) + " ?";
         }
-        $(this).click(function () { askConfirmation($(this), message); });
+        $(this).on("click", function () { askConfirmation($(this), message); });
     });
     $(".actions .confirm").each(function ()
     {
-        $(this).click(function () { askConfirmation($(this)); });
+        $(this).on("click", function () { askConfirmation($(this)); });
     });
 }
 
@@ -314,7 +316,7 @@ function installMenuToggleButton()
     atoggle = $('<a title="Afficher/masquer le menu"></a>')
         .button({icons: {primary: 'ui-icon-carat-2-e-w'}, texte: false})
         .css('height', '12px').css('width', '30px').css('margin-bottom', '2px')
-        .click(function ()
+        .on("click", function ()
         {
             var visible = $.jStorage.get('menuvisible', '?');
             if (visible == '?') {
@@ -354,7 +356,7 @@ function setMenuVisible(visible)
  */
 function installOpacifier(element, opacity, ajaxLoadingElement)
 {
-    element.click(function ()
+    element.on("click", function ()
     {
         $("body").css("opacity", opacity ? opacity : "0.5");
         $(ajaxLoadingElement ? ajaxLoadingElement : "#ajax-loader").show().position({
@@ -465,10 +467,10 @@ function alertFlash(message, severity, duration)
         error: 'danger'
     };
     var iconClasses = {
-        info: 'info-sign',
-        success: 'ok-sign',
-        warning: 'warning-sign',
-        error: 'exclamation-sign'
+        info: 'info-circle',
+        success: 'check-circle',
+        warning: 'exclamation-circle',
+        error: 'exclamation-triangle'
     };
     var alertClass = 'alert-' + alertClasses[severity];
     var divId = "alert-div-" + Math.floor((Math.random() * 100000) + 1);
@@ -476,14 +478,14 @@ function alertFlash(message, severity, duration)
     var alertDiv = $(
         '<div id="' + divId + '" class="alert fade in navbar-fixed-bottom" role="alert" style="display: none;">' +
         '    <div class="container">' +
-        '        <p class="text-center"><span class="icon glyphicon"></span> <span class="message"></span></p>' +
+        '        <p class="text-center"><span class="icon fas"></span> <span class="message"></span></p>' +
         '    </div>' +
         '</div>'
     ).appendTo("body");
 
     alertDiv.addClass(alertClass);
     $("p .message", alertDiv).html(message);
-    $("p .icon", alertDiv).addClass('glyphicon-' + iconClasses[severity]);
+    $("p .icon", alertDiv).addClass('fa-' + iconClasses[severity]);
 
     alertDiv.slideToggle(500, function ()
     {
@@ -530,7 +532,7 @@ function installCheckboxes(targetElements, checkboxName, initiallyChecked)
                 .attr("type", "checkbox")
                 .attr("name", checkboxName + "[]")
                 .attr('value', $(element).data("id"))
-                .attr("class", "check-" + checkboxName)
+                .attr("class", "form-check-input check-" + checkboxName)
                 .prop('checked', initiallyChecked ? true : false)
         );
     });
@@ -544,8 +546,8 @@ function installCheckboxes(targetElements, checkboxName, initiallyChecked)
         )
     );
 
-    cocherTout.click(function () { $("input.check-" + checkboxName).prop('checked', true).trigger("change"); });
-    decocherTout.click(function () { $("input.check-" + checkboxName).prop('checked', false).trigger("change"); });
+    cocherTout.on("click", function () { $("input.check-" + checkboxName).prop('checked', true).trigger("change"); });
+    decocherTout.on("click", function () { $("input.check-" + checkboxName).prop('checked', false).trigger("change"); });
 
     return $("input.check-" + checkboxName);
 }

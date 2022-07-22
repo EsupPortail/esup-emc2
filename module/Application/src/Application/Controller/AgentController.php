@@ -116,35 +116,26 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
+        //Recupération de l'agent
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $utilisateur = $this->getUserService()->getConnectedUser();
+        if ($agent === null) $agent = $this->getAgentService()->getAgentByConnectedUser();
+        if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
 
-        /** Si pas d'agent de specifier récupérer l'agent lié au compte de la personne connectée */
-        if ($agent === null) {
-            if ($utilisateur !== null) $agent = $this->getAgentService()->getAgentByUser($utilisateur);
-            if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
-        }
+        //Récupération des status
+        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
 
-        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, true);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true);
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, true);
+        //Récupération des supérieures et autorités
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        $autorites = $this->getAgentService()->computeAutorites($agent, $superieures);
 
-        $connectedAgent = $this->getAgentService()->getAgentByUser($utilisateur);
-        $connectedRole = $this->getUserService()->getConnectedRole();
-        if ($connectedAgent !== $agent and ($connectedRole->getRoleId() === RoleConstant::PERSONNEL or $agent === null)) {
-            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [], true);
-        }
+
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
-        $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
-        $autorites = $this->getAgentService()->getAutoritesHierarchiques($agent);
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-
-//        $fichePosteActive = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
-//        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichePosteActive);
-//        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);
 
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
@@ -159,6 +150,7 @@ class AgentController extends AbstractActionController
             'fichespostes' => $fichespostes,
 
             'entretiens' => $entretiens,
+            'superieures' => $superieures,
             'responsables' => $responsables,
             'autorites' => $autorites,
 

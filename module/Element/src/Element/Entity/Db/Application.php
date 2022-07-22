@@ -4,8 +4,8 @@ namespace Element\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;

@@ -6,8 +6,8 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     use HasPeriodeTrait;

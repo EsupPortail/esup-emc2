@@ -16,8 +16,8 @@ $agent = $ficheposte->getAgent();
 $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->getActivites());
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="card panel-info">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-5">
                 <h2> <?php echo $fiche->getFicheType()->getMetier()->getLibelleGenre($agent); ?> </h2>
@@ -89,7 +89,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
             </div>
         <?php endif; ?>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <?php if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-poste') : ?>
             <?php /** @see \Application\Controller\FichePosteController::selectionnerActiviteAction() */ ?>
             <a href="<?php echo $this->url("fiche-poste/selectionner-activite", ["fiche-poste" => $ficheposte->getId(), "fiche-type-externe" => $fiche->getId()], [], true); ?>"

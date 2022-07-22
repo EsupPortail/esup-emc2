@@ -9,8 +9,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatInterface
 {

@@ -6,8 +6,8 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Entity\HasAgentInterface;
 use Structure\Entity\Db\Structure;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterface, HasPeriodeInterface {
     use HasPeriodeTrait;

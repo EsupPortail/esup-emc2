@@ -3,8 +3,8 @@
 namespace Application\Entity\Db;
 
 use Formation\Entity\Db\Formation;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class ParcoursDeFormationFormation implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

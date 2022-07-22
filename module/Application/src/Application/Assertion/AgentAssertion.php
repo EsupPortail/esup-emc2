@@ -6,6 +6,7 @@ use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Structure\Provider\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
@@ -16,6 +17,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class AgentAssertion extends AbstractAssertion
 {
     use AgentServiceAwareTrait;
+    use AgentAffectationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -128,13 +130,14 @@ class AgentAssertion extends AbstractAssertion
 
         /** @var Agent|null $entity */
         $entity = null;
-        if ($agent) {
+//        if (true AND $agent) {
             $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
             $entity = $this->getAgentService()->getAgent($agentId);
-        }
+//        }
 
         $structures = [];
-        foreach ($entity->getAffectations() as $affectation) {
+        $affectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($entity);
+        foreach ($affectations as $affectation) {
             $structures[] = $affectation->getStructure();
         }
         foreach ($entity->getStructuresForcees(false) as $structureAgentForce) {

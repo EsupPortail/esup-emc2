@@ -47,7 +47,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             <td>
                 <span
                     title="<?php echo $corp->generateTooltip(); ?>"
-                    data-toggle="tooltip" data-html="true"
+                    data-bs-toggle="tooltip" data-bs-html="true"
                 >
                 <?php echo $corp->getLibelleLong(); ?>
                 </span>
@@ -79,7 +79,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                         href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon icon-voir" data-toggle="tooltip" data-html="true"
+                                        <span class="icon icon-voir" data-bs-toggle="tooltip" data-bs-html="true"
                                               title="Afficher les agents ayant ce corps"></span></a>
                 <?php endif; ?>
             </td>

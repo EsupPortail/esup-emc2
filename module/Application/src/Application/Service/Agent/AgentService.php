@@ -4,6 +4,8 @@ namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
+use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\Complement\ComplementServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
@@ -15,14 +17,19 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\Exception\LogicException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentService {
     use EntityManagerAwareTrait;
+    use AgentAffectationServiceAwareTrait;
+    use ComplementServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     /** AGENT *********************************************************************************************************/
 
@@ -198,6 +205,16 @@ EOS;
     {
         $id = $controller->params()->fromRoute($paramName);
         $agent = $this->getAgent($id, true);
+        return $agent;
+    }
+
+    /**
+     * @return Agent|null
+     */
+    public function getAgentByConnectedUser() : ?Agent
+    {
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentByUser($utilisateur);
         return $agent;
     }
 
@@ -422,48 +439,93 @@ EOS;
         return null;
     }
 
+    /** Recupration des supérieures et autorités  *********************************************************************/
+
     /**
-     * @param Agent $agent
-     * @return Agent[]|null
+     *
+     * @var Agent $agent
+     * @return array
      */
-    public function getResponsablesHierarchiques(Agent $agent) : ?array
+    public function computeSuperieures(Agent $agent) : array
     {
-        $affectationPrincipale = $agent->getAffectationPrincipale();
-        if ($affectationPrincipale === null) return null;
-        $structure = $affectationPrincipale->getStructure();
-        if ($structure === null) return null;
-
-        $structureResponsables = $structure->getResponsables();
-        $responsables = [];
-        foreach ($structureResponsables as $structureResponsable) {
-            $responsables[] = $structureResponsable->getAgent();
+       //checking complement
+        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), Complement::COMPLEMENT_TYPE_RESPONSABLE);
+        $liste = [];
+        if (!empty($complements)) {
+            foreach ($complements as $complement) {
+                $superieure = $this->getAgent($complement->getComplementId());
+                if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
+            }
         }
+        if (!empty($liste)) return $liste;
 
-        if ($responsables !== []) return $responsables;
-        return null;
+       //checking structure
+       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+       if (count($affectationsPrincipales) !== 1) throw new LogicException("Plusieurs affectations principales pour l'agent");
+
+       $structure = $affectationsPrincipales[0]->getStructure();
+       do {
+           $responsablesAll = array_map(function (StructureResponsable $a) {
+               return $a->getAgent();
+           }, $this->getStructureService()->getResponsables($structure));
+           if (!in_array($agent, $responsablesAll)) {
+               $responsables = [];
+               foreach ($responsablesAll as $responsable) {
+                   $responsables["structure_" . $responsable->getId()] = $responsable;
+               }
+               if (!empty($responsables)) return $responsables;
+           }
+
+           $structure = $structure->getParent();
+       } while($structure !== null);
+
+        return [];
     }
 
     /**
      * @param Agent $agent
-     * @return Agent[]|null
+     * @param array|null $superieurs
+     * @return array
      */
-    public function getAutoritesHierarchiques(Agent $agent) : ?array
+    public function computeAutorites(Agent $agent, ?array $superieurs = null) : array
     {
-        $affectationPrincipale = $agent->getAffectationPrincipale();
-        if ($affectationPrincipale === null) return null;
-        $structure = $affectationPrincipale->getStructure();
-        if ($structure === null) return null;
-        $niv2 = $structure->getNiv2();
-        if ($niv2 === null) return null;
-
-        $structureResponsables = $niv2->getResponsables();
-        $responsables = [];
-        foreach ($structureResponsables as $structureResponsable) {
-            $responsables[] = $structureResponsable->getAgent();
+        //checking complement
+        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), Complement::COMPLEMENT_TYPE_AUTORITE);
+        $liste = [];
+        if (!empty($complements)) {
+            foreach ($complements as $complement) {
+                $superieure = $this->getAgent($complement->getComplementId());
+                if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
+            }
         }
+        if (!empty($liste)) return $liste;
 
-        if ($responsables !== []) return $responsables;
-        return null;
+        // fetching superieurs if not given
+        if ($superieurs === null) $superieurs = $this->computeSuperieures($agent);
+
+        //checking structure
+        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+        if (count($affectationsPrincipales) !== 1) throw new LogicException("Plusieurs affectations principales pour l'agent");
+
+        $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
+        do {
+            $responsablesAll = array_map(function (StructureResponsable $a) {
+                return $a->getAgent();
+            }, $this->getStructureService()->getResponsables($structure));
+            if (!in_array($agent, $responsablesAll)) {
+                $responsables = [];
+                foreach ($responsablesAll as $responsable) {
+                    if (!in_array($responsable, $superieurs)) {
+                        $responsables["structure_" . $responsable->getId()] = $responsable;
+                    }
+                }
+                if (!empty($responsables)) return $responsables;
+            }
+
+            $structure = $structure->getParent();
+        } while($structure !== null);
+
+        return [];
     }
 
     /** AgentFormation ************************************************************************************************/

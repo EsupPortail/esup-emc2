@@ -21,7 +21,7 @@ use Formation\Entity\Db\Formation;
         <?php endif; ?>
         <?php if ($formation->getLien() !== null AND trim ($formation->getLien()) !== "") : ?>
             <dt> Lien </dt>
-            <dd> <a href="<?php echo $formation->getLien(); ?>" title="Lien vers la documentation associée à la formation" data-toggle="tooltip" data-html="true">
+            <dd> <a href="<?php echo $formation->getLien(); ?>" title="Lien vers la documentation associée à la formation" data-bs-toggle="tooltip" data-bs-html="true">
                     <?php echo $formation->getLien(); ?></a> </dd>
         <?php endif; ?>
         <?php if ($formation->getDescription() !== null) : ?>

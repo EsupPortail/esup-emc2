@@ -10,39 +10,39 @@ use Application\Entity\Db\AgentStatut;
 
 $debug = false;
 
-$displayStructure   = (isset($options['structure']) AND $options['structure'] !== false);
-$displayPeriode     = (isset($options['periode']) AND $options['periode'] !== false);
-$displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
-$displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
-$displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
+$displayStructure = (isset($options['structure']) and $options['structure'] !== false);
+$displayPeriode = (isset($options['periode']) and $options['periode'] !== false);
+$displayIdentifiant = (isset($options['identifiant']) and $options['identifiant'] !== false);
+$displayAgent = (isset($options['agent']) and $options['agent'] !== false);
+$displayTemoin = (isset($options['temoin']) and $options['temoin'] !== false);
 ?>
 
-<?php if($debug) : ?>
+<?php if ($debug) : ?>
     <div class="alert alert-warning">
         <ul>
-            <li>Display Structure =  <?php echo $displayStructure; ?></li>
-            <li>Display Periode =  <?php echo $displayPeriode; ?></li>
-            <li>Display Identifiant =  <?php echo $displayIdentifiant; ?></li>
-            <li>Display Agent =  <?php echo $displayAgent; ?></li>
-            <li>Display Témoin =  <?php echo $displayTemoin; ?></li>
+            <li>Display Structure = <?php echo $displayStructure; ?></li>
+            <li>Display Periode = <?php echo $displayPeriode; ?></li>
+            <li>Display Identifiant = <?php echo $displayIdentifiant; ?></li>
+            <li>Display Agent = <?php echo $displayAgent; ?></li>
+            <li>Display Témoin = <?php echo $displayTemoin; ?></li>
         </ul>
     </div>
 <?php endif; ?>
 
 <div class="agent-status">
     <div>
-    <?php if ($displayStructure) : ?>
-        <span class="badge structure" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
+        <?php if ($displayStructure) : ?>
+            <span class="badge structure" title="<?php echo $statut->getStructure()->getLibelleLong(); ?>">
             <?php echo $statut->getStructure()->getLibelleCourt(); ?>
         </span>
-    <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <div>
         <?php if ($displayPeriode) : ?>
             <?php
-                $debut  = ($statut->getDateDebut())?$statut->getDateDebut()->format('d/m/Y'):'---';
-                $fin    = ($statut->getDateFin() && $statut->getDateFin()->format('d/m/Y') !== '31/12/1999')?$statut->getDateFin()->format('d/m/Y'):'---';
+            $debut = ($statut->getDateDebut()) ? $statut->getDateDebut()->format('d/m/Y') : '---';
+            $fin = ($statut->getDateFin() && $statut->getDateFin()->format('d/m/Y') !== '31/12/1999') ? $statut->getDateFin()->format('d/m/Y') : '---';
             ?>
             <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
         <?php endif; ?>
@@ -51,41 +51,41 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
     <div>
         <?php if ($displayIdentifiant) : ?>
             <strong> Identifiant </strong> <br/>
-                <span class="badge">
+            <span class="badge">
                     <?php echo $statut->getIdOrigine(); ?>
                 </span>
         <?php endif; ?>
 
         <?php if ($displayAgent) : ?>
-            <strong> Agent  : </strong> <br/>
-                <span class="badge">
+            <strong> Agent : </strong> <br/>
+            <span class="badge">
                     <?php echo $statut->getAgent()->getDenomination(); ?>
                 </span>
         <?php endif; ?>
 
         <?php if ($displayTemoin) : ?>
-<!--            <strong> Témoins actifs : </strong>--> <br/>
+            <!--            <strong> Témoins actifs : </strong>--> <br/>
 
-                <ul>
+            <ul>
                 <?php
-                    if ($statut->isTitulaire())         echo '<li>Titulaire</li>';
-                    if ($statut->isCdi())               echo '<li>C.D.I.</li>';
-                    if ($statut->isCdd())               echo '<li>C.D.D.</li>';
-                    if ($statut->isVacataire())         echo '<li>Vacataire</li>';
-                    if ($statut->isEnseignant())        echo '<li>Enseignant</li>';
-                    if ($statut->isAdministratif())     echo '<li>Administratif</li>';
-                    if ($statut->isChercheur())         echo '<li>Chercheur</li>';
-                    if ($statut->isEtudiant())          echo '<li>Etudiant</li>';
-                    if ($statut->isAuditeurLibre())     echo '<li>Auditeur libre</li>';
-                    if ($statut->isDoctorant())         echo '<li>Doctorant</li>';
-                    if ($statut->isDetacheIn())         echo '<li>Détaché (in)</li>';
-                    if ($statut->isDetacheOut())        echo '<li>Détaché (out)</li>';
-                    if ($statut->isDispo())             echo '<li>Disponibilité</li>';
-                    if ($statut->isHeberge())           echo '<li>Hébergé</li>';
-                    if ($statut->isEmerite())           echo '<li>Émerite</li>';
-                    if ($statut->isRetraite())          echo '<li>Retraité</li>';
+                if ($statut->isTitulaire()) echo '<li>Titulaire</li>';
+                if ($statut->isCdi()) echo '<li>C.D.I.</li>';
+                if ($statut->isCdd()) echo '<li>C.D.D.</li>';
+                if ($statut->isVacataire()) echo '<li>Vacataire</li>';
+                if ($statut->isEnseignant()) echo '<li>Enseignant</li>';
+                if ($statut->isAdministratif()) echo '<li>Administratif</li>';
+                if ($statut->isChercheur()) echo '<li>Chercheur</li>';
+                if ($statut->isEtudiant()) echo '<li>Etudiant</li>';
+                if ($statut->isAuditeurLibre()) echo '<li>Auditeur libre</li>';
+                if ($statut->isDoctorant()) echo '<li>Doctorant</li>';
+                if ($statut->isDetacheIn()) echo '<li>Détaché (in)</li>';
+                if ($statut->isDetacheOut()) echo '<li>Détaché (out)</li>';
+                if ($statut->isDispo()) echo '<li>Disponibilité</li>';
+                if ($statut->isHeberge()) echo '<li>Hébergé</li>';
+                if ($statut->isEmerite()) echo '<li>Émerite</li>';
+                if ($statut->isRetraite()) echo '<li>Retraité</li>';
                 ?>
-                </ul>
+            </ul>
         <?php endif; ?>
 
     </div>

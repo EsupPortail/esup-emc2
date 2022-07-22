@@ -67,7 +67,7 @@ class NotificationService {
     public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $superieurs_structures = $this->getAgentService()->getResponsablesHierarchiques($agent);
+        $superieurs_structures = $this->getAgentService()->computeSuperieures($agent);
         $superieurs_nommees = $this->getAgentService()->getSuperieursByAgent($agent);
 
         $superieurs = [];
@@ -90,7 +90,7 @@ class NotificationService {
     public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $autorites_structures = $this->getAgentService()->getAutoritesHierarchiques($agent);
+        $autorites_structures = $this->getAgentService()->computeAutorites($agent);
         $autorites_nommes = $this->getAgentService()->getAutoritesByAgent($agent);
 
         $autorites = [];

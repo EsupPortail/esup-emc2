@@ -7,8 +7,8 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Metier\Entity\Db\Metier;
 use Structure\Entity\Db\Structure;
 use UnicaenEtat\Entity\Db\Etat;
-use UnicaenUtilisateur\Entity\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class AgentStageObservation implements HistoriqueAwareInterface, HasPeriodeInterface {
     use HasPeriodeTrait;

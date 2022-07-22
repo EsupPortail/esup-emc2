@@ -17,8 +17,8 @@ $date = new DateTime();
     <?php $expertises = $fiche->getCurrentExpertises($date); ?>
 
     <?php if ($mode === 'edition' OR !empty($expertises)) : ?>
-        <div class="panel panel-info">
-            <div class="panel-heading">
+        <div class="card panel-info">
+            <div class="card-header">
                 <div class="row">
                     <div class="col-md-6">
                         <h2> Expertises associées au poste </h2>
@@ -37,7 +37,7 @@ $date = new DateTime();
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <ul>
                     <?php foreach ($expertises as $expertise) : ?>
                         <li>
