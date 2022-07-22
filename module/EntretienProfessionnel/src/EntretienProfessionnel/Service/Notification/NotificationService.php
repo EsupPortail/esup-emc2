@@ -67,12 +67,7 @@ class NotificationService {
     public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $superieurs_structures = $this->getAgentService()->computeSuperieures($agent);
-        $superieurs_nommees = $this->getAgentService()->getSuperieursByAgent($agent);
-
-        $superieurs = [];
-        foreach ($superieurs_structures as $superieur) $superieurs[$superieur->getId()] = $superieur;
-        foreach ($superieurs_nommees as $superieur) $superieurs[$superieur->getId()] = $superieur;
+        $superieurs =  $this->getAgentService()->computeSuperieures($agent);
 
         $emails = [];
         foreach ($superieurs as $superieur) {
@@ -90,12 +85,7 @@ class NotificationService {
     public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $autorites_structures = $this->getAgentService()->computeAutorites($agent);
-        $autorites_nommes = $this->getAgentService()->getAutoritesByAgent($agent);
-
-        $autorites = [];
-        foreach ($autorites_structures as $autorite) $autorites[$autorite->getId()] = $autorite;
-        foreach ($autorites_nommes as $autorite) $autorites[$autorite->getId()] = $autorite;
+        $autorites = $this->getAgentService()->computeAutorites($agent);
 
         $emails = [];
         foreach ($autorites as $autorite) {

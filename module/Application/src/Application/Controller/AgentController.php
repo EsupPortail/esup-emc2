@@ -110,7 +110,7 @@ class AgentController extends AbstractActionController
 
     public function indexAction()  : ViewModel
     {
-        $agents = $this->getAgentService()->getAgentsPourIndex();
+        $agents = $this->getAgentService()->getAgents();
         return new ViewModel([
             'agents' => $agents,
         ]);
@@ -151,7 +151,6 @@ class AgentController extends AbstractActionController
 
             'entretiens' => $entretiens,
             'superieures' => $superieures,
-            'responsables' => $responsables,
             'autorites' => $autorites,
 
 //          'parcoursArray' => $parcoursArray,

@@ -53,7 +53,7 @@ $modules = [
     'Element',
     'Application',
 
-//    'LaminasDeveloperTools',
+//    'ZendDeveloperTools',
 
 ];
 

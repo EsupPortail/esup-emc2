@@ -6,8 +6,6 @@
  * @var Role $role
  */
 
-use UnicaenDbImport\Privilege\ImportPrivilege;
-use UnicaenDbImport\Privilege\LogPrivilege;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -38,9 +36,6 @@ use UnicaenUtilisateur\Entity\Db\User;
 
     <br/>
 
-<!--    --><?php //var_dump($individu); ?>
-
-<!--    <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
 
     <?php if ($user): ?>
     <p>
@@ -63,6 +58,8 @@ use UnicaenUtilisateur\Entity\Db\User;
     div.jumbotron {
         margin-top: auto;
         margin-bottom: auto;
+        border-radius: 0.5rem ;
+        padding: 1rem;
     }
     div#contenu-principal {
         background: var(--body-background);
@@ -111,7 +108,3 @@ use UnicaenUtilisateur\Entity\Db\User;
         }
     }
 </style>
-
-
-<?php var_dump($this->isAllowed(ImportPrivilege::getResourceId(ImportPrivilege::LISTER))); ?>
-<?php var_dump($this->isAllowed(LogPrivilege::getResourceId(LogPrivilege::LISTER))); ?>

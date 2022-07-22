@@ -41,7 +41,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
             <?php if ($structure ) : ?>
             <?php /** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
             <a href="<?php echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
-                class="icon icon-cloner"</span>
+                <span class="icon icon-cloner"></span>
                 Cloner une fiche de poste
             </a>
             <?php endif; ?>

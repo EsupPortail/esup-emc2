@@ -939,7 +939,7 @@ class FichePosteController extends AbstractActionController {
                 $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (".$ficheposte->getAgent()->getDenomination().") afin qu'il puisse valider à son tour celle-ci.<br/>";
                 break;
             case FichePoste::VALIDATION_AGENT :
-                $responsables = $this->getAgentService()->getResponsables($ficheposte->getAgent());
+                $responsables = $this->getAgentService()->computeSuperieures($agent);
                 usort($responsables, function (Agent $a, Agent $b) {
                     $aaa = $a->getNomUsuel() . " " . $a->getPrenom();
                     $bbb = $b->getNomUsuel() . " " . $b->getPrenom();

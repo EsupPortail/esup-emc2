@@ -90,7 +90,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                     <?php /** @see \Application\Controller\FicheMetierController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                        title="Dupliquer la fiche metier">
-                        class="icon icon-cloner"</span></a>
+                        <span class="icon icon-cloner"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if($fiche->estNonHistorise()) :?>

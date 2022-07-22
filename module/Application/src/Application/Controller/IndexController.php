@@ -33,7 +33,7 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
         if ($connectedUser === null) return new ViewModel([]);
 
-        $agent = $this->getAgentService()->getAgentByUsername($connectedUser->getUsername());
+        $agent = $this->getAgentService()->getAgentByConnectedUser();
         if ($agent !== null && $agent->getUtilisateur() === null) {
             $agent->setUtilisateur($connectedUser);
             $this->getAgentService()->update($agent);
