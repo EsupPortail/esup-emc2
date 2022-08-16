@@ -3,12 +3,16 @@
 
 div.modal div.modal-dialog {
     width: 80%;
+    max-width: none;
 }
 
 div.modal div.modal-content {
     width: 100%;
+    border : 1px solid black;
 }
 div.modal div.modal-header {
+    border-radius : 0;
+    border : 1px solid black;
     background-color: var(--header-background);
     color: white;
 }
@@ -16,10 +20,10 @@ div.modal div.modal-header {
 div.modal h2.modal-title{
     color: white;
 }
-button.close {
+button.btn-close {
     color: white;
     opacity: 1;
-    font-size: xx-large;
+    font-size: large;
 }
 
 div.modal div.modal-footer {

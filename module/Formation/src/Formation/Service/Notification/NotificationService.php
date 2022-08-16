@@ -166,11 +166,11 @@ class NotificationService {
             }
             $texte .= "</ul>";
 
-            $email = $this->getParametreService()->getParametreByCode('GLOBAL','MAIL_LISTE_BIATS')->getValeur();
+            $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_PERSONNEL')->getValeur();
             $vars = [
                 'UrlService' => $this->getUrlService(),
             ];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_NOTIFICATION_NOUVELLES_FORMATIONS", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_NOUVELLES_FORMATIONS, $vars);
             $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
             $mail->setMotsClefs(["NOTIFICATION_FORMATION_" . (new DateTime())->format('d/m/Y')]);
             $this->getMailService()->update($mail);
