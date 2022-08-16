@@ -38,6 +38,8 @@ class Formation implements HistoriqueAwareInterface,
     private $missions;
     /** @var ArrayCollection (FormationInstance) */
     private $instances;
+    /** @var ArrayCollection (FormationAbonnement) */
+    private $abonnements;
 
 
     public function __construct()

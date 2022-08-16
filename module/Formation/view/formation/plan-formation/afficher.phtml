@@ -1,0 +1,86 @@
+<?php
+
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationAbonnement;
+use Formation\Entity\Db\FormationGroupe;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Privilege\FormationabonnementPrivileges;
+
+/**
+ * @see \Formation\Controller\PlanFormationController::afficherAction()
+ * @var FormationGroupe[] $groupes
+ * @var Formation[] $formations
+ * @var FormationInstance[] $sessions
+ * @var FormationAbonnement[] $abonnements
+ * @var string $annee
+ */
+
+$this->headTitle("Plan de formation pour l'année " . $annee);
+
+$canListerParFormation = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_LISTE_FORMATION));
+$canGererAbonnement = true; //todo
+$canAbonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_ABONNER));
+$canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_DESABONNER));
+
+?>
+
+<h1 class="page-header">
+    Plan de formation pour l'année <?php echo $annee; ?>
+</h1>
+
+<?php foreach ($groupes as $groupe) : ?>
+    <ul>
+        <li>
+            <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
+            (<?php echo count($formations[$groupe->getId()]); ?> formations)
+            <ul>
+                <?php foreach ($formations[$groupe->getId()] as $formation) : ?>
+                    <li>
+                        <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                        (<?php echo count($sessions[$formation->getId()]); ?> sessions)
+
+                        <?php
+                            $abonnement = null;
+                            foreach ($abonnements as $abonnement_) {
+                                if ($abonnement_->getFormation() === $formation) {
+                                    $abonnement = $abonnement_;
+                                    break;
+                                }
+                            }
+                        ?>
+
+                        <?php if ($abonnement !== null) : ?>
+                            <span class="icon icon-checked text-success" title="Vous êtes abonné·e aux notifications liées à cette formation"></span>
+                        <?php endif; ?>
+
+                        <?php if ($canListerParFormation) : ?>
+                            <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
+                        <?php endif; ?>
+
+                        <?php if ($canAbonner AND $abonnement === null) : ?>
+                            <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $formation->getId()], [], true); ?>"
+                               class="btn btn-sm btn-primary"
+                            >
+                                <span class="icon icon-plus" title="S'abonner aux notifications liées à la formation"></span>
+                                S'abonner aux notifications
+                            </a>
+                        <?php endif; ?>
+
+                        <?php if ($canAbonner AND $abonnement !== null) : ?>
+                            <a href="<?php echo $this->url('formation/abonnement/retirer', ['formation' => $formation->getId()], [], true); ?>"
+                               class="btn btn-sm btn-primary"
+                            >
+                                <span class="icon icon-minus" title="Se désabonner des notifications liées à la formation"></span>
+                                Se désabonner des notifications
+                            </a>
+                        <?php endif; ?>
+
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+    </ul>
+<?php endforeach; ?>

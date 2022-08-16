@@ -1,0 +1,39 @@
+<?php
+
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationAbonnement;
+
+/**
+ * @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction()
+ * @var Formation $formation
+ * @var FormationAbonnement[] $abonnements
+ */
+
+$this->headTitle("Listing des abonnements pour la formation [".$formation->getLibelle()."]");
+
+$nb = count($abonnements);
+?>
+
+<?php echo $nb; ?> abonnement<?php if ($nb > 1) echo "s"; ?> pour la formation <em><?php echo $formation->getLibelle(); ?></em>.
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Agent </th>
+        <th> Date d'abonnemnt </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($abonnements as $abonnement) : ?>
+        <tr>
+            <td> <?php echo $abonnement->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo $abonnement->getDateInscription()->format('d/m/Y à H:i'); ?> </td>
+            <td>
+                <span class="icon icon-voir" title="Examiner l'abonnement"></span>
+                <span class="icon icon-retirer text-danger" title="Annulation de l'abonnement"></span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -57,7 +57,7 @@ $date = new DateTime();
                        target="_blank">
                         <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true" title="Ajouter la fiche de poste"></span></a>
                 <?php else : ?>
-                    <span class="icon ajouter nope"></span>
+                    <span class="icon icon-ajouter nope"></span>
                 <?php endif; ?>
 
                 <?php if ($structure AND $canAjouterFichePoste) : ?>
@@ -104,7 +104,7 @@ $date = new DateTime();
                                     <?php else : ?>
                                         <span class="icon icon-pdf nope"></span>
                                     <?php endif; ?>
-                                    <span class="icon editer nope"></span>
+                                    <span class="icon icon-editer nope"></span>
                                     <span class="icon icon-historiser nope"></span>
                                     <?php if ($canDetruireFichier) : ?>
                                         <a
@@ -169,7 +169,7 @@ $date = new DateTime();
                                            target="_blank">
                                             <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true" title="Modifier la fiche de poste"></span></a>
                                     <?php else :?>
-                                        <span class="icon editer nope"></span>
+                                        <span class="icon icon-editer nope"></span>
                                     <?php endif; ?>
                                     <?php if ($canHistoriserFichePoste AND $ficheposte['etat_code'] !== FichePoste::ETAT_CODE_SIGNEE) : ?>
                                         <?php if ($ficheposte['histo_destruction']) : ?>

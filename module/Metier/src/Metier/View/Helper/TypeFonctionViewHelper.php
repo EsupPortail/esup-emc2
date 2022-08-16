@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\View\Helper;
+namespace Metier\View\Helper;
 
 use Metier\Entity\Db\Domaine;
 use Application\View\Renderer\PhpRenderer;

@@ -3,18 +3,19 @@
 /**
  * @var Domaine[] $domaines
  * @var int $domaine
+ * @var string $historise
  */
 
 use Metier\Entity\Db\Domaine;
 
 ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card">
+    <div class="card-header bg-default">
         <span class="icon icon-filtrer"></span>
         Filtrage de la liste des métiers
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <form id="filter" method="get" action="<?php echo $this->url(); ?>">
         <div class="row">
         <div class="col-md-4">
@@ -35,6 +36,7 @@ use Metier\Entity\Db\Domaine;
             </select>
         </div>
 
+        <div class="col-md-4">
         <div class="pull-right">
             <button type="button" id="filter" class="btn btn-primary filter-action">
                 <span class="icon icon-filtrer" aria-hidden="true"></span> Filtrer
@@ -43,6 +45,7 @@ use Metier\Entity\Db\Domaine;
             <button type="button" id="reset" class="btn btn-primary filter-action">
                 <span class="icon icon-gommer" aria-hidden="true"></span> R.A.Z.
             </button>
+        </div>
         </div>
         </div>
         </form>

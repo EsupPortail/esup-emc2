@@ -31,6 +31,7 @@ $this->headTitle('Liste des domaines')
             Liste des domaines
         </h1>
     </div>
+    <div class="col-md-3">
     <div class="pull-right">
         <?php if ($canAjouter) : ?>
             <a
@@ -43,6 +44,7 @@ $this->headTitle('Liste des domaines')
                 Ajouter un domaine
             </a>
         <?php endif;?>
+    </div>
     </div>
 </div>
 
@@ -91,12 +93,12 @@ $this->headTitle('Liste des domaines')
                             <span class="icon icon-restaurer" title="Restaurer le domaine"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
-                <?php if ($canEffacer) : ?>
+                <?php if ($canEffacer AND $domaine->estHistorise()) : ?>
                     <a  <?php /** @see \Metier\Controller\DomaineController::effacerAction() */ ?>
                         href="<?php echo $this->url('domaine/effacer', ['domaine' => $domaine->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer"  title="Supprimer le domaine"></span></a>
+                        <span class="icon icon-retirer text-danger"  title="Supprimer le domaine"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

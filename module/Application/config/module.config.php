@@ -335,7 +335,7 @@ return [
     'public_files' => [
         'inline_scripts' => [
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
-            '114_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
+//            '114_' => 'vendor/bootstrap-select-1.13.18/js/bootstrap-select.min.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
@@ -344,7 +344,7 @@ return [
             '050_bootstrap-theme' => '',
             '110_' => 'vendor/DataTables-1.12.1/datatables.min.css',
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
-            '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
+//            '114_' => 'vendor/bootstrap-select-1.13.18/css/bootstrap-select.min.css',
             '990_' => 'css/ubuntu.css',
             '991_' => 'css/raleway.css',
             '060_unicaen' => 'css/unicaen.css',

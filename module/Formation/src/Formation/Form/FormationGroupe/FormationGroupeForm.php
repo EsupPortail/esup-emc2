@@ -2,6 +2,7 @@
 
 namespace Formation\Form\FormationGroupe;
 
+use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Text;
@@ -22,6 +23,14 @@ class FormationGroupeForm extends Form
             ],
             'attributes' => [
                 'id' => 'libelle',
+            ],
+        ]);
+        //description
+        $this->add([
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
+            'attributes' => [
+                'id' => 'description',
             ],
         ]);
         //ordre
@@ -64,6 +73,7 @@ class FormationGroupeForm extends Form
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
+            'description' => ['required' => false,],
             'ordre' => ['required' => false,],
 //            'couleur'   => [ 'required' => false, ],
         ]));
