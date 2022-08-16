@@ -12,8 +12,16 @@ use Formation\Entity\Db\FormationAbonnement;
  * @var FormationAbonnement[] $abonnements
  */
 
-if ($agent !== null) $this->headTitle("Listing des abonnements pour l'agent [".$agent->getDenomination()."]");
-if ($formation !== null) $this->headTitle("Listing des abonnements pour la formation [".$formation->getLibelle()."]");
+$retour = null;
+
+if ($agent !== null) {
+    $this->headTitle("Listing des abonnements pour l'agent [".$agent->getDenomination()."]");
+    $retour = $this->url('formation/abonnement/lister-abonnements-par-agent', ['agent' => $agent->getId()], [], true);
+}
+if ($formation !== null) {
+    $this->headTitle("Listing des abonnements pour la formation [".$formation->getLibelle()."]");
+    $retour = $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true);
+}
 
 $nb = count($abonnements);
 ?>
@@ -51,7 +59,7 @@ $nb = count($abonnements);
             <td> <?php echo $abonnement->getDateInscription()->format('d/m/Y à H:i'); ?> </td>
             <td>
                 <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
-                <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], ["query" => ['dismiss' => true]] , true); ?>"
+                <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], ["query" => ['retour' => $retour]] , true); ?>"
                    data-bs-dismiss="modal"
                 >
                     <span class="icon icon-retirer text-danger" title="Annulation de l'abonnement"></span>

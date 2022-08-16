@@ -177,4 +177,12 @@ class Formation implements HistoriqueAwareInterface,
         return $this->instances->toArray();
     }
 
+    /**
+     * @return FormationAbonnement[]
+     */
+    public function getAbonnements() : array
+    {
+        return $this->abonnements->toArray();
+    }
+
 }

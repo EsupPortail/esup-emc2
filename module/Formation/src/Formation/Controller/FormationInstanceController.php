@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Formation\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -29,6 +30,7 @@ class FormationInstanceController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use RappelAgentAvantFormationServiceAwareTrait;
@@ -183,6 +185,13 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->ouvrirInscription($instance);
+
+        //notification abonnement
+        $abonnements = $instance->getFormation()->getAbonnements();
+        foreach ($abonnements as $abonnement) {
+            if ($abonnement->estNonHistorise()) $this->getNotificationService()->triggerNouvelleSession($instance, $abonnement);
+        }
+
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 

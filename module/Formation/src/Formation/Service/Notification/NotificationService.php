@@ -4,8 +4,10 @@ namespace Formation\Service\Notification;
 
 use Application\Entity\Db\Agent;
 use DateTime;
+use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Template\MailTemplates;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
@@ -168,7 +170,7 @@ class NotificationService {
             $vars = [
                 'UrlService' => $this->getUrlService(),
             ];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_NOTIFICATION_NOUVELLE_FORMATION", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_NOTIFICATION_NOUVELLES_FORMATIONS", $vars);
             $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
             $mail->setMotsClefs(["NOTIFICATION_FORMATION_" . (new DateTime())->format('d/m/Y')]);
             $this->getMailService()->update($mail);
@@ -176,5 +178,24 @@ class NotificationService {
         }
 
         return null;
+    }
+
+    /** ABONNEMENTS ***************************************************************************************************/
+
+    public function triggerNouvelleSession(FormationInstance $instance, FormationAbonnement $abonnement) : Mail
+    {
+        $vars = [
+            'formation' => $instance->getFormation(),
+            'instance' => $instance,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_OUVERTE, $vars);
+
+        $email = $abonnement->getAgent()->getEmail();
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
     }
 }

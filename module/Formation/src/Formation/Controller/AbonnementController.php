@@ -68,7 +68,6 @@ class AbonnementController extends AbstractActionController {
 
     public function retirerAction() : Response
     {
-
         $abonnement = $this->getAbonnementService()->getRequestedAbonnement($this);
 
         if ($abonnement !== null) {
@@ -79,8 +78,6 @@ class AbonnementController extends AbstractActionController {
         }
 
         $retour = $this->params()->fromQuery('retour');
-        $dismiss = $this->params()->fromQuery('dismiss');
-        if ($dismiss !== null) exit();
         if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('plan-formation');
     }

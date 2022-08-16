@@ -13,6 +13,8 @@ use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FormationControllerFactory
 {
@@ -20,6 +22,8 @@ class FormationControllerFactory
     /**
      * @param ContainerInterface $container
      * @return FormationController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : FormationController
     {
