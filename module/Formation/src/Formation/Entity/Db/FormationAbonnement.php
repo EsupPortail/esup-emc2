@@ -31,9 +31,9 @@ class FormationAbonnement implements HistoriqueAwareInterface, HasDescriptionInt
     }
 
     /**
-     * @return Formation
+     * @return Formation|null
      */
-    public function getFormation(): Formation
+    public function getFormation(): ?Formation
     {
         return $this->formation;
     }
@@ -47,9 +47,9 @@ class FormationAbonnement implements HistoriqueAwareInterface, HasDescriptionInt
     }
 
     /**
-     * @return Agent
+     * @return Agent|null
      */
-    public function getAgent(): Agent
+    public function getAgent(): ?Agent
     {
         return $this->agent;
     }

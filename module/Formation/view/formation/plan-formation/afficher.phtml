@@ -18,7 +18,7 @@ use Formation\Provider\Privilege\FormationabonnementPrivileges;
 $this->headTitle("Plan de formation pour l'année " . $annee);
 
 $canListerParFormation = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_LISTE_FORMATION));
-$canGererAbonnement = true; //todo
+$canGererAbonnement = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER));
 $canAbonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_ABONNER));
 $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_DESABONNER));
 
@@ -27,6 +27,26 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
 <h1 class="page-header">
     Plan de formation pour l'année <?php echo $annee; ?>
 </h1>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php if ($canGererAbonnement) : ?>
+    <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('formation/abonnement/ajouter', [], [], true); ?>"
+        class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Abonner un agent
+    </a>
+<?php endif; ?>
+
+<?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParAgentAction() */ ?>
+<a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-agent', [], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
+>
+    <span class="icon icon-listing"></span>
+    Lister mes abonnements
+</a>
 
 <?php foreach ($groupes as $groupe) : ?>
     <ul>
@@ -54,6 +74,7 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                         <?php endif; ?>
 
                         <?php if ($canListerParFormation) : ?>
+                            <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction() */ ?>
                             <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true); ?>"
                                class="ajax-modal"
                             >
@@ -61,6 +82,7 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                         <?php endif; ?>
 
                         <?php if ($canAbonner AND $abonnement === null) : ?>
+                            <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
                             <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                                class="btn btn-sm btn-primary"
                             >
@@ -70,7 +92,8 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                         <?php endif; ?>
 
                         <?php if ($canAbonner AND $abonnement !== null) : ?>
-                            <a href="<?php echo $this->url('formation/abonnement/retirer', ['formation' => $formation->getId()], [], true); ?>"
+                            <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
+                            <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], [], true); ?>"
                                class="btn btn-sm btn-primary"
                             >
                                 <span class="icon icon-minus" title="Se désabonner des notifications liées à la formation"></span>
@@ -84,3 +107,12 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
         </li>
     </ul>
 <?php endforeach; ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

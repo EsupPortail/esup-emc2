@@ -3,6 +3,8 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Entity\Db\FormationAbonnement;
+use Formation\Form\Abonnement\AbonnementFormAwareTrait;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Http\Response;
@@ -17,13 +19,39 @@ class AbonnementController extends AbstractActionController {
     use AbonnementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use FormationServiceAwareTrait;
+    use AbonnementFormAwareTrait;
 
-    public function ajouterAction() : Response
+    public function ajouterAction()
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
+        if ($formation === null) {
+
+            $abonnement = new FormationAbonnement();
+            $form = $this->getAbonnementForm();
+            $form->setAttribute('action', $this->url()->fromRoute('formation/abonnement/ajouter', [], [], true));
+            $form->bind($abonnement);
+
+            $request = $this->getRequest();
+            if ($request->isPost()) {
+                $data = $request->getPost();
+                $form->setData($data);
+                if ($form->isValid()) {
+                    $this->getAbonnementService()->create($abonnement);
+                    $this->flashMessenger()->addSuccessMessage("<strong>" . $abonnement->getAgent()->getDenomination()."</strong> est maintenant abonné·e à la formation <strong>".$abonnement->getFormation()->getLibelle()."</strong>");
+                    exit();
+                }
+            }
+
+            $vm = new ViewModel([
+                'title' => "Ajouter un abonnement à un agent",
+                'form' => $form,
+            ]);
+            $vm->setTemplate('formation/default/default-form');
+            return $vm;
+        }
+
         $agent = $this->getAgentService()->getAgentByConnectedUser();
         if ($agent === null) throw new RuntimeException("Aucun agent fourni");
-        if ($formation === null) throw new RuntimeException("Aucune formation fournie");
 
         $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
         if ($abonnement) {
@@ -40,36 +68,38 @@ class AbonnementController extends AbstractActionController {
 
     public function retirerAction() : Response
     {
-        $formation = $this->getFormationService()->getRequestedFormation($this);
-        $agent = $this->getAgentService()->getAgentByConnectedUser();
-        if ($agent === null) throw new RuntimeException("Aucun agent fourni");
-        if ($formation === null) throw new RuntimeException("Aucune formation fournie");
 
-        $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-        if ($abonnement) {
+        $abonnement = $this->getAbonnementService()->getRequestedAbonnement($this);
+
+        if ($abonnement !== null) {
+            $formation = $abonnement->getFormation();
+            $agent = $abonnement->getAgent();
             $this->getAbonnementService()->retirerAbonnement($agent,$formation);
             $this->flashMessenger()->addSuccessMessage("Vous êtes maintenant désabonné·e à la formation <strong>".$formation->getLibelle()."</strong>");
-        } else {
-            $this->flashMessenger()->addWarningMessage("Vous n'êtes pas abonné·e à la formation <strong>".$formation->getLibelle()."</strong>");
         }
 
         $retour = $this->params()->fromQuery('retour');
+        $dismiss = $this->params()->fromQuery('dismiss');
+        if ($dismiss !== null) exit();
         if ($retour !== null) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('plan-formation');
     }
 
     public function listerAbonnementsParAgentAction() : ViewModel
     {
-        $agent = $this->getAgentService()->getAgentByConnectedUser();
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        if ($agent === null) $agent = $this->getAgentService()->getAgentByConnectedUser();
         if ($agent === null) throw new RuntimeException("Aucun agent fourni");
 
         $abonnements = $this->getAbonnementService()->getAbonnementsByAgent($agent);
 
-        return new ViewModel([
+        $vm =  new ViewModel([
            'title' => "Listing des abonnements pour l'agent [".$agent->getDenomination()."]",
            'agent' => $agent,
            'abonnements' => $abonnements,
         ]);
+        $vm->setTemplate('formation/abonnement/lister-abonnements');
+        return $vm;
     }
 
     public function listerAbonnementsParFormationAction() : ViewModel
@@ -79,10 +109,12 @@ class AbonnementController extends AbstractActionController {
 
         $abonnements = $this->getAbonnementService()->getAbonnementsByFormation($formation);
 
-        return new ViewModel([
+        $vm = new ViewModel([
             'title' => "Listing des abonnements pour la formation [".$formation->getLibelle()."]",
             'formation' => $formation,
             'abonnements' => $abonnements,
         ]);
+        $vm->setTemplate('formation/abonnement/lister-abonnements');
+        return $vm;
     }
 }

@@ -4,6 +4,10 @@ namespace Formation;
 
 use Formation\Controller\AbonnementController;
 use Formation\Controller\AbonnementControllerFactory;
+use Formation\Form\Abonnement\AbonnementForm;
+use Formation\Form\Abonnement\AbonnementFormFactory;
+use Formation\Form\Abonnement\AbonnementHydrator;
+use Formation\Form\Abonnement\AbonnementHydratorFactory;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
 use Formation\Service\Abonnement\AbonnementService;
 use Formation\Service\Abonnement\AbonnementServiceFactory;
@@ -22,6 +26,7 @@ return [
                     ],
                     'privileges' => [
                         FormationabonnementPrivileges::FORMATIONABONNEMENT_ABONNER,
+                        FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER,
                     ],
                 ],
                 [
@@ -31,6 +36,7 @@ return [
                     ],
                     'privileges' => [
                         FormationabonnementPrivileges::FORMATIONABONNEMENT_DESABONNER,
+                        FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER,
                     ],
                 ],
                 [
@@ -80,7 +86,7 @@ return [
                             'ajouter' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter/:formation',
+                                    'route'    => '/ajouter[/:formation]',
                                     'defaults' => [
                                         'controller' => AbonnementController::class,
                                         'action' => 'ajouter'
@@ -90,7 +96,7 @@ return [
                             'retirer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/retirer/:formation',
+                                    'route'    => '/retirer/:abonnement',
                                     'defaults' => [
                                         'controller' => AbonnementController::class,
                                         'action' => 'retirer'
@@ -100,7 +106,7 @@ return [
                             'lister-abonnements-par-agent' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/lister-abonnements-par-agent/:agent',
+                                    'route'    => '/lister-abonnements-par-agent[/:agent]',
                                     'defaults' => [
                                         'controller' => AbonnementController::class,
                                         'action' => 'lister-abonnements-par-agent'
@@ -135,10 +141,14 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            AbonnementForm::class => AbonnementFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            AbonnementHydrator::class => AbonnementHydratorFactory::class,
+        ],
     ]
 
 ];
