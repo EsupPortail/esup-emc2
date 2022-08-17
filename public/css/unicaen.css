@@ -207,6 +207,12 @@ div.navbar .popover {
     color: var(--header-background-hover);
 }
 
+input[type=submit].user-usurpation-submit {
+    width: 97%;
+}
+p.user-usurpation-stop-btn a {
+    width: 97%;
+}
 /** FOOTER ************************************************************************************************/
 
 footer {
@@ -455,7 +461,7 @@ a.btn
 .btn-default:hover, .btn-default:focus  { background: var(--body-background); }
 .btn-info                               { background: var(--information-background); }
 .btn-info:hover, .btn-info:focus        { background: var(--information-background-hover); }
-.btn-primary                            { background: var(--primary-background); }
+.btn-primary                            { background: var(--primary-background); border-color: var(--primary-background-hover); }
 .btn-primary:hover, .btn-primary:focus  { background: var(--primary-background-hover); }
 .btn-success                            { background: var(--success-background); }
 .btn-success:hover, .btn-success:focus  { background: var(--success-background-hover); }

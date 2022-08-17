@@ -175,7 +175,7 @@ class FichePosteController extends AbstractActionController {
         if ($fiche->getFicheTypeExternePrincipale()) {
             $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
         } else {
-            $titre .= "<span class='icon attention' style='color:darkred;'></span> Aucun fiche principale";
+            $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
         }
         if($fiche->getLibelle() !== null) {
             $titre .= "(" .$fiche->getLibelle(). ")";

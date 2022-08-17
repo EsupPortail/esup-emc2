@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
@@ -67,7 +68,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     /**
      * @throws MpdfException
      */
-    public function genererConvocationAction()
+    public function genererConvocationAction() : ?string
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
@@ -76,7 +77,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FORMATION_CONVOCATION', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');
@@ -88,7 +89,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     /**
      * @throws MpdfException
      */
-    public function genererAttestationAction()
+    public function genererAttestationAction() : ?string
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
@@ -99,7 +100,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'instance' => $inscrit->getInstance(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FORMATION_ATTESTATION', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('');

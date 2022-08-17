@@ -44,7 +44,7 @@ class EntretienProfessionnelForm extends Form {
     public function init()
     {
         //Responsable
-        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon icon-information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $responsable
             ->setAutocompleteSource($this->urlResponsable)
             ->setSelectionRequired(true)

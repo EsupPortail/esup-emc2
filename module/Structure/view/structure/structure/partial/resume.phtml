@@ -56,7 +56,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
 
         <?php if ($structure->getRepriseResumeMere()) : ?>
             <div class="alert alert-info">
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Reprise du résumé de la structure mère.
             </div>
         <?php endif; ?>
@@ -87,7 +87,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
     <div class="col-md-6">
         <h2 style="border-bottom:1px solid black;">
             Rôles
-            <span class="icon information" style="color:var(--content-background)"></span>
+            <span class="icon icon-information" style="color:var(--content-background)"></span>
         </h2>
 
         <?php //echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
@@ -159,7 +159,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         </ul>
         <h2 style="border-bottom:1px solid black;">
             Structures
-            <span class="icon information" style="color:var(--content-background)"></span>
+            <span class="icon icon-information" style="color:var(--content-background)"></span>
         </h2>
 
         <?php //echo $this->portenote('StructureController::indexAction()>structures_liees', '', []); ?>

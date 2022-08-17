@@ -4,6 +4,7 @@ use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Provider\EvenementProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
+use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Provider\EvenementProvider as FormationEvenementProvider;
 use EntretienProfessionnel\Provider\EvenementProvider as EntretienProfessionnelEvenementProvider;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
@@ -25,6 +26,7 @@ return [
 
             FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE                                  => NotificationFormationsOuvertesService::class,
             FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT                                    => RappelAgentAvantFormationService::class,
+            FormationEvenementProvider::INSCRIPTION_CLOTURE                                             => InscriptionClotureEvent::class,
 
             EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT                         => RappelCampagneAvancementService::class,
             EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL                     => RappelEntretienProfessionnelService::class,

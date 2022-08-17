@@ -84,8 +84,8 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     </div>
                     <div style="float:right;" style="padding-right: 1rem;">
                         <?php if ($canPresenceModifier) : ?>
-                            <span class="all_toggle icon ok" id="on_<?php echo $inscrit->getId(); ?>"           data-bs-toggle="tooltip" data-bs-html="true" title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
-                            <span class="all_toggle icon detruire" id="off_<?php echo $inscrit->getId(); ?>"    data-bs-toggle="tooltip" data-bs-html="true" title="Passer à absent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                            <span class="all_toggle icon icon-checked" id="on_<?php echo $inscrit->getId(); ?>"           data-bs-toggle="tooltip" data-bs-html="true" title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                            <span class="all_toggle icon icon-unchecked" id="off_<?php echo $inscrit->getId(); ?>"    data-bs-toggle="tooltip" data-bs-html="true" title="Passer à absent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
                         <?php endif; ?>
                     </div>
             </td>
@@ -176,7 +176,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     function(retour){
                         // console.log(retour);
                         let texte = "";
-                        if (retour == 1) texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                        if (retour == 1) texte = "<span class='icon icon-checked' style='color:darkgreen;'></span>";
                         else texte = "<span class='icon detruire' style='color:darkred;'></span>";
                         document.getElementById(id).innerHTML = texte;
                     }
@@ -211,7 +211,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                         $.each(journees, function(index, journee) {
                             // console.log(inscrit);
                             // console.log(journee);
-                            if (mode == 'on') texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                            if (mode == 'on') texte = "<span class='icon icon-checked' style='color:darkgreen;'></span>";
                             else texte = "<span class='icon detruire' style='color:darkred;'></span>";
                             document.getElementById(journee + "_" + inscrit).innerHTML = texte;
                         });

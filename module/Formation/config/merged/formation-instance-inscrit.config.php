@@ -5,6 +5,7 @@ namespace Formation;
 use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
+use Formation\Controller\PlanFormationController;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
@@ -65,6 +66,22 @@ return [
                         'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
                         'route' => 'liste-formations-instances',
                         'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                        'pages' => [
+                            [
+                                'order' => 200,
+                                'label' => 'Plan de formation',
+                                'route' => 'plan-formation',
+                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 400,
+                                'label' => 'Mes formations',
+                                'route' => 'liste-formations-instances',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],

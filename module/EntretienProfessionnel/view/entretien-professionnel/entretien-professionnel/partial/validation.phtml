@@ -44,7 +44,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 0) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
+            <strong><span class="icon icon-information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
             <br/><br/>
             Cette validation :
             <ul>
@@ -107,7 +107,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 1) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
+            <strong><span class="icon icon-information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
             <br/><br/>
             Une fois les observations faites, en validant l'agent :
             <ul>
@@ -117,7 +117,7 @@ $depasse = ($date === null or $date < $now);
             </ul>
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
-            <strong><span class="icon information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
+            <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
                 (<?php echo $entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"); ?>).
             </strong>
         </div>
@@ -126,7 +126,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 1) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation du responsable d'entretien professionnel
             </strong>
         </div>
@@ -204,7 +204,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 2) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
+            <strong><span class="icon icon-information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
             <br/><br/>
             Une fois cette validation faite :
             <ul>
@@ -216,7 +216,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 2) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation des observations ou le dépassement du délai d'expression des observations.
             </strong>
         </div>
@@ -275,7 +275,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step === 3) : ?>
         <div class="alert alert-info">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant valider son entretien professionnel.
             </strong>
             <br/><br/>
@@ -291,7 +291,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 3) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation de l'autorité hiérarchique.
             </strong>
         </div>

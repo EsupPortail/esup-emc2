@@ -7,6 +7,7 @@ use DateTime;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Roles;
 use Formation\Provider\Template\MailTemplates;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
@@ -14,14 +15,29 @@ use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class NotificationService {
     use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use RoleServiceAwareTrait;
+    use UserServiceAwareTrait;
     use UrlServiceAwareTrait;
 
+    /** RECUPERATION DES MAILS *************************/
+
+    public function getMailsResponsablesFormations() : array
+    {
+        $role  = $this->getRoleService()->findByRoleId(Roles::GESTIONNAIRE_FORMATION);
+        $users = $this->getUserService()->findByRole($role);
+        $mails = array_map(function (User $a) { return $a->getEmail(); }, $users);
+        return $mails;
+
+    }
     /** GESTION DES INSCRIPTIONS **************************************************************************************/
 
     public function triggerInscriptionAgent(Agent $agent, FormationInstance $instance) : Mail
@@ -31,7 +47,7 @@ class NotificationService {
             'instance' => $instance,
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_DEMANDE_AGENT", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
 
         $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_CCC')->getValeur();
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
@@ -58,7 +74,7 @@ class NotificationService {
             'instance' => $inscription->getInstance(),
             'UrlService' => $urlService,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_RESPONSABLE_VALIDATION", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_VALIDATION, $vars);
 
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -81,7 +97,7 @@ class NotificationService {
             'instance' => $instance,
             'inscrit' => $inscription,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_RESPONSABLE_REFUS", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_REFUS, $vars);
 
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -100,7 +116,7 @@ class NotificationService {
             'instance' => $instance,
             'UrlService' => $this->getUrlService()
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_DRH_VALIDATION", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_VALIDATION, $vars);
 
         $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -119,7 +135,7 @@ class NotificationService {
             'instance' => $instance,
             'inscrit' => $inscription
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_DRH_REFUS", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_REFUS, $vars);
 
         $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -136,7 +152,7 @@ class NotificationService {
             'instance' => $instance,
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSCRIPTION_RAPPEL_AVANT_FORMATION", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_RAPPEL_AVANT_FORMATION, $vars);
 
         $liste = $instance->getListePrincipale();
         $mails = [];
@@ -197,5 +213,32 @@ class NotificationService {
         $this->getMailService()->update($mail);
 
         return $mail;
+    }
+
+    /**
+     * @param FormationInstance[] $closes
+     * @return Mail|null
+     */
+    public function triggerNotifierInscriptionClotureAutomatique(array $closes) : ?Mail
+    {
+        if (!empty($closes)) {
+            $texte = "<ul>";
+            foreach ($closes as $close) {
+                $texte .= "<li>" . $close->getInstanceLibelle() . " - " . $close->getInstanceCode() . "</li>";
+            }
+            $texte .= "</ul>";
+
+            $email = $this->getMailsResponsablesFormations();
+            $vars = [
+                'UrlService' => $this->getUrlService(),
+            ];
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_CLOTURE_AUTOMATIQUE, $vars);
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+            return $mail;
+        }
+
+        return null;
     }
 }
