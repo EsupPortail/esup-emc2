@@ -22,6 +22,15 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementServiceAwareTrait;
     use CampagneFormAwareTrait;
 
+    public function indexAction() : ViewModel
+    {
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
+        return new ViewModel([
+            'campagnes' => $campagnes,
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         $campagne = new Campagne();

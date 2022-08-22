@@ -509,38 +509,27 @@ div.card {
 
 div.card div.card-header{
     border-color:  var(--header-background-hover);
+    font-weight: 500;
 }
 
-
-div.card.info div.card-header {
-    background:  var(--information-background-back);
-    color:  var(--information-background);
+.card-info .card-header {
+    background: var(--information-background-back);
 }
 
-div.card.warning div.card-header {
-    border-color:  var(--warning-background);
-    color:  var(--warning-background);
+.card-warning .card-header  {
+    background:  var(--warning-background);
 }
 
-div.card.danger div.card-header {
-    border-color:  var(--danger-background);
-    color:  var(--danger-background);
+.card-danger .card-header {
+    background:  var(--danger-background);
 }
 
-div.card.success div.card-header {
-    border-color:  var(--success-background-hover);
-    color:  var(--success-background);
+.card-success .card-header {
+    background:  var(--success-background);
 }
 
-div.card.default div.card-header  {
-    border-color:  var(--color-dark);
-    color:  var(--default-background);
-}
-
-div.panel.panel-default div.panel-heading{
+.card-default .card-header  {
     background: var(--color-medium-bis);
-    border-color:  var(--color-dark);
-    color:  var(--default-background-hover);
 }
 
 /** TABLE *************************************************************************************************************/
@@ -564,31 +553,27 @@ table.table tbody tr td {
 }
 /** ONGLET ************************************************************************************************************/
 
-ul.nav-tabs {
-    padding: 0.5rem 0.5rem 0 0.5rem;
+
+
+ul.nav {
     border-bottom: 1px solid var(--content-color);
-    margin-bottom: 0.5rem   ;
+    margin-bottom: 0.5rem;
 }
 
-ul.nav-tabs li.nav-item a.nav-link,
-ul.nav-tabs li.nav-item a.nav-link:hover {
-    border: 1px solid var(--color-medium);
+ul.nav li.nav-item,
+ul.nav li.nav-item:hover {
+    border: 1px solid var(--color-medium-bis);
     border-bottom: none;
-    border-radius: 0;
     color: var(--body-color);
-}
-
-ul.nav-tabs li a:hover {
-    border: 1px solid var(--content-color);
-    border-bottom: none;
-}
-
-ul.nav-tabs li.nav-item a.nav-link.active,
-ul.nav-tabs li.nav-item a.nav-link.active:hover {
-    border: 1px solid black;
-    border-bottom: none;
+    background: var(--color-light);
     border-radius: 0;
+}
+
+ul.nav li.nav-item a.nav-link.active,
+ul.nav li.nav-item a.nav-link.active:hover {
     color: var(--body-color);
+    background: white;
+    border-bottom: white 1px solid;
 }
 
 /** BRICOLAGE *********************************************************************************************************/

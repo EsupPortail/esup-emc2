@@ -23,12 +23,12 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
 
 ?>
 
-<h1 class="page-header">
-    Liste des missions spécifiques
-</h1>
-
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Liste des missions spécifiques
+        </h1>
+
         <?php if ($canAjouter) : ?>
             <a href="<?php echo $this->url('mission-specifique/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
                 <span class="icon icon-ajouter"></span>
@@ -36,19 +36,23 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
             </a>
         <?php endif; ?>
     </div>
-    <div class="pull-right">
-        <?php if ($canIndexMissionSpecifiqueTheme) : ?>
-            <a href="<?php echo $this->url("mission-specifique-theme"); ?>" class="btn btn-primary">
-                Accéder aux thèmes
-            </a>
-        <?php endif; ?>
-        <?php if ($canIndexMissionSpecifiqueType) : ?>
-            <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-primary">
-                Accéder aux types
-            </a>
-        <?php endif; ?>
+    <div class="col-md-3">
+            <?php if ($canIndexMissionSpecifiqueTheme) : ?>
+                <a href="<?php echo $this->url("mission-specifique-theme"); ?>" class="btn btn-primary">
+                    <span class="icon icon-listing"></span>
+                    Accéder aux thèmes
+                </a>
+            <?php endif; ?>
+            <?php if ($canIndexMissionSpecifiqueType) : ?>
+                <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-primary">
+                    <span class="icon icon-listing"></span>
+                    Accéder aux types
+                </a>
+            <?php endif; ?>
     </div>
 </div>
+
+<br/>
 
 <table class="table table-condensed table-hover">
     <thead>

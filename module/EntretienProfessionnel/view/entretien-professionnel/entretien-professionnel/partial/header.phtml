@@ -26,16 +26,18 @@ $canAfficherInformationMetier = (
 );
 ?>
 
+<!-- AGENT ------------------------------------------------------------------------------------------------------------>
+
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-info">
-            <div class="panel-heading">
+        <div class="card card-info">
+            <div class="card-header">
                 À propos de l'agent
             </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt> Fiche de l'agent </dt>
-                    <dd>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-md-4"> Fiche de l'agent </dt>
+                    <dd class="col-md-8">
                         <a
                             <?php /** @see \Application\Controller\AgentController::afficherAction() */ ?>
                             href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
@@ -46,8 +48,8 @@ $canAfficherInformationMetier = (
                     </dd>
                     <?php if ($canAfficherInformationMetier) : ?>
 
-                        <dt> Fiche(s) de poste</dt>
-                        <dd>
+                        <dt class="col-md-4"> Fiche(s) de poste</dt>
+                        <dd class="col-md-8">
                             <?php if ($ficheposte !== null) : ?>
                                 <a
                                     <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
@@ -60,8 +62,8 @@ $canAfficherInformationMetier = (
                                 <span style="color: darkred;"><span class="icon icon-attention"></span> Aucune fiche de poste</span>
                             <?php endif; ?>
                         </dd>
-                        <dt> Fiche(s) métier(s)</dt>
-                        <dd>
+                        <dt class="col-md-4"> Fiche(s) métier(s)</dt>
+                        <dd class="col-md-8">
                             <?php if (!empty($fichesmetiers)) : ?>
                                 <?php $first = true; foreach ($fichesmetiers as $fichemetier) : ?>
                                     <?php if ($first) $first=false; else echo '<br/>'; ?>
@@ -84,8 +86,8 @@ $canAfficherInformationMetier = (
 
                     <?php endif; ?>
 
-                    <dt> Structure(s) </dt>
-                    <dd>
+                    <dt class="col-md-4"> Structure(s) </dt>
+                    <dd class="col-md-8">
                         <?php
                             $structures = [];
                             foreach ($agent->getAffectationsActifs() as $affectation) {
@@ -118,11 +120,11 @@ $canAfficherInformationMetier = (
 
     </div>
     <div class="col-md-6">
-        <div class="panel panel-info">
-            <div class="panel-heading">
+        <div class="card card-info">
+            <div class="card-header">
                 Documents utiles
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <ul>
                     <?php foreach ($documents as $document) : ?>
                         <li> <?php echo $document; ?></li>
@@ -135,40 +137,40 @@ $canAfficherInformationMetier = (
 
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-info">
-            <div class="panel-heading">
+        <div class="card  card-info">
+            <div class="card-header">
                 Informations complémentaires
             </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt> Responsable </dt>
-                    <dd> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
-                    <dt> Année </dt>
-                    <dd> <?php echo $entretien->getAnnee(); ?> </dd>
-                    <dt> Date </dt>
-                    <dd> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-md-4"> Responsable </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
+                    <dt class="col-md-4"> Année </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getAnnee(); ?> </dd>
+                    <dt class="col-md-4"> Date </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
                     <?php if ($sursis !== null) : ?>
-                        <dt> Sursis </dt>
-                        <dd> Jusqu'au <?php echo $sursis->getSursis()->format('d/m/Y'); ?> </dd>
+                        <dt class="col-md-4"> Sursis </dt>
+                        <dd class="col-md-8"> Jusqu'au <?php echo $sursis->getSursis()->format('d/m/Y'); ?> </dd>
                     <?php endif; ?>
-                    <dt> Lieu </dt>
-                    <dd> <?php echo $entretien->getLieu(); ?> </dd>
+                    <dt class="col-md-4"> Lieu </dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
                 </dl>
             </div>
         </div>
     </div>
 
     <div class="col-md-6">
-        <div class="panel panel-info">
-            <div class="panel-heading">
+        <div class="card card-info">
+            <div class="card-header">
                 Validation de l'entretien
             </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>Confirmation</dt>
-                    <dd><?php echo ($entretien->getToken() === null) ? '<span class="icon icon-checked" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
-                    <dt>Responsable d'entretien </dt>
-                    <dd>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-md-5">Confirmation</dt>
+                    <dd class="col-md-7"><?php echo ($entretien->getToken() === null) ? '<span class="icon icon-checked" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
+                    <dt class="col-md-5">Responsable d'entretien </dt>
+                    <dd class="col-md-7">
                         <?php $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE); ?>
                         <?php if ($validationResponsable !== null) : ?>
                             <div>
@@ -184,8 +186,8 @@ $canAfficherInformationMetier = (
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
-                    <dt>Autorité hiérachique </dt>
-                    <dd>
+                    <dt class="col-md-5">Autorité hiérachique </dt>
+                    <dd class="col-md-7">
                         <?php $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH); ?>
                         <?php if ($validationHierarchie !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
@@ -199,8 +201,8 @@ $canAfficherInformationMetier = (
                             <span class="icon sursis" title="Non effectuée"></span> Non effectuée
                         <?php endif; ?>
                     </dd>
-                    <dt>Agent </dt>
-                    <dd>
+                    <dt class="col-md-5">Agent </dt>
+                    <dd class="col-md-7">
                         <?php
                         $hasValidationAgent = $entretien->getValidations(EntretienProfessionnelConstant::VALIDATION_AGENT);
                         $validationAgent = ($hasValidationAgent !== [])?current($hasValidationAgent):null;

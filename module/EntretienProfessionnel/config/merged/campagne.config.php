@@ -22,6 +22,15 @@ return [
                 [
                     'controller' => CampagneController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CampagneController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -66,9 +75,13 @@ return [
                 'child_routes' => [
                     'campagne' => [
                         'type'  => Literal::class,
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'options' => [
                             'route'    => '/campagne',
+                            'defaults' => [
+                                'controller' => CampagneController::class,
+                                'action'     => 'index',
+                            ],
                         ],
                         'child_routes' => [
                             'ajouter' => [

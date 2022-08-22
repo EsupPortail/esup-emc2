@@ -13,7 +13,6 @@ use UnicaenEtat\Entity\Db\Etat;
 
 ?>
 
-
 <?php
 //var_dump($params);
 //var_dump($params['structure']->getLibelleLong());
@@ -21,108 +20,100 @@ use UnicaenEtat\Entity\Db\Etat;
 
 <br/>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card card-default">
+    <div class="card-header">
         <span class="icon icon-filtrer"></span>
         Filtre des entretiens professionnels
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
             <div class="row">
-                <div class="col-md-3">
-                    <?php
-                    /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherStructureAction() */
-                    $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
-                    $structureF
-                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
-                        ->setSelectionRequired(true)
-                        ->setAttributes([
-                            'id' => 'structure-filtre',
-                            'placeholder' => "Nom de la structure ...",
-                        ]);
-                    ?>
-                    <?php echo $this->formControlGroup($structureF); ?>
-                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <?php
+                            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherStructureAction() */
+                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+                            $structureF
+                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'structure-filtre',
+                                    'placeholder' => "Nom de la structure ...",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($structureF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <?php
+                            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherAgentAction() */
+                            $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
+                            $agentF
+                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-agent'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'agent-filtre',
+                                    'placeholder' => "Nom de l'agent ...",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($agentF); ?>
 
-                <div class="col-md-3">
-                    <?php
-                    /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherAgentAction() */
-                    $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
-                    $agentF
-                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-agent'))
-                        ->setSelectionRequired(true)
-                        ->setAttributes([
-                            'id' => 'agent-filtre',
-                            'placeholder' => "Nom de l'agent ...",
-                        ]);
-                    ?>
-                    <?php echo $this->formControlGroup($agentF); ?>
-
-                </div>
-
-                <div class="col-md-3">
-                    <?php
-                    /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherResponsableAction() */
-                    $agentF = new SearchAndSelect('responsable-filtre', ['label' => "Responsable :"]);
-                    $agentF
-                        ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-responsable'))
-                        ->setSelectionRequired(true)
-                        ->setAttributes([
-                            'id' => 'responsable-filtre',
-                            'placeholder' => "Nom du resposable ...",
-                        ]);
-                    ?>
-                    <?php echo $this->formControlGroup($agentF); ?>
-                </div>
-
-                <div class="col-md-3">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="campagne">Campagne :</label>
-                    <select id="campagne" name="campagne" class="form-control selectpicker show-tick" data-live-search="false">
-                        <option value=""> Toutes les campagnes </option>
-                        <?php foreach($campagnes as $campagne) : ?>
-                            <option
-                                    value="<?php echo $campagne->getId(); ?>"
-                                    <?php if ($campagne->getId() == $params['campagneId']) echo " selected "; ?>
-                            >
-                                <?php echo $campagne->getAnnee(); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="etat">État :</label>
-                    <select id="etat" name="etat" class="form-control selectpicker show-tick" data-live-search="false">
-                        <option value=""> Tous les états </option>
-                        <?php foreach($etats as $etat) : ?>
-                            <option
-                                    value="<?php echo $etat->getId(); ?>"
-                                    data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                        </div>
+                        <div class="col-md-4">
+                            <?php
+                            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherResponsableAction() */
+                            $agentF = new SearchAndSelect('responsable-filtre', ['label' => "Responsable :"]);
+                            $agentF
+                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-responsable'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'responsable-filtre',
+                                    'placeholder' => "Nom du resposable ...",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($agentF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="campagne">Campagne :</label>
+                            <select id="campagne" name="campagne" class="form-control selectpicker show-tick" data-live-search="false">
+                                <option value=""> Toutes les campagnes </option>
+                                <?php foreach($campagnes as $campagne) : ?>
+                                    <option
+                                            value="<?php echo $campagne->getId(); ?>"
+                                        <?php if ($campagne->getId() == $params['campagneId']) echo " selected "; ?>
+                                    >
+                                        <?php echo $campagne->getAnnee(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                        <label for="etat">État :</label>
+                        <select id="etat" name="etat" class="form-control selectpicker show-tick" data-live-search="false">
+                            <option value=""> Tous les états </option>
+                            <?php foreach($etats as $etat) : ?>
+                                <option
+                                        value="<?php echo $etat->getId(); ?>"
+                                        data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
                                     <?php if ($etat->getId() == $params['etatId']) echo " selected "; ?>
-                            >
-                                <?php echo $etat->getLibelle(); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                                >
+                                    <?php echo $etat->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <br/>
-                    <div class="pull-right">
-                        <button class="btn btn-primary" id="clear">
-                            <span class="icon effacer"></span>
-                        </button>
-
-                        <button class="btn btn-primary" id="filter" style="width:20rem;">
+                <div class="col-md-3">
+                        <button class="btn btn-primary" id="filter">
                             <span class="icon icon-filtrer"></span>
                             Filtrer
                         </button>
+                        <button class="btn btn-primary" id="clear">
+                            <span class="icon icon-erase"></span>
+                        </button>
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 </div>
