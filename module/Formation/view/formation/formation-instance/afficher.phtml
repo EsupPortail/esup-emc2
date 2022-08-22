@@ -5,10 +5,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFormateur;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
-use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
-use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
-use Formation\Provider\Privilege\FormationinstancejourneePrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -61,11 +58,12 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
 
 <div class="main">
     <h2> Action de formation </h2>
+
     <div class="row">
-        <div class="col-sm-6 col-md-8">
+        <div class="col-md-9">
             <?php echo $this->formationInformations($formation); ?>
         </div>
-        <div class="pull-right">
+        <div class="col-md-3">
             <a      <?php /** @see FormationController::editerAction() */ ?>
                     href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                     class="btn btn-info action">
@@ -124,43 +122,41 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </div>
     </div>
 
-    <div role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
-            <li>
-                <a href="#information" aria-controls="information" role="tab" data-toggle="tabz">
-                    Information sur la session
-                </a>
+    <!-- ONGLET :: TAB ------------------------------------------------------------------------------------------------>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#information" aria-controls="information">
+                Information sur la session
+            </a>
             </li>
-            <li>
-                <a href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
+            <li class="nav-item">
+                <a class="nav-link" href="#inscriptions" aria-controls="inscriptions">
                     Inscription et listes
                 </a>
             </li>
-            <li>
-                <a href="#presences" aria-controls="presences" role="tab" data-toggle="tabz">
+            <li class="nav-item">
+                <a class="nav-link" href="#presences" aria-controls="presences">
                     Présences aux séances
                 </a>
-            </li>
-            <li class="pull-right">
-                <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
+            </li class="nav-item">
+            <li class="nav-item">
+                <a class="nav-link" href="#mails" aria-controls="mails">
                     Mails
                 </a>
             </li>
         </ul>
     </div>
 
+    <!-- ONGLET :: PANE------------------------------------------------------------------------------------------------>
     <div class="tab-content">
-
-        <div id="information" class="tab-pane " role="tabpanel">
+        <div id="information" class="tab-pane">
             <div class="row">
-                <h2> Session de formation</h2>
-
-                <div class="col-sm-6 col-md-8">
+                <div class="col-md-9">
+                    <h2> Informations de la session de formation</h2>
                     <?php echo $this->formationInstanceInformations($instance); ?>
                 </div>
-
-                <?php if ($canInformation) : ?>
-                    <div class="pull-right">
+                <div class="col-md-3">
+                    <?php if ($canInformation) : ?>
                         <?php /** @see FormationInstanceController::modifierInformationsAction() */ ?>
                         <a href="<?php echo $this->url('formation-instance/modifier-informations', ['formation-instance' => $instance->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal" data-event="modification">
@@ -176,15 +172,15 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                                 <?php echo ($canPresenceModifier)?"Renseigner":"Voir"; ?> les présences
                             </a>
                         <?php endif; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-6 col-md-8">
-                    <h3>Formateurs </h3>
+                <div class="col-md-9">
+                    <h2>Formateurs </h2>
                 </div>
-                <div class="pull-right">
+                <div class="col-md-3">
                     <?php if ($canFormateurModifier) : ?>
                         <?php /** @see FormationInstanceFormateurController::ajouterFormateurAction() */?>
                         <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
@@ -236,26 +232,25 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
-            </table>
+            </table><br/>
 
             <div class="row">
-                <div class="col-md-8">
-                    <h3>
-                        séance(s) de formation
-                        <span class="badge"> <?php echo count($journees); ?></span>
-                    </h3>
+                <div class="col-md-9">
+                    <h2>
+                        Séance(s) de formation
+                    </h2>
 
-                    <dl class="dl-horizontal">
-                        <dt>Première séance </dt>
-                        <dd><?php echo $instance->getDebut(); ?></dd>
-                        <dt>Dernière séance </dt>
-                        <dd><?php echo $instance->getFin(); ?></dd>
-                        <dt>Durée de la formation</dt>
-                        <dd><?php echo $instance->getDuree(); ?></dd>
+                    <dl class="row">
+                        <dt class="col-md-3">Première séance </dt>
+                        <dd class="col-md-9"><?php echo $instance->getDebut(); ?></dd>
+                        <dt class="col-md-3">Dernière séance </dt>
+                        <dd class="col-md-9"><?php echo $instance->getFin(); ?></dd>
+                        <dt class="col-md-3">Durée de la formation</dt>
+                        <dd class="col-md-9"><?php echo $instance->getDuree(); ?></dd>
                     </dl>
 
                 </div>
-                <div class="pull-right">
+                <div class="col-md-3">
                     <?php if ($canJourneeModifier): ?>
                         <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -276,7 +271,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 </div>
             </div>
 
-            <table id="journees" class="datatable table table-condensed">
+        <table id="journees" class="datatable table table-condensed">
         <thead>
             <tr>
                 <th> Jour </th>
@@ -325,25 +320,25 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             </tr>
             <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br/>
         </div>
-    <div id="inscriptions" class="tab-pane " role="tabpanel">
+        <div id="inscriptions" class="tab-pane">
     <div class="row">
-        <div class="col-md-8">
-            <h3> Agent(s) inscrit(s) </h3>
+        <div class="col-md-9">
+            <h2> Inscription·s </h2>
         </div>
 
-        <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
-            <div class="pull-right">
-                <br/>
+        <div class="col-md-3">
+            <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
                 <a      <?php /**  @see FormationInstanceInscritController::ajouterAgentAction() */ ?>
                         href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     <span class="icon icon-ajouter"></span>
                     Ajouter un agent
                 </a>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
+
     </div>
 
     <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
@@ -355,14 +350,10 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         $inscriptions = $instance->getInscrits();
     ?>
 
-    <h3> Inscriptions
-        <span class="badge"><?php echo count($inscriptions); ?></span>
-    </h3>
-
     <table id="agents" class="datatable table table-condensed">
         <thead>
         <tr>
-            <th style="width:40rem;"> Dénomination </th>
+            <th> Dénomination </th>
             <th> Affection principale </th>
             <th style="width:13rem;"> Date de demande </th>
             <th style="width:13rem;"> État </th>
@@ -390,11 +381,11 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br/>
 
     <h4>
         Liste principale
-        <span class="badge"><?php echo count($principales); ?></span>
+        (<?php echo count($principales); ?>/<?php echo $instance->getNbPlacePrincipale(); ?>)
         <?php if ($instance->isListePrincipaleComplete()) : ?>
             <span class="label label-success"> Complète</span>
         <?php endif; ?>
@@ -403,8 +394,8 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     <table id="agents" class="datatable table table-condensed">
         <thead>
         <tr>
-            <th style="width:40rem;"> Dénomination </th>
-            <th> Affection principale </th>
+            <th> Dénomination </th>
+            <th style="width:26rem;"> Affection principale </th>
             <th style="width:15rem;"> Action </th>
         </tr>
         </thead>
@@ -470,11 +461,11 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br/>
 
     <h4>
         Liste complémentaire
-        <span class="badge"><?php echo count($complementaires); ?></span>
+        (<?php echo count($complementaires); ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>)
         <?php if ($instance->isListeComplementaireComplete()) : ?>
             <span class="label label-success"> Complète</span>
         <?php endif; ?>
@@ -482,8 +473,8 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     <table id="agents" class="datatable table table-condensed">
         <thead>
         <tr>
-            <th style="width:50rem;"> Dénomination </th>
-            <th> Affection principale </th>
+            <th > Dénomination </th>
+            <th style="width:26rem;"> Affection principale </th>
             <th style="width:13rem;"> Action </th>
         </tr>
         </thead>
@@ -524,11 +515,11 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
             </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br/>
 
     <h4>
         Agents historisés
-        <span class="badge"><?php echo count($historises); ?></span>
+        (<?php echo count($historises); ?>)
     </h4>
 
     <table id="agents" class="datatable table table-condensed table-hover">
@@ -576,34 +567,34 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <?php endforeach; ?>
         </tbody>
     </table>
-
         </div>
-        <div id="mails" class="tab-pane " role="tabpanel">
+        <div id="mails" class="tab-pane">
     <h2> Mails envoyés </h2>
 
     <?php echo $this->mails($mails); ?>
 
     </div>
 
-    <div id="presences" class="tab-pane " role="tabpanel">
+    <div id="presences" class="tab-pane">
         <h2> Présence aux séances</h2>
 
         <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'titre' => false], [], true); ?>
     </div>
 
 </div>
-</div>
 
 <script>
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "information";
+        if (name === undefined || name === "") name = "formulaire";
 
         $('a[aria-controls=' + name + ']').tab('show');
 
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
             $(this).tab('show');
         });
 

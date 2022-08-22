@@ -48,8 +48,9 @@ foreach ($agents as $agent) {
     }
 
     if ($entretien === null) {
-        $date = new DateTime();
-        $date = $date->sub(new DateInterval('P6M'));
+        $date = $campagne->getDateFin();
+        $date = DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y'));
+        $date = $date->sub(new DateInterval('P12M'));
         if ($agent->isContratLong() AND !empty($agent->getAffectationsActifs($date))) {
             $sans[$agent->getDenomination()] = $agent;
         } else {

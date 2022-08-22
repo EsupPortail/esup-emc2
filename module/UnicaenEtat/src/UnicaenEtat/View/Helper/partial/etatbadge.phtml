@@ -7,56 +7,20 @@ use UnicaenEtat\Entity\Db\Etat;
  * @var array $options
  */
 
+$type_couleur = ($etat AND $etat->getType())?$etat->getType()->getCouleur():null;
+$type_icone = ($etat AND $etat->getType())?$etat->getType()->getIcone():null;
+$type_libelle = ($etat AND $etat->getType())?$etat->getType()->getLibelle():null;
+
+$etat_couleur = $etat?$etat->getCouleur():null;
+$etat_icone = $etat?$etat->getIcone():null;
+$etat_libelle = $etat?$etat->getLibelle():null;
 ?>
 
-<?php if ($etat === null) : ?>
-    <div class="label leftpart" title="État inconnu">
-            <i class="fa fa-question-circle" aria-hidden="true"></i>
-        </div>
-    <div class="label rightpart" title="Type inconnu">
-            <i class="fa fa-question-circle" aria-hidden="true"></i>
-        </div>
-
-    <style>
-        .leftpart {
-            background: #8e7c7c;
-            position:relative;
-            left:0.5rem;
-            width:2.5rem;
-            display: inline-block;
-        }
-        .rightpart {
-            position:relative;
-            left:-0.25rem;
-            background: linear-gradient(90deg, transparent 2px, #7f8e7c 0);
-            width:2.5rem;
-            display: inline-block;
-        }
-    </style>
-<?php else : ?>
-    <div class="label leftpart<?php echo $etat->getId(); ?>" title="<?php echo $etat->getLibelle(); ?>">
-            <span class="<?php echo ($etat->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></span>
-        </div>
-    <div class="label rightpart<?php echo $etat->getType()->getId(); ?>" title="<?php echo $etat->getType()->getLibelle(); ?>">
-            <span class="<?php echo ($etat->getType()->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></span>
-        </div>
-
-    <style>
-        .leftpart<?php echo $etat->getId(); ?> {
-            background: <?php echo ($etat->getCouleur())?:"#8e7c7c"; ?>;
-            color:white;
-            position:relative;
-            left:0.5rem;
-            width:2rem;
-            display: inline-block;
-        }
-        .rightpart<?php echo $etat->getType()->getId(); ?> {
-            position:relative;
-            /*left:-0.25rem;*/
-            background: linear-gradient(90deg, transparent 2px, <?php echo ($etat->getType()->getCouleur())?:"#7f8e7c"; ?> 0);
-            width:2rem;
-            color:white;
-            display: inline-block;
-        }
-    </style>
-<?php endif; ?>
+<div style="display: inline-block;">
+    <div class="etat-leftpart" title="<?php echo $etat_libelle; ?>" style="background: <?php echo $etat_couleur; ?>;">
+        <span class="<?php echo ($etat_icone)?:"fa fa-question-circle"; ?>" aria-hidden="true"></span>
+    </div>
+    <div class="etat-rightpart" title="<?php echo $type_libelle; ?>" style="background: <?php echo $type_couleur; ?>;">
+            &nbsp;<span class="<?php echo ($type_icone)?:"fa fa-question-circle"; ?>" aria-hidden="true"></span>
+    </div>
+</div>

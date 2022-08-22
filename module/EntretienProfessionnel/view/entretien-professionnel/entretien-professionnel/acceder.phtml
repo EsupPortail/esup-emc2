@@ -197,7 +197,9 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
         $('a[aria-controls=' + name + ']').tab('show');
 
         $('.nav a').click(function (e) {
-            e.preventDefault();
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
             $(this).tab('show');
         });
 

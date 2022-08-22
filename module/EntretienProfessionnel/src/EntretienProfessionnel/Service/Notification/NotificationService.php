@@ -2,6 +2,8 @@
 
 namespace EntretienProfessionnel\Service\Notification;
 
+use Application\Entity\Db\Agent;
+use DateInterval;
 use Structure\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
@@ -254,6 +256,12 @@ class NotificationService {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgents = array_merge($agents, $agentsForces);
 
+        $date = DateTime::createFromFormat('d/m/Y',$campagne->getDateFin()->format('d/m/Y'));
+        $date = $date->sub(new DateInterval('P12M'));
+
+        $allAgents = array_filter($allAgents,
+            function (Agent $a) use ($date) { return $a->getTControatLong() === 'O' AND !empty($a->getAffectationsActifs($date));}
+        );
 
         $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);
         $entretiensFaits  = $this->getCampagneService()->getAgentsAvecEntretiensFaits($campagne, $allAgents);

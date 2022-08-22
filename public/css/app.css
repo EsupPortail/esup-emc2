@@ -145,10 +145,11 @@ span.lettrine {
 
 span.small-lettrine {
     position:relative;
-    left:-1.5rem;
-    top:0.75rem;
+    left:-0.75rem;
+    top:0.5rem;
     font-weight:bolder;
     font-size:7pt;
+    text-decoration: none;
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 

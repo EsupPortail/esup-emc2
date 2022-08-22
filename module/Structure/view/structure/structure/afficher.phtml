@@ -87,69 +87,66 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
         <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles, 'responsables' => $responsables, 'gestionnaires' => $gestionnaires]); ?>
 
-        <div role="tabpanel">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a href="#agents" class="nav-link" aria-controls="agents" role="tab" data-toggle="tabz">
-                        Agents <br/> &nbsp;
+        <ul class="nav">
+            <li class="nav-item">
+                <a href="#agents" class="nav-link" aria-controls="agents">
+                    Agents <br/> &nbsp;
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#informations" class="nav-link" aria-controls="informations">
+                    Fiches de  <br/> poste
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#missions" class="nav-link" aria-controls="missions">
+                    Missions <br/> spécifiques
+                </a>
+            </li>
+
+            <?php if ($last !== null) : ?>
+                <li class="nav-item">
+                    <a href="#campagne_<?php echo $last->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $last->getId(); ?>">
+                        Entretien professionnel  <br/>
+                        <strong><?php echo $last->getAnnee(); ?></strong>
                     </a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a href="#informations" class="nav-link" aria-controls="informations" role="tab" data-toggle="tabz">
-                        Fiches de  <br/> poste
+            <?php endif; ?>
+
+            <?php foreach ($campagnes as $campagne) : ?>
+                <li class="nav-item">
+                    <a href="#campagne_<?php echo $campagne->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $campagne->getId(); ?>">
+                        Entretien professionnel <br/>
+                        <strong><?php echo $campagne->getAnnee(); ?></strong>
                     </a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a href="#missions" class="nav-link" aria-controls="missions" role="tab" data-toggle="tabz">
-                        Missions <br/> spécifiques
-                    </a>
-                </li>
+            <?php endforeach;?>
 
-                <?php if ($last !== null) : ?>
-                    <li role="presentation">
-                        <a href="#campagne_<?php echo $last->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $last->getId(); ?>" role="tab" data-toggle="tabz">
-                            Entretien professionnel  <br/>
-                            <strong><?php echo $last->getAnnee(); ?></strong>
-                        </a>
-                    </li>
-                <?php endif; ?>
+            <li class="nav-item">
+                <a href="#profil" class="nav-link" aria-controls="profil">
+                    Profil de  <br/>
+                    recrutement
+                </a>
+            </li>
 
-                <?php foreach ($campagnes as $campagne) : ?>
-                    <li role="presentation">
-                        <a href="#campagne_<?php echo $campagne->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab" data-toggle="tabz">
-                            Entretien professionnel <br/>
-                            <strong><?php echo $campagne->getAnnee(); ?></strong>
-                        </a>
-                    </li>
-                <?php endforeach;?>
+            <li class="nav-item">
+                <a href="#formation" class="nav-link" aria-controls="formation">
+                    Demande de <br/> Formation
+                </a>
+            </li>
 
-                <li role="presentation">
-                    <a href="#profil" class="nav-link" aria-controls="profil" role="tab" data-toggle="tabz" >
-                        Profil de  <br/>
-                        recrutement
-                    </a>
-                </li>
+            <li class="nav-item">
+                <a href="#extraction" class="nav-link" aria-controls="extraction">
+                    Extractions  <br/> &nbsp;
+                </a>
+            </li>
+        </ul>
 
-                <li role="presentation">
-                    <a href="#formation" class="nav-link" aria-controls="formation" role="tab" data-toggle="tabz" >
-                        Demande de <br/> Formation
-                    </a>
-                </li>
 
-                <li role="presentation">
-                    <a href="#extraction" class="nav-link" aria-controls="extraction" role="tab" data-toggle="tabz" >
-                        Extractions  <br/> &nbsp;
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="main-with-tab">
-
-            <div class="tab-content">
+        <div class="tab-content">
 
                 <!-- Informations ------------------------------------------------------------------------------------->
-                <div id="agents" class="tab-pane " role="tabpanel">
+                <div id="agents" class="tab-pane">
 
                     <div class="row">
                         <div class="col-md-8">
@@ -183,12 +180,12 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 </div>
 
                 <!-- Informations ------------------------------------------------------------------------------------->
-                <div id="informations" class="tab-pane " role="tabpanel">
+                <div id="informations" class="tab-pane">
                     <?php echo $this->partial('partial/fiches-postes', ['agents' => $agentsAll, 'structure' => $structure, 'fichespostes' => $fichespostes, 'fichespostes_pdf' => $fichespostes_pdf]); ?>
                 </div>
 
                 <!-- Missions spécifique ------------------------------------------------------------------------------------->
-                <div id="missions" class="tab-pane " role="tabpanel">
+                <div id="missions" class="tab-pane">
                     <?php echo $this->partial('partial/missions-specifiques', ['structure' => $structure, 'missions' => $missions]); ?>
                 </div>
 
@@ -196,32 +193,31 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <?php $allAgents = array_merge($agents, $agentsForces); ?>
 
                 <?php if ($last !== null) : ?>
-                    <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane " role="tabpanel">
+                    <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane">
                         <?php echo $this->partial('partial/precedente', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents]); ?>
                     </div>
                 <?php endif; ?>
                 <?php foreach ($campagnes as $campagne) : ?>
-                    <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">
+                    <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane">
                         <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues]); ?>
                     </div>
                 <?php endforeach; ?>
 
                 <!-- Profil de recrutement ------------------------------->
-                <div id="profil" class="tab-pane " role="tabpanel">
+                <div id="profil" class="tab-pane">
                     <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
                 </div>
 
                 <!-- Demande de formation ------------------------------->
-                <div id="formation" class="tab-pane " role="tabpanel">
+                <div id="formation" class="tab-pane">
                     <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptions]); ?>
                 </div>
 
                 <!-- Extraction ------------------------------------------------------------------------------------->
-                <div id="extraction" class="tab-pane " role="tabpanel">
+                <div id="extraction" class="tab-pane">
                     <?php echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
                 </div>
             </div>
-        </div>
     </div>
 <?php endif; ?>
 
@@ -256,25 +252,21 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
 
     $(function() {
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formulaire";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
+            $(this).tab('show');
         });
 
-        $("body").on("duplication", function (event) {
-            let content = event.div.html();
-            let match_regex = content.match(/#[0-9]*/g)[0];
-            let id = match_regex.split('#')[1];
+        $("body").on("modification", function (event) {
             event.div.modal('hide');
-            let win = window.open('../../fiche-poste/editer/' + id + '?structure=' + <?php echo ($structure)?$structure->getId():0; ?>, '_blank');
-            if (win) {
-                //Browser has allowed it to be opened
-                win.focus();
-            } else {
-                //Browser has blocked it
-                alert('Please allow popups for this website');
-            }
-            console.log("fiche-de-poste: " + id);
             window.location.reload();
         });
     });
