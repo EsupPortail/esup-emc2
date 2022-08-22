@@ -17,12 +17,14 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
+use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -440,7 +442,17 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREP, $vars);
-        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch(MpdfException $e) {
+            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
+        }
     }
 
     public function exporterCrefAction() : string
@@ -454,7 +466,18 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREF, $vars);
-        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch(MpdfException $e) {
+            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
+        }
+        
     }
 
     public function accepterEntretienAction() : ViewModel
