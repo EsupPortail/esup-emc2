@@ -46,49 +46,6 @@ create table carriere_categorie
 );
 create unique index categorie_code_uindex on carriere_categorie (code);
 create unique index categorie_id_uindex on carriere_categorie (id);
-create table carriere_corps
-(
-    id         integer not null constraint corps_pk  primary key,
-    lib_court  varchar(20),
-    lib_long   varchar(200),
-    code       varchar(10)                                                        not null,
-    categorie  varchar(10),
-    histo      timestamp,
-    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on timestamp(0),
-    deleted_on timestamp(0),
-    niveau     integer,
-    niveau_id  integer  constraint corps_niveau_definition_id_fk references carriere_niveau on delete set null,
-    niveaux_id integer constraint carriere_corps_carriere_niveau_enveloppe_id_fk references carriere_niveau_enveloppe on delete set null
-);
-create unique index corps_code_uindex on carriere_corps (code);
-
-
-
-create table carriere_correspondance
-(
-    id serial not null constraint correspondance_pk primary key,
-    c_bap varchar(10),
-    lib_court varchar(20),
-    lib_long varchar(200),
-    old_id integer,
-    histo timestamp,
-    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on timestamp(0),
-    deleted_on timestamp(0)
-);
-
-create table carriere_grade
-(
-    id integer not null constraint grade_pk primary key,
-    lib_court varchar(20),
-    lib_long varchar(200),
-    code varchar(10) not null,
-    histo timestamp,
-    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on timestamp(0),
-    deleted_on timestamp(0)
-);
 
 -- MODULE METIER -------------------------------------------------------------------------------------------------------
 
@@ -318,6 +275,7 @@ create table formation_groupe
 (
     id serial not null constraint formation_groupe_pk primary key,
     libelle varchar(1024),
+    description text,
     couleur varchar(255),
     ordre integer default 9999,
     source varchar(64),
@@ -434,6 +392,8 @@ create table formation_instance
     type varchar(256),
     etat_id integer constraint formation_instance_unicaen_etat_etat_id_fk references unicaen_etat_etat,
     auto_inscription boolean default false not null,
+    cout_ht float,
+    cout_ttc float,
     source varchar(64),
     id_source varchar(256),
     histo_creation timestamp not null,
@@ -564,13 +524,13 @@ create unique index complement_id_uindex on complement (id);
 
 create table agent
 (
+    id bigint,
     c_individu varchar(40) not null constraint agent_pk primary key,
     utilisateur_id integer constraint agent_user_id_fk references unicaen_utilisateur_user on delete set null,
     prenom varchar(64),
     nom_usage varchar(64),
-    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on timestamp(0),
-    deleted_on timestamp(0),
+    nom_famille varchar(256),
+
     octo_id varchar(40),
     preecog_id varchar(40),
     harp_id integer,
@@ -579,8 +539,16 @@ create table agent
     sexe varchar(1),
     t_contrat_long varchar(1),
     date_naissance date,
-    nom_famille varchar(256)
+    source_id BIGINT NOT NULL,
+    ID_ORIG VARCHAR(100),
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0),
+    HISTO_CREATEUR_ID BIGINT NOT NULL,
+    HISTO_MODIFICATEUR_ID BIGINT,
+    HISTO_DESTRUCTEUR_ID BIGINT
 );
+CREATE SEQUENCE agent_ID_SEQ ;
 
 -- STRUCTURE -----------------------------------------------------------------------------------------------------------
 
@@ -589,12 +557,17 @@ create table structure_type
     id integer not null constraint structure_type_pk primary key,
     code varchar(64) not null,
     libelle varchar(256) not null,
-    synchro timestamp,
-    histo timestamp,
+    description text,
+    source_id bigint,
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
-    deleted_on timestamp(0)
+    deleted_on timestamp(0),
+    histo_createur_id bigint,
+    histo_modificateur_id bigint,
+    histo_destructuer_id bigint
 );
+CREATE SEQUENCE structure_type_ID_SEQ ;
+
 create unique index structure_type_source_id_uindex on structure_type (id);
 
 create table structure
@@ -614,11 +587,17 @@ create table structure
     parent_id integer constraint structure_structure_source_id_fk references structure on delete set null,
     niv2_id integer constraint structure_structure_id_fk references structure on delete set null,
     niv2_id_ow integer constraint structure_structure_id_fk references structure on delete set null,
+    source_id bigint,
+    id_orig varchar(100),
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
-    deleted_on timestamp(0)
+    deleted_on timestamp(0),
+    histo_createur_id bigint,
+    histo_modificateur_id bigint,
+    histo_destructuer_id bigint
 );
 create unique index structure_source_id_uindex on structure (id);
+CREATE SEQUENCE structure_ID_SEQ ;
 
 -- AGENT <-> CARRIERE --------------------------------------------------------------------------------------------------
 
@@ -664,7 +643,7 @@ create table agent_carriere_affectation
     updated_on timestamp(0),
     deleted_on timestamp(0)
 );
-create unique index agent_affectation_id_uindex on agent_carriere_affectation (affectation_id);
+create unique index agent_affectation_id_uindex on agent_carriere_affectation (id);
 
 create table agent_carriere_statut
 (
@@ -697,17 +676,24 @@ create table agent_carriere_statut
     created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on timestamp(0),
     deleted_on timestamp(0)
+
 );
 
+--drop table agent_carriere_echelon;
 create table agent_carriere_echelon
 (
-    id  serial constraint agent_carriere_echelon_pk primary key,
+    id  bigint constraint agent_carriere_echelon_pk primary key,
     agent_id varchar(40) not null constraint agent_carriere_echelon_agent_c_individu_fk references agent on delete cascade,
     echelon      integer                        not null,
     date_passage date                           not null,
-    created_on   timestamp default CURRENT_DATE not null,
-    updated_on   timestamp,
-    deleted_on   timestamp
+    source_id BIGINT NOT NULL,
+    ID_ORIG VARCHAR(100),
+    created_on timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
+    updated_on timestamp(0),
+    deleted_on timestamp(0),
+    HISTO_CREATEUR_ID BIGINT NOT NULL,
+    HISTO_MODIFICATEUR_ID BIGINT,
+    HISTO_DESTRUCTEUR_ID BIGINT
 );
 create unique index agent_carriere_echelon_id_uindex on agent_carriere_echelon (id);
 

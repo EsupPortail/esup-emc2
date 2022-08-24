@@ -10,3 +10,5 @@ INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter,
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Responsable de structure', 'Responsable de structure', false, null, null, true, null);
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Délégué·e pour entretien professionnel', 'Délégué·e pour entretien professionnel', false, null, null, true, null);
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Autorité hiérarchique', 'Autorité hiérarchique', false, null, null, true, null);
+
+INSERT INTO SOURCE (id, code, libelle, importable) VALUES (1, 'OCTOPUS', 'Référentiel OCTOPUS', true);

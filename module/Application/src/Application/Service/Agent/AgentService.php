@@ -202,7 +202,8 @@ class AgentService {
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
+//            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
+            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
             //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
@@ -311,7 +312,7 @@ class AgentService {
 
        //checking structure
        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
-       if (count($affectationsPrincipales) !== 1) throw new LogicException("Plusieurs affectations principales pour l'agent");
+       if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
        $structure = $affectationsPrincipales[0]->getStructure();
        do {
@@ -355,7 +356,7 @@ class AgentService {
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
-        if (count($affectationsPrincipales) !== 1) throw new LogicException("Plusieurs affectations principales pour l'agent");
+        if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent");
 
         $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
         do {

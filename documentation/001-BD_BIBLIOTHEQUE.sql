@@ -508,3 +508,35 @@ create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
 create unique index indicateur_id_uindex on unicaen_indicateur (id);
 
 
+-- IMPORT
+
+create table import_log
+(
+    type         varchar(128)          not null,
+    name         varchar(128)          not null,
+    log          text                  not null,
+    started_on   timestamp(0)          not null,
+    ended_on     timestamp(0)          not null,
+    import_hash  varchar(64),
+    has_problems boolean default false not null,
+    id           serial
+        constraint import_log_pk
+            primary key,
+    success      boolean default true  not null
+);
+CREATE SEQUENCE agent_carriere_echelon_ID_SEQ ;
+create unique index import_log_id_uindex
+    on import_log (id);
+
+create table source
+(
+    id         bigint       not null
+        primary key,
+    code       varchar(64)  not null
+        unique,
+    libelle    varchar(128) not null,
+    importable boolean      not null
+);
+
+
+

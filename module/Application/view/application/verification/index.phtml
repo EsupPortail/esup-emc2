@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @see \Application\Controller\VerificationController::indexAction()
+ * @var string[] $modules
+ *
+ * @var TemplateService $templateService
+ * @var PrivilegeService $privilegeService
+ */
+
+
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
+use UnicaenRenderer\Service\Template\TemplateService;
+
+$this->headTitle("Vérification de l'installation");
+
+?>
+
+<h1 class="page-header">
+    Vérification de l'installation
+</h1>
+
+<?php foreach ($modules as $module) : ?>
+    <h2> Vérification du module <em><?php echo $module; ?></em></h2>
+
+    <h3> Templates : Mail, Pdf, Texte </h3>
+    <?php
+        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template'), ['.', '..']);
+        foreach ($filenames as $filename) {
+            $res = explode('.', $filename);
+            $path = $module ."\\Provider\\Template\\".$res[0];
+            if (!class_exists($path)) {
+                echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [".$path."] n'est pas déclarée.</strong><br>";
+            } else {
+                echo "<strong><span class='icon icon-checked text-success'></span> la classe [".$path."] est bien déclarée.</strong><br/>";
+                $oClass = new ReflectionClass ($path);
+                $templates = $oClass->getConstants ();
+                foreach ($templates as $template) {
+                    $bool = ($templateService->getTemplateByCode($template) !== null);
+                    if ($bool === true) {
+                        echo "<span class='icon icon-checked text-success'></span> le template [".$template."] est bien déclarée";
+                    } else {
+                        echo "<span class='icon icon-retirer text-danger'></span> le template [".$template."] n'est pas déclarée";
+                    }
+                    echo "<br/>";
+                }
+            }
+        }
+    ?>
+
+    <h3> Privilèges </h3>
+
+    <?php
+        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
+        foreach ($filenames as $filename) {
+            $res = explode('.', $filename);
+            $path = $module ."\\Provider\\Privilege\\".$res[0];
+            if (!class_exists($path)) {
+                echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [".$path."] n'est pas déclarée.</strong><br>";
+            } else {
+                echo "<strong><span class='icon icon-checked text-success'></span> la classe [".$path."] est bien déclarée.</strong><br/>";
+                $oClass = new ReflectionClass ($path);
+                $privileges = $oClass->getConstants();
+                 foreach ($privileges as $privilege) {
+                     $bool = ($privilegeService->findByFullCode($privilege) !== null);
+                     if ($bool === true) {
+                         echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclarée";
+                     } else {
+                         echo "<span class='icon icon-retirer text-danger'></span> le privilège [" . $privilege . "] n'est pas déclarée";
+                     }
+                     echo "<br/>";
+                 }
+            }
+        }
+    ?>
+
+
+
+<?php endforeach; ?>

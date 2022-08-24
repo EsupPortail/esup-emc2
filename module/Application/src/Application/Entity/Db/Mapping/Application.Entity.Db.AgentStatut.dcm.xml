@@ -5,9 +5,6 @@
         <id    name="id"                        column="id"                 type="string" length="40" >
         </id>
 
-        <field name="sourceName"                column="c_source"           type="string" length="40" />
-        <field name="idOrigine"                 column="id_orig"            type="string" length="256" />
-
         <many-to-one target-entity="Application\Entity\Db\Agent"  field="agent">
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
@@ -24,8 +21,6 @@
         <field name="enseignant"    type="string" length="1"            column="t_enseignant"              nullable="true"/>
         <field name="administratif" type="string" length="1"            column="t_administratif"           nullable="true"/>
         <field name="chercheur"     type="string" length="1"            column="t_chercheur"               nullable="true"/>
-        <field name="etudiant"      type="string" length="1"            column="t_etudiant"                nullable="true"/>
-        <field name="auditeurLibre" type="string" length="1"            column="t_auditeur_libre"          nullable="true"/>
         <field name="doctorant"     type="string" length="1"            column="t_doctorant"               nullable="true"/>
         <field name="detacheIn"     type="string" length="1"            column="t_detache_in"              nullable="true"/>
         <field name="detacheOut"    type="string" length="1"            column="t_detache_out"             nullable="true"/>

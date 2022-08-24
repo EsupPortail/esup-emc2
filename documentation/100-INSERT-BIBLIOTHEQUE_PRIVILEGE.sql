@@ -313,6 +313,56 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
 
+-- synchro ----------------------------------------------------------------------------------------------------
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('unicaen-db-import-import', 'DB Import - Import', 'UnicaenDbImport\Privilege', 99994);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'lister', 'Lister les logs', 1 UNION
+    SELECT 'consulter', 'Consulter un log', 2 UNION
+    SELECT 'lancer', 'Lancer un import', 3
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-import';
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('unicaen-db-import-log', 'DB Import - Log', 'UnicaenDbImport\Privilege', 99995);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'lister', 'Lister les logs', 1 UNION
+    SELECT 'consulter', 'Consulter un log', 2
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-log';
+
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('unicaen-db-import-observation', 'DB Import - Observation', 'UnicaenDbImport\Privilege', 99996);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'lister', 'Lister les observations', 1 UNION
+    SELECT 'consulter-resultat', 'Consulter les résultats', 2
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-observation';
+
+INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('unicaen-db-import-synchro', 'DB Import - Synchro', 'UnicaenDbImport\Privilege', 99997);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'lister', 'Lister les synchro', 1 UNION
+    SELECT 'consulter', 'Consulter une synchro', 2 UNION
+    SELECT 'lancer', 'Lancer un synchro', 3
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-synchro';
+
 -- ATTRIBUTION A L'ADMIN TECH ---------------------------------------------------------------------------------
 
 TRUNCATE TABLE unicaen_privilege_privilege_role_linker;
