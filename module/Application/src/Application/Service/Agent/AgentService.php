@@ -160,8 +160,7 @@ class AgentService {
         $agent = $this->getAgentByUser($utilisateur);
         return $agent;
     }
-
-    /**
+        /**
      * @param User|null $user
      * @return Agent|null
      */
@@ -169,6 +168,7 @@ class AgentService {
     {
         if ($user === null) return null;
 
+        //en utilisant l'id
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
@@ -177,6 +177,18 @@ class AgentService {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Agent liés au même User [".$user->getId()."]", $e);
+        }
+        if ($result !== null) return $result;
+
+        //en utilisant l'username si echec
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->andWhere('agent.login = :username')
+            ->setParameter('username', $user->getUsername());
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Agent liés au même Username [".$user->getUsername()."]", $e);
         }
         return $result;
     }
@@ -433,8 +445,7 @@ class AgentService {
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
             ->andWhere('sr.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sr.deleted_on IS NULL or sr.imported = :false')
-            ->setParameter('false', false)
+            ->andWhere('sr.deleted_on IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -452,8 +463,7 @@ class AgentService {
         $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('sg')
             ->andWhere('sg.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sg.deleted_on IS NULL or sg.imported = :false')
-            ->setParameter('false', false)
+            ->andWhere('sg.deleted_on IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

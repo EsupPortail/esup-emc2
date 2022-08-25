@@ -26,71 +26,56 @@ $this->headTitle("Liste des actions de formations proposées");
 
 <br/>
 
-<div class="main">
-    <div role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="#instances" aria-controls="instances">
+            Actions de formation
+            <span class="badge"> <?php echo count($instances); ?> </span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
+            Mes inscriptions
+            <span class="badge"> <?php echo count($inscriptions); ?> </span>
+        </a>
+    </li>
+    <li class="nav-item" >
+        <a class="nav-link" href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
+            Mes formations suivies
+            <span class="badge">
+            <?php echo count($formations); ?>
+        </span>
+        </a>
+    </li>
+    <li class="nav-item pull-right" style="margin-left: 10rem;">
+        <a class="nav-link" href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz" >
+            Mon parcours d'entrée
+        </a>
+    </li>
+</ul>
 
-            <li>
-                <a href="#instances" aria-controls="instances" role="tab" data-toggle="tabz">
-                    Actions de formation
-                    <span class="badge">
-                    <?php echo count($instances); ?>
-                </span>
-                </a>
-            </li>
-            <li>
-                <a href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
-                    Mes inscriptions
-                    <span class="badge">
-                    <?php echo count($inscriptions); ?>
-                </span>
-                </a>
-            </li>
-            <li>
-                <a href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
-                    Mes formations suivies
-                    <span class="badge">
-                    <?php echo count($formations); ?>
-                </span>
-                </a>
-            </li>
-            <li class="pull-right">
-                <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz" >
-                    Mon parcours d'entrée
-<!--                <span class="badge">-->
-                        <?php //echo count($inscriptions); ?>
-<!--                </span>-->
-                </a>
-            </li>
-        </ul>
+<div class="tab-content">
+
+    <!-- Mission------------------------------------------------------------------------------------------->
+    <div id="instances" class="tab-pane">
+        <?php echo $this->partial('partial/instances', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
     </div>
-</div>
 
-<div class="main-with-tab">
-
-    <div class="tab-content">
-
-        <!-- Mission------------------------------------------------------------------------------------------->
-        <div id="instances" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/instances', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
-        </div>
-
-        <!-- Type---------------------------------------------------------------------------------------------->
-        <div id="inscriptions" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/inscriptions', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
-        </div>
-
-        <!-- Type---------------------------------------------------------------------------------------------->
-        <div id="formations" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/formations', ['formations' => $formations, 'agent' => $agent]); ?>
-        </div>
-
-        <!-- Type---------------------------------------------------------------------------------------------->
-        <div id="parcours" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/parcours-entree', ['description' => $texteParcours, 'agent' => $agent]); ?>
-        </div>
-
+    <!-- Type---------------------------------------------------------------------------------------------->
+    <div id="inscriptions" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/inscriptions', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
     </div>
+
+    <!-- Type---------------------------------------------------------------------------------------------->
+    <div id="formations" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/formations', ['formations' => $formations, 'agent' => $agent]); ?>
+    </div>
+
+    <!-- Type---------------------------------------------------------------------------------------------->
+    <div id="parcours" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/parcours-entree', ['description' => $texteParcours, 'agent' => $agent]); ?>
+    </div>
+
 </div>
 
 <script>
@@ -119,9 +104,16 @@ $this->headTitle("Liste des actions de formations proposées");
 
         $('a[aria-controls=' + name + ']').tab('show');
 
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
             $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
         });
     });
 </script>

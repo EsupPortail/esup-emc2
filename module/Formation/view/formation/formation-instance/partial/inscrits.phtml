@@ -1,0 +1,269 @@
+<?php
+
+/**
+ * @var FormationInstance $instance
+ */
+
+use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
+
+
+$principales = $instance->getListePrincipale();
+$complementaires = $instance->getListeComplementaire();
+$historises = $instance->getListeHistorisee();
+
+$canInscritModifier     = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
+$canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
+$canFraisModifier       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
+
+?>
+
+<div class="row">
+    <div class="col-md-9">
+        <h2> Inscription·s </h2>
+    </div>
+
+    <div class="col-md-3">
+        <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
+            <a      <?php /**  @see FormationInstanceInscritController::ajouterAgentAction() */ ?>
+                href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
+                class="btn btn-primary action ajax-modal" data-event="modification">
+                <span class="icon icon-ajouter"></span>
+                Ajouter un agent
+            </a>
+        <?php endif; ?>
+    </div>
+
+</div>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<?php
+$liste = $instance->getListeDisponible();
+$principaleComplete = $instance->isListePrincipaleComplete();
+$complementaireComplete = $instance->isListeComplementaireComplete();
+$inscriptions = $instance->getInscrits();
+?>
+
+<table id="agents" class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Dénomination </th>
+        <th> Affection principale </th>
+        <th style="width:13rem;"> Date de demande </th>
+        <th style="width:13rem;"> État </th>
+        <th style="width:15rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($inscriptions as $inscrit) : ?>
+        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+            <td>
+                <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                <?php if ($inscrit->getComplement() !== null) : ?>
+                    <span class="icon icon-information" title="<?php echo $inscrit->getComplement(); ?>"></span>
+                <?php endif; ?>
+            </td>
+            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
+            <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
+            <td>
+                <?php if ($canInscritModifier AND $inscrit->getEtat() !== null AND $inscrit->getEtat()->getCode() === InscriptionEtats::ETAT_VALIDER_RESPONSABLE) : ?>
+                    <a      <?php /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
+                        href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"><span class="icon icon-ok"> Gérer la demande</a>
+                <?php endif; ?>
+                <?php if ($inscrit->getEtat()->getCode() === InscriptionEtats::ETAT_DEMANDE) : ?>
+                    <em>  Inscription non validée </em>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table><br/>
+
+<h4>
+    Liste principale
+    (<?php echo count($principales); ?>/<?php echo $instance->getNbPlacePrincipale(); ?>)
+    <?php if ($instance->isListePrincipaleComplete()) : ?>
+        <span class="label label-success"> Complète</span>
+    <?php endif; ?>
+</h4>
+
+<table id="agents" class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Dénomination </th>
+        <th style="width:26rem;"> Affection principale </th>
+        <th style="width:15rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($principales as $inscrit) : ?>
+        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td>
+                <?php if ($canInscritModifier) : ?>
+                    <?php /** @see AgentController::afficherAction() */?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
+                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
+                    >
+                        <span class="icon icon-user"></span></a>
+                    <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
+                        <span class="icon icon-pdf"></span><span class="lettrine">C</span></a>
+                    <?php /** @see FormationInstanceDocumentController::genererAttestationAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation">
+                        <span class="icon icon-pdf"></span><span class="lettrine">A</span></a>
+                    <?php if ($canFraisAfficher) : ?>
+                        <?php if ($canFraisModifier) : ?>
+                            <?php /** @see FormationInstanceFraisController::renseignerFraisAction() */?>
+                            <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification"
+                            >
+                        <?php endif; ?>
+                        <span class="icon icon-euro" data-bs-toggle="tooltip" data-bs-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"></span>
+                        <?php if ($canFraisModifier) : ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php /** @see FormationInstanceController::renseignerQuestionnaireAction() */?>
+                    <a href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                       data-bs-toggle="tooltip" data-bs-html="true" title="Saissir du formulaire de retour de formation pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
+                    >
+                        <span class="icon icon-listing"></span><span class="lettrine">?</span></a>
+                    <?php if (! $complementaireComplete) : ?>
+                        <?php /** @see FormationInstanceInscritController::envoyerListeComplementaireAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste complémentaire."
+                        >
+                            <span class="icon icon-descendre"></span></a>
+                    <?php endif; ?>
+                    <?php if ($inscrit->estNonHistorise()) : ?>
+                        <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation"
+                        >
+                            <span class="icon icon-historiser"></span></a>
+                    <?php endif; ?>
+                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                    >
+                        <span class="icon icon-retirer"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table><br/>
+
+<h4>
+    Liste complémentaire
+    (<?php echo count($complementaires); ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>)
+    <?php if ($instance->isListeComplementaireComplete()) : ?>
+        <span class="label label-success"> Complète</span>
+    <?php endif; ?>
+</h4>
+<table id="agents" class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th > Dénomination </th>
+        <th style="width:26rem;"> Affection principale </th>
+        <th style="width:13rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($complementaires as $inscrit) : ?>
+        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td>
+                <?php if ($canInscritModifier) : ?>
+                    <?php /** @see AgentController::afficherAction() */?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
+                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
+                    >
+                        <span class="icon icon-user"></span></a>
+                    <span class="icon icon-pdf"></span>
+                    <?php if ($inscrit->estNonHistorise()) : ?>
+                        <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation">
+                            <span class="icon icon-historiser"></span></a>
+                    <?php endif; ?>
+                    <?php if (! $principaleComplete) : ?>
+                        <?php /** @see FormationInstanceInscritController::envoyerListePrincipaleAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/envoyer-liste-principale', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste principale."
+                        >
+                            <span class="icon icon-monter"></span></a>
+                    <?php endif; ?>
+                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                    >
+                        <span class="icon icon-retirer"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table><br/>
+
+<h4>
+    Agents historisés
+    (<?php echo count($historises); ?>)
+</h4>
+
+<table id="agents" class="datatable table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th style="width:50rem;"> Dénomination </th>
+        <th> Affection principale </th>
+        <th style="width:13rem;"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($historises as $inscrit) : ?>
+        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+            <td>
+                <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                <?php if ($inscrit->getComplement() !== null) : ?>
+                    <span class="icon icon-information" title="<?php echo $inscrit->getComplement(); ?>"></span>
+                <?php endif; ?>
+            </td>
+            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td>
+                <?php if ($canInscritModifier) : ?>
+                    <?php /** @see AgentController::afficherAction() */?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
+                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
+                    >
+                        <span class="icon icon-user"></span></a>
+                    <span class="icon icon-pdf"></span>
+                    <?php if ($liste !== null) : ?>
+                        <?php /** @see FormationInstanceInscritController::restaurerAgentAction() */?>
+                        <a  href="<?php echo $this->url('formation-instance/restaurer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> dans la formation."
+                        >
+                            <span class="icon icon-restaurer"></span></a>
+                    <?php endif; ?>
+                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                    >
+                        <span class="icon icon-retirer"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

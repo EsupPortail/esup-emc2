@@ -2,6 +2,7 @@
 
 namespace Formation\Service\Notification;
 
+use Application\Service\Agent\AgentService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
@@ -24,6 +25,7 @@ class NotificationServiceFactory {
     public function __invoke(ContainerInterface $container) : NotificationService
     {
         /**
+         * @var AgentService $agentService
          * @var FormationInstanceService $formationInstanceService
          * @var MailService $mailService
          * @var ParametreService $parametreService
@@ -32,6 +34,7 @@ class NotificationServiceFactory {
          * @var UrlService $urlService
          * @var UserService $userService
          */
+        $agentService = $container->get(AgentService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -41,6 +44,7 @@ class NotificationServiceFactory {
         $userService = $container->get(UserService::class);
 
         $service = new NotificationService();
+        $service->setAgentService($agentService);
         $service->setFormationInstanceService($formationInstanceService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);

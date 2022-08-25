@@ -36,7 +36,6 @@ class CorrespondanceService {
      */
     public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true) {
         $qb = $this->createQueryBuilder()
-            ->andWhere('correspondance.histo IS NULL')
             ->orderBy('correspondance.' . $champ, $ordre)
         ;
 

@@ -52,7 +52,6 @@ class CorpsService {
     public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo IS NULL')
             ->orderBy('corps.' . $champ, $ordre)
         ;
 

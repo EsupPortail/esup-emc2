@@ -6,9 +6,14 @@
  *
  * @var TemplateService $templateService
  * @var PrivilegeService $privilegeService
+ * @var EtatTypeService $etatTypeService
+ * @var EtatService $etatService
+ *
  */
 
 
+use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
 
@@ -20,11 +25,31 @@ $this->headTitle("Vérification de l'installation");
     Vérification de l'installation
 </h1>
 
+
+<ul class="nav">
+    <?php foreach ($modules as $module) : ?>
+    <li class="nav-item">
+        <a class="nav-link" href="#<?php echo $module;?>" aria-controls="<?php echo $module;?>">
+            <?php echo $module;?>
+        </a>
+    </li>
+    <?php endforeach; ?>
+</ul>
+
+<div class="tab-content">
+
+
+
 <?php foreach ($modules as $module) : ?>
+    <div id="<?php echo $module;?>" class="tab-pane" >
     <h2> Vérification du module <em><?php echo $module; ?></em></h2>
 
-    <h3> Templates : Mail, Pdf, Texte </h3>
-    <?php
+    <div class="card bg-default">
+        <div class="card-header">
+            Templates : Mail, Pdf, Texte
+        </div>
+        <div class="card-body">
+            <?php
         $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
@@ -47,10 +72,63 @@ $this->headTitle("Vérification de l'installation");
             }
         }
     ?>
+        </div>
+    </div>
 
-    <h3> Privilèges </h3>
+    <div class="card bg-default">
+        <div class="card-header">
+            États et types d'état
+        </div>
+        <div class="card-body">
+            <?php
+            $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Etat'), ['.', '..']);
 
-    <?php
+            foreach ($filenames as $filename) {
+                $res = explode('.', $filename);
+                $path = $module . "\\Provider\\Etat\\" . $res[0];
+                if (!class_exists($path)) {
+                    echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [" . $path . "] n'est pas déclarée.</strong><br>";
+                } else {
+                    echo "<strong><span class='icon icon-checked text-success'></span> la classe [" . $path . "] est bien déclarée.</strong><br/>";
+
+                    $oClass = new ReflectionClass ($path);
+                    $constants = $oClass->getConstants ();
+
+                    $typeName = null;
+                    $type = null;
+                    if (isset( $constants['TYPE'])) {
+                        $typeName = $constants['TYPE'];
+                        $type = $etatTypeService->getEtatTypeByCode($typeName);
+                    }
+                    if ($type !== null) {
+                        echo "<span class='icon icon-checked text-success'></span> Type d'état [".$typeName."] bien déclarée <br>";
+                    } else {
+                        echo "<span class='icon icon-retirer text-danger'></span> Type d'état [".$typeName."] n'est pas déclarée <br>";
+                    }
+
+                    foreach ($constants as $name => $value) {
+                        if ($name !== 'TYPE') {
+                            $etat = $etatService->getEtatByCode($value);
+                            if ($etat !== null) {
+                                echo "<span class='icon icon-checked text-success'></span> L'état [".$value."] bien déclarée <br>";
+                            } else {
+                                echo "<span class='icon icon-retirer text-danger'></span> L'état [".$value."] n'est pas déclarée <br>";
+                            }
+                        }
+                    }
+
+                }
+            }
+        ?>
+        </div>
+    </div>
+
+    <div class="card bg-default">
+        <div class="card-header">
+            Privilèges
+        </div>
+        <div class="card-body">
+        <?php
         $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
@@ -74,6 +152,30 @@ $this->headTitle("Vérification de l'installation");
         }
     ?>
 
-
-
+        </div>
+    </div>
+    </div>
 <?php endforeach; ?>
+</div>
+
+<script>
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formulaire";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

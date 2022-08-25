@@ -4,21 +4,22 @@ namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenMail\Service\Mail\MailServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -55,7 +56,7 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($form->isValid()) {
                 if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
-                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
+                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
                     $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
@@ -148,7 +149,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
     public function listeFormationsInstancesAction() : ViewModel
     {
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
@@ -174,7 +175,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit = new FormationInstanceInscrit();
         $inscrit->setInstance($instance);
         $inscrit->setAgent($agent);
-        $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION));
+        $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_DEMANDE));
         $this->getFormationInstanceInscritService()->create($inscrit);
         $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
 
@@ -233,12 +234,12 @@ class FormationInstanceInscritController extends AbstractActionController
             $data = $request->getPost();
 
             if ($data["reponse"] === "oui") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE));
+                $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_RESPONSABLE));
 
                 $this->getNotificationService()->triggerResponsableValidation($inscrit);
             }
             if ($data["reponse"] === "non") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_REFUS_INSCRIPTION));
+                $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_REFUSER));
                 $inscrit->setComplement($data["complement"]);
                 $this->getFormationInstanceInscritService()->update($inscrit);
 
@@ -272,7 +273,7 @@ class FormationInstanceInscritController extends AbstractActionController
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
+                $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
 
                 $this->getNotificationService()->triggerDrhValidation($inscrit);
 
@@ -280,7 +281,7 @@ class FormationInstanceInscritController extends AbstractActionController
                 if ($inscrit->getListe() === null AND !$instance->isListeComplementaireComplete()) { $inscrit->setListe('complementaire'); }
             }
             if ($data["reponse"] === "non") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_REFUS_INSCRIPTION));
+                $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_REFUSER));
                 $inscrit->setComplement($data["complement"]);
                 $this->getFormationInstanceInscritService()->update($inscrit);
 

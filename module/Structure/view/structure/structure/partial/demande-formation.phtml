@@ -2,6 +2,7 @@
 
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Provider\Etat\InscriptionEtats;
 
 /**
  * @var FormationInstanceInscrit[] $inscriptions
@@ -57,7 +58,7 @@ foreach ($inscriptions as $inscription) {
             return (
                     $inscription->estNonHistorise() AND
                     $inscription->getEtat() !== null AND
-                    $inscription->getEtat()->getCode() === FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION
+                    $inscription->getEtat()->getCode() === InscriptionEtats::ETAT_DEMANDE
                 );
         }
     );

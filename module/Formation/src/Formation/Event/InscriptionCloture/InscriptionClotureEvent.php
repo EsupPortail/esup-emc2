@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\EvenementProvider;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -49,7 +50,7 @@ class InscriptionClotureEvent extends  EvenementService
 
         try {
             $closes = [];
-            $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
+            $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
             $deadline = (new DateTime())->sub(new DateInterval(self::DEADLINE));
             foreach ($sessions as $session) {
                 $dateDebut = ($session->getDebut() !== null)?DateTime::createFromFormat('d/m/Y', $session->getDebut()):null;

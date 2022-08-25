@@ -2,22 +2,21 @@
 
 namespace UnicaenEtat\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use Interop\Container\ContainerInterface;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatService;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\View\Helper\AbstractHelper;
-use Laminas\View\Helper\Partial;
-use Laminas\View\Resolver\TemplatePathStack;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\Etat\EtatService;
 
 class EtatBadgeViewHelperFactory extends AbstractHelper
 {
     /**
      * @param ContainerInterface $container
      * @return EtatBadgeViewHelper
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : EtatBadgeViewHelper
     {
         /**
          * @var EtatService $etatService

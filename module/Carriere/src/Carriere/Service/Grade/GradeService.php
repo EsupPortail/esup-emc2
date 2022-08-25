@@ -53,7 +53,6 @@ class GradeService {
     public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere("grade.histo IS NULL")
             ->orderBy('grade.' . $champ, $ordre)
         ;
         if ($avecAgent) {

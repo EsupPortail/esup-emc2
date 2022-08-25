@@ -9,6 +9,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
@@ -230,7 +231,7 @@ class FormationInstanceService
         $instance->setNbPlacePrincipale(0);
         $instance->setNbPlaceComplementaire(0);
         $instance->setFormation($formation);
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CREATION_EN_COURS));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
 
         $this->create($instance);
         $instance->setSource("EMC2");
@@ -248,7 +249,7 @@ class FormationInstanceService
      */
     public function ouvrirInscription(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_OUVERTE));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_INSCRIPTION_OUVERTE));
         $this->update($instance);
 
         return $instance;
@@ -260,7 +261,7 @@ class FormationInstanceService
      */
     public function fermerInscription(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_INSCRIPTION_FERMEE));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_INSCRIPTION_FERMEE));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
 
@@ -289,7 +290,7 @@ class FormationInstanceService
      */
     public function envoyerConvocation(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_FORMATION_CONVOCATION));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_FORMATION_CONVOCATION));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
 
@@ -329,7 +330,7 @@ class FormationInstanceService
      */
     public function demanderRetour(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_ATTENTE_RETOURS));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_ATTENTE_RETOURS));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
             $vars = ['instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
@@ -347,7 +348,7 @@ class FormationInstanceService
      */
     public function cloturer(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatService()->getEtatByCode(FormationInstance::ETAT_CLOTURE_INSTANCE));
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
         $this->update($instance);
         return $instance;
     }
@@ -360,7 +361,7 @@ class FormationInstanceService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.etat IS NOT NULL AND etat.code <> :cloturer')
-            ->setParameter('cloturer', FormationInstance::ETAT_CLOTURE_INSTANCE);
+            ->setParameter('cloturer', SessionEtats::ETAT_CLOTURE_INSTANCE);
 
         $result = $qb->getQuery()->getResult();
         return $result;

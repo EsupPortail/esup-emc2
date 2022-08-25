@@ -229,7 +229,7 @@ select
     st.libelle AS TYPE
 from structure s
 left join structure_type st on st.id = s.type_id
-where s.fermeture IS NULL
+where s.d_fermeture IS NULL
 EOS;
 
         $tmp = null;

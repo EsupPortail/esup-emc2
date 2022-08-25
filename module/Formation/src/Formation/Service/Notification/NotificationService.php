@@ -3,6 +3,7 @@
 namespace Formation\Service\Notification;
 
 use Application\Entity\Db\Agent;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
@@ -20,6 +21,7 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class NotificationService {
+    use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -49,8 +51,13 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
 
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_CCC')->getValeur();
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $superieurs = $this->getAgentService()->computeSuperieures($agent);
+        $emails = [];
+        /** @var Agent $superieur */
+        foreach ($superieurs as $superieur) {
+            if ($superieur->getEmail()) $emails[] = $superieur->getEmail();
+        }
+        $mail = $this->getMailService()->sendMail($emails, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -62,7 +69,7 @@ class NotificationService {
         $instance = $inscription->getInstance();
         $agent = $inscription->getAgent();
 
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_CCC')->getValeur();
+            $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
         $email .= ",";
         $email .= $agent->getEmail();
 

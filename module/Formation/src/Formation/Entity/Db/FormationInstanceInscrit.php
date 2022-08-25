@@ -21,11 +21,6 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
-    const ETAT_DEMANDE_INSCRIPTION      = 'DEMANDE_INSCRIPTION';
-    const ETAT_VALIDATION_RESPONSABLE   = 'VALIDATION_RESPONSABLE';
-    const ETAT_VALIDATION_INSCRIPTION   = 'VALIDATION_INSCRIPTION';
-    const ETAT_REFUS_INSCRIPTION        = 'REFUS_INSCRIPTION';
-
     public function getResourceId()
     {
         return 'Inscrit';

@@ -9,6 +9,7 @@
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\SessionEtats;
 
 $canInscrire = true;
 
@@ -33,7 +34,7 @@ $canInscrire = true;
                 Demande d'inscription enregristrer
             <?php endif; ?>
         </div>
-        <div class="pull-right">
+        <div class="col-md-4">
             <a
                 <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
                     href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
@@ -41,7 +42,7 @@ $canInscrire = true;
             >
                 <span class="icon icon-retirer"> J'annule mon inscription </span>
             </a>
-            <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+            <?php if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
             <br/>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>

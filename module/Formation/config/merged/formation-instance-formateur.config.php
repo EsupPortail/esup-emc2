@@ -8,7 +8,6 @@ use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFactory;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
 use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
-use Formation\Provider\Privilege\FormationinstanceformateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurService;
 use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceFactory;

@@ -8,9 +8,10 @@
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\SessionEtats;
 
-$retours = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS;} );
-$closes  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_CLOTURE_INSTANCE;} );
+$retours = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS;} );
+$closes  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === SessionEtats::ETAT_CLOTURE_INSTANCE;} );
 ?>
 
 <h2>

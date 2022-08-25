@@ -9,6 +9,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\SessionEtats;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -174,7 +175,7 @@ class FormationInstanceInscritService
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
             ->andWhere('instanceetat.code <> :code')
-            ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
 
@@ -192,8 +193,8 @@ class FormationInstanceInscritService
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
             ->andWhere('instanceetat.code = :retour OR instanceetat.code = :close')
-            ->setParameter('retour', FormationInstance::ETAT_ATTENTE_RETOURS)
-            ->setParameter('close', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->setParameter('retour', SessionEtats::ETAT_ATTENTE_RETOURS)
+            ->setParameter('close', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
 
