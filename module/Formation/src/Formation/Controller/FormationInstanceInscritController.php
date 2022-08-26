@@ -130,6 +130,8 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit->setListe(FormationInstanceInscrit::PRINCIPALE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
+        $this->getNotificationService()->triggerListePrincipale($inscrit);
+
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste principale.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);

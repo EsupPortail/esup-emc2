@@ -132,7 +132,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerDrhRefus(FormationInstanceInscrit $inscription)
+    public function triggerDrhRefus(FormationInstanceInscrit $inscription) : Mail
     {
         $instance = $inscription->getInstance();
         $agent = $inscription->getAgent();
@@ -145,6 +145,94 @@ class NotificationService {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_REFUS, $vars);
 
         $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+
+    public function triggerListePrincipale(FormationInstanceInscrit $inscrit) : Mail
+    {
+        $instance = $inscrit->getInstance();
+
+        $vars = [
+            'agent' => $inscrit->getAgent(),
+            'instance' => $instance,
+            'UrlService' => $this->getUrlService()
+        ];
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_PRINCIPALE, $vars);
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerListeComplementaire(FormationInstanceInscrit $inscrit) : Mail
+    {
+        $instance = $inscrit->getInstance();
+
+        $vars = [
+            'agent' => $inscrit->getAgent(),
+            'instance' => $instance,
+            'UrlService' => $this->getUrlService()
+        ];
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_COMPLEMENTAIRE, $vars);
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerConvocation(FormationInstanceInscrit $inscrit) : Mail
+    {
+        $instance = $inscrit->getInstance();
+
+        $vars = [
+            'instance' => $instance,
+            'agent' => $inscrit->getAgent(),
+            'UrlService' => $this->getUrlService()
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_CONVOCATION, $vars);
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerDemandeRetour(FormationInstanceInscrit $inscrit) : Mail
+    {
+        $instance = $inscrit->getInstance();
+
+        $vars = [
+            'instance' => $instance,
+            'agent' => $inscrit->getAgent(),
+            'UrlService' => $this->getUrlService()
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_DEMANDE_RETOUR, $vars);
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerLienPourEmargement(FormationInstance $instance) : Mail
+    {
+        $mails = [];
+        foreach ($instance->getFormateurs() as $formateur) {
+            $mails[] = $formateur->getEmail();
+        }
+
+        $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
+        $vars = ['instance' => $instance, 'UrlService' => $urlService];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_EMARGEMENT, $vars);
+        $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -248,4 +336,5 @@ class NotificationService {
 
         return null;
     }
+
 }

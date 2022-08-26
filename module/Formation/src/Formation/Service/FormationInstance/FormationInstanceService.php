@@ -10,23 +10,19 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Etat\SessionEtats;
-use Formation\Service\Url\UrlServiceAwareTrait;
+use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class FormationInstanceService
 {
     use EntityManagerAwareTrait;
     use EtatServiceAwareTrait;
-    use RenduServiceAwareTrait;
-    use MailServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use UrlServiceAwareTrait;
 
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -264,22 +260,10 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_INSCRIPTION_FERMEE));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-
-            $vars = ['agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_PRINCIPALE", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
-
+            $this->getNotificationService()->triggerListePrincipale($inscrit);
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
-
-            $vars = ['agent' => $inscrit->getAgent(), 'instance' => $instance, 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_LISTE_COMPLEMENTAIRE", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
-
+            $this->getNotificationService()->triggerListeComplementaire($inscrit);
         }
         return $instance;
     }
@@ -292,13 +276,9 @@ class FormationInstanceService
     {
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_FORMATION_CONVOCATION));
         $this->update($instance);
-        foreach ($instance->getListePrincipale() as $inscrit) {
-
-            $vars = ['instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_CONVOCATION", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+        foreach ($instance->getListePrincipale() as $inscrit)
+        {
+            $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
     }
@@ -310,17 +290,7 @@ class FormationInstanceService
     public function envoyerEmargement(FormationInstance $instance): FormationInstance
     {
         $this->update($instance);
-        $mails = [];
-        foreach ($instance->getFormateurs() as $formateur) {
-            $mails[] = $formateur->getEmail();
-        }
-
-        $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
-        $vars = ['instance' => $instance, 'UrlService' => $urlService];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_EMARGEMENT", $vars);
-        $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
+        $this->getNotificationService()->triggerLienPourEmargement($instance);
         return $instance;
     }
 
@@ -333,11 +303,7 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_ATTENTE_RETOURS));
         $this->update($instance);
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $vars = ['instance' => $instance, 'agent' => $inscrit->getAgent(), 'UrlService' => $this->getUrlService()];
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("FORMATION_INSTANCE_RETOUR", $vars);
-            $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
-            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-            $this->getMailService()->update($mail);
+            $this->getNotificationService()->triggerDemandeRetour($inscrit);
         }
         return $instance;
     }

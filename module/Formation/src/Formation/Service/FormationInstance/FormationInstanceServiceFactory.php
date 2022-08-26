@@ -27,18 +27,13 @@ class FormationInstanceServiceFactory
         /**
          * @var EntityManager $entityManager
          * @var EtatService $etatService
-         * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
-         * @var RenduService $renduService
-         * @var UrlService $urlService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $etatService = $container->get(EtatService::class);
-        $mailingService = $container->get(MailService::class);
+        $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
-        $renduService = $container->get(RenduService::class);
-        $urlService = $container->get(UrlService::class);
 
         /**
          * @var FormationInstanceService $service
@@ -46,10 +41,8 @@ class FormationInstanceServiceFactory
         $service = new FormationInstanceService();
         $service->setEntityManager($entityManager);
         $service->setEtatService($etatService);
-        $service->setMailService($mailingService);
+        $service->setNotificationService($notificationService);
         $service->setParametreService($parametreService);
-        $service->setRenduService($renduService);
-        $service->setUrlService($urlService);
         return $service;
     }
 }
