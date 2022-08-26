@@ -4,7 +4,7 @@ namespace Formation\Service\Evenement;
 
 use DateTime;
 use Exception;
-use Formation\Provider\EvenementProvider;
+use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;

@@ -2,14 +2,14 @@
 
 use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Provider\EvenementProvider;
-use Application\Service\Evenement\SynchroOctopusService;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
-use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
-use Formation\Provider\EvenementProvider as FormationEvenementProvider;
+use Application\Service\Evenement\SynchroOctopusService;
 use EntretienProfessionnel\Provider\EvenementProvider as EntretienProfessionnelEvenementProvider;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
+use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
+use Formation\Provider\Event\EvenementProvider as FormationEvenementProvider;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use UnicaenEvenement\Entity\Db\Type;

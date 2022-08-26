@@ -8,12 +8,14 @@
  * @var PrivilegeService $privilegeService
  * @var EtatTypeService $etatTypeService
  * @var EtatService $etatService
+ * @var TypeService $evenementTypeService
  *
  */
 
 
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
 
@@ -125,6 +127,37 @@ $this->headTitle("Vérification de l'installation");
 
     <div class="card bg-default">
         <div class="card-header">
+            Événements
+        </div>
+        <div class="card-body">
+            <?php
+        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Event'), ['.', '..']);
+        foreach ($filenames as $filename) {
+            $res = explode('.', $filename);
+            $path = $module ."\\Provider\\Event\\".$res[0];
+            if (!class_exists($path)) {
+                echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [".$path."] n'est pas déclarée.</strong><br>";
+            } else {
+                echo "<strong><span class='icon icon-checked text-success'></span> la classe [" . $path . "] est bien déclarée.</strong><br/>";
+                $oClass = new ReflectionClass ($path);
+                $constants = $oClass->getConstants();
+                foreach ($constants as $event) {
+                    $bool = ($evenementTypeService->findByCode($event) !== null);
+                    if ($bool === true) {
+                        echo "<span class='icon icon-checked text-success'></span> l'événement  [" . $event . "] est bien déclarée";
+                    } else {
+                        echo "<span class='icon icon-retirer text-danger'></span> l'événement [" . $event . "] n'est pas déclarée";
+                    }
+                    echo "<br/>";
+                }
+            }
+        }
+        ?>
+        </div>
+    </div>
+
+    <div class="card bg-default">
+        <div class="card-header">
             Privilèges
         </div>
         <div class="card-body">
@@ -162,7 +195,7 @@ $this->headTitle("Vérification de l'installation");
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "formulaire";
+        if (name === undefined || name === "") name = "<?php echo $modules[0]; ?>";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

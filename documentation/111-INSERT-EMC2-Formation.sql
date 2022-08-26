@@ -178,3 +178,12 @@ WITH e(code, libelle, icone, couleur, ordre) AS (
 SELECT et.id, e.code, e.libelle, e.icone, e.couleur, e.ordre
 FROM e
 JOIN unicaen_etat_etat_type et ON et.CODE = 'FORMATION_SESSION';
+
+-- EVENEMENT ----
+
+INSERT INTO public.unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('notification_nouvelle_session', 'notification_nouvelle_session', 'Notification hebdomadaire de nouvelle session de formation', null, 'P1W');
+INSERT INTO public.unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('notification_rappel_session_imminente', 'notification_rappel_session_imminente', 'Notification de rappel d''une session de formation', null, null);
+INSERT INTO public.unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('cloture_automatique_inscription', 'cloture_automatique_inscription', 'cloture_automatique_inscription', null, 'P1D');
