@@ -106,6 +106,16 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
 
     /** Fonctions pour les macros *************************************************************************************/
 
+    public function getDateDebutToString() : string
+    {
+        return ($this->dateDebut)?$this->dateDebut->format('d/m/Y'):"N.C.";
+    }
+
+    public function getDateFinToString() : string
+    {
+        return ($this->dateFin)?$this->dateFin->format('d/m/Y'):"N.C.";
+    }
+
     public function getDateCirculaireToString() : string
     {
         return ($this->dateCirculaire)?$this->dateCirculaire->format('d/m/Y'):"N.C.";

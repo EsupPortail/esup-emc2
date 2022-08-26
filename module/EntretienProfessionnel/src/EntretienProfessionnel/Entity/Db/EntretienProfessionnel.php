@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
@@ -24,12 +25,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
 
-    const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
-    const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
-    const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
-    const ETAT_VALIDATION_OBSERVATION       = 'ENTRETIEN_VALIDATION_OBSERVATION';
-    const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
-    const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
     const DELAI_OBSERVATION                 = 8;
 
 
@@ -185,7 +180,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      */
     public function isComplete() : bool
     {
-        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === self::ETAT_VALIDATION_AGENT);
+        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
     }
 
     /**

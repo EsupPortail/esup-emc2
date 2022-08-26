@@ -18,6 +18,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -50,10 +51,10 @@ $date = $entretien->getMaxSaisiObservation();
 $depasseObs = ($date !== null AND $date < $now);
 
 $step = 0;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE) $step = 1;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION OR $depasseObs) $step = 2;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)  $step = 3;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_AGENT)       $step = 4;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE) $step = 1;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION OR $depasseObs) $step = 2;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)  $step = 3;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)       $step = 4;
 
 ?>
 
@@ -69,8 +70,8 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
     <div class="col-md-3">
     <?php $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser; ?>
     <?php if ($isAgent AND (
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER OR
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION )) : ?>
     <?php else : ?>
         <?php if ($canExporterEP) : ?>
             <div class="pull-right">

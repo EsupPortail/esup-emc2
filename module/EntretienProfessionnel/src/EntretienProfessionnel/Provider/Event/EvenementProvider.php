@@ -1,6 +1,6 @@
 <?php
 
-namespace EntretienProfessionnel\Provider;
+namespace EntretienProfessionnel\Provider\Event;
 
 class EvenementProvider {
 

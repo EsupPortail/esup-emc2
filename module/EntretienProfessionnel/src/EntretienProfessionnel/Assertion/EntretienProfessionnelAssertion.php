@@ -7,6 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Complement\ComplementServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Structure\Entity\Db\Structure;
@@ -90,8 +91,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
                 if ($isAgent AND (
-                    $entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
-                    $entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) return false;
+                    $entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER OR
+                    $entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION )) return false;
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:
@@ -99,8 +100,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                         return true;
                     case RoleConstant::PERSONNEL:
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::GESTIONNAIRE:
                         return $predicats['isGestionnaireStructure'];
@@ -123,8 +124,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR:
                         return true;
                     case RoleConstant::PERSONNEL:
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
+                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::GESTIONNAIRE:
                         return $predicats['isGestionnaireStructure'];
@@ -222,8 +223,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case RoleConstant::OBSERVATEUR :
                         return true;
                     case Agent::ROLE_AGENT :
-                        if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION) return false;
-                        if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) return false;
+                        if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
+                        if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
