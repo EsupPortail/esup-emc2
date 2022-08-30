@@ -5,6 +5,7 @@ namespace Application\Assertion;
 use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -66,7 +67,7 @@ class FichePosteAssertion extends AbstractAssertion {
                         return $isAutorite;
                     case RoleConstant::PERSONNEL:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
-                        return $isAgent AND ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE);
+                        return $isAgent AND ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE);
                     default:
                         return false;
                 }
@@ -74,7 +75,7 @@ class FichePosteAssertion extends AbstractAssertion {
             case FichePostePrivileges::FICHEPOSTE_MODIFIER :
             case FichePostePrivileges::FICHEPOSTE_HISTORISER :
                 // REMARQUE on ne peut plus agir sur une fiche signée et plus active
-                if ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) return false;
+                if ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return false;
                 switch ($role->getRoleId()) {
                     case RoleConstant::ADMIN_FONC:
                     case RoleConstant::ADMIN_TECH:

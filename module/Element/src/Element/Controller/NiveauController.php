@@ -36,7 +36,7 @@ class NiveauController extends AbstractActionController
     {
         $maitrise = new Niveau();
         $form = $this->getNiveauForm();
-        $form->setAttribute('action', $this->url()->fromRoute('element-niveau/ajouter', [], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('element/niveau/ajouter', [], [], true));
         $form->bind($maitrise);
 
         $request = $this->getRequest();

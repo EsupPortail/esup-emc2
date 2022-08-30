@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Entity\Db\FicheProfil;
 use Application\Form\FicheProfil\FicheProfilFormAwareTrait;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -118,7 +119,7 @@ class FicheProfilController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PROFIL_DE_RECRUTEMENT', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_RECRUTEMENT, $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

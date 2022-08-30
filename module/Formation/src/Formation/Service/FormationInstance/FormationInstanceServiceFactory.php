@@ -4,14 +4,11 @@ namespace Formation\Service\FormationInstance;
 
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Notification\NotificationService;
-use Formation\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\Etat\EtatService;
-use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FormationInstanceServiceFactory
 {

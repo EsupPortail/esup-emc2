@@ -4,7 +4,7 @@ use Application\Event\RgpdRenderer\RgpdRendererEvenement;
 use Application\Provider\EvenementProvider;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
 use Application\Service\Evenement\SynchroOctopusService;
-use EntretienProfessionnel\Provider\EvenementProvider as EntretienProfessionnelEvenementProvider;
+use EntretienProfessionnel\Provider\Event\EvenementProvider as EntretienProfessionnelEvenementProvider;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;

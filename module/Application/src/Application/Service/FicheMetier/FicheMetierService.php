@@ -2,28 +2,29 @@
 
 namespace Application\Service\FicheMetier;
 
-use Element\Entity\Db\ApplicationElement;
-use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Form\EntityFormManagmentTrait;
-use Element\Service\Application\ApplicationServiceAwareTrait;
-use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
-use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Application\Provider\Etat\FicheMetierEtats;
 use Carriere\Service\Niveau\NiveauService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Service\Application\ApplicationServiceAwareTrait;
+use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
+use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractController;
 
 class FicheMetierService {
     use ApplicationServiceAwareTrait;
@@ -206,7 +207,7 @@ class FicheMetierService {
             ->setParameter('niveau', $niveau)
             ->andWhere('ficheMetier.histoDestruction IS NULL')
             ->andWhere('etat.code = :ok')
-            ->setParameter('ok', FicheMetier::ETAT_VALIDE)
+            ->setParameter('ok', FicheMetierEtats::ETAT_VALIDE)
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -221,7 +222,7 @@ class FicheMetierService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.code = :ucode')
-            ->setParameter('ucode', FicheMetier::ETAT_VALIDE)
+            ->setParameter('ucode', FicheMetierEtats::ETAT_VALIDE)
             ->orderBy('ficheMetier.', $order)
         ;
 
@@ -503,7 +504,7 @@ class FicheMetierService {
         }
 
         //etat
-        $duplicata->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
+        $duplicata->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->update($duplicata);
 
         return $duplicata;

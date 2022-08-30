@@ -470,6 +470,8 @@ a.btn
 .btn-warning                            { background: var(--warning-background); }
 .btn-warning:hover, .btn-warning:focus  { background: var(--warning-background-hover); }
 
+.btn.disabled:hover { pointer-events: all; cursor: not-allowed; }
+.btn-primary.disabled { background: var(--footer-border-color); }
 /** ALERT / PANEL *************************************************************************************************************/
 
 div.alert {

@@ -9,6 +9,7 @@
  * @var EtatTypeService $etatTypeService
  * @var EtatService $etatService
  * @var TypeService $evenementTypeService
+ * @var ValidationTypeService $validationTypeService
  *
  */
 
@@ -18,6 +19,7 @@ use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 $this->headTitle("Vérification de l'installation");
 
@@ -43,14 +45,19 @@ $this->headTitle("Vérification de l'installation");
 
 
 <?php foreach ($modules as $module) : ?>
+
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template')); ?>
     <div id="<?php echo $module;?>" class="tab-pane" >
     <h2> Vérification du module <em><?php echo $module; ?></em></h2>
 
-    <div class="card bg-default">
+    <div class="card bg-default ">
         <div class="card-header">
             Templates : Mail, Pdf, Texte
         </div>
         <div class="card-body">
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Template</code> !</span>
+            <?php else : ?>
             <?php
         $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template'), ['.', '..']);
         foreach ($filenames as $filename) {
@@ -74,14 +81,19 @@ $this->headTitle("Vérification de l'installation");
             }
         }
     ?>
+            <?php endif; ?>
         </div>
     </div>
 
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Etat')); ?>
     <div class="card bg-default">
         <div class="card-header">
             États et types d'état
         </div>
         <div class="card-body">
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Etat</code> !</span>
+            <?php else : ?>
             <?php
             $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Etat'), ['.', '..']);
 
@@ -122,14 +134,57 @@ $this->headTitle("Vérification de l'installation");
                 }
             }
         ?>
+            <?php endif; ?>
         </div>
     </div>
 
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Validation')); ?>
+    <div class="card bg-default">
+        <div class="card-header">
+            Type de validation
+        </div>
+        <div class="card-body">
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Validation</code> !</span>
+            <?php else : ?>
+                <?php
+                $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Validation'), ['.', '..']);
+
+                foreach ($filenames as $filename) {
+                    $res = explode('.', $filename);
+                    $path = $module . "\\Provider\\Validation\\" . $res[0];
+                    if (!class_exists($path)) {
+                        echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [" . $path . "] n'est pas déclarée.</strong><br>";
+                    } else {
+                        echo "<strong><span class='icon icon-checked text-success'></span> la classe [" . $path . "] est bien déclarée.</strong><br/>";
+
+                        $oClass = new ReflectionClass ($path);
+                        $constants = $oClass->getConstants ();
+
+                        foreach ($constants as $value) {
+                            $etat = $validationTypeService->getValidationTypeByCode($value);
+                            if ($etat !== null) {
+                                echo "<span class='icon icon-checked text-success'></span> Le type de validation [".$value."] bien déclarée <br>";
+                            } else {
+                                echo "<span class='icon icon-retirer text-danger'></span> Le type de validation [".$value."] n'est pas déclarée <br>";
+                            }
+                        }
+                    }
+                }
+                ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Event')); ?>
     <div class="card bg-default">
         <div class="card-header">
             Événements
         </div>
         <div class="card-body">
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Event</code> !</span>
+            <?php else : ?>
             <?php
         $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Event'), ['.', '..']);
         foreach ($filenames as $filename) {
@@ -153,15 +208,20 @@ $this->headTitle("Vérification de l'installation");
             }
         }
         ?>
+            <?php endif; ?>
         </div>
     </div>
 
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege')); ?>
     <div class="card bg-default">
         <div class="card-header">
             Privilèges
         </div>
         <div class="card-body">
-        <?php
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Privilege</code> !</span>
+            <?php else : ?>
+            <?php
         $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
@@ -184,6 +244,7 @@ $this->headTitle("Vérification de l'installation");
             }
         }
     ?>
+            <?php endif; ?>
 
         </div>
     </div>

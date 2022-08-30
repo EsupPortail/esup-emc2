@@ -5,12 +5,12 @@ namespace Formation\Service\Notification;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Roles;
 use Formation\Provider\Template\MailTemplates;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -22,7 +22,6 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class NotificationService {
     use AgentServiceAwareTrait;
-    use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -263,13 +262,11 @@ class NotificationService {
     }
 
     /**
+     * @param FormationInstance[] $instances
      * @return Mail|null
      */
-    public function triggerNotificationFormationsOuvertes() : ?Mail
+    public function triggerNotificationFormationsOuvertes(array $instances) : ?Mail
     {
-        /** @var FormationInstance[] $instances */
-        $instances = $this->getFormationInstanceService()->getNouvelleInstance();
-
         if (! empty($instances)) {
             $texte = "<ul>";
             foreach ($instances as $instance) {
@@ -337,4 +334,106 @@ class NotificationService {
         return null;
     }
 
+    // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////
+
+    public function triggerValidationAgent(DemandeExterne $demande) : ?Mail
+    {
+        $agent = $demande->getAgent();
+        $responsables = $this->getAgentService()->computeSuperieures($agent);
+
+        $email = array_map(
+            function (Agent $a) { return $a->getEmail();},
+            $responsables
+        );
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_AGENT, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
+    public function triggerValidationResponsableAgent(DemandeExterne $demande) : ?Mail
+    {
+        $agent = $demande->getAgent();
+        $email = [ $agent->getEmail() ];
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_AGENT, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
+    public function triggerValidationResponsableDrh(DemandeExterne $demande) : ?Mail
+    {
+        $email = $this->getMailsResponsablesFormations();
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_DRH, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
+    public function triggerValidationDrh(DemandeExterne $demande) : ?Mail
+    {
+        $agent = $demande->getAgent();
+        $responsables = $this->getAgentService()->computeSuperieures($agent);
+
+        $email = array_map(
+            function (Agent $a) { return $a->getEmail();},
+            $responsables
+        );
+        $email[] = $agent->getEmail();
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_DRH, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
+    public function triggerRefus(DemandeExterne $demande) : ?Mail
+    {
+        $agent = $demande->getAgent();
+        $responsables = $this->getAgentService()->computeSuperieures($agent);
+
+        $email = array_map(
+            function (Agent $a) { return $a->getEmail();},
+            $responsables
+        );
+        $email[] = $agent->getEmail();
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_REFUS, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
 }

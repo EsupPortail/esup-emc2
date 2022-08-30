@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
+use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\Notification\NotificationService;
@@ -25,23 +26,25 @@ class FormationInstanceInscritControllerFactory
     {
         /**
          * @var AgentService $agentService
-         * @var RenduService $renduService
+         * @var DemandeExterneService $demandeExterneService
          * @var EtatService $etatService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
+         * @var RenduService $renduService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
-        $renduService = $container->get(RenduService::class);
+        $demandeExterneService = $container->get(DemandeExterneService::class);
         $etatService = $container->get(EtatService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
+        $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
 
         /**
@@ -51,13 +54,14 @@ class FormationInstanceInscritControllerFactory
 
         $controller = new FormationInstanceInscritController();
         $controller->setAgentService($agentService);
-        $controller->setRenduService($renduService);
+        $controller->setDemandeExterneService($demandeExterneService);
         $controller->setEtatService($etatService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
+        $controller->setRenduService($renduService);
         $controller->setUserService($userService);
         $controller->setSelectionAgentForm($selectionAgentForm);
         return $controller;

@@ -20,13 +20,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     use HasEtatTrait;
     use HasValidationsTrait;
 
-    const ETAT_TYPE_FICHEPOSTE  = 'FICHE_POSTE';
-    const ETAT_CODE_MASQUEE     = 'FICHE_POSTE_MASQUEE';
-    const ETAT_CODE_REDACTION   = 'FICHE_POSTE_REDACTION';
-    const ETAT_CODE_OK          = 'FICHE_POSTE_OK';
-    const ETAT_CODE_SIGNEE      = 'FICHE_POSTE_SIGNEE';
-
-
     const TYPE_DEFAULT  = 'DEFAULT';
     const TYPE_INCLUSIF = 'INCLUSIF';
     const TYPE_GENRE    = 'GENRE';

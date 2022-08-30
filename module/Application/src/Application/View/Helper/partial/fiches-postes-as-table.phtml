@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Structure\Entity\Db\Structure;
 
@@ -97,7 +98,7 @@ if ($retour)    $query['retour'] = $retour;
         }
 
         ?>
-        <?php if ($etat !== FichePoste::ETAT_CODE_MASQUEE AND $canAfficher) : ?>
+        <?php if ($etat !== FichePosteEtats::ETAT_CODE_MASQUEE AND $canAfficher) : ?>
             <tr class="
                 <?php if ($destruction !== null) echo ' historise '; ?>
                 <?php if ($isEnCours === false AND $displays['validite']) echo ' termine '; ?>
@@ -165,7 +166,7 @@ if ($retour)    $query['retour'] = $retour;
                 <?php endif; ?>
                 <?php if ($displays['en-cours'] AND $displays['validite']) : ?>
                     <td style="text-align: center;">
-                        <?php if ($etat === FichePoste::ETAT_CODE_SIGNEE) : ?>
+                        <?php if ($etat === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
                             <?php if ($isEnCours) : ?>
                                 <span class="icon icon-checked" style="color:darkgreen;" title="Fiche en cours de validité"></span>
                             <?php else : ?>

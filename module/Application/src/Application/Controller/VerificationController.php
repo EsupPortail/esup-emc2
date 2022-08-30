@@ -9,6 +9,7 @@ use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Type\TypeServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
+use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class VerificationController extends AbstractActionController {
     use PrivilegeServiceAwareTrait;
@@ -16,10 +17,11 @@ class VerificationController extends AbstractActionController {
     use EtatServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use TypeServiceAwareTrait;
+    use ValidationTypeServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $modules = ['EntretienProfessionnel', 'Formation'];
+        $modules = ['Application', 'Carriere', 'Element', 'EntretienProfessionnel', 'Formation', 'Metier', 'Structure'];
 
         return new ViewModel([
             'modules' => $modules,
@@ -28,6 +30,7 @@ class VerificationController extends AbstractActionController {
             'etatService' => $this->getEtatService(),
             'etatTypeService' => $this->getEtatTypeService(),
             'evenementTypeService' => $this->getTypeService(),
+            'validationTypeService' => $this->getValidationTypeService(),
         ]);
     }
 }

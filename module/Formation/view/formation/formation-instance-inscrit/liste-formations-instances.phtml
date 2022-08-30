@@ -3,6 +3,7 @@
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::listeFormationsInstancesAction()
  * @var FormationInstance[] $instances
+ * @var DemandeExterne[] $demandes
  * @var FormationInstance[] $formations
  * @var FormationInstanceInscrit[] $inscriptions
  * @var Agent $agent
@@ -10,6 +11,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 
@@ -31,6 +33,12 @@ $this->headTitle("Liste des actions de formations proposées");
         <a class="nav-link" href="#instances" aria-controls="instances">
             Actions de formation
             <span class="badge"> <?php echo count($instances); ?> </span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#demandes" aria-controls="demandes">
+            Demandes de formation externe
+            <span class="badge"> <?php echo count($demandes); ?> </span>
         </a>
     </li>
     <li class="nav-item">
@@ -60,6 +68,12 @@ $this->headTitle("Liste des actions de formations proposées");
     <div id="instances" class="tab-pane">
         <?php echo $this->partial('partial/instances', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
     </div>
+
+    <!-- Mission------------------------------------------------------------------------------------------->
+    <div id="demandes" class="tab-pane">
+        <?php echo $this->partial('partial/demandes-externes', ['demandes' => $demandes, 'agent' => $agent]); ?>
+    </div>
+
 
     <!-- Type---------------------------------------------------------------------------------------------->
     <div id="inscriptions" class="tab-pane " role="tabpanel">

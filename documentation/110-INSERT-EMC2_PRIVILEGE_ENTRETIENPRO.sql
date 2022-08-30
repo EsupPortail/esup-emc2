@@ -54,8 +54,22 @@ WITH d(code, lib, ordre) AS (
     SELECT 'entretienpro_detruire', 'Supprimer un entretien professionnel', 50 UNION
     SELECT 'entretienpro_valider_agent', 'Valider en tant qu''Agent', 900 UNION
     SELECT 'entretienpro_valider_responsable', 'Valider en tant que Responsable', 910 UNION
-    SELECT 'entretienpro_valider_drh', 'Valider en tant que DRH', 920
+    SELECT 'entretienpro_valider_drh', 'Valider en tant que DRH', 920 UNION
+    SELECT 'entretienpro_valider_observation', 'Valider les observation', 930
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'entretienpro';
+
+-- TEMPLATE - MAIL ---
+
+
+
+-- EVENT ---
+
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('rappel_campagne','rappel_campagne','rappel_campagne', 'campagne', 'P4W');
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('rappel_entretienpro','rappel_entretienpro','rappel_entretienpro', 'entretien', null);
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion)
+VALUES ('rappel_pas_observation_entretienpro','rappel_pas_observation_entretienpro','rappel_pas_observation_entretienpro', 'entretien', null);

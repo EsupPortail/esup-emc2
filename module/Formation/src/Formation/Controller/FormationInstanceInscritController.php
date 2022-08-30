@@ -4,9 +4,11 @@ namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -26,13 +28,14 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class FormationInstanceInscritController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use RenduServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use SelectionAgentFormAwareTrait;
@@ -144,6 +147,9 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
+        $this->getNotificationService()->triggerListeComplementaire($inscrit);
+
+
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
@@ -159,6 +165,9 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
+
         $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
         return new ViewModel([
             'instances' => $instances,
@@ -166,6 +175,7 @@ class FormationInstanceInscritController extends AbstractActionController
             'formations' => $formations,
             'agent' => $agent,
             'texteParcours' => $rendu->getCorps(),
+            'demandes' => $demandes,
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
+use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Metier\Entity\Db\Reference;
@@ -174,7 +175,7 @@ class AjouterFicheMetierForm extends Form {
         $fiches = array_filter($fiches, function (FicheMetier $a) use ($agent) {
             return (
                 $a->estNonHistorise() AND
-                $a->getEtat()->getCode() === FicheMetier::ETAT_VALIDE AND
+                $a->getEtat()->getCode() === FicheMetierEtats::ETAT_VALIDE AND
                 ($a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
         });
 

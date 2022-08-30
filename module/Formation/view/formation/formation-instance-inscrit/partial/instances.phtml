@@ -11,12 +11,18 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 
 $canInscrire = true;
+
+
 ?>
 
-<h2>
-    Actions de formations
-    <span class="badge"><?php echo count($instances); ?></span>
-</h2>
+<div class="row">
+    <div class="col-md-9">
+        <h2>
+            Actions de formations
+            <span class="badge"><?php echo count($instances); ?></span>
+        </h2>
+    </div>
+</div>
 
 <?php foreach ($instances as $instance) : ?>
     <?php

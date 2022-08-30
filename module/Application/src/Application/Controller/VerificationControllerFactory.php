@@ -11,6 +11,7 @@ use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 class VerificationControllerFactory {
 
@@ -28,12 +29,14 @@ class VerificationControllerFactory {
          * @var EtatService $etatService
          * @var EtatTypeService $etatTypeService
          * @var TypeService $evenementTypeService
+         * @var ValidationTypeService $validationTypeService
          */
         $privilegeService = $container->get(PrivilegeService::class);
         $templateService = $container->get(TemplateService::class);
         $etatService = $container->get(EtatService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $evenementTypeService = $container->get(TypeService::class);
+        $validationTypeService = $container->get(ValidationTypeService::class);
 
         $controller = new VerificationController();
         $controller->setPrivilegeService($privilegeService);
@@ -41,6 +44,7 @@ class VerificationControllerFactory {
         $controller->setEtatService($etatService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setTypeService($evenementTypeService);
+        $controller->setValidationTypeService($validationTypeService);
         return $controller;
     }
 }

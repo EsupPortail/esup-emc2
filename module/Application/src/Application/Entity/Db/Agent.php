@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\Niveau;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
@@ -735,10 +736,10 @@ class Agent implements
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
             if ($fiche->isEnCours() AND $fiche->estNonHistorise()) {
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE)) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_OK))) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
             }
         }
         return $best;

@@ -25,6 +25,7 @@ $refusable = ($refus === null OR $refus === true)
             <td>
                 <form method="post" action="<?php echo $action; ?>">
                     <input type="hidden" name="reponse" value="non">
+                    <textarea id="justification" name="justification"></textarea>
                     <input type="submit" name="non" class="btn btn-danger action"  value="Refuser">
                 </form>
             </td>

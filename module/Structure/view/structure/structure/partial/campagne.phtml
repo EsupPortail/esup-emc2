@@ -5,6 +5,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use Structure\Entity\Db\Structure;
@@ -71,7 +72,8 @@ $enCours = $campagne->estEnCours();
 $planifie = [];
 $fait = [];
 foreach ($encours as $epro) {
-    if ($epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION || $epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) {
+    if ($epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
+        $epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) {
         $planifie[] = $epro;
     } else {
         $fait[] = $epro;

@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
@@ -207,7 +208,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('MISSION_SPECIFIQUE_LETTRE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::LETTRE_MISSION, $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

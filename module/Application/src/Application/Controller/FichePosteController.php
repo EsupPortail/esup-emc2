@@ -17,6 +17,8 @@ use Application\Form\Expertise\ExpertiseFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
+use Application\Provider\Etat\FichePosteEtats;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -211,7 +213,7 @@ class FichePosteController extends AbstractActionController {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
-        if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
+        if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
         $agent = $fiche->getAgent();
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
@@ -301,7 +303,7 @@ class FichePosteController extends AbstractActionController {
             'agent' => $agent,
             'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_DE_POSTE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_POSTE, $vars);
 
         try {
             $exporter = new PdfExporter();
@@ -324,7 +326,7 @@ class FichePosteController extends AbstractActionController {
         $form = $this->getSelectionEtatForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/changer-etat', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($fiche);
-        $form->reinit(FichePoste::ETAT_TYPE_FICHEPOSTE);
+        $form->reinit(FichePosteEtats::TYPE);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -902,7 +904,7 @@ class FichePosteController extends AbstractActionController {
             }
             switch($type) {
                 case FichePoste::VALIDATION_RESPONSABLE :
-                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_OK));
+                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
                     $this->getFichePosteService()->update($ficheposte);
 
                     $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
@@ -910,12 +912,12 @@ class FichePosteController extends AbstractActionController {
 
                 case FichePoste::VALIDATION_AGENT :
                     $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
-                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_SIGNEE));
+                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_SIGNEE));
                     $this->getFichePosteService()->update($ficheposte);
 
                     $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
                     $newFiche->setAgent($ficheposte->getAgent());
-                    $newFiche->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION));
+                    $newFiche->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION));
                     $this->getFichePosteService()->update($newFiche);
 
                     $date = new DateTime();
@@ -971,11 +973,11 @@ class FichePosteController extends AbstractActionController {
 
         switch ($validation->getType()->getCode()) {
             case FichePoste::VALIDATION_RESPONSABLE :
-                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION));
+                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION));
                 $this->getFichePosteService()->update($ficheposte);
                 break;
             case FichePoste::VALIDATION_AGENT :
-                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_OK));
+                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
                 $this->getFichePosteService()->update($ficheposte);
                 break;
         }

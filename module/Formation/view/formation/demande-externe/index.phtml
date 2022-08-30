@@ -1,0 +1,71 @@
+<?php
+
+use Formation\Entity\Db\DemandeExterne;
+
+/**
+ * @see \Formation\Controller\DemandeExterneController::indexAction()
+ * @var DemandeExterne[] $demandes
+ */
+
+$this->headTitle("Demandes de formations externes");
+
+$canAfficher = true;
+$canModifier = true;
+$canHistoriser = true;
+$canSupprimer = true;
+?>
+
+<h1 class="page-header">
+    Demandes de formations externes
+</h1>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Agent             </th>
+            <th> Foramtion </th>
+            <th> Organisme </th>
+            <th> État </th>
+            <th class="action"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($demandes as $demande) : ?>
+        <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
+            <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo $demande->getLibelle(); ?> </td>
+            <td> <?php echo $demande->getOrganisme(); ?> </td>
+            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>">
+                    <span class="icon icon-voir"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-voir nope"></span>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                <a href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()],[], true); ?>"
+                   class="ajax-modal" data-event="modification"
+                >
+                    <span class="icon icon-editer"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-editer nope"></span>
+                <?php endif; ?>
+                <span class="icon icon-historiser"></span>
+                <span class="icon icon-retirer"></span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

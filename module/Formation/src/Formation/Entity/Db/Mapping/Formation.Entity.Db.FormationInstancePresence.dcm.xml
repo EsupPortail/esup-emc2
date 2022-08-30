@@ -18,8 +18,8 @@
         <field name="commentaire"       column="commentaire"     type="string"  length="4096"   nullable="true"/>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
-        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
+<!--        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>-->
+<!--        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>-->
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
