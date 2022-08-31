@@ -282,7 +282,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/acceder/:entretien',
+                            'route'    => '/acceder/:entretien-professionnel',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'acceder',

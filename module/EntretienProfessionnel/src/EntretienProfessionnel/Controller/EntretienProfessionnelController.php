@@ -173,7 +173,7 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) {
             /** @see EntretienProfessionnelController::accederAction() */
-            return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien" => $entretien->getId()], [], true);
+            return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
         $entretien = new EntretienProfessionnel();
@@ -275,8 +275,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function accederAction() : ViewModel
     {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
+        $agent = $entretien->getAgent();
         $ficheposte = $agent->getFichePosteBest();
         $fichesmetiers = [];
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
@@ -431,7 +431,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */
-        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
     public function exporterCrepAction() : string

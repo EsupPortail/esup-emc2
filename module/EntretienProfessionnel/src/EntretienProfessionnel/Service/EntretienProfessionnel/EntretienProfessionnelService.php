@@ -256,7 +256,7 @@ class EntretienProfessionnelService {
     public function getEntretienProfessionnel(?int $id) : ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
-            ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
+            ->addSelect('formulaireInstance')->leftJoin('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
             ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
             ->addSelect('categorie')->leftJoin('champ.categorie', 'categorie')

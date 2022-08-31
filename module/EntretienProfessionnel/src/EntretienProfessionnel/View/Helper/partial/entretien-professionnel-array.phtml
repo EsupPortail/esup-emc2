@@ -158,7 +158,7 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
             <?php if ($canAcceder AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER)  and !$dropdowns) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */?>
-                        href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true) ?>"
+                        href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true) ?>"
                 >
                     <span class="icon icon-editer" title="Accéder à l'entretien professionnel"></a>
             <?php endif; ?>

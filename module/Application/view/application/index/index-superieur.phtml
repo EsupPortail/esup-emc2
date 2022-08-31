@@ -118,7 +118,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                                class="ajax-modal" data-event="modification">
                                 <span class="icon gerer"></span></a>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                                target="_blank">
                                 <span class="icon icon-editer"></span></a>
                             <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
