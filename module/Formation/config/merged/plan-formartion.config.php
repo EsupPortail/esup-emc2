@@ -33,7 +33,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'planformation_' => [
-                                'label'    => 'Plan de formation',
+                                'label'    => 'Plan de formation à venir',
                                 'route'    => 'plan-formation',
                                 'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
                                 'order'    => 302,

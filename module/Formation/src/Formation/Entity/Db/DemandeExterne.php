@@ -24,16 +24,11 @@ class DemandeExterne implements HistoriqueAwareInterface {
     private ?DateTime $debut = null;
     private ?DateTime $fin = null;
     private ?string $motivation = null;
-    private bool $priseEnCharge = false;
+    private bool $priseEnCharge = true;
     private ?string $cofinanceur = null;
 
     private ?Agent $agent = null;
     private ?Etat $etat = null;
-
-//    public function __construct()
-//    {
-//        $this->validations = new ArrayCollection();
-//    }
 
     /**
      * @return int

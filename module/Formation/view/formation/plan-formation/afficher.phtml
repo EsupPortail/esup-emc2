@@ -15,7 +15,7 @@ use Formation\Provider\Privilege\FormationabonnementPrivileges;
  * @var string $annee
  */
 
-$this->headTitle("Plan de formation pour l'année " . $annee);
+$this->headTitle("Plan de formation à venir pour l'année " . $annee);
 
 $canListerParFormation = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_LISTE_FORMATION));
 $canGererAbonnement = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER));
@@ -25,7 +25,7 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
 ?>
 
 <h1 class="page-header">
-    Plan de formation pour l'année <?php echo $annee; ?>
+    Plan de formation à venir pour l'année <?php echo $annee; ?>
 </h1>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>

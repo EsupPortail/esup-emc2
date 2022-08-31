@@ -221,6 +221,23 @@ class NotificationService {
         return $mail;
     }
 
+    public function triggerSessionAnnulee(FormationInstanceInscrit $inscrit) : Mail
+    {
+        $instance = $inscrit->getInstance();
+
+        $vars = [
+            'instance' => $instance,
+            'agent' => $inscrit->getAgent(),
+            'UrlService' => $this->getUrlService()
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_ANNULEE, $vars);
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
     public function triggerLienPourEmargement(FormationInstance $instance) : Mail
     {
         $mails = [];

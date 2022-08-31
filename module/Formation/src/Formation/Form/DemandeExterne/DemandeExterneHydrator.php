@@ -2,7 +2,6 @@
 
 namespace Formation\Form\DemandeExterne;
 
-use Application\Form\HasPeriode\HasPeriodeFieldset;
 use DateTime;
 use Formation\Entity\Db\DemandeExterne;
 use Laminas\Hydrator\HydratorInterface;
@@ -49,7 +48,7 @@ class DemandeExterneHydrator implements HydratorInterface {
 //        $fin = (isset($data['fin']) AND trim($data['fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['fin']):null;
         $fin = (isset($data['fin']) AND trim($data['fin']) !== '')?DateTime::createFromFormat('d/m/Y', $data['fin']):null;
         $motivation = (isset($data['motivation']) AND trim($data['motivation']) !== '')?trim($data['motivation']):null;
-        $priseEnCharge = isset($data['prise-en-charge'])??false;
+        $priseEnCharge = isset($data['prise-en-charge'])??true;
         $cofinanceur = (isset($data['cofinanceur']) AND trim($data['cofinanceur']) !== '')?trim($data['cofinanceur']):null;
 
         $object->setLibelle($libelle);

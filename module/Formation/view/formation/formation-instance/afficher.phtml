@@ -22,6 +22,7 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
 $canInformation     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 $canAfficherMail    = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canReEnvoyerMail   = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
+$canAnnuler         = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
 
 
 $retour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
@@ -113,6 +114,14 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     </a>
                 <?php endif; ?>
             <?php endif; ?>
+            <?php if ($canAnnuler AND $instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
+                <br/>
+                <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
+                        href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
+                        class="btn btn-danger action">
+                    Annuler la session
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -191,7 +200,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                 <thead>
                 <tr>
                     <th> Dénomination </th>
-                    <th> Structure de rattachement </th>
+                    <th> Structure de rattachement / Organisme </th>
                     <th> Action </th>
                 </tr>
                 </thead>
@@ -340,7 +349,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "formulaire";
+        if (name === undefined || name === "") name = "information";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

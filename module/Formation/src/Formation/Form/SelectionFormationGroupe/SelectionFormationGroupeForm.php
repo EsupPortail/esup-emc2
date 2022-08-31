@@ -19,8 +19,8 @@ class SelectionFormationGroupeForm extends Form
             'type' => Select::class,
             'name' => 'groupes',
             'options' => [
-                'label' => "Groupes de formation:",
-                'empty_option' => "Sélectionner le ou les groupes de formation",
+                'label' => "Thèmes de formation:",
+                'empty_option' => "Sélectionner le ou les thèmes de formation",
                 'value_options' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
             ],
             'attributes' => [

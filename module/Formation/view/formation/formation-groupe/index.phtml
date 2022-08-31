@@ -16,13 +16,13 @@ $canEditer          = $this->isAllowed(FormationgroupePrivileges::getResourceId(
 $canHistoriser      = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_HISTORISER));
 $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 
-$this->headTitle("Groupes de formation");
+$this->headTitle("Thèmes de formation");
 ?>
 
 <div class="row">
     <div class="col-md-8">
         <h2 class="page-header">
-            Groupes des formations
+            Thèmes de formations
         </h2>
     </div>
     <div class="pull-right">
@@ -34,7 +34,7 @@ $this->headTitle("Groupes de formation");
                 class="btn btn-primary action ajax-modal"
                 data-event="modification">
                 <span class="icon icon-ajouter"></span>
-                Ajouter un groupe
+                Ajouter un thème
             </a>
         <?php endif; ?>
     </div>
@@ -62,7 +62,7 @@ $this->headTitle("Groupes de formation");
                     <a  <?php /** @see FormationGroupeController::afficherGroupeAction() */ ?>
                         href="<?php echo $this->url('formation-groupe/afficher', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal">
-                        <span class="icon icon-voir" title="Afficher le groupe"></span></a>
+                        <span class="icon icon-voir" title="Afficher le thème"></span></a>
                 <?php else : ?>
                     <span class="icon icon-voir" style="color:lightgrey;"></span>
                 <?php endif; ?>
@@ -73,7 +73,7 @@ $this->headTitle("Groupes de formation");
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon icon-editer" title="Modifier le groupe"></span></a>
+                        <span class="icon icon-editer" title="Modifier le thème"></span></a>
                 <?php else : ?>
                     <span class="icon icon-editer" style="color:lightgrey;"></span>
                 <?php endif; ?>
@@ -83,14 +83,14 @@ $this->headTitle("Groupes de formation");
                             <?php /** @see FormationGroupeController::historiserGroupeAction() */ ?>
                             href="<?php  echo $this->url('formation-groupe/historiser', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-historiser" title="Historiser le groupe"></span></a>
+                            <span class="icon icon-historiser" title="Historiser le thème"></span></a>
                     <?php else : ?>
 
                         <a
                             <?php /** @see FormationGroupeController::restaurerGroupeAction() */ ?>
                             href="<?php  echo $this->url('formation-groupe/restaurer', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-restaurer" title="Restaurer le groupe"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le thème"></span></a>
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if ($groupe->estNonHistorise()) : ?>
@@ -105,7 +105,7 @@ $this->headTitle("Groupes de formation");
                         href="<?php  echo $this->url('formation-groupe/detruire', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer text-danger" title="Supprimer le groupe"></span></a>
+                        <span class="icon icon-retirer text-danger" title="Supprimer le thème"></span></a>
                 <?php else : ?>
                     <span class="icon icon-retirer" style="color:lightgrey;"></span>
                 <?php endif; ?>

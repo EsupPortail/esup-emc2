@@ -12,4 +12,5 @@ class SessionEtats {
     const ETAT_FORMATION_CONVOCATION  = 'CONVOCATION';
     const ETAT_ATTENTE_RETOURS        = 'ATTENTE_RETOUR';
     const ETAT_CLOTURE_INSTANCE       = 'FERMEE';
+    const ETAT_SESSION_ANNULEE        = 'SESSION_ANNULEE';
 }

@@ -9,6 +9,7 @@
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
         <field name="description"   column="description"    type="string"       length="2048"  />
         <field name="lien"          column="lien"           type="string"       length="1024"  />
+        <field name="affichage"     column="affichage"      type="boolean"      />
 
         <many-to-one target-entity="Formation\Entity\Db\FormationGroupe"  field="groupe">
             <join-column name="groupe_id" referenced-column-name="id"/>

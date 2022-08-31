@@ -47,7 +47,7 @@ class FormationGroupeController extends AbstractActionController
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
         return new ViewModel([
-            'title' => 'Affichage du groupe',
+            'title' => 'Affichage du thème',
             'groupe' => $groupe,
         ]);
     }
@@ -74,7 +74,7 @@ class FormationGroupeController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajouter un groupe de formation',
+            'title' => 'Ajouter un thème de formation',
             'form' => $form,
         ]);
         return $vm;
@@ -100,7 +100,7 @@ class FormationGroupeController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Modifier un groupe de formation',
+            'title' => 'Modifier un thème de formation',
             'form' => $form,
         ]);
         return $vm;
@@ -142,7 +142,7 @@ class FormationGroupeController extends AbstractActionController
         if ($groupe !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du groupe de formation [" . $groupe->getLibelle() . "]",
+                'title' => "Suppression du thème de formation [" . $groupe->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation-groupe/detruire', ["formation-groupe" => $groupe->getId()], [], true),
             ]);

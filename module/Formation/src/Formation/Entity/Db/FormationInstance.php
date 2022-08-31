@@ -39,6 +39,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private $lieu;
     /** @var string */
     private $type;
+    private ?float $coutHt  = null;
+    private ?float $coutTtc = null;
+    private bool $affichage = true;
 
     /** @var ArrayCollection (FormationInstanceJournee) */
     private $journees;
@@ -47,10 +50,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** @var ArrayCollection (FormationInstanceFormateur) */
     private $formateurs;
 
-    /** @var float|null */
-    private $coutHt;
-    /** @var float|null */
-    private $coutTtc;
+
 
     /**
      * @return string
@@ -195,6 +195,23 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->autoInscription = $autoInscription;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function getAffichage(): bool
+    {
+        return $this->affichage;
+    }
+
+    /**
+     * @param bool $affichage
+     */
+    public function setAffichage(bool $affichage): void
+    {
+        $this->affichage = $affichage;
+    }
+
 
 
     /** FORMATEURS ****************************************************************************************************/
@@ -432,7 +449,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
-        $text .= "<th>Structure de rattachement  </th>";
+        $text .= "<th>Structure de rattachement / Organisme  </th>";
         $text .= "</tr>";
         $text .= "</thead>";
         $text .= "<tbody>";

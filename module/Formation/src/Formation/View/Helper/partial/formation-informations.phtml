@@ -28,5 +28,7 @@ use Formation\Entity\Db\Formation;
             <dt class="col-md-3"> Description </dt>
             <dd class="col-md-9"> <?php echo $formation->getDescription(); ?> </dd>
         <?php endif; ?>
+        <dt class="col-md-3"> Affichage "plan" </dt>
+        <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>
     </dl>
 <?php endif; ?>

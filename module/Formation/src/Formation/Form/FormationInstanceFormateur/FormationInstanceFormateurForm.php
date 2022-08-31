@@ -51,7 +51,7 @@ class FormationInstanceFormateurForm extends Form
             'type' => Text::class,
             'name' => 'attachement',
             'options' => [
-                'label' => "Structure d'attachement :",
+                'label' => "Structure de rattachement / Organisme  :",
             ],
             'attributes' => [
                 'id' => 'attachement',

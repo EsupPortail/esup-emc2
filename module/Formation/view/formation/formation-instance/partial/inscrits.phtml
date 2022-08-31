@@ -52,6 +52,7 @@ $inscriptions = $instance->getInscrits();
     <tr>
         <th> Dénomination </th>
         <th> Affection principale </th>
+        <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Date de demande </th>
         <th style="width:13rem;"> État </th>
         <th style="width:15rem;"> Action </th>
@@ -67,6 +68,7 @@ $inscriptions = $instance->getInscrits();
                 <?php endif; ?>
             </td>
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
             <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
             <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
             <td>
@@ -96,6 +98,7 @@ $inscriptions = $instance->getInscrits();
     <tr>
         <th> Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
+        <th style="width:6rem;"> Statut </th>
         <th style="width:15rem;"> Action </th>
     </tr>
     </thead>
@@ -104,6 +107,7 @@ $inscriptions = $instance->getInscrits();
         <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
             <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
             <td>
                 <?php if ($canInscritModifier) : ?>
                     <?php /** @see AgentController::afficherAction() */?>
@@ -175,6 +179,7 @@ $inscriptions = $instance->getInscrits();
     <tr>
         <th > Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
+        <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Action </th>
     </tr>
     </thead>
@@ -183,6 +188,7 @@ $inscriptions = $instance->getInscrits();
         <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
             <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
             <td>
                 <?php if ($canInscritModifier) : ?>
                     <?php /** @see AgentController::afficherAction() */?>
@@ -227,6 +233,7 @@ $inscriptions = $instance->getInscrits();
     <tr>
         <th style="width:50rem;"> Dénomination </th>
         <th> Affection principale </th>
+        <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Action </th>
     </tr>
     </thead>
@@ -240,6 +247,7 @@ $inscriptions = $instance->getInscrits();
                 <?php endif; ?>
             </td>
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
+            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
             <td>
                 <?php if ($canInscritModifier) : ?>
                     <?php /** @see AgentController::afficherAction() */?>

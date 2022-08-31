@@ -10,6 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
@@ -20,6 +21,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 class FormationInstanceService
 {
     use EntityManagerAwareTrait;
+    use AbonnementServiceAwareTrait;
     use EtatServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -224,8 +226,8 @@ class FormationInstanceService
         $instance = new FormationInstance();
         $instance->setType(FormationInstance::TYPE_INTERNE);
         $instance->setAutoInscription(true);
-        $instance->setNbPlacePrincipale(0);
-        $instance->setNbPlaceComplementaire(0);
+        $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_PRINCIPALE')->getValeur());
+        $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_COMPLEMENTAIRE')->getValeur());
         $instance->setFormation($formation);
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
 
@@ -259,11 +261,20 @@ class FormationInstanceService
     {
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_INSCRIPTION_FERMEE));
         $this->update($instance);
+
         foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerListePrincipale($inscrit);
+            $agent = $inscrit->getAgent();
+            $formation = $inscrit->getInstance()->getFormation();
+            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+            if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
             $this->getNotificationService()->triggerListeComplementaire($inscrit);
+            $agent = $inscrit->getAgent();
+            $formation = $inscrit->getInstance()->getFormation();
+            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+            if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
         }
         return $instance;
     }
@@ -320,6 +331,24 @@ class FormationInstanceService
     }
 
     /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function annuler(FormationInstance $instance): FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_SESSION_ANNULEE));
+        $this->update($instance);
+        foreach ($instance->getInscrits() as $inscrit) {
+            $this->getNotificationService()->triggerSessionAnnulee($inscrit);
+            $agent = $inscrit->getAgent();
+            $formation = $inscrit->getInstance()->getFormation();
+            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+            if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+        }
+        return $instance;
+    }
+
+    /**
      * @return FormationInstance[]
      * @attention se base sur l'etat !
      */
@@ -339,8 +368,9 @@ class FormationInstanceService
         $date = (new DateTime())->sub(new DateInterval('P1W'));
 
         $qb = $this->createQueryBuilder()
-            ->andWhere('Finstance.histoCreation > :date')
-            ->setParameter('date', $date);
+            ->andWhere('Finstance.histoCreation > :date')->setParameter('date', $date)
+            ->andWhere('formation.affichage = :true')->setParameter('true', true)
+        ;
         $result = $qb->getQuery()->getResult();
 
         return $result;

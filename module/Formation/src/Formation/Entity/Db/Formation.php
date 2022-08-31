@@ -25,14 +25,11 @@ class Formation implements HistoriqueAwareInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $lien;
-    /** @var FormationGroupe */
-    private $groupe;
+    private int $id = -1;
+    private ?string $libelle = null;
+    private ?string $lien = null;
+    private ?FormationGroupe $groupe = null;
+    private bool $affichage = true;
 
     /** @var ArrayCollection */
     private $missions;
@@ -107,6 +104,22 @@ class Formation implements HistoriqueAwareInterface,
     {
         $this->groupe = $groupe;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAffichage(): bool
+    {
+        return $this->affichage;
+    }
+
+    /**
+     * @param bool $affichage
+     */
+    public function setAffichage(bool $affichage): void
+    {
+        $this->affichage = $affichage;
     }
 
     /**

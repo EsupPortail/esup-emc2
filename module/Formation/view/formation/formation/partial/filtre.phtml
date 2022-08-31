@@ -14,13 +14,13 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 <div class="card default">
     <div class="card-header">
         <span class="icon icon-filtrer"></span>
-        Filtrage des groupes de formation
+        Filtrage des thèmes de formation
     </div>
     <div class="card-body">
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
             <div class="row">
                 <div class="col-md-3">
-                    <label for="groupe">Groupe de formation : </label>
+                    <label for="groupe">Thème de formation : </label>
                     <select id="groupe" name="groupe" class="selectpicker" data-live-search="true">
                         <option value=""> Tous les groupes </option>
                         <?php foreach ($groupes as $id => $libelle) : ?>

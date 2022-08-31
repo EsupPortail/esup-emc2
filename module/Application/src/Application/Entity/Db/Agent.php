@@ -762,4 +762,28 @@ class Agent implements
 
         return $ficheposte->toStringCompositionFichesMetiers();
     }
+
+    public function getStatutToString(?DateTime $date = null) : string
+    {
+        $result = "";
+
+        $statuts =  $this->getStatutsActifs($date);
+        $isTitulaire = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isTitulaire()) { $isTitulaire = true; break;}
+        }
+        if ($isTitulaire) $result .= "Titulaire ";
+        $isCDI = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isCdi()) { $isCDI = true; break;}
+        }
+        if ($isCDI) $result .= "C.D.I. ";
+        $isCDD = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isCdd()) { $isCDD = true; break;}
+        }
+        if ($isCDD) $result .= "C.D.D. ";
+
+        return $result;
+    }
 }

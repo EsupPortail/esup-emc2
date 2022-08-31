@@ -46,31 +46,7 @@ $this->headTitle("Demande de stage externe");
             <dt class="col-md-2"> Adresse électronique </dt>
             <dd class="col-md-10"> <?php echo $agent->getEmail(); ?> </dd>
             <dt class="col-md-2"> Statut </dt>
-            <dd class="col-md-4">
-                <?php $statuts =  $agent->getStatutsActifs(); ?>
-                <?php //est titulaire ?
-                    $isTitulaire = false;
-                    foreach ($statuts as $statut) {
-                        if ($statut->isTitulaire()) { $isTitulaire = true; break;}
-                    }
-                    if ($isTitulaire) echo "Titulaire";
-                ?>
-                <?php //est cdi ?
-                    $isCDI = false;
-                    foreach ($statuts as $statut) {
-                        if ($statut->isCdi()) { $isCDI = true; break;}
-                    }
-                    if ($isCDI) echo "C.D.I.";
-                ?>
-                <?php //est cdd ?
-                    $isCDD = false;
-                    foreach ($statuts as $statut) {
-                        if ($statut->isCdd()) { $isCDD = true; break;}
-                    }
-                    if ($isCDD) echo "C.D.D.";
-                ?>
-
-            </dd>
+            <dd class="col-md-4"> <?php echo $agent->getStatutToString(); ?> </dd>
             <dt class="col-md-2"> Corps </dt>
             <dd class="col-md-4">
                 <?php $corps = $agent->getGradesActifs(); ?>
@@ -107,6 +83,7 @@ $this->headTitle("Demande de stage externe");
             <div class="col-md-4"><?php echo $this->formControlGroup($form->get('lieu')); ?> </div>
             <div class="col-md-4"><?php echo $this->formControlGroup($form->get('debut')); ?> </div>
             <div class="col-md-4"><?php echo $this->formControlGroup($form->get('fin')); ?> </div>
+            <div class="col-md-12"><?php echo $this->formControlGroup($form->get('montant')); ?> </div>
         </div>
 
         <h3> Motivation </h3>

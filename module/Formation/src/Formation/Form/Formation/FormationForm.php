@@ -5,6 +5,7 @@ namespace Formation\Form\Formation;
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -65,6 +66,23 @@ class FormationForm extends Form
                 'id' => 'lien',
             ],
         ]);
+
+        // type
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'affichage',
+            'options' => [
+                'label' => "Affichage dans le 'plan de formation à venir'  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'value_options' => [
+                    true => "Oui",
+                    false => "Non",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'affichage',
+            ],
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -87,6 +105,7 @@ class FormationForm extends Form
             'groupe' => ['required' => false,],
             'description' => ['required' => false,],
             'lien' => ['required' => false,],
+            'affichage' => ['required' => true,],
         ]));
     }
 }

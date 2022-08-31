@@ -79,6 +79,15 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
+                        'annuler',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
                         'restaurer',
                         'historiser',
                     ],
@@ -197,6 +206,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'annuler' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/annuler/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'annuler',
                             ],
                         ],
                     ],

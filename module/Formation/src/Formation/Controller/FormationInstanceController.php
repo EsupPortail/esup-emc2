@@ -228,4 +228,11 @@ class FormationInstanceController extends AbstractActionController
           $this->getFormationInstanceService()->cloturer($instance);
           return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
+
+    public function annulerAction() : Response
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->annuler($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
+    }
 }

@@ -55,7 +55,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                     </span>
                 <br/>
                 <?php echo $instance->getFormation()->getLibelle(); ?> <br/>
-                <?php echo ($instance->getFormation()->getGroupe())?$instance->getFormation()->getGroupe()->getLibelle():"Sans groupe de formation"; ?>
+                <?php echo ($instance->getFormation()->getGroupe())?$instance->getFormation()->getGroupe()->getLibelle():"Sans thème de formation"; ?>
             </td>
             <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
             <td> <?php echo ($instance->getFin())?:"???"; ?></td>
