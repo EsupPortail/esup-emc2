@@ -29,7 +29,7 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                 <br/>
                 <br/>
             </div>
-            <div class="pull-right">
+            <div class="col-md-4">
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
                         href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscription->getId()], [], true); ?>"
@@ -65,7 +65,7 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                 <br/>
                 <br/>
             </div>
-            <div class="pull-right">
+            <div class="col-md-4">
                 <a
                 <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
                     href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"

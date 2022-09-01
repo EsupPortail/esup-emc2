@@ -3,6 +3,7 @@
 namespace Formation\Service\FormationInstance;
 
 use Doctrine\ORM\EntityManager;
+use Formation\Service\Abonnement\AbonnementService;
 use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -23,11 +24,13 @@ class FormationInstanceServiceFactory
     {
         /**
          * @var EntityManager $entityManager
+         * @var AbonnementService $abonnementService
          * @var EtatService $etatService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $abonnementService = $container->get(AbonnementService::class);
         $etatService = $container->get(EtatService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -37,6 +40,7 @@ class FormationInstanceServiceFactory
          */
         $service = new FormationInstanceService();
         $service->setEntityManager($entityManager);
+        $service->setAbonnementService($abonnementService);
         $service->setEtatService($etatService);
         $service->setNotificationService($notificationService);
         $service->setParametreService($parametreService);

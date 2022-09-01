@@ -3,23 +3,43 @@
 /**
  * @var FormationInstance[] $instances
  * @var FormationInstanceInscrit[] $inscriptions
+ * @var DemandeExterne[] $demandes
  * @var Agent $agent
  */
 
 use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+use Formation\Provider\Validation\DemandeExterneValidations;
+use UnicaenValidation\Entity\Db\ValidationInstance;
 
 $canInscrire = true;
 
+$canModifierDemande     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
+$canHistoriserDemande   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
+$canValiderAgentDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT));
+
+$formationValidees = [];
+foreach ($inscriptions as $inscription) {
+    if ($inscription->getInstance()->estPrete() AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) $formationValidees[] = $inscription;
+}
+
+$formationsAttentes = [];
+foreach ($inscriptions as $inscription) {
+    if ($inscription->getInstance()->estPrete() AND $inscription->getListe() !== FormationInstanceInscrit::PRINCIPALE) $formationsAttentes[] = $inscription;
+    if ($inscription->getInstance()->estPreparation()) $formationsAttentes[] = $inscription;
+}
+
 ?>
 <h2>
-    Mes inscriptions
-    <span class="badge"><?php echo count($inscriptions); ?></span>
+    Mes inscriptions validées
 </h2>
 
-<?php foreach ($inscriptions as $inscription) : ?>
+<?php foreach ($formationValidees as $inscription) : ?>
     <?php
         $instance = $inscription->getInstance();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
@@ -28,11 +48,7 @@ $canInscrire = true;
         <div class="col-md-8 description">
             <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
             <br/>
-            <?php if ($inscription->getListe() !==null) : ?>
-                <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
-            <?php else : ?>
-                Demande d'inscription enregristrer
-            <?php endif; ?>
+            <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
         </div>
         <div class="col-md-4">
             <a
@@ -55,3 +71,125 @@ $canInscrire = true;
     </div>
     <br/>
 <?php endforeach; ?>
+
+<h2>
+    Mes inscriptions en attente de validation
+</h2>
+
+
+<?php foreach ($formationsAttentes as $inscription) : ?>
+    <?php
+    $instance = $inscription->getInstance();
+    $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
+    ?>
+    <div class="row formation-inscription">
+        <div class="col-md-8 description">
+            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
+            <br/>
+        </div>
+        <div class="col-md-4">
+            <a
+                <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
+                    href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
+                    class="btn btn-danger action ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-retirer"> J'annule mon inscription </span>
+            </a>
+            <?php if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+                <br/>
+                <a
+                    <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
+                        href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                >
+                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <br/>
+<?php endforeach; ?>
+
+<?php foreach ($demandes as $demande) : ?>
+    <?php if ($demande->estNonHistorise()) : ?>
+
+        <?php
+        /**
+         * @var ValidationInstance[] $validationAgent
+         * @var ValidationInstance[] $validationResp
+         * @var ValidationInstance[] $validationDrh
+         */
+        $validationAgent = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
+        $validationResp  = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
+        $validationDrh   = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
+        ?>
+
+        <div class="row">
+            <div class="col-md-7 description">
+                <?php echo $this->etatbadge($demande->getEtat()); ?>
+                <?php echo $demande->getLibelle(); ?> (<?php echo $demande->getOrganisme(); ?>)
+                <br/>
+                <?php echo $demande->getLieu(); ?> ( du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
+                <br/>
+                Créée le <?php echo $demande->getHistoCreation()->format('d/m/Y à H:i'); ?>
+                <br/>
+                <br/>
+            </div>
+            <div class="col-md-5">
+                <?php if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::modifierAction() */?>
+                    <a  href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()], [], true); ?>"
+                        class="btn btn-primary ajax-modal <?php if (!$canModifierDemande) echo " disabled "; ?> " data-event="modification">
+                        <span class="icon icon-modifier"></span>
+                        Modifier la demande
+                    </a>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::validerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation/demande-externe/valider-agent', ['demande-externe' => $demande->getId()], [], true); ?>"
+                        class="btn btn-success ajax-modal <?php if (!$canValiderAgentDemande) echo " disabled "; ?> " data-event="modification">
+                        <span class="icon icon-valider"></span>
+                        Valider la demande (Agent)
+                    </a>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
+                    <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
+                        class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
+                        <span class="icon icon-historiser"></span>
+                        Supprimer la demande
+                    </a>
+                    <br/>
+                    <br/>
+                <?php else :?>
+                    <?php if ($validationAgent) : ?>
+                        Validée par l'agent (<?php echo $validationAgent[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationAgent[0]->getHistoCreation()->format('d/m/Y'); ?>.
+                        <br/>
+                    <?php endif; ?>
+                    <?php if ($validationResp) : ?>
+                        <?php if ($validationResp[0]->getValeur() === null) :  ?>
+                            Validée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
+                            <br/>
+                        <?php else : ?>
+                            Refusée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
+                            <br/>
+                            <p class="text-danger"> Motif : <?php echo $validationResp[0]->getValeur(); ?> </p>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <em>En attente de la validation du responsable</em>
+                    <?php endif; ?>
+                    <?php if ($validationDrh) : ?>
+                        <?php if ($validationDrh[0]->getValeur() === null) :  ?>
+                            Validée par le bureau des formations (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
+                            <br/>
+                        <?php else : ?>
+                            Refusée par le responsable (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
+                            <br/>
+                            <p class="text-danger"> Motif : <?php echo $validationDrh[0]->getValeur(); ?> </p>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <?php if ($validationResp AND $validationResp[0]->getValeur() === null) :?>
+                            <em>En attente de la validation du bureau des formations</em>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endforeach; ?>
+

@@ -6,6 +6,7 @@ use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
 use Formation\Controller\PlanFormationController;
+use Formation\Controller\ProjetPersonnelController;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
@@ -13,6 +14,8 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFa
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+
+$annee = '2023';
 
 return [
     'bjyauthorize' => [
@@ -69,7 +72,7 @@ return [
                         'pages' => [
                             [
                                 'order' => 200,
-                                'label' => 'Plan de formation à venir',
+                                'label' => 'Plan de formation '. $annee,
                                 'route' => 'plan-formation',
                                 'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
                                 'icon' => 'fas fa-angle-right',
@@ -79,6 +82,13 @@ return [
                                 'label' => 'Mes formations',
                                 'route' => 'liste-formations-instances',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 410,
+                                'label' => 'Mon projet personnel',
+                                'route' => 'projet-personnel',
+                                'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

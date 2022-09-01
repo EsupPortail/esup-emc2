@@ -7,6 +7,7 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Formation\Provider\Etat\SessionEtats;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -423,6 +424,24 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function setCoutTtc(?float $coutTtc): void
     {
         $this->coutTtc = $coutTtc;
+    }
+
+    /** PREDICAT D'ETAT *********************************************************************************************/
+
+    public function estPreparation() : bool
+    {
+        return (
+            $this->getEtat()->getCode() === SessionEtats::ETAT_CREATION_EN_COURS OR
+            $this->getEtat()->getCode() === SessionEtats::ETAT_INSCRIPTION_OUVERTE OR
+            $this->getEtat()->getCode() === SessionEtats::ETAT_INSCRIPTION_FERMEE
+        );
+    }
+
+    public function estPrete() : bool
+    {
+        return (
+            $this->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION
+        );
     }
 
     /** Fonctions pour les macros **********************************************************************************/

@@ -116,7 +116,7 @@ class StructureController extends AbstractActionController {
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
+        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true);
         $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = [];

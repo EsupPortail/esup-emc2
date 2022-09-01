@@ -1,123 +1,28 @@
 <?php
 
 /**
- * @var DemandeExterne[] $demandes
  * @var Agent $agent
  */
 
 use Application\Entity\Db\Agent;
-use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
-use Formation\Provider\Validation\DemandeExterneValidations;
-use UnicaenValidation\Entity\Db\ValidationInstance;
 
 $canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER));
-$canModifierDemande     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
-$canHistoriserDemande   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
-$canValiderAgentDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT));
 
 ?>
 
-<div class="row">
-    <div class="col-md-9">
-        <h2>
-            Demande de formations externes
-            <span class="badge"><?php echo count($demandes); ?></span>
-        </h2>
-    </div>
-    <div class="col-md-3">
-        <?php /** @see \Formation\Controller\DemandeExterneController::ajouterAction() */ ?>
-        <a href="<?php echo $this->url('formation/demande-externe/ajouter', ['agent' => $agent->getId()], [], true); ?>"
-           class="btn btn-primary ajax-modal <?php if (!$canAjouterDemande) echo " disabled "; ?> " data-event="modification"
-        >
-            <span class="icon icon-ajouter"></span>
-            Réaliser une demande
-        </a>
-    </div>
+<h2>
+    Formuler une demande de formation
+</h2>
+
+<div>
+    Afin de réaliser une demande de formation hors plan de formation, vous devez trouver au <em>moins trois</em> organismes et déposer les devis.
 </div>
 
-
-<?php foreach ($demandes as $demande) : ?>
-    <?php if ($demande->estNonHistorise()) : ?>
-
-        <?php
-        /**
-         * @var ValidationInstance[] $validationAgent
-         * @var ValidationInstance[] $validationResp
-         * @var ValidationInstance[] $validationDrh
-         */
-        $validationAgent = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
-        $validationResp  = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
-        $validationDrh   = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-        ?>
-
-        <div class="row">
-            <div class="col-md-7 description">
-                <?php echo $this->etatbadge($demande->getEtat()); ?>
-                <?php echo $demande->getLibelle(); ?> (<?php echo $demande->getOrganisme(); ?>)
-                <br/>
-                <?php echo $demande->getLieu(); ?> ( du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
-                <br/>
-                Créée le <?php echo $demande->getHistoCreation()->format('d/m/Y à H:i'); ?>
-                <br/>
-            </div>
-            <div class="col-md-5">
-                <?php if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::modifierAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-primary ajax-modal <?php if (!$canModifierDemande) echo " disabled "; ?> " data-event="modification">
-                        <span class="icon icon-modifier"></span>
-                        Modifier la demande
-                    </a>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::validerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/valider-agent', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-success ajax-modal <?php if (!$canValiderAgentDemande) echo " disabled "; ?> " data-event="modification">
-                        <span class="icon icon-valider"></span>
-                        Valider la demande (Agent)
-                    </a>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
-                        <span class="icon icon-historiser"></span>
-                        Supprimer la demande
-                    </a>
-                    <br/>
-                    <br/>
-                <?php else :?>
-                    <?php if ($validationAgent) : ?>
-                        Validée par l'agent (<?php echo $validationAgent[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationAgent[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                        <br/>
-                    <?php endif; ?>
-                    <?php if ($validationResp) : ?>
-                        <?php if ($validationResp[0]->getValeur() === null) :  ?>
-                        Validée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                        <br/>
-                        <?php else : ?>
-                            Refusée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                            <p class="text-danger"> Motif : <?php echo $validationResp[0]->getValeur(); ?> </p>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <em>En attente de la validation du responsable</em>
-                    <?php endif; ?>
-                    <?php if ($validationDrh) : ?>
-                        <?php if ($validationDrh[0]->getValeur() === null) :  ?>
-                            Validée par le bureau des formations (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                        <?php else : ?>
-                            Refusée par le responsable (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                            <p class="text-danger"> Motif : <?php echo $validationDrh[0]->getValeur(); ?> </p>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <?php if ($validationResp AND $validationResp[0]->getValeur() === null) :?>
-                            <em>En attente de la validation du bureau des formations</em>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-<?php endforeach; ?>
+    <?php /** @see \Formation\Controller\DemandeExterneController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('formation/demande-externe/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal <?php if (!$canAjouterDemande) echo " disabled "; ?> " data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Je remplis le formulaire
+    </a>

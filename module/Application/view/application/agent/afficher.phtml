@@ -94,12 +94,6 @@ if ($agent !== null) {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#entretiens" class="nav-link" aria-controls="entretiens" role="tab" data-toggle="tabz">
-                    Entretiens <br/>
-                    professionnels
-                </a>
-            </li>
-            <li class="nav-item">
                 <a href="#fiches" class="nav-link" aria-controls="fiches" role="tab" data-toggle="tabz">
                     Fiches de poste et <br/>
                     missions spécifiques
@@ -155,25 +149,7 @@ if ($agent !== null) {
                     ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
                 <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
             </div>
-            <div id="entretiens" class="tab-pane " role="tabpanel">
-                <h2> Entretiens professionnels </h2>
 
-                <div class="alert alert-info">
-                    <span class="icon icon-attention"></span> Seuls les entretiens professionnels validés par le&middot;a supérieur·e hiérarchique direct·e (ou son&middot;a délégué&middot;e) sont visualisables par les agents.
-                </div>
-
-                <?php echo $this->entretienProfessionnelArray($entretiens,
-                    [
-                        'affichages' => ['agent' => false, 'lieu' => false],
-                        'droits' => ['modifier' => false, 'historiser' => false,  'supprimer' => false, 'sursis' => false]
-                    ]
-                ); ?>
-
-                <br/>
-                <div class="alert alert-info">
-                    <span class="icon icon-attention"></span> Vous pouvez retrouvez sur l'intranet les documents vous permettant de préparer votre entretien : <?php echo $intranet; ?>.
-                </div>
-            </div>
 
             <?php if ($displayParcours === true) : ?>
             <div id="parcours" class="tab-pane " role="tabpanel">

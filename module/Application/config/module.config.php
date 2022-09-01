@@ -21,6 +21,8 @@ use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
+use Application\Service\Macro\MacroService;
+use Application\Service\Macro\MacroServiceFactory;
 use Application\Service\Notification\NotificationService;
 use Application\Service\Notification\NotificationServiceFactory;
 use Application\Service\Url\UrlService;
@@ -72,7 +74,6 @@ return [
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
                         FormationPrivileges::FORMATION_ACCES,
-                        ActivitePrivileges::ACTIVITE_AFFICHER,
                         ActivitePrivileges::ACTIVITE_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         PostePrivileges::POSTE_INDEX,
@@ -278,6 +279,7 @@ return [
         ],
         'factories' => [
 //            RoleService::class => RoleServiceFactory::class,
+            MacroService::class => MacroServiceFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 

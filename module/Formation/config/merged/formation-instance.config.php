@@ -56,11 +56,18 @@ return [
                         'modifier-informations',
                         'export-emargement',
                         'export-tous-emargements',
-
-                        'renseigner-questionnaire',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'renseigner-questionnaire',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_QUESTIONNAIRE,
                     ],
                 ],
                 [

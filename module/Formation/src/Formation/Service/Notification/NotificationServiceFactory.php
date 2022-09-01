@@ -3,6 +3,7 @@
 namespace Formation\Service\Notification;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\Macro\MacroService;
 use Formation\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -30,6 +31,7 @@ class NotificationServiceFactory {
          * @var RenduService $renduService
          * @var RoleService $roleService
          * @var UrlService $urlService
+         * @var MacroService $macroService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
@@ -38,6 +40,7 @@ class NotificationServiceFactory {
         $renduService = $container->get(RenduService::class);
         $roleService = $container->get(RoleService::class);
         $urlService = $container->get(UrlService::class);
+        $macroService = $container->get(MacroService::class);
         $userService = $container->get(UserService::class);
 
         $service = new NotificationService();
@@ -47,6 +50,7 @@ class NotificationServiceFactory {
         $service->setRenduService($renduService);
         $service->setRoleService($roleService);
         $service->setUrlService($urlService);
+        $service->setMacroService($macroService);
         $service->setUserService($userService);
         return $service;
     }

@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Service\Macro\MacroServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
@@ -20,6 +21,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
     use TemplateServiceAwareTrait;
 
@@ -75,7 +77,8 @@ class FormationInstanceDocumentController extends AbstractActionController
         $vars = [
             'agent' => $inscrit->getAgent(),
             'formation' => $inscrit->getInstance()->getFormation(),
-            'instance' => $inscrit->getInstance(),
+            'session' => $inscrit->getInstance(),
+            'MacroService' => $this->getMacroService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
         $exporter = new PdfExporter();
@@ -96,9 +99,10 @@ class FormationInstanceDocumentController extends AbstractActionController
         $vars = [
             'type' => '',
             'agent' => $inscrit->getAgent(),
-            'inscrit' => $inscrit,
+            'inscription' => $inscrit,
             'formation' => $inscrit->getInstance()->getFormation(),
-            'instance' => $inscrit->getInstance(),
+            'session' => $inscrit->getInstance(),
+            'MacroService' => $this->getMacroService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();

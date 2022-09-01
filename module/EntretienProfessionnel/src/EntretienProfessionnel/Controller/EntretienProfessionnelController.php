@@ -98,6 +98,18 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
+    public function indexAgentAction() : ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
+
+        return new ViewModel([
+            'entretiens' => $entretiens,
+        ]);
+    }
+
     /** Action de recherche parmi les entretiens professionnels *******************************************************/
 
     public function rechercherResponsableAction() : JsonModel

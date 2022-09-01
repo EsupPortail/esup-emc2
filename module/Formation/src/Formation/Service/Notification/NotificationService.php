@@ -4,12 +4,13 @@ namespace Formation\Service\Notification;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\Macro\MacroServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Roles;
+use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
@@ -27,13 +28,14 @@ class NotificationService {
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
+    use MacroServiceAwareTrait;
     use UrlServiceAwareTrait;
 
     /** RECUPERATION DES MAILS *************************/
 
     public function getMailsResponsablesFormations() : array
     {
-        $role  = $this->getRoleService()->findByRoleId(Roles::GESTIONNAIRE_FORMATION);
+        $role  = $this->getRoleService()->findByRoleId(FormationRoles::GESTIONNAIRE_FORMATION);
         $users = $this->getUserService()->findByRole($role);
         $mails = array_map(function (User $a) { return $a->getEmail(); }, $users);
         return $mails;
@@ -45,7 +47,8 @@ class NotificationService {
     {
         $vars = [
             'agent' => $agent,
-            'instance' => $instance,
+            'session' => $instance,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
@@ -76,9 +79,11 @@ class NotificationService {
         $urlService->setVariables(['instance' => $inscription->getInstance(),]);
 
         $vars = [
-            'agent' => $inscription->getAgent(),
-            'instance' => $inscription->getInstance(),
-            'UrlService' => $urlService,
+            'agent' => $agent,
+            'session' => $instance,
+            'inscription' => $inscription,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_VALIDATION, $vars);
 
@@ -100,8 +105,10 @@ class NotificationService {
 
         $vars = [
             'agent' => $agent,
-            'instance' => $instance,
-            'inscrit' => $inscription,
+            'session' => $instance,
+            'inscription' => $inscription,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_REFUS, $vars);
 
@@ -119,8 +126,10 @@ class NotificationService {
 
         $vars = [
             'agent' => $agent,
-            'instance' => $instance,
-            'UrlService' => $this->getUrlService()
+            'session' => $instance,
+            'inscription' => $inscription,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_VALIDATION, $vars);
 
@@ -138,8 +147,10 @@ class NotificationService {
 
         $vars = [
             'agent' => $agent,
-            'instance' => $instance,
-            'inscrit' => $inscription
+            'session' => $instance,
+            'inscription' => $inscription,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_REFUS, $vars);
 
@@ -154,11 +165,14 @@ class NotificationService {
     public function triggerListePrincipale(FormationInstanceInscrit $inscrit) : Mail
     {
         $instance = $inscrit->getInstance();
+        $agent = $inscrit->getAgent();
 
         $vars = [
-            'agent' => $inscrit->getAgent(),
-            'instance' => $instance,
-            'UrlService' => $this->getUrlService()
+            'agent' => $agent,
+            'session' => $instance,
+            'inscription' => $inscrit,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_PRINCIPALE, $vars);
@@ -172,11 +186,14 @@ class NotificationService {
     public function triggerListeComplementaire(FormationInstanceInscrit $inscrit) : Mail
     {
         $instance = $inscrit->getInstance();
+        $agent = $inscrit->getAgent();
 
         $vars = [
-            'agent' => $inscrit->getAgent(),
-            'instance' => $instance,
-            'UrlService' => $this->getUrlService()
+            'agent' => $agent,
+            'session' => $instance,
+            'inscription' => $inscrit,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_COMPLEMENTAIRE, $vars);
@@ -192,8 +209,9 @@ class NotificationService {
         $instance = $inscrit->getInstance();
 
         $vars = [
-            'instance' => $instance,
+            'session' => $instance,
             'agent' => $inscrit->getAgent(),
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_CONVOCATION, $vars);
@@ -209,8 +227,9 @@ class NotificationService {
         $instance = $inscrit->getInstance();
 
         $vars = [
-            'instance' => $instance,
+            'session' => $instance,
             'agent' => $inscrit->getAgent(),
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_DEMANDE_RETOUR, $vars);
@@ -226,8 +245,9 @@ class NotificationService {
         $instance = $inscrit->getInstance();
 
         $vars = [
-            'instance' => $instance,
+            'session' => $instance,
             'agent' => $inscrit->getAgent(),
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_ANNULEE, $vars);
@@ -260,7 +280,7 @@ class NotificationService {
     public function triggerRappelAgentAvantFormation(FormationInstance $instance) : array
     {
         $vars = [
-            'instance' => $instance,
+            'session' => $instance,
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_RAPPEL_AVANT_FORMATION, $vars);
@@ -311,7 +331,8 @@ class NotificationService {
     {
         $vars = [
             'formation' => $instance->getFormation(),
-            'instance' => $instance,
+            'session' => $instance,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_OUVERTE, $vars);
@@ -366,6 +387,7 @@ class NotificationService {
         $vars = [
             'agent' => $demande->getAgent(),
             'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_AGENT, $vars);
@@ -383,6 +405,7 @@ class NotificationService {
         $vars = [
             'agent' => $demande->getAgent(),
             'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_AGENT, $vars);
@@ -399,6 +422,7 @@ class NotificationService {
         $vars = [
             'agent' => $demande->getAgent(),
             'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_DRH, $vars);
@@ -422,6 +446,7 @@ class NotificationService {
         $vars = [
             'agent' => $demande->getAgent(),
             'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_DRH, $vars);
@@ -445,6 +470,7 @@ class NotificationService {
         $vars = [
             'agent' => $demande->getAgent(),
             'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_REFUS, $vars);

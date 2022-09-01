@@ -8,6 +8,7 @@
  * @var PrivilegeService $privilegeService
  * @var EtatTypeService $etatTypeService
  * @var EtatService $etatService
+ * @var RoleService $roleService
  * @var TypeService $evenementTypeService
  * @var ValidationTypeService $validationTypeService
  *
@@ -19,6 +20,7 @@ use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
+use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 $this->headTitle("Vérification de l'installation");
@@ -46,10 +48,50 @@ $this->headTitle("Vérification de l'installation");
 
 <?php foreach ($modules as $module) : ?>
 
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template')); ?>
+
     <div id="<?php echo $module;?>" class="tab-pane" >
     <h2> Vérification du module <em><?php echo $module; ?></em></h2>
 
+    <!-- ROLE --------------------------------------------------------------------------------------------------------->
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Role')); ?>
+    <div class="card bg-default ">
+        <div class="card-header">
+            Role
+        </div>
+        <div class="card-body">
+        <?php if (!$exist) : ?>
+            <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Role</code> !</span>
+            <?php else : ?>
+            <?php
+            $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Role'), ['.', '..']);
+            foreach ($filenames as $filename) {
+                $res = explode('.', $filename);
+                $path = $module ."\\Provider\\Role\\".$res[0];
+                if (!class_exists($path)) {
+                    echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [".$path."] n'est pas déclarée.</strong><br>";
+                } else {
+                    echo "<strong><span class='icon icon-checked text-success'></span> la classe [".$path."] est bien déclarée.</strong><br/>";
+                    $oClass = new ReflectionClass ($path);
+                    $roles = $oClass->getConstants ();
+                    foreach ($roles as $role) {
+                        $bool = ($roleService->findByRoleId($role) !== null);
+                        if ($bool === true) {
+                            echo "<span class='icon icon-checked text-success'></span> le role [".$role."] est bien déclarée";
+                        } else {
+                            echo "<span class='icon icon-retirer text-danger'></span> le role [".$role."] n'est pas déclarée";
+                        }
+                        echo "<br/>";
+                    }
+                }
+            }
+            ?>
+            <?php ?>
+        <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- TEMPLATE ----------------------------------------------------------------------------------------------------->
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template')); ?>
     <div class="card bg-default ">
         <div class="card-header">
             Templates : Mail, Pdf, Texte
