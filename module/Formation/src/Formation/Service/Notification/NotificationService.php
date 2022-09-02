@@ -99,7 +99,7 @@ class NotificationService {
         $instance = $inscription->getInstance();
         $agent = $inscription->getAgent();
 
-        $email = $this->getParametreService()->getParametreByCode('FORMATION','EMAIL')->getValeur();
+        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
         $email .= ",";
         $email .= $agent->getEmail();
 

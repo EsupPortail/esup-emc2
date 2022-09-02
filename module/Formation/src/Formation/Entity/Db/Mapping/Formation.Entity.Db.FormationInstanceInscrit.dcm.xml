@@ -25,7 +25,9 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="complement"        type="string" length="9999"     column="complement"         nullable="true"/>
+        <field name="justificationAgent"        column="justification_agent"                type="string" length="9999"         nullable="true"/>
+        <field name="justificationResponsable"  column="justification_responsable"          type="string" length="9999"         nullable="true"/>
+        <field name="justificationRefus"        column="justification_refus"                type="string" length="9999"         nullable="true"/>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="source"            type="string" length="256"      column="source"             nullable="true"/>

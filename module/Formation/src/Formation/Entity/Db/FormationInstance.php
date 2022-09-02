@@ -32,10 +32,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** @var boolean */
     private $autoInscription;
 
-    /** @var integer */
-    private $nbPlacePrincipale;
-    /** @var integer */
-    private $nbPlaceComplementaire;
+    private int $nbPlacePrincipale = -1;
+    private int $nbPlaceComplementaire = -1;
     /** @var string */
     private $lieu;
     /** @var string */
@@ -48,7 +46,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private $journees;
     /** @var ArrayCollection (FormationInstanceInscrit) */
     private $inscrits;
-    /** @var ArrayCollection (FormationInstanceFormateur) */
+    /** @var ArrayCollection (Formateur) */
     private $formateurs;
 
 
@@ -218,7 +216,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** FORMATEURS ****************************************************************************************************/
 
     /**
-     * @return FormationInstanceFormateur[]|null
+     * @return Formateur[]|null
      */
     public function getFormateurs(): ?array
     {
@@ -458,9 +456,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function getListeFormateurs() : string
     {
-        /** @var FormationInstanceFormateur[] $formateurs */
+        /** @var Formateur[] $formateurs */
         $formateurs = $this->getFormateurs();
-        usort($formateurs, function (FormationInstanceFormateur $a, FormationInstanceFormateur $b) {
+        usort($formateurs, function (Formateur $a, Formateur $b) {
             return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
         });
 
@@ -572,5 +570,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $minutes = ($result->i);
         $text = $heures . " heures" . (($minutes !== 0) ? (" ".$minutes . " minutes") : "");
         return $text;
+    }
+
+    public function getPlaceDisponible(string $liste) : int
+    {
+        $inscriptions = array_filter(
+            $this->getInscrits(),
+            function(FormationInstanceInscrit $a)  use ($liste) { return $a->estNonHistorise() AND $a->getListe() === $liste;
+        });
+        return count($inscriptions);
     }
 }

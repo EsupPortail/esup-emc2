@@ -78,8 +78,10 @@ foreach ($inscriptions as $inscription) {
                     <?php echo $this->etatbadge($inscription->getEtat()); ?>
                     <?php echo $inscription->getAgent()->getDenomination(); ?>
                     <?php if ($canValiderResponsable ) : ?>
-                        <a  <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
-                                href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do"> Gérer la demande</a>
+                        <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span>  </a>
+                        <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserResponsableAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span>  </a>
                     <?php endif; ?>
                 </li>
                 <?php endif; ?>

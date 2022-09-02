@@ -1,15 +1,15 @@
 <?php
 
-namespace Formation\Form\FormationInstanceFormateur;
+namespace Formation\Form\Formateur;
 
-use Formation\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\Formateur;
 use Laminas\Hydrator\HydratorInterface;
 
-class FormationInstanceFormateurHydrator implements HydratorInterface
+class FormateurHydrator implements HydratorInterface
 {
 
     /**
-     * @param FormationInstanceFormateur $object
+     * @param Formateur $object
      * @return array
      */
     public function extract($object): array
@@ -25,8 +25,8 @@ class FormationInstanceFormateurHydrator implements HydratorInterface
 
     /**
      * @param array $data
-     * @param FormationInstanceFormateur $object
-     * @return FormationInstanceFormateur
+     * @param Formateur $object
+     * @return Formateur
      */
     public function hydrate(array $data, $object)
     {

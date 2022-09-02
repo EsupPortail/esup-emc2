@@ -3,24 +3,28 @@
 namespace Formation\Service\FormationInstanceFormateur;
 
 use Doctrine\ORM\EntityManager;
+use Formation\Service\Formateur\FormateurService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class FormationInstanceFormateurServiceFactory
+class FormateurServiceFactory
 {
 
     /**
      * @param ContainerInterface $container
-     * @return FormationInstanceFormateurService
+     * @return FormateurService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : FormateurService
     {
         /**
          * @var EntityManager $entityManager
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var FormationInstanceFormateurService $service */
-        $service = new FormationInstanceFormateurService();
+        $service = new FormateurService();
         $service->setEntityManager($entityManager);
         return $service;
     }

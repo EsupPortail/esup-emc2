@@ -478,7 +478,7 @@ create table formation_instance_formateur
     histo_destruction timestamp,
     histo_destructeur_id integer constraint formation_instance_formateur_user_id_fk_3 references unicaen_utilisateur_user
 );
-create unique index formation_instance_formateur_id_uindex on formation_instance_formateur (id);
+create unique index formation_instance_formateur_id_uindex on formation_formateur (id);
 
 create table formation_instance_presence
 (
@@ -1036,8 +1036,8 @@ create table fichemetier_competence
 create table fichemetier_activite
 (
     id serial not null constraint fichemetier_activite_pkey primary key,
-    fiche integer not null constraint fichemetier_activite_fichemetier_id_fk references fichemetier on delete cascade,
-    activite integer not null constraint fichemetier_activite_activite_id_fk references activite on delete cascade,
+    fiche_id integer not null constraint fichemetier_activite_fichemetier_id_fk references fichemetier on delete cascade,
+    activite_id integer not null constraint fichemetier_activite_activite_id_fk references activite on delete cascade,
     position integer default 0 not null
 );
 create unique index fichemetier_activite_id_uindex on fichemetier_activite (id);

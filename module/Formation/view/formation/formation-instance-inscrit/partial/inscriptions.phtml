@@ -39,7 +39,10 @@ foreach ($inscriptions as $inscription) {
     Mes inscriptions validées
 </h2>
 
-<?php foreach ($formationValidees as $inscription) : ?>
+<?php if (empty($formationValidees)) : ?>
+    <em> Aucune formation validée </em>
+<?php else : ?>
+    <?php foreach ($formationValidees as $inscription) : ?>
     <?php
         $instance = $inscription->getInstance();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
@@ -71,13 +74,16 @@ foreach ($inscriptions as $inscription) {
     </div>
     <br/>
 <?php endforeach; ?>
+<?php endif; ?>
 
 <h2>
     Mes inscriptions en attente de validation
 </h2>
 
-
-<?php foreach ($formationsAttentes as $inscription) : ?>
+<?php if (empty($formationsAttentes) AND empty($demandes)) : ?>
+    <em> Aucune formation en attente de validation </em>
+<?php else : ?>
+    <?php foreach ($formationsAttentes as $inscription) : ?>
     <?php
     $instance = $inscription->getInstance();
     $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
@@ -108,8 +114,7 @@ foreach ($inscriptions as $inscription) {
     </div>
     <br/>
 <?php endforeach; ?>
-
-<?php foreach ($demandes as $demande) : ?>
+    <?php foreach ($demandes as $demande) : ?>
     <?php if ($demande->estNonHistorise()) : ?>
 
         <?php
@@ -192,4 +197,4 @@ foreach ($inscriptions as $inscription) {
         </div>
     <?php endif; ?>
 <?php endforeach; ?>
-
+<?php endif; ?>

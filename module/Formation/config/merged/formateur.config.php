@@ -2,24 +2,24 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationInstanceFormateurController;
-use Formation\Controller\FormationInstanceFormateurControllerFactory;
-use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurForm;
-use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurFormFactory;
-use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydrator;
-use Formation\Form\FormationInstanceFormateur\FormationInstanceFormateurHydratorFactory;
+use Formation\Controller\FormateurController;
+use Formation\Controller\FormateurControllerFactory;
+use Formation\Form\Formateur\FormateurForm;
+use Formation\Form\Formateur\FormateurFormFactory;
+use Formation\Form\Formateur\FormateurHydrator;
+use Formation\Form\Formateur\FormateurHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
-use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurService;
-use Formation\Service\FormationInstanceFormateur\FormationInstanceFormateurServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Formation\Service\Formateur\FormateurService;
+use Formation\Service\FormationInstanceFormateur\FormateurServiceFactory;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FormationInstanceFormateurController::class,
+                    'controller' => FormateurController::class,
                     'action' => [
                         'ajouter-formateur',
                         'modifier-formateur',
@@ -44,7 +44,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-formateur/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceFormateurController::class,
+                                'controller' => FormateurController::class,
                                 'action'     => 'ajouter-formateur',
                             ],
                         ],
@@ -54,7 +54,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-formateur/:formateur',
                             'defaults' => [
-                                'controller' => FormationInstanceFormateurController::class,
+                                'controller' => FormateurController::class,
                                 'action'     => 'modifier-formateur',
                             ],
                         ],
@@ -64,7 +64,7 @@ return [
                         'options' => [
                             'route'    => '/historiser-journee/:formateur',
                             'defaults' => [
-                                'controller' => FormationInstanceFormateurController::class,
+                                'controller' => FormateurController::class,
                                 'action'     => 'historiser-formateur',
                             ],
                         ],
@@ -74,7 +74,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer-formateur/:formateur',
                             'defaults' => [
-                                'controller' => FormationInstanceFormateurController::class,
+                                'controller' => FormateurController::class,
                                 'action'     => 'restaurer-formateur',
                             ],
                         ],
@@ -84,7 +84,7 @@ return [
                         'options' => [
                             'route'    => '/supprimer-formateur/:formateur',
                             'defaults' => [
-                                'controller' => FormationInstanceFormateurController::class,
+                                'controller' => FormateurController::class,
                                 'action'     => 'supprimer-formateur',
                             ],
                         ],
@@ -96,22 +96,22 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FormationInstanceFormateurService::class => FormationInstanceFormateurServiceFactory::class,
+            FormateurService::class => FormateurServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            FormationInstanceFormateurController::class => FormationInstanceFormateurControllerFactory::class,
+            FormateurController::class => FormateurControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            FormationInstanceFormateurForm::class => FormationInstanceFormateurFormFactory::class,
+            FormateurForm::class => FormateurFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            FormationInstanceFormateurHydrator::class => FormationInstanceFormateurHydratorFactory::class,
+            FormateurHydrator::class => FormateurHydratorFactory::class,
         ],
     ]
 

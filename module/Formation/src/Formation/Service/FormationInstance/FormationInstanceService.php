@@ -9,6 +9,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -348,6 +349,27 @@ class FormationInstanceService
         return $instance;
     }
 
+    /** Fonction de classement des inscriptions ***********************************************************************/
+
+    public function classerInscription(FormationInstanceInscrit $inscription) : FormationInstanceInscrit
+    {
+        $session = $inscription->getInstance();
+        $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
+        if ($session->getNbPlacePrincipale() > $placePrincipale) {
+            $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+            $this->getEntityManager()->flush($inscription);
+            return $inscription;
+        }
+        $placeComplementaire = $session->getPlaceDisponible(FormationInstanceInscrit::COMPLEMENTAIRE);
+        if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
+            $inscription->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
+            $this->getEntityManager()->flush($inscription);
+            return $inscription;
+        }
+        return $inscription;
+    }
+
+
     /**
      * @return FormationInstance[]
      * @attention se base sur l'etat !
@@ -375,4 +397,6 @@ class FormationInstanceService
 
         return $result;
     }
+
+
 }

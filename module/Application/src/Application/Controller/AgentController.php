@@ -2,12 +2,10 @@
 
 namespace Application\Controller;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\AgentAccompagnement;
 use Application\Entity\Db\AgentPPP;
 use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentTutorat;
-use Application\Entity\Db\FichePoste;
 use Element\Entity\Db\ApplicationElement;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
 use Application\Form\AgentPPP\AgentPPPFormAwareTrait;
@@ -132,9 +130,6 @@ class AgentController extends AbstractActionController
         $superieures = $this->getAgentService()->computeSuperieures($agent);
         $autorites = $this->getAgentService()->computeAutorites($agent, $superieures);
 
-
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
-
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
 
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
@@ -149,7 +144,6 @@ class AgentController extends AbstractActionController
             'echelon' => $agent->getEchelonActif(),
             'fichespostes' => $fichespostes,
 
-            'entretiens' => $entretiens,
             'superieures' => $superieures,
             'autorites' => $autorites,
 

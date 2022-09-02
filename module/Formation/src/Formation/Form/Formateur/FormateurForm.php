@@ -1,14 +1,13 @@
 <?php
 
-namespace Formation\Form\FormationInstanceFormateur;
+namespace Formation\Form\Formateur;
 
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
-use Laminas\Validator\Regex;
 
-class FormationInstanceFormateurForm extends Form
+class FormateurForm extends Form
 {
 
     public function init()

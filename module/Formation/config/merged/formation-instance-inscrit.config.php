@@ -2,12 +2,14 @@
 
 namespace Formation;
 
-use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
 use Formation\Controller\PlanFormationController;
 use Formation\Controller\ProjetPersonnelController;
-use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
+use Formation\Form\Inscription\InscriptionForm;
+use Formation\Form\Inscription\InscriptionFormFactory;
+use Formation\Form\Inscription\InscriptionHydrator;
+use Formation\Form\Inscription\InscriptionHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
@@ -30,6 +32,7 @@ return [
                         'supprimer-agent',
                         'envoyer-liste-principale',
                         'envoyer-liste-complementaire',
+                        'classer-inscription',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -50,7 +53,9 @@ return [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
                         'valider-responsable',
+                        'refuser-responsable',
                         'valider-drh',
+                        'refuser-drh',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -142,6 +147,16 @@ return [
                             ],
                         ],
                     ],
+                    'refuser-responsable' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refuser-responsable/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'refuser-responsable',
+                            ],
+                        ],
+                    ],
                     'valider-drh' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -149,6 +164,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'valider-drh',
+                            ],
+                        ],
+                    ],
+                    'refuser-drh' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refuser-drh/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'refuser-drh',
                             ],
                         ],
                     ],
@@ -212,6 +237,16 @@ return [
                             ],
                         ],
                     ],
+                    'classer-inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/classer-inscription/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'classer-inscription',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -228,10 +263,14 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            InscriptionForm::class => InscriptionFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            InscriptionHydrator::class => InscriptionHydratorFactory::class,
+        ],
     ]
 
 ];

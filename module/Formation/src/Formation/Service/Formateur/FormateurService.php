@@ -1,26 +1,26 @@
 <?php
 
-namespace Formation\Service\FormationInstanceFormateur;
+namespace Formation\Service\Formateur;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Formation\Entity\Db\FormationInstanceFormateur;
+use Formation\Entity\Db\Formateur;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceFormateurService
+class FormateurService
 {
     use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param FormationInstanceFormateur $formateur
-     * @return FormationInstanceFormateur
+     * @param Formateur $formateur
+     * @return Formateur
      */
-    public function create(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
+    public function create(Formateur $formateur) : Formateur
     {
         try {
             $this->getEntityManager()->persist($formateur);
@@ -32,10 +32,10 @@ class FormationInstanceFormateurService
     }
 
     /**
-     * @param FormationInstanceFormateur $formateur
-     * @return FormationInstanceFormateur
+     * @param Formateur $formateur
+     * @return Formateur
      */
-    public function update(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
+    public function update(Formateur $formateur) : Formateur
     {
         try {
             $this->getEntityManager()->flush($formateur);
@@ -46,10 +46,10 @@ class FormationInstanceFormateurService
     }
 
     /**
-     * @param FormationInstanceFormateur $formateur
-     * @return FormationInstanceFormateur
+     * @param Formateur $formateur
+     * @return Formateur
      */
-    public function historise(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
+    public function historise(Formateur $formateur) : Formateur
     {
         try {
             $formateur->historiser();
@@ -61,10 +61,10 @@ class FormationInstanceFormateurService
     }
 
     /**
-     * @param FormationInstanceFormateur $formateur
-     * @return FormationInstanceFormateur
+     * @param Formateur $formateur
+     * @return Formateur
      */
-    public function restore(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
+    public function restore(Formateur $formateur) : Formateur
     {
         try {
             $formateur->dehistoriser();
@@ -76,10 +76,10 @@ class FormationInstanceFormateurService
     }
 
     /**
-     * @param FormationInstanceFormateur $formateur
-     * @return FormationInstanceFormateur
+     * @param Formateur $formateur
+     * @return Formateur
      */
-    public function delete(FormationInstanceFormateur $formateur) : FormationInstanceFormateur
+    public function delete(Formateur $formateur) : Formateur
     {
         try {
             $this->getEntityManager()->remove($formateur);
@@ -97,16 +97,16 @@ class FormationInstanceFormateurService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceFormateur::class)->createQueryBuilder('formateur')
+        $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
             ->addSelect('finstance')->join('formateur.instance', 'finstance');
         return $qb;
     }
 
     /**
      * @param int|null $id
-     * @return FormationInstanceFormateur|null
+     * @return Formateur|null
      */
-    public function getFormationInstanceFormateur(?int $id) : ?FormationInstanceFormateur
+    public function getFormateur(?int $id) : ?Formateur
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formateur.id = :id')
@@ -114,7 +114,7 @@ class FormationInstanceFormateurService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstanceFormateur partagent le même id [" . $id . "]");
+            throw new RuntimeException("Plusieurs Formateur partagent le même id [" . $id . "]");
         }
         return $result;
     }
@@ -122,11 +122,11 @@ class FormationInstanceFormateurService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstanceFormateur|null
+     * @return Formateur|null
      */
-    public function getRequestedFormationInstanceFormateur(AbstractActionController $controller, string $param = 'formateur') : ?FormationInstanceFormateur
+    public function getRequestedFormateur(AbstractActionController $controller, string $param = 'formateur') : ?Formateur
     {
         $id = $controller->params()->fromRoute($param);
-        return $this->getFormationInstanceFormateur($id);
+        return $this->getFormateur($id);
     }
 }

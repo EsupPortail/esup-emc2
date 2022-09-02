@@ -36,7 +36,9 @@ $canInscrire = true;
                     <span class="alert alert-danger">Action de formation complète.</span>
                 <?php else: ?>
                     <?php if ($canInscrire) : ?>
-                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+                        <?php /**  @see \Formation\Controller\FormationInstanceInscritController::inscriptionAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon inscription-ouverture"> Je m'inscris</span>
                         </a>
                     <?php endif; ?>

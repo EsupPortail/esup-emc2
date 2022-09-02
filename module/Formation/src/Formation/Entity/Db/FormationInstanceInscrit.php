@@ -46,6 +46,10 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     /** @var string|null */
     private $complement;
 
+    private ?string $justificationAgent = null;
+    private ?string $justificationResponsable = null;
+    private ?string $justificationRefus = null;
+
     /**
      * @return int
      */
@@ -145,30 +149,46 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getComplement(): ?string
+    /** JUSTIFICATIONS  *************************************************************************************/
+
+    public function getJustificationAgent(): ?string
     {
-        return $this->complement;
+        return $this->justificationAgent;
     }
 
-    /**
-     * @param string|null $complement
-     * @return FormationInstanceInscrit
-     */
-    public function setComplement(?string $complement): FormationInstanceInscrit
+    public function setJustificationAgent(?string $justificationAgent): void
     {
-        $this->complement = $complement;
-        return $this;
+        $this->justificationAgent = $justificationAgent;
     }
+
+    public function getJustificationResponsable(): ?string
+    {
+        return $this->justificationResponsable;
+    }
+
+    public function setJustificationResponsable(?string $justificationResponsable): void
+    {
+        $this->justificationResponsable = $justificationResponsable;
+    }
+
+    public function getJustificationRefus(): ?string
+    {
+        return $this->justificationRefus;
+    }
+
+    public function setJustificationRefus(?string $justificationRefus): void
+    {
+        $this->justificationRefus = $justificationRefus;
+    }
+
+    /** PRESENCES *****************************************************************************************************/
 
     public function getPresences() : array
     {
         return $this->presences->toArray();
     }
 
-    public function wasPresent(FormationInstanceJournee $journee)
+    public function wasPresent(FormationInstanceJournee $journee) : bool
     {
         /** @var FormationInstancePresence $presence */
         foreach ($this->presences as $presence) {
