@@ -82,9 +82,10 @@ class FormationInstanceDocumentController extends AbstractActionController
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
         $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('');
-        $exporter->setFooterScript('');
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
@@ -106,9 +107,10 @@ class FormationInstanceDocumentController extends AbstractActionController
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('');
-        $exporter->setFooterScript('');
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
