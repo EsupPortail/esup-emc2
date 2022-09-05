@@ -1,26 +1,26 @@
 <?php
 
-namespace Formation\Service\FormationInstanceJournee;
+namespace Formation\Service\Seance;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
+use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
-class FormationInstanceJourneeService
+class SeanceService
 {
     use EntityManagerAwareTrait;
 
     /**  GESTION ENTITY ***********************************************************************************************/
 
     /**
-     * @param FormationInstanceJournee $journee
-     * @return FormationInstanceJournee
+     * @param Seance $journee
+     * @return Seance
      */
-    public function create(FormationInstanceJournee $journee) : FormationInstanceJournee
+    public function create(Seance $journee) : Seance
     {
         try {
             $this->getEntityManager()->persist($journee);
@@ -32,10 +32,10 @@ class FormationInstanceJourneeService
     }
 
     /**
-     * @param FormationInstanceJournee $journee
-     * @return FormationInstanceJournee
+     * @param Seance $journee
+     * @return Seance
      */
-    public function update(FormationInstanceJournee $journee) : FormationInstanceJournee
+    public function update(Seance $journee) : Seance
     {
         try {
             $this->getEntityManager()->flush($journee);
@@ -46,10 +46,10 @@ class FormationInstanceJourneeService
     }
 
     /**
-     * @param FormationInstanceJournee $journee
-     * @return FormationInstanceJournee
+     * @param Seance $journee
+     * @return Seance
      */
-    public function historise(FormationInstanceJournee $journee) : FormationInstanceJournee
+    public function historise(Seance $journee) : Seance
     {
         try {
             $journee->historiser();
@@ -61,10 +61,10 @@ class FormationInstanceJourneeService
     }
 
     /**
-     * @param FormationInstanceJournee $journee
-     * @return FormationInstanceJournee
+     * @param Seance $journee
+     * @return Seance
      */
-    public function restore(FormationInstanceJournee $journee) : FormationInstanceJournee
+    public function restore(Seance $journee) : Seance
     {
         try {
             $journee->dehistoriser();
@@ -76,10 +76,10 @@ class FormationInstanceJourneeService
     }
 
     /**
-     * @param FormationInstanceJournee $journee
-     * @return FormationInstanceJournee
+     * @param Seance $journee
+     * @return Seance
      */
-    public function delete(FormationInstanceJournee $journee) : FormationInstanceJournee
+    public function delete(Seance $journee) : Seance
     {
         try {
             $this->getEntityManager()->remove($journee);
@@ -97,7 +97,7 @@ class FormationInstanceJourneeService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceJournee::class)->createQueryBuilder('journee')
+        $qb = $this->getEntityManager()->getRepository(Seance::class)->createQueryBuilder('journee')
             ->addSelect('finstance')->join('journee.instance', 'finstance')
             ->addSelect('formation')->join('finstance.formation', 'formation');
         return $qb;
@@ -106,9 +106,9 @@ class FormationInstanceJourneeService
     /**
      * @param string $champ
      * @param string $ordre
-     * @return FormationInstanceJournee[]
+     * @return Seance[]
      */
-    public function getFormationsInstancesJournees($champ = 'id', $ordre = 'ASC')
+    public function getSeances(string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('journee.' . $champ, $ordre);
@@ -118,9 +118,9 @@ class FormationInstanceJourneeService
 
     /**
      * @param integer $id
-     * @return FormationInstanceJournee
+     * @return Seance|null
      */
-    public function getFormationInstanceJournee(int $id)
+    public function getSeance(int $id) : ?Seance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.id = :id')
@@ -136,16 +136,16 @@ class FormationInstanceJourneeService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstanceJournee
+     * @return Seance|null
      */
-    public function getRequestedFormationInstanceJournee(AbstractActionController $controller, $param = 'journee')
+    public function getRequestedSeance(AbstractActionController $controller, string $param = 'journee') : ?Seance
     {
         $id = $controller->params()->fromRoute($param);
-        $result = $this->getFormationInstanceJournee($id);
+        $result = $this->getSeance($id);
         return $result;
     }
 
-    public function getFormationInstanceJourneeBySource(string $source, string $idSource)
+    public function getSeanceBySource(string $source, string $idSource)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.source = :source')

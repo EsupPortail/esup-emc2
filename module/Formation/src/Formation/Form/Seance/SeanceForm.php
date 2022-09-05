@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Form\FormationJournee;
+namespace Formation\Form\Seance;
 
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\DateTime;
@@ -8,7 +8,7 @@ use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
-class FormationJourneeForm extends Form
+class SeanceForm extends Form
 {
 
     public function init()

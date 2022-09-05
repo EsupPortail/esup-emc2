@@ -3,26 +3,26 @@
 namespace Formation\Controller;
 
 use Application\Service\Macro\MacroServiceAwareTrait;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class FormationInstanceDocumentController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
-    use FormationInstanceJourneeServiceAwareTrait;
     use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use SeanceServiceAwareTrait;
     use TemplateServiceAwareTrait;
 
     private $renderer;
@@ -34,7 +34,7 @@ class FormationInstanceDocumentController extends AbstractActionController
 
     public function exportEmargementAction()
     {
-        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
+        $journee = $this->getSeanceService()->getRequestedSeance($this);
 
         $exporter = new EmargementPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
@@ -56,7 +56,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $journees = $instance->getJournees();
-        $journees = array_filter($journees, function (FormationInstanceJournee $a) {
+        $journees = array_filter($journees, function (Seance $a) {
             return $a->estNonHistorise();
         });
 

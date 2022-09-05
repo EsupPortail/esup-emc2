@@ -1,16 +1,16 @@
 <?php
 
-namespace Formation\Form\FormationJournee;
+namespace Formation\Form\Seance;
 
 use DateTime;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Laminas\Hydrator\HydratorInterface;
 
-class FormationJourneeHydrator implements HydratorInterface
+class SeanceHydrator implements HydratorInterface
 {
 
     /**
-     * @param FormationInstanceJournee $object
+     * @param Seance $object
      * @return array
      */
     public function extract($object): array
@@ -27,8 +27,8 @@ class FormationJourneeHydrator implements HydratorInterface
 
     /**
      * @param array $data
-     * @param FormationInstanceJournee $object
-     * @return FormationInstanceJournee
+     * @param Seance $object
+     * @return Seance
      */
     public function hydrate(array $data, $object)
     {

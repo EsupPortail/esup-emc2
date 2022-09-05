@@ -10,17 +10,17 @@ use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFrais;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
 use Formation\Entity\Db\LAGAFStagiaire;
 use Formation\Entity\Db\Presence;
+use Formation\Entity\Db\Seance;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -31,7 +31,7 @@ class ImportationLagafController extends AbstractActionController {
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceJourneeServiceAwareTrait;
+    use SeanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
     use PresenceAwareTrait;
@@ -257,9 +257,9 @@ class ImportationLagafController extends AbstractActionController {
             $instance = isset($instances[$st_action_id . "-" . $st_session_id])?$instances[$st_action_id . "-" . $st_session_id]:null;
             if ($instance !== null) {
                 $st_id_source = $st_seance_id . "-" . $st_plage_id;
-                $journee = $this->getFormationInstanceJourneeService()->getFormationInstanceJourneeBySource('LAGAF', $st_id_source);
+                $journee = $this->getSeanceService()->getSeanceBySource('LAGAF', $st_id_source);
                 if ($journee === null) {
-                    $journee = new FormationInstanceJournee();
+                    $journee = new Seance();
                     $journee->setInstance($instance);
                     $journee->setJour(DateTime::createFromFormat('d/m/Y', $st_date));
                     $journee->setDebut($st_debut);
@@ -268,7 +268,7 @@ class ImportationLagafController extends AbstractActionController {
                     $journee->setRemarque($st_responsable);
                     $journee->setSource("LAGAF");
                     $journee->setIdSource($st_id_source);
-                    $this->getFormationInstanceJourneeService()->create($journee);
+                    $this->getSeanceService()->create($journee);
                     $instances[] = $journee;
                 }
             }
@@ -480,7 +480,7 @@ class ImportationLagafController extends AbstractActionController {
         $position_presence         = array_search('Présence', $array[0]);
 
 
-        $journees_tmp = $this->getFormationInstanceJourneeService()->getFormationsInstancesJournees();
+        $journees_tmp = $this->getSeanceService()->getSeances();
         $journees = [];
         foreach ($journees_tmp as $journee) {
             if ($journee->getSource() === 'LAGAF') {

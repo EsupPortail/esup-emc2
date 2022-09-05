@@ -7,7 +7,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Presence;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -140,11 +140,11 @@ class PresenceService
     }
 
     /**
-     * @param FormationInstanceJournee $journee
+     * @param Seance $journee
      * @param FormationInstanceInscrit $inscrit
      * @return Presence|null
      */
-    public function getPresenceByJourneeAndInscrit(FormationInstanceJournee $journee, FormationInstanceInscrit $inscrit) : ?Presence
+    public function getPresenceByJourneeAndInscrit(Seance $journee, FormationInstanceInscrit $inscrit) : ?Presence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('presence.journee = :journee')

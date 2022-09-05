@@ -9,12 +9,12 @@
 
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Presence;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
-/** @var FormationInstanceJournee[] $journees */
+/** @var Seance[] $journees */
 $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getListePrincipale();
@@ -151,7 +151,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
 <script>
     let journees = [
         <?php
-            $array = array_map(function(FormationInstanceJournee $a) {return $a->getId();}, $journees);
+            $array = array_map(function(Seance $a) {return $a->getId();}, $journees);
             echo implode(",", $array);
             ?>
     ];

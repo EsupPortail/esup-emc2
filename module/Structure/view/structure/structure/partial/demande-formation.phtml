@@ -1,7 +1,7 @@
 <?php
 
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\InscriptionEtats;
 
 /**
@@ -20,7 +20,7 @@ $annee = ($month > 8 ) ? ($year . "/" . ($year+1)) : (($year-1) . "/" . $year);
 
 $inscriptions = array_filter($inscriptions, function (FormationInstanceInscrit $inscription) use ($maxi, $mini) {
     if ($inscription->getInstance()->getDebut() === null) return false;
-    /** @var FormationInstanceJournee $journee */
+    /** @var Seance $journee */
     foreach ($inscription->getInstance()->getJournees() as $journee) {
         $date = $journee->getJour();
         if ($date >= $mini AND $date <= $maxi) return true;

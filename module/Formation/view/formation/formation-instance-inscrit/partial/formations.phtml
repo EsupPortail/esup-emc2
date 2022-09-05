@@ -10,19 +10,17 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\SessionEtats;
 
-$retours = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS;} );
-$closes  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === SessionEtats::ETAT_CLOTURE_INSTANCE;} );
+$realisees  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->estRealisee();} );
 ?>
 
 <h2>
-    Formations en attentes de retour
-    <span class="badge"><?php echo count($retours); ?></span>
+    Formations réalisées
 </h2>
 
-<?php if (empty($retours)) : ?>
+<?php if (empty($realisees)) : ?>
     <em> Aucune formation en attente de retour </em>
 <?php else : ?>
-    <?php foreach ($retours as $inscription) : ?>
+    <?php foreach ($realisees as $inscription) : ?>
         <div class="row formation-inscription">
             <div class="col-md-8 description">
                 <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
@@ -42,34 +40,6 @@ $closes  = array_filter($formations, function (FormationInstanceInscrit $a) { re
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
                         class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
-                >
-                    <span class="icon icon-pdf"> Je télécharge mon attestation</span>
-                </a>
-            </div>
-        </div>
-    <?php endforeach; ?>
-<?php endif; ?>
-
-<h2>
-    Formations closes
-    <span class="badge"><?php echo count($closes); ?></span>
-</h2>
-
-<?php if (empty($closes)) : ?>
-    <em> Aucune formation close </em>
-<?php else : ?>
-    <?php foreach ($closes as $inscription) : ?>
-        <div class="row formation-inscription">
-            <div class="col-md-8 description">
-                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
-                <br/>
-                <br/>
-            </div>
-            <div class="col-md-4">
-                <a
-                <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                    href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
-                    class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
                 >
                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>

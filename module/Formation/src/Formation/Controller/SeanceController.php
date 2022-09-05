@@ -2,28 +2,29 @@
 
 namespace Formation\Controller;
 
-use Formation\Entity\Db\FormationInstanceJournee;
-use Formation\Form\FormationJournee\FormationJourneeFormAwareTrait;
+use Formation\Entity\Db\Seance;
+use Formation\Form\Seance\SeanceFormAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class FormationInstanceJourneeController extends AbstractActionController
+class SeanceController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceJourneeServiceAwareTrait;
-    use FormationJourneeFormAwareTrait;
+    use SeanceServiceAwareTrait;
+    use SeanceFormAwareTrait;
 
-    public function ajouterJourneeAction()
+    public function ajouterJourneeAction() : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
-        $journee = new FormationInstanceJournee();
+        $journee = new Seance();
         $journee->setInstance($instance);
 
-        $form = $this->getFormationJourneeForm();
+        $form = $this->getSeanceForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true));
         $form->bind($journee);
 
@@ -32,7 +33,7 @@ class FormationInstanceJourneeController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getFormationInstanceJourneeService()->create($journee);
+                $this->getSeanceService()->create($journee);
             }
         }
 
@@ -45,11 +46,11 @@ class FormationInstanceJourneeController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierJourneeAction()
+    public function modifierJourneeAction() : ViewModel
     {
-        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
+        $journee = $this->getSeanceService()->getRequestedSeance($this);
 
-        $form = $this->getFormationJourneeForm();
+        $form = $this->getSeanceForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true));
         $form->bind($journee);
 
@@ -58,7 +59,7 @@ class FormationInstanceJourneeController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getFormationInstanceJourneeService()->update($journee);
+                $this->getSeanceService()->update($journee);
             }
         }
 
@@ -71,29 +72,29 @@ class FormationInstanceJourneeController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserJourneeAction()
+    public function historiserJourneeAction() : Response
     {
-        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
-        $this->getFormationInstanceJourneeService()->historise($journee);
+        $journee = $this->getSeanceService()->getRequestedSeance($this);
+        $this->getSeanceService()->historise($journee);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
     }
 
-    public function restaurerJourneeAction()
+    public function restaurerJourneeAction() : Response
     {
-        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
-        $this->getFormationInstanceJourneeService()->restore($journee);
+        $journee = $this->getSeanceService()->getRequestedSeance($this);
+        $this->getSeanceService()->restore($journee);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
     }
 
     public function supprimerJourneeAction()
     {
-        $journee = $this->getFormationInstanceJourneeService()->getRequestedFormationInstanceJournee($this);
+        $journee = $this->getSeanceService()->getRequestedSeance($this);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") $this->getFormationInstanceJourneeService()->delete($journee);
+            if ($data["reponse"] === "oui") $this->getSeanceService()->delete($journee);
             exit();
         }
 

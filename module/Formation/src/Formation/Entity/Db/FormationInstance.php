@@ -261,7 +261,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getFin() : ?string
     {
         $maximum = null;
-        /** @var FormationInstanceJournee $journee */
+        /** @var Seance $journee */
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) {
                 $split = explode("/", $journee->getJour()->format('d/m/Y'));
@@ -281,7 +281,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      */
     public function hasJournee() : bool
     {
-        /** @var FormationInstanceJournee $journee */
+        /** @var Seance $journee */
         foreach ($this->journees as $journee) {
             if ($journee->estNonHistorise()) return true;
         }
@@ -442,6 +442,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         );
     }
 
+    public function estRealisee() : bool
+    {
+        return (
+            $this->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS OR
+            $this->getEtat()->getCode() === SessionEtats::ETAT_CLOTURE_INSTANCE
+        );
+    }
+
     /** Fonctions pour les macros **********************************************************************************/
 
     public function getInstanceLibelle() : string
@@ -484,7 +492,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function getListeJournees() : string
     {
-        /** @var FormationInstanceJournee[] $journees */
+        /** @var Seance[] $journees */
         $journees = $this->getJournees();
         //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a > $b;});
 
@@ -520,7 +528,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function getListeComplementaireAgents() : string
     {
-        /** @var FormationInstanceInscrit[] $inscrits */
+        /** @var Seance[] $inscrits */
         $inscrits = $this->getListeComplementaire();
         $inscrits = array_filter($inscrits, function (FormationInstanceInscrit $a) {
             return $a->estNonHistorise();
@@ -554,8 +562,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getDuree() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
-        /** @var FormationInstanceJournee[] $journees */
-        $journees = array_filter($this->journees->toArray(), function (FormationInstanceJournee $a) {
+        /** @var Seance[] $journees */
+        $journees = array_filter($this->journees->toArray(), function (Seance $a) {
             return $a->estNonHistorise();
         });
         foreach ($journees as $journee) {

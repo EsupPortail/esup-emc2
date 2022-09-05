@@ -13,7 +13,7 @@ class Presence implements HistoriqueAwareInterface, HasSourceInterface
     use HasSourceTrait;
 
     private int $id = -1;
-    private ?FormationInstanceJournee $journee = null;
+    private ?Seance $journee = null;
     private ?FormationInstanceInscrit $inscrit = null;
     private ?string $presenceType = null;
     private bool $presenceTemoin = false;
@@ -24,12 +24,12 @@ class Presence implements HistoriqueAwareInterface, HasSourceInterface
         return $this->id;
     }
 
-    public function getJournee(): ?FormationInstanceJournee
+    public function getJournee(): ?Seance
     {
         return $this->journee;
     }
 
-    public function setJournee(?FormationInstanceJournee $journee) : void
+    public function setJournee(?Seance $journee) : void
     {
         $this->journee = $journee;
     }

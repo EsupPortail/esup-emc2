@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Formation\Service\Notification\NotificationService;
+use Formation\Service\Presence\PresenceService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
@@ -36,6 +37,7 @@ class FormationInstanceControllerFactory
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
+         * @var PresenceService $presenceService
          * @var RappelAgentAvantFormationService $rappelAgentAvantFormationService
          */
         $etatService = $container->get(EtatService::class);
@@ -46,6 +48,7 @@ class FormationInstanceControllerFactory
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
+        $presenceService = $container->get(PresenceService::class);
         $rappelAgentAvantFormationService = $container->get(RappelAgentAvantFormationService::class);
 
         /**
@@ -64,6 +67,7 @@ class FormationInstanceControllerFactory
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
+        $controller->setPresenceService($presenceService);
         $controller->setRappelAgentAvantFormationService($rappelAgentAvantFormationService);
         return $controller;
     }

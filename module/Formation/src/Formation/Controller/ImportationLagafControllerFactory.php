@@ -10,6 +10,7 @@ namespace Formation\Controller;
  use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
  use Formation\Service\HasFormationCollection\HasFormationCollectionService;
  use Formation\Service\Presence\PresenceService;
+ use Formation\Service\Seance\SeanceService;
  use Formation\Service\Stagiaire\StagiaireService;
  use Interop\Container\ContainerInterface;
  use UnicaenEtat\Service\Etat\EtatService;
@@ -27,7 +28,7 @@ namespace Formation\Controller;
           * @var FormationService $formationService
           * @var FormationGroupeService $formationGroupeService
           * @var FormationInstanceService $formationInstanceService
-          * @var FormationInstanceJourneeService $formationInstanceJourneeService
+          * @var SeanceService $seanceService
           * @var FormationInstanceInscritService $formationInstanceInscritService
           * @var FormationInstanceFraisService $formationInstanceFraisService
           * @var PresenceService $presenceService
@@ -38,7 +39,7 @@ namespace Formation\Controller;
          $formationService = $container->get(FormationService::class);
          $formationGroupeService = $container->get(FormationGroupeService::class);
          $formationInstanceService = $container->get(FormationInstanceService::class);
-         $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
+         $seanceService = $container->get(SeanceService::class);
          $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
          $formationInstanceFraisService = $container->get(FormationInstanceFraisService::class);
          $presenceService = $container->get(PresenceService::class);
@@ -50,7 +51,7 @@ namespace Formation\Controller;
          $controller->setFormationService($formationService);
          $controller->setFormationGroupeService($formationGroupeService);
          $controller->setFormationInstanceService($formationInstanceService);
-         $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
+         $controller->setSeanceService($seanceService);
          $controller->setFormationInstanceInscritService($formationInstanceInscritService);
          $controller->setFormationInstanceFraisService($formationInstanceFraisService);
          $controller->setPresenceService($presenceService);

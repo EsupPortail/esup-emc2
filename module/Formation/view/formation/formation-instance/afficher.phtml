@@ -4,7 +4,7 @@ use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
@@ -15,6 +15,7 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
 /**
  * @see FormationInstanceController::afficherAction()
  * @var FormationInstance $instance
+ * @var array $presences
  * @var Mail[] $mails
  */
 
@@ -28,7 +29,7 @@ $retour = $this->url('formation-instance/afficher', ['formation-instance' => $in
 
 /** @var Formation $formation */
 $formation = $instance->getFormation();
-/** @var FormationInstanceJournee[] $journees */
+/** @var Seance[] $journees */
 $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getInscrits();
@@ -339,7 +340,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
     <div id="presences" class="tab-pane">
         <h2> Présence aux séances</h2>
 
-        <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'titre' => false], [], true); ?>
+        <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'presences' => $presences, 'titre' => false], [], true); ?>
     </div>
 
 </div>

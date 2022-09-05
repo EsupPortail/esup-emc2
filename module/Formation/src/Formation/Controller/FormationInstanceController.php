@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -32,6 +33,7 @@ class FormationInstanceController extends AbstractActionController
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use RappelAgentAvantFormationServiceAwareTrait;
 
@@ -81,9 +83,17 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
 
+        $presences = $this->getPresenceService()->getPresenceByInstance($instance);
+
+        $dictionnaire = [];
+        foreach ($presences as $presence) {
+            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscrit()->getId()] = $presence;
+        }
+
         return new ViewModel([
             'instance' => $instance,
             'mode' => "affichage",
+            'presences' => $dictionnaire,
             'mails' => $mails,
         ]);
     }

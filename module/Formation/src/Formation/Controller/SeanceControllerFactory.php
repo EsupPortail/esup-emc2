@@ -2,41 +2,40 @@
 
 namespace Formation\Controller;
 
+use Formation\Form\Seance\SeanceForm;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PresenceControllerFactory
+class SeanceControllerFactory
 {
 
     /**
      * @param ContainerInterface $container
-     * @return PresenceController
+     * @return SeanceController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PresenceController
+    public function __invoke(ContainerInterface $container) : SeanceController
     {
         /**
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var PresenceService $presenceService
          * @var SeanceService $seanceService
          */
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $presenceService = $container->get(PresenceService::class);
         $seanceService = $container->get(SeanceService::class);
 
-        $controller = new PresenceController();
+        /**
+         * @var SeanceForm $seanceForm
+         */
+        $seanceForm = $container->get('FormElementManager')->get(SeanceForm::class);
+
+        $controller = new SeanceController();
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setPresenceService($presenceService);
         $controller->setSeanceService($seanceService);
+        $controller->setSeanceForm($seanceForm);
         return $controller;
     }
 }

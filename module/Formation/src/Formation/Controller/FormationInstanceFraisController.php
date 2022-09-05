@@ -7,7 +7,7 @@ use Formation\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -15,9 +15,9 @@ class FormationInstanceFraisController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
-    use FormationInstanceJourneeServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
     use FormationInstanceFraisFormAwareTrait;
+    use SeanceServiceAwareTrait;
 
     public function renseignerFraisAction()
     {

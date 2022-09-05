@@ -6,6 +6,7 @@ use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
+use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -26,15 +27,15 @@ class FormationInstanceDocumentControllerFactory
         /**
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var FormationInstanceJourneeService $formationInstanceJourneeService
          * @var MacroService $macroService
          * @var RenduService $renduService
+         * @var SeanceService $seanceService
          */
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
         $macroService = $container->get(MacroService::class);
         $renduService = $container->get(RenduService::class);
+        $seanceService = $container->get(SeanceService::class);
 
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
@@ -43,9 +44,9 @@ class FormationInstanceDocumentControllerFactory
         $controller = new FormationInstanceDocumentController();
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
         $controller->setMacroService($macroService);
         $controller->setRenduService($renduService);
+        $controller->setSeanceService($seanceService);
         $controller->setRenderer($renderer);
 
         return $controller;

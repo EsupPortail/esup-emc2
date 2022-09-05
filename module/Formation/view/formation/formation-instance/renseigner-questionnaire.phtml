@@ -1,7 +1,7 @@
 <?php
 
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
@@ -48,7 +48,7 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
 
                     <table class="presence">
                     <tr>
-                    <?php /** @var FormationInstanceJournee $journee */?>
+                    <?php /** @var Seance $journee */?>
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="journee">
                         <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>

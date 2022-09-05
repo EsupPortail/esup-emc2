@@ -20,7 +20,7 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many field="journees"   target-entity="Formation\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
+        <one-to-many field="journees"   target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
         <one-to-many field="inscrits"   target-entity="Formation\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
         <one-to-many field="formateurs" target-entity="Formation\Entity\Db\Formateur"    mapped-by="instance"/>
 

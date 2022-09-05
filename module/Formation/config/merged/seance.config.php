@@ -2,24 +2,24 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationInstanceJourneeController;
-use Formation\Controller\FormationInstanceJourneeControllerFactory;
-use Formation\Form\FormationJournee\FormationJourneeForm;
-use Formation\Form\FormationJournee\FormationJourneeFormFactory;
-use Formation\Form\FormationJournee\FormationJourneeHydrator;
-use Formation\Form\FormationJournee\FormationJourneeHydratorFactory;
+use Formation\Controller\SeanceController;
+use Formation\Controller\SeanceControllerFactory;
+use Formation\Form\Seance\SeanceForm;
+use Formation\Form\Seance\SeanceFormFactory;
+use Formation\Form\Seance\SeanceHydrator;
+use Formation\Form\Seance\SeanceHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Formation\Service\Seance\SeanceService;
+use Formation\Service\Seance\SeanceServiceFactory;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FormationInstanceJourneeController::class,
+                    'controller' => SeanceController::class,
                     'action' => [
                         'ajouter-journee',
                         'modifier-journee',
@@ -44,7 +44,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter-journee/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceJourneeController::class,
+                                'controller' => SeanceController::class,
                                 'action'     => 'ajouter-journee',
                             ],
                         ],
@@ -54,7 +54,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-journee/:journee',
                             'defaults' => [
-                                'controller' => FormationInstanceJourneeController::class,
+                                'controller' => SeanceController::class,
                                 'action'     => 'modifier-journee',
                             ],
                         ],
@@ -64,7 +64,7 @@ return [
                         'options' => [
                             'route'    => '/historiser-journee/:journee',
                             'defaults' => [
-                                'controller' => FormationInstanceJourneeController::class,
+                                'controller' => SeanceController::class,
                                 'action'     => 'historiser-journee',
                             ],
                         ],
@@ -74,7 +74,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer-journee/:journee',
                             'defaults' => [
-                                'controller' => FormationInstanceJourneeController::class,
+                                'controller' => SeanceController::class,
                                 'action'     => 'restaurer-journee',
                             ],
                         ],
@@ -84,7 +84,7 @@ return [
                         'options' => [
                             'route'    => '/supprimer-journee/:journee',
                             'defaults' => [
-                                'controller' => FormationInstanceJourneeController::class,
+                                'controller' => SeanceController::class,
                                 'action'     => 'supprimer-journee',
                             ],
                         ],
@@ -96,22 +96,22 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FormationInstanceJourneeService::class => FormationInstanceJourneeServiceFactory::class,
+            SeanceService::class => SeanceServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            FormationInstanceJourneeController::class => FormationInstanceJourneeControllerFactory::class,
+            SeanceController::class => SeanceControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            FormationJourneeForm::class => FormationJourneeFormFactory::class,
+            SeanceForm::class => SeanceFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            FormationJourneeHydrator::class => FormationJourneeHydratorFactory::class,
+            SeanceHydrator::class => SeanceHydratorFactory::class,
         ],
     ]
 

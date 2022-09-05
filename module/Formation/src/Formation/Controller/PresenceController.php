@@ -5,8 +5,8 @@ namespace Formation\Controller;
 use Formation\Entity\Db\Presence;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -14,8 +14,8 @@ class PresenceController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
-    use FormationInstanceJourneeServiceAwareTrait;
     use PresenceAwareTrait;
+    use SeanceServiceAwareTrait;
 
 
     public function renseignerPresencesAction() : ViewModel
@@ -37,7 +37,7 @@ class PresenceController extends AbstractActionController
     public function togglePresenceAction() : ViewModel
     {
         $journeeId = $this->params()->fromRoute('journee');
-        $journee = $this->getFormationInstanceJourneeService()->getFormationInstanceJournee($journeeId);
+        $journee = $this->getSeanceService()->getSeance($journeeId);
         $inscritId = $this->params()->fromRoute('inscrit');
         $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscrit($inscritId);
 

@@ -6,14 +6,14 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\HasAgentInterface;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface, HasSourceInterface, ResourceInterface
 {
@@ -188,7 +188,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return $this->presences->toArray();
     }
 
-    public function wasPresent(FormationInstanceJournee $journee) : bool
+    public function wasPresent(Seance $journee) : bool
     {
         /** @var Presence $presence */
         foreach ($this->presences as $presence) {
