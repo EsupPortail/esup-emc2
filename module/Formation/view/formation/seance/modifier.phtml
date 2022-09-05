@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @see \Formation\Controller\SeanceController::ajouterJourneeAction()
+ * @see \Formation\Controller\SeanceController::modifierJourneeAction()
+ * @var SeanceForm $form
+ */
+
+use Formation\Form\Seance\SeanceForm;
+
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('type')); ?>
+
+<div id="seance">
+    <?php echo $this->formControlGroup($form->get('jour')); ?>
+    <?php echo $this->formControlGroup($form->get('debut')); ?>
+    <?php echo $this->formControlGroup($form->get('fin')); ?>
+</div>
+<div id="volume">
+    <?php echo $this->formControlGroup($form->get('volume')); ?>
+</div>
+<?php echo $this->formControlGroup($form->get('lieu')); ?>
+<?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+
+<script>
+    function checkType() {
+        let type = $('select#type').val();
+        console.log(type);
+        if (type === 'VOLUME') {
+            $('div#volume').show();
+            $('div#seance').hide();
+        }
+        if (type === 'SEANCE') {
+            $('div#volume').hide();
+            $('div#seance').show();
+        }
+    }
+
+    checkType();
+    $('select#type').change(
+        function() {
+            console.log(type);
+            checkType();
+        }
+    );
+    $('select').selectpicker();
+</script>

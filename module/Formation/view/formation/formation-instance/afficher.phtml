@@ -277,6 +277,7 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <table id="journees" class="datatable table table-condensed">
         <thead>
             <tr>
+                <th> Type </th>
                 <th> Jour </th>
                 <th> Début </th>
                 <th> Fin </th>
@@ -287,9 +288,16 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
         <tbody>
             <?php foreach ($journees as $journee) : ?>
             <tr <?php if ($journee->estHistorise()) echo " class='historise' "; ?>>
-                <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> </td>
-                <td> <?php echo $journee->getDebut(); ?> </td>
-                <td> <?php echo $journee->getFin(); ?> </td>
+                <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                    <td> Séance de formation </td>
+                    <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> </td>
+                    <td> <?php echo $journee->getDebut(); ?> </td>
+                    <td> <?php echo $journee->getFin(); ?> </td>
+                <?php endif; ?>
+                <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                    <td> Volume horaire </td>
+                    <td colspan="3"> <?php echo $journee->getVolume(); ?> heures </td>
+                <?php endif; ?>
                 <td> <?php echo $journee->getLieu(); ?></td>
                 <td>
                     <?php if ($canJourneeModifier) : ?>

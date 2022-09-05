@@ -13,11 +13,16 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     use HistoriqueAwareTrait;
     use HasSourceTrait;
 
+    const TYPE_SEANCE = "SEANCE";
+    const TYPE_VOLUME = "VOLUME";
+
     private ?int $id = null;
     private ?FormationInstance $instance = null;
+    private string $type = self::TYPE_SEANCE;
     private ?DateTime $jour = null;
     private ?string $debut = null;
     private ?string $fin = null;
+    private ?float $volume = null;
     private ?string $lieu = null;
     private ?string $remarque = null;
 
@@ -36,12 +41,23 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
         $this->instance = $instance;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    /** DONNEES RELATIVES AUX SEANCES **************************** */
     public function getJour() : ?DateTime
     {
         return $this->jour;
     }
 
-    public function setJour(DateTime $jour) : void
+    public function setJour(?DateTime $jour) : void
     {
         $this->jour = $jour;
     }
@@ -75,6 +91,20 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     {
         $this->lieu = $lieu;
     }
+
+    /** DONNEE RELATIVE AU "VOLUME" *****************************/
+
+    public function getVolume(): ?float
+    {
+        return $this->volume;
+    }
+
+    public function setVolume(?float $volume): void
+    {
+        $this->volume = $volume;
+    }
+
+    /** AUTRE ****************************************************** */
 
     public function getRemarque() : ?string
     {

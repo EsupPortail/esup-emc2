@@ -461,7 +461,7 @@ create table formation_instance_journee
     histo_destruction timestamp,
     histo_destructeur_id integer constraint formation_instance_journee_user_id_fk_3 references unicaen_utilisateur_user
 );
-create unique index formation_instance_journee_id_uindex on formation_instance_journee (id);
+create unique index formation_instance_journee_id_uindex on formation_seance (id);
 
 create table formation_instance_formateur
 (
@@ -483,7 +483,7 @@ create unique index formation_instance_formateur_id_uindex on formation_formateu
 create table formation_instance_presence
 (
     id serial not null constraint formation_instance_presence_pk primary key,
-    journee_id integer not null constraint formation_instance_presence_formation_instance_journee_id_fk references formation_instance_journee on delete cascade,
+    journee_id integer not null constraint formation_instance_presence_formation_instance_journee_id_fk references formation_seance on delete cascade,
     inscrit_id integer not null constraint formation_instance_presence_formation_instance_inscrit_id_fk references formation_instance_inscrit on delete cascade,
     presence_type varchar(256) not null,
     presence_temoin boolean not null,

@@ -6,9 +6,11 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\HasAgentInterface;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Mpdf\Shaper\Sea;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
@@ -206,10 +208,17 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         });
         foreach ($presences as $presence) {
             $journee = $presence->getJournee();
-            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-            $duree = $fin->diff($debut);
-            $sum->add($duree);
+            if ($journee->getType() === Seance::TYPE_SEANCE) {
+                $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+                $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
+                $duree = $debut->diff($fin);
+                $sum->add($duree);
+            }
+            if ($journee->getType() === Seance::TYPE_VOLUME) {
+                $volume = $journee->getVolume();
+                $temp = new DateInterval('PT'.$volume.'H');
+                $sum->add($temp);
+            }
         }
 
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));

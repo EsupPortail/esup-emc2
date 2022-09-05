@@ -17,10 +17,12 @@ class SeanceHydrator implements HydratorInterface
     {
         $jour = ($object->getJour())?$object->getJour()->format('d/m/Y'):null;
         $data = [
+            'type' => $object->getType(),
             'jour' => $jour,
             'debut' => $object->getDebut(),
             'fin' => $object->getFin(),
             'lieu' => $object->getLieu(),
+            'volume' => $object->getVolume(),
         ];
         return $data;
     }
@@ -32,15 +34,20 @@ class SeanceHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
+        $type = (isset($data['type'])) ? $data['type'] : null;
         $jour = (isset($data['jour'])) ? DateTime::createFromFormat('d/m/Y',$data['jour']) : null;
+        $jour = ($jour === false)?null:$jour;
         $debut = (isset($data['debut'])) ? $data['debut'] : null;
         $fin = (isset($data['fin'])) ? $data['fin'] : null;
         $lieu = (isset($data['lieu'])) ? $data['lieu'] : null;
+        $volume = (isset($data['volume'])) ? ((float) $data['volume']) : null;
 
+        $object->setType($type);
         $object->setJour($jour);
         $object->setDebut($debut);
         $object->setFin($fin);
         $object->setLieu($lieu);
+        $object->setVolume($volume);
 
         return $object;
     }

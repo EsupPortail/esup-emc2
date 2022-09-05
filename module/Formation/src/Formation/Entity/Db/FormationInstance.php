@@ -5,6 +5,7 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Provider\Etat\SessionEtats;
@@ -242,7 +243,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         $minimum = null;
         foreach ($this->journees as $journee) {
-            if ($journee->estNonHistorise()) {
+            if ($journee->estNonHistorise() AND $journee->getType() === Seance::TYPE_SEANCE) {
                 $split = explode("/", $journee->getJour()->format('d/m/Y'));
                 $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
                 if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
@@ -263,7 +264,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $maximum = null;
         /** @var Seance $journee */
         foreach ($this->journees as $journee) {
-            if ($journee->estNonHistorise()) {
+            if ($journee->estNonHistorise() AND $journee->getType() === Seance::TYPE_SEANCE) {
                 $split = explode("/", $journee->getJour()->format('d/m/Y'));
                 $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
                 if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
@@ -508,9 +509,15 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $text .= "<tbody>";
         foreach ($journees as $journee) {
             $text .= "<tr>";
-            $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
-            $text .= "<td>" . $journee->getDebut() . "</td>";
-            $text .= "<td>" . $journee->getFin() . "</td>";
+                if ($journee->getType() === Seance::TYPE_SEANCE) {
+                    $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
+                    $text .= "<td>" . $journee->getDebut() . "</td>";
+                    $text .= "<td>" . $journee->getFin() . "</td>";
+                }
+                if ($journee->getType() === Seance::TYPE_VOLUME) {
+                    $text .="<td colspan='2'>Volume horaire</td>";
+                    $text .="<td>" .$journee->getVolume(). " heures </td>";
+                }
             $text .= "<td>" . $journee->getLieu() . "</td>";
             $text .= "</tr>";
         }
@@ -567,10 +574,17 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return $a->estNonHistorise();
         });
         foreach ($journees as $journee) {
-            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-            $duree = $fin->diff($debut);
-            $sum->add($duree);
+            if ($journee->getType() === Seance::TYPE_SEANCE) {
+                $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+                $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
+                $duree = $debut->diff($fin);
+                $sum->add($duree);
+            }
+            if ($journee->getType() === Seance::TYPE_VOLUME) {
+                $volume = $journee->getVolume();
+                $temp = new DateInterval('PT'.$volume.'H');
+                $sum->add($temp);
+            }
         }
 
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));

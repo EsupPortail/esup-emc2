@@ -51,8 +51,13 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
                     <?php /** @var Seance $journee */?>
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="journee">
-                        <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>
-                        <?php echo $journee->getDebut(); ?> &rightarrow; <?php echo $journee->getFin(); ?>
+                            <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                                <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>
+                                <?php echo $journee->getDebut(); ?> &rightarrow; <?php echo $journee->getFin(); ?>
+                            <?php endif; ?>
+                            <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                                <?php echo $journee->getVolume(); ?> heures
+                            <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
                     </tr>

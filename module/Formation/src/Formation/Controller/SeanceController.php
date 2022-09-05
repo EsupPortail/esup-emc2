@@ -38,7 +38,7 @@ class SeanceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('formation/seance/modifier');
         $vm->setVariables([
             'title' => "Ajout d'une journée de formation",
             'form' => $form,
@@ -64,7 +64,7 @@ class SeanceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('formation/seance/modifier');
         $vm->setVariables([
             'title' => "Modification d'une journée de formation",
             'form' => $form,
