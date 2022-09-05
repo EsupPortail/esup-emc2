@@ -495,7 +495,7 @@ create table formation_instance_presence
     histo_destruction timestamp,
     histo_destructeur_id integer constraint formation_instance_presence_user_id_fk_3 references unicaen_utilisateur_user
 );
-create unique index formation_instance_presence_id_uindex on formation_instance_presence (id);
+create unique index formation_instance_presence_id_uindex on formation_presence (id);
 
 
 

@@ -11,20 +11,20 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceFrais;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
-use Formation\Entity\Db\FormationInstancePresence;
 use Formation\Entity\Db\LAGAFStagiaire;
+use Formation\Entity\Db\Presence;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
-use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class ImportationLagafController extends AbstractActionController {
     use EtatServiceAwareTrait;
@@ -34,7 +34,7 @@ class ImportationLagafController extends AbstractActionController {
     use FormationInstanceJourneeServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceFraisServiceAwareTrait;
-    use FormationInstancePresenceAwareTrait;
+    use PresenceAwareTrait;
     use StagiaireServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
@@ -495,7 +495,7 @@ class ImportationLagafController extends AbstractActionController {
             }
         }
 
-        $presences_tmp = $this->getFormationInstancePresenceService()->getFormationsInstancesPresences();
+        $presences_tmp = $this->getPresenceService()->getPresences();
         $olds = [];
         foreach ($presences_tmp as $presence) {
             if ($presence->getSource() === 'LAGAF') {
@@ -518,13 +518,13 @@ class ImportationLagafController extends AbstractActionController {
 
             if ($journee !== null AND $inscrit !== null) {
                 if (!isset($olds[$st_journee . "-" . $st_inscrit])) {
-                    $presence = new FormationInstancePresence();
+                    $presence = new Presence();
                     $presence->setJournee($journee);
                     $presence->setInscrit($inscrit);
                     $presence->setPresent($data[$position_presence] === "1");
                     $presence->setSource('LAGAF');
                     $presence->setIdSource($st_journee . "-" . $st_inscrit);
-                    $this->getFormationInstancePresenceService()->create($presence);
+                    $this->getPresenceService()->create($presence);
                     $presences[] = $presence;
                 }
             } else {

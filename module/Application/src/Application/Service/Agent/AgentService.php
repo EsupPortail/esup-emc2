@@ -16,7 +16,6 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\LogicException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -183,7 +182,7 @@ class AgentService {
         //en utilisant l'username si echec
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.login = :username')
-            ->setParameter('username', $user->getUsername());
+            ->setParameter('username', $user->getUsername())
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -237,7 +236,7 @@ class AgentService {
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
-        if ($structures !== null) {
+        if (!empty($structures)) {
             $qb = $qb->andWhere('affectation.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
@@ -257,7 +256,7 @@ class AgentService {
             ->addSelect('forcage')->join('agent.structuresForcees', 'forcage')
             ->andWhere('forcage.histoDestruction IS NULL');
 
-        if ($structures !== null) {
+        if (!empty(null)) {
             $qb = $qb->andWhere('forcage.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
@@ -304,15 +303,9 @@ class AgentService {
 
     /** Recuperation des supérieures et autorités  *********************************************************************/
 
-    /**
-     *
-     * @var Agent $agent
-     * @return array
-     */
-    public function computeSuperieures(Agent $agent) : array
+    public function computeComplements(Agent $agent, string $type) : array
     {
-       //checking complement
-        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), Complement::COMPLEMENT_TYPE_RESPONSABLE);
+        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), $type);
         $liste = [];
         if (!empty($complements)) {
             foreach ($complements as $complement) {
@@ -320,6 +313,16 @@ class AgentService {
                 if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
             }
         }
+        return $liste;
+    }
+
+    /**
+     * @param Agent $agent
+     * @return array
+     */
+    public function computeSuperieures(Agent $agent) : array
+    {
+        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_RESPONSABLE);
         if (!empty($liste)) return $liste;
 
        //checking structure
@@ -352,15 +355,7 @@ class AgentService {
      */
     public function computeAutorites(Agent $agent, ?array $superieurs = null) : array
     {
-        //checking complement
-        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), Complement::COMPLEMENT_TYPE_AUTORITE);
-        $liste = [];
-        if (!empty($complements)) {
-            foreach ($complements as $complement) {
-                $superieure = $this->getAgent($complement->getComplementId());
-                if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
-            }
-        }
+        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_AUTORITE);
         if (!empty($liste)) return $liste;
 
         // fetching superieurs if not given
@@ -491,6 +486,23 @@ class AgentService {
     /** FONCTION POUR LES RÔLES AUTOMATIQUES **************************************************************************/
 
     /**
+     * @param Complement[] $complements
+     * @return User[]
+     */
+    public function getUsersInComplements(array $complements) : array
+    {
+        $ids = [];
+        foreach ($complements as $item) $ids[$item->getComplementId()] = $item->getComplementId();
+
+        $users = [];
+        foreach ($ids as $id) {
+            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
+        }
+
+        return $users;
+    }
+
+    /**
      * @return User[]
      */
     public function getUsersInSuperieurs() : array
@@ -501,19 +513,7 @@ class AgentService {
             ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
         ;
         $result = $qb->getQuery()->getResult();
-
-        /** @var Complement[] $result */
-
-        $ids = [];
-        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
-
-        $users = [];
-        foreach ($ids as $id) {
-            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-            //else {var_dump("No agent with id = ".$id);}
-        }
-
-        return $users;
+        return $this->getUsersInComplements($result);
     }
 
     /**
@@ -549,19 +549,7 @@ class AgentService {
             ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
         ;
         $result = $qb->getQuery()->getResult();
-
-        /** @var Complement[] $result */
-
-        $ids = [];
-        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
-
-        $users = [];
-        foreach ($ids as $id) {
-            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-            //else {var_dump("No agent with id = ".$id);}
-        }
-
-        return $users;
+        return $this->getUsersInComplements($result);
     }
 
     /**

@@ -2,20 +2,20 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationInstancePresenceController;
-use Formation\Controller\FormationInstancePresenceControllerFactory;
+use Formation\Controller\PresenceController;
+use Formation\Controller\PresenceControllerFactory;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
-use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
-use Formation\Service\FormationInstancePresence\FormationInstancePresenceServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Formation\Service\Presence\PresenceService;
+use Formation\Service\Presence\PresenceServiceFactory;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => FormationInstancePresenceController::class,
+                    'controller' => PresenceController::class,
                     'action' => [
                         'renseigner-presences',
                     ],
@@ -24,7 +24,7 @@ return [
                     ],
                 ],
                 [
-                    'controller' => FormationInstancePresenceController::class,
+                    'controller' => PresenceController::class,
                     'action' => [
                         'toggle-presence',
                         'toggle-presences',
@@ -46,7 +46,7 @@ return [
                         'options' => [
                             'route'    => '/renseigner-presences/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstancePresenceController::class,
+                                'controller' => PresenceController::class,
                                 'action'     => 'renseigner-presences',
                             ],
                         ],
@@ -56,7 +56,7 @@ return [
                         'options' => [
                             'route'    => '/toggle-presence/:journee/:inscrit',
                             'defaults' => [
-                                'controller' => FormationInstancePresenceController::class,
+                                'controller' => PresenceController::class,
                                 'action'     => 'toggle-presence',
                             ],
                         ],
@@ -66,7 +66,7 @@ return [
                         'options' => [
                             'route'    => '/toggle-presences/:mode/:inscrit',
                             'defaults' => [
-                                'controller' => FormationInstancePresenceController::class,
+                                'controller' => PresenceController::class,
                                 'action'     => 'toggle-presences',
                             ],
                         ],
@@ -78,12 +78,12 @@ return [
 
     'service_manager' => [
         'factories' => [
-            FormationInstancePresenceService::class => FormationInstancePresenceServiceFactory::class,
+            PresenceService::class => PresenceServiceFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            FormationInstancePresenceController::class => FormationInstancePresenceControllerFactory::class,
+            PresenceController::class => PresenceControllerFactory::class,
         ],
     ],
     'form_elements' => [

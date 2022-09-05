@@ -10,7 +10,7 @@ use Formation\Form\Formateur\FormateurHydrator;
 use Formation\Form\Formateur\FormateurHydratorFactory;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Formateur\FormateurService;
-use Formation\Service\FormationInstanceFormateur\FormateurServiceFactory;
+use Formation\Service\Formateur\FormateurServiceFactory;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 

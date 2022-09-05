@@ -2,26 +2,26 @@
 
 namespace Formation\Controller;
 
-use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\Presence;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeServiceAwareTrait;
-use Formation\Service\FormationInstancePresence\FormationInstancePresenceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class FormationInstancePresenceController extends AbstractActionController
+class PresenceController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceJourneeServiceAwareTrait;
-    use FormationInstancePresenceAwareTrait;
+    use PresenceAwareTrait;
 
 
-    public function renseignerPresencesAction()
+    public function renseignerPresencesAction() : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $presences = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByInstance($instance);
+        $presences = $this->getPresenceService()->getPresenceByInstance($instance);
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
@@ -34,25 +34,25 @@ class FormationInstancePresenceController extends AbstractActionController
         ]);
     }
 
-    public function togglePresenceAction()
+    public function togglePresenceAction() : ViewModel
     {
         $journeeId = $this->params()->fromRoute('journee');
         $journee = $this->getFormationInstanceJourneeService()->getFormationInstanceJournee($journeeId);
         $inscritId = $this->params()->fromRoute('inscrit');
         $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscrit($inscritId);
 
-        /** @var  FormationInstancePresence $presence */
-        $presence = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByJourneeAndInscrit($journee, $inscrit);
+        /** @var  Presence $presence */
+        $presence = $this->getPresenceService()->getPresenceByJourneeAndInscrit($journee, $inscrit);
         if ($presence === null) {
-            $presence = new FormationInstancePresence();
+            $presence = new Presence();
             $presence->setJournee($journee);
             $presence->setInscrit($inscrit);
             $presence->setPresent(true);
             $presence->setPresenceType("???");
-            $this->getFormationInstancePresenceService()->create($presence);
+            $this->getPresenceService()->create($presence);
         } else {
             $presence->setPresent(!$presence->isPresent());
-            $this->getFormationInstancePresenceService()->update($presence);
+            $this->getPresenceService()->update($presence);
         }
 
         $vm = new ViewModel();
@@ -63,7 +63,7 @@ class FormationInstancePresenceController extends AbstractActionController
         return $vm;
     }
 
-    public function togglePresencesAction()
+    public function togglePresencesAction() : ViewModel
     {
         $mode = $this->params()->fromRoute('mode');
         $inscritId = $this->params()->fromRoute('inscrit');
@@ -72,19 +72,19 @@ class FormationInstancePresenceController extends AbstractActionController
         $instance = $inscrit->getInstance();
         $journees = $instance->getJournees();
 
-        /** @var  FormationInstancePresence $presence */
+        /** @var  Presence $presence */
         foreach ($journees as $journee) {
-            $presence = $this->getFormationInstancePresenceService()->getFormationInstancePresenceByJourneeAndInscrit($journee, $inscrit);
+            $presence = $this->getPresenceService()->getPresenceByJourneeAndInscrit($journee, $inscrit);
             if ($presence === null) {
-                $presence = new FormationInstancePresence();
+                $presence = new Presence();
                 $presence->setJournee($journee);
                 $presence->setInscrit($inscrit);
                 $presence->setPresent($mode === 'on');
                 $presence->setPresenceType("???");
-                $this->getFormationInstancePresenceService()->create($presence);
+                $this->getPresenceService()->create($presence);
             } else {
                 $presence->setPresent($mode === 'on');
-                $this->getFormationInstancePresenceService()->update($presence);
+                $this->getPresenceService()->update($presence);
             }
         }
 

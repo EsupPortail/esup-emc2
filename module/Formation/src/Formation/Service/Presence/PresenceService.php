@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Service\FormationInstancePresence;
+namespace Formation\Service\Presence;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -8,22 +8,22 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\FormationInstanceJournee;
-use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\Presence;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
-class FormationInstancePresenceService
+class PresenceService
 {
     use EntityManagerAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     /**
-     * @param FormationInstancePresence $presence
-     * @return FormationInstancePresence
+     * @param Presence $presence
+     * @return Presence
      */
-    public function create(FormationInstancePresence $presence) : FormationInstancePresence
+    public function create(Presence $presence) : Presence
     {
         try {
             $this->getEntityManager()->persist($presence);
@@ -35,10 +35,10 @@ class FormationInstancePresenceService
     }
 
     /**
-     * @param FormationInstancePresence $presence
-     * @return FormationInstancePresence
+     * @param Presence $presence
+     * @return Presence
      */
-    public function update(FormationInstancePresence $presence) : FormationInstancePresence
+    public function update(Presence $presence) : Presence
     {
         try {
             $this->getEntityManager()->flush($presence);
@@ -49,10 +49,10 @@ class FormationInstancePresenceService
     }
 
     /**
-     * @param FormationInstancePresence $presence
-     * @return FormationInstancePresence
+     * @param Presence $presence
+     * @return Presence
      */
-    public function historise(FormationInstancePresence $presence) : FormationInstancePresence
+    public function historise(Presence $presence) : Presence
     {
         try {
             $presence->historiser();
@@ -64,10 +64,10 @@ class FormationInstancePresenceService
     }
 
     /**
-     * @param FormationInstancePresence $presence
-     * @return FormationInstancePresence
+     * @param Presence $presence
+     * @return Presence
      */
-    public function restore(FormationInstancePresence $presence) : FormationInstancePresence
+    public function restore(Presence $presence) : Presence
     {
         try {
             $presence->dehistoriser();
@@ -79,10 +79,10 @@ class FormationInstancePresenceService
     }
 
     /**
-     * @param FormationInstancePresence $presence
-     * @return FormationInstancePresence
+     * @param Presence $presence
+     * @return Presence
      */
-    public function deleteFromTrait(FormationInstancePresence $presence) : FormationInstancePresence
+    public function deleteFromTrait(Presence $presence) : Presence
     {
         try {
             $this->getEntityManager()->remove($presence);
@@ -100,7 +100,7 @@ class FormationInstancePresenceService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstancePresence::class)->createQueryBuilder('presence')
+        $qb = $this->getEntityManager()->getRepository(Presence::class)->createQueryBuilder('presence')
             ->addSelect('journee')->join('presence.journee', 'journee')
             ->addSelect('finstance')->join('journee.instance', 'finstance')
             ->addSelect('formation')->join('finstance.formation', 'formation')
@@ -112,9 +112,9 @@ class FormationInstancePresenceService
 
     /**
      * @param integer|null $id
-     * @return FormationInstancePresence
+     * @return Presence|null
      */
-    public function getFormationInstancePresence(?int $id)
+    public function getPresence(?int $id) : ?Presence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('presence.id = :id')
@@ -123,7 +123,7 @@ class FormationInstancePresenceService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstancePresence partagent le même id [" . $id . "].");
+            throw new RuntimeException("Plusieurs Presence partagent le même id [" . $id . "].");
         }
         return $result;
     }
@@ -131,20 +131,20 @@ class FormationInstancePresenceService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstancePresence
+     * @return Presence|null
      */
-    public function getRequestedFormationInstancePresence(AbstractActionController $controller, $param = 'presence')
+    public function getRequestedPresence(AbstractActionController $controller, string $param = 'presence') : ?Presence
     {
         $id = $controller->params()->fromRoute($param);
-        return $this->getFormationInstancePresence($id);
+        return $this->getPresence($id);
     }
 
     /**
      * @param FormationInstanceJournee $journee
      * @param FormationInstanceInscrit $inscrit
-     * @return FormationInstancePresence
+     * @return Presence|null
      */
-    public function getFormationInstancePresenceByJourneeAndInscrit(FormationInstanceJournee $journee, FormationInstanceInscrit $inscrit)
+    public function getPresenceByJourneeAndInscrit(FormationInstanceJournee $journee, FormationInstanceInscrit $inscrit) : ?Presence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('presence.journee = :journee')
@@ -156,16 +156,16 @@ class FormationInstancePresenceService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstancePresence (non historisées) partagent la même journée [" . $journee->getId() . "] et le même inscrit [" . $inscrit->getId() . "]");
+            throw new RuntimeException("Plusieurs Presence (non historisées) partagent la même journée [" . $journee->getId() . "] et le même inscrit [" . $inscrit->getId() . "]");
         }
         return $result;
     }
 
     /**
      * @param FormationInstance $instance
-     * @return FormationInstancePresence[]
+     * @return Presence[]
      */
-    public function getFormationInstancePresenceByInstance(FormationInstance $instance)
+    public function getPresenceByInstance(FormationInstance $instance) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.instance = :instance')
@@ -176,15 +176,14 @@ class FormationInstancePresenceService
     }
 
     /**
-     * @return FormationInstancePresence[]
+     * @return Presence[]
      */
-    public function getFormationsInstancesPresences()
+    public function getPresences() : array
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstancePresence::class)->createQueryBuilder('presence');
+        $qb = $this->getEntityManager()->getRepository(Presence::class)->createQueryBuilder('presence');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /** FONCTIONS UTILITAIRES ******************************************************************************************/
 
 }

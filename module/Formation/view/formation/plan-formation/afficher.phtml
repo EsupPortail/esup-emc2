@@ -28,6 +28,11 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
     Plan de formation à venir pour l'année <?php echo $annee; ?>
 </h1>
 
+<div class="alert alert-info">
+    <span class="icon icon-information"></span>
+    S'abonner ne vaut pas inscription, un mail vous sera envoyé une fois la session ouverte et vous pourrez vous inscrire.
+</div>
+
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
 <?php if ($canGererAbonnement) : ?>

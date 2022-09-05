@@ -37,7 +37,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $agent;
     /** @var string */
     private $liste;
-    /** @var ArrayCollection (FormationInstancePresence) */
+    /** @var ArrayCollection (Presence) */
     private $presences;
     /** @var FormationInstanceFrais */
     private $frais;
@@ -190,7 +190,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
 
     public function wasPresent(FormationInstanceJournee $journee) : bool
     {
-        /** @var FormationInstancePresence $presence */
+        /** @var Presence $presence */
         foreach ($this->presences as $presence) {
             if ($presence->getJournee() === $journee) return $presence->isPresent();
         }
@@ -200,8 +200,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     public function getDureePresence() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
-        /** @var FormationInstancePresence[] $presences */
-        $presences = array_filter($this->presences->toArray(), function (FormationInstancePresence $a) {
+        /** @var Presence[] $presences */
+        $presences = array_filter($this->presences->toArray(), function (Presence $a) {
             return $a->estNonHistorise() and $a->isPresent();
         });
         foreach ($presences as $presence) {

@@ -8,8 +8,8 @@ namespace Formation\Controller;
  use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
  use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
  use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
- use Formation\Service\FormationInstancePresence\FormationInstancePresenceService;
  use Formation\Service\HasFormationCollection\HasFormationCollectionService;
+ use Formation\Service\Presence\PresenceService;
  use Formation\Service\Stagiaire\StagiaireService;
  use Interop\Container\ContainerInterface;
  use UnicaenEtat\Service\Etat\EtatService;
@@ -30,7 +30,7 @@ namespace Formation\Controller;
           * @var FormationInstanceJourneeService $formationInstanceJourneeService
           * @var FormationInstanceInscritService $formationInstanceInscritService
           * @var FormationInstanceFraisService $formationInstanceFraisService
-          * @var FormationInstancePresenceService $formationInstancePresenceService
+          * @var PresenceService $presenceService
           * @var HasFormationCollectionService $hasFormationCollectionService
           * @var StagiaireService $stagiaireService
           */
@@ -41,7 +41,7 @@ namespace Formation\Controller;
          $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
          $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
          $formationInstanceFraisService = $container->get(FormationInstanceFraisService::class);
-         $formationInstancePresenceService = $container->get(FormationInstancePresenceService::class);
+         $presenceService = $container->get(PresenceService::class);
          $hasFormationCollectionService = $container->get(HasFormationCollectionService::class);
          $stagiaireService = $container->get(StagiaireService::class);
 
@@ -53,7 +53,7 @@ namespace Formation\Controller;
          $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
          $controller->setFormationInstanceInscritService($formationInstanceInscritService);
          $controller->setFormationInstanceFraisService($formationInstanceFraisService);
-         $controller->setFormationInstancePresenceService($formationInstancePresenceService);
+         $controller->setPresenceService($presenceService);
          $controller->setHasFormationCollectionService($hasFormationCollectionService);
          $controller->setStagiaireService($stagiaireService);
          return $controller;
