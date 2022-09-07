@@ -12,12 +12,23 @@ $formation = $journee->getInstance()->getFormation();
 ?>
 
 <h1>
-    Feuille d'émargement de la formation : <?php echo $formation->getLibelle(); ?>
+    Feuille d'émargement
 </h1>
-<h2>
-    Journée du <?php echo $journee->getJour()->format('d/m/Y'); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?>
-</h2>
 
+<table>
+    <tr>
+        <th style="width:8rem; text-align:left; "> Intitulé </th>
+        <td> <?php echo $formation->getLibelle(); ?> </td>
+    </tr><tr>
+        <th style="width:8rem; text-align:left; "> Horaire </th>
+        <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?> </td>
+    </tr><tr>
+        <th style="width:8rem; text-align:left; ">Lieu </th>
+        <td><?php echo $journee->getLieu(); ?></td>
+    </tr>
+</table>
+
+<br/>
 
 <table class="emargement">
     <?php /** @var FormationInstanceInscrit $inscrit */ ?>

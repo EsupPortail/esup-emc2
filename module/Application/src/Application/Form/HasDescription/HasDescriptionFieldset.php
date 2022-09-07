@@ -14,9 +14,8 @@ class HasDescriptionFieldset extends Fieldset {
             'type' => 'textarea',
             'options' => [
                 'label' => 'Description : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
+                'label_attributes' => [ 'class' => 'control-label', ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'class' => 'type2 form-control',

@@ -96,10 +96,12 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             </td>
             <?php foreach ($journees as $journee) : ?>
                 <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
-                    <?php if ($presences[$journee->getId()][$inscrit->getId()] && $presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
-                        <span class="icon icon-checked" style="color:darkgreen;" title="Présent"></span>
-                    <?php else : ?>
-                        <span class="icon icon-retirer" style="color:darkred;" title="Non présent"></span>
+                    <?php if ($presences[$journee->getId()][$inscrit->getId()]) : ?>
+                        <?php if ($presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
+                            <span class="icon icon-checked" style="color:darkgreen;" title="Présent"></span>
+                        <?php else : ?>
+                            <span class="icon icon-retirer" style="color:darkred;" title="Non présent"></span>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
             <?php endforeach; ?>
@@ -122,13 +124,13 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         border : 0;
     }
     table.presence tr td.journee{
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
+        /*writing-mode: vertical-rl;*/
+        /*text-orientation: mixed;*/
         padding-top:.5rem;
         padding-bottom:1rem;
         background: #1b6d85;
         color:white;
-        width: 5rem;
+        width: 7rem;
     }
 
     table.presence tr td.inscrit{

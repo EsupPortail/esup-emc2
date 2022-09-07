@@ -20,6 +20,7 @@ class InscriptionForm extends Form {
                 'id' => 'description',
             ],
         ]);
+        $this->get('HasDescription')->get('description')->setLabel("Motiviation :");
         //bouton
         $this->add([
             'type' => Button::class,

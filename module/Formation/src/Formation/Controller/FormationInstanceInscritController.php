@@ -157,6 +157,28 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
+    public function inscriptionFormationAction() : ViewModel
+    {
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+        //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+
+        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
+        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
+
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+
+        return new ViewModel([
+            'instances' => $instances,
+            'inscriptions' => $inscriptions,
+            'formations' => $formations,
+            'agent' => $agent,
+
+            'superieures' => $superieures,
+        ]);
+    }
+
     public function listeFormationsInstancesAction() : ViewModel
     {
         $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);

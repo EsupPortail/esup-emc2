@@ -2,6 +2,7 @@
 
 /**
  * @see \Formation\Controller\ProjetPersonnelController::indexAction()
+ * @var string $lien
  */
 
 $this->headTitle('Mon projet personnel');
@@ -18,10 +19,9 @@ $this->headTitle('Mon projet personnel');
     Quel que soit le dispositif choisi, une commission a lieu deux fois par an. Vous pouvez consulter le lien intranet pour connaître l'ensemble des modalités.
 </p>
 
-<a href=""
+<a href="<?php echo $lien; ?>"
    class="btn btn-primary" target="_blank">
     <span class="icon icon-dossier"></span>
     Accéder à l'intranet
 </a>
-<span class="todo">lien vers l'intranet</span><br/>
 

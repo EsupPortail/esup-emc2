@@ -87,7 +87,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                     <?php if ($instance->estNonHistorise()) : ?>
                         <?php /** @see FormationInstanceController::historiserAction() */ ?>
                         <a   href="<?php echo $this->url('formation-instance/historiser', ['formation-instance' => $instance->getId()], [], true); ?>"
-                             data-toogle="tooltip" data-bs-html="true" title="Historiser la session de formation">
+                             data-toogle="tooltip" data-bs-html="true" title="Supprimer la session de formation">
                             <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see FormationInstanceController::restaurerAction() */ ?>
@@ -100,8 +100,8 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                     <?php /** @see FormationInstanceController::supprimerAction() */ ?>
                     <a   href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
                          class="ajax-modal" data-event="modification"
-                         data-toogle="tooltip" data-bs-html="true" title="Supprimer la session de formation">
-                        <span class="icon icon-retirer"></span></a>
+                         data-toogle="tooltip" data-bs-html="true" title="Supprimer définitivement la session de formation">
+                        <span class="icon icon-retirer text-danger"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

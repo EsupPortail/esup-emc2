@@ -12,12 +12,17 @@
  * @var TypeService $evenementTypeService
  * @var ValidationTypeService $validationTypeService
  *
+ * @var ParametreService $parametreService
+ * @var CategorieService $categorieService
+ *
  */
 
 
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Type\TypeService;
+use UnicaenParametre\Service\Categorie\CategorieService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenRenderer\Service\Template\TemplateService;
 use UnicaenUtilisateur\Service\Role\RoleService;
@@ -87,6 +92,61 @@ $this->headTitle("Vérification de l'installation");
             ?>
             <?php ?>
         <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- PARAMETRE ---------------------------------------------------------------------------------------------------->
+    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Parametre')); ?>
+    <div class="card bg-default ">
+        <div class="card-header">
+            Parametres
+        </div>
+        <div class="card-body">
+            <?php if (!$exist) : ?>
+                <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Parametre</code> !</span>
+            <?php else : ?>
+                <?php
+                $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Parametre'), ['.', '..']);
+
+                foreach ($filenames as $filename) {
+                    $res = explode('.', $filename);
+                    $path = $module . "\\Provider\\Parametre\\" . $res[0];
+                    if (!class_exists($path)) {
+                        echo "<strong><span class='icon icon-retirer text-danger'></span> la classe [" . $path . "] n'est pas déclarée.</strong><br>";
+                    } else {
+                        echo "<strong><span class='icon icon-checked text-success'></span> la classe [" . $path . "] est bien déclarée.</strong><br/>";
+
+                        $oClass = new ReflectionClass ($path);
+                        $constants = $oClass->getConstants ();
+
+                        $typeName = null;
+                        $type = null;
+                        if (isset( $constants['TYPE'])) {
+                            $typeName = $constants['TYPE'];
+                            $type = $categorieService->getCategoriebyCode($typeName);
+                        }
+                        if ($type !== null) {
+                            echo "<span class='icon icon-checked text-success'></span> Type de parametre [".$typeName."] bien déclarée <br>";
+                        } else {
+                            echo "<span class='icon icon-retirer text-danger'></span> Type de parametre [".$typeName."] n'est pas déclarée <br>";
+                        }
+
+                        foreach ($constants as $name => $value) {
+                            if ($name !== 'TYPE') {
+                                $etat = $parametreService->getParametreByCode($type->getCode(), $value);
+                                if ($etat !== null) {
+                                    echo "<span class='icon icon-checked text-success'></span> Le paramètre [".$value."] bien déclarée <br>";
+                                } else {
+                                    echo "<span class='icon icon-retirer text-danger'></span> Le paramètre [".$value."] n'est pas déclarée <br>";
+                                }
+                            }
+                        }
+
+                    }
+                }
+                ?>
+                <?php ?>
+            <?php endif; ?>
         </div>
     </div>
 

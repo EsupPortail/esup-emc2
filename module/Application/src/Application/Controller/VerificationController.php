@@ -7,6 +7,8 @@ use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Type\TypeServiceAwareTrait;
+use UnicaenParametre\Service\Categorie\CategorieServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
@@ -17,6 +19,8 @@ class VerificationController extends AbstractActionController {
     use TemplateServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
+    use CategorieServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RoleServiceAwareTrait;
     use TypeServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
@@ -34,6 +38,8 @@ class VerificationController extends AbstractActionController {
             'evenementTypeService' => $this->getTypeService(),
             'roleService' => $this->getRoleService(),
             'validationTypeService' => $this->getValidationTypeService(),
+            'parametreService' => $this->getParametreService(),
+            'categorieService' => $this->getCategorieService(),
         ]);
     }
 }

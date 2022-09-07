@@ -10,6 +10,7 @@ use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\Inscription\InscriptionFormFactory;
 use Formation\Form\Inscription\InscriptionHydrator;
 use Formation\Form\Inscription\InscriptionHydratorFactory;
+use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
@@ -42,6 +43,7 @@ return [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
                         'liste-formations-instances',
+                        'inscription-formation',
                         'inscription',
                         'desinscription',
                     ],
@@ -54,11 +56,19 @@ return [
                     'action' => [
                         'valider-responsable',
                         'refuser-responsable',
+                    ],
+                    'privileges' => [
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_SUPERIEURE,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceInscritController::class,
+                    'action' => [
                         'valider-drh',
                         'refuser-drh',
                     ],
                     'privileges' => [
-                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_GESTIONNAIRE,
                     ],
                 ],
             ],
@@ -83,7 +93,14 @@ return [
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
-                                'order' => 400,
+                                'order' => 405,
+                                'label' => "S'inscrire à une formation",
+                                'route' => 'inscription-formation',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 405,
                                 'label' => 'Mes formations',
                                 'route' => 'liste-formations-instances',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
@@ -105,6 +122,16 @@ return [
 
     'router'          => [
         'routes' => [
+            'inscription-formation' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/inscription-formation',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'inscription-formation',
+                    ],
+                ],
+            ],
             'liste-formations-instances' => [
                 'type'  => Literal::class,
                 'options' => [

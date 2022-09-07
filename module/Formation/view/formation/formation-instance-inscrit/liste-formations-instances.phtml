@@ -27,24 +27,13 @@ $this->headTitle("Liste des actions de formations proposées");
 
 <ul class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="#instances" aria-controls="instances">
-            Formations proposées <br> dans le plan de formation
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#demandes" aria-controls="demandes">
-            Formations hors <br> plan de formation
-        </a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link" href="#inscriptions" aria-controls="inscriptions" role="tab" data-toggle="tabz">
-            Inscriptions <br/> à des formations
+            Mes inscriptions à <br> des formations
         </a>
     </li>
     <li class="nav-item" >
         <a class="nav-link" href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
-            Formations <br> suivies
-        </span>
+            Mes formations <br> réalisées
         </a>
     </li>
 <!--    <li class="nav-item pull-right" style="margin-left: 10rem;">-->
@@ -55,16 +44,6 @@ $this->headTitle("Liste des actions de formations proposées");
 </ul>
 
 <div class="tab-content">
-
-    <!-- Mission------------------------------------------------------------------------------------------->
-    <div id="instances" class="tab-pane">
-        <?php echo $this->partial('partial/instances', ['instances' => $instances, 'inscriptions' => $inscriptions, 'agent' => $agent]); ?>
-    </div>
-
-    <!-- Mission------------------------------------------------------------------------------------------->
-    <div id="demandes" class="tab-pane">
-        <?php echo $this->partial('partial/demandes-externes', ['demandes' => $demandes, 'agent' => $agent]); ?>
-    </div>
 
 
     <!-- Type---------------------------------------------------------------------------------------------->
@@ -106,7 +85,7 @@ $this->headTitle("Liste des actions de formations proposées");
     $(function() {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
-        if (name === undefined || name === "") name = "instances";
+        if (name === undefined || name === "") name = "inscriptions";
 
         $('a[aria-controls=' + name + ']').tab('show');
 

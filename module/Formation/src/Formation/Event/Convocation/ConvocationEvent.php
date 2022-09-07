@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Event\InscriptionCloture;
+namespace Formation\Event\Convocation;
 
 use DateInterval;
 use DateTime;
@@ -14,7 +14,7 @@ use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
-class InscriptionClotureEvent extends  EvenementService
+class ConvocationEvent extends  EvenementService
 {
     use EntityManagerAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -29,7 +29,7 @@ class InscriptionClotureEvent extends  EvenementService
      */
     public function creer(DateTime $dateTraitement = null) : Evenement
     {
-        $type = $this->getTypeService()->findByCode(EvenementProvider::INSCRIPTION_CLOTURE);
+        $type = $this->getTypeService()->findByCode(EvenementProvider::CONVOCATION);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
 
         $parametres = [
@@ -50,18 +50,18 @@ class InscriptionClotureEvent extends  EvenementService
         $log = "";
 
         try {
-            $closes = [];
-            $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+            $convocations = [];
+            $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
             $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
             foreach ($sessions as $session) {
                 $dateDebut = ($session->getDebut() !== null)?DateTime::createFromFormat('d/m/Y', $session->getDebut()):null;
                 if ($dateDebut >= $deadline) {
-                    $this->getFormationInstanceService()->fermerInscription($session);
-                    $log .= "Fermeture des inscriptions de la session : " . $session->getInstanceLibelle() . "(". $session->getInstanceCode().")";
-                    $closes[] = $session;
+                    $this->getFormationInstanceService()->envoyerConvocation($session);
+                    $log .= "Convocation des inscrits de la session : " . $session->getInstanceLibelle() . "(". $session->getInstanceCode().")";
+                    $convocations[] = $session;
                 }
             }
-            $this->getNotificationService()->triggerNotifierInscriptionClotureAutomatique($closes);
+            $this->getNotificationService()->triggerNotifierConvocationAutomatique($convocations);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;

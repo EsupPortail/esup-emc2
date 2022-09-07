@@ -13,11 +13,15 @@ use Formation\Entity\Db\FormationInstanceInscrit;
 $canInscrire = true;
 
 
+
 ?>
 
 <h2>
-    Listes des formations ouvertes à l'inscription
+    S'inscrire à une session de formation du plan de formation
 </h2>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 
 <?php foreach ($instances as $instance) : ?>
     <?php

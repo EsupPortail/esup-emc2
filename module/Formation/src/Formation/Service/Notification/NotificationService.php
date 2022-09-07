@@ -372,6 +372,31 @@ class NotificationService {
         return null;
     }
 
+    /**
+     * @param FormationInstance[] $closes
+     * @return Mail|null
+     */
+    public function triggerNotifierConvocationAutomatique(array $convocations): ?Mail
+    {
+        if (!empty($convocations)) {
+            $texte = "<ul>";
+            foreach ($convocations as $convocation) {
+                $texte .= "<li>" . $convocation->getInstanceLibelle() . " - " . $convocation->getInstanceCode() . "</li>";
+            }
+            $texte .= "</ul>";
+
+            $email = $this->getMailsResponsablesFormations();
+            $vars = [
+                'UrlService' => $this->getUrlService(),
+            ];
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_CONVOCATION_AUTOMATIQUE, $vars);
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+            return $mail;
+        }
+    }
+
     // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////
 
     public function triggerValidationAgent(DemandeExterne $demande) : ?Mail
@@ -479,4 +504,6 @@ class NotificationService {
         $this->getMailService()->update($mail);
         return $mail;
     }
+
+
 }

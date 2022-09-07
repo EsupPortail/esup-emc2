@@ -214,11 +214,14 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                                 <a  <?php /** @see FormateurController::modifierFormateurAction() */ ?>
                                     href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
                                     class="ajax-modal" data-event="modification"
+                                    title="Modifier les informations du formateur"
                                 >
                                     <span class="icon icon-editer"></span></a>
                                 <?php if ($formateur->estNonHistorise()) : ?>
                                     <a      <?php /** @see FormateurController::historiserFormateurAction() */ ?>
-                                            href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                                            href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                                            title="Supprimer le formateur"
+                                    >
                                     <span class="icon icon-historiser"></span></a>
                                 <?php else : ?>
                                     <a      <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
@@ -228,8 +231,9 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                                 <a      <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
                                         href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
                                    class="ajax-modal" data-event="modification"
+                                    title="Supprimer définitivement le formateur"
                                 >
-                                    <span class="icon icon-retirer"></span></a>
+                                    <span class="icon icon-retirer text-danger"></span></a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -303,29 +307,29 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     <?php if ($canJourneeModifier) : ?>
                         <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
-                                data-bs-toggle="tooltip" data-bs-html="true" title="Exporter l'émargement de la séance de formation" target="_blank">
+                                title="Exporter l'émargement de la séance de formation" target="_blank">
                             <span class="icon icon-pdf"></span><span class="lettrine">E</span></a>
                         <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-bs-toggle="tooltip" data-bs-html="true" title="Modifier l'émargement de la séance de formation">
+                                title="Modifier l'émargement de la séance de formation">
                             <span class="icon icon-editer"></span></a>
                         <?php if ($journee->estNonHistorise()) : ?>
                             <?php /** @see FormationInstanceJourneeController::historiserJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-bs-toggle="tooltip" data-bs-html="true" title="Historiser l'émargement de la séance de formation">
+                                    title="Supprimer l'émargement de la séance de formation">
                                 <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see FormationInstanceJourneeController::restaurerJourneeAction() */?>
                             <a      href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer l'émargement de la séance de formation">
+                                    title="Restaurer l'émargement de la séance de formation">
                                 <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
                         <?php /** @see FormationInstanceJourneeController::supprimerJourneeAction() */?>
                         <a      href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
-                                data-bs-toggle="tooltip" data-bs-html="true" title="Supprimer définitivement l'émargement de la séance de formation">
-                            <span class="icon icon-retirer"></span></a>
+                                title="Supprimer définitivement l'émargement de la séance de formation">
+                            <span class="icon icon-retirer text-danger"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>

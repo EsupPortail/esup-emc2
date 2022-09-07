@@ -128,7 +128,7 @@ class DemandeExterneForm extends Form {
             'type' => Textarea::class,
             'name' => 'motivation',
             'options' => [
-                'label' => "Motiviation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Motivation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
