@@ -12,6 +12,8 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Octopus\Entity\Db\Source;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 
 class FormationGroupeController extends AbstractActionController
 {
@@ -19,6 +21,7 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
     use SelectionFormationGroupeFormAwareTrait;
+    use SourceServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -65,8 +68,10 @@ class FormationGroupeController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $groupe->setSource($source);
                 $this->getFormationGroupeService()->create($groupe);
-                $groupe->setSource(HasSourceInterface::SOURCE_EMC2);
                 $this->getFormationGroupeService()->update($groupe);
             }
         }

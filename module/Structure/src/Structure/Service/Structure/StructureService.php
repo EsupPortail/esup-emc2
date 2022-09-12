@@ -348,7 +348,7 @@ EOS;
             if (    ($gestionnaire->getAgent() === $agent)
                 AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
                 AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
-                AND (!$gestionnaire->isImported() OR !$gestionnaire->isDeleted())
+                AND (!$gestionnaire->isDeleted())
             ) return true;
         }
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
@@ -384,7 +384,7 @@ EOS;
             if (    ($responsable->getAgent() === $agent)
                 AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
                 AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+                AND (!$responsable->isDeleted())
             ) return true;
         }
         if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
@@ -423,7 +423,7 @@ EOS;
             if (    ($responsable->getAgent() === $agent)
                 AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
                 AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+                AND (!$responsable->isDeleted())
             ) return true;
         }
         return false;

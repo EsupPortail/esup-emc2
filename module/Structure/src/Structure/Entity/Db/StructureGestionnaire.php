@@ -6,97 +6,51 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use Application\Entity\Db\Traits\HasSourceTrait;
 
 class StructureGestionnaire implements HasPeriodeInterface {
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
+    use HasSourceTrait;
 
-    /** @var int */
-    private $id;
-    /** @var Structure */
-    private $structure;
-    /** @var Agent */
-    private $agent;
-    /** @var int|null */
-    private $fonctionId;
+    private ?int $id = -1;
+    private ?Structure $structure = null;
+    private ?Agent $agent = null;
+    private ?int $fonctionId = null;
 
-    /**
-     * @return int
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Structure
-     */
     public function getStructure(): ?Structure
     {
         return $this->structure;
     }
 
-    /**
-     * @param Structure $structure
-     * @return StructureGestionnaire
-     */
-    public function setStructure(Structure $structure): StructureGestionnaire
+    public function setStructure(Structure $structure): void
     {
         $this->structure = $structure;
-        return $this;
     }
 
-    /**
-     * @return Agent
-     */
     public function getAgent(): ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent $agent
-     * @return StructureGestionnaire
-     */
-    public function setAgent(Agent $agent): StructureGestionnaire
+    public function setAgent(Agent $agent): void
     {
         $this->agent = $agent;
-        return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getFonctionId(): ?int
     {
         return $this->fonctionId;
     }
 
-    /**
-     * @param int|null $fonctionId
-     * @return StructureGestionnaire
-     */
-    public function setFonctionId(?int $fonctionId): StructureGestionnaire
+    public function setFonctionId(?int $fonctionId): void
     {
         $this->fonctionId = $fonctionId;
-        return $this;
     }
 
-    /** @var bool */
-    private $imported;
-
-    public function isImported() : bool
-    {
-        return ($this->imported === true);
-    }
-
-    /**
-     * @param bool $imported
-     * @return DbImportableAwareTrait
-     */
-    public function setImported(bool $imported)
-    {
-        $this->imported = $imported;
-        return $this;
-    }
 }

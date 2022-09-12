@@ -6,4 +6,5 @@ class PdfTemplates {
 
     const FORMATION_CONVOCATION             = "FORMATION_CONVOCATION";
     const FORMATION_ATTESTATION             = "FORMATION_ATTESTATION";
+    const FORMATION_HISTORIQUE              = "FORMATION_HISTORIQUE";
 }

@@ -12,11 +12,11 @@
  * @var FichePoste[] $fichespostes_pdf
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
- * @var FichePoste[] $fichesRecrutements
+// * @var FichePoste[] $fichesRecrutements
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
  * @var Agent[] $agentsAll
- * @var FicheProfil[] $profils
+// * @var FicheProfil[] $profils
  * @var FormationInstanceInscrit[] $inscriptions
  *
  * @var Agent[] $autorites;
@@ -122,12 +122,12 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 </li>
             <?php endforeach;?>
 
-            <li class="nav-item">
-                <a href="#profil" class="nav-link" aria-controls="profil">
-                    Profil de  <br/>
-                    recrutement
-                </a>
-            </li>
+<!--            <li class="nav-item">-->
+<!--                <a href="#profil" class="nav-link" aria-controls="profil">-->
+<!--                    Profil de  <br/>-->
+<!--                    recrutement-->
+<!--                </a>-->
+<!--            </li>-->
 
             <li class="nav-item">
                 <a href="#formation" class="nav-link" aria-controls="formation">
@@ -204,9 +204,9 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <?php endforeach; ?>
 
                 <!-- Profil de recrutement ------------------------------->
-                <div id="profil" class="tab-pane">
-                    <?php echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
-                </div>
+<!--                <div id="profil" class="tab-pane">-->
+<!--                    --><?php //echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
+<!--                </div>-->
 
                 <!-- Demande de formation ------------------------------->
                 <div id="formation" class="tab-pane">

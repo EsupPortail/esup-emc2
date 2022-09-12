@@ -87,6 +87,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'annuler',
+                        'reouvrir',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER,
@@ -223,6 +224,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'annuler',
+                            ],
+                        ],
+                    ],
+                    'reouvrir' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/reouvrir/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'reouvrir',
                             ],
                         ],
                     ],

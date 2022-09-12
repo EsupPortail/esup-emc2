@@ -6,6 +6,7 @@
 
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 
@@ -14,9 +15,11 @@ $principales = $instance->getListePrincipale();
 $complementaires = $instance->getListeComplementaire();
 $historises = $instance->getListeHistorisee();
 
-$canInscritModifier     = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
+$estAnnulee = ($instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+
+$canInscritModifier     = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
-$canFraisModifier       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER));
+$canFraisModifier       = (!$estAnnulee AND  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
 
 ?>
 

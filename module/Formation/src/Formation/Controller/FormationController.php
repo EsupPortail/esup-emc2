@@ -22,6 +22,8 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 
 class FormationController extends AbstractActionController
 {
@@ -30,12 +32,13 @@ class FormationController extends AbstractActionController
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-    use FormationFormAwareTrait;
+    use SourceServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementFormAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use FormationFormAwareTrait;
     use SelectionFormationFormAwareTrait;
 
     /** CRUD **********************************************************************************************************/
@@ -77,8 +80,11 @@ class FormationController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+
                 $this->getFormationService()->create($formation);
-                $formation->setSource(HasSourceInterface::SOURCE_EMC2);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $formation->setSource($source);
                 $formation->setIdSource($formation->getId());
                 $this->getFormationService()->update($formation);
                 exit;

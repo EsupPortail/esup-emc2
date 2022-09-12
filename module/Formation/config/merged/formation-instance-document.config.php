@@ -33,6 +33,15 @@ return [
                 [
                     'controller' => FormationInstanceDocumentController::class,
                     'action' => [
+                        'generer-historique',
+                    ],
+                    'privileges' => [
+                        FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceDocumentController::class,
+                    'action' => [
                         'export-emargement',
                         'export-tous-emargements',
                     ],
@@ -65,6 +74,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-attestation',
+                            ],
+                        ],
+                    ],
+                    'generer-historique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-historique/:agent',
+                            'defaults' => [
+                                'controller' => FormationInstanceDocumentController::class,
+                                'action'     => 'generer-historique',
                             ],
                         ],
                     ],

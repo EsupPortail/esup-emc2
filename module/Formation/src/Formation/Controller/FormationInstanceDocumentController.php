@@ -2,8 +2,10 @@
 
 namespace Formation\Controller;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Formation\Entity\Db\Seance;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
@@ -18,6 +20,7 @@ use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
 
 class FormationInstanceDocumentController extends AbstractActionController
 {
+    use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use MacroServiceAwareTrait;
@@ -112,6 +115,46 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+    }
+
+    /**
+     * @throws MpdfException
+     */
+    public function genererHistoriqueAction() : ?string
+    {
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
+
+
+        $texte  = "<ul>";
+        foreach ($inscriptions as $inscription) {
+            $dureeSuivie = $inscription->getDureePresence();
+            $session = $inscription->getInstance();
+            $sessionEtat = $session->getEtat()->getCode();
+            if ($dureeSuivie != '0 heures ' AND ($sessionEtat === SessionEtats::ETAT_CLOTURE_INSTANCE OR $sessionEtat === SessionEtats::ETAT_ATTENTE_RETOURS)) {
+                $libelle = $session->getFormation()->getLibelle();
+                $periode = $session->getPeriode();
+                $texte .= "<li>";
+                $texte .= $libelle . ($periode) . "<br/>";
+                $texte .= $dureeSuivie . " suivies sur " . $session->getDuree() . " de formation";
+                $texte .= "</li>";
+            }
+        }
+        $texte .= "<ul>";
+
+        $vars = [
+            'agent' => $agent,
+            'MacroService' => $this->getMacroService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_HISTORIQUE, $vars);
+        $corps = str_replace("###A REMPLACER###", $texte, $rendu->getCorps());
+        $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
+        $exporter->addBodyHtml($corps);
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 

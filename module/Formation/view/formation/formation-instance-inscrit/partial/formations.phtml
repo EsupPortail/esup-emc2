@@ -6,16 +6,29 @@
  */
 
 use Application\Entity\Db\Agent;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
 $realisees  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->estRealisee();} );
+
+$canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
+
 ?>
 
 <h2>
     Formations réalisées
 </h2>
+
+
+<?php if ($canHistorique) : ?>
+<?php /**  @see \Formation\Controller\FormationInstanceDocumentController::genererHistoriqueAction() */ ?>
+<a href="<?php echo $this->url('formation-instance/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
+   class="btn btn-primary" target="_blank"
+>
+    <span class="icon icon-pdf"></span>
+    Générer l'historique de formation
+</a>
+<?php endif; ?>
 
 <?php if (empty($realisees)) : ?>
     <em> Aucune formation en attente de retour </em>

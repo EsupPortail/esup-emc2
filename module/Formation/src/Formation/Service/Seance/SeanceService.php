@@ -9,6 +9,7 @@ use Formation\Entity\Db\Seance;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 
 class SeanceService
 {
@@ -145,7 +146,7 @@ class SeanceService
         return $result;
     }
 
-    public function getSeanceBySource(string $source, string $idSource)
+    public function getSeanceBySource(Source $source, string $idSource)
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('journee.source = :source')

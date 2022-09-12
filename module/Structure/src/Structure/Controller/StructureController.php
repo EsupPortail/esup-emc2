@@ -4,6 +4,7 @@ namespace Structure\Controller;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
@@ -28,6 +29,8 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Http\Request;
@@ -46,6 +49,7 @@ class StructureController extends AbstractActionController {
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use UserServiceAwareTrait;
+    use SourceServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -103,7 +107,7 @@ class StructureController extends AbstractActionController {
             $autorites[$agent->getId()] = $aut;
         }
 
-        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
+//        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         /** Campagne */
@@ -117,7 +121,7 @@ class StructureController extends AbstractActionController {
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
         $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true);
-        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+//        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = [];
         foreach ($allAgents as $agent) {
@@ -135,8 +139,8 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
             'fichespostes_pdf' => $fichespostes_pdf,
-            'fichesRecrutements' => $fichesRecrutements,
-            'profils' => $profils,
+//            'fichesRecrutements' => $fichesRecrutements,
+//            'profils' => $profils,
             'inscriptions' => $inscriptions,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
@@ -212,7 +216,9 @@ class StructureController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $responsable->setCreatedOn();
-                $responsable->setImported(false);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $responsable->setSource($source);
                 $this->getStructureService()->getEntityManager()->persist($responsable);
                 $this->getStructureService()->getEntityManager()->flush($responsable);
             }
@@ -261,7 +267,10 @@ class StructureController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $gestionnaire->setCreatedOn();
-                $gestionnaire->setImported(false);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $gestionnaire->setSource($source);
+                $gestionnaire->setIdSource($structure->getId() ."_". $gestionnaire->getAgent()->getId());
                 $this->getStructureService()->getEntityManager()->persist($gestionnaire);
                 $this->getStructureService()->getEntityManager()->flush($gestionnaire);
             }

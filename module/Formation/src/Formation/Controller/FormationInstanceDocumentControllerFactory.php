@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
@@ -25,12 +26,14 @@ class FormationInstanceDocumentControllerFactory
     public function __invoke(ContainerInterface $container) : FormationInstanceDocumentController
     {
         /**
+         * @var AgentService $agentService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MacroService $macroService
          * @var RenduService $renduService
          * @var SeanceService $seanceService
          */
+        $agentService = $container->get(AgentService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $macroService = $container->get(MacroService::class);
@@ -42,6 +45,7 @@ class FormationInstanceDocumentControllerFactory
 
         /** @var FormationInstanceDocumentController $controller */
         $controller = new FormationInstanceDocumentController();
+        $controller->setAgentService($agentService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMacroService($macroService);

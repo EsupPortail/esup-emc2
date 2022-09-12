@@ -2,6 +2,7 @@
 
 namespace Formation\Service\FormationInstance;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -16,6 +17,8 @@ use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -26,6 +29,7 @@ class FormationInstanceService
     use EtatServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use SourceServiceAwareTrait;
 
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -201,11 +205,11 @@ class FormationInstanceService
     }
 
     /**
-     * @param string $source
+     * @param Source $source
      * @param string $idSource
      * @return FormationInstance|null
      */
-    public function getFormationInstanceBySource(string $source, string $idSource): ?FormationInstance
+    public function getFormationInstanceBySource(Source $source, string $idSource): ?FormationInstance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.source = :source')
@@ -233,7 +237,9 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
 
         $this->create($instance);
-        $instance->setSource("EMC2");
+        /** @var Source  $source */
+        $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+        $instance->setSource($source);
         $instance->setIdSource(($formation->getIdSource()) ? (($formation->getIdSource()) . "-" . $instance->getId()) : ($formation->getId() . "-" . $instance->getId()));
         $this->update($instance);
 
@@ -349,6 +355,16 @@ class FormationInstanceService
         return $instance;
     }
 
+    /**
+     * @param FormationInstance $instance
+     * @return FormationInstance
+     */
+    public function reouvrir(FormationInstance $instance): FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
+        $this->update($instance);
+        return $instance;
+    }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
     public function classerInscription(FormationInstanceInscrit $inscription) : FormationInstanceInscrit
@@ -377,8 +393,10 @@ class FormationInstanceService
     public function getFormationInstanceEnCours(): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('Finstance.etat IS NOT NULL AND etat.code <> :cloturer')
-            ->setParameter('cloturer', SessionEtats::ETAT_CLOTURE_INSTANCE);
+            ->andWhere('Finstance.etat IS NOT NULL')
+            ->andWhere('etat.code <> :annuler AND etat.code <> :cloturer')
+            ->setParameter('cloturer', SessionEtats::ETAT_CLOTURE_INSTANCE)
+            ->setParameter('annuler', SessionEtats::ETAT_SESSION_ANNULEE);
 
         $result = $qb->getQuery()->getResult();
         return $result;

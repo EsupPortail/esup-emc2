@@ -19,10 +19,14 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
  * @var Mail[] $mails
  */
 
-$canInformation     = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$estAnnulee = ($instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+
+$canInformation     = (!$estAnnulee AND $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
 $canAfficherMail    = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canReEnvoyerMail   = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
+
 $canAnnuler         = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
+
 
 
 $retour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
@@ -39,11 +43,11 @@ usort($formateurs, function (Formateur $a, Formateur $b){ return ($a->getNom()."
 
 $this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
 
-$canFormateurModifier   = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR));
-$canJourneeModifier     = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE));
+$canFormateurModifier   = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR)));
+$canJourneeModifier     = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE)));
 $canPresenceAfficher    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
-$canPresenceModifier    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
-$canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
+$canPresenceModifier    = (!$estAnnulee AND $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER)));
+$canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 
 ?>
 
@@ -114,13 +118,21 @@ $canGererInscription    = $this->isAllowed(FormationinstancePrivileges::getResou
                     </a>
                 <?php endif; ?>
             <?php endif; ?>
-            <?php if ($canAnnuler AND $instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
+            <?php if ($canAnnuler) : ?>
                 <br/>
-                <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
-                        href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
-                        class="btn btn-danger action">
-                    Annuler la session
-                </a>
+                <?php if ($instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
+                    <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-danger action">
+                        Annuler la session
+                    </a>
+                <?php else : ?>
+                    <a      <?php /** @see FormationInstanceController::reouvrirAction() */ ?>
+                            href="<?php echo $this->url('formation-instance/reouvrir', ['formation-instance' => $instance->getId()], [], true); ?>"
+                            class="btn btn-primary action">
+                        Ré-ouvrir la session
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

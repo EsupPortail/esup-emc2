@@ -7,6 +7,7 @@
  * @var StructureGestionnaire[] $gestionnaires
  */
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -16,8 +17,8 @@ $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRU
 $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 $canEditerResponsable  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
-$responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted() OR !$r->isImported(); });
-$gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted() OR !$r->isImported(); });
+$responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted() ; });
+$gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted(); });
 
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
@@ -98,7 +99,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
             <?php if ($canEditerResponsable) : ?>
                 <a
-                    <?php /** @see \Application\Controller\StructureController::ajouterResponsable() */ ?>
+                    <?php /** @see \Structure\Controller\StructureController::ajouterResponsableAction() */ ?>
                         href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
@@ -114,7 +115,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
                         <?php echo $responsable->getAgent()->getDenomination(); ?>
                     </span>
-                    <?php if (! $responsable->isImported() AND $canEditerResponsable) : ?>
+                    <?php if ($responsable->getSource()->getCode() !== HasSourceInterface::SOURCE_OCTOPUS AND $canEditerResponsable) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerResponsableAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-responsable', ['structure'=>$structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>">
                             <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
@@ -147,7 +148,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <span title="Responsabilité valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
                         <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
                     </span>
-                    <?php if (! $gestionnaire->isImported() AND $canEditerGestionnaire) : ?>
+                    <?php if ($gestionnaire->getSource()->getCode() !== HasSourceInterface::SOURCE_OCTOPUS AND $canEditerGestionnaire) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerGestionnaireAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure'=>$structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>">
                             <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
