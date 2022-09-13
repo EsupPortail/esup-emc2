@@ -42,10 +42,12 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="menuPrincipalNavbar">
+
                 <?php echo $navigationHelper
                     ->menu('navigation')
                     ->setUlClass('navbar-nav me-auto')
                     ->setPartial('layout/menu-principal.phtml'); ?>
+
                 <div class="navbar-text text-end">
                     <?php echo $this->appConnection(); ?>
                 </div>

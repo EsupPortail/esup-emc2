@@ -298,10 +298,16 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        $autorites = $this->getAgentService()->computeAutorites($agent);
+
         return new ViewModel([
             'entretien' => $entretien,
 
             'agent'         => $agent,
+            'superieures'   => $superieures,
+            'autorites'     => $autorites,
+
             'ficheposte'    => $ficheposte,
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),

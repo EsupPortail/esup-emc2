@@ -2,6 +2,8 @@
 
 namespace Formation;
 
+use Formation\Assertion\DemandeExterneAssertion;
+use Formation\Assertion\DemandeExterneAssertionFactory;
 use Formation\Controller\DemandeExterneController;
 use Formation\Controller\DemandeExterneControllerFactory;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
@@ -14,9 +16,35 @@ use Formation\Service\DemandeExterne\DemandeExterneServiceFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'DemandeExterne' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH,
+                        ],
+                        'resources' => ['DemandeExterne'],
+                        'assertion' => DemandeExterneAssertion::class
+                    ],
+                ],
+            ],
+        ],
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -36,6 +64,7 @@ return [
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER,
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
@@ -45,6 +74,7 @@ return [
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
@@ -64,6 +94,7 @@ return [
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER,
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
@@ -73,6 +104,7 @@ return [
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER,
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
@@ -82,24 +114,29 @@ return [
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
                         'valider-responsable',
+                        'refuser-responsable',
                     ],
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
                         'valider-drh',
+                        'refuser-drh',
                     ],
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH
                     ],
+                    'assertion' => DemandeExterneAssertion::class
                 ],
             ],
         ],
@@ -225,6 +262,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'refuser-responsable' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/refuser-responsable/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'refuser-responsable'
+                                    ],
+                                ],
+                            ],
                             'valider-drh' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -232,6 +279,16 @@ return [
                                     'defaults' => [
                                         'controller' => DemandeExterneController::class,
                                         'action' => 'valider-drh'
+                                    ],
+                                ],
+                            ],
+                            'refuser-drh' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/refuser-drh/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'refuser-drh'
                                     ],
                                 ],
                             ],
@@ -244,6 +301,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            DemandeExterneAssertion::class => DemandeExterneAssertionFactory::class,
             DemandeExterneService::class => DemandeExterneServiceFactory::class,
         ],
     ],

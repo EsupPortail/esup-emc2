@@ -18,6 +18,7 @@
  * @var Agent[] $agentsAll
 // * @var FicheProfil[] $profils
  * @var FormationInstanceInscrit[] $inscriptions
+ * @var DemandeExterne[] $demandes
  *
  * @var Agent[] $autorites;
  * @var Agent[] $superieurs;
@@ -34,6 +35,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheProfil;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
@@ -210,7 +212,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Demande de formation ------------------------------->
                 <div id="formation" class="tab-pane">
-                    <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptions]); ?>
+                    <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptions, 'demandes' => $demandes]); ?>
                 </div>
 
                 <!-- Extraction ------------------------------------------------------------------------------------->

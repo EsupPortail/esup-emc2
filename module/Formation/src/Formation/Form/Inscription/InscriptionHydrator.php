@@ -3,6 +3,7 @@
 namespace Formation\Form\Inscription;
 
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Laminas\Hydrator\HydratorInterface;
 
@@ -20,9 +21,11 @@ class InscriptionHydrator implements HydratorInterface
                 $description = $object->getJustificationAgent();
                 break;
             case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
+            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
                 $description = $object->getJustificationResponsable();
                 break;
             case InscriptionEtats::ETAT_REFUSER :
+            case DemandeExterneEtats::ETAT_REJETEE :
                 $description = $object->getJustificationRefus();
                 break;
         }
@@ -47,9 +50,11 @@ class InscriptionHydrator implements HydratorInterface
                 $object->setJustificationAgent($description);
                 break;
             case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
+            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
                 $object->setJustificationResponsable($description);
                 break;
             case InscriptionEtats::ETAT_REFUSER :
+            case DemandeExterneEtats::ETAT_REJETEE :
                 $object->setJustificationRefus($description);
                 break;
         }

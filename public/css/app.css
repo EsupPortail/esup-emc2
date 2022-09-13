@@ -98,7 +98,7 @@ tr.termine {
     background: #d7d7d7;
 }
 
-tr.historise {
+tr.historise td:not(.action) {
     text-decoration: line-through darkred 2px;
 }
 

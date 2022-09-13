@@ -1,0 +1,138 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+use Formation\Provider\Validation\DemandeExterneValidations;
+
+/**
+ * @see \Formation\Controller\DemandeExterneController::afficherAction()
+ * @var DemandeExterne $demande
+ * @var Agent $agent;
+ */
+
+$canValiderDrh = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH));
+?>
+
+
+<div class="card card-info">
+    <div class="card-header">
+        Informations à propos de l'Agent demandant le stage
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-md-2"> Prénom </dt>
+            <dd class="col-md-4"> <?php echo $agent->getPrenom(); ?> </dd>
+            <dt class="col-md-2"> Nom </dt>
+            <dd class="col-md-4"> <?php echo $agent->getNomUsuel()??$agent->getNomFamille(); ?> </dd>
+            <dt class="col-md-2"> Adresse électronique </dt>
+            <dd class="col-md-10"> <?php echo $agent->getEmail(); ?> </dd>
+            <dt class="col-md-2"> Statut </dt>
+            <dd class="col-md-4"> <?php echo $agent->getStatutToString(); ?> </dd>
+            <dt class="col-md-2"> Corps </dt>
+            <dd class="col-md-4">
+                <?php $corps = $agent->getGradesActifs(); ?>
+                <?php foreach ($corps as $corp) echo $corp->getCorps()->getLibelleLong(); ?>
+            </dd>
+            <dt class="col-md-2"> Service </dt>
+            <dd class="col-md-10">
+                <?php $affectations = $agent->getAffectationsActifs(); ?>
+                <?php foreach ($affectations as $affectation) {
+                    $structure = $affectation->getStructure();
+                    $niv2 = $structure->getNiv2();
+                    if ($niv2 !== null AND $niv2 !== $structure) echo $niv2->getLibelleLong() . " > ";
+                    echo $affectation->getStructure()->getLibelleLong();
+                }
+                ?>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-info">
+    <div class="card-header">
+        Formulaire de demande de formation externe
+    </div>
+    <div class="card-body">
+
+        <h3> Description de la formation demandée </h3>
+        <dl class="row">
+            <dt class="col-md-4"> Libellé : </dt>
+            <dd class="col-md-8"> <?php echo $demande->getLibelle(); ?> </dd>
+            <dt class="col-md-2"> Organisme :</dt>
+            <dd class="col-md-4"> <?php echo $demande->getOrganisme(); ?> </dd>
+            <dt class="col-md-2"> Contact :</dt>
+            <dd class="col-md-4"> <?php echo $demande->getContact(); ?> </dd>
+            <dt class="col-md-4"> Pourquoi le choix de cet organisme :</dt>
+            <dd class="col-md-12"> <?php echo $demande->getPourquoi(); ?> </dd>
+            <dt class="col-md-2"> Lieu :</dt>
+            <dd class="col-md-4"> <?php echo $demande->getLieu(); ?> </dd>
+            <dt class="col-md-2"> Periode :</dt>
+            <dd class="col-md-4"> <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?> </dd>
+            <dt class="col-md-4"> Montant : </dt>
+            <dd class="col-md-8"><?php echo $demande->getMontant(); ?> </dd>
+        </dl>
+
+        <h3> Motivation </h3>
+        <div class="row">
+            <div class="col-md-12"> <?php echo $demande->getJustificationAgent(); ?> </div>
+        </div>
+
+        <h3> Cofinancement </h3>
+        <dl class="row">
+            <dt class="col-md-4"> Prise en charge </dt>
+            <dd class="col-md-8"> <?php echo ($demande->isPriseEnCharge())?"Oui" : "Non"; ?> </dd>
+            <dt class="col-md-4"> Cofinanceur </dt>
+            <dd class="col-md-8"> <?php echo $demande->getCofinanceur(); ?> </dd>
+        </dl>
+    </div></div>
+
+
+<div class="card card-info">
+    <div class="card-header">
+        Validation
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT)) : ?>
+                <dt class="col-md-4"> Validation de l'agent </dt>
+                <dd class="col-md-8">
+                    <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>
+                    <?php echo $demande->getJustificationAgent(); ?>
+                </dd>
+            <?php endif; ?>
+            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE)) : ?>
+                <dt class="col-md-4"> Validation du responsable </dt>
+                <dd class="col-md-8">
+                    <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>
+                    <?php echo $demande->getJustificationResponsable(); ?>
+                </dd>
+            <?php endif; ?>
+            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH)) : ?>
+                <dt class="col-md-4"> Validation de la DRH </dt>
+                <dd class="col-md-8"> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> </dd>
+            <?php endif; ?>
+            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS)) : ?>
+                <dt class="col-md-4"> Refus </dt>
+                <dd class="col-md-8">
+                    <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>
+                    <?php echo $demande->getJustificationRefus(); ?>
+                </dd>
+            <?php endif; ?>
+        </dl>
+    </div></div>
+
+<?php if ($canValiderDrh AND $demande->getEtat()->getCode() === \Formation\Provider\Etat\DemandeExterneEtats::ETAT_VALIDATION_RESP) : ?>
+    <?php /** @see \Formation\Controller\DemandeExterneController::validerDrhAction() */ ?>
+    <a href=""
+       class="btn btn-success ajax-modal" data-event="modification">
+        <span class="icon icon-checked"></span>
+        Valider la demande
+    </a>
+    <?php /** @see \Formation\Controller\DemandeExterneController::refuserDrhAction() */ ?>
+    <a href=""
+       class="btn btn-danger ajax-modal" data-event="modification">
+        <span class="icon icon-checked"></span>
+        Refuser la demande
+    </a>
+<?php endif; ?>

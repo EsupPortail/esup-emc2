@@ -3,6 +3,7 @@
 namespace Formation\Service\DemandeExterne;
 
 use Doctrine\ORM\EntityManager;
+use Structure\Service\Structure\StructureService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,15 +22,18 @@ class DemandeExterneServiceFactory {
     {
         /**
          * @var EntityManager $entityManager
+         * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
 
         $service = new DemandeExterneService();
         $service->setEntityManager($entityManager);
+        $service->setStructureService($structureService);
         $service->setValidationInstanceService($validationInstanceService);
         $service->setValidationTypeService($validationTypeService);
         return $service;

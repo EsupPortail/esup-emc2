@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
+use Formation\Form\Inscription\InscriptionForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
@@ -34,8 +35,10 @@ class DemandeExterneControllerFactory {
 
         /**
          * @var DemandeExterneForm $demandeExterneForm
+         * @var InscriptionForm $inscriptionForm
          */
         $demandeExterneForm = $container->get('FormElementManager')->get(DemandeExterneForm::class);
+        $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
 
         $controller = new DemandeExterneController();
         $controller->setAgentService($agentService);
@@ -43,6 +46,7 @@ class DemandeExterneControllerFactory {
         $controller->setEtatService($etatService);
         $controller->setNotificationService($notificationService);
         $controller->setDemandeExterneForm($demandeExterneForm);
+        $controller->setInscriptionForm($inscriptionForm);
         return $controller;
     }
 }

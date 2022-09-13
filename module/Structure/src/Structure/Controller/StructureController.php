@@ -17,6 +17,7 @@ use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
@@ -42,6 +43,7 @@ use Laminas\View\Model\ViewModel;
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
@@ -120,7 +122,8 @@ class StructureController extends AbstractActionController {
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true);
+        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
+        $demandes = $this->getDemandeExterneService()->getDemandeByStructure($structure, true, true);
 //        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = [];
@@ -142,6 +145,7 @@ class StructureController extends AbstractActionController {
 //            'fichesRecrutements' => $fichesRecrutements,
 //            'profils' => $profils,
             'inscriptions' => $inscriptions,
+            'demandes' => $demandes,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,

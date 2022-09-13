@@ -4,17 +4,22 @@ namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class DemandeExterne implements HistoriqueAwareInterface {
+class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
     use HistoriqueAwareTrait;
     use HasValidationsTrait;
 
-    private int $id = -1;
+    public function getResourceId() : string
+    {
+        return 'DemandeExterne';
+    }
+
+    private ?int $id = -1;
     private ?string $libelle = null;
     private ?string $organisme = null;
     private ?string $contact = null;
@@ -23,17 +28,20 @@ class DemandeExterne implements HistoriqueAwareInterface {
     private ?string $lieu = null;
     private ?DateTime $debut = null;
     private ?DateTime $fin = null;
-    private ?string $motivation = null;
     private bool $priseEnCharge = true;
     private ?string $cofinanceur = null;
 
     private ?Agent $agent = null;
     private ?Etat $etat = null;
 
+    private ?string $justificationAgent = null;
+    private ?string $justificationResponsable = null;
+    private ?string $justificationRefus = null;
+
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -169,17 +177,17 @@ class DemandeExterne implements HistoriqueAwareInterface {
     /**
      * @return string|null
      */
-    public function getMotivation(): ?string
+    public function getJustificationAgent(): ?string
     {
-        return $this->motivation;
+        return $this->justificationAgent;
     }
 
     /**
-     * @param string|null $motivation
+     * @param string|null $justificationAgent
      */
-    public function setMotivation(?string $motivation): void
+    public function setJustificationAgent(?string $justificationAgent): void
     {
-        $this->motivation = $motivation;
+        $this->justificationAgent = $justificationAgent;
     }
 
     /**
@@ -251,5 +259,24 @@ class DemandeExterne implements HistoriqueAwareInterface {
         return 'DemandeExterne_' . $this->getId() ;
     }
 
+    public function getJustificationResponsable(): ?string
+    {
+        return $this->justificationResponsable;
+    }
+
+    public function setJustificationResponsable(?string $justificationResponsable): void
+    {
+        $this->justificationResponsable = $justificationResponsable;
+    }
+
+    public function getJustificationRefus(): ?string
+    {
+        return $this->justificationRefus;
+    }
+
+    public function setJustificationRefus(?string $justificationRefus): void
+    {
+        $this->justificationRefus = $justificationRefus;
+    }
 
 }

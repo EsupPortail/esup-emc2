@@ -4,8 +4,12 @@
  * @var EntretienProfessionnel $entretien
  * @var array $droits
  * @var int $step
+ *
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  */
 
+use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;

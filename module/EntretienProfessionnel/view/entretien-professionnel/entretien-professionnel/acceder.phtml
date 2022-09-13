@@ -10,6 +10,9 @@
  * @var User $connectedUser
  * @var Mail[] $mails
  * @var string[] $documents
+ *
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  */
 
 use Application\Entity\Db\Agent;
@@ -160,7 +163,10 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_
 <!--            --><?php //endif; ?>
 
     <div id="validation" class="tab-pane">
-        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction', 'droits' => $droits, 'step' => $step]); ?>
+        <?php echo $this->partial('partial/validation', [
+                'entretien' => $entretien, 'source' => 'renseignerAction',
+                'superieures' => $superieures, 'autorites' => $autorites,
+                'droits' => $droits, 'step' => $step]); ?>
     </div>
 
     <div id="mails" class="tab-pane">

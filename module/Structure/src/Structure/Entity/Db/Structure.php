@@ -75,6 +75,8 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
     /** @var ArrayCollection (AgentMissionSpecifique) */
     private $missions;
 
+    /** @var ArrayCollection (AgentAffectation) */
+    private $affectations;
     /** @var ArrayCollection (StructureAgentForce) */
     private $agentsForces;
     /** @var ArrayCollection (FichePoste) */

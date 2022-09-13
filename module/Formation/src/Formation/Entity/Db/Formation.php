@@ -3,6 +3,7 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Activite;
+use DateTime;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
@@ -42,6 +43,13 @@ class Formation implements HistoriqueAwareInterface,
     public function __construct()
     {
         $this->missions = new ArrayCollection();
+    }
+
+    public static function getAnnee(?DateTime $date = null) : ?int
+    {
+        if ($date === null) $date = new DateTime();
+        if ((int) $date->format("m") > 8) return (int) $date->format('Y');
+        return ((int) $date->format('Y') - 1);
     }
 
     /**

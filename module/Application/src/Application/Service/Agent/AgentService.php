@@ -4,6 +4,7 @@ namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\Complement\ComplementServiceAwareTrait;
 use DateTime;
@@ -569,6 +570,22 @@ class AgentService {
             ->andWhere('complement.complementId = :agentId')
             ->setParameter('agentId', $agent->getId())
         ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function computesStructures(?Agent $agent, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->join('structure.affectations', 'affectation')
+            ->andWhere('affectation.agent = :agent')->setParameter('agent', $agent)
+        ;
+        $qb = HasPeriodeTrait::decorateWithActif($qb,'affectation', $date);
 
         $result = $qb->getQuery()->getResult();
         return $result;

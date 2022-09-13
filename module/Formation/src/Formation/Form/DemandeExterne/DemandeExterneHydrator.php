@@ -23,7 +23,7 @@ class DemandeExterneHydrator implements HydratorInterface {
             'lieu' => $object->getLieu(),
             'debut' => $object->getDebut(),
             'fin' => $object->getFin(),
-            'motivation' => $object->getMotivation(),
+            'motivation' => $object->getJustificationAgent(),
             'prise-en-charge' => $object->isPriseEnCharge(),
             'cofinanceur' => $object->getCofinanceur(),
         ];
@@ -59,7 +59,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $object->setLieu($lieu);
         $object->setDebut($debut);
         $object->setFin($fin);
-        $object->setMotivation($motivation);
+        $object->setJustificationAgent($motivation);
         $object->setPriseEnCharge($priseEnCharge);
         $object->setCofinanceur($cofinanceur);
 

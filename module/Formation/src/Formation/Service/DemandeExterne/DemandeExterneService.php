@@ -3,12 +3,15 @@
 namespace Formation\Service\DemandeExterne;
 
 use Application\Entity\Db\Agent;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Structure\Service\Structure\StructureServiceAwareTrait;
+use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -18,6 +21,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class DemandeExterneService {
     use EntityManagerAwareTrait;
+    use StructureServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
 
@@ -163,6 +167,55 @@ class DemandeExterneService {
     {
         $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
         return $this->addValidation($vtype, $demande, $justification);
+    }
+
+    public function addValidationRefus(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
+    {
+        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
+        return $this->addValidation($vtype, $demande, $justification);
+    }
+
+    /**
+     * @param Structure $structure
+     * @param bool $avecStructuresFilles
+     * @param bool $anneeCourrante
+     * @return DemandeExterne[]
+     */
+    public function getDemandeByStructure(Structure $structure, bool $avecStructuresFilles = false, bool $anneeCourrante = false) : array
+    {
+        $structures = [];
+        $structures[] = $structure;
+
+        if ($avecStructuresFilles === true) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+        }
+
+        $qb = $this->createQueryBuilder()
+            ->addSelect('affectation')->join('agent.affectations','affectation')
+            ->andWhere('affectation.structure in (:structures)')
+            ->setParameter('structures', $structures)
+//            ->andWhere('inscritetat.code = :demandevalidation')
+//            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
+        ;
+
+        if ($anneeCourrante) {
+            $today = new DateTime();
+            $month = ((int) $today->format('m'));
+            $year  = ((int) $today->format('Y'));
+            $annee = ($month > 8 ) ? $year : ($year-1) ;
+
+            $mini = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+            $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee+1));
+
+            $qb = $qb->andWhere('demande.histoCreation >= :mini AND demande.histoCreation <= :maxi')
+                ->setParameter('mini', $mini)
+                ->setParameter('maxi', $maxi)
+            ;
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
 }
