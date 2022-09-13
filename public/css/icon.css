@@ -120,3 +120,12 @@ span.icon.hourglass:before {
 span.icon.obligatoire:before {
     content: "\f069";
 }
+
+
+.icon.icon-follow:before {
+    content: "\f0f3";
+}
+
+.icon.icon-unfollow:before {
+    content: "\f1f6";
+}

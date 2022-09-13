@@ -89,20 +89,15 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                         <?php if ($canAbonner AND $abonnement === null) : ?>
                             <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
                             <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $formation->getId()], [], true); ?>"
-                               class="btn btn-sm btn-primary"
                             >
-                                <span class="icon icon-plus" title="S'abonner aux notifications liées à la formation"></span>
-                                S'abonner aux notifications
-                            </a>
+                                <span class="icon icon-follow text-success" title="S'abonner aux notifications liées à la formation"></span></a>
                         <?php endif; ?>
 
                         <?php if ($canAbonner AND $abonnement !== null) : ?>
                             <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
                             <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], [], true); ?>"
-                               class="btn btn-sm btn-primary"
                             >
-                                <span class="icon icon-minus" title="Se désabonner des notifications liées à la formation"></span>
-                                Se désabonner des notifications
+                                <span class="icon icon-unfollow text-danger" title="Se désabonner des notifications liées à la formation"></span>
                             </a>
                         <?php endif; ?>
 

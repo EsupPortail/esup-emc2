@@ -53,11 +53,11 @@ class DemandeExterneAssertion extends AbstractAssertion {
      * @param string $privilege
      * @return bool
      */
-    private function computeAssertion(?DemandeExterne $demande, string $privilege) : bool
+    private function computeAssertion(?DemandeExterne $demande, string $privilege, ?Agent $givenAgent = null) : bool
     {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
-        $agent = $demande->getAgent();
+        $agent = ($demande)?$demande->getAgent():$givenAgent;
 
         switch($role->getRoleId()) {
             case RoleConstant::ADMIN_TECH :
@@ -101,12 +101,15 @@ class DemandeExterneAssertion extends AbstractAssertion {
         /** @var DemandeExterne|null $entity */
         $demandeId = (($this->getMvcEvent()->getRouteMatch()->getParam('demande-externe')));
         $entity = $this->getDemandeExterneService()->getDemandeExterne($demandeId);
+        /** @var Agent|null $entity */
+        $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
+        $entityAgent = $this->getAgentService()->getAgent($agentId);
 
         switch($action) {
             case 'afficher' :
                 return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER);
             case 'ajouter' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER);
+                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER, $entityAgent);
             case 'modifier' :
                 return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER);
             case 'historiser' :

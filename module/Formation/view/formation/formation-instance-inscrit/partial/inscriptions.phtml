@@ -11,17 +11,12 @@ use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 
 $canInscrire = true;
-
-$canModifierDemande     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
-$canHistoriserDemande   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
-$canValiderAgentDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT));
 
 $formationValidees = [];
 foreach ($inscriptions as $inscription) {
@@ -89,11 +84,11 @@ foreach ($inscriptions as $inscription) {
     $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
     ?>
     <div class="row formation-inscription">
-        <div class="col-md-8 description">
+        <div class="col-md-7 description">
             <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
             <br/>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
             <a
                 <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
                     href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
@@ -118,6 +113,8 @@ foreach ($inscriptions as $inscription) {
     <?php if ($demande->estNonHistorise()) : ?>
 
         <?php
+        $canHistoriserDemande   = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER);
+
         /**
          * @var ValidationInstance[] $validationAgent
          * @var ValidationInstance[] $validationResp
@@ -140,28 +137,6 @@ foreach ($inscriptions as $inscription) {
                 <br/>
             </div>
             <div class="col-md-5">
-                <?php if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::modifierAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-primary ajax-modal <?php if (!$canModifierDemande) echo " disabled "; ?> " data-event="modification">
-                        <span class="icon icon-modifier"></span>
-                        Modifier la demande
-                    </a>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::validerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/valider-agent', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-success ajax-modal <?php if (!$canValiderAgentDemande) echo " disabled "; ?> " data-event="modification">
-                        <span class="icon icon-valider"></span>
-                        Valider la demande (Agent)
-                    </a>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
-                    <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
-                        class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
-                        <span class="icon icon-historiser"></span>
-                        Supprimer la demande
-                    </a>
-                    <br/>
-                    <br/>
-                <?php else :?>
                     <?php if ($validationAgent) : ?>
                         Validée par l'agent (<?php echo $validationAgent[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationAgent[0]->getHistoCreation()->format('d/m/Y'); ?>.
                         <br/>
@@ -192,7 +167,14 @@ foreach ($inscriptions as $inscription) {
                             <em>En attente de la validation du bureau des formations</em>
                         <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
+                <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
+                <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
+                    class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
+                    <span class="icon icon-historiser"></span>
+                    Supprimer la demande
+                </a>
+                <br/>
+                <br/>
             </div>
         </div>
     <?php endif; ?>

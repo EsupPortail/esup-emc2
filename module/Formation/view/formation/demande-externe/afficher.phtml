@@ -11,7 +11,8 @@ use Formation\Provider\Validation\DemandeExterneValidations;
  * @var Agent $agent;
  */
 
-$canValiderDrh = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH));
+$canValiderDrh = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH);
+
 ?>
 
 

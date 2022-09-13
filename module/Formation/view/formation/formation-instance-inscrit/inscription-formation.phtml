@@ -4,11 +4,13 @@
  * @see \Formation\Controller\FormationInstanceInscritController::inscriptionFormationAction()
  * @var FormationInstance[] $instances
  * @var FormationInstanceInscrit[] $inscriptions
+ * @var DemandeExterne[] $demandes
  * @var Agent $agent
  * @var array $superieures
  */
 
 use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 
@@ -54,7 +56,7 @@ if (!empty($superieures)) {
 
     <!-- Mission------------------------------------------------------------------------------------------->
     <div id="demandes" class="tab-pane">
-        <?php echo $this->partial('partial/demandes-externes', ['agent' => $agent]); ?>
+        <?php echo $this->partial('partial/demandes-externes', ['agent' => $agent, 'demandes' => $demandes]); ?>
     </div>
 
 </div>

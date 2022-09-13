@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -169,11 +170,17 @@ class FormationInstanceInscritController extends AbstractActionController
 
         $superieures = $this->getAgentService()->computeSuperieures($agent);
 
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
+        $demandesNonValidees = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
             'formations' => $formations,
             'agent' => $agent,
+
+            'demandes' => $demandesNonValidees,
 
             'superieures' => $superieures,
         ]);
@@ -192,14 +199,16 @@ class FormationInstanceInscritController extends AbstractActionController
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
+        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
             'formations' => $formations,
             'agent' => $agent,
             'texteParcours' => $rendu->getCorps(),
-            'demandes' => $demandes,
+            'demandes' => $demandesValidees,
         ]);
     }
 

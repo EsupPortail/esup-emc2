@@ -2,7 +2,6 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
@@ -13,7 +12,6 @@ use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
  * @var DemandeExterne[] $demandes
  */
 
-$canDemandeAfficher = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 $canValiderResponsable = $this->isAllowed(FormationinstanceinscritPrivileges::getResourceId(FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_SUPERIEURE));
 
 $array = [];
@@ -79,6 +77,8 @@ foreach ($inscriptions as $inscription) {
         <?php else : ?>
 
             <?php foreach ($demandes as $demande) : ?>
+                <?php $canDemandeAfficher = $this->isAllowed($demande, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER); ?>
+
                 <?php echo $demande->getLibelle(); ?> (du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
                 <ul>
                 <li>
