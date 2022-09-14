@@ -2,9 +2,9 @@
 
 namespace Formation\Form\DemandeExterne;
 
-use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Email;
+use Laminas\Form\Element\File;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
@@ -169,7 +169,36 @@ class DemandeExterneForm extends Form {
             ],
         ]);
 
-        //-- Bouton ------------------------------------
+        //-- DEVIS -----------------------------------------------------------------------------------------------------
+
+//        //upload
+//        $this->add([
+//            'type' => File::class,
+//            'name' => 'devis1',
+//            'options' => [
+//                'label' => "Premier devis <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+//                'label_options' => [ 'disable_html_escape' => true, ],
+//            ],
+//        ]);
+//        $this->add([
+//            'type' => File::class,
+//            'name' => 'devis2',
+//            'options' => [
+//                'label' => "Deuxième devis :",
+//                'label_options' => [ 'disable_html_escape' => true, ],
+//            ],
+//        ]);
+//        $this->add([
+//            'type' => File::class,
+//            'name' => 'devis3',
+//            'options' => [
+//                'label' => "Troisième devis :",
+//                'label_options' => [ 'disable_html_escape' => true, ],
+//            ],
+//        ]);
+
+
+        //-- Bouton ----------------------------------------------------------------------------------------------------
 
         $this->add([
             'type' => Button::class,
@@ -200,6 +229,10 @@ class DemandeExterneForm extends Form {
 
             'prise-en-charge'    => [ 'required' => true,  ],
             'cofinanceur'        => [ 'required' => false,  ],
+
+//            'devis1'        => [ 'required' => true,  ],
+//            'devis2'        => [ 'required' => false,  ],
+//            'devis3'        => [ 'required' => false,  ],
         ]));
     }
 }

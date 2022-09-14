@@ -13,6 +13,7 @@ use Formation\Form\DemandeExterne\DemandeExterneHydratorFactory;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\DemandeExterne\DemandeExterneServiceFactory;
+use Formation\View\Helper\DemandeExterneViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -51,6 +52,8 @@ return [
                     'controller' => DemandeExterneController::class,
                     'action' => [
                         'index',
+                        'rechercher-agent',
+                        'rechercher-organisme',
                     ],
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_INDEX,
@@ -80,6 +83,8 @@ return [
                     'controller' => DemandeExterneController::class,
                     'action' => [
                         'modifier',
+                        'ajouter-devis',
+                        'retirer-devis',
                     ],
                     'privileges' => [
                         DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER,
@@ -212,6 +217,26 @@ return [
                                     ],
                                 ],
                             ],
+                            'ajouter-devis' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter-devis/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'ajouter-devis'
+                                    ],
+                                ],
+                            ],
+                            'retirer-devis' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/retirer-devis/:devis',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'retirer-devis'
+                                    ],
+                                ],
+                            ],
                             'historiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -292,6 +317,26 @@ return [
                                     ],
                                 ],
                             ],
+                            'rechercher-agent' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/rechercher-agent',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'rechercher-agent'
+                                    ],
+                                ],
+                            ],
+                            'rechercher-organisme' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/rechercher-organisme',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'rechercher-organisme'
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -319,6 +364,11 @@ return [
         'factories' => [
             DemandeExterneHydrator::class => DemandeExterneHydratorFactory::class,
         ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'demandeExterne' => DemandeExterneViewHelper::class,
+        ]
     ]
 
 ];

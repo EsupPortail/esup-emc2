@@ -123,6 +123,29 @@ class DemandeExterneService {
     }
 
     /**
+     * @param array $params ['agent' Agent, 'organisme' string, 'etat' Etat, 'histo' ??? ]
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getDemandesExternesWithFiltre(array $params, string $champ = 'histoCreation', string $ordre = 'ASC') : array
+    {
+        $qb = $this->createQueryBuilder()->orderBy('demande.'.$champ, $ordre);
+
+        if (isset($params['agent'])) $qb = $qb->andWhere('demande.agent = :agent')->setParameter('agent', $params['agent']);
+        if (isset($params['organisme']) AND trim($params['organisme'] !== '')) $qb = $qb->andWhere('demande.organisme = :organisme')->setParameter('organisme', $params['organisme']);
+        if (isset($params['etat'])) $qb = $qb->andWhere('demande.etat = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['historise'])) {
+            if ($params['historise'] === '1') $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
+            if ($params['historise'] === '0') $qb = $qb->andWhere('demande.histoDestruction IS NULL');
+        }
+
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+    }
+    /**
      * @param Agent $agent
      * @param string $champ
      * @param string $ordre
@@ -195,6 +218,7 @@ class DemandeExterneService {
             ->addSelect('affectation')->join('agent.affectations','affectation')
             ->andWhere('affectation.structure in (:structures)')
             ->setParameter('structures', $structures)
+            ->andWhere('demande.histoDestruction IS NULL')
 //            ->andWhere('inscritetat.code = :demandevalidation')
 //            ->setParameter('demandevalidation', FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION)
         ;
@@ -218,4 +242,44 @@ class DemandeExterneService {
         return $result;
     }
 
+    /** FONCTION POUR LA RECHERCHE ************************************************************************************/
+
+    /**
+     * @param string $texte
+     * @return Agent[]
+     */
+    public function findAgentByTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        /** @var DemandeExterne $item */
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
+    }
+
+    /**
+     * @param string $texte
+     * @return Agent[]
+     */
+    public function findOrganismeByTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere("LOWER(demande.organisme) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        $organismes = [];
+        /** @var DemandeExterne $item */
+        foreach ($result as $item) {
+            $organismes[$item->getOrganisme()] = $item->getOrganisme();
+        }
+        return $organismes;
+    }
 }

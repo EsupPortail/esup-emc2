@@ -1,7 +1,9 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Provider\Validation\DemandeExterneValidations;
 
@@ -88,6 +90,21 @@ $canValiderDrh = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTE
         </dl>
     </div></div>
 
+<div class="card card-info">
+    <div class="card-header">
+        Devis
+    </div>
+    <div class="card-body">
+        <?php /** @var Fichier  $devis */
+        foreach ($demande->getDevis() as $devis) : ?>
+        <a href="<?php echo $this->url('download-fichier', ['fichier' => $devis->getId()], [], true); ?>">
+            <span class="icon icon-fichier"></span>
+            <?php echo $devis->getNomOriginal(); ?>
+        </a>&nbsp;
+        <br/>
+        <?php endforeach; ?>
+    </div>
+</div>
 
 <div class="card card-info">
     <div class="card-header">
@@ -123,17 +140,35 @@ $canValiderDrh = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTE
         </dl>
     </div></div>
 
-<?php if ($canValiderDrh AND $demande->getEtat()->getCode() === \Formation\Provider\Etat\DemandeExterneEtats::ETAT_VALIDATION_RESP) : ?>
+<?php if ($canValiderDrh) : ?>
+    <?php /** @see \Formation\Controller\DemandeExterneController::indexAction() */ ?>
+    <a href="<?php echo $this->url('formation/demande-externe', [], [], true); ?>"
+       class="btn btn-primary">
+        Retour à l'index des demandes
+    </a>
+<?php endif; ?>
+
+<?php if ($canValiderDrh AND $demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_RESP) : ?>
     <?php /** @see \Formation\Controller\DemandeExterneController::validerDrhAction() */ ?>
-    <a href=""
+    <a href="<?php echo $this->url('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true); ?>"
        class="btn btn-success ajax-modal" data-event="modification">
         <span class="icon icon-checked"></span>
         Valider la demande
     </a>
     <?php /** @see \Formation\Controller\DemandeExterneController::refuserDrhAction() */ ?>
-    <a href=""
+    <a href="<?php echo $this->url('formation/demande-externe/refuser-drh', ['demande-externe' => $demande->getId()], [], true); ?>"
        class="btn btn-danger ajax-modal" data-event="modification">
         <span class="icon icon-checked"></span>
         Refuser la demande
     </a>
 <?php endif; ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

@@ -22,6 +22,8 @@ $canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
     Demandes de formations externes
 </h1>
 
+<?php echo $this->partial('partial/filtre', ['etats' => $etats], [], true); ?>
+
 <table class="table table-condensed table-hover">
     <thead>
         <tr>

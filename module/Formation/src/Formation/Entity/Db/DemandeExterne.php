@@ -4,6 +4,8 @@ namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Fichier\Entity\Db\Fichier;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -37,6 +39,9 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
     private ?string $justificationRefus = null;
+
+    /** @var ?ArrayCollection */
+    private $devis = null;
 
     /**
      * @return int
@@ -279,4 +284,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
         $this->justificationRefus = $justificationRefus;
     }
 
+    /**
+     * @return Fichier[]
+     */
+    public function getDevis() : array
+    {
+        return $this->devis->toArray();
+    }
+
+    public function addDevis($fichier)
+    {
+        $this->devis->add($fichier);
+    }
 }

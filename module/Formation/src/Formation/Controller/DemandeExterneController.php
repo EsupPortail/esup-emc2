@@ -3,6 +3,10 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Fichier\Entity\Db\Fichier;
+use Fichier\Form\Upload\UploadFormAwareTrait;
+use Fichier\Service\Fichier\FichierServiceAwareTrait;
+use Fichier\Service\Nature\NatureServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Form\DemandeExterne\DemandeExterneFormAwareTrait;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
@@ -14,6 +18,7 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
@@ -21,18 +26,36 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class DemandeExterneController extends AbstractActionController {
     use AgentServiceAwareTrait;
-    use EtatServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
+    use EtatServiceAwareTrait;
+    use FichierServiceAwareTrait;
+    use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
 
     use DemandeExterneFormAwareTrait;
+    use UploadFormAwareTrait;
     use InscriptionFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
-        $demandes = $this->getDemandeExterneService()->getDemandesExternes();
+        $fromQueries  = $this->params()->fromQuery();
+        $params = [
+            'agent' => $this->getAgentService()->getAgent($fromQueries['agent']['id']),
+            'organisme' => $fromQueries['organisme']['id'],
+            'etat' => $this->getEtatService()->getEtat((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null),
+            'historise' => $fromQueries['historise'],
+        ];
 
-        return new ViewModel(['demandes' => $demandes]);
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($params);
+
+        $etats = $this->getEtatService()->getEtatsByTypeCode(DemandeExterneEtats::TYPE);
+
+        return new ViewModel([
+            'demandes' => $demandes,
+            'etats' => $etats,
+
+            'params' => $params
+        ]);
     }
 
     public function afficherAction() : ViewModel
@@ -271,7 +294,7 @@ class DemandeExterneController extends AbstractActionController {
             'inscription' => $demande,
             'form' => $form,
         ]);
-        $vm->setTemplate('formation/demande-externe');
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
         return $vm;
     }
 
@@ -305,7 +328,88 @@ class DemandeExterneController extends AbstractActionController {
             'inscription' => $demande,
             'form' => $form,
         ]);
-        $vm->setTemplate('formation/demande-externe');
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
         return $vm;
+    }
+
+    /** DEVIS *********************************************************************************************/
+
+    public function ajouterDevisAction()
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+
+        $fichier = new Fichier();
+        $devisNature = $this->getNatureService()->getNatureByCode('DEMANDEEXTERNE_DEVIS');
+        $fichier->setNature($devisNature);
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true));
+        $form->get('nature')->setValueOptions([$devisNature->getId() => $devisNature->getLibelle()]);
+        $form->bind($fichier);
+
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $files = $request->getFiles();
+            $file = $files['fichier'];
+
+            if ($file['name'] != '') {
+                $nature = $this->getNatureService()->getNature($data['nature']);
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $demande->addDevis($fichier);
+                $this->getDemandeExterneService()->update($demande);
+            }
+            return $this->redirect()->toRoute('inscription-formation', [], [], true);
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('formation/default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function retirerDevisAction() : Response
+    {
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'devis');
+        $this->getFichierService()->delete($fichier);
+
+        return $this->redirect()->toRoute('inscription-formation', [], ['fragment' => "demandes"], true);
+    }
+
+    /** FONCTIONS POUR LE FILTRE ***************************************************************************/
+
+    public function rechercherAgentAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getDemandeExterneService()->findAgentByTerm($term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherOrganismeAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $organismes = $this->getDemandeExterneService()->findOrganismeByTerm($term);
+
+            $result = [];
+            foreach ($organismes as $organisme) {
+                $result[] = array(
+                    'id' => $organisme,
+                    'label' => $organisme,
+                );
+            }
+            usort($result, function ($a, $b) {
+                return strcmp($a['label'], $b['label']);
+            });
+
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

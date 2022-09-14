@@ -11,16 +11,23 @@ use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
-use Formation\Provider\Privilege\DemandeexternePrivileges;
-use Formation\Provider\Validation\DemandeExterneValidations;
-use UnicaenValidation\Entity\Db\ValidationInstance;
 
 $canInscrire = true;
 
 $formationValidees = [];
 foreach ($inscriptions as $inscription) {
     if ($inscription->getInstance()->estPrete() AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) $formationValidees[] = $inscription;
+}
+$demandesValidees = [];
+$demandesAttentes = [];
+foreach ($demandes as $demande) {
+    if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) {
+        $demandesValidees[] = $demande;
+    } else {
+        $demandesAttentes[] = $demande;
+    }
 }
 
 $formationsAttentes = [];
@@ -34,7 +41,7 @@ foreach ($inscriptions as $inscription) {
     Mes inscriptions validées
 </h2>
 
-<?php if (empty($formationValidees)) : ?>
+<?php if (empty($formationValidees) AND empty($demandesValidees)) : ?>
     <em> Aucune formation validée </em>
 <?php else : ?>
     <?php foreach ($formationValidees as $inscription) : ?>
@@ -69,13 +76,16 @@ foreach ($inscriptions as $inscription) {
     </div>
     <br/>
 <?php endforeach; ?>
+    <?php foreach ($demandesValidees as $demande) : ?>
+        <?php echo $this->demandeExterne($demande); ?>
+    <?php endforeach; ?>
 <?php endif; ?>
 
 <h2>
     Mes inscriptions en attente de validation
 </h2>
 
-<?php if (empty($formationsAttentes) AND empty($demandes)) : ?>
+<?php if (empty($formationsAttentes) AND empty($demandesAttentes)) : ?>
     <em> Aucune formation en attente de validation </em>
 <?php else : ?>
     <?php foreach ($formationsAttentes as $inscription) : ?>
@@ -109,74 +119,8 @@ foreach ($inscriptions as $inscription) {
     </div>
     <br/>
 <?php endforeach; ?>
-    <?php foreach ($demandes as $demande) : ?>
-    <?php if ($demande->estNonHistorise()) : ?>
-
-        <?php
-        $canHistoriserDemande   = $this->isAllowed($demande,DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER);
-
-        /**
-         * @var ValidationInstance[] $validationAgent
-         * @var ValidationInstance[] $validationResp
-         * @var ValidationInstance[] $validationDrh
-         */
-        $validationAgent = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
-        $validationResp  = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
-        $validationDrh   = $demande->getValidationsByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-        ?>
-
-        <div class="row">
-            <div class="col-md-7 description">
-                <?php echo $this->etatbadge($demande->getEtat()); ?>
-                <?php echo $demande->getLibelle(); ?> (<?php echo $demande->getOrganisme(); ?>)
-                <br/>
-                <?php echo $demande->getLieu(); ?> ( du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
-                <br/>
-                Créée le <?php echo $demande->getHistoCreation()->format('d/m/Y à H:i'); ?>
-                <br/>
-                <br/>
-            </div>
-            <div class="col-md-5">
-                    <?php if ($validationAgent) : ?>
-                        Validée par l'agent (<?php echo $validationAgent[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationAgent[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                        <br/>
-                    <?php endif; ?>
-                    <?php if ($validationResp) : ?>
-                        <?php if ($validationResp[0]->getValeur() === null) :  ?>
-                            Validée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                        <?php else : ?>
-                            Refusée par le responsable (<?php echo $validationResp[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationResp[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                            <p class="text-danger"> Motif : <?php echo $validationResp[0]->getValeur(); ?> </p>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <em>En attente de la validation du responsable</em>
-                    <?php endif; ?>
-                    <?php if ($validationDrh) : ?>
-                        <?php if ($validationDrh[0]->getValeur() === null) :  ?>
-                            Validée par le bureau des formations (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                        <?php else : ?>
-                            Refusée par le responsable (<?php echo $validationDrh[0]->getHistoCreateur()->getDisplayName(); ?>) le <?php echo $validationDrh[0]->getHistoCreation()->format('d/m/Y'); ?>.
-                            <br/>
-                            <p class="text-danger"> Motif : <?php echo $validationDrh[0]->getValeur(); ?> </p>
-                        <?php endif; ?>
-                    <?php else : ?>
-                        <?php if ($validationResp AND $validationResp[0]->getValeur() === null) :?>
-                            <em>En attente de la validation du bureau des formations</em>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
-                <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
-                    class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
-                    <span class="icon icon-historiser"></span>
-                    Supprimer la demande
-                </a>
-                <br/>
-                <br/>
-            </div>
-        </div>
-    <?php endif; ?>
-<?php endforeach; ?>
+    <?php foreach ($demandesAttentes as $demande) : ?>
+        <?php echo $this->demandeExterne($demande); ?>
+    <?php endforeach; ?>
 <?php endif; ?>
+

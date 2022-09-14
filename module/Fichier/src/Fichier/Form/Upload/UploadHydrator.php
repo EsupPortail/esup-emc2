@@ -14,7 +14,7 @@ class UploadHydrator implements HydratorInterface {
     public function extract($object): array
     {
         $data = [
-            'nature' => ($object)?$object->getNature()->getId():null,
+            'nature' => ($object AND $object->getNature())?$object->getNature()->getId():null,
         ];
         return $data;
     }

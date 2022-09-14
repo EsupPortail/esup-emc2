@@ -27,6 +27,8 @@ class DemandeExterneHydrator implements HydratorInterface {
             'prise-en-charge' => $object->isPriseEnCharge(),
             'cofinanceur' => $object->getCofinanceur(),
         ];
+
+
         return $data;
     }
 
