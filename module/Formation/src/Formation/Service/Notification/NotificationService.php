@@ -10,6 +10,7 @@ use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Url\UrlServiceAwareTrait;
@@ -71,7 +72,7 @@ class NotificationService {
         $instance = $inscription->getInstance();
         $agent = $inscription->getAgent();
 
-            $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
+        $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
         $email .= ",";
         $email .= $agent->getEmail();
 
@@ -139,6 +140,31 @@ class NotificationService {
 
         return $mail;
     }
+
+    public function triggerPrevention(FormationInstanceInscrit $inscription) : Mail
+    {
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $email = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE,FormationParametres::MAIL_PREVENTION_FORMATION)->getValeur();
+
+        $vars = [
+            'agent' => $agent,
+            'session' => $instance,
+            'inscription' => $inscription,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_PREVENTION, $vars);
+
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+
 
     public function triggerDrhRefus(FormationInstanceInscrit $inscription) : Mail
     {
@@ -506,4 +532,20 @@ class NotificationService {
     }
 
 
+    public function triggerValidationComplete(DemandeExterne $demande) : ?Mail
+    {
+        $email = $this->getMailsResponsablesFormations();
+
+        $vars = [
+            'agent' => $demande->getAgent(),
+            'demande' => $demande,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_COMPLETE, $vars);
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
 }

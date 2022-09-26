@@ -160,11 +160,11 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 </a>
             </li>
         </ul>
-    </div>
 
     <!-- ONGLET :: PANE------------------------------------------------------------------------------------------------>
     <div class="tab-content">
         <div id="information" class="tab-pane">
+
             <div class="row">
                 <div class="col-md-9">
                     <h2> Informations de la session de formation</h2>
@@ -193,7 +193,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
 
             <div class="row">
                 <div class="col-md-9">
-                    <h2>Formateurs </h2>
+                    <h2>Formateur(s) </h2>
                 </div>
                 <div class="col-md-3">
                     <?php if ($canFormateurModifier) : ?>
@@ -207,56 +207,66 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                     <?php endif; ?>
                 </div>
             </div>
-
-            <table id="formateurs" class="datatable table table-condensed">
-                <thead>
-                <tr>
-                    <th> Dénomination </th>
-                    <th> Structure de rattachement / Organisme </th>
-                    <th> Action </th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($formateurs as $formateur) : ?>
-                    <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
-                        <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
-                        <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
-                        <td>
-                            <?php if ($canFormateurModifier) : ?>
-                                <a  <?php /** @see FormateurController::modifierFormateurAction() */ ?>
-                                    href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                                    class="ajax-modal" data-event="modification"
-                                    title="Modifier les informations du formateur"
+            <?php if (empty($formateurs)) : ?>
+            <div class="alert alert-warning">
+                <strong>
+                    <span class="icon icon-attention"></span>
+                    Aucun formateur de déclaré pour cette formation.
+                </strong>
+                <br/>
+                Sans formateur la formation ne pourra être ouverte.
+            </div>
+        <?php else : ?>
+            <table id="formateurs" class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Dénomination </th>
+                <th> Structure de rattachement / Organisme </th>
+                <th> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($formateurs as $formateur) : ?>
+                <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
+                    <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
+                    <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
+                    <td>
+                        <?php if ($canFormateurModifier) : ?>
+                            <a  <?php /** @see FormateurController::modifierFormateurAction() */ ?>
+                                href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                                class="ajax-modal" data-event="modification"
+                                title="Modifier les informations du formateur"
+                            >
+                                <span class="icon icon-editer"></span></a>
+                            <?php if ($formateur->estNonHistorise()) : ?>
+                                <a      <?php /** @see FormateurController::historiserFormateurAction() */ ?>
+                                        href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                                        title="Supprimer le formateur"
                                 >
-                                    <span class="icon icon-editer"></span></a>
-                                <?php if ($formateur->estNonHistorise()) : ?>
-                                    <a      <?php /** @see FormateurController::historiserFormateurAction() */ ?>
-                                            href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                                            title="Supprimer le formateur"
-                                    >
-                                    <span class="icon icon-historiser"></span></a>
-                                <?php else : ?>
-                                    <a      <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
-                                            href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
-                                        <span class="icon icon-restaurer"></span></a>
-                                <?php endif; ?>
-                                <a      <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
-                                        href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                                   class="ajax-modal" data-event="modification"
-                                    title="Supprimer définitivement le formateur"
-                                >
-                                    <span class="icon icon-retirer text-danger"></span></a>
+                                <span class="icon icon-historiser"></span></a>
+                            <?php else : ?>
+                                <a      <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
+                                        href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
+                                    <span class="icon icon-restaurer"></span></a>
                             <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table><br/>
+                            <a      <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
+                                    href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                                title="Supprimer définitivement le formateur"
+                            >
+                                <span class="icon icon-retirer text-danger"></span></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table><br/>
+        <?php endif; ?>
 
             <div class="row">
                 <div class="col-md-9">
                     <h2>
-                        Séance(s) de formation
+                        Séance(s) de formation et/ou volume(s) horaires
                     </h2>
 
                     <dl class="row">
@@ -289,8 +299,17 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                     <br/>
                 </div>
             </div>
-
-        <table id="journees" class="datatable table table-condensed">
+            <?php if (empty($journees)) : ?>
+            <div class="alert alert-warning">
+                <strong>
+                    <span class="icon icon-attention"></span>
+                    Aucune séance ou volume horaire de déclaré pour cette formation.
+                </strong>
+                <br/>
+                Sans séance ou volume horaire la formation ne pourra être ouverte.
+            </div>
+        <?php else : ?>
+            <table id="journees" class="table table-condensed">
         <thead>
             <tr>
                 <th> Type </th>
@@ -348,6 +367,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php endforeach; ?>
         </tbody>
     </table><br/>
+        <?php endif; ?>
         </div>
 
         <div id="inscriptions" class="tab-pane">
@@ -355,19 +375,21 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
         </div>
 
         <div id="mails" class="tab-pane">
-    <h2> Mails envoyés </h2>
+            <h2> Mails envoyés </h2>
 
-    <?php echo $this->mails($mails); ?>
+            <?php echo $this->mails($mails); ?>
 
-    </div>
+        </div>
 
-    <div id="presences" class="tab-pane">
-        <h2> Présence aux séances</h2>
+        <div id="presences" class="tab-pane">
+            <h2> Présence aux séances</h2>
 
-        <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'presences' => $presences, 'titre' => false], [], true); ?>
-    </div>
+            <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'presences' => $presences, 'titre' => false], [], true); ?>
+        </div>
 
 </div>
+</div>
+
 
 <script>
     $(function() {

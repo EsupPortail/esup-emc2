@@ -2,6 +2,7 @@
 
 namespace Formation\Form\Inscription;
 
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
@@ -10,7 +11,7 @@ use Laminas\Hydrator\HydratorInterface;
 class InscriptionHydrator implements HydratorInterface
 {
     /**
-     * @param FormationInstanceInscrit $object
+     * @param FormationInstanceInscrit|DemandeExterne $object
      * @return array
      */
     public function extract(object $object): array
@@ -38,7 +39,7 @@ class InscriptionHydrator implements HydratorInterface
 
     /**
      * @param array $data
-     * @param FormationInstanceInscrit $object
+     * @param FormationInstanceInscrit|DemandeExterne $object
      * @return FormationInstanceInscrit
      */
     public function hydrate(array $data, object $object)

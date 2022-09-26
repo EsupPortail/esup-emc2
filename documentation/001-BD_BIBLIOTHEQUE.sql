@@ -247,8 +247,8 @@ create table unicaen_glossaire_definition
     alternatives text
 );
 
-create unique index unicaen_glossaire_definition_id_uindex on unicaen_glossaire_definition (id);
-create unique index unicaen_glossaire_definition_terme_uindex on unicaen_glossaire_definition (terme);
+create unique index unicaen_glossaire_definition_id_uindex on unicaen_aide_glossaire_definition (id);
+create unique index unicaen_glossaire_definition_terme_uindex on unicaen_aide_glossaire_definition (terme);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- UNICAEN VALIDATION --------------------------------------------------------------------------------------------------

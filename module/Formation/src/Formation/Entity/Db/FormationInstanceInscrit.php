@@ -9,6 +9,7 @@ use Application\Entity\HasAgentInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -46,6 +47,8 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $questionnaire;
     /** @var string|null */
     private $complement;
+    private ?DateTime $validationEnquete;
+    private Collection $reponsesEnquete;
 
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
@@ -150,6 +153,17 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return $this;
     }
 
+    /**
+     * @return EnqueteReponse[]
+     */
+    public function getReponsesEnquete(): array
+    {
+        if ($this->reponsesEnquete === null) return [];
+        $responses = $this->reponsesEnquete->toArray();
+        $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
+        return $responses;
+    }
+
     /** JUSTIFICATIONS  *************************************************************************************/
 
     public function getJustificationAgent(): ?string
@@ -180,6 +194,16 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     public function setJustificationRefus(?string $justificationRefus): void
     {
         $this->justificationRefus = $justificationRefus;
+    }
+
+    public function getValidationEnquete(): ?DateTime
+    {
+        return $this->validationEnquete;
+    }
+
+    public function setValidationEnquete(?DateTime $validationEnquete): void
+    {
+        $this->validationEnquete = $validationEnquete;
     }
 
     /** PRESENCES *****************************************************************************************************/
@@ -226,5 +250,6 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
+
 
 }

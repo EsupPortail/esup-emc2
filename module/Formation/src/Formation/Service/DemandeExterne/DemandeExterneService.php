@@ -8,12 +8,27 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Presence;
+use Formation\Entity\Db\Seance;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Validation\DemandeExterneValidations;
+use Formation\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\Db\ValidationType;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -21,6 +36,15 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class DemandeExterneService {
     use EntityManagerAwareTrait;
+
+    use EtatServiceAwareTrait;
+    use FormationServiceAwareTrait;
+    use FormationGroupeServiceAwareTrait;
+    use FormationInstanceServiceAwareTrait;
+    use FormationInstanceInscritServiceAwareTrait;
+    use SeanceServiceAwareTrait;
+    use PresenceAwareTrait;
+
     use StructureServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -139,7 +163,15 @@ class DemandeExterneService {
             if ($params['historise'] === '1') $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
             if ($params['historise'] === '0') $qb = $qb->andWhere('demande.histoDestruction IS NULL');
         }
-
+        if (isset($params['annee']) AND $params['annee'] !== '') {
+            $annee = (int) $params['annee'];
+            $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
+            $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+            $qb = $qb
+                ->andWhere('demande.fin >= :debut')->setParameter('debut', $debut)
+                ->andWhere('demande.debut <= :fin')->setParameter('fin', $fin)
+            ;
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -281,5 +313,91 @@ class DemandeExterneService {
             $organismes[$item->getOrganisme()] = $item->getOrganisme();
         }
         return $organismes;
+    }
+
+    public function transformer(?DemandeExterne $demande, string $libelle, float $volume, float $suivi) : FormationInstance
+    {
+        //theme
+        $theme = $this->getFormationGroupeService()->getFormationGroupeByLibelle("Stage externe");
+        if ($theme === null) {
+            $theme = new FormationGroupe();
+            $theme->setLibelle('Stage externe');
+            $theme->setOrdre(99999999);
+            //source ... todo
+            $this->getFormationGroupeService()->create($theme);
+        }
+
+        //creation de l'action de formation
+        $formation = new Formation();
+        $formation->setLibelle($libelle);
+        $formation->setGroupe($theme);
+        $formation->setDescription("Action de formation générée depuis la demande ".$demande->getId());
+        $formation->setAffichage(false);
+        //source ... todo
+        $this->getFormationService()->create($formation);
+
+        //session
+        $session = new FormationInstance();
+        $session->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
+        $session->setFormation($formation);
+        $session->setAutoInscription(false);
+        $session->setNbPlacePrincipale(1);
+        $session->setNbPlaceComplementaire(0);
+        $session->setType("stage externe");
+        //source ... todo
+        $this->getFormationInstanceService()->create($session);
+
+        //inscription
+        $inscription = new FormationInstanceInscrit();
+        $inscription->setAgent($demande->getAgent());
+        $inscription->setInstance($session);
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
+        $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+        //source ... todo
+        $this->getFormationInstanceInscritService()->create($inscription);
+
+        $absence = $volume - $suivi;
+
+        if ($suivi !== 0) {
+            //seance
+            $seance = new Seance();
+            $seance->setInstance($session);
+            $seance->setVolume($suivi);
+            $seance->setLieu("");
+            $seance->setType(Seance::TYPE_VOLUME);
+            //source ... todo
+            $this->getSeanceService()->create($seance);
+
+            //presence true
+            $presence = new Presence();
+            $presence->setJournee($seance);
+            $presence->setInscrit($inscription);
+            $presence->setPresent(true);
+            $presence->setPresenceType("stage externe");
+            //source ... todo
+            $this->getPresenceService()->create($presence);
+        }
+
+        if ($absence !== 0) {
+            //seance
+            $seance = new Seance();
+            $seance->setInstance($session);
+            $seance->setVolume($absence);
+            $seance->setLieu("");
+            $seance->setType(Seance::TYPE_VOLUME);
+            //source ... todo
+            $this->getSeanceService()->create($seance);
+
+            //presence true
+            $presence = new Presence();
+            $presence->setJournee($seance);
+            $presence->setInscrit($inscription);
+            $presence->setPresent(false);
+            $presence->setPresenceType("stage externe");
+            //source ... todo
+            $this->getPresenceService()->create($presence);
+        }
+
+        return $session;
     }
 }

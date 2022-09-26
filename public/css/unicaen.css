@@ -522,6 +522,14 @@ div.alert.alert-success {
     color:  var(--success-background);
 }
 
+
+div.alert.alert-default {
+    background: var(--body-background);
+    border-color:  var(--body-color);
+    color:  var(--body-color);
+}
+
+
 /** CARD ----------------------------------------------------------------------------------------------------------  **/
 
 div.card {
@@ -617,4 +625,15 @@ div.div-connexion {
 
 .bootstrap-select > .dropdown-toggle {
     height:3rem;
+}
+
+div.ui-datepicker {
+    z-index: 1061 !important; /* NB: doit être supérieur à la modale Bootstrap qui est à 1050 et au popover(1060) */
+}
+
+div.multicheckbox label {
+    margin-right: 1rem;
+}
+div.multicheckbox label input {
+    margin-right: 0.25rem;
 }

@@ -29,6 +29,9 @@
         <field name="justificationResponsable"  column="justification_responsable"          type="string" length="9999"         nullable="true"/>
         <field name="justificationRefus"        column="justification_refus"                type="string" length="9999"         nullable="true"/>
 
+        <field name="validationEnquete"  type="datetime"                 column="validation_enquete"  nullable="true"/>
+        <one-to-many field="reponsesEnquete" target-entity="Formation\Entity\Db\EnqueteReponse" mapped-by="inscription"/>
+
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
             <join-column name="source_id" referenced-column-name="ID" />

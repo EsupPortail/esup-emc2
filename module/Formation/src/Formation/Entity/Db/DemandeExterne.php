@@ -4,8 +4,7 @@ namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Fichier\Entity\Db\Fichier;
+use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -32,6 +31,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
     private ?DateTime $fin = null;
     private bool $priseEnCharge = true;
     private ?string $cofinanceur = null;
+    private string $modalite= "présentiel";
 
     private ?Agent $agent = null;
     private ?Etat $etat = null;
@@ -39,221 +39,174 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
     private ?string $justificationRefus = null;
+    private ?Collection $devis = null;
 
-    /** @var ?ArrayCollection */
-    private $devis = null;
-
-    /**
-     * @return int
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string|null $libelle
-     */
     public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
     }
 
-    /**
-     * @return string|null
-     */
     public function getOrganisme(): ?string
     {
         return $this->organisme;
     }
 
-    /**
-     * @param string|null $organisme
-     */
     public function setOrganisme(?string $organisme): void
     {
         $this->organisme = $organisme;
     }
 
-    /**
-     * @return string|null
-     */
     public function getContact(): ?string
     {
         return $this->contact;
     }
 
-    /**
-     * @param string|null $contact
-     */
     public function setContact(?string $contact): void
     {
         $this->contact = $contact;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPourquoi(): ?string
     {
         return $this->pourquoi;
     }
 
-    /**
-     * @param string|null $pourquoi
-     */
     public function setPourquoi(?string $pourquoi): void
     {
         $this->pourquoi = $pourquoi;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMontant(): ?string
     {
         return $this->montant;
     }
 
-    /**
-     * @param string|null $montant
-     */
     public function setMontant(?string $montant): void
     {
         $this->montant = $montant;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLieu(): ?string
     {
         return $this->lieu;
     }
 
-    /**
-     * @param string|null $lieu
-     */
     public function setLieu(?string $lieu): void
     {
         $this->lieu = $lieu;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getDebut(): ?DateTime
     {
         return $this->debut;
     }
 
-    /**
-     * @param DateTime|null $debut
-     */
     public function setDebut(?DateTime $debut): void
     {
         $this->debut = $debut;
     }
 
     /**
-     * @return DateTime|null
+     * Utiliser por les macros
+     * @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction)
      */
+    public function getDebutAsString() : string
+    {
+        if ($this->getDebut() === null) return "Date de début absente";
+        return $this->getDebut()->format('d/m/Y');
+    }
+
     public function getFin(): ?DateTime
     {
         return $this->fin;
     }
 
     /**
-     * @param DateTime|null $fin
-     */
+     * Utiliser por les macros
+     * @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction)
+     **/
+    public function getFinAsString() : string
+    {
+        if ($this->getFin() === null) return "Date de fin absente";
+        return $this->getFin()->format('d/m/Y');
+    }
+
     public function setFin(?DateTime $fin): void
     {
         $this->fin = $fin;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
+    public function getModalite(): string
+    {
+        return $this->modalite;
+    }
+
+    /**
+     * @param string $modalite
+     */
+    public function setModalite(string $modalite): void
+    {
+        $this->modalite = $modalite;
+    }
+
     public function getJustificationAgent(): ?string
     {
         return $this->justificationAgent;
     }
 
-    /**
-     * @param string|null $justificationAgent
-     */
     public function setJustificationAgent(?string $justificationAgent): void
     {
         $this->justificationAgent = $justificationAgent;
     }
 
-    /**
-     * @return bool
-     */
     public function isPriseEnCharge(): bool
     {
         return $this->priseEnCharge;
     }
 
-    /**
-     * @param bool $priseEnCharge
-     */
     public function setPriseEnCharge(bool $priseEnCharge): void
     {
         $this->priseEnCharge = $priseEnCharge;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCofinanceur(): ?string
     {
         return $this->cofinanceur;
     }
 
-    /**
-     * @param string|null $cofinanceur
-     */
     public function setCofinanceur(?string $cofinanceur): void
     {
         $this->cofinanceur = $cofinanceur;
     }
 
-    /**
-     * @return Agent|null
-     */
     public function getAgent(): ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent|null $agent
-     */
     public function setAgent(?Agent $agent): void
     {
         $this->agent = $agent;
     }
 
-    /**
-     * @return Etat|null
-     */
     public function getEtat(): ?Etat
     {
         return $this->etat;
     }
 
-    /**
-     * @param Etat|null $etat
-     */
     public function setEtat(?Etat $etat): void
     {
         $this->etat = $etat;
@@ -284,9 +237,6 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
         $this->justificationRefus = $justificationRefus;
     }
 
-    /**
-     * @return Fichier[]
-     */
     public function getDevis() : array
     {
         return $this->devis->toArray();

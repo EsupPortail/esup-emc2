@@ -26,6 +26,7 @@
 
         <field name="coutHt"                type="float"     column="cout_ht"                  nullable="true"/>
         <field name="coutTtc"               type="float"     column="cout_ttc"                 nullable="true"/>
+
         <field name="affichage"             type="boolean"   column="affichage"                nullable="true"/>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

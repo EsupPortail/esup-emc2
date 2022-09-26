@@ -92,13 +92,9 @@ $this->headTitle("Liste des actions de formations proposées");
         $('.nav a').click(function (e) {
             let anchor = $(this).attr('aria-controls');
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
+            history.replaceState(null, null, "#" + anchor);
             $(this).tab('show');
         });
-
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
-        });
     });
+
 </script>

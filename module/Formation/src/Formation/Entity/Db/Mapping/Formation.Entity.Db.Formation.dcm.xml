@@ -10,6 +10,7 @@
         <field name="description"   column="description"    type="string"       length="2048"  />
         <field name="lien"          column="lien"           type="string"       length="1024"  />
         <field name="affichage"     column="affichage"      type="boolean"      />
+        <field name="rattachement"          type="string" length="1024"      column="rattachement"                        nullable="true"/>
 
         <many-to-one target-entity="Formation\Entity\Db\FormationGroupe"  field="groupe">
             <join-column name="groupe_id" referenced-column-name="id"/>

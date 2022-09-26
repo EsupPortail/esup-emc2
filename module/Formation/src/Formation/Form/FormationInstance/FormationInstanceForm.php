@@ -120,6 +120,7 @@ class FormationInstanceForm extends Form
                 'id' => 'cout_ttc',
             ],
         ]);
+
         //button
         $this->add([
             'type' => Button::class,
@@ -173,7 +174,6 @@ class FormationInstanceForm extends Form
                     ],
                 ],
             ],
-
         ]));
     }
 }

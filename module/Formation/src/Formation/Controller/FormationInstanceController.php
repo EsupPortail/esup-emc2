@@ -221,7 +221,7 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->envoyerConvocation($instance);
-        $this->getFormationInstanceService()->envoyerEmargement($instance);
+        //$this->getFormationInstanceService()->envoyerEmargement($instance); //todo définir ce que l'on fait pour les formateurs
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 

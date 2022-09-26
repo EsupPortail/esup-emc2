@@ -4,6 +4,7 @@ namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Activite;
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
@@ -26,23 +27,26 @@ class Formation implements HistoriqueAwareInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
+    const RATTACHEMENT_PREVENTION = 'prévention';
+    const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
+
     private int $id = -1;
     private ?string $libelle = null;
     private ?string $lien = null;
     private ?FormationGroupe $groupe = null;
     private bool $affichage = true;
 
-    /** @var ArrayCollection */
-    private $missions;
-    /** @var ArrayCollection (FormationInstance) */
-    private $instances;
-    /** @var ArrayCollection (FormationAbonnement) */
-    private $abonnements;
+    private Collection $missions;
+    private Collection $instances;
+    private Collection $abonnements;
 
+    private ?string $rattachement = null;
 
     public function __construct()
     {
         $this->missions = new ArrayCollection();
+        $this->instances = new ArrayCollection();
+        $this->abonnements = new ArrayCollection();
     }
 
     public static function getAnnee(?DateTime $date = null) : ?int
@@ -186,6 +190,17 @@ class Formation implements HistoriqueAwareInterface,
             $options[] = $array;
         }
         return $options;
+    }
+
+
+    public function getRattachement(): ?string
+    {
+        return $this->rattachement;
+    }
+
+    public function setRattachement(?string $rattachement): void
+    {
+        $this->rattachement = $rattachement;
     }
 
     /** Formation Instances *******************************************************************************************/

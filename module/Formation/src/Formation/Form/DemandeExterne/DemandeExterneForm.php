@@ -2,7 +2,9 @@
 
 namespace Formation\Form\DemandeExterne;
 
+use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Email;
 use Laminas\Form\Element\File;
 use Laminas\Form\Element\Radio;
@@ -94,6 +96,7 @@ class DemandeExterneForm extends Form {
             ],
         ]);
 
+
         // debut
         $this->add([
             'type' => Date::class,
@@ -115,13 +118,29 @@ class DemandeExterneForm extends Form {
             'options' => [
                 'label' => "Date de fin <span class='icon obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
-//                'format' => HasPeriodeFieldset::format,
+//                'format' => 'd/m/Y'
             ],
             'attributes' => [
                 'id' => 'fin',
             ],
         ]);
 
+        // type
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'modalite',
+            'options' => [
+                'label' => "Modalité de la session de formation  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'value_options' => [
+                    "présentiel" => "Je suivrai la formation en présentiel",
+                    "distanciel" => "Je suivrai la formation en distanciel",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'modalite',
+            ],
+        ]);
         //-- Motivations -------------------------------
 
         $this->add([
@@ -169,35 +188,6 @@ class DemandeExterneForm extends Form {
             ],
         ]);
 
-        //-- DEVIS -----------------------------------------------------------------------------------------------------
-
-//        //upload
-//        $this->add([
-//            'type' => File::class,
-//            'name' => 'devis1',
-//            'options' => [
-//                'label' => "Premier devis <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-//                'label_options' => [ 'disable_html_escape' => true, ],
-//            ],
-//        ]);
-//        $this->add([
-//            'type' => File::class,
-//            'name' => 'devis2',
-//            'options' => [
-//                'label' => "Deuxième devis :",
-//                'label_options' => [ 'disable_html_escape' => true, ],
-//            ],
-//        ]);
-//        $this->add([
-//            'type' => File::class,
-//            'name' => 'devis3',
-//            'options' => [
-//                'label' => "Troisième devis :",
-//                'label_options' => [ 'disable_html_escape' => true, ],
-//            ],
-//        ]);
-
-
         //-- Bouton ----------------------------------------------------------------------------------------------------
 
         $this->add([
@@ -224,15 +214,12 @@ class DemandeExterneForm extends Form {
             'lieu'               => [ 'required' => true,  ],
             'debut'              => [ 'required' => true,  ],
             'fin'                => [ 'required' => true,  ],
+            'modalite'           => [ 'required' => true,  ],
 
             'motivation'         => [ 'required' => true,  ],
 
             'prise-en-charge'    => [ 'required' => true,  ],
             'cofinanceur'        => [ 'required' => false,  ],
-
-//            'devis1'        => [ 'required' => true,  ],
-//            'devis2'        => [ 'required' => false,  ],
-//            'devis3'        => [ 'required' => false,  ],
         ]));
     }
 }

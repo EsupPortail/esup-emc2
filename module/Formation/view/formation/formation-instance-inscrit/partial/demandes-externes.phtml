@@ -6,9 +6,7 @@
  */
 
 use Application\Entity\Db\Agent;
-use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 $canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER));
@@ -20,7 +18,12 @@ $canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResource
 
 <div class="row">
 <div class="col-md-7">
-    Afin de réaliser une demande de formation hors plan de formation, vous devez trouver au <em>moins trois</em> organismes et déposer les devis.
+    Afin de réaliser cette demande :
+    <ol>
+        <li> remplir le formulaire ;</li>
+        <li> déposer au moins un devis (ou document équivalent) ;</li>
+        <li> valider votre demande.</li>
+    </ol>
 </div>
 <div class="col-md-5">
     <?php /** @see \Formation\Controller\DemandeExterneController::ajouterAction() */ ?>
@@ -38,7 +41,10 @@ $canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResource
 <h2> Demandes que je n'ai pas encore validées </h2>
 
 <?php foreach($demandes as $demande) : ?>
-    <?php echo $this->demandeExterne($demande); ?>
+    <?php
+        $url = $this->url('inscription-formation', [], ['force_canonical' => true, 'fragment' => 'demandes'], true);
+        echo $this->demandeExterne($demande, ['retour' => $url]);
+    ?>
 <?php endforeach; ?>
 
 

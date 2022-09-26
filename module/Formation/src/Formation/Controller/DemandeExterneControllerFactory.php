@@ -6,6 +6,7 @@ use Application\Service\Agent\AgentService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
+use Formation\Form\Demande2Formation\Demande2FormationForm;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
@@ -42,10 +43,12 @@ class DemandeExterneControllerFactory {
 
         /**
          * @var DemandeExterneForm $demandeExterneForm
+         * @var Demande2FormationForm $demande2formationForm
          * @var InscriptionForm $inscriptionForm
          * @var UploadForm $uploadForm
          */
         $demandeExterneForm = $container->get('FormElementManager')->get(DemandeExterneForm::class);
+        $demande2formationForm = $container->get('FormElementManager')->get(Demande2FormationForm::class);
         $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
@@ -59,6 +62,7 @@ class DemandeExterneControllerFactory {
         $controller->setNotificationService($notificationService);
 
         $controller->setDemandeExterneForm($demandeExterneForm);
+        $controller->setDemande2formationForm($demande2formationForm);
         $controller->setInscriptionForm($inscriptionForm);
         $controller->setUploadForm($uploadForm);
 

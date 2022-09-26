@@ -369,4 +369,13 @@ trait AgentMacroTrait
         }
         return $texte;
     }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function getDateNaissanceAsString() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        if ($agent->getDateNaissance() === null) return "Date de naissance non renseignée";
+        return $agent->getDateNaissance()->format('d/m/y');
+    }
 }

@@ -1,11 +1,15 @@
 <?php
 
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
+use UnicaenEtat\Entity\Db\Etat;
 
 /**
  * @see \Formation\Controller\DemandeExterneController::indexAction()
  * @var DemandeExterne[] $demandes
+ * @var Etat[] $etats
+ * @var array $params
  */
 
 $this->headTitle("Demandes de formations externes");
@@ -15,14 +19,14 @@ $canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 $canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
 $canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
 $canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
-
+$canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_GERER))
 ?>
 
 <h1 class="page-header">
     Demandes de formations externes
 </h1>
 
-<?php echo $this->partial('partial/filtre', ['etats' => $etats], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params], [], true); ?>
 
 <table class="table table-condensed table-hover">
     <thead>
@@ -44,7 +48,9 @@ $canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>">
+                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal"
+                    >
                     <span class="icon icon-voir"></span></a>
                 <?php else : ?>
                     <span class="icon icon-voir nope"></span>
@@ -57,6 +63,15 @@ $canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                         <span class="icon icon-editer"></span></a>
                 <?php else : ?>
                     <span class="icon icon-editer nope"></span>
+                <?php endif; ?>
+                <?php if ($canGerer AND $demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::gererAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/gerer', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon gerer" title="Transformer la demande en formation"></span></a>
+                <?php else : ?>
+                    <span class="icon gerer nope"></span>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($demande->estNonHistorise()) : ?>

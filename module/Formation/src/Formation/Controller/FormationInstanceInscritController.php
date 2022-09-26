@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
@@ -67,6 +68,9 @@ class FormationInstanceInscritController extends AbstractActionController
 
                     $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
                     $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
+
+                    if ($instance->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) $this->getNotificationService()->triggerPrevention($inscrit);
+
                 } else {
                     $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
                 }
@@ -197,7 +201,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
-        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
 
         $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
@@ -384,6 +388,10 @@ class FormationInstanceInscritController extends AbstractActionController
                 $this->getFormationInstanceService()->classerInscription($inscription);
                 $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                 $this->getNotificationService()->triggerDrhValidation($inscription);
+                if ($inscription->getListe() === FormationInstanceInscrit::PRINCIPALE
+                    AND $inscription->getInstance()->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) {
+                    $this->getNotificationService()->triggerPrevention($inscription);
+                }
             }
         }
 

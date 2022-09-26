@@ -11,6 +11,7 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider
  * @var array $options
  */
 
+$retour = $options['retour'] ?? null;
 ?>
 
 <?php $canModifierDemande = $this->isAllowed($demande, DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER); ?>
@@ -21,8 +22,9 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider
 
         <div>
         <?php echo $this->etatbadge($demande->getEtat()); ?>
-        <?php echo $demande->getLibelle(); ?> (<?php echo $demande->getOrganisme(); ?>)
+        <strong><?php echo $demande->getLibelle(); ?></strong>
         <br/>
+        <?php echo $demande->getOrganisme(); ?> -
         <?php echo $demande->getLieu(); ?> ( du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
         </div>
 
@@ -46,6 +48,7 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider
                 <br/>
             <?php endforeach; ?>
         <?php endif; ?>
+            <br/>
         </div>
     </div>
     <div class="col-md-5">
@@ -78,10 +81,10 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider
                     <span class="icon icon-televerser"></span>Ajouter un devis</a><br/>
         <?php endif ?>
         <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
-        <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
+        <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $retour]], true); ?>"
             class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
-            <span class="icon icon-historiser"></span>
-            Supprimer la demande
+            <span class="icon icon-retirer"></span>
+            J'annule mon inscription
         </a>
 
         <br/>

@@ -38,10 +38,10 @@ $modules = [
     'UnicaenRenderer',
     'UnicaenPdf',
     'UnicaenMail',
-    'UnicaenGlossaire',
     'UnicaenParametre',
     'UnicaenValidation',
     'UnicaenEvenement',
+    'UnicaenAide',
 
     'Indicateur',
     'EntretienProfessionnel',

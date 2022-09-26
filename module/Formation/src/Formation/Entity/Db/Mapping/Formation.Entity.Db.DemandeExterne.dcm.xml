@@ -14,6 +14,7 @@
         <field name="lieu"          column="lieu"           type="string"       length="1024"  />
         <field name="debut"         column="debut"          type="datetime"  />
         <field name="fin"           column="fin"            type="datetime"  />
+        <field name="modalite"      column="modalite"       type="string"       length="1024"  />
 
         <field name="priseEnCharge" column="prise_en_charge" type="boolean"  />
         <field name="cofinanceur"   column="cofinanceur"    type="string"       length="1024" />

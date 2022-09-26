@@ -3,6 +3,7 @@
 namespace Formation\Form\Formation;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
+use Formation\Entity\Db\Formation;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
@@ -83,6 +84,22 @@ class FormationForm extends Form
                 'id' => 'affichage',
             ],
         ]);
+        //rattachement
+        $this->add([
+            'type' => Select::class,
+            'name' => 'rattachement',
+            'options' => [
+                'label' => "Action de formation rattachée  :",
+                'empty_option' => "Aucun rattachement particulier",
+                'value_options' => [
+                    Formation::RATTACHEMENT_PREVENTION => 'service de prévention',
+                    Formation::RATTACHEMENT_BIBLIOTHEQUE => 'service de documentation',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'rattachement',
+            ],
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -106,6 +123,7 @@ class FormationForm extends Form
             'description' => ['required' => false,],
             'lien' => ['required' => false,],
             'affichage' => ['required' => true,],
+            'rattachement' => ['required' => false,],
         ]));
     }
 }

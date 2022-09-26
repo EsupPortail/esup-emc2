@@ -5,6 +5,7 @@
  * @var array $etats
  */
 
+use Formation\Entity\Db\Formation;
 use UnicaenApp\Form\Element\SearchAndSelect;
 
 ?>
@@ -46,6 +47,15 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                 ]);
                             ?>
                             <?php echo $this->formControlGroup($organismeF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="annee">Année de la demande :  </label>
+                            <select id="annee" name="annee" class="selectpicker">
+                                <option value="">Peu importe</option>
+                                <?php for ($annee = 2022 ; $annee <= Formation::getAnnee() ; $annee++) : ?> <!-- todo nope -->
+                                    <option value="<?php echo $annee; ?>"><?php echo $annee; ?>/<?php echo $annee+1; ?></option>
+                                <?php endfor; ?>
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label for="etat">État :</label>
@@ -98,7 +108,20 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         $('form#filter').submit();
     });
 
-    //$('select#historise option[value=<?php echo $params['historise']; ?>]').prop('selected', true);
-    //$('select#type option[value=<?php //echo $type; ?>//]').prop('selected', true);
-    //$('select#historise option[value=<?php //echo $historise; ?>//]').prop('selected', true);
+    <?php if ($params['agent'] !== null) :?>
+    $('input[name="agent[label]').val(" <?php echo $params['agent']->getDenomination(); ?> ");
+    $('input[name="agent[id]').val("<?php echo $params['agent']->getId(); ?>");
+    <?php endif; ?>
+
+    <?php if ($params['organisme'] !== null) :?>
+    $('input[name="organisme[label]').val(" <?php echo $params['organisme']; ?> ");
+    $('input[name="organisme[id]').val("<?php echo $params['organisme']; ?>");
+    <?php endif; ?>
+
+    <?php if (isset($params['etat'])) :?>
+    $('select#etat option[value=<?php echo $params['etat']->getId(); ?>]').prop('selected', true);
+    <?php endif; ?>
+
+    $('select#annee option[value=<?php echo $params['annee']; ?>]').prop('selected', true);
+    $('select#historise option[value=<?php echo $params['historise']; ?>]').prop('selected', true);
 </script>

@@ -106,6 +106,7 @@ class DemandeExterneAssertion extends AbstractAssertion {
     protected function assertController($controller, $action = null, $privilege = null): bool
     {
         /** @var DemandeExterne|null $entity */
+        if ($this->getMvcEvent()->getRouteMatch() === null) return false;
         $demandeId = (($this->getMvcEvent()->getRouteMatch()->getParam('demande-externe')));
         $entity = $this->getDemandeExterneService()->getDemandeExterne($demandeId);
         /** @var Agent|null $entity */

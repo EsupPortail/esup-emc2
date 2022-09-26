@@ -22,7 +22,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     const TYPE_INTERNE = "formation interne";
     const TYPE_EXTERNE = "formation externe";
-    const TYPE_REGIONALE = "formation régionale";
+    const TYPE_REGIONALE = "formation régionale";const RATTACHEMENT_PREVENTION = 'prévention';
+    const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
     /** @var integer */
     private $id;
@@ -49,8 +50,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private $inscrits;
     /** @var ArrayCollection (Formateur) */
     private $formateurs;
-
-
 
     /**
      * @return string
@@ -451,6 +450,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         );
     }
 
+
     /** Fonctions pour les macros **********************************************************************************/
 
     public function getInstanceLibelle() : string
@@ -582,8 +582,11 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             }
             if ($journee->getType() === Seance::TYPE_VOLUME) {
                 $volume = $journee->getVolume();
-                $temp = new DateInterval('PT'.$volume.'H');
-                $sum->add($temp);
+                if ($volume) {
+                    $temp = new DateInterval('PT'.$volume.'H');
+                    $sum->add($temp);
+                }
+
             }
         }
 

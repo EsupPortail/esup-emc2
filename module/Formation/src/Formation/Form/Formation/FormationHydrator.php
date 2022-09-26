@@ -22,6 +22,7 @@ class FormationHydrator implements HydratorInterface
             'lien' => $object->getLien(),
             'groupe' => ($object->getGroupe()) ? $object->getGroupe()->getId() : null,
             'affichage' => $object->getAffichage(),
+            'rattachement' => $object->getRattachement(),
         ];
 
         return $data;
@@ -37,12 +38,14 @@ class FormationHydrator implements HydratorInterface
         $groupe = (isset($data['groupe']) && $data['groupe'] !== "") ? $this->getFormationGroupeService()->getFormationGroupe($data['groupe']) : null;
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
         $affichage = !((isset($data['affichage']) and $data['affichage'] === '0'));
+        $rattachement = $data['rattachement'] ?? null;
 
         $object->setLibelle($data['libelle']);
         $object->setDescription($description);
         $object->setLien($data['lien']);
         $object->setGroupe($groupe);
         $object->setAffichage($affichage);
+        $object->setRattachement($rattachement);
         return $object;
     }
 

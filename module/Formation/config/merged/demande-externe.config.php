@@ -6,6 +6,10 @@ use Formation\Assertion\DemandeExterneAssertion;
 use Formation\Assertion\DemandeExterneAssertionFactory;
 use Formation\Controller\DemandeExterneController;
 use Formation\Controller\DemandeExterneControllerFactory;
+use Formation\Form\Demande2Formation\Demande2FormationForm;
+use Formation\Form\Demande2Formation\Demande2FormationFormFactory;
+use Formation\Form\Demande2Formation\Demande2FormationHydrator;
+use Formation\Form\Demande2Formation\Demande2FormationHydratorFactory;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
 use Formation\Form\DemandeExterne\DemandeExterneFormFactory;
 use Formation\Form\DemandeExterne\DemandeExterneHydrator;
@@ -39,6 +43,7 @@ return [
                             DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT,
                             DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE,
                             DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH,
+                            DemandeexternePrivileges::DEMANDEEXTERNE_GERER,
                         ],
                         'resources' => ['DemandeExterne'],
                         'assertion' => DemandeExterneAssertion::class
@@ -135,6 +140,7 @@ return [
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
+                        'parapheur',
                         'valider-drh',
                         'refuser-drh',
                     ],
@@ -143,7 +149,18 @@ return [
                     ],
                     'assertion' => DemandeExterneAssertion::class
                 ],
+                [
+                    'controller' => DemandeExterneController::class,
+                    'action' => [
+                        'gerer',
+                    ],
+                    'privileges' => [
+                        DemandeexternePrivileges::DEMANDEEXTERNE_GERER
+                    ],
+                    'assertion' => DemandeExterneAssertion::class
+                ],
             ],
+
         ],
     ],
 
@@ -158,6 +175,13 @@ return [
                                 'route'    => 'formation/demande-externe',
                                 'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'index') ,
                                 'order'    => 331,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'demande-externe-parapheur' => [
+                                'label'    => 'Parapheur des demandes',
+                                'route'    => 'formation/demande-externe/parapheur',
+                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'parapheur') ,
+                                'order'    => 332,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -187,6 +211,16 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'parapheur' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/parapheur',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'parapheur'
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -317,6 +351,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'gerer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/gerer/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'gerer'
+                                    ],
+                                ],
+                            ],
                             'rechercher-agent' => [
                                 'type'  => Literal::class,
                                 'options' => [
@@ -358,11 +402,13 @@ return [
     'form_elements' => [
         'factories' => [
             DemandeExterneForm::class => DemandeExterneFormFactory::class,
+            Demande2FormationForm::class => Demande2FormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             DemandeExterneHydrator::class => DemandeExterneHydratorFactory::class,
+            Demande2FormationHydrator::class => Demande2FormationHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

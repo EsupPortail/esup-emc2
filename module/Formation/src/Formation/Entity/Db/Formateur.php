@@ -51,9 +51,6 @@ class Formateur implements HistoriqueAwareInterface
         $this->nom = $nom;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;

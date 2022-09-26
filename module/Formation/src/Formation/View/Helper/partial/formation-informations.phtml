@@ -30,5 +30,9 @@ use Formation\Entity\Db\Formation;
         <?php endif; ?>
         <dt class="col-md-3"> Affichage "plan" </dt>
         <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>
+        <?php if ($formation->getRattachement() !== null) : ?>
+            <dt class="col-md-3"> Rattachement </dt>
+            <dd class="col-md-9"> <?php echo $formation->getRattachement(); ?> </dd>
+        <?php endif; ?>
     </dl>
 <?php endif; ?>

@@ -45,11 +45,14 @@ class PlanFormationController extends AbstractActionController {
         $agent = $this->getAgentService()->getAgentByConnectedUser();
         if ($agent !== null) $abonnements = $this->getAbonnementService()->getAbonnementsByAgent($agent);
 
+
+        $annee = Formation::getAnnee();
+
         return new ViewModel([
             'groupes' => $groupes,
             'formations' => $formations,
             'sessions' => $sessions,
-            'annee' => '2021/2022', //todo ...pas de date en dur...
+            'annee' => $annee ."/" . ($annee+1),
             'abonnements' => $abonnements,
         ]);
     }
