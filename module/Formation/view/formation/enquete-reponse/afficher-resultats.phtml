@@ -11,6 +11,8 @@ use Formation\Entity\Db\EnqueteReponse;
  * @var array $array;
  * @var array $histogramme;
  * @var string $title
+ *
+ * @var array $params
  */
 
 $title = "Affichage des résultats de l'enquêtes";
@@ -43,7 +45,7 @@ $nbReponses = count($array);
     </div>
 </div>
 
-<span class="todo">FILTRE</span>
+<?php echo $this->partial("partial/filtre", ['params' => $params]); ?>
 
 <div class="row">
     <div class="col-md-6">

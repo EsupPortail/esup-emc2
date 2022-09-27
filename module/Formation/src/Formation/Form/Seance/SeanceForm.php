@@ -12,6 +12,7 @@ use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
+use UnicaenApp\Form\Element\Date;
 
 class SeanceForm extends Form
 {
@@ -39,7 +40,7 @@ class SeanceForm extends Form
 
         //jour
         $this->add([
-            'type' => DateTime::class,
+            'type' => Date::class,
             'name' => 'jour',
             'options' => [
                 'label' => "Jour de la formation * :",

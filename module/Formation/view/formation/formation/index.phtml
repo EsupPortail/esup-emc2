@@ -41,6 +41,8 @@ $this->headTitle("Actions de formation");
 
 <?php echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupe, 'historise' => $historise, 'source' => $source], [], true); ?>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <table class="datatable table-condensed table-hover" id="formations" style="width:100%;">
     <thead>
         <tr>

@@ -2,6 +2,7 @@
 
 namespace Formation\Service\EnqueteReponse;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -145,6 +146,42 @@ class EnqueteReponseService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reponse.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param array $params
+     * @return float|int|mixed|string
+     */
+    public function getEnqueteReponsesWithFiltre(array $params = [])
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('reponse.histoDestruction IS NULL')
+            ->join('reponse.inscription', 'inscription')->addSelect('inscription')
+            ->join('inscription.instance', 'session')->addSelect('session')
+            ->join('session.formateurs', 'formateur')->addSelect('formateur')
+            ->join('session.formation', 'formation')->addSelect('formation')
+            ->join('session.journees', 'journee')->addSelect('journee')
+        ;
+
+        if (isset($params['formation'])) {
+            $qb = $qb->andWhere('formation.id = :id')->setParameter('id', $params['formation']->getId());
+        }
+        if (isset($params['formateur']) AND trim($params['formateur']) !== "") {
+            $qb = $qb->andWhere('formateur.email = :email')->setParameter('email', $params['formateur']);
+        }
+        if (isset($params['annee'])  AND trim($params['annee']) !== "") {
+            $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$params['annee']);
+            $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.(((int) $params['annee']) + 1));
+
+            $qb = $qb
+                ->andWhere('journee.jour <= :fin')->setParameter('fin', $fin)
+                ->andWhere('journee.jour >= :debut')->setParameter('debut', $debut)
+            ;
+        }
+
         ;
         $result = $qb->getQuery()->getResult();
         return $result;

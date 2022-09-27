@@ -30,7 +30,7 @@ class Formation implements HistoriqueAwareInterface,
     const RATTACHEMENT_PREVENTION = 'prévention';
     const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
-    private int $id = -1;
+    private ?int $id = -1;
     private ?string $libelle = null;
     private ?string $lien = null;
     private ?FormationGroupe $groupe = null;

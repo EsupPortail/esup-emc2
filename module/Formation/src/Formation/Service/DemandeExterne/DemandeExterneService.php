@@ -14,6 +14,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Validation\DemandeExterneValidations;
@@ -28,6 +29,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\Db\ValidationType;
@@ -399,5 +401,55 @@ class DemandeExterneService {
         }
 
         return $session;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Etat[] $etats
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee) : array
+    {
+        if ($annee === null) Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
+        $fin   = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+
+        $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+            ->andWhere('demande.histoDestruction IS NULL')
+            ->join('demande.etat', 'etat')->addSelect('etat')
+            ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
+            ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
+            ->join('demande.agent', 'agent')->addSelect('agent')
+            ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesValideesByAgents(array $agents, ?int $annee) : array
+    {
+        $etats = [ DemandeExterneEtats::ETAT_VALIDATION_DRH, DemandeExterneEtats::ETAT_REJETEE, DemandeExterneEtats::ETAT_TERMINEE];
+        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesNonValideesByAgents(array $agents, ?int $annee) : array
+    {
+        $etats = [ DemandeExterneEtats::ETAT_VALIDATION_AGENT, DemandeExterneEtats::ETAT_VALIDATION_RESP ];
+        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
+        return $result;
     }
 }

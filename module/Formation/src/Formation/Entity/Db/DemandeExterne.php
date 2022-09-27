@@ -141,6 +141,12 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
         return $this->getFin()->format('d/m/Y');
     }
 
+    public function getPeriodeAsString() : string
+    {
+        if ($this->getDebut() === $this->getFin()) return $this->getDebutAsString();
+        return $this->getDebutAsString()." au ".$this->getFinAsString();
+    }
+
     public function setFin(?DateTime $fin): void
     {
         $this->fin = $fin;

@@ -22,7 +22,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     const TYPE_INTERNE = "formation interne";
     const TYPE_EXTERNE = "formation externe";
-    const TYPE_REGIONALE = "formation régionale";const RATTACHEMENT_PREVENTION = 'prévention';
+    const TYPE_REGIONALE = "formation régionale";
+    const RATTACHEMENT_PREVENTION = 'prévention';
     const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
     /** @var integer */
@@ -236,9 +237,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /**
+     * @param bool $datetime
      * @return string|null
      */
-    public function getDebut() : ?string
+    public function getDebut(bool $datetime = false) : ?string
     {
         $minimum = null;
         foreach ($this->journees as $journee) {
@@ -252,13 +254,17 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $split = explode("/", $minimum);
             $minimum = $split[2] . "/" . $split[1] . "/" . $split[0];
         }
+        if ($datetime === true) {
+            return ($minimum)?DateTime::createFromFormat('d/m/Y', $minimum):null;
+        }
         return $minimum;
     }
 
     /**
+     * @param bool $datetime
      * @return string|null
      */
-    public function getFin() : ?string
+    public function getFin(bool $datetime = false) : ?string
     {
         $maximum = null;
         /** @var Seance $journee */
@@ -272,6 +278,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         if ($maximum !== null) {
             $split = explode("/", $maximum);
             $maximum = $split[2] . "/" . $split[1] . "/" . $split[0];
+        }
+        if ($datetime === true) {
+            return ($maximum)?DateTime::createFromFormat('d/m/Y', $maximum):null;
         }
         return $maximum;
     }
@@ -529,8 +538,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function getPeriode() : string
     {
+        if ($this->getDebut() === null or $this->getFin() === null) return "formation sans date";
+        if ($this->getDebut() === $this->getFin()) return $this->getDebut();
         return $this->getDebut() . " au " . $this->getFin();
-
     }
 
     public function getListeComplementaireAgents() : string

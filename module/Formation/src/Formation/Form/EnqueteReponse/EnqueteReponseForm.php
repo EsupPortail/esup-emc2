@@ -71,6 +71,5 @@ class EnqueteReponseForm extends Form
         }
         $this->setInputFilter((new Factory())->createInputFilter( $filter ));
 
-
     }
 }

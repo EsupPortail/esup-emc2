@@ -17,6 +17,7 @@ use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Formation\Entity\Db\Formation;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
@@ -122,14 +123,18 @@ class StructureController extends AbstractActionController {
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
-        $demandes = $this->getDemandeExterneService()->getDemandeByStructure($structure, true, true);
 //        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = [];
         foreach ($allAgents as $agent) {
             $fichespostes_pdf[$agent->getId()] = $agent->getFichiersByCode("FICHE_POSTE");
         }
+
+        //formations
+        $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
+        $demandesValidees =  $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -144,8 +149,6 @@ class StructureController extends AbstractActionController {
             'fichespostes_pdf' => $fichespostes_pdf,
 //            'fichesRecrutements' => $fichesRecrutements,
 //            'profils' => $profils,
-            'inscriptions' => $inscriptions,
-            'demandes' => $demandes,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
@@ -156,6 +159,12 @@ class StructureController extends AbstractActionController {
             'agentsLast' => $allAgentsLast,
             'campagnes' => $campagnes,
             'delegues' => $delegues,
+
+            //formations
+            'demandesNonValidees' => $demandesNonValidees,
+            'demandesValidees' => $demandesValidees,
+            'inscriptionsNonValidees' => $inscriptionsNonValidees,
+            'inscriptionsValidees' => $inscriptionsValidees,
         ]);
     }
 

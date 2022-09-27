@@ -67,6 +67,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'rechercher-formation',
+                        'rechercher-formateur',
                     ],
                     'roles' => [],
                 ],
@@ -247,6 +248,17 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'rechercher-formation',
+                            ],
+                        ],
+                    ],
+                    'rechercher-formateur' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-formateur',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'rechercher-formateur',
                             ],
                         ],
                     ],

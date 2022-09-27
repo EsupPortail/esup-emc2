@@ -1,6 +1,7 @@
 <?php
 
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
@@ -35,101 +36,99 @@ foreach ($inscriptions as $inscription) {
         $attentes[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
     }
 }
+
+$dictionnaryInscriptions = [];
+foreach ($inscriptions as $inscription) {
+    $dictionnaryInscriptions[$inscription->getAgent()->getId()][] = $inscription;
+}
+usort($dictionnaryInscriptions,
+    function ($a, $b) {
+        /** @var FormationInstanceInscrit[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        return $aaa > $bbb;
+    }
+);
+
+$dictionnaryDemandes = [];
+foreach ($demandes as $demande) {
+    $dictionnaryDemandes[$demande->getAgent()->getId()][] = $demande;
+}
+usort($dictionnaryDemandes,
+    function ($a, $b) {
+        /** @var DemandeExterne[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        return $aaa > $bbb;
+    }
+);
 ?>
 
+<h2> Demandes des formations en attente de validations <?php echo Formation::getAnnee(); ?>/<?php echo Formation::getAnnee()+1; ?> </h2>
 
 <div class="row">
     <div class="col-md-6">
+        <h3> Formations du plan de formation </h3>
 
-    <h2> Demandes de formations en attente de validation </h2>
+        <?php /** @var FormationInstanceInscrit[] $ds */ ?>
+        <ul>
+            <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
+                <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+                <li>
+                    <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
-    <div>
-        <h3>Demande de formation du plan de formation</h3>
-        <?php foreach ($attentes as $formationId => $dFormation) : ?>
-            <h4><?php echo $dFormation["formation"]->getLibelle(); ?></h4>
-
-            <?php foreach ($dFormation["instances"] as $instanceId => $dInstance) : ?>
-                Session du <?php echo $dInstance["instance"]->getPeriode(); ?>
-
-                <ul>
-                <?php foreach ($dInstance["inscriptions"] as $dInscription) : ?>
-                    <li>
-                        <?php echo $this->etatbadge($dInscription->getEtat()); ?>
-                        <?php echo $dInscription->getAgent()->getDenomination(); ?>
+                    <?php foreach ($ds as $d) : ?>
+                        <br/>
+                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
+                        (<?php echo $d->getInstance()->getPeriode(); ?>)
+                        <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <?php if ($canValiderResponsable ) : ?>
                             <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $dInscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
+                            <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
                             <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $dInscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
+                            <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
                         <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
-            <?php endforeach; ?>
-        <?php endforeach; ?>
-    </div>
-
-    <div>
-        <h3>Demande de formation hors plan de formation</h3>
-
-        <?php if (empty($demandes)) : ?>
-            Aucune demande de formation hors plan de formation
-        <?php else : ?>
-
-            <?php foreach ($demandes as $demande) : ?>
-                <?php $canDemandeAfficher = $this->isAllowed($demande, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER); ?>
-
-                <?php echo $demande->getLibelle(); ?> (du <?php echo $demande->getDebut()->format('d/m/Y'); ?> au <?php echo $demande->getFin()->format('d/m/Y'); ?>)
-                <ul>
-                <li>
-                    <?php echo $this->etatbadge($demande->getEtat()); ?>
-                    <?php echo $demande->getAgent()->getDenomination(); ?>
-                    <?php if ($canDemandeAfficher ) : ?>
-                    <?php  /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()], [], true); ?>"
-                       class="ajax-modal"> <span class="icon icon-voir"></span>Afficher</a>
-                    <?php endif; ?>
-                    <?php if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_AGENT) : ?>
-                        <?php if ($canValiderResponsable ) : ?>
-                            <?php  /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
-                            <?php  /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </li>
-                </ul>
             <?php endforeach; ?>
-
-        <?php endif; ?>
+        </ul>
     </div>
-    </div>
-
-
 
     <div class="col-md-6">
-    <h2> Listes des inscriptions </h2>
+        <h3>Demandes de stage externe</h3>
 
-    <?php usort($array, function ($a,$b) { return $a['formation']->getLibelle() > $b['formation']->getLibelle();}); ?>
-    <?php foreach ($array as $item) : ?>
-        <h3> <?php echo $item['formation']->getLibelle(); ?> </h3>
-
+        <?php /** @var DemandeExterne[] $ds */ ?>
         <ul>
-        <?php foreach($item['instances'] as $instance) : ?>
-            <li>
-                Instance du <?php echo $instance['instance']->getDebut(); ?> au <?php echo $instance['instance']->getFin(); ?> (<?php echo $instance['instance']->getDuree(); ?>).
-                <ul>
-                    <?php foreach ($instance['inscriptions'] as $inscription) : ?>
-                        <li>
-                            <?php echo $this->etatbadge($inscription->getEtat()); ?>
-                            <?php echo $inscription->getAgent()->getDenomination(); ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </li>
-        <?php endforeach; ?>
-        </ul>
-    <?php endforeach; ?>
+            <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
+                <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+                <li>
+                    <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
+                    <?php foreach ($ds as $d) : ?>
+                        <?php $canDemandeAfficher = $this->isAllowed($d, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER); ?>
+                        <br/>
+                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $d->getLibelle(); ?>
+                        (<?php echo $d->getPeriodeAsString(); ?>)
+                    <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php if ($canDemandeAfficher ) : ?>
+                            <?php  /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $d->getId()], [], true); ?>" class="ajax-modal"> <span class="icon icon-voir"></span>Afficher</a>
+                        <?php endif; ?>
+                        <?php if ($d->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_AGENT) : ?>
+                            <?php if ($canValiderResponsable ) : ?>
+                                <?php  /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
+                                <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
+                                <?php  /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
+                                <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
 </div>

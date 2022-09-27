@@ -20,10 +20,13 @@ use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 use UnicaenDbImport\Entity\Db\Source;
+
+/** @method FlashMessenger flashMessenger() */
 
 class FormationController extends AbstractActionController
 {
@@ -87,6 +90,9 @@ class FormationController extends AbstractActionController
                 $formation->setSource($source);
                 $formation->setIdSource($formation->getId());
                 $this->getFormationService()->update($formation);
+
+                $url = $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()], ['force_canonical' => true], true);
+                $this->flashMessenger()->addSuccessMessage("Action de formation <strong>".$formation->getLibelle()."</strong> créée. Pour accéder à celle-ci vous pouvez utiliser le lien suivant : <a href='".$url."'>".$url."</a>");
                 exit;
             }
         }
@@ -274,6 +280,16 @@ class FormationController extends AbstractActionController
         if (($term = $this->params()->fromQuery('term'))) {
             $formations = $this->getFormationService()->findFormationByTerm($term);
             $result = $this->getFormationService()->formatFormationtJSON($formations);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherFormateurAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $formateurs = $this->getFormationService()->findFormateurByTerm($term);
+            $result = $this->getFormationService()->formatFormateurJSON($formateurs);
             return new JsonModel($result);
         }
         exit;

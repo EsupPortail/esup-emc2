@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @var array $params
+ */
+
+
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+$init = 2022;
+$current = ((int) (new DateTime())->format('Y'));
+
+?>
+
+<div class="card card-default">
+    <div class="card-header">
+        <span class="icon icon-filter"></span>
+        Filtre pour l'affichage des résultats de l'enquête
+    </div>
+    <div class="card-body">
+        <form id="filter" method="get" action="<?php echo $this->url(); ?>">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <?php
+                        /** @see \Formation\Controller\FormationController::rechercherFormationAction() */
+                        $actionF = new SearchAndSelect('formation', ['label' => "Action de formation :"]);
+                        $actionF
+                            ->setAutocompleteSource($this->url('formation/rechercher-formation'))
+                            ->setSelectionRequired(true)
+                            ->setAttributes([
+                                'id' => 'formation',
+                                'placeholder' => "Libelle de l'action de formation ...",
+                            ]);
+                        ?>
+                        <?php echo $this->formControlGroup($actionF); ?>
+                    </div>
+                    <div class="col-md-4">
+                        <?php
+                        /** @see \Formation\Controller\FormationController::rechercherFormateurAction() */
+                        $formateurF = new SearchAndSelect('formateur', ['label' => "Formateur :"]);
+                        $formateurF
+                            ->setAutocompleteSource($this->url('formation/rechercher-formateur'))
+                            ->setSelectionRequired(true)
+                            ->setAttributes([
+                                'id' => 'formateur',
+                                'placeholder' => "Nom du formateur ...",
+                            ]);
+                        ?>
+                        <?php echo $this->formControlGroup($formateurF); ?>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="annee">Année de formation : </label>
+                        <select id="annee" name="annee" class="selectpicker show-tick">
+                            <option value="">Toutes années </option>
+                            <?php for ($annee = $init ; $annee <= $current ; $annee++) : ?>
+                                <option value="<?php echo $annee; ?>"><?php echo $annee; ?>/<?php echo $annee+1; ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div class="pull-right">
+                    <button type="button" id="filter" class="btn btn-primary filter-action">
+                        <span class="icon icon-filtrer" aria-hidden="true"></span> Filtrer
+                    </button>
+                    <br/>
+                    <button type="button" id="reset" class="btn btn-primary filter-action">
+                        <span class="icon icon-gommer" aria-hidden="true"></span> R.A.Z.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+
+
+<script>
+    $('button#reset').click(function (e) {
+        e.preventDefault();
+        window.location = '?';
+    });
+    $('button#filter').click(function () {
+        $('form#filter').submit();
+    });
+
+    <?php if ($params['formation'] !== null) :?>
+    $('input[name="formation[label]').val(" <?php echo $params['formation']->getLibelle(); ?> ");
+    $('input[name="formation[id]').val("<?php echo $params['formation']->getId(); ?>");
+    <?php endif; ?>
+
+    <?php if ($params['formateur'] !== null and trim($params['formateur']) !== '') :?>
+    $('input[name="formateur[label]').val(" <?php echo $params['formateur_denomination']; ?> ");
+    $('input[name="formateur[id]').val("<?php echo $params['formateur']; ?>");
+    <?php endif; ?>
+
+    $('select#annee option[value=<?php echo $params['annee']; ?>]').prop('selected', true);
+</script>
