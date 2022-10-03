@@ -7,7 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;

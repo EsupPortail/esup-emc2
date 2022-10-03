@@ -16,15 +16,14 @@ $saisielibre = $ficheposte->getLibelle();
 
 ?>
 
-<strong>
-    <?php echo $ficheprincipale; ?>
-</strong>
 <?php if ($saisielibre) : ?>
-    <br/>
-    Rattaché à
     <strong>
         <?php echo $saisielibre; ?>
     </strong>
+    Rattaché à
+    <strong> <?php echo $ficheprincipale; ?> </strong>
+<?php else : ?>
+    <strong> <?php echo $ficheprincipale; ?> </strong>
 <?php endif; ?>
 
 

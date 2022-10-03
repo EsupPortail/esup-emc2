@@ -1,21 +1,3 @@
--- STRUCTURE --------------------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-    VALUES ('structure', 'Gestion des structures', 200, 'Structure\Provider\Privilege');
-
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'structure_index', 'Accéder à l''index des structures', 0 UNION
-    SELECT 'structure_afficher', 'Afficher les structures', 10 UNION
-    SELECT 'structure_description', 'Édition de la description', 20 UNION
-    SELECT 'structure_gestionnaire', 'Gérer les gestionnaire', 30 UNION
-    SELECT 'structure_complement_agent', 'Ajouter des compléments à propos des agents', 40 UNION
-    SELECT 'structure_agent_force', 'Ajouter/Retirer des agents manuellements', 50
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-JOIN unicaen_privilege_categorie cp ON cp.CODE = 'structure'
-;
 
 -- METIER -----------------------------------------------------------------------------------------------------
 

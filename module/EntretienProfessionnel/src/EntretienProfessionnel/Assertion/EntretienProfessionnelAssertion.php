@@ -11,7 +11,7 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Structure\Entity\Db\Structure;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Entity\Db\Role;
@@ -59,8 +59,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $this->predicats = [
             'isAgentEntretien'          => $entretienProfessionnel->isAgent($connectedAgent),
             'isResponsableEntretien'    => $entretienProfessionnel->isReponsable($connectedAgent),
-            'isGestionnaireStructure'   => ($role->getRoleId() === Structure::ROLE_GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
-            'isResponsableStructure'    => ($role->getRoleId() === Structure::ROLE_RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
+            'isGestionnaireStructure'   => ($role->getRoleId() === RoleProvider::GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
+            'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
             'isSuperieureHierarchique'  => $this->getComplementService()->isSuperieur($connectedAgent, $entretienProfessionnel->getAgent()),
             'isAutoriteHierarchique'    => $this->getComplementService()->isAutorite($connectedAgent, $entretienProfessionnel->getAgent()),

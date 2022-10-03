@@ -12,6 +12,7 @@ use Formation\Provider\Role\FormationRoles;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Entity\Db\Structure;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -42,8 +43,8 @@ class DemandeExterneAssertion extends AbstractAssertion {
         $agents = [];
         foreach ($structures as $structure) {
             $liste = [];
-            if ($roleId === Structure::ROLE_GESTIONNAIRE) $liste = $structure->getGestionnaires();
-            if ($roleId === Structure::ROLE_RESPONSABLE) $liste = $structure->getResponsables();
+            if ($roleId === RoleProvider::GESTIONNAIRE) $liste = $structure->getGestionnaires();
+            if ($roleId === RoleProvider::RESPONSABLE) $liste = $structure->getResponsables();
             foreach ($liste as $agent) $agents[$agent->getId()] = $agent;
         }
         $agents = array_map(function ($a) { return $a->getAgent();}, $agents);
@@ -78,15 +79,15 @@ class DemandeExterneAssertion extends AbstractAssertion {
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
                 $superieurs = $this->getAgentService()->computeSuperieures($agent);
                 return DemandeExterneAssertion::userInAgents($user, $superieurs);
-            case Structure::ROLE_RESPONSABLE :
+            case RoleProvider::RESPONSABLE :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
                 $structures = $this->getAgentService()->computesStructures($agent);
-                $responsables = DemandeExterneAssertion::agentInStructures(Structure::ROLE_RESPONSABLE, $structures);
+                $responsables = DemandeExterneAssertion::agentInStructures(RoleProvider::RESPONSABLE, $structures);
                 return DemandeExterneAssertion::userInAgents($user, $responsables);
-            case Structure::ROLE_GESTIONNAIRE :
+            case RoleProvider::GESTIONNAIRE :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
                 $structures = $this->getAgentService()->computesStructures($agent);
-                $gestionnaires = DemandeExterneAssertion::agentInStructures(Structure::ROLE_GESTIONNAIRE, $structures);
+                $gestionnaires = DemandeExterneAssertion::agentInStructures(RoleProvider::GESTIONNAIRE, $structures);
                 return DemandeExterneAssertion::userInAgents($user, $gestionnaires);
         }
 

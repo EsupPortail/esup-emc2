@@ -1,6 +1,6 @@
 <?php
 
-namespace Structure\Provider;
+namespace Structure\Provider\Role;
 
 class RoleProvider {
 

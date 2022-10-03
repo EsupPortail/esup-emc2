@@ -7,7 +7,7 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;

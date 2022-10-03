@@ -6,11 +6,10 @@ use Application\Constant\RoleConstant;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
-use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
@@ -20,15 +19,10 @@ class StructureAssertion extends AbstractAssertion {
     use UserServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null)
+    public function computeAssertion(?Structure $entity, string $privilege) : bool
     {
-        if (! $entity instanceof Structure) {
-            return false;
-        }
-
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
-        /** @var RoleInterface $role */
         $role = $this->getUserService()->getConnectedRole();
 
         $isGestionnaire = false;
@@ -55,7 +49,6 @@ class StructureAssertion extends AbstractAssertion {
                     default:
                         return false;
                 }
-
             case StructurePrivileges::STRUCTURE_DESCRIPTION:
             case StructurePrivileges::STRUCTURE_GESTIONNAIRE:
             case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
@@ -72,11 +65,39 @@ class StructureAssertion extends AbstractAssertion {
                     default:
                         return false;
                 }
-
         }
-
         return true;
     }
 
+    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
+    {
+        if (! $entity instanceof Structure) {
+            return false;
+        }
+        return $this->computeAssertion($entity, $privilege);
+    }
 
+    protected function assertController($controller, $action = null, $privilege = null): bool
+    {
+        /** @var Structure|null $entity */
+        $structureId = (($this->getMvcEvent()->getRouteMatch()->getParam('structure')));
+        $entity = $this->getStructureService()->getStructure($structureId);
+
+        switch($action) {
+            case 'afficher' :
+                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AFFICHER);
+            case 'editer-description' :
+            case 'toggle-resume-mere' :
+                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_DESCRIPTION);
+            case 'ajouter-gestionnaire' :
+            case 'retirer-gestionnaire' :
+            case 'ajouter-responsable' :
+            case 'retirer-responsable' :
+                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
+            case 'ajouter-manuellement-agent' :
+            case 'retirer-manuellement-agent' :
+                return  $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AGENT_FORCE);
+        }
+        return true;
+    }
 }

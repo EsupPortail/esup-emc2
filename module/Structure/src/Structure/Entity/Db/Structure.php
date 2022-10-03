@@ -2,25 +2,19 @@
 
 namespace Structure\Entity\Db;
 
-use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
-use Application\Entity\Db\MacroContent\StructureMacroTrait;
 use Application\Entity\Db\Poste;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Structure implements ResourceInterface, HasDescriptionInterface {
     use DbImportableAwareTrait;
     use HasDescriptionTrait;
-    use StructureMacroTrait;
-
-    const ROLE_RESPONSABLE   = 'Responsable de structure';
-    const ROLE_GESTIONNAIRE  = 'Gestionnaire de structure';
 
     public function getResourceId() : string
     {
@@ -35,132 +29,79 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return 'Structure_' . $this->getId();
     }
 
-    /** @var string */
-    private $id;
-    /** @var integer */
-    private $source_id;
-    /** @var string */
-    private $code;
-    /** @var string */
-    private $libelleCourt;
-    /** @var string */
-    private $libelleLong;
-    /** @var StructureType */
-    private $type;
-    /** @var DateTime */
-    private $ouverture;
-    /** @var DateTime */
-    private $fermeture;
-    /** @var DateTime */
-    private $fermetureOW;
-    /** @var string|null */
-    private $adresseFonctionnelle;
-    /** @var Boolean */
-    private $repriseResumeMere;
-    /** @var Structure */
-    private $parent;
-    /** @var Structure|null */
-    private $niv2;
-    /** @var Structure|null */
-    private $niv2OverWriten;
-    /** @var ArrayCollection (Structure) */
-    private $enfants;
+    private ?string $id = null;
 
-    /** @var ArrayCollection */
-    private $gestionnaires;
-    /** @var ArrayCollection (StructureResponsable) */
-    private $responsables;
-    /** @var ArrayCollection (Agent) */
-    private $postes;
-    /** @var ArrayCollection (AgentMissionSpecifique) */
-    private $missions;
+    private ?int $source_id = -1;
+    private ?string $code = null;
 
-    /** @var ArrayCollection (AgentAffectation) */
-    private $affectations;
-    /** @var ArrayCollection (StructureAgentForce) */
-    private $agentsForces;
-    /** @var ArrayCollection (FichePoste) */
-    private $fichesPostesRecrutements;
+    private ?StructureType $type = null;
+    private ?string $libelleCourt = null;
+    private ?string $libelleLong = null;
 
-    public function __construct()
-    {
-        $this->gestionnaires = new ArrayCollection();
-        $this->responsables = new ArrayCollection();
-        $this->postes = new ArrayCollection();
-        $this->enfants = new ArrayCollection();
-        $this->agentsForces = new ArrayCollection();
-        $this->fichesPostesRecrutements = new ArrayCollection();
-    }
+    private ?DateTime $ouverture = null;
+    private ?DateTime $fermeture = null;
+    private ?DateTime $fermetureOW = null;
 
-    /**
-     * @return string
-     */
+    private ?string $adresseFonctionnelle = null;
+    private bool $repriseResumeMere = false;
+
+    private ?Structure $parent;
+    private ?Structure $niv2;
+    private ?Structure $niv2OverWriten;
+    private Collection $enfants;            // [Structure]
+
+    private Collection $gestionnaires;      //[StructureGestionnaire]
+    private Collection $responsables;       //[StructureResponsable]
+
+    private Collection $postes;             //[Poste]
+    private Collection $missions;           //[AgentMissionSpecifique]
+
+    private Collection $affectations;       //[AgentAffectation]
+    private Collection $agentsForces;       //[StructureAgentForce]
+
+    private Collection $fichesPostesRecrutements; //[FichePoste]
+
     public function getId() : string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getCode() : string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getLibelleCourt() : string
     {
         return $this->libelleCourt;
     }
 
-    /**
-     * @return string
-     */
     public function getLibelleLong() : string
     {
         return $this->libelleLong;
     }
 
-    /**
-     * @return StructureType
-     */
     public function getType() : StructureType
     {
         return $this->type;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getOuverture() : ?DateTime
     {
         return $this->ouverture;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getFermeture() : ?DateTime
     {
         if ($this->getFermetureOW() !== null) return $this->getFermetureOW();
         return $this->fermeture;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getFermetureOW() : ?DateTime
     {
         return $this->fermetureOW;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return bool
-     */
     public function isOuverte(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
@@ -169,9 +110,6 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return true;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionComplete() : string
     {
         $text = "";
@@ -181,64 +119,28 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $text . $this->description ;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAdresseFonctionnelle(): ?string
     {
         return $this->adresseFonctionnelle;
     }
 
-    /**
-     * @param string|null $adresseFonctionnelle
-     * @return Structure
-     */
-    public function setAdresseFonctionnelle(?string $adresseFonctionnelle): Structure
-    {
-        $this->adresseFonctionnelle = $adresseFonctionnelle;
-        return $this;
-    }
+//    public function setAdresseFonctionnelle(?string $adresseFonctionnelle): Structure
+//    {
+//        $this->adresseFonctionnelle = $adresseFonctionnelle;
+//        return $this;
+//    }
 
     /** GESTIONNAIRES ET RESPONSABLES **************************************************************************/
-
-//    /**
-//     * @return StructureGestionnaire[]
-//     */
-//    public function getGestionnaires() : array
-//    {
-//        if ($this->gestionnaires === null) return [];
-//        return $this->gestionnaires->toArray();
-//    }
 
     /**
      * @return StructureGestionnaire[]
      */
     public function getGestionnaires() : array
     {
-        if ($this->gestionnaires === null) return [];
+        //if ($this->gestionnaires === null) return [];
         $array = $this->gestionnaires->toArray();
         $array = array_filter($array, function (StructureGestionnaire $a) { return !$a->isDeleted();});
         return $array;
-    }
-
-    /**
-     * @param Agent $agent
-     * @return Structure
-     */
-    public function addGestionnaire(Agent $agent) : Structure
-    {
-        $this->gestionnaires->add($agent);
-        return $this;
-    }
-
-    /**
-     * @param Agent $agent
-     * @return Structure
-     */
-    public function removeGestionnaire(Agent $agent) : Structure
-    {
-        $this->gestionnaires->removeElement($agent);
-        return $this;
     }
 
     /**
@@ -246,107 +148,65 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
      */
     public function getResponsables() : array
     {
-        if ($this->responsables === null) return [];
+        //if ($this->responsables === null) return [];
         $array = $this->responsables->toArray();
         $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted() ;});
         return $array;
     }
 
-    /** POSTE ****************************************************************************************************/
+    /** POSTE - STATUER ****************************************************************************************************/
 
-    /**
-     * @return Poste[]
-     */
     public function getPostes() : array
     {
         return $this->postes->toArray();
     }
 
-    /**
-     * @param Poste $poste
-     * @return Structure
-     */
-    public function addPoste(Poste $poste) : Structure
+    public function addPoste(Poste $poste) : void
     {
         $this->postes->add($poste);
-        return $this;
     }
 
-    /**
-     * @param Poste $poste
-     * @return Structure
-     */
-    public function removePoste(Poste $poste) : Structure
+    public function removePoste(Poste $poste) : void
     {
         $this->postes->removeElement($poste);
-        return $this;
     }
 
-    /**
-     * @param Poste $poste
-     * @return boolean
-     */
     public function hasPoste(Poste $poste) : bool
     {
         return $this->postes->contains($poste);
     }
-    /**
-     * @return AgentMissionSpecifique[]
-     */
+
     public function getMissions() : array
     {
         return $this->missions->toArray();
     }
 
-    /**
-     * @param AgentMissionSpecifique $mission
-     * @return Structure
-     */
-    public function addMission(AgentMissionSpecifique $mission) : Structure
+    public function addMission(AgentMissionSpecifique $mission) : void
     {
         $this->missions->add($mission);
-        return $this;
     }
 
-    /**
-     * @param AgentMissionSpecifique $mission
-     * @return Structure
-     */
-    public function removeMission(AgentMissionSpecifique $mission) : Structure
+    public function removeMission(AgentMissionSpecifique $mission) : void
     {
         $this->postes->removeElement($mission);
-        return $this;
     }
 
-    /**
-     * @param AgentMissionSpecifique $mission
-     * @return boolean
-     */
     public function hasMission(AgentMissionSpecifique $mission) : bool
     {
         return $this->missions->contains($mission);
     }
 
-    /**
-     * @return Structure|null
-     */
     public function getParent() : ?Structure
     {
         return $this->parent;
     }
 
-    /**
-     * @return Structure|null
-     */
     public function getNiv2() : ?Structure
     {
         if ($this->getNiv2OW() !== null) return $this->getNiv2OW();
         return $this->niv2;
     }
 
-    /**
-     * @return Structure|null
-     */
     public function getNiv2OW() : ?Structure
     {
         return $this->niv2OverWriten;
@@ -362,28 +222,19 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $enfants;
     }
 
-    /**
-     * @return bool
-     */
     public function getRepriseResumeMere() : bool
     {
         return $this->repriseResumeMere;
     }
 
-    /**
-     * @param bool $repriseResumeMere
-     * @return Structure
-     */
-    public function setRepriseResumeMere(bool $repriseResumeMere) : Structure
+    public function setRepriseResumeMere(bool $repriseResumeMere) : void
     {
         $this->repriseResumeMere = $repriseResumeMere;
-        return $this;
     }
 
     /** AGENTS FORCES *************************************************************************************************/
 
     /**
-     * @var bool $keepHisto
      * @return StructureAgentForce[]
      */
     public function getAgentsForces(bool $keepHisto = false) : array
@@ -406,30 +257,17 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $this->fichesPostesRecrutements->toArray();
     }
 
-    /**
-     * @var FichePoste|null $fiche
-     * @return Structure
-     */
-    public function addFichePosteRecrutement(?FichePoste $fiche) : Structure
+    public function addFichePosteRecrutement(?FichePoste $fiche) : void
     {
         $this->fichesPostesRecrutements->add($fiche);
-        return $this;
     }
 
-    /**
-     * @var FichePoste|null $fiche
-     * @return Structure
-     */
-    public function removeFichePosteRecrutement(?FichePoste $fiche) : Structure
+    public function removeFichePosteRecrutement(?FichePoste $fiche) : void
     {
         $this->fichesPostesRecrutements->removeElement($fiche);
-        return $this;
     }
 
 
-    /**
-     * @return string
-     */
     public function __toString() : string
     {
         $text = "[".$this->getType()."] ";
@@ -437,12 +275,90 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $text;
     }
 
-    /**
-     * @return string
-     */
-    public function toString() : string
+    /** MACRO *********************************************************************************************************/
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringLibelle() : string
     {
-        $text = $this->getLibelleCourt();
-        return $text;
+        $texte = $this->getLibelleLong();
+        return $texte;
+    }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringLibelleLong() : string
+    {
+        $texte = "";
+
+        $niv2 = $this->getNiv2();
+        if ($niv2 !== null AND $niv2 !== $this) $texte .= $niv2->getLibelleLong() . " > ";
+        $texte .= $this->getLibelleLong();
+
+        return $texte;
+    }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringResume() : string
+    {
+        /** @var Structure $structure */
+        $structure = $this;
+        $texte = "";
+        if ($structure->getRepriseResumeMere()) {
+            $texte .= $structure->getParent()->toStringResume();
+        }
+        if ($structure->getDescription() !== null AND trim($structure->getDescription() !== '')) {
+            $texte .= "<h3>" . $structure->toStringLibelle() . "</h3>";
+            $texte .= $structure->getDescription();
+        }
+        return $texte;
+    }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringStructureBloc() : string
+    {
+        /** @var Structure $structure */
+        $structure = $this;
+        $texte = "";
+        if ($structure->getRepriseResumeMere()) {
+            $texte .= $structure->getParent()->toStringStructureBloc();
+        }
+        $texte .= "<h3>" . $structure->toStringLibelle() . "</h3>";
+        $texte .= $structure->getDescription();
+        return $texte;
+    }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringResponsables() : string
+    {
+        $date = new DateTime();
+        $responsables = $this->getResponsables();
+        $responsables = array_filter($responsables, function (StructureResponsable $a) use ($date) {
+            $encours = $a->estEnCours($date);
+            $effacer = $a->isDeleted($date);
+            return ($encours AND !$effacer);
+        });
+
+        if (empty($responsables)) return "aucun·e responsable";
+        $texte  = "<ul>";
+        foreach ($responsables as $responsable) $texte .= "<li>".$responsable->getAgent()->getDenomination()."</li>";
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    public function toStringGestionnaires() : string
+    {
+        $date = new DateTime();
+        $gestionnaires = $this->getGestionnaires();
+        $gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $a) use ($date) {
+            $encours = $a->estEnCours($date);
+            $effacer = $a->isDeleted($date);
+            return ($encours AND !$effacer);
+        });
+
+        if (empty($gestionnaires)) return "aucun·e gestionnaire";
+        $texte  = "<ul>";
+        foreach ($gestionnaires as $gestionnaire) $texte .= "<li>".$gestionnaire->getAgent()->getDenomination()."</li>";
+        $texte .= "</ul>";
+        return $texte;
     }
 }

@@ -9,7 +9,7 @@ use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;

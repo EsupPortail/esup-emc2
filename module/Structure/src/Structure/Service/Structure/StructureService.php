@@ -15,7 +15,7 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
