@@ -11,9 +11,9 @@
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenUtilisateur\Entity\Db\User;
 
 $agent = $entretien->getAgent();
@@ -54,7 +54,7 @@ $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 $res = ($now <= $date);
 
-$validationReponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+$validationReponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 ?>
 

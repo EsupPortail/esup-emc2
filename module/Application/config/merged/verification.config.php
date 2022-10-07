@@ -2,7 +2,7 @@
 
 namespace Application;
 
-use Application\Constant\RoleConstant;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Controller\VerificationController;
 use Application\Controller\VerificationControllerFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -19,8 +19,8 @@ return [
                         'index'
                     ],
                     'roles' => [
-                        RoleConstant::ADMIN_TECH,
-                        RoleConstant::ADMIN_FONC,
+                        AppRoleProvider::ADMIN_TECH,
+                        AppRoleProvider::ADMIN_FONC,
                     ],
                 ],
             ],

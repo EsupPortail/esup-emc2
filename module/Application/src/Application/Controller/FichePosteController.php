@@ -19,6 +19,7 @@ use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Template\PdfTemplate;
+use Application\Provider\Validation\FichePosteValidations;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
@@ -903,14 +904,14 @@ class FichePosteController extends AbstractActionController {
                 if ($data["reponse"] === "non") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte, 'Refus');
             }
             switch($type) {
-                case FichePoste::VALIDATION_RESPONSABLE :
+                case FichePosteValidations::VALIDATION_RESPONSABLE :
                     $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
                     $this->getFichePosteService()->update($ficheposte);
 
                     $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
                     break;
 
-                case FichePoste::VALIDATION_AGENT :
+                case FichePosteValidations::VALIDATION_AGENT :
                     $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
                     $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_SIGNEE));
                     $this->getFichePosteService()->update($ficheposte);
@@ -935,12 +936,12 @@ class FichePosteController extends AbstractActionController {
         $titre = "Validation de la fiche de poste";
         $texte = "Validation de la fiche de poste";
         switch($type) {
-            case FichePoste::VALIDATION_RESPONSABLE :
+            case FichePosteValidations::VALIDATION_RESPONSABLE :
                 $titre  = "Validation du responsable de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
                 $texte  = "Cette validation rendra visible la fiche de poste à l'agent (".$ficheposte->getAgent()->getDenomination().").<br/>";
                 $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (".$ficheposte->getAgent()->getDenomination().") afin qu'il puisse valider à son tour celle-ci.<br/>";
                 break;
-            case FichePoste::VALIDATION_AGENT :
+            case FichePosteValidations::VALIDATION_AGENT :
                 $responsables = $this->getAgentService()->computeSuperieures($agent);
                 usort($responsables, function (Agent $a, Agent $b) {
                     $aaa = $a->getNomUsuel() . " " . $a->getPrenom();
@@ -972,11 +973,11 @@ class FichePosteController extends AbstractActionController {
         $this->getValidationInstanceService()->historise($validation);
 
         switch ($validation->getType()->getCode()) {
-            case FichePoste::VALIDATION_RESPONSABLE :
+            case FichePosteValidations::VALIDATION_RESPONSABLE :
                 $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION));
                 $this->getFichePosteService()->update($ficheposte);
                 break;
-            case FichePoste::VALIDATION_AGENT :
+            case FichePosteValidations::VALIDATION_AGENT :
                 $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
                 $this->getFichePosteService()->update($ficheposte);
                 break;

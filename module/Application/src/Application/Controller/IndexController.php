@@ -2,10 +2,11 @@
 
 namespace Application\Controller;
 
-use Application\Constant\RoleConstant;
+
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
+use EntretienProfessionnel\Provider\Role\EntretienProfessionnelRoles;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -45,11 +46,11 @@ class IndexController extends AbstractActionController
 
         if ($connectedRole) {
             switch ($connectedRole->getRoleId()) {
-                case RoleConstant::PERSONNEL :
+                case AppRoleProvider::AGENT :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
                     return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-                case RoleConstant::VALIDATEUR :
-                    return $this->redirect()->toRoute('index-validateur', [], [], true);
+//                case RoleConstant::VALIDATEUR :
+//                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                 case RoleProvider::GESTIONNAIRE :
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
@@ -58,7 +59,7 @@ class IndexController extends AbstractActionController
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
                     break;
-                case EntretienProfessionnelConstant::ROLE_DELEGUE :
+                case EntretienProfessionnelRoles::ROLE_DELEGUE :
                     return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
                 case Agent::ROLE_SUPERIEURE :
                     /** @see IndexController::indexSuperieurAction() */
@@ -139,7 +140,7 @@ class IndexController extends AbstractActionController
         return $vm;
     }
 
-    public function infosAction()
+    public function infosAction() : ViewModel
     {
         return new ViewModel();
     }

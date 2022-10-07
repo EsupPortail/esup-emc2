@@ -2,12 +2,12 @@
 
 namespace Application\Assertion;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Structure\Provider\Role\RoleProvider;
+use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -38,7 +38,7 @@ class AgentAssertion extends AbstractAssertion
         foreach ($entity->getAffectations() as $affectation) {
             $structures[] = $affectation->getStructure();
         }
-        foreach ($entity->getStructuresForcees(false) as $structureAgentForce) {
+        foreach ($entity->getStructuresForcees() as $structureAgentForce) {
             $structures[] = $structureAgentForce->getStructure();
         }
 
@@ -46,27 +46,27 @@ class AgentAssertion extends AbstractAssertion
         $isGestionnaire = false;
         $isSuperieur = false;
         $isAutorite = false;
-        if ($role->getRoleId() === RoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
+        if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
+        if ($role->getRoleId() === StructureRoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $entity->hasSuperieurHierarchique($agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $entity->hasAutoriteHierarchique($agent);
 
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::OBSERVATEUR:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::OBSERVATEUR:
                         return true;
-                    case RoleProvider::RESPONSABLE:
+                    case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
-                    case RoleProvider::GESTIONNAIRE:
+                    case StructureRoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
                     case Agent::ROLE_SUPERIEURE:
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
                         return $isAutorite;
-                    case Agent::ROLE_AGENT :
+                    case AppRoleProvider::AGENT :
                         return $entity === $agent;
                 }
                 return false;
@@ -77,14 +77,14 @@ class AgentAssertion extends AbstractAssertion
             case AgentPrivileges::AGENT_ELEMENT_MODIFIER:
             case AgentPrivileges::AGENT_ELEMENT_HISTORISER:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
 //                    case RoleConstant::PERSONNEL:
 //                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
-                    case RoleProvider::GESTIONNAIRE:
+                    case StructureRoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleProvider::RESPONSABLE:
+                    case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case Agent::ROLE_SUPERIEURE;
                         return $isSuperieur;
@@ -94,20 +94,20 @@ class AgentAssertion extends AbstractAssertion
                 return false;
             case AgentPrivileges::AGENT_ELEMENT_DETRUIRE:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
                 }
                 return false;
             case AgentPrivileges::AGENT_ELEMENT_VALIDER:
             case AgentPrivileges::AGENT_ELEMENT_AJOUTER_EPRO:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
-                    case RoleProvider::GESTIONNAIRE:
+                    case StructureRoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleProvider::RESPONSABLE:
+                    case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
                 }
                 return false;
@@ -140,7 +140,7 @@ class AgentAssertion extends AbstractAssertion
         foreach ($affectations as $affectation) {
             $structures[] = $affectation->getStructure();
         }
-        foreach ($entity->getStructuresForcees(false) as $structureAgentForce) {
+        foreach ($entity->getStructuresForcees() as $structureAgentForce) {
             $structures[] = $structureAgentForce->getStructure();
         }
 
@@ -148,8 +148,8 @@ class AgentAssertion extends AbstractAssertion
         $isGestionnaire = false;
         $isSuperieur = false;
         $isAutorite = false;
-        if ($role->getRoleId() === RoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
+        if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
+        if ($role->getRoleId() === StructureRoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $entity->hasSuperieurHierarchique($agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $entity->hasAutoriteHierarchique($agent);
 
@@ -157,19 +157,19 @@ class AgentAssertion extends AbstractAssertion
             case 'afficher' :
             case 'afficher-statuts-grades' :
             switch ($role->getRoleId()) {
-                case RoleConstant::ADMIN_TECH :
-                case RoleConstant::ADMIN_FONC :
-                case RoleConstant::OBSERVATEUR :
+                case AppRoleProvider::ADMIN_TECH :
+                case AppRoleProvider::ADMIN_FONC :
+                case AppRoleProvider::OBSERVATEUR :
                     return true;
-                case RoleProvider::RESPONSABLE:
+                case StructureRoleProvider::RESPONSABLE:
                     return $isResponsable;
-                case RoleProvider::GESTIONNAIRE:
+                case StructureRoleProvider::GESTIONNAIRE:
                     return $isGestionnaire;
                 case Agent::ROLE_SUPERIEURE:
                     return $isSuperieur;
                 case Agent::ROLE_AUTORITE:
                     return $isAutorite;
-                case Agent::ROLE_AGENT :
+                case AppRoleProvider::AGENT :
                     return $entity === $agent;
             }
             return false;

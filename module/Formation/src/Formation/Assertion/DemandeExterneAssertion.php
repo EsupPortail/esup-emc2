@@ -2,8 +2,8 @@
 
 namespace Formation\Assertion;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Etat\DemandeExterneEtats;
@@ -54,6 +54,7 @@ class DemandeExterneAssertion extends AbstractAssertion {
     /**
      * @param DemandeExterne|null $demande
      * @param string $privilege
+     * @param Agent|null $givenAgent
      * @return bool
      */
     private function computeAssertion(?DemandeExterne $demande, string $privilege, ?Agent $givenAgent = null) : bool
@@ -63,12 +64,12 @@ class DemandeExterneAssertion extends AbstractAssertion {
         $agent = ($demande)?$demande->getAgent():$givenAgent;
 
         switch($role->getRoleId()) {
-            case RoleConstant::ADMIN_TECH :
-            case RoleConstant::ADMIN_FONC :
-            case RoleConstant::DRH :
+            case AppRoleProvider::ADMIN_TECH :
+            case AppRoleProvider::ADMIN_FONC :
+            case AppRoleProvider::DRH :
             case FormationRoles::GESTIONNAIRE_FORMATION :
                 return true;
-            case RoleConstant::PERSONNEL :
+            case AppRoleProvider::AGENT :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
                 return $agent->getUtilisateur() === $user;
             case Agent::ROLE_AUTORITE :

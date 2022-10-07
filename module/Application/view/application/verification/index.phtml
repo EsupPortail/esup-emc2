@@ -127,21 +127,19 @@ $this->headTitle("Vérification de l'installation");
                         }
                         if ($type !== null) {
                             echo "<span class='icon icon-checked text-success'></span> Type de parametre [".$typeName."] bien déclarée <br>";
-                        } else {
-                            echo "<span class='icon icon-retirer text-danger'></span> Type de parametre [".$typeName."] n'est pas déclarée <br>";
-                        }
-
-                        foreach ($constants as $name => $value) {
-                            if ($name !== 'TYPE') {
-                                $etat = $parametreService->getParametreByCode($type->getCode(), $value);
-                                if ($etat !== null) {
-                                    echo "<span class='icon icon-checked text-success'></span> Le paramètre [".$value."] bien déclarée <br>";
-                                } else {
-                                    echo "<span class='icon icon-retirer text-danger'></span> Le paramètre [".$value."] n'est pas déclarée <br>";
+                            foreach ($constants as $name => $value) {
+                                if ($name !== 'TYPE') {
+                                    $etat = $parametreService->getParametreByCode($type->getCode(), $value);
+                                    if ($etat !== null) {
+                                        echo "<span class='icon icon-checked text-success'></span> Le paramètre [" . $value . "] bien déclarée <br>";
+                                    } else {
+                                        echo "<span class='icon icon-retirer text-danger'></span> Le paramètre [" . $value . "] n'est pas déclarée <br>";
+                                    }
                                 }
                             }
+                        } else {
+                            echo "<span class='icon icon-retirer text-danger'></span> Type de parametre [" . $typeName . "] n'est pas déclarée <br>";
                         }
-
                     }
                 }
                 ?>

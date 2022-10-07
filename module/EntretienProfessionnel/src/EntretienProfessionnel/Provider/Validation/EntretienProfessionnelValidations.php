@@ -1,14 +1,11 @@
 <?php
 
-namespace EntretienProfessionnel\Entity\Db;
+namespace EntretienProfessionnel\Provider\Validation;
 
-class EntretienProfessionnelConstant {
-
-    const ROLE_DELEGUE = 'Délégué·e pour entretien professionnel';
+class EntretienProfessionnelValidations {
 
     const VALIDATION_AGENT          = "ENTRETIEN_AGENT";
     const VALIDATION_OBSERVATION    = "ENTRETIEN_OBSERVATION";
     const VALIDATION_RESPONSABLE    = "ENTRETIEN_RESPONSABLE";
     const VALIDATION_DRH            = "ENTRETIEN_HIERARCHIE";
-
 }

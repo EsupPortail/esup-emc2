@@ -2,7 +2,7 @@
 
 namespace Structure\Assertion;
 
-use Application\Constant\RoleConstant;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
@@ -37,10 +37,10 @@ class StructureAssertion extends AbstractAssertion {
         switch($privilege) {
             case StructurePrivileges::STRUCTURE_AFFICHER :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::OBSERVATEUR:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::OBSERVATEUR:
+                    case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
@@ -54,9 +54,9 @@ class StructureAssertion extends AbstractAssertion {
             case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
             case StructurePrivileges::STRUCTURE_AGENT_FORCE:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;

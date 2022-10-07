@@ -4,7 +4,7 @@ namespace EntretienProfessionnel\Provider;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
+use EntretienProfessionnel\Provider\Role\EntretienProfessionnelRoles;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
@@ -28,7 +28,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
     public function computeUsersAutomatiques(string $code) : ?array
     {
         switch ($code) {
-            case EntretienProfessionnelConstant::ROLE_DELEGUE :
+            case EntretienProfessionnelRoles::ROLE_DELEGUE :
                 $user = $this->getDelegueService()->getUsersInDelegue();
                 return $user;
         }
@@ -51,7 +51,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
         if ($agent !== null) {
             $deleguations = $this->getDelegueService()->getDeleguesByAgent($agent);
             if ($deleguations !== null and $deleguations !== []) {
-                $roleDelegue = $this->getRoleService()->findByRoleId(EntretienProfessionnelConstant::ROLE_DELEGUE);
+                $roleDelegue = $this->getRoleService()->findByRoleId(EntretienProfessionnelRoles::ROLE_DELEGUE);
                 $roles[] = $roleDelegue;
             }
         }

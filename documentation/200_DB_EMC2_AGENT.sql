@@ -7,8 +7,7 @@ create table agent
     nom_famille           varchar(256),
     date_naissance        date,
     sexe                  varchar(1),
-    utilisateur_id        integer
-        constraint agent_user_id_fk references unicaen_utilisateur_user on delete set null,
+    utilisateur_id        integer constraint agent_user_id_fk references unicaen_utilisateur_user on delete set null,
     login                 varchar(256),
     email                 varchar(1024),
     t_contrat_long        varchar(1),
@@ -61,7 +60,6 @@ create table agent_carriere_echelon
     histo_destructeur_id  bigint
 );
 
-drop table agent_carriere_quotite;
 create table agent_carriere_quotite
 (
     id                    bigint not null unique
@@ -80,45 +78,6 @@ create table agent_carriere_quotite
     histo_modificateur_id bigint,
     histo_destructeur_id  bigint
 );
-
-create table structure_responsable
-(
-    id                    bigint not null unique
-        constraint structure_responsable_pk primary key,
-    structure_id          integer not null,
-    agent_id              varchar(40) not null,
-    fonction_id           integer,
-    date_debut            timestamp,
-    date_fin              timestamp,
-    source_id             bigint                         not null,
-    id_orig               varchar(100),
-    created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on            timestamp(0),
-    deleted_on            timestamp(0),
-    histo_createur_id     bigint                         not null,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint
-);
-
-create table structure_gestionnaire
-(
-    id                    bigint not null unique
-        constraint structure_gestionnaire_pk primary key,
-    structure_id          integer not null,
-    agent_id              varchar(40) not null,
-    fonction_id           integer,
-    date_debut            timestamp,
-    date_fin              timestamp,
-    source_id             bigint                         not null,
-    id_orig               varchar(100),
-    created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
-    updated_on            timestamp(0),
-    deleted_on            timestamp(0),
-    histo_createur_id     bigint                         not null,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint
-);
-
 
 create table agent_carriere_grade
 (
@@ -140,7 +99,6 @@ create table agent_carriere_grade
     histo_destructeur_id  bigint
 );
 
-drop table agent_carriere_statut;
 create table agent_carriere_statut
 (
     id BIGINT not null constraint agent_statut_pk primary key,

@@ -9,9 +9,9 @@
 
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenUtilisateur\Entity\Db\User;
 
 $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser;
@@ -28,7 +28,7 @@ $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entreti
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 
 ?>

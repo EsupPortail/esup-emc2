@@ -24,9 +24,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     const TYPE_INCLUSIF = 'INCLUSIF';
     const TYPE_GENRE    = 'GENRE';
 
-    const VALIDATION_RESPONSABLE    = 'FICHEPOSTE_RESPONSABLE';
-    const VALIDATION_AGENT          = 'FICHEPOSTE_AGENT';
-
     public function getResourceId()
     {
         return 'FichePoste';

@@ -2,8 +2,9 @@
 
 namespace Application\View\Helper;
 
-use Application\Constant\RoleConstant;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\FichePoste;
+
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -21,7 +22,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke($fiches, $structure = null, $options = [])
+    public function __invoke($fiches, $structure = null, array $options = [])
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
@@ -38,7 +39,7 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
             'en-cours' => true,
             'modification' => false,
             'action' => true,
-            'isObservateur' => ($this->getUserService()->getConnectedRole()->getRoleId() === RoleConstant::OBSERVATEUR),
+            'isObservateur' => ($this->getUserService()->getConnectedRole()->getRoleId() === AppRoleProvider::OBSERVATEUR),
         ];
         if (isset($options['displays']) AND isset($options['displays']['id'])) $displays['id'] = ($options['displays']['id'] === true);
         if (isset($options['displays']) AND isset($options['displays']['agent'])) $displays['agent'] = ($options['displays']['agent'] !== false);

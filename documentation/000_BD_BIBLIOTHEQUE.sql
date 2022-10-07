@@ -230,27 +230,6 @@ create table unicaen_etat_etat
 create unique index unicaen_etat_etat_id_uindex on unicaen_etat_etat (id);
 
 -- ---------------------------------------------------------------------------------------------------------------------
--- UNICAEN GLOSSAIRE ---------------------------------------------------------------------------------------------------
--- ---------------------------------------------------------------------------------------------------------------------
-
-create table unicaen_glossaire_definition
-(
-    id serial not null constraint unicaen_glossaire_definition_pk primary key,
-    terme varchar(1024) not null,
-    definition text not null,
-    histo_creation timestamp not null,
-    histo_createur_id integer not null constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
-    histo_modification timestamp,
-    histo_modificateur_id integer constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
-    histo_destruction timestamp,
-    histo_destructeur_id integer constraint unicaen_glossaire_definition_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user,
-    alternatives text
-);
-
-create unique index unicaen_glossaire_definition_id_uindex on unicaen_aide_glossaire_definition (id);
-create unique index unicaen_glossaire_definition_terme_uindex on unicaen_aide_glossaire_definition (terme);
-
--- ---------------------------------------------------------------------------------------------------------------------
 -- UNICAEN VALIDATION --------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 

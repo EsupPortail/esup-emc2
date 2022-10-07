@@ -126,7 +126,7 @@ class ValidationTypeService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('vtype')
-            ->addSelect('modificateur')->join('vtype.histoModificateur', 'modificateur')
+            //->addSelect('modificateur')->join('vtype.histoModificateur', 'modificateur')
             ;
 
         return $qb;

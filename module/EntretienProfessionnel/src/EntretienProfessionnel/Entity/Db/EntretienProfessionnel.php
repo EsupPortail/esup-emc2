@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Entity\Db;
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
@@ -322,7 +323,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function getMaxSaisiObservation() : ?DateTime
     {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
         $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
@@ -532,7 +533,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationAgent() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -540,7 +541,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationResponsable() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -548,7 +549,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationHierarchie() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }

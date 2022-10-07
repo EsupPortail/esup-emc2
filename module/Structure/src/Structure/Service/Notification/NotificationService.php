@@ -2,7 +2,7 @@
 
 namespace Structure\Service\Notification;
 
-use Application\Constant\RoleConstant;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use Structure\Entity\Db\Structure;
@@ -31,7 +31,7 @@ class NotificationService
 
     public function getMailsAdministrationFonctionnelle(): array
     {
-        $role = $this->getRoleService()->findByRoleId(RoleConstant::ADMIN_FONC);
+        $role = $this->getRoleService()->findByRoleId(AppRoleProvider::ADMIN_FONC);
         $users = $this->getUserService()->findByRole($role);
         $mails = array_map(function (User $a) {
             return $a->getEmail();

@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Provider\Validation\FichePosteValidations;
 
 /**
  * @var FichePoste $fiche
@@ -21,7 +22,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
             <dl>
                 <dt> Validation du responsable </dt>
                 <dd>
-                    <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_RESPONSABLE); ?>
+                    <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE); ?>
                     <?php if ($validationResponsable === null) : ?>
                         Aucune validation
                     <?php else : ?>
@@ -32,7 +33,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                 </dd>
                 <dt> Validation de l'agent </dt>
                 <dd>
-                    <?php $validationAgent = $fiche->getValidationByTypeCode(FichePoste::VALIDATION_AGENT); ?>
+                    <?php $validationAgent = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_AGENT); ?>
                     <?php if ($validationAgent === null) : ?>
                         Aucune validation
                     <?php else : ?>
