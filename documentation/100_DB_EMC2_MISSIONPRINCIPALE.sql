@@ -104,19 +104,19 @@ create table activite_competence
 );
 
 
--- create table activite_formation
--- (
---     activite_id          integer not null
---         constraint activite_formation_activite_id_fk
---         references activite
---         on delete cascade,
---     formation_element_id integer not null
---         constraint activite_formation_formation_element_id_fk
---         references formation_element
---         on delete cascade,
---     constraint activite_formation_pk
---         primary key (activite_id, formation_element_id)
--- );
+create table activite_formation
+(
+    activite_id          integer not null
+        constraint activite_formation_activite_id_fk
+        references activite
+        on delete cascade,
+    formation_element_id integer not null
+        constraint activite_formation_formation_element_id_fk
+        references formation_element
+        on delete cascade,
+    constraint activite_formation_pk
+        primary key (activite_id, formation_element_id)
+);
 
 
 create table activite_domaine

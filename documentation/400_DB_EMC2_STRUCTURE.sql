@@ -109,6 +109,40 @@ create table structure_ficheposte
     constraint structure_ficheposte_pk primary key (structure_id, ficheposte_id)
 );
 
+create table agent_missionspecifique
+(
+    id                    serial
+        constraint agent_missionspecifique_pk
+            primary key,
+    agent_id              varchar(40) not null,
+    mission_id            integer     not null
+        constraint agent_missionspecifique_mission_specifique_id_fk
+            references mission_specifique
+            on delete cascade,
+    structure_id          integer,
+    date_debut            timestamp,
+    date_fin              timestamp,
+    commentaire           varchar(2048),
+    decharge              double precision,
+    histo_creation        timestamp   not null,
+    histo_createur_id     integer     not null
+        constraint agent_missionspecifique_createur_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint agent_missionspecifique_modificateur_fk
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint agent_missionspecifique_destructeur_fk
+            references unicaen_utilisateur_user
+);
+
+create unique index agent_missionspecifique_id_uindex
+    on agent_missionspecifique (id);
+
+
+
 ------------------------------------------------------------------------------------------------------------------------
 -- ROLE ----------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------

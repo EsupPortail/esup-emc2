@@ -14,18 +14,6 @@ SELECT cp.id, d.code, d.libelle, d.ordre, d.icone, d.couleur, d.histo_creation, 
 FROM d
 JOIN unicaen_etat_etat_type cp ON cp.CODE = 'FICHE_METIER';
 
-INSERT INTO unicaen_etat_etat_type (code, libelle, icone, couleur, histo_creation, histo_createur_id)
-    VALUES ('FICHE_POSTE', 'États associés aux fiches de poste', 'fas fa-book-reader', '#00d88d', current_date, 0);
-INSERT INTO unicaen_etat_etat(type_id, code, libelle, ordre, icone, couleur, histo_creation, histo_createur_id)
-WITH d(code, libelle, ordre, icone, couleur, histo_creation, histo_createur_id) AS (
-    SELECT 'FICHE_POSTE_REDACTION', 'Fiche de poste en cours de rédaction', 1, 'fas fa-pencil-ruler', '#ff9500', current_date, 0 UNION
-    SELECT 'FICHE_POSTE_OK', 'Fiche de poste validée', 2, 'fas fa-check', '#00a004', current_date, 0 UNION
-    SELECT 'FICHE_POSTE_MASQUEE', 'Fiche de poste masquée', 4, 'fas fa-mask', '#cb0000', current_date, 0 UNION
-    SELECT 'FICHE_POSTE_SIGNEE', 'Fiche de poste signée', 3, 'fas fa-signature', '#000099', current_date, 0
-)
-SELECT cp.id, d.code, d.libelle, d.ordre, d.icone, d.couleur, d.histo_creation, d.histo_createur_id
-FROM d
-JOIN unicaen_etat_etat_type cp ON cp.CODE = 'FICHE_POSTE';
 
 -- ---------------------------------------------------------------------------------------
 -- TEMPLATE ------------------------------------------------------------------------------
