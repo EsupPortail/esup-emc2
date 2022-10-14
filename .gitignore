@@ -4,3 +4,4 @@ upload/
 config/autoload/*local*
 composer.lock
 vendor
+!/public/vendor
