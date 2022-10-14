@@ -13,7 +13,7 @@
     "unicaen/authentification": "^5",
     "unicaen/utilisateur": "^5",
     "unicaen/privilege": "^5",
-    "unicaen/renderer": "^5",
+    "unicaen/renderer": "emc2_1.0.0",
     "unicaen/pdf": "^5",
     "unicaen/mail": "^5",
     "unicaen/parametre": "^5",
@@ -24,7 +24,7 @@
     "unicaen/autoform": "^5",
     "unicaen/aide": "dev-master",
     "ext-json": "*",
-    "unicaen/db-import": "dev-release_5.2.1"
+    "unicaen/db-import": "dev-utilisateur"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

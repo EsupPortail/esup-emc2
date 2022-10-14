@@ -239,8 +239,8 @@ create table unicaen_validation_instance
     entity_id varchar(64),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint unicaen_validation_instance_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint unicaen_validation_instance_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint unicaen_validation_instance_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint unicaen_validation_instance_destructeur_fk references unicaen_utilisateur_user
 );
@@ -308,7 +308,7 @@ create table unicaen_autoform_formulaire
     code varchar(256),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint autoform_formulaire_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp ,
+    histo_modification timestamp,
     histo_modificateur_id integer  constraint autoform_formulaire_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint autoform_formulaire_destructeur_fk references unicaen_utilisateur_user
@@ -324,8 +324,8 @@ create table unicaen_autoform_categorie
     mots_clefs varchar(1024),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint autoform_categorie_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint autoform_categorie_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint autoform_categorie_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint autoform_categorie_destructeur_fk references unicaen_utilisateur_user
 );
@@ -347,8 +347,8 @@ create table unicaen_autoform_champ
     mots_clefs varchar(1024),
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint autoform_champ_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint autoform_champ_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint autoform_champ_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint autoform_champ_destructeur_fk references unicaen_utilisateur_user
 );
@@ -362,8 +362,8 @@ create table unicaen_autoform_formulaire_instance
     formulaire integer not null constraint autoform_formulaire_instance_autoform_formulaire_id_fk references unicaen_autoform_formulaire,
     histo_creation timestamp not null,
     histo_createur_id integer constraint autoform_formulaire_instance_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint autoform_formulaire_instance_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint autoform_formulaire_instance_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint autoform_formulaire_instance_destructeur_fk references unicaen_utilisateur_user
 );
@@ -378,8 +378,8 @@ create table unicaen_autoform_formulaire_reponse
     reponse text,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint autoform_reponse_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint autoform_reponse_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint autoform_reponse_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint autoform_reponse_destructeur_fk references unicaen_utilisateur_user
 );
@@ -393,8 +393,8 @@ create table unicaen_autoform_validation
     instance integer not null constraint validation_instance_fk references unicaen_autoform_formulaire_instance on delete cascade,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint validation_createur_fk references unicaen_utilisateur_user,
-    histo_modification timestamp not null,
-    histo_modificateur_id integer not null constraint validation_modificateur_fk references unicaen_utilisateur_user,
+    histo_modification timestamp,
+    histo_modificateur_id integer constraint validation_modificateur_fk references unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer constraint validation_destructeur_fk references unicaen_utilisateur_user
 );
@@ -818,7 +818,7 @@ FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
 
 -- synchro ----------------------------------------------------------------------------------------------------
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('unicaen-db-import-import', 'DB Import - Import', 'UnicaenDbImport\Privilege', 99994);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -831,7 +831,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-import';
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('unicaen-db-import-log', 'DB Import - Log', 'UnicaenDbImport\Privilege', 99995);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -843,7 +843,7 @@ FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-log';
 
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('unicaen-db-import-observation', 'DB Import - Observation', 'UnicaenDbImport\Privilege', 99996);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -854,7 +854,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-observation';
 
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('unicaen-db-import-synchro', 'DB Import - Synchro', 'UnicaenDbImport\Privilege', 99997);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
@@ -931,3 +931,7 @@ INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (1, 'en_attente', 
 INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (2, 'en_cours', 'En cours');
 INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (3, 'echec', 'Échec');
 INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (4, 'succes', 'Succès');
+
+INSERT INTO source (id, code, libelle, importable) VALUES (1, 'OCTOPUS', 'OCTOPUS', true);
+INSERT INTO source (id, code, libelle, importable) VALUES (2, 'EMC2', 'EMC2', false);
+INSERT INTO source (id, code, libelle, importable) VALUES (3, 'LAGAF', 'LAGAF', false);
