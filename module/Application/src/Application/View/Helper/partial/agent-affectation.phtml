@@ -32,9 +32,13 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
 <div class="agent-status">
     <div>
     <?php if ($displayStructure) : ?>
-        <span class="badge structure" title="<?php echo $affectation->getStructure()->getLibelleLong(); ?>">
-            <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
-        </span>
+        <?php if ($affectation->getStructure() === null) : ?>
+            Aucune structure
+        <?php else : ?>
+            <span class="badge structure" title="<?php echo $affectation->getStructure()->getLibelleLong(); ?>">
+                <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+            </span>
+        <?php endif; ?>
     <?php endif; ?>
     </div>
 
