@@ -76,7 +76,7 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
 
                 <ul>
                 <?php
-                    if ($affectation->isPrincipale())        echo '<li>Principale</li>';
+                    if ($affectation !== null AND $affectation->isPrincipale())        echo '<li>Principale</li>';
                 ?>
                 </ul>
         <?php endif; ?>
