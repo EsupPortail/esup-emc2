@@ -25,9 +25,9 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     use HasCompetenceCollectionTrait;
 
     /** @var int */
-    private $id;
+    private ?int $id = -1;
     private ?Metier $metier = null;
-    private bool $hasExpertise = false;
+    private ?bool $hasExpertise = false;
 
     /** @var ArrayCollection */
     private $activites;
