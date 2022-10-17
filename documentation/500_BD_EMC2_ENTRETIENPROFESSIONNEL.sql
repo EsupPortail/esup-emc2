@@ -620,5 +620,10 @@ INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, 
 INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, element, balise, options, mots_clefs, histo_creation, histo_createur_id) VALUES (154, 23, '2_23_6228a0ae78c65', 'L''agent envisage-t''il de mobiliser son CPF cette année', '', 3, 'Select', null, 'Oui;Non', 'CREF;CPF_mobilisation', '2022-03-09 13:42:22.000000', 0);
 INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, element, balise, options, mots_clefs, histo_creation, histo_createur_id) VALUES (153, 23, '2_23_6228a0589d84b', 'Solde du CPF', '', 2, 'Text', null, '', 'CREF;CPF_solde', '2022-03-09 13:40:56.000000', 0);
 
+-- role ----------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Supérieur·e hiérarchique direct·e', 'Supérieur·e hiérarchique direct·e', false, null, null, true, null);
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Délégué·e pour entretien professionnel', 'Délégué·e pour entretien professionnel', false, null, null, true, null);
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Autorité hiérarchique', 'Autorité hiérarchique', false, null, null, true, null);
 
 
