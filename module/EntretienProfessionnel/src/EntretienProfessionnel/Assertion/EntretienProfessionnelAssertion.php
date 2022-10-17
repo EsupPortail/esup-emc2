@@ -204,7 +204,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         $predicats = [];
         if ($agent) {
-            $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
+            //to remove copium here
+            $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien-professionnel')));
+            if ($entretienId === null) $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
             if ($entretien) $predicats = $this->computePredicats($entretien, $agent, $role);
         }
