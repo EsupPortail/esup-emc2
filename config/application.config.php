@@ -42,6 +42,7 @@ $modules = [
     'UnicaenValidation',
     'UnicaenEvenement',
     'UnicaenAide',
+    'UnicaenAlerte',
 
     'Indicateur',
     'EntretienProfessionnel',
