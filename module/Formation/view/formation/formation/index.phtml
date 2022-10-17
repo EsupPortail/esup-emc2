@@ -24,30 +24,26 @@ $this->headTitle("Actions de formation");
 
 ?>
 
-<div class="row">
-    <div class="col-md-8">
-        <h2 class="page-header">
-            Actions de formation
-        </h2>
-    </div>
-    <div class="pull-right">
-        <br>
-        <?php if ($canAjouter) : ?>
-            <a
-                <?php /** @see FormationController::ajouterAction() */ ?>
-                href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
-                class="btn btn-primary action ajax-modal"
-                data-event="modification">
-                <span class="icon ajouter"></span>
-                Ajouter une action
-            </a>
-        <?php endif; ?>
-    </div>
-</div>
+<h1 class="page-header">
+    Actions de formation
+</h1>
+
+<?php if ($canAjouter) : ?>
+    <a
+        <?php /** @see FormationController::ajouterAction() */ ?>
+        href="<?php echo $this->url('formation/ajouter', [], [], true); ?>"
+        class="btn btn-primary action ajax-modal"
+        data-event="modification">
+        <span class="icon icon-ajouter"></span>
+        Ajouter une action
+    </a>
+<?php endif; ?>
 
 <?php echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupe, 'historise' => $historise, 'source' => $source], [], true); ?>
 
-<table class="datatable table-condensed" id="formations" style="width:100%;">
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<table class="datatable table-condensed table-hover" id="formations" style="width:100%;">
     <thead>
         <tr>
             <th class="col-md-6 nosort"> Libellé </th>
@@ -58,7 +54,7 @@ $this->headTitle("Actions de formation");
     </thead>
     <tbody>
     <?php foreach($formations as $formation) : ?>
-        <tr>
+        <tr id="<?php echo $formation->getId(); ?>"  class="<?php if ($formation->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $formation->getLibelle(); ?> </td>
             <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
             <td>
@@ -72,7 +68,7 @@ $this->headTitle("Actions de formation");
                         <?php /** @see FormationController::editerAction() */ ?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
                     >
-                        <span class="icon voir" title="Afficher la formation"></span></a>
+                        <span class="icon icon-voir" title="Afficher la formation"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($formation->estNonHistorise()) : ?>
@@ -80,32 +76,22 @@ $this->headTitle("Actions de formation");
                             <?php /** @see FormationController::historiserAction() */ ?>
                             href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser la formation"></span></a>
+                            <span class="icon icon-historiser" title="Historiser la formation"></span></a>
                     <?php else : ?>
                         <a
                             <?php /** @see FormationController::restaurerAction() */ ?>
                             href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer la formation"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer la formation"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
-                <?php if (false) : ?>
-                    <?php if ($canDedoublonner) : ?>
-                        <a
-                            <?php /** @see FormationController::dedoublonnerAction() */ ?>
-                                href="<?php echo $this->url('formation/dedoublonner', ['formation' => $formation->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon fusionner" title="Dédoublonner la formation"></span></a>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canDetruire) : ?>
+                <?php if ($canDetruire AND $formation->estHistorise()) : ?>
                     <a
                         <?php /** @see FormationController::detruireAction() */ ?>
                         href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire text-danger" title="Supprimer la formation"></span></a>
+                        <span class="icon icon-retirer text-danger" title="Supprimer la formation"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

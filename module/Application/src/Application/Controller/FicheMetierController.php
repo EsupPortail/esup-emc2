@@ -3,6 +3,8 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
+use Application\Provider\Etat\FicheMetierEtats;
+use Application\Provider\Template\PdfTemplate;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\FicheMetier;
@@ -32,11 +34,11 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -76,7 +78,7 @@ class FicheMetierController extends AbstractActionController
         $expertise    = $fromQueries['expertise'];
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetier::TYPE_FICHEMETIER);
+        $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetierEtats::TYPE);
         $etats = $this->getEtatService()->getEtatsByType($type);
         $domaines = $this->getDomaineService()->getDomaines();
 
@@ -111,7 +113,7 @@ class FicheMetierController extends AbstractActionController
     {
         /** @var FicheMetier $fiche */
         $fiche = new FicheMetier();
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetier::ETAT_REDACTION));
+        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
 
         /** @var LibelleForm $form */
         $form = $this->getLibelleForm();
@@ -181,7 +183,7 @@ class FicheMetierController extends AbstractActionController
             'metier' => $fichemetier->getMetier(),
             'parcours' => ($fichemetier->getMetier()->getCategorie())?$this->getParcoursDeFormationService()->getParcoursDeFormationByTypeAndReference(ParcoursDeFormation::TYPE_CATEGORIE, $fichemetier->getMetier()->getCategorie()->getId()):null,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('FICHE_METIER', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_METIER, $vars);
 
         try {
             $exporter = new PdfExporter();
@@ -470,7 +472,7 @@ class FicheMetierController extends AbstractActionController
         $form = $this->getSelectionEtatForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/changer-etat', ['fiche-metier' => $fiche->getId()], [], true));
         $form->bind($fiche);
-        $form->reinit(FicheMetier::TYPE_FICHEMETIER);
+        $form->reinit(FicheMetierEtats::TYPE);
 
         $request = $this->getRequest();
         if ($request->isPost()) {

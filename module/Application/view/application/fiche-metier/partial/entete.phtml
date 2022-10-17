@@ -22,7 +22,7 @@ $libelle = $metier->getLibelle(true);
             <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
             <a class="btn btn-primary action ajax-modal" data-event="modification"
                href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fichemetier->getId()], [], true); ?>">
-                <span class="icon editer"></span>
+                <span class="icon icon-editer"></span>
                 Modifier libellé
             </a>
         <?php endif; ?>
@@ -66,7 +66,7 @@ $libelle = $metier->getLibelle(true);
                         <?php /** @see FicheMetierController::changerExpertiseAction() */ ?>
                         href="<?php echo $this->url('fiche-metier-type/changer-expertise', ['fiche' => $fichemetier->getId()], [], true); ?>"
                     >
-                        <span class="icon synchoniser"></span>
+                        <span class="icon icon-synchroniser"></span>
                     </a>
                 <?php endif; ?>
             </dd>

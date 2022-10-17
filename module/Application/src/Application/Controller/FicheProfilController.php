@@ -4,15 +4,16 @@ namespace Application\Controller;
 
 use Application\Entity\Db\FicheProfil;
 use Application\Form\FicheProfil\FicheProfilFormAwareTrait;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class FicheProfilController extends AbstractActionController {
     use RenduServiceAwareTrait;
@@ -118,7 +119,7 @@ class FicheProfilController extends AbstractActionController {
             'ficheposte' => $ficheposte,
             'structure' => $ficheprofil->getStructure(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PROFIL_DE_RECRUTEMENT', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_RECRUTEMENT, $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

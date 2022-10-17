@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class EtatTypeService {
     use EntityManagerAwareTrait;
@@ -160,9 +160,9 @@ class EtatTypeService {
 
     /**
      * @param string $code
-     * @return EtatType
+     * @return EtatType|null
      */
-    public function getEtatTypeByCode(string $code)
+    public function getEtatTypeByCode(string $code) : ?EtatType
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etype.code = :code')

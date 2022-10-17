@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
@@ -12,9 +13,9 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class MissionSpecifiqueAffectationController extends AbstractActionController {
     use AgentServiceAwareTrait;
@@ -207,7 +208,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             'structure' => $affectation->getStructure(),
             'affectation' => $affectation,
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('MISSION_SPECIFIQUE_LETTRE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::LETTRE_MISSION, $vars);
 
         $exporter = new PdfExporter();
         $exporter->getMpdf()->SetTitle($rendu->getSujet());

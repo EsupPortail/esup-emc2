@@ -2,15 +2,23 @@
 
 namespace Formation;
 
-use Application\Controller\IndexController;
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
+use Formation\Controller\PlanFormationController;
+use Formation\Controller\ProjetPersonnelController;
+use Formation\Form\Inscription\InscriptionForm;
+use Formation\Form\Inscription\InscriptionFormFactory;
+use Formation\Form\Inscription\InscriptionHydrator;
+use Formation\Form\Inscription\InscriptionHydratorFactory;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
+
+$annee = '2023';
 
 return [
     'bjyauthorize' => [
@@ -25,15 +33,17 @@ return [
                         'supprimer-agent',
                         'envoyer-liste-principale',
                         'envoyer-liste-complementaire',
+                        'classer-inscription',
                     ],
                     'privileges' => [
-                        FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
                     ],
                 ],
                 [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
                         'liste-formations-instances',
+                        'inscription-formation',
                         'inscription',
                         'desinscription',
                     ],
@@ -45,10 +55,20 @@ return [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
                         'valider-responsable',
-                        'valider-drh',
+                        'refuser-responsable',
                     ],
                     'privileges' => [
-                        FormationinstanceinscritPrivileges::FORMATIONINSTANCEINSCRIT_MODIFIER,
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_SUPERIEURE,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceInscritController::class,
+                    'action' => [
+                        'valider-drh',
+                        'refuser-drh',
+                    ],
+                    'privileges' => [
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_GESTIONNAIRE,
                     ],
                 ],
             ],
@@ -64,6 +84,36 @@ return [
                         'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
                         'route' => 'liste-formations-instances',
                         'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                        'pages' => [
+                            [
+                                'order' => 200,
+                                'label' => 'Plan de formation '. $annee,
+                                'route' => 'plan-formation',
+                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 405,
+                                'label' => "S'inscrire à une formation",
+                                'route' => 'inscription-formation',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 405,
+                                'label' => 'Mes formations',
+                                'route' => 'liste-formations-instances',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            [
+                                'order' => 410,
+                                'label' => 'Mon projet personnel',
+                                'route' => 'projet-personnel',
+                                'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -72,6 +122,16 @@ return [
 
     'router'          => [
         'routes' => [
+            'inscription-formation' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/inscription-formation',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'inscription-formation',
+                    ],
+                ],
+            ],
             'liste-formations-instances' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -114,6 +174,16 @@ return [
                             ],
                         ],
                     ],
+                    'refuser-responsable' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refuser-responsable/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'refuser-responsable',
+                            ],
+                        ],
+                    ],
                     'valider-drh' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -121,6 +191,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'valider-drh',
+                            ],
+                        ],
+                    ],
+                    'refuser-drh' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/refuser-drh/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'refuser-drh',
                             ],
                         ],
                     ],
@@ -184,6 +264,16 @@ return [
                             ],
                         ],
                     ],
+                    'classer-inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/classer-inscription/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'classer-inscription',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -200,10 +290,14 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            InscriptionForm::class => InscriptionFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            InscriptionHydrator::class => InscriptionHydratorFactory::class,
+        ],
     ]
 
 ];

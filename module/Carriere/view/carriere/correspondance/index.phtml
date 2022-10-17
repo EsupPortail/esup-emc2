@@ -24,7 +24,7 @@ $this->headTitle("Liste des correspondances");
     </div>
     <div class="col-md-4">
         <div class="alert alert-info">
-            <span class="icon synchroniser"></span>
+            <span class="icon icon-synchroniser"></span>
             Synchoniser depuis Octopus
         </div>
     </div>
@@ -44,7 +44,7 @@ $this->headTitle("Liste des correspondances");
             <td>
                 <span
                     title="<?php echo $correspondance->generateTooltip(); ?>"
-                    data-toggle="tooltip" data-html="true"
+                    data-bs-toggle="tooltip" data-bs-html="true"
                 >
                 <?php echo $correspondance->getLibelleLong(); ?>
                 </span>
@@ -57,7 +57,7 @@ $this->headTitle("Liste des correspondances");
                         href="<?php echo $this->url('correspondance/afficher-agents', ['correspondance' => $correspondance->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon users" data-toggle="tooltip" data-html="true"
+                                        <span class="icon users" data-bs-toggle="tooltip" data-bs-html="true"
                                               title="Afficher les agents ayant cette correpondance"></span></a>
                 <?php endif; ?>
             </td>

@@ -18,8 +18,8 @@ foreach ($formations as $item) {
 
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="card panel-info">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-11">
                 <h2>
@@ -34,12 +34,12 @@ foreach ($formations as $item) {
                     <a <?php /** @see \Application\Controller\FichePosteController::selectionnerFormationsRetireesAction() */ ?>
                             href="<?php echo $this->url('fiche-poste/selectionner-formations-retirees', ['fiche-poste' => $fiche->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification">
-                        <span class="icon listing" title="Sélection des formations liées à la fiche de poste"></span></a>
+                        <span class="icon icon-listing" title="Sélection des formations liées à la fiche de poste"></span></a>
                 <?php endif; ?>
             </div>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <ul>
             <?php foreach ($cFormations as $item) : ?>
                 <li>

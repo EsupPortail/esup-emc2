@@ -42,16 +42,16 @@ $this->headTitle($titre  . " : " .($activite !== null and $activite->getCurrentA
         <?php /** @see \Application\Controller\ActiviteController::ajouterNiveauxAction() */ ?>
         <a href="<?php echo $this->url('activite/ajouter-niveaux', ['activite' => $activite->getId()], [], true); ?>"
            class="ajax-modal" data-event="modification">
-        <span class="icon ajouter"></span></a>
+        <span class="icon icon-ajouter"></span></a>
     <?php else : ?>
         <?php /** @see \Application\Controller\ActiviteController::modifierNiveauxAction() */ ?>
         <a href="<?php echo $this->url('activite/modifier-niveaux', ['activite' => $activite->getId()], [], true); ?>"
            class="ajax-modal" data-event="modification">
-            <span class="icon editer"></span></a>
+            <span class="icon icon-editer"></span></a>
         <?php /** @see \Application\Controller\ActiviteController::retirerNiveauxAction() */ ?>
         <a href="<?php echo $this->url('activite/retirer-niveaux', ['activite' => $activite->getId()], [], true); ?>"
            >
-            <span class="icon detruire"></span></a>
+            <span class="icon icon-retirer"></span></a>
     <?php endif; ?>
 <?php endif; ?>
 

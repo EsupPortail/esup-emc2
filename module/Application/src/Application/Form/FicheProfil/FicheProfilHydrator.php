@@ -6,7 +6,7 @@ use Application\Entity\Db\FicheProfil;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use DateTime;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FicheProfilHydrator implements HydratorInterface {
     use FichePosteServiceAwareTrait;
@@ -16,7 +16,7 @@ class FicheProfilHydrator implements HydratorInterface {
      * @param FicheProfil $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'vacance_emploi'=> ($object->isVacanceEmploi())?1:0,

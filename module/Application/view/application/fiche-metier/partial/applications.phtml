@@ -16,8 +16,8 @@ if ($mode === 'edition-fiche-metier') {
 
 ?>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
+<div class="card info">
+    <div class="card-header">
         <div class="row">
             <div class="col-md-3">
                 <h2>
@@ -26,41 +26,43 @@ if ($mode === 'edition-fiche-metier') {
                     <span class="badge"><?php echo count($applications); ?></span>
                 </h2>
             </div>
-            <div class="pull-right">
-                <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
-                <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                   class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
-                >
-                    <span class="icon graphique"></span>
-                    Afficher les applications
-                </a>
-
-                <?php if ($actions['modifier'] === true) : ?>
-                    <?php /** @see \Application\Controller\ElementController::ajouterApplicationElementAction() */ ?>
-                    <a href="<?php echo $this->url('element_/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()],
-                        ['query' => ['multiple' => true]], true); ?>"
+            <div class="col-md-9">
+                <div class="float-end">
+                    <?php /** @see FicheMetierController::graphiqueApplicationsAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                        class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
-                       data-event="modification"
                     >
-                        <span class="icon ajouter"></span>
-                        Ajouter des applications
+                        <span class="icon icon-diagramme"></span>
+                        Afficher les applications
                     </a>
-                <?php endif; ?>
 
-                <?php if ($actions['modifier'] === true) : ?>
-                    <?php /** @see \Application\Controller\FicheMetierController::clonerApplicationsAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-metier-type/cloner-applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
-                       data-event="modification"
-                    >
-                        <span class="icon cloner"></span>
-                        Cloner depuis une autre fiche
-                    </a>
-                <?php endif; ?>
+                    <?php if ($actions['modifier'] === true) : ?>
+                        <?php /** @see \Application\Controller\ElementController::ajouterApplicationElementAction() */ ?>
+                        <a href="<?php echo $this->url('element_/ajouter-application-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()],
+                            ['query' => ['multiple' => true]], true); ?>"
+                           class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span>
+                            Ajouter des applications
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($actions['modifier'] === true) : ?>
+                        <?php /** @see \Application\Controller\FicheMetierController::clonerApplicationsAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier-type/cloner-applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="modification"
+                        >
+                            <span class="icon icon-cloner"></span>
+                            Cloner depuis une autre fiche
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <?php echo $this->applicationBloc($applications, $fichemetier,
             ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
                 'actions' => $actions]); ?>

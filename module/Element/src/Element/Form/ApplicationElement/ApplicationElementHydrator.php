@@ -5,7 +5,7 @@ namespace Element\Form\ApplicationElement;
 use Element\Entity\Db\ApplicationElement;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ApplicationElementHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
@@ -15,7 +15,7 @@ class ApplicationElementHydrator implements HydratorInterface {
      * @param ApplicationElement $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'application'   => ($object->getApplication())?$object->getApplication()->getId():null,

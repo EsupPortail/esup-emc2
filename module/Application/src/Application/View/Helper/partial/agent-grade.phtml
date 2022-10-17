@@ -13,23 +13,23 @@ use Application\Entity\Db\AgentGrade;
 $debug = false;
 
 /** @var AgentEchelon $echelon */
-$echelon            = ($options['echelon'])??null;
-$displayStructure   = (isset($options['structure']) AND $options['structure'] !== false);
-$displayPeriode     = (isset($options['periode']) AND $options['periode'] !== false);
-$displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
-$displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
-$displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
-$displayCorrespondance      = (isset($options['correspondance']) AND $options['correspondance'] !== false);
+$echelon = ($options['echelon']) ?? null;
+$displayStructure = (isset($options['structure']) and $options['structure'] !== false);
+$displayPeriode = (isset($options['periode']) and $options['periode'] !== false);
+$displayIdentifiant = (isset($options['identifiant']) and $options['identifiant'] !== false);
+$displayAgent = (isset($options['agent']) and $options['agent'] !== false);
+$displayTemoin = (isset($options['temoin']) and $options['temoin'] !== false);
+$displayCorrespondance = (isset($options['correspondance']) and $options['correspondance'] !== false);
 ?>
 
-<?php if($debug) : ?>
+<?php if ($debug) : ?>
     <div class="alert alert-warning">
         <ul>
-            <li>Display Structure =  <?php echo $displayStructure; ?></li>
-            <li>Display Periode =  <?php echo $displayPeriode; ?></li>
-            <li>Display Identifiant =  <?php echo $displayIdentifiant; ?></li>
-            <li>Display Agent =  <?php echo $displayAgent; ?></li>
-            <li>Display Témoin =  <?php echo $displayTemoin; ?></li>
+            <li>Display Structure = <?php echo $displayStructure; ?></li>
+            <li>Display Periode = <?php echo $displayPeriode; ?></li>
+            <li>Display Identifiant = <?php echo $displayIdentifiant; ?></li>
+            <li>Display Agent = <?php echo $displayAgent; ?></li>
+            <li>Display Témoin = <?php echo $displayTemoin; ?></li>
         </ul>
     </div>
 <?php endif; ?>
@@ -43,8 +43,8 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
 
     <?php if ($displayPeriode) : ?>
         <?php
-        $debut  = ($grade->getDateDebut())?$grade->getDateDebut()->format('d/m/Y'):'---';
-        $fin    = ($grade->getDateFin() && $grade->getDateFin()->format('d/m/Y') !== '31/12/1999')?$grade->getDateFin()->format('d/m/Y'):'---';
+        $debut = ($grade->getDateDebut()) ? $grade->getDateDebut()->format('d/m/Y') : '---';
+        $fin = ($grade->getDateFin() && $grade->getDateFin()->format('d/m/Y') !== '31/12/1999') ? $grade->getDateFin()->format('d/m/Y') : '---';
         ?>
         <?php echo $debut; ?> &rarr; <?php echo $fin; ?>
     <?php endif; ?>
@@ -67,15 +67,14 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
     <?php endif; ?>
 
     <?php if ($displayTemoin) : ?>
-    <dl class="dl-horizontal">
-
-            <dt> Corps </dt>
-            <dd>
+        <dl class="row">
+            <dt class="col-md-3"> Corps</dt>
+            <dd class="col-md-9">
                 <?php $corps = $grade->getCorps(); ?>
                 <?php if ($corps !== null) : ?>
                     <?php $niveaux = $corps->getNiveaux(); ?>
                     <?php if ($niveaux) : ?>
-                        <span data-toggle="tooltip" data-html="true" title="<strong>[ <?php echo $niveaux->getBorneInferieure()->getLibelle(); ?> <?php echo $niveaux->getBorneInferieure()->getNiveau(); ?>: <?php echo $niveaux->getBorneSuperieure()->getLibelle(); ?> <?php echo $niveaux->getBorneSuperieure()->getNiveau(); ?>]</strong>">
+                        <span data-bs-toggle="tooltip" data-bs-html="true" title="<strong>[ <?php echo $niveaux->getBorneInferieure()->getLibelle(); ?> <?php echo $niveaux->getBorneInferieure()->getNiveau(); ?>: <?php echo $niveaux->getBorneSuperieure()->getLibelle(); ?> <?php echo $niveaux->getBorneSuperieure()->getNiveau(); ?>]</strong>">
                     <?php endif; ?>
                     <?php echo $corps->getLibelleLong(); ?>
                     <?php if ($niveaux) : ?>
@@ -85,16 +84,16 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
                     Corps inconnu
                 <?php endif; ?>
             </dd>
-                <dt> Grade </dt>
-                <dd>
-                    <?php if ($grade->getGrade() !== null) : ?>
-                        <?php echo $grade->getGrade()->getLibelleLong(); ?>
-                    <?php else : ?>
-                        Grade inconnu
-                    <?php endif; ?>
-                </dd>
-            <dt> Correspondance </dt>
-            <dd>
+            <dt class="col-md-3"> Grade</dt>
+            <dd class="col-md-9">
+                <?php if ($grade->getGrade() !== null) : ?>
+                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                <?php else : ?>
+                    Grade inconnu
+                <?php endif; ?>
+            </dd>
+            <dt class="col-md-3"> Correspondance</dt>
+            <dd class="col-md-9">
                 <?php if ($grade->getBap()) : ?>
                     BAP
                     <?php echo $grade->getBap()->getCategorie(); ?> -
@@ -103,11 +102,13 @@ $displayCorrespondance      = (isset($options['correspondance']) AND $options['c
                     Non renseignée
                 <?php endif; ?>
             </dd>
-            <?php if ($echelon) : ?>
-                <dt> Échelon </dt>
-                <dd> <?php echo $echelon->getEchelon(); ?> (date de passage : <?php echo $echelon->getDate()->format('d/m/Y'); ?>)</dd>
+            <?php if ($echelon and $echelon->getEchelon() !== 0) : ?>
+                <dt class="col-md-3"> Échelon</dt>
+                <dd class="col-md-9"> <?php echo $echelon->getEchelon(); ?> (date de passage
+                    : <?php echo $echelon->getDate()->format('d/m/Y'); ?>)
+                </dd>
             <?php endif; ?>
-    </dl>
+        </dl>
     <?php endif; ?>
 </div>
 

@@ -19,12 +19,16 @@
         <field name="dateDebut"     type="datetime"                 column="date_debut"     nullable="false"/>
         <field name="dateFin"       type="datetime"                 column="date_fin"       nullable="false"/>
 
+        <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
+            <join-column name="source_id" referenced-column-name="ID" />
+        </many-to-one>
+        <field name="idSource"          type="string" length="256"      column="id_orig"          nullable="true"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
         <field name="updated_on"               column="updated_on"       type="datetime"/>
         <field name="deleted_on"               column="deleted_on"       type="datetime"/>
-        <field name="imported"                 column="imported"         type="boolean"/>
 
     </entity>
 </doctrine-mapping>

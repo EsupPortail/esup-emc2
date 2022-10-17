@@ -2,9 +2,8 @@
 
 namespace Structure\Provider;
 
-use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Structure\Entity\Db\Structure;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
 use UnicaenAuthentification\Provider\Identity\ChainableProvider;
@@ -29,10 +28,10 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
     public function computeUsersAutomatiques(string $code) : ?array
     {
         switch ($code) {
-            case Structure::ROLE_RESPONSABLE :
+            case RoleProvider::RESPONSABLE :
                 $user = $this->getStructureService()->getUsersInResponsables();
                 return $user;
-            case Structure::ROLE_GESTIONNAIRE :
+            case RoleProvider::GESTIONNAIRE :
                 $user = $this->getStructureService()->getUsersInGestionnaires();
                 return $user;
         }
@@ -55,13 +54,13 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
         if ($agent !== null) {
             $responsabilites = $this->getAgentService()->getResposabiliteStructure($agent);
             if ($responsabilites !== null and $responsabilites !== []) {
-                $roleResponsable = $this->getRoleService()->findByRoleId(Structure::ROLE_RESPONSABLE);
+                $roleResponsable = $this->getRoleService()->findByRoleId(RoleProvider::RESPONSABLE);
                 $roles[] = $roleResponsable;
             }
 
             $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
             if ($gestions !== null and $gestions !== []) {
-                $roleGestionnaire = $this->getRoleService()->findByRoleId(Structure::ROLE_GESTIONNAIRE);
+                $roleGestionnaire = $this->getRoleService()->findByRoleId(RoleProvider::GESTIONNAIRE);
                 $roles[] = $roleGestionnaire;
             }
         }
@@ -71,7 +70,7 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
     /**
      * @return string[]|RoleInterface[]
      */
-    public function getIdentityRoles()
+    public function getIdentityRoles() : array
     {
         return $this->computeRolesAutomatiques();
     }

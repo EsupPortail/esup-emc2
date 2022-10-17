@@ -8,10 +8,11 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class CampagneService {
     use EntityManagerAwareTrait;
@@ -229,7 +230,7 @@ class CampagneService {
             ->andWhere('etat.code <> :code')
             ->andWhere('entretien.campagne = :campagne')
             ->andWhere('agent in (:agents)')
-            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('code', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)
             ->setParameter('campagne', $campagne)
             ->setParameter('agents', $agents)
         ;
@@ -246,8 +247,8 @@ class CampagneService {
             ->andWhere('etat.code = :CONVOCATION OR etat.code = :ACCEPTER')
             ->andWhere('entretien.campagne = :campagne')
             ->andWhere('agent in (:agents)')
-            ->setParameter('CONVOCATION', EntretienProfessionnel::ETAT_ACCEPTATION)
-            ->setParameter('ACCEPTER', EntretienProfessionnel::ETAT_ACCEPTER)
+            ->setParameter('CONVOCATION', EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)
+            ->setParameter('ACCEPTER', EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)
             ->setParameter('campagne', $campagne)
             ->setParameter('agents', $agents)
         ;
@@ -264,9 +265,9 @@ class CampagneService {
             ->andWhere('etat.code = :RESPONSABLE OR etat.code = :OBSERVATION OR etat.code = :AUTORITE')
             ->andWhere('entretien.campagne = :campagne')
             ->andWhere('agent in (:agents)')
-            ->setParameter('RESPONSABLE', EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE)
-            ->setParameter('OBSERVATION', EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION)
-            ->setParameter('AUTORITE', EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)
+            ->setParameter('RESPONSABLE', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)
+            ->setParameter('OBSERVATION', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION)
+            ->setParameter('AUTORITE', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)
             ->setParameter('campagne', $campagne)
             ->setParameter('agents', $agents)
         ;
@@ -283,7 +284,7 @@ class CampagneService {
             ->andWhere('etat.code = :code')
             ->andWhere('entretien.campagne = :campagne')
             ->andWhere('agent in (:agents)')
-            ->setParameter('code', EntretienProfessionnel::ETAT_VALIDATION_AGENT)
+            ->setParameter('code', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)
             ->setParameter('campagne', $campagne)
             ->setParameter('agents', $agents)
         ;

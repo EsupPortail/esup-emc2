@@ -9,16 +9,17 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
 use Structure\Entity\Db\Structure;
 
 ?>
 
 <div class="alert alert-info">
-    <span class="icon information"></span>
+    <span class="icon icon-information"></span>
     Les fiches listées ci-dessous ne correspondent qu'aux fiches de postes :
     <ul>
         <li> qui sont complètes ;</li>
-        <li> qui ne sont pas dans l'état masquée <?php echo $this->etatbadge(FichePoste::ETAT_CODE_MASQUEE); ?> ;</li>
+        <li> qui ne sont pas dans l'état masquée <?php echo $this->etatbadge(FichePosteEtats::ETAT_CODE_MASQUEE); ?> ;</li>
         <li> associées à un·e agent·e de niveau compatible. </li>
     </ul>
 </div>

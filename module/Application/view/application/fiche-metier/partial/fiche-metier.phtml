@@ -71,7 +71,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true); ?>"
                         title="Afficher la fiche métier"
                     >
-                        <span class="icon voir"></span></a>
+                        <span class="icon icon-voir"></span></a>
                 <?php endif; ?>
                 <?php if ($canVoir) : ?>
                     <a
@@ -79,28 +79,28 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         href="<?php echo $this->url('fiche-metier-type/exporter', ['id' => $fiche->getId()], [], true); ?>"
                         title="Exporter en PDF la fiche métier"
                     >
-                        <span class="icon pdf"></span></a>
+                        <span class="icon icon-pdf"></span></a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a href="<?php echo $this->url('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true); ?>"
                        title="Modifier la fiche metier">
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <?php /** @see \Application\Controller\FicheMetierController::dupliquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/dupliquer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                        title="Dupliquer la fiche metier">
-                        <span class="icon cloner"></span></a>
+                        <span class="icon icon-cloner"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if($fiche->estNonHistorise()) :?>
                         <a href="<?php echo $this->url('fiche-metier-type/historiser', ['id' => $fiche->getId()], [], true); ?>"
                            title="Historiser la fiche metier">
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else: ?>
                         <a href="<?php echo $this->url('fiche-metier-type/restaurer', ['id' => $fiche->getId()], [], true); ?>"
                            title="Restaurer la fiche metier">
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire) : ?>
@@ -110,7 +110,7 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                         title="Détruire la fiche metier"
                         class="ajax-modal" data-event="destruction"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

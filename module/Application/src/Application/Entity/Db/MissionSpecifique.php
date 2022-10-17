@@ -4,8 +4,8 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\MacroContent\MissionSpecifiqueMacroTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class MissionSpecifique implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

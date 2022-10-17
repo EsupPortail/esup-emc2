@@ -77,7 +77,7 @@ if (isset($options["mode"])) $mode = $options["mode"];
                 <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
                 <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fichePoste->getId(), 'specificite-poste' => ($specificite)?$specificite->getId():null], [], true); ?>"
                    class="btn btn-primary action ajax-modal" data-event="modification">
-                    <span class="icon ajouter"></span>
+                    <span class="icon icon-ajouter"></span>
                     Ajouter une activité spécifique
                 </a>
             <?php endif; ?>

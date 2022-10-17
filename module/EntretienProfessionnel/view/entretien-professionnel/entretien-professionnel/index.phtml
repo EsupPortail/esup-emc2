@@ -11,69 +11,70 @@
 
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenEtat\Entity\Db\Etat;
 
 $this->headTitle('Index des entretiens professionnel');
 
+
+$canVoir        = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
+$canAjouter     = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AJOUTER));
+$canModifier    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
+$canHistoriser  = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
+$canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 ?>
 
-<h1 class="page-header">
-    Index des entretiens professionnels
-</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Index des entretiens professionnels
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-listing"></span>
+                Accéder aux campagnes
+        </a>
+    </div>
+</div>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
 
-        <li role="presentation">
-            <a href="#campagne" aria-controls="campagne" role="tab" data-toggle="tabz">
-                Campagnes
-                <span class="badge">
-                <?php echo count($campagnes); ?>
-            </span>
-            </a>
-        </li>
+<?php echo $this->entretienProfessionnelArray($entretiens,
+    [
+        'affichages' => ['lieu' => false],
+        'droits' => []
+    ]
+); ?>
 
-        <li role="presentation">
-            <a href="#entretien" aria-controls="entretien" role="tab" data-toggle="tabz">
-                Entretiens professionnels
-                <span class="badge">
-                <?php echo count($entretiens); ?>
-            </span>
-            </a>
-        </li>
-    </ul>
-</div>
 
-<div class="tab-content">
+<style>
+    th#etat {
+        width:6rem;
+        min-width: 6rem;
+    }
 
-    <!-- CAMPAGNES ------------------------------------------------------------------------------------------------>
-    <div id="campagne" class="tab-pane " role="tabpanel">
-        <?php echo $this->partial('partial/index-campagne', ['campagnes' => $campagnes]); ?>
-    </div>
+    th#action {
+        width:11rem;
+        min-width: 6rem;
+    }
 
-    <!-- ENTRETIENS ------------------------------------------------------------------------------------------------>
-    <div id="entretien" class="tab-pane " role="tabpanel">
-        <?php echo $this->partial('partial/index-entretien', ['entretiens' => $entretiens, 'etats' => $etats, 'campagnes' => $campagnes, 'params' => $params]); ?>
-    </div>
-</div>
+    @media (min-width: 0) and (max-width: 768px) {
+        th {
+            font-size: small;
+        }
+        td {
+            font-size: small;
+            background: var(--content-background);
+        }
+    }
+
+</style>
 
 <script>
-
-    $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        if (name === undefined || name === "") name = "campagne";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-    });
-
     $("body").on("modification", function (event) {
         event.div.modal('hide');
         window.location.reload();

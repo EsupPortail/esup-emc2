@@ -8,7 +8,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AgentTutoratHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -19,7 +19,7 @@ class AgentTutoratHydrator implements HydratorInterface {
      * @param AgentTutorat $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'cible'             => ($object->getCible())?['id' => $object->getCible()->getId(), 'label' => $object->getCible()->getDenomination()]:null,

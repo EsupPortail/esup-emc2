@@ -2,16 +2,16 @@
 
 namespace Formation\Assertion;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\FormationPrivileges;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FormationInstanceInscritAssertion extends AbstractAssertion
 {
@@ -56,26 +56,26 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
         switch ($privilege) {
             case FormationPrivileges::FORMATION_QUESTIONNAIRE_VISUALISER:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::OBSERVATEUR:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::OBSERVATEUR:
+                    case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
-                    case RoleConstant::PERSONNEL:
+                    case AppRoleProvider::AGENT:
                         return ($entity->getAgent()->getUtilisateur() !== null and $user === $entity->getAgent()->getUtilisateur());
                     default :
                         return false;
                 }
             case FormationPrivileges::FORMATION_QUESTIONNAIRE_MODIFIER:
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
-                    case RoleConstant::PERSONNEL:
+                    case AppRoleProvider::AGENT:
                         return ($entity->getAgent()->getUtilisateur() !== null and $user === $entity->getAgent()->getUtilisateur());
                     default :
                         return false;

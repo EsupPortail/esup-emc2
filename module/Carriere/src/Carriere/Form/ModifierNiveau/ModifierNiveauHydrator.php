@@ -5,7 +5,7 @@ namespace Carriere\Form\ModifierNiveau;
 use Carriere\Entity\Db\Corps;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Metier\Entity\Db\Metier;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ModifierNiveauHydrator implements HydratorInterface {
     use NiveauServiceAwareTrait;
@@ -14,7 +14,7 @@ class ModifierNiveauHydrator implements HydratorInterface {
      * @param Corps|Metier $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'niveau' => ($object->getNiveau())?$object->getNiveau()->getId():null,

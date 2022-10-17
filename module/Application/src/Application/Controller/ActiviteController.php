@@ -20,11 +20,11 @@ use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 class ActiviteController  extends AbstractActionController {
     /** Traits associé aux services */

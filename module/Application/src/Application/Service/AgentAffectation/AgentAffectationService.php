@@ -29,9 +29,10 @@ class AgentAffectationService {
     /**
      * @param Agent $agent
      * @param bool $actif
-     * @return array
+     * @param bool $principale
+     * @return AgentAffectation[]
      */
-    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true) : array
+    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true, bool $principale = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentaffectation.agent = :agent')
@@ -39,11 +40,13 @@ class AgentAffectationService {
             ->orderBy('agentaffectation.dateDebut', 'DESC')
         ;
 
+        if ($principale) $qb = $qb->andWhere("agentaffectation.principale = 'O'");
         if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
 
     /**
      * @param Structure $structure

@@ -6,10 +6,11 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 /**
  * Controleur pour gérer les routes 'console' du module de formation
@@ -44,7 +45,7 @@ class FormationConsoleController extends AbstractActionController {
 
         $now = new DateTime();
         $now->add(new DateInterval('P'.$delai->getValeur().'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_FERMEE);
+        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE);
         foreach ($sessions as $session) {
             $debut = DateTime::createFromFormat('d/m/Y',$session->getDebut());
             if ($debut <= $now) {
@@ -73,7 +74,7 @@ class FormationConsoleController extends AbstractActionController {
 
         $now = new DateTime();
         $now->add(new DateInterval('P'.$delai->getValeur().'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_FORMATION_CONVOCATION);
+        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_FORMATION_CONVOCATION);
         foreach ($sessions as $session) {
             $fin = DateTime::createFromFormat('d/m/Y',$session->getFin());
             if ($fin <= $now) {
@@ -98,7 +99,7 @@ class FormationConsoleController extends AbstractActionController {
 
         $now = new DateTime();
         $now->add(new DateInterval('P'.$delai->getValeur().'D'));
-        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_ATTENTE_RETOURS);
+        $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_ATTENTE_RETOURS);
         foreach ($sessions as $session) {
             $fin = DateTime::createFromFormat('d/m/Y',$session->getFin());
             if ($fin <= $now) {

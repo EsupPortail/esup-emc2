@@ -2,7 +2,8 @@
 
 namespace Metier;
 
-use Application\View\Helper\TypeFonctionViewHelper;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 use Metier\Controller\DomaineController;
 use Metier\Controller\FamilleProfessionnelleController;
 use Metier\Controller\MetierController;
@@ -15,9 +16,8 @@ use Metier\Form\Metier\MetierHydratorFactory;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceFactory;
+use Metier\View\Helper\TypeFonctionViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -103,42 +103,42 @@ return [
                                 'order' => 600,
                                 'label' => 'Gestion des métiers',
                                 'route' => 'metier',
-                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'index'),
                                 'dropdown-header' => true,
                             ],
                             [
                                 'order' => 610,
                                 'label' => 'Métiers',
                                 'route' => 'metier',
-                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 620,
                                 'label' => 'Domaines',
                                 'route' => 'domaine',
-                                'resource' => PrivilegeController::getResourceId(DomaineController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(DomaineController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 630,
                                 'label' => 'Familles professionnelles',
                                 'route' => 'famille-professionnelle',
-                                'resource' => PrivilegeController::getResourceId(FamilleProfessionnelleController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(FamilleProfessionnelleController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 640,
                                 'label' => 'Référentiels métiers',
                                 'route' => 'metier/referentiel',
-                                'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index') ,
+                                'resource' => PrivilegeController::getResourceId(ReferentielController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             [
                                 'order' => 650,
                                 'label' => 'Cartographie',
                                 'route' => 'metier/cartographie',
-                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'cartographie') ,
+                                'resource' => PrivilegeController::getResourceId(MetierController::class, 'cartographie'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -148,15 +148,15 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'metier' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/metier',
+                    'route' => '/metier',
                     'defaults' => [
                         'controller' => MetierController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
@@ -165,82 +165,82 @@ return [
                     /** METIER ****************************************************************************************/
 
                     'ajouter' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route' => '/ajouter',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'modifier' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier/:metier',
+                            'route' => '/modifier/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'modifier',
+                                'action' => 'modifier',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:metier',
+                            'route' => '/historiser/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:metier',
+                            'route' => '/restaurer/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'supprimer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer/:metier',
+                            'route' => '/supprimer/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'supprimer',
+                                'action' => 'supprimer',
                             ],
                         ],
                     ],
                     'initialiser-niveaux' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/initialiser-niveaux',
+                            'route' => '/initialiser-niveaux',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'initialiser-niveaux',
+                                'action' => 'initialiser-niveaux',
                             ],
                         ],
                     ],
                     'modifier-niveaux' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-niveaux/:metier',
+                            'route' => '/modifier-niveaux/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'modifier-niveaux',
+                                'action' => 'modifier-niveaux',
                             ],
                         ],
                     ],
                     'lister-agents' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/lister-agents/:metier',
+                            'route' => '/lister-agents/:metier',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'lister-agents',
+                                'action' => 'lister-agents',
                             ],
                         ],
                     ],
@@ -250,10 +250,10 @@ return [
                     'cartographie' => [
                         'type' => Literal::class,
                         'options' => [
-                            'route'    => '/cartographie',
+                            'route' => '/cartographie',
                             'defaults' => [
                                 'controller' => MetierController::class,
-                                'action'     => 'cartographie',
+                                'action' => 'cartographie',
                             ],
                         ],
                         'may_terminate' => true,
@@ -268,7 +268,7 @@ return [
             MetierService::class => MetierServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             MetierController::class => MetierControllerFactory::class,
         ],

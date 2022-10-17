@@ -2,12 +2,10 @@
 
 namespace Application\Controller;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\AgentAccompagnement;
 use Application\Entity\Db\AgentPPP;
 use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentTutorat;
-use Application\Entity\Db\FichePoste;
 use Element\Entity\Db\ApplicationElement;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
 use Application\Form\AgentPPP\AgentPPPFormAwareTrait;
@@ -55,10 +53,10 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 class AgentController extends AbstractActionController
 {
@@ -110,41 +108,29 @@ class AgentController extends AbstractActionController
 
     public function indexAction()  : ViewModel
     {
-        $agents = $this->getAgentService()->getAgentsPourIndex();
+        $agents = $this->getAgentService()->getAgents();
         return new ViewModel([
             'agents' => $agents,
         ]);
     }
 
-    public function afficherAction()
+    public function afficherAction() : ViewModel
     {
+        //Recupération de l'agent
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $utilisateur = $this->getUserService()->getConnectedUser();
+        if ($agent === null) $agent = $this->getAgentService()->getAgentByConnectedUser();
+        if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
 
-        /** Si pas d'agent de specifier récupérer l'agent lié au compte de la personne connectée */
-        if ($agent === null) {
-            if ($utilisateur !== null) $agent = $this->getAgentService()->getAgentByUser($utilisateur);
-            if ($agent === null) throw new RuntimeException("Aucun agent n'a pu être trouvé.");
-        }
+        //Récupération des status
+        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
 
-        $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent, true);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true);
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, true);
-
-        $connectedAgent = $this->getAgentService()->getAgentByUser($utilisateur);
-        $connectedRole = $this->getUserService()->getConnectedRole();
-        if ($connectedAgent !== $agent and ($connectedRole->getRoleId() === RoleConstant::PERSONNEL or $agent === null)) {
-            return $this->redirect()->toRoute('agent/afficher', ['agent' => $connectedAgent->getId()], [], true);
-        }
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
-        $responsables = $this->getAgentService()->getResponsablesHierarchiques($agent);
-        $autorites = $this->getAgentService()->getAutoritesHierarchiques($agent);
+        //Récupération des supérieures et autorités
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        $autorites = $this->getAgentService()->computeAutorites($agent, $superieures);
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-
-//        $fichePosteActive = $this->getFichePosteService()->getFichePosteActiveByAgent($agent);
-//        $parcoursArray = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fichePosteActive);
-//        $applications = $this->getApplicationElementService()->getApplicationElementsByAgent($agent);
 
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
@@ -158,8 +144,7 @@ class AgentController extends AbstractActionController
             'echelon' => $agent->getEchelonActif(),
             'fichespostes' => $fichespostes,
 
-            'entretiens' => $entretiens,
-            'responsables' => $responsables,
+            'superieures' => $superieures,
             'autorites' => $autorites,
 
 //          'parcoursArray' => $parcoursArray,

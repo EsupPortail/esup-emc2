@@ -3,7 +3,7 @@
 namespace Application\Form\Expertise;
 
 use Application\Entity\Db\Expertise;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ExpertiseHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ExpertiseHydrator implements HydratorInterface {
      * @param Expertise $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle' => $object->getLibelle(),

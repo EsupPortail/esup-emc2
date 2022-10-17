@@ -21,21 +21,21 @@ $this->headTitle($title)
 
 <div class="row">
     <div class="col-md-3">
-        <h2> Affectations  <span class="icon information" style="color:white;"></span></h2>
+        <h2> Affectations  <span class="icon icon-information" style="color:white;"></span></h2>
         <?php foreach ($affectations as $affectation) : ?>
             <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
-        <h2> Statuts <span class="icon information" title="Attention ici ne sont affichés que les statuts associées à la structure principale"></span></h2>
+        <h2> Statuts <span class="icon icon-information" title="Attention ici ne sont affichés que les statuts associées à la structure principale"></span></h2>
         <?php foreach ($statuts as $statut) : ?>
-                <?php if ($statut->getStructure()->getCode() === $codeEtabPrincipal) : ?>
+<!--                --><?php //if ($statut->getStructure()->getCode() === $codeEtabPrincipal) : ?>
                     <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
-                <?php endif; ?>
+<!--                --><?php //endif; ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
-        <h2> Grades <span class="icon information" title="Attention ici ne sont affichés que les derniers échelons de chaque corps/grades/bap"></span></h2>
+        <h2> Grades <span class="icon icon-information" title="Attention ici ne sont affichés que les derniers échelons de chaque corps/grades/bap"></span></h2>
         <?php foreach ($grades as $grade) : ?>
                 <?php echo $this->agentGrade($grade, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
         <?php endforeach; ?>

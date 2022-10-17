@@ -12,8 +12,8 @@ use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use EntretienProfessionnel\Service\Sursis\SursisService;
 use EntretienProfessionnel\Service\Sursis\SursisServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

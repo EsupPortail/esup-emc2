@@ -6,8 +6,8 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     use HasPeriodeTrait;
@@ -105,6 +105,16 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     }
 
     /** Fonctions pour les macros *************************************************************************************/
+
+    public function getDateDebutToString() : string
+    {
+        return ($this->dateDebut)?$this->dateDebut->format('d/m/Y'):"N.C.";
+    }
+
+    public function getDateFinToString() : string
+    {
+        return ($this->dateFin)?$this->dateFin->format('d/m/Y'):"N.C.";
+    }
 
     public function getDateCirculaireToString() : string
     {

@@ -7,13 +7,17 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenEtat\Entity\Db\Etat;
 
 class FormationInstanceInscritService
 {
@@ -174,7 +178,7 @@ class FormationInstanceInscritService
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
             ->andWhere('instanceetat.code <> :code')
-            ->setParameter('code', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
 
@@ -192,8 +196,8 @@ class FormationInstanceInscritService
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
             ->andWhere('instanceetat.code = :retour OR instanceetat.code = :close')
-            ->setParameter('retour', FormationInstance::ETAT_ATTENTE_RETOURS)
-            ->setParameter('close', FormationInstance::ETAT_CLOTURE_INSTANCE)
+            ->setParameter('retour', SessionEtats::ETAT_ATTENTE_RETOURS)
+            ->setParameter('close', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
 
@@ -240,6 +244,60 @@ class FormationInstanceInscritService
         }
 
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Etat[] $etats
+     * @param int|null $annee
+     * @return FormationInstanceInscrit[]
+     */
+    public function getInscriptionsValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee) : array
+    {
+        if ($annee === null) Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
+        $fin   = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+
+        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscription')
+            ->andWhere('inscription.histoDestruction IS NULL')
+            ->join('inscription.etat', 'etat')->addSelect('etat')
+            ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
+//            ->andWhere('inscription.debut > :debut')->setParameter('debut', $debut)
+//            ->andWhere('inscription.debut < :fin')->setParameter('fin', $fin)
+            ->join('inscription.agent', 'agent')->addSelect('agent')
+            ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        array_filter($result, function(FormationInstanceInscrit $a) use ($debut, $fin) {
+            return $a->getInstance()->getDebut() >= $debut
+                AND $a->getInstance()->getFin() >= $fin;
+        });
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return FormationInstanceInscrit[]
+     */
+    public function getInscriptionsValideesByAgents(array $agents, ?int $annee) : array
+    {
+        $etats = [ InscriptionEtats::ETAT_VALIDER_DRH, InscriptionEtats::ETAT_REFUSER];
+        $result = $this->getInscriptionsValideesByAgentsAndEtats($agents, $etats, $annee);
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return FormationInstanceInscrit[]
+     */
+    public function getInscriptionsNonValideesByAgents(array $agents, ?int $annee) : array
+    {
+        $etats = [ InscriptionEtats::ETAT_DEMANDE, InscriptionEtats::ETAT_VALIDER_RESPONSABLE];
+        $result = $this->getInscriptionsValideesByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }
 }

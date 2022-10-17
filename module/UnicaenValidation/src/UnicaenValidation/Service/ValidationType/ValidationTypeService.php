@@ -10,7 +10,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationType;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class ValidationTypeService {
     use EntityManagerAwareTrait;
@@ -126,7 +126,7 @@ class ValidationTypeService {
     public function createQueryBuilder()
     {
         $qb = $this->getEntityManager()->getRepository(ValidationType::class)->createQueryBuilder('vtype')
-            ->addSelect('modificateur')->join('vtype.histoModificateur', 'modificateur')
+            //->addSelect('modificateur')->join('vtype.histoModificateur', 'modificateur')
             ;
 
         return $qb;

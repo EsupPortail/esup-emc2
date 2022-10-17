@@ -1,0 +1,118 @@
+<?php
+
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+use UnicaenEtat\Entity\Db\Etat;
+
+/**
+ * @see \Formation\Controller\DemandeExterneController::indexAction()
+ * @var DemandeExterne[] $demandes
+ * @var Etat[] $etats
+ * @var array $params
+ */
+
+$this->headTitle("Demandes de formations externes");
+
+// ATTENTION :: ici pas d'appel à l'assertion pour économiser du temps
+$canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
+$canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
+$canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
+$canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
+$canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_GERER))
+?>
+
+<h1 class="page-header">
+    Demandes de formations externes
+</h1>
+
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params], [], true); ?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Agent             </th>
+            <th> Formation </th>
+            <th> Organisme </th>
+            <th> État </th>
+            <th class="action"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($demandes as $demande) : ?>
+        <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
+            <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo $demande->getLibelle(); ?> </td>
+            <td> <?php echo $demande->getOrganisme(); ?> </td>
+            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal"
+                    >
+                    <span class="icon icon-voir"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-voir nope"></span>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-editer nope"></span>
+                <?php endif; ?>
+                <?php if ($canGerer AND $demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::gererAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/gerer', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon gerer" title="Transformer la demande en formation"></span></a>
+                <?php else : ?>
+                    <span class="icon gerer nope"></span>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($demande->estNonHistorise()) : ?>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
+                           title="Supprimer la demande externe"
+                        >
+                            <span class="icon icon-historiser"></span></a>
+                    <?php else : ?>
+                <?php /** @see \Formation\Controller\DemandeExterneController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/restaurer', ["demande-externe" => $demande->getId()], [], true); ?>"
+                           title="Restaurer la demande externe"
+                        >
+                            <span class="icon icon-restaurer"></span></a>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <span class="icon icon-historiser nope"></span>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                       title="Supprimer définitivement la demande externe"
+                    >
+                        <span class="icon icon-retirer text-danger"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-retirer nope"></span>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

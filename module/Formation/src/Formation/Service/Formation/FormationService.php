@@ -5,11 +5,13 @@ namespace Formation\Service\Formation;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenDbImport\Entity\Db\Source;
 
 class FormationService
 {
@@ -173,11 +175,11 @@ class FormationService
     }
 
     /**
-     * @param string $source
+     * @param Source $source
      * @param string $id
      * @return Formation|null
      */
-    public function getFormationBySource(string $source, string $id) : ?Formation
+    public function getFormationBySource(Source $source, string $id) : ?Formation
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.source = :source')
@@ -309,8 +311,48 @@ class FormationService
             $groupe = $formation->getGroupe();
             $result[] = array(
                 'id' => $formation->getId(),
-                'label' => $formation->getLibelle(),
-                'extra' => "<span class='badge' style='background-color: slategray;'>" . ($groupe !== null)?$groupe->getLibelle():"Sans groupe" . "</span>",
+                'label' => (($groupe !== null)?$groupe->getLibelle():"Sans thème ") . " > " . $formation->getLibelle(),
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /**
+     * @param string $texte
+     * @return array
+     */
+    public function findFormateurByTerm(string $texte) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+            ->andWhere("LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search")
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        $data = [];
+        /** @var Formateur $f */
+        foreach ($result as $f) {
+            $data[$f->getEmail()] = $f->getPrenom(). ' ' . strtoupper($f->getNom());
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $formateurs [ $email => $denomination ]
+     * @return array
+     */
+    public function formatFormateurJSON(array $formateurs) : array
+    {
+        $result = [];
+        /** @var Formateur[] $formateurs */
+        foreach ($formateurs as $email => $denomination) {
+            $result[] = array(
+                'id' => $email,
+                'label' => $denomination,
+                'extra' => "<span class='badge'>".$email."</span>",
             );
         }
         usort($result, function ($a, $b) {

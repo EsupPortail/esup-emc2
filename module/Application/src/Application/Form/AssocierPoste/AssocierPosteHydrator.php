@@ -4,7 +4,7 @@ namespace Application\Form\AssocierPoste;
 
 use Application\Entity\Db\FichePoste;
 use Application\Service\Poste\PosteServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 ;
 
@@ -15,7 +15,7 @@ class AssocierPosteHydrator implements HydratorInterface {
      * @param FichePoste $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         return [
             'poste' => ($object->getPoste())?$object->getPoste()->getId():0,

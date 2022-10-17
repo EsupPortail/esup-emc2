@@ -3,3 +3,5 @@ upload/
 .idea
 config/autoload/*local*
 composer.lock
+vendor
+!/public/vendor

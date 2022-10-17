@@ -1,12 +1,12 @@
 <?php
-/* @var $container Zend\Navigation\Navigation */
+/* @var $container Laminas\Navigation\Navigation */
 // On récupère le container en-dessous du 'home'
 $container = $this->container->getChildren();
 ?>
 <ul class="<?php echo $this->navigation($container)->menu()->getUlClass(); ?>">
     <?php foreach ($container as $page): ?>
         <?php if (!$this->navigation()->accept($page)) continue; ?>
-        <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
+        <?php /* @var $page Laminas\Navigation\Page\Mvc */ ?>
         <?php $hasChildren = $page->hasPages() ?>
         <?php if (!$hasChildren): ?>
             <li<?php if ($page->isActive()) echo ' class="active"' ?>>

@@ -2,9 +2,9 @@
 
 namespace EntretienProfessionnel\Form\Observation;
 
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Textarea;
-use Zend\Form\Form;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Textarea;
+use Laminas\Form\Form;
 
 class ObservationForm extends Form {
 

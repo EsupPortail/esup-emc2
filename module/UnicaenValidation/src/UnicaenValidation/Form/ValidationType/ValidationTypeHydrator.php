@@ -3,7 +3,7 @@
 namespace UnicaenValidation\Form\ValidationType;
 
 use UnicaenValidation\Entity\Db\ValidationType;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ValidationTypeHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ValidationTypeHydrator implements HydratorInterface {
      * @param ValidationType $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             "code" => $object->getCode(),

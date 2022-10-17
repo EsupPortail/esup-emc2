@@ -1,24 +1,25 @@
 <?php
 
 /**
- * @see \Formation\Controller\FormationInstancePresenceController::renseignerPresencesAction()
+ * @see \Formation\Controller\PresenceController::renseignerPresencesAction()
  * @var FormationInstance $instance
- * @var FormationInstancePresence[][] $presences
+ * @var Presence[][] $presences
  * @var bool $titre
  */
 
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
-use Formation\Entity\Db\FormationInstancePresence;
+use Formation\Entity\Db\Seance;
+use Formation\Entity\Db\Presence;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
-/** @var FormationInstanceJournee[] $journees */
+/** @var Seance[] $journees */
 $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getListePrincipale();
 
-$canPresenceModifier = $instance->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS &&
+$canPresenceModifier = $instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS &&
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
 
 $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode() . " " . $instance->getFormation()->getLibelle() );
@@ -42,14 +43,14 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 <a      <?php /** @see FormationInstanceController::afficherAction() */?>
                         href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-info action">
-                    <span class="icon retour"></span>
+                    <span class="icon icon-retour"></span>
                     Retour à l'instance de la formation
                 </a>
                 <br/>
                 <a      <?php /** @see FormationController::editerAction() */?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                         class="btn btn-info action">
-                    <span class="icon retour-double"></span>
+                    <span class="icon icon-retour"></span>
                     Retour à la formation associée
                 </a>
             </div>
@@ -72,7 +73,11 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         <tr>
             <td class="separateur"></td>
             <?php foreach ($journees as $journee) : ?>
-                <td class="journee"> <?php echo $journee->getJour()->format('d/m/Y')?> <br/>  <?php echo $journee->getDebut()?> &rightarrow; <?php echo $journee->getFin()?> </td>
+                <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                    <td class="journee"> <?php echo $journee->getJour()->format('d/m/Y')?> <br/>  <?php echo $journee->getDebut()?> &rightarrow; <?php echo $journee->getFin()?> </td>
+                <?php else : ?>
+                    <td class="journee"> Volume de <br/> <?php echo $journee->getVolume(); ?> heures </td>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tr>
         <?php foreach ($inscrits as $inscrit) : ?>
@@ -84,17 +89,19 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     </div>
                     <div style="float:right;" style="padding-right: 1rem;">
                         <?php if ($canPresenceModifier) : ?>
-                            <span class="all_toggle icon ok" id="on_<?php echo $inscrit->getId(); ?>"           data-toggle="tooltip" data-html="true" title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
-                            <span class="all_toggle icon detruire" id="off_<?php echo $inscrit->getId(); ?>"    data-toggle="tooltip" data-html="true" title="Passer à absent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                            <span class="all_toggle icon icon-checked" id="on_<?php echo $inscrit->getId(); ?>"           data-bs-toggle="tooltip" data-bs-html="true" title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                            <span class="all_toggle icon icon-unchecked" id="off_<?php echo $inscrit->getId(); ?>"    data-bs-toggle="tooltip" data-bs-html="true" title="Passer à absent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
                         <?php endif; ?>
                     </div>
             </td>
             <?php foreach ($journees as $journee) : ?>
                 <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>" id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
-                    <?php if ($presences[$journee->getId()][$inscrit->getId()] && $presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
-                        <span class="icon ok" style="color:darkgreen;" title="Présent"></span>
-                    <?php else : ?>
-                        <span class="icon detruire" style="color:darkred;" title="Non présent"></span>
+                    <?php if ($presences[$journee->getId()][$inscrit->getId()]) : ?>
+                        <?php if ($presences[$journee->getId()][$inscrit->getId()]->isPresent()) : ?>
+                            <span class="icon icon-checked" style="color:darkgreen;" title="Présent"></span>
+                        <?php else : ?>
+                            <span class="icon icon-retirer" style="color:darkred;" title="Non présent"></span>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
             <?php endforeach; ?>
@@ -117,13 +124,13 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         border : 0;
     }
     table.presence tr td.journee{
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
+        /*writing-mode: vertical-rl;*/
+        /*text-orientation: mixed;*/
         padding-top:.5rem;
         padding-bottom:1rem;
         background: #1b6d85;
         color:white;
-        width: 5rem;
+        width: 7rem;
     }
 
     table.presence tr td.inscrit{
@@ -150,7 +157,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
 <script>
     let journees = [
         <?php
-            $array = array_map(function(FormationInstanceJournee $a) {return $a->getId();}, $journees);
+            $array = array_map(function(Seance $a) {return $a->getId();}, $journees);
             echo implode(",", $array);
             ?>
     ];
@@ -163,7 +170,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             // console.log('inscrit: ' + inscrit);
             // console.log('journee: ' + journee);
 
-            <?php /** @see FormationInstancePresenceController::togglePresenceAction() */ ?>
+            <?php /** @see PresenceController::togglePresenceAction() */ ?>
             let url = "../toggle-presence/" + journee + "/" + inscrit;
             $.ajax({
                 type: "POST",
@@ -176,7 +183,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     function(retour){
                         // console.log(retour);
                         let texte = "";
-                        if (retour == 1) texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                        if (retour == 1) texte = "<span class='icon icon-checked' style='color:darkgreen;'></span>";
                         else texte = "<span class='icon detruire' style='color:darkred;'></span>";
                         document.getElementById(id).innerHTML = texte;
                     }
@@ -191,7 +198,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             console.log('mode: ' + mode);
             console.log('inscrit: ' + inscrit);
 
-            <?php /** @see FormationInstancePresenceController::togglePresencesAction() */ ?>
+            <?php /** @see PresenceController::togglePresencesAction() */ ?>
             let url = "../toggle-presences/" + mode + "/" + inscrit;
             $.ajax({
                 type: "POST",
@@ -211,7 +218,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                         $.each(journees, function(index, journee) {
                             // console.log(inscrit);
                             // console.log(journee);
-                            if (mode == 'on') texte = "<span class='icon ok' style='color:darkgreen;'></span>";
+                            if (mode == 'on') texte = "<span class='icon icon-checked' style='color:darkgreen;'></span>";
                             else texte = "<span class='icon detruire' style='color:darkred;'></span>";
                             document.getElementById(journee + "_" + inscrit).innerHTML = texte;
                         });

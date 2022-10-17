@@ -39,4 +39,13 @@ return [
         'factories' => [
         ],
     ],
+
+    'public_files' => [
+        'inline_scripts' => [
+//            '202_' => 'vendor/chart-2.9.3/Chart.bundle.min.js',
+        ],
+        'stylesheets' => [
+            '10000_etat' => 'css/unicaen-etat.css',
+        ],
+    ],
 ];

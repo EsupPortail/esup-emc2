@@ -4,7 +4,7 @@ namespace UnicaenEtat\Form\SelectionEtat;
 
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class SelectionEtatHydrator implements HydratorInterface {
     use EtatServiceAwareTrait;
@@ -13,7 +13,7 @@ class SelectionEtatHydrator implements HydratorInterface {
      * @param HasEtatInterface $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'etat' => ($object->getEtat())?$object->getEtat()->getId():null,

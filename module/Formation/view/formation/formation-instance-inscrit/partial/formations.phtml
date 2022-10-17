@@ -6,72 +6,72 @@
  */
 
 use Application\Entity\Db\Agent;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
-$retours = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_ATTENTE_RETOURS;} );
-$closes  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->getEtat()->getCode() === FormationInstance::ETAT_CLOTURE_INSTANCE;} );
+$realisees  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->estRealisee();} );
+
+$canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
+
 ?>
 
 <h2>
-    Formations en attentes de retour
-    <span class="badge"><?php echo count($retours); ?></span>
+    Formations réalisées
 </h2>
 
-<?php if (empty($retours)) : ?>
+<div class="alert alert-info">
+    <span class="icon icon-attention"></span> Vous ne pourrez récupérer l'attestation pour une formation qu'une fois l'enquête associée saisie et validée.
+</div>
+
+<?php if ($canHistorique) : ?>
+<?php /**  @see \Formation\Controller\FormationInstanceDocumentController::genererHistoriqueAction() */ ?>
+<a href="<?php echo $this->url('formation-instance/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
+   class="btn btn-primary" target="_blank"
+>
+    <span class="icon icon-pdf"></span>
+    Générer l'historique de formation
+</a>
+<?php endif; ?>
+
+<?php if (empty($realisees)) : ?>
     <em> Aucune formation en attente de retour </em>
 <?php else : ?>
-    <?php foreach ($retours as $inscription) : ?>
+    <?php foreach ($realisees as $inscription) : ?>
         <div class="row formation-inscription">
             <div class="col-md-8 description">
                 <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
                 <br/>
                 <br/>
             </div>
-            <div class="pull-right">
-                <a
-                    <?php /** @see \Formation\Controller\FormationInstanceController::renseignerQuestionnaireAction() */?>
-                        href="<?php echo $this->url('formation-instance/renseigner-questionnaire', ['inscrit' => $inscription->getId()], [], true); ?>"
-                        class="btn btn-primary action"
-                >
-                    <span class="icon editer"> Je complète le formulaire</span>
-                </a>
+            <div class="col-md-4">
+                <?php if ($inscription->getValidationEnquete() === null) : ?>
+                    <a
+                        <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
+                            href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            class="btn btn-primary action <?php if ($inscription->getValidationEnquete() !== null) echo " disabled "; ?>"
+                    >
+                        <span class="icon icon-editer"> Je complète l'enquête</span>
+                    </a>
+                    <br/>
+                    <a
+                        <?php /** @see \Formation\Controller\EnqueteQuestionController::validerQuestionsAction() */?>
+                            href="<?php echo $this->url('formation/enquete/valider-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            class="btn btn-primary ajax-modal action <?php if (empty($inscription->getReponsesEnquete())) echo " disabled "; ?>"
+                            data-event="modification"
+                    >
+                        <span class="icon icon-checked"> Je valide mes réponses</span>
+                    </a>
+
                 <br/>
+                <?php else : ?>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
-                        class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
+                        class="btn btn-primary action <?php if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                 >
-                    <span class="icon pdf"> Je télécharge mon attestation</span>
+                    <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
-            </div>
-        </div>
-    <?php endforeach; ?>
-<?php endif; ?>
-
-<h2>
-    Formations closes
-    <span class="badge"><?php echo count($closes); ?></span>
-</h2>
-
-<?php if (empty($closes)) : ?>
-    <em> Aucune formation close </em>
-<?php else : ?>
-    <?php foreach ($closes as $inscription) : ?>
-        <div class="row formation-inscription">
-            <div class="col-md-8 description">
-                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
-                <br/>
-                <br/>
-            </div>
-            <div class="pull-right">
-                <a
-                <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                    href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
-                    class="btn btn-primary action <?php if ($inscription->getQuestionnaire() === null) echo " disabled "; ?>"
-                >
-                    <span class="icon pdf"> Je télécharge mon attestation</span>
-                </a>
+                <?php endif; ?>
             </div>
         </div>
     <?php endforeach; ?>

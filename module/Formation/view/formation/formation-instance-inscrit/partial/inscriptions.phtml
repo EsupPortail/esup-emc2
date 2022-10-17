@@ -3,22 +3,48 @@
 /**
  * @var FormationInstance[] $instances
  * @var FormationInstanceInscrit[] $inscriptions
+ * @var DemandeExterne[] $demandes
  * @var Agent $agent
  */
 
 use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\SessionEtats;
 
 $canInscrire = true;
 
+$formationValidees = [];
+foreach ($inscriptions as $inscription) {
+    if ($inscription->getInstance()->estPrete() AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) $formationValidees[] = $inscription;
+}
+$demandesValidees = [];
+$demandesAttentes = [];
+foreach ($demandes as $demande) {
+    if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) {
+        $demandesValidees[] = $demande;
+    } else {
+        $demandesAttentes[] = $demande;
+    }
+}
+
+$formationsAttentes = [];
+foreach ($inscriptions as $inscription) {
+    if ($inscription->getInstance()->estPrete() AND $inscription->getListe() !== FormationInstanceInscrit::PRINCIPALE) $formationsAttentes[] = $inscription;
+    if ($inscription->getInstance()->estPreparation()) $formationsAttentes[] = $inscription;
+}
+
 ?>
 <h2>
-    Mes inscriptions
-    <span class="badge"><?php echo count($inscriptions); ?></span>
+    Mes inscriptions validées
 </h2>
 
-<?php foreach ($inscriptions as $inscription) : ?>
+<?php if (empty($formationValidees) AND empty($demandesValidees)) : ?>
+    <em> Aucune formation validée </em>
+<?php else : ?>
+    <?php foreach ($formationValidees as $inscription) : ?>
     <?php
         $instance = $inscription->getInstance();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
@@ -27,30 +53,74 @@ $canInscrire = true;
         <div class="col-md-8 description">
             <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
             <br/>
-            <?php if ($inscription->getListe() !==null) : ?>
-                <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
-            <?php else : ?>
-                Demande d'inscription enregristrer
-            <?php endif; ?>
+            <strong> Inscrit en liste <?php echo $inscription->getListe(); ?></strong>
         </div>
-        <div class="pull-right">
+        <div class="col-md-4">
             <a
                 <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
                     href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
                     class="btn btn-danger action ajax-modal" data-event="modification"
             >
-                <span class="icon detruire"> J'annule mon inscription </span>
+                <span class="icon icon-retirer"> J'annule mon inscription </span>
             </a>
-            <?php if ($instance->getEtat()->getCode() === FormationInstance::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+            <?php if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
             <br/>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                 >
-                    <span class="icon pdf"> Je télécharge ma convocation</span>
+                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                 </a>
             <?php endif; ?>
         </div>
     </div>
     <br/>
 <?php endforeach; ?>
+    <?php foreach ($demandesValidees as $demande) : ?>
+        <?php echo $this->demandeExterne($demande); ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<h2>
+    Mes inscriptions en attente de validation
+</h2>
+
+<?php if (empty($formationsAttentes) AND empty($demandesAttentes)) : ?>
+    <em> Aucune formation en attente de validation </em>
+<?php else : ?>
+    <?php foreach ($formationsAttentes as $inscription) : ?>
+    <?php
+    $instance = $inscription->getInstance();
+    $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
+    ?>
+    <div class="row formation-inscription">
+        <div class="col-md-7 description">
+            <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
+            <br/>
+        </div>
+        <div class="col-md-5">
+            <a
+                <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
+                    href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
+                    class="btn btn-danger action ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-retirer"> J'annule mon inscription </span>
+            </a>
+            <?php if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+                <br/>
+                <a
+                    <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
+                        href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                >
+                    <span class="icon icon-pdf"> Je télécharge ma convocation</span>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <br/>
+<?php endforeach; ?>
+    <?php foreach ($demandesAttentes as $demande) : ?>
+        <?php echo $this->demandeExterne($demande); ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+

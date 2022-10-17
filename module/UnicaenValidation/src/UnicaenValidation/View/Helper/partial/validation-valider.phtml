@@ -35,7 +35,7 @@ $retour         = isset($options["retour"])?$options["retour"]:$this->url(null,[
             href="<?php echo $this->url('validation/instance/valider', ['type' => $type->getId(), 'entityclass' => $entityclass, 'entityid' => $entityid], ["query" => ["retour" => $retour]]); ?>"
             class="btn btn-success action"
         >
-            <span class="icon ok"></span> Valider
+            <span class="icon icon-checked"></span> Valider
         </a>
         <?php if ($type->isRefusable()) : ?>
             <a
@@ -43,7 +43,7 @@ $retour         = isset($options["retour"])?$options["retour"]:$this->url(null,[
                 href="<?php echo $this->url('validation/instance/refuser', ['type' => $type->getId(), 'entityclass' => $entityclass, 'entityid' => $entityid], ["query" => ["retour" => $retour]]); ?>"
                 class="btn btn-danger action"
             >
-                <span class="icon ko"></span> Refuser
+                <span class="icon icon-retirer"></span> Refuser
             </a>
         <?php endif; ?>
 </div>

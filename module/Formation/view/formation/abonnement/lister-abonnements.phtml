@@ -1,0 +1,71 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationAbonnement;
+
+/**
+ * @see \Formation\Controller\AbonnementController::listerAbonnementsParAgentAction()
+ * @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction()
+ * @var Agent $agent
+ * @var Formation $formation
+ * @var FormationAbonnement[] $abonnements
+ */
+
+$retour = null;
+
+if ($agent !== null) {
+    $this->headTitle("Listing des abonnements pour l'agent [".$agent->getDenomination()."]");
+    $retour = $this->url('formation/abonnement/lister-abonnements-par-agent', ['agent' => $agent->getId()], [], true);
+}
+if ($formation !== null) {
+    $this->headTitle("Listing des abonnements pour la formation [".$formation->getLibelle()."]");
+    $retour = $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true);
+}
+
+$nb = count($abonnements);
+?>
+
+<?php echo $nb; ?> abonnement<?php if ($nb > 1) echo "s"; ?>
+<?php if ($agent !== null) : ?>
+    pour l'agent <em><?php echo $agent->getDenomination(); ?></em>
+<?php endif; ?>
+<?php if ($formation !== null) : ?>
+    pour la formation <em><?php echo $formation->getLibelle(); ?></em>
+<?php endif; ?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <?php if ($formation !== null) : ?>
+            <th> Agent </th>
+        <?php endif; ?>
+        <?php if ($agent !== null): ?>
+            <th> Formation </th>
+        <?php endif; ?>
+        <th> Date d'abonnement </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($abonnements as $abonnement) : ?>
+        <tr>
+            <?php if ($formation !== null) : ?>
+                <td> <?php echo $abonnement->getAgent()->getDenomination(); ?> </td>
+            <?php endif; ?>
+            <?php if ($agent !== null): ?>
+                <td> <?php echo $abonnement->getFormation()->getLibelle(); ?> </td>
+            <?php endif; ?>
+            <td> <?php echo $abonnement->getDateInscription()->format('d/m/Y à H:i'); ?> </td>
+            <td>
+                <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
+                <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], ["query" => ['retour' => $retour]] , true); ?>"
+                   data-bs-dismiss="modal"
+                >
+                    <span class="icon icon-retirer text-danger" title="Annulation de l'abonnement"></span>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

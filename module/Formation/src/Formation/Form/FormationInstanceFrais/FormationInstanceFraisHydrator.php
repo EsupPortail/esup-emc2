@@ -3,7 +3,7 @@
 namespace Formation\Form\FormationInstanceFrais;
 
 use Formation\Entity\Db\FormationInstanceFrais;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class FormationInstanceFraisHydrator implements HydratorInterface
 {
@@ -12,7 +12,7 @@ class FormationInstanceFraisHydrator implements HydratorInterface
      * @param FormationInstanceFrais $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'repas' => ($object) ? $object->getFraisRepas() : null,

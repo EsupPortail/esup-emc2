@@ -8,7 +8,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

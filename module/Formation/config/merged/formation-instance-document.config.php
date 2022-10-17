@@ -6,7 +6,7 @@ use Formation\Controller\FormationInstanceDocumentController;
 use Formation\Controller\FormationInstanceDocumentControllerFactory;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -28,6 +28,15 @@ return [
                     ],
                     'privileges' => [
                         FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_ATTESTATION
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceDocumentController::class,
+                    'action' => [
+                        'generer-historique',
+                    ],
+                    'privileges' => [
+                        FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE
                     ],
                 ],
                 [
@@ -65,6 +74,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-attestation',
+                            ],
+                        ],
+                    ],
+                    'generer-historique' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-historique/:agent',
+                            'defaults' => [
+                                'controller' => FormationInstanceDocumentController::class,
+                                'action'     => 'generer-historique',
                             ],
                         ],
                     ],

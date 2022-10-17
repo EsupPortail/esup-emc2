@@ -11,12 +11,17 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 
 $canInscrire = true;
+
+
+
 ?>
 
 <h2>
-    Actions de formations
-    <span class="badge"><?php echo count($instances); ?></span>
+    S'inscrire à une session de formation du plan de formation
 </h2>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 
 <?php foreach ($instances as $instance) : ?>
     <?php
@@ -27,15 +32,17 @@ $canInscrire = true;
         <div class="col-md-8 description">
             <?php echo $this->formationInstanceInformations($instance, 'bloc'); ?>
         </div>
-        <div class="pull-right">
+        <div class="col-md-4">
             <?php if ($dejaInscrit) : ?>
-                <span class="alert alert-success"> <span class="icon ok"></span>Vous êtes inscrit&middot;e à cette action de formation.</span>
+                <span class="alert alert-success"> <span class="icon icon-checked"></span>Demande d'inscription effectuée.</span>
             <?php else: ?>
                 <?php if ($nbPlace <= 0) : ?>
                     <span class="alert alert-danger">Action de formation complète.</span>
                 <?php else: ?>
                     <?php if ($canInscrire) : ?>
-                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary action">
+                        <?php /**  @see \Formation\Controller\FormationInstanceInscritController::inscriptionAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon inscription-ouverture"> Je m'inscris</span>
                         </a>
                     <?php endif; ?>

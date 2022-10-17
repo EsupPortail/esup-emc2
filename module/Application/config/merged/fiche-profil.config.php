@@ -12,8 +12,8 @@ use Application\Provider\Privilege\FicheprofilPrivileges;
 use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\FicheProfil\FicheProfilServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

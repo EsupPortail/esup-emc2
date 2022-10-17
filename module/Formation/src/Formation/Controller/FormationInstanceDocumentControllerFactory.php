@@ -2,39 +2,55 @@
 
 namespace Formation\Controller;
 
+use Application\Service\Agent\AgentService;
+use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
+use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
-use UnicaenDocument\Service\Exporter\ExporterService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class FormationInstanceDocumentControllerFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationInstanceDocumentController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container) : FormationInstanceDocumentController
     {
         /**
+         * @var AgentService $agentService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var FormationInstanceJourneeService $formationInstanceJourneeService
+         * @var MacroService $macroService
          * @var RenduService $renduService
+         * @var SeanceService $seanceService
          */
+        $agentService = $container->get(AgentService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $formationInstanceJourneeService = $container->get(FormationInstanceJourneeService::class);
+        $macroService = $container->get(MacroService::class);
         $renduService = $container->get(RenduService::class);
+        $seanceService = $container->get(SeanceService::class);
 
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
 
         /** @var FormationInstanceDocumentController $controller */
         $controller = new FormationInstanceDocumentController();
+        $controller->setAgentService($agentService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setFormationInstanceJourneeService($formationInstanceJourneeService);
+        $controller->setMacroService($macroService);
         $controller->setRenduService($renduService);
+        $controller->setSeanceService($seanceService);
         $controller->setRenderer($renderer);
 
         return $controller;

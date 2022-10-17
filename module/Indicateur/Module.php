@@ -1,20 +1,20 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
+ * Laminas Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/LaminasSkeletonApplication for the canonical source repository
+ * @copyright Copyright (c) 2005-2012 Laminas Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
 namespace Indicateur;
 
-use Zend\Config\Factory as ConfigFactory;
-use Zend\Console\Adapter\AdapterInterface as Console;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\Glob;
+use Laminas\Config\Factory as ConfigFactory;
+use Laminas\Console\Adapter\AdapterInterface as Console;
+use Laminas\Mvc\ModuleRouteListener;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Stdlib\Glob;
 
 class Module
 {
@@ -44,7 +44,7 @@ class Module
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),

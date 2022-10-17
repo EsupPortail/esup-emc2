@@ -4,13 +4,15 @@ namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
+use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\Complement\ComplementServiceAwareTrait;
 use DateTime;
-use Doctrine\DBAL\Driver\Exception as DRV_Exception;
-use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\FormationElement;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -18,11 +20,14 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
-use Zend\Mvc\Controller\AbstractActionController;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentService {
     use EntityManagerAwareTrait;
+    use AgentAffectationServiceAwareTrait;
+    use ComplementServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     /** AGENT *********************************************************************************************************/
 
@@ -42,37 +47,6 @@ class AgentService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function getAgentsPourIndex() : array
-    {
-        $sql = <<<EOS
-select
-    a.c_individu AS ID,
-    a.prenom AS PRENOM,
-    a.nom_usage AS NOM_USAGE,
-    uuu.username AS UTILISATEUR,
-    current_date
-from agent a
-left join unicaen_utilisateur_user uuu on a.utilisateur_id = uuu.id
-left join agent_carriere_affectation aa on aa.agent_id = a.c_individu
-where aa.t_principale = 'O'
-and aa.date_debut <= current_date AND (aa.date_fin IS NULL OR aa.date_fin >= current_date)
-group by a.c_individu, a.prenom, a.c_individu, a.nom_usage, uuu.username
-order by a.nom_usage, a.prenom
-EOS;
-
-        try {
-            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
-            try {
-                $tmp = $res->fetchAllAssociative();
-            } catch (DRV_Exception $e) {
-                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-            }
-        } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
-        }
-        return $tmp;
-    }
-
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
@@ -89,37 +63,13 @@ EOS;
     }
 
     /**
-     * @param array $temoins
-     * @param string|null $order
      * @return Agent[]
      */
-    public function getAgents(array $temoins = [], ?string $order = null) : array
+    public function getAgents() : array
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere('agent.deleted_on IS NULL')
-            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
-//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->andWhere('affectation.dateDebut <= :NOW')
-            ->andWhere('affectation.dateFin >= :NOW OR affectation.dateFin IS NULL')
-            ->setParameter('NOW', new DateTime())
-        ;
-
-//        $tmp = ['statut IS NULL'];
-//        foreach ($temoins as $temoin => $value) {
-//            if ($value) $tmp[] = 'statut.'. $temoin .' = :TRUE';
-//        }
-//        if (!empty($tmp)) {
-//            $qb = $qb->andWhere(implode(" OR ",$tmp))
-//                ->setParameter('TRUE', 'O');
-//        }
-
-        if ($order !== null) {
-            $qb = $qb->orderBy('agent.' . $order);
-        } else {
-            $qb = $qb->orderBy('agent.nomUsuel, agent.prenom');
-        }
-
+            ->orderBy('agent.nomUsuel, agent.prenom');
         $result =  $qb->getQuery()->getResult();
         return $result;
     }
@@ -202,6 +152,15 @@ EOS;
     }
 
     /**
+     * @return Agent|null
+     */
+    public function getAgentByConnectedUser() : ?Agent
+    {
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentByUser($utilisateur);
+        return $agent;
+    }
+        /**
      * @param User|null $user
      * @return Agent|null
      */
@@ -209,6 +168,7 @@ EOS;
     {
         if ($user === null) return null;
 
+        //en utilisant l'id
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.utilisateur = :user')
             ->setParameter('user', $user)
@@ -218,94 +178,18 @@ EOS;
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Agent liés au même User [".$user->getId()."]", $e);
         }
-        return $result;
-    }
+        if ($result !== null) return $result;
 
-    /**
-     * @param string|null $unsername
-     * @return Agent|null
-     */
-    public function getAgentByUsername(?string $username) : ?Agent
-    {
-        if ($username === null) return null;
-
+        //en utilisant l'username si echec
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.login = :username')
-            ->setParameter('username', $username)
+            ->setParameter('username', $user->getUsername())
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Agent liés au même Username [".$username."]", $e);
+            throw new RuntimeException("Plusieurs Agent liés au même Username [".$user->getUsername()."]", $e);
         }
-        return $result;
-    }
-
-    /**
-     * @param int $supannId
-     * @return Agent|null
-     */
-    public function getAgentBySupannId(int $supannId) : ?Agent
-    {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere('agent.harpId = :supannId')
-            ->setParameter('supannId', $supannId)
-            ->andWhere('agent.deleted_on IS NULL');
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$supannId."]");
-        }
-        return $result;
-    }
-
-    /**
-     * @param Structure|null $structure
-     * @param boolean $sousstructure
-     * @return Agent[]
-     */
-    public function getAgentsSansFichePosteByStructure(?Structure $structure = null, bool $sousstructure = false) : array
-    {
-        $today = new DateTime();
-
-        /** !!TODO!! faire le lien entre agent et fiche de poste */
-        $qb1 = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->addSelect('statut')->join('agent.statuts', 'statut')
-            ->addSelect('grade')->join('agent.grades', 'grade')
-            ->addSelect('structure')->join('grade.structure', 'structure')
-            ->addSelect('fiche')->leftJoin('agent.fiches', 'fiche')
-            ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
-            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-//            ->andWhere('statut.administratif = :true')
-            ->andWhere('statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND statut.heberge = :false AND statut.auditeurLibre = :false')
-            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
-            ->andWhere('affectation.principale = :true')
-            //->andWhere('fiche.id IS NULL')
-            ->setParameter('today', $today)
-            ->setParameter('true', 'O')
-            ->setParameter('false', 'N')
-            ->orderBy('agent.nomUsuel, agent.prenom')
-            ->andWhere('agent.deleted_on IS NULL');
-
-        if ($structure !== null && $sousstructure === true) {
-            $qb1 = $qb1->andWhere('grade.structure = :structure OR structure.parent = :structure')
-                     ->setParameter('structure', $structure);
-        }
-        if ($structure !== null && $sousstructure === false) {
-            $qb1 = $qb1->andWhere('statut.structure = :structure' )
-                ->setParameter('structure', $structure);
-        }
-        $result1 = $qb1->getQuery()->getResult();
-
-        //TODO ! faire la jointure ...
-        $result = [];
-        /** @var Agent $agent */
-        foreach ($result1 as $agent) {
-            if (empty($agent->getFiches())) $result[] = $agent;
-        }
-
         return $result;
     }
 
@@ -330,7 +214,8 @@ EOS;
             ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
             ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
+//            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
+            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
             //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
@@ -352,7 +237,7 @@ EOS;
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
-        if ($structures !== null) {
+        if (!empty($structures)) {
             $qb = $qb->andWhere('affectation.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
@@ -372,7 +257,7 @@ EOS;
             ->addSelect('forcage')->join('agent.structuresForcees', 'forcage')
             ->andWhere('forcage.histoDestruction IS NULL');
 
-        if ($structures !== null) {
+        if (!empty(null)) {
             $qb = $qb->andWhere('forcage.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
@@ -398,10 +283,9 @@ EOS;
     /**
      * @param $st_prenom
      * @param $st_nom
-     * @param $st_annee
      * @return Agent|null
      */
-    public function getAgentByIdentification($st_prenom, $st_nom, $st_annee) : ?Agent
+    public function getAgentByIdentification($st_prenom, $st_nom) : ?Agent
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent');
 
@@ -413,57 +297,94 @@ EOS;
             $qb = $qb->andWhere('LOWER(agent.nomUsuel) = LOWER(:nom)')
                 ->setParameter("nom", $st_nom);
         }
-//        if ($st_annee !== null) {
-//            $qb = $qb->andWhere('LOWER(agent.nom) = LOWER(:nom)')
-//                ->setParameter("prenom", $st_nom);
-//        }
         $result = $qb->getQuery()->getResult();
         if (count($result) === 1) return $result[0];
         return null;
     }
 
-    /**
-     * @param Agent $agent
-     * @return Agent[]|null
-     */
-    public function getResponsablesHierarchiques(Agent $agent) : ?array
+    /** Recuperation des supérieures et autorités  *********************************************************************/
+
+    public function computeComplements(Agent $agent, string $type) : array
     {
-        $affectationPrincipale = $agent->getAffectationPrincipale();
-        if ($affectationPrincipale === null) return null;
-        $structure = $affectationPrincipale->getStructure();
-        if ($structure === null) return null;
-
-        $structureResponsables = $structure->getResponsables();
-        $responsables = [];
-        foreach ($structureResponsables as $structureResponsable) {
-            $responsables[] = $structureResponsable->getAgent();
+        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), $type);
+        $liste = [];
+        if (!empty($complements)) {
+            foreach ($complements as $complement) {
+                $superieure = $this->getAgent($complement->getComplementId());
+                if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
+            }
         }
-
-        if ($responsables !== []) return $responsables;
-        return null;
+        return $liste;
     }
 
     /**
      * @param Agent $agent
-     * @return Agent[]|null
+     * @return array
      */
-    public function getAutoritesHierarchiques(Agent $agent) : ?array
+    public function computeSuperieures(Agent $agent) : array
     {
-        $affectationPrincipale = $agent->getAffectationPrincipale();
-        if ($affectationPrincipale === null) return null;
-        $structure = $affectationPrincipale->getStructure();
-        if ($structure === null) return null;
-        $niv2 = $structure->getNiv2();
-        if ($niv2 === null) return null;
+        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_RESPONSABLE);
+        if (!empty($liste)) return $liste;
 
-        $structureResponsables = $niv2->getResponsables();
-        $responsables = [];
-        foreach ($structureResponsables as $structureResponsable) {
-            $responsables[] = $structureResponsable->getAgent();
-        }
+       //checking structure
+       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+       if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
-        if ($responsables !== []) return $responsables;
-        return null;
+       $structure = $affectationsPrincipales[0]->getStructure();
+       do {
+           $responsablesAll = array_map(function (StructureResponsable $a) {
+               return $a->getAgent();
+           }, $this->getStructureService()->getResponsables($structure));
+           if (!in_array($agent, $responsablesAll)) {
+               $responsables = [];
+               foreach ($responsablesAll as $responsable) {
+                   $responsables["structure_" . $responsable->getId()] = $responsable;
+               }
+               if (!empty($responsables)) return $responsables;
+           }
+
+           $structure = $structure->getParent();
+       } while($structure !== null);
+
+        return [];
+    }
+
+    /**
+     * @param Agent $agent
+     * @param array|null $superieurs
+     * @return array
+     */
+    public function computeAutorites(Agent $agent, ?array $superieurs = null) : array
+    {
+        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_AUTORITE);
+        if (!empty($liste)) return $liste;
+
+        // fetching superieurs if not given
+        if ($superieurs === null) $superieurs = $this->computeSuperieures($agent);
+
+        //checking structure
+        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+        if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent");
+
+        $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
+        do {
+            $responsablesAll = array_map(function (StructureResponsable $a) {
+                return $a->getAgent();
+            }, $this->getStructureService()->getResponsables($structure));
+            if (!in_array($agent, $responsablesAll)) {
+                $responsables = [];
+                foreach ($responsablesAll as $responsable) {
+                    if (!in_array($responsable, $superieurs)) {
+                        $responsables["structure_" . $responsable->getId()] = $responsable;
+                    }
+                }
+                if (!empty($responsables)) return $responsables;
+            }
+
+            $structure = $structure->getParent();
+        } while($structure !== null);
+
+        return [];
     }
 
     /** AgentFormation ************************************************************************************************/
@@ -509,34 +430,7 @@ EOS;
     }
 
     /**
-     * @param Agent|null $agent
-     * @return Agent[]
-     */
-    function getResponsables(?Agent $agent) : ?array
-    {
-        if ($agent === null) return null;
-
-        $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
-            ->andWhere('sr.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->andWhere('sr.deleted_on IS NULL or sr.imported = :false')
-            ->setParameter('false', false)
-        ;
-        $result = $qb->getQuery()->getResult();
-        $result = array_map(function (StructureResponsable $a) { return $a->getAgent();}, $result);
-        $result = array_filter($result, function (Agent $a) use ($agent) { return $a !== $agent;});
-        if (!empty(($result))) return $result;
-
-        $complements = $agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE);
-        foreach ($complements as $complement) {
-            $responsable = $this->getAgent($complement->getComplementId());
-            if ($responsable) $result[] = $responsable;
-        }
-        return $result;
-
-    }
-
-    /**
+     * todo plutôt dans structure
      * @param Agent|null $agent
      * @return StructureResponsable[]
      */
@@ -547,14 +441,14 @@ EOS;
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('sr')
             ->andWhere('sr.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sr.deleted_on IS NULL or sr.imported = :false')
-            ->setParameter('false', false)
+            ->andWhere('sr.deleted_on IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /**
+     * todo plutôt dans structure
      * @param Agent|null $agent
      * @return Structure[]
      */
@@ -565,8 +459,7 @@ EOS;
         $qb = $this->getEntityManager()->getRepository(StructureGestionnaire::class)->createQueryBuilder('sg')
             ->andWhere('sg.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('sg.deleted_on IS NULL or sg.imported = :false')
-            ->setParameter('false', false)
+            ->andWhere('sg.deleted_on IS NULL')
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -594,6 +487,23 @@ EOS;
     /** FONCTION POUR LES RÔLES AUTOMATIQUES **************************************************************************/
 
     /**
+     * @param Complement[] $complements
+     * @return User[]
+     */
+    public function getUsersInComplements(array $complements) : array
+    {
+        $ids = [];
+        foreach ($complements as $item) $ids[$item->getComplementId()] = $item->getComplementId();
+
+        $users = [];
+        foreach ($ids as $id) {
+            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
+        }
+
+        return $users;
+    }
+
+    /**
      * @return User[]
      */
     public function getUsersInSuperieurs() : array
@@ -604,19 +514,7 @@ EOS;
             ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
         ;
         $result = $qb->getQuery()->getResult();
-
-        /** @var Complement[] $result */
-
-        $ids = [];
-        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
-
-        $users = [];
-        foreach ($ids as $id) {
-            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-            //else {var_dump("No agent with id = ".$id);}
-        }
-
-        return $users;
+        return $this->getUsersInComplements($result);
     }
 
     /**
@@ -642,31 +540,6 @@ EOS;
     }
 
     /**
-     * @param Agent|null $agent
-     * @return Agent[]
-     */
-    public function getSuperieursByAgent(?Agent $agent) : array
-    {
-        if ($agent === null) return [];
-
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
-            ->andWhere('complement.type = :SUPERIEUR')
-            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
-            ->andWhere('complement.attachmentId = :agentId')
-            ->setParameter('agentId', $agent->getId())
-        ;
-        $result = $qb->getQuery()->getResult();
-
-        $superieurs = [];
-        /** @var Complement $item */
-        foreach ($result as $item) {
-            $superieur = $this->getAgent($item->getComplementId());
-            if ($superieur) $superieurs[] = $superieur;
-        }
-        return $superieurs;
-    }
-
-    /**
      * @return User[]
      */
     public function getUsersInAutorites() : array
@@ -677,19 +550,7 @@ EOS;
             ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
         ;
         $result = $qb->getQuery()->getResult();
-
-        /** @var Complement[] $result */
-
-        $ids = [];
-        foreach ($result as $item) $ids[$item->getComplementId()] = $item->getComplementId();
-
-        $users = [];
-        foreach ($ids as $id) {
-            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-            //else {var_dump("No agent with id = ".$id);}
-        }
-
-        return $users;
+        return $this->getUsersInComplements($result);
     }
 
     /**
@@ -714,28 +575,20 @@ EOS;
         return $result;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @return Agent[]
-     */
-    public function getAutoritesByAgent(?Agent $agent) : array
+    public function computesStructures(?Agent $agent, ?DateTime $date = null) : array
     {
-        if ($agent === null) return [];
+        if ($date === null) $date = new DateTime();
 
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
-            ->andWhere('complement.type = :AUTORITE')
-            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
-            ->andWhere('complement.attachmentId = :agentId')
-            ->setParameter('agentId', $agent->getId())
+        $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
+            ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
+            ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->join('structure.affectations', 'affectation')
+            ->andWhere('affectation.agent = :agent')->setParameter('agent', $agent)
         ;
-        $result = $qb->getQuery()->getResult();
+        $qb = HasPeriodeTrait::decorateWithActif($qb,'affectation', $date);
 
-        $superieurs = [];
-        /** @var Complement $item */
-        foreach ($result as $item) {
-            $superieur = $this->getAgent($item->getComplementId());
-            if ($superieur) $superieurs[] = $superieur;
-        }
-        return $superieurs;
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
+
 }

@@ -2,6 +2,8 @@
 
 namespace Formation\Controller;
 
+use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -13,11 +15,11 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAw
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -29,7 +31,9 @@ class FormationInstanceController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
     use RappelAgentAvantFormationServiceAwareTrait;
 
@@ -79,9 +83,17 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
 
+        $presences = $this->getPresenceService()->getPresenceByInstance($instance);
+
+        $dictionnaire = [];
+        foreach ($presences as $presence) {
+            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscrit()->getId()] = $presence;
+        }
+
         return new ViewModel([
             'instance' => $instance,
             'mode' => "affichage",
+            'presences' => $dictionnaire,
             'mails' => $mails,
         ]);
     }
@@ -183,6 +195,13 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->ouvrirInscription($instance);
+
+        //notification abonnement
+        $abonnements = $instance->getFormation()->getAbonnements();
+        foreach ($abonnements as $abonnement) {
+            if ($abonnement->estNonHistorise()) $this->getNotificationService()->triggerNouvelleSession($instance, $abonnement);
+        }
+
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
@@ -202,7 +221,7 @@ class FormationInstanceController extends AbstractActionController
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->envoyerConvocation($instance);
-        $this->getFormationInstanceService()->envoyerEmargement($instance);
+        //$this->getFormationInstanceService()->envoyerEmargement($instance); //todo définir ce que l'on fait pour les formateurs
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
@@ -218,5 +237,19 @@ class FormationInstanceController extends AbstractActionController
           $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
           $this->getFormationInstanceService()->cloturer($instance);
           return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
+    }
+
+    public function annulerAction() : Response
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->annuler($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
+    }
+
+    public function reouvrirAction() : Response
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->reouvrir($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 }

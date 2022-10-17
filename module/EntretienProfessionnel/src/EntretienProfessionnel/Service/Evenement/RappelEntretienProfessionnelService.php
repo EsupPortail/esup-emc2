@@ -4,13 +4,12 @@ namespace EntretienProfessionnel\Service\Evenement;
 
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\EvenementProvider;
+use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
-use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 

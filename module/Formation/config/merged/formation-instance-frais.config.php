@@ -12,7 +12,7 @@ use Formation\Provider\Privilege\FormationinstancefraisPrivileges;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

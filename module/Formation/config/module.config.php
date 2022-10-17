@@ -4,6 +4,10 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Formation\Event\Convocation\ConvocationEvent;
+use Formation\Event\Convocation\ConvocationEventFactory;
+use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
+use Formation\Event\InscriptionCloture\InscriptionClotureEventFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
@@ -75,6 +79,8 @@ return [
             //Evenement
             NotificationFormationsOuvertesService::class => NotificationFormationsOuvertesServiceFactory::class,
             RappelAgentAvantFormationService::class => RappelAgentAvantFormationServiceFactory::class,
+            InscriptionClotureEvent::class => InscriptionClotureEventFactory::class,
+            ConvocationEvent::class => ConvocationEventFactory::class,
         ],
     ],
     'controllers'     => [

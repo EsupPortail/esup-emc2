@@ -2,8 +2,8 @@
 
 namespace Application\Form;
 
-use Zend\Form\Form;
-use Zend\Http\Request;
+use Laminas\Form\Form;
+use Laminas\Http\Request;
 
 trait EntityFormManagmentTrait {
 

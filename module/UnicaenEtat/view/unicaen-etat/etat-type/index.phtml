@@ -22,14 +22,14 @@ use UnicaenEtat\Entity\Db\EtatType;
             <?php /** @see \UnicaenEtat\Controller\IndexController::indexAction() */ ?>
             <a href="<?php echo $this->url('unicaen-etat', [], [], true); ?>"
                class="btn btn-info action">
-                <span class="icon retour"></span>
+                <span class="icon icon-retour"></span>
                 Retour à l'index du module
             </a>
             <br/>
             <?php /** @see \UnicaenEtat\Controller\EtatTypeController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('unicaen-etat/etat-type/ajouter', [], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="modification">
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter un type d'état
             </a>
         </div>
@@ -56,20 +56,20 @@ use UnicaenEtat\Entity\Db\EtatType;
                     <?php /** @see \UnicaenEtat\Controller\EtatTypeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('unicaen-etat/etat-type/modifier', ['etat-type' => $etatType->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon editer"></span></a>
+                        <span class="icon icon-editer"></span></a>
                     <?php if ($etatType->estNonHistorise()) : ?>
                         <?php /** @see \UnicaenEtat\Controller\EtatTypeController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('unicaen-etat/etat-type/historiser', ['etat-type' => $etatType->getId()], [], true); ?>">
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else: ?>
                         <?php /** @see \UnicaenEtat\Controller\EtatTypeController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('unicaen-etat/etat-type/restaurer', ['etat-type' => $etatType->getId()], [], true); ?>">
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                     <?php /** @see \UnicaenEtat\Controller\EtatTypeController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('unicaen-etat/etat-type/supprimer', ['etat-type' => $etatType->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 </td>
             </tr>
         <?php endforeach; ?>

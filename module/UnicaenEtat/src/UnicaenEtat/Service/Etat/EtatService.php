@@ -10,7 +10,7 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Entity\Db\EtatType;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class EtatService {
     use EntityManagerAwareTrait;

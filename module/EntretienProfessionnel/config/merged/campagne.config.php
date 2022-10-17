@@ -12,13 +12,22 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => CampagneController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_AFFICHER,
+                    ],
+                ],
                 [
                     'controller' => CampagneController::class,
                     'action' => [
@@ -66,9 +75,13 @@ return [
                 'child_routes' => [
                     'campagne' => [
                         'type'  => Literal::class,
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'options' => [
                             'route'    => '/campagne',
+                            'defaults' => [
+                                'controller' => CampagneController::class,
+                                'action'     => 'index',
+                            ],
                         ],
                         'child_routes' => [
                             'ajouter' => [

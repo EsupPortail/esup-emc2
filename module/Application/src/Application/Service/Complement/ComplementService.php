@@ -9,7 +9,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class ComplementService {
     use EntityManagerAwareTrait;
@@ -109,7 +109,7 @@ class ComplementService {
      * @param string $attachmentType
      * @param string $attachmentId
      * @param string|null $type
-     * @return array
+     * @return Complement[]
      */
     public function getCompelementsByAttachement(string $attachmentType, string $attachmentId, ?string $type = null) : array
     {

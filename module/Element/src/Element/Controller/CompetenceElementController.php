@@ -5,8 +5,8 @@ namespace Element\Controller;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
 use Element\Entity\Db\CompetenceElement;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class CompetenceElementController extends AbstractActionController {
     /** GESTION DES COMPETENCES ELEMENTS ==> Faire CONTROLLER ? *******************************************************/

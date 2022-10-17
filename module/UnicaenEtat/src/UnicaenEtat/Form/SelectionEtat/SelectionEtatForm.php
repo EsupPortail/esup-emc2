@@ -5,10 +5,10 @@ namespace UnicaenEtat\Form\SelectionEtat;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class SelectionEtatForm extends Form {
     use EtatServiceAwareTrait;

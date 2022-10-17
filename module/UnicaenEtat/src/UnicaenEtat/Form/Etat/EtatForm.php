@@ -5,15 +5,15 @@ namespace UnicaenEtat\Form\Etat;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPrivilege\Entity\Db\Privilege;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Color;
-use Zend\Form\Element\Hidden;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Callback;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Color;
+use Laminas\Form\Element\Hidden;
+use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class EtatForm extends Form
 {

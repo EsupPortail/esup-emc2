@@ -6,7 +6,7 @@ trait FormationInstanceServiceAwareTrait
 {
 
     /** @var FormationInstanceService */
-    private $formationInstanceService;
+    private FormationInstanceService $formationInstanceService;
 
     /**
      * @return FormationInstanceService

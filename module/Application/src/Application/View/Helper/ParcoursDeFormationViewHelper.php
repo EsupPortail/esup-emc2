@@ -8,9 +8,9 @@ use Metier\Entity\Db\Metier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\View\Renderer\PhpRenderer;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Resolver\TemplatePathStack;
 
 class ParcoursDeFormationViewHelper extends AbstractHelper
 {

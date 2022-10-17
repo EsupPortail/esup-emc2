@@ -4,11 +4,15 @@
  * @var EntretienProfessionnel $entretien
  * @var array $droits
  * @var int $step
+ *
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  */
 
+use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
 $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
@@ -17,10 +21,10 @@ $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
 $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
-$validationResponsable   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
-$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
-$validationHierarchie    = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
-$validationAgent         = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
+$validationResponsable   = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
+$validationHierarchie    = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+$validationAgent         = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
 
 
 $now = new DateTime();
@@ -34,7 +38,7 @@ $depasse = ($date === null or $date < $now);
 
 <?php if ($canValiderDrh === null) : ?>
     <div class="alert alert-warning">
-        <span class="icon attention"> </span>
+        <span class="icon icon-attention"> </span>
         La validation de l'entretien professionnel provoquent un blocage des saisies de celui-ci.
     </div>
 <?php endif; ?>
@@ -44,7 +48,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 0) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
+            <strong><span class="icon icon-information"></span> Le reponsable de l'entretien (<?php echo $entretien->getResponsable()->getDenomination(); ?>) doit valider l'entretien professionnel.</strong>
             <br/><br/>
             Cette validation :
             <ul>
@@ -91,7 +95,7 @@ $depasse = ($date === null or $date < $now);
         <?php if ($canValiderResponsable) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_RESPONSABLE], [], true); ?>"
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_RESPONSABLE], [], true); ?>"
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
@@ -107,7 +111,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 1) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
+            <strong><span class="icon icon-information"></span> L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant exprimer des observations.</strong>
             <br/><br/>
             Une fois les observations faites, en validant l'agent :
             <ul>
@@ -117,7 +121,7 @@ $depasse = ($date === null or $date < $now);
             </ul>
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
-            <strong><span class="icon information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
+            <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
                 (<?php echo $entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"); ?>).
             </strong>
         </div>
@@ -126,7 +130,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 1) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation du responsable d'entretien professionnel
             </strong>
         </div>
@@ -175,7 +179,7 @@ $depasse = ($date === null or $date < $now);
             <?php if ($entretien->getObservationActive()) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                        href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                        href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
                         class="btn btn-success action ajax-modal"
                         data-event="modification"
                 >
@@ -185,7 +189,7 @@ $depasse = ($date === null or $date < $now);
             <?php else : ?>
                 <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_OBSERVATION], [], true); ?>"
+                            href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
                             class="btn btn-success action ajax-modal"
                             data-event="modification"
                     >
@@ -204,7 +208,7 @@ $depasse = ($date === null or $date < $now);
 
     <?php if ($step === 2) : ?>
         <div class="alert alert-info">
-            <strong><span class="icon information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
+            <strong><span class="icon icon-information"></span> L'autorité hiérarchique de l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut valider l'entretien professionnel.</strong>
             <br/><br/>
             Une fois cette validation faite :
             <ul>
@@ -216,7 +220,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 2) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation des observations ou le dépassement du délai d'expression des observations.
             </strong>
         </div>
@@ -258,7 +262,7 @@ $depasse = ($date === null or $date < $now);
         <?php if ($canValiderDrh AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_DRH], [], true); ?>"
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_DRH], [], true); ?>"
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
@@ -275,7 +279,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step === 3) : ?>
         <div class="alert alert-info">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 L'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) peut maintenant valider son entretien professionnel.
             </strong>
             <br/><br/>
@@ -291,7 +295,7 @@ $depasse = ($date === null or $date < $now);
     <?php if ($step < 3) : ?>
         <div class="alert alert-warning">
             <strong>
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Ne sera disponible qu'après la validation de l'autorité hiérarchique.
             </strong>
         </div>
@@ -333,7 +337,7 @@ $depasse = ($date === null or $date < $now);
         <?php if ($validationHierarchie !== null) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
-                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelConstant::VALIDATION_AGENT], [], true); ?>"
+                    href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_AGENT], [], true); ?>"
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >

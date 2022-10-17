@@ -6,8 +6,8 @@ use Fichier\Controller\IndexController;
 use Fichier\Controller\IndexControllerFactory;
 use Fichier\Provider\Privilege\FichierPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

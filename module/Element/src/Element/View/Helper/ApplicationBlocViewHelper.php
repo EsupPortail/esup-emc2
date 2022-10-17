@@ -3,9 +3,9 @@
 namespace Element\View\Helper;
 
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Resolver\TemplatePathStack;
 
 class ApplicationBlocViewHelper extends AbstractHelper
 {

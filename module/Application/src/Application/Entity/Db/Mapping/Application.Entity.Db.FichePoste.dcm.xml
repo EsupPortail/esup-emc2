@@ -14,10 +14,6 @@
 
         <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste" mapped-by="fiche"/>
 
-<!--        <one-to-one field="poste" target-entity="Application\Entity\Db\Poste" >-->
-<!--            <join-column name="poste" referenced-column-name="id" />-->
-<!--        </one-to-one>-->
-
         <one-to-many target-entity="Application\Entity\Db\Expertise"                mapped-by="ficheposte" field="expertises"/>
 
         <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>

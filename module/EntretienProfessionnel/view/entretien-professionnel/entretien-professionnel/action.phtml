@@ -21,7 +21,7 @@ $empty = true;
     <li><a class="dropdown-item"
            href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>"
         >
-            <span class="icon editer"></span>
+            <span class="icon icon-editer"></span>
             Accéder à l'entretien
         </a></li>
     <?php $empty = false; ?>
@@ -30,13 +30,13 @@ $empty = true;
     <li><a class="dropdown-item"
            href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
         >
-            <span class="icon pdf"></span>
+            <span class="icon icon-pdf"></span>
             Exporter le CREP
         </a></li>
     <li><a class="dropdown-item"
            href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
         >
-            <span class="icon pdf"></span>
+            <span class="icon icon-pdf"></span>
             Exporter le CREF
         </a></li>
     <?php $empty = false; ?>
@@ -55,14 +55,14 @@ $empty = true;
         <li><a class="dropdown-item"
                href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
             >
-                <span class="icon historiser"></span>
+                <span class="icon icon-historiser"></span>
                 Supprimer l'entretien
             </a></li>
     <?php else : ?>
         <li><a class="dropdown-item"
                href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>"
             >
-                <span class="icon restaurer"></span>
+                <span class="icon icon-restaurer"></span>
                 Restaurer l'entretien
             </a></li>
     <?php endif; ?>
@@ -72,7 +72,7 @@ $empty = true;
     <li class="bg-danger"><a class="dropdown-item"
            href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
         >
-            <span class="icon detruire"></span>
+            <span class="icon icon-retirer"></span>
             Détruire l'entretien
         </a></li>
     <?php $empty = false; ?>

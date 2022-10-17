@@ -15,12 +15,12 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 ?>
 
-<h1 class="panel-heading">
+<h1 class="card-header">
     Liste des agents dont vous êtes le supérieur hiérarchique direct
 </h1>
 
 <div class="alert alert-info">
-    <span class="icon attention"></span>
+    <span class="icon icon-attention"></span>
     Ici ne figurent que les agents pour lesquels vous avez été désigné manuellement en tant que supérieur&middot;e hiérarchique direct&middot;e
 </div>
 
@@ -41,7 +41,7 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                 <?php echo $agent->getDenomination(); ?>
                 <?php if ($canVoirAgent) : ?>
                     <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
-                        <span class="icon voir" title="Afficher les informations de l'agent"></span>
+                        <span class="icon icon-voir" title="Afficher les informations de l'agent"></span>
                     </a>
                 <?php endif; ?>
                 <br/>
@@ -77,10 +77,10 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                 <?php endif; ?>
                 <?php if ($fichePoste AND $canVoirFichePoste) : ?>
                     <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
-                        <span class="icon voir" title="Afficher la fiche de poste"></span>
+                        <span class="icon icon-voir" title="Afficher la fiche de poste"></span>
                         <span class="small-lettrine">FP</span></a>
                     <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
-                        <span class="icon pdf" title="Exporter la fiche de poste"></span>
+                        <span class="icon icon-pdf" title="Exporter la fiche de poste"></span>
                         <span class="small-lettrine">FP</span></a>
                 <?php endif; ?>
             </td>
@@ -94,13 +94,13 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                         Entretien du <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
                         <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
-                            <span class="icon voir"></span></a>
+                            <span class="icon icon-voir"></span></a>
                         <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
-                            <span class="icon pdf"></span><span class="small-lettrine">CREP</span></a>
+                            <span class="icon icon-pdf"></span><span class="small-lettrine">CREP</span></a>
                         <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
                            target="_blank">
-                            <span class="icon pdf"></span><span class="small-lettrine">CREF</span></a>
+                            <span class="icon icon-pdf"></span><span class="small-lettrine">CREF</span></a>
                     <?php else : ?>
                         Aucun entretien
                     <?php endif; ?>
@@ -118,21 +118,21 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
                                class="ajax-modal" data-event="modification">
                                 <span class="icon gerer"></span></a>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                                target="_blank">
-                                <span class="icon editer"></span></a>
+                                <span class="icon icon-editer"></span></a>
                             <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
                                target="_blank">
-                                <span class="icon pdf"></span><span class="small-lettrine">CREP</span></a>
+                                <span class="icon icon-pdf"></span><span class="small-lettrine">CREP</span></a>
                             <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
                                target="_blank">
-                                <span class="icon pdf"></span><span class="small-lettrine">CREF</span></a>
+                                <span class="icon icon-pdf"></span><span class="small-lettrine">CREF</span></a>
                         <?php else : ?>
                             Aucun entretien
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                             <a href="<?php echo $this->url('entretien-professionnel/creer', ["campagne" => $campagneCurrent->getId()], ["query" => ["agent" => $agent->getId(), 'structure' => ($affectation AND $affectation->getStructure())?$affectation->getStructure()->getId():null]], true); ?>"
                                class="ajax-modal" data-event="modification">
-                                <span class="icon ajouter"></span></a>
+                                <span class="icon icon-ajouter"></span></a>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>

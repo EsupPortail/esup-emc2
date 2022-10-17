@@ -4,36 +4,44 @@ namespace Formation\Controller;
 
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Form\Inscription\InscriptionFormAwareTrait;
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
 class FormationInstanceInscritController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
-    use RenduServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use UserServiceAwareTrait;
 
+    use InscriptionFormAwareTrait;
     use SelectionAgentFormAwareTrait;
 
     public function ajouterAgentAction() : ViewModel
@@ -55,11 +63,14 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($form->isValid()) {
                 if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
-                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
+                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
                     $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
                     $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
+
+                    if ($instance->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) $this->getNotificationService()->triggerPrevention($inscrit);
+
                 } else {
                     $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
                 }
@@ -129,6 +140,8 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit->setListe(FormationInstanceInscrit::PRINCIPALE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
+        $this->getNotificationService()->triggerListePrincipale($inscrit);
+
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste principale.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
@@ -141,14 +154,17 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
         $this->getFormationInstanceInscritService()->update($inscrit);
 
+        $this->getNotificationService()->triggerListeComplementaire($inscrit);
+
+
         $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en liste complémentaire.");
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function listeFormationsInstancesAction() : ViewModel
+    public function inscriptionFormationAction() : ViewModel
     {
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(FormationInstance::ETAT_INSCRIPTION_OUVERTE);
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
@@ -156,42 +172,99 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
+        $demandesNonValidees = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+
+        return new ViewModel([
+            'instances' => $instances,
+            'inscriptions' => $inscriptions,
+            'formations' => $formations,
+            'agent' => $agent,
+
+            'demandes' => $demandesNonValidees,
+
+            'superieures' => $superieures,
+        ]);
+    }
+
+    public function listeFormationsInstancesAction() : ViewModel
+    {
+        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+        //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+
+        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
+        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
+
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
+
+        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
             'formations' => $formations,
             'agent' => $agent,
             'texteParcours' => $rendu->getCorps(),
+            'demandes' => $demandesValidees,
         ]);
     }
 
-    public function inscriptionAction()  : Response
+    public function inscriptionAction()  : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
-        $inscrit = new FormationInstanceInscrit();
-        $inscrit->setInstance($instance);
-        $inscrit->setAgent($agent);
-        $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_DEMANDE_INSCRIPTION));
-        $this->getFormationInstanceInscritService()->create($inscrit);
-        $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
+        $inscription = new FormationInstanceInscrit();
+        $inscription->setInstance($instance);
+        $inscription->setAgent($agent);
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_DEMANDE));
 
-        $this->getNotificationService()->triggerInscriptionAgent($agent, $instance);
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
 
-        return $this->redirect()->toRoute('liste-formations-instances', [], ['fragment' => 'instances'], true);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($inscription->getJustificationAgent() === null) {
+                    $this->flashMessenger()->addErrorMessage("<strong> Échec de l'inscription </strong> <br/> Veuillez justifier votre demande d'inscription !");
+                } else {
+                    $this->getFormationInstanceInscritService()->create($inscription);
+                    $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
+                    $this->getNotificationService()->triggerInscriptionAgent($agent, $instance);
+                }
+            }
+        }
+
+        return new ViewModel([
+            'title' => "Inscription à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
+        ]);
     }
 
     public function desinscriptionAction() : ViewModel
     {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $instance = $inscrit->getInstance();
-        $agent = $inscrit->getAgent();
-        $user = $this->getUserService()->getConnectedUser();
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_REFUSER));
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/desinscription', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
 
         $break = false;
-        if ($agent->getUtilisateur() !== $user) {
+        if ($agent->getUtilisateur() !== $this->getUserService()->getConnectedUser()) {
             $this->flashMessenger()->addErrorMessage("L'utilisateur connecté ne correspond à l'agent en train de se déinscrire !");
             $break = true;
         }
@@ -200,106 +273,196 @@ class FormationInstanceInscritController extends AbstractActionController
             $request = $this->getRequest();
             if ($request->isPost()) {
                 $data = $request->getPost();
-                if ($data["reponse"] === "oui") {
-                    $inscrit->setComplement($data["complement"]);
-                    $this->getFormationInstanceInscritService()->update($inscrit);
-                    $this->getFormationInstanceInscritService()->historise($inscrit);
-                    $this->flashMessenger()->addSuccessMessage("Inscription annulée.");
+                $form->setData($data);
+                if ($form->isValid()) {
+                    if ($inscription->getJustificationRefus() === null) {
+                        $this->flashMessenger()->addErrorMessage("<strong> Échec de l'inscription </strong> <br/> Veuillez justifier votre demande de désinscription !");
+                    } else {
+                        $this->getFormationInstanceInscritService()->historise($inscription);
+                        $this->flashMessenger()->addSuccessMessage("Désinscription faite.");
+                        //todo trigger reclassement
+                    }
                 }
             }
         }
 
-        $intitule = $instance->getFormation()->getLibelle();
-        $periode = $instance->getDebut()." au " .$instance->getFin() ;
-        $vm = new ViewModel([
-            'title' => "Desinscription à la formation " . $intitule,
-            'text' => "Je confirme me désinscrire de la formation ". $intitule ." du ". $periode.".",
-            'action' => $this->url()->fromRoute('formation-instance/desinscription', ["inscrit" => $inscrit->getId()], [], true),
-            'complement' => 'oui',
+        $vm =  new ViewModel([
+            'title' => "Désinscription à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
         ]);
-        $vm->setTemplate('formation/default/confirmation');
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
         return $vm;
-
     }
+
+    /** VALIDATION ****************************************************************************************************/
 
     public function validerResponsableAction() : ViewModel
     {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $agent = $inscrit->getAgent();
-        $instance = $inscrit->getInstance();
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_RESPONSABLE));
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/valider-responsable', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-
-            if ($data["reponse"] === "oui") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_RESPONSABLE));
-
-                $this->getNotificationService()->triggerResponsableValidation($inscrit);
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($inscription->getJustificationResponsable() === null) {
+                    $this->flashMessenger()->addErrorMessage("<strong> Échec de la validation </strong> <br/> Veuillez justifier votre validation !");
+                } else {
+                    $this->getFormationInstanceInscritService()->update($inscription);
+                    $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                    $this->getNotificationService()->triggerResponsableValidation($inscription);
+                }
             }
-            if ($data["reponse"] === "non") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_REFUS_INSCRIPTION));
-                $inscrit->setComplement($data["complement"]);
-                $this->getFormationInstanceInscritService()->update($inscrit);
-
-                $this->getNotificationService()->triggerResponsableRefus($inscrit);
-            }
-            $this->getFormationInstanceInscritService()->update($inscrit);
-            exit();
         }
 
-        $denomination = $agent->getDenomination();
-        $intitule = $instance->getFormation()->getLibelle();
-        $periode = $instance->getDebut()." au " .$instance->getFin() ;
-        $vm = new ViewModel([
-            'title' => "Validation par le responsable hiérarchique",
-            'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
-            'action' => $this->url()->fromRoute('formation-instance/valider-responsable', ["isncrit" => $inscrit->getId()], [], true),
-            'complement' => 'non',
+        $vm =  new ViewModel([
+            'title' => "Validation de l'inscription de ". $agent->getDenomination() ." à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
         ]);
-        $vm->setTemplate('formation/default/confirmation');
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
         return $vm;
+    }
 
+    public function refuserResponsableAction() : ViewModel
+    {
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_REFUSER));
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/refuser-responsable', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($inscription->getJustificationRefus() === null) {
+                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
+                } else {
+                    $this->getFormationInstanceInscritService()->historise($inscription);
+                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                    $this->getNotificationService()->triggerResponsableRefus($inscription);
+                    //todo trigger reclassement
+                }
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "refus de l'inscription de ". $agent->getDenomination() ." à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
     }
 
     public function validerDrhAction() : ViewModel
     {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-        $agent = $inscrit->getAgent();
-        $instance = $inscrit->getInstance();
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/valider-drh', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            if ($data["reponse"] === "oui") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_VALIDATION_INSCRIPTION));
-
-                $this->getNotificationService()->triggerDrhValidation($inscrit);
-
-                if ($inscrit->getListe() === null AND !$instance->isListePrincipaleComplete()) { $inscrit->setListe('principale'); }
-                if ($inscrit->getListe() === null AND !$instance->isListeComplementaireComplete()) { $inscrit->setListe('complementaire'); }
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceInscritService()->update($inscription);
+                $this->getFormationInstanceService()->classerInscription($inscription);
+                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                $this->getNotificationService()->triggerDrhValidation($inscription);
+                if ($inscription->getListe() === FormationInstanceInscrit::PRINCIPALE
+                    AND $inscription->getInstance()->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) {
+                    $this->getNotificationService()->triggerPrevention($inscription);
+                }
             }
-            if ($data["reponse"] === "non") {
-                $inscrit->setEtat($this->getEtatService()->getEtatByCode(FormationInstanceInscrit::ETAT_REFUS_INSCRIPTION));
-                $inscrit->setComplement($data["complement"]);
-                $this->getFormationInstanceInscritService()->update($inscrit);
-
-                $this->getNotificationService()->triggerDrhRefus($inscrit);
-            }
-            $this->getFormationInstanceInscritService()->update($inscrit);
-            exit();
         }
 
-        $denomination = $agent->getDenomination();
-        $intitule = $instance->getFormation()->getLibelle();
-        $periode = $instance->getDebut()." au " .$instance->getFin() ;
-        $vm = new ViewModel([
-            'title' => "Validation par la direction des ressources humaines",
-            'text' => "Je valide l'inscription de ". $denomination ." à la formation ". $intitule ." du ". $periode.".",
-            'action' => $this->url()->fromRoute('formation-instance/valider-drh', ["isncrit" => $inscrit->getId()], [], true),
-            'complement' => 'non',
+        $vm =  new ViewModel([
+            'title' => "Validation de l'inscription de ". $agent->getDenomination() ." à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
         ]);
-        $vm->setTemplate('formation/default/confirmation');
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
         return $vm;
+    }
+
+    public function refuserDrhAction() : ViewModel
+    {
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $instance = $inscription->getInstance();
+        $agent = $inscription->getAgent();
+
+        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_REFUSER));
+        $form = $this->getInscriptionForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/refuser-drh', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
+        $form->bind($inscription);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($inscription->getJustificationRefus() === null) {
+                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
+                } else {
+                    $this->getFormationInstanceInscritService()->historise($inscription);
+                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                    $this->getNotificationService()->triggerDrhRefus($inscription);
+                }
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "refus de l'inscription de ". $agent->getDenomination() ." à la formation ".$instance->getInstanceLibelle(). " du ".$instance->getPeriode(),
+            'inscription' => $inscription,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
+    }
+
+    /** Classement ****************************************************************************************************/
+
+    public function classerInscriptionAction() : Response
+    {
+        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+
+        $this->getFormationInstanceService()->classerInscription($inscription);
+
+        switch ($inscription->getListe()) {
+            case FormationInstanceInscrit::PRINCIPALE :
+                $this->flashMessenger()->addSuccessMessage("Classement de l'inscription en liste principale.");
+                break;
+            case FormationInstanceInscrit::COMPLEMENTAIRE :
+                $this->flashMessenger()->addWarningMessage("Liste principale complète. <br/> Classement de l'inscription en liste complémentaire.");
+                break;
+            default :
+                $this->flashMessenger()->addErrorMessage("Plus de place en liste principale et complémentaire. <br/> Échec du classement de l'inscription.");
+                break;
+        }
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
+        $session = $inscription->getInstance();
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => 'inscriptions'], true);
     }
 }

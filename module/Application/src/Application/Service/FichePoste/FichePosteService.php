@@ -9,6 +9,7 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
@@ -29,7 +30,7 @@ use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
     use EntityManagerAwareTrait;
@@ -240,8 +241,8 @@ class FichePosteService {
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
             ->andWhere('etat.code = :OK AND etat.code = :SIGNEE')
             ->setParameter('date', $date)
-            ->setParameter('OK', FichePoste::ETAT_CODE_OK)
-            ->setParameter('SIGNEE', FichePoste::ETAT_CODE_SIGNEE)
+            ->setParameter('OK', FichePosteEtats::ETAT_CODE_OK)
+            ->setParameter('SIGNEE', FichePosteEtats::ETAT_CODE_SIGNEE)
             ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -512,7 +513,7 @@ EOS;
             return (
                 $a->estNonHistorise() AND
                 $a->isComplete() AND
-                $a->getEtat()->getCode() !== FichePoste::ETAT_CODE_MASQUEE AND
+                $a->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_MASQUEE AND
                 ($a->getAgent()->getNiveauEnveloppe() !== null AND $agent->getNiveauEnveloppe() !== null AND NiveauEnveloppe::isCompatible($a->getAgent()->getNiveauEnveloppe(), $agent->getNiveauEnveloppe())));
         });
         return $fiches;
@@ -952,7 +953,7 @@ EOS;
             }
         }
 
-        $etat = $this->getEtatService()->getEtatByCode(FichePoste::ETAT_CODE_REDACTION);
+        $etat = $this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION);
         $nouvelleFiche->setEtat($etat);
         $nouvelleFiche = $this->update($nouvelleFiche);
 
@@ -998,7 +999,7 @@ EOS;
             ->andWhere('fiche.agent =  :agent')
             ->andWhere('etat.code = :SIGNE')
             ->setParameter('agent', $agent)
-            ->setParameter('SIGNE', FichePoste::ETAT_CODE_SIGNEE);
+            ->setParameter('SIGNE', FichePosteEtats::ETAT_CODE_SIGNEE);
         $result = $qb->getQuery()->getResult();
         return $result;
 

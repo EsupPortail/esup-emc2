@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Formation\Entity\Db\Presence" table="formation_presence">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="Formation\Entity\Db\Seance"  field="journee">
+            <join-column name="journee_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Formation\Entity\Db\FormationInstanceInscrit"  field="inscrit">
+            <join-column name="inscrit_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="presenceType"      column="presence_type"   type="string"  length="256"    nullable="false"/>
+        <field name="presenceTemoin"    column="presence_temoin" type="boolean"                 nullable="false"/>
+        <field name="commentaire"       column="commentaire"     type="string"  length="4096"   nullable="true"/>
+
+        <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!--        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>-->
+<!--        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>-->
+
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

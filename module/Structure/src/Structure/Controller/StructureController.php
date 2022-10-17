@@ -4,6 +4,7 @@ namespace Structure\Controller;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
@@ -16,6 +17,8 @@ use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Formation\Entity\Db\Formation;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
@@ -28,17 +31,20 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
@@ -46,6 +52,7 @@ class StructureController extends AbstractActionController {
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use UserServiceAwareTrait;
+    use SourceServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -95,26 +102,39 @@ class StructureController extends AbstractActionController {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
-        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
+        $superieurs = []; $autorites = [];
+        foreach ($allAgents as $agent) {
+            $sup = $this->getAgentService()->computeSuperieures($agent);
+            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
+            $superieurs[$agent->getId()] = $sup;
+            $autorites[$agent->getId()] = $aut;
+        }
+
+//        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
         /** Récupération des agents et postes liés aux structures */
-        $agentsLast = $this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut());
+        $agentsLast = ($last !== null)?$this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut()):[];
         $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
 
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-        $inscriptions = $this->getFormationInstanceInscritService()->getInscriptionsByStructure($structure, true, true);
-        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
+//        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = [];
         foreach ($allAgents as $agent) {
             $fichespostes_pdf[$agent->getId()] = $agent->getFichiersByCode("FICHE_POSTE");
         }
+
+        //formations
+        $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
+        $demandesValidees =  $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -127,17 +147,24 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
             'fichespostes_pdf' => $fichespostes_pdf,
-            'fichesRecrutements' => $fichesRecrutements,
-            'profils' => $profils,
-            'inscriptions' => $inscriptions,
+//            'fichesRecrutements' => $fichesRecrutements,
+//            'profils' => $profils,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
+            'superieurs' => $superieurs,
+            'autorites' => $autorites,
 
             'last' => $last,
             'agentsLast' => $allAgentsLast,
             'campagnes' => $campagnes,
             'delegues' => $delegues,
+
+            //formations
+            'demandesNonValidees' => $demandesNonValidees,
+            'demandesValidees' => $demandesValidees,
+            'inscriptionsNonValidees' => $inscriptionsNonValidees,
+            'inscriptionsValidees' => $inscriptionsValidees,
         ]);
     }
 
@@ -202,7 +229,9 @@ class StructureController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $responsable->setCreatedOn();
-                $responsable->setImported(false);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $responsable->setSource($source);
                 $this->getStructureService()->getEntityManager()->persist($responsable);
                 $this->getStructureService()->getEntityManager()->flush($responsable);
             }
@@ -251,7 +280,10 @@ class StructureController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $gestionnaire->setCreatedOn();
-                $gestionnaire->setImported(false);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $gestionnaire->setSource($source);
+                $gestionnaire->setIdSource($structure->getId() ."_". $gestionnaire->getAgent()->getId());
                 $this->getStructureService()->getEntityManager()->persist($gestionnaire);
                 $this->getStructureService()->getEntityManager()->flush($gestionnaire);
             }

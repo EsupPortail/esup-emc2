@@ -4,7 +4,7 @@ namespace Application\Form\ParcoursDeFormation;
 
 use Application\Entity\Db\ParcoursDeFormation;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ParcoursDeFormationHydrator implements HydratorInterface {
     use FormationServiceAwareTrait;
@@ -13,7 +13,7 @@ class ParcoursDeFormationHydrator implements HydratorInterface {
      * @param ParcoursDeFormation $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $formationId = [];
         if ($object->getFormations() !== null) {

@@ -4,7 +4,7 @@ namespace Fichier\Service\Nature;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class NatureServiceFactory {
 

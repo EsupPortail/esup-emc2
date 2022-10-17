@@ -4,7 +4,7 @@ namespace Fichier\Form\Upload;
 
 use Fichier\Service\Nature\NatureService;
 use Interop\Container\ContainerInterface;
-use Zend\Form\FormElementManager;
+use Laminas\Form\FormElementManager;
 
 class UploadFormFactory {
 

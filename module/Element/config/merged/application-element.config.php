@@ -9,8 +9,8 @@ use Element\Form\ApplicationElement\ApplicationElementHydratorFactory;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\ApplicationElement\ApplicationElementServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

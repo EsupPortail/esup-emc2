@@ -30,7 +30,7 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
             class="btn btn-primary action ajax-modal"
             data-event="modification"
         >
-            <span class="icon ajouter"> Ajouter un type de validation</span>
+            <span class="icon icon-ajouter"> Ajouter un type de validation</span>
         </a>
     <?php endif; ?>
 
@@ -51,9 +51,9 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                     <td> <?php echo $type->getLibelle(); ?> </td>
                     <td>
                         <?php if ($type->isRefusable()) : ?>
-                            <span class="icon ok" style="color:darkgreen;"></span>
+                            <span class="icon icon-checked" style="color:darkgreen;"></span>
                         <?php else : ?>
-                            <span class="icon ko" style="color:darkred;"></span>
+                            <span class="icon icon-retirer" style="color:darkred;"></span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -63,7 +63,7 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                                 href="<?php echo $this->url('validation/type/modifier', ['type' => $type->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon editer" title="Modifier le type de validation"></a>
+                                <span class="icon icon-editer" title="Modifier le type de validation"></a>
                         <?php endif; ?>
 
                         <?php if ($canHistoriser): ?>
@@ -72,14 +72,14 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                                     <?php /** @see \UnicaenValidation\Controller\ValidationTypeController::modifierAction() */?>
                                     href="<?php echo $this->url('validation/type/historiser', ['type' => $type->getId()], [], true); ?>"
                                 >
-                                    <span class="icon historiser" title="Historiser le type de validation"></a>
+                                    <span class="icon icon-historiser" title="Historiser le type de validation"></a>
                             <?php else : ?>
 
                                 <a
                                     <?php /** @see \UnicaenValidation\Controller\ValidationTypeController::modifierAction() */?>
                                     href="<?php echo $this->url('validation/type/restaurer', ['type' => $type->getId()], [], true); ?>"
                                 >
-                                    <span class="icon restaurer" title="Restaurer le type de validation"></a>
+                                    <span class="icon icon-restaurer" title="Restaurer le type de validation"></a>
                             <?php endif; ?>
                         <?php endif; ?>
 
@@ -89,7 +89,7 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                                 href="<?php echo $this->url('validation/type/detruire', ['type' => $type->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon detruire" title="Supprimer définitivement le type de validation"></a>
+                                <span class="icon icon-retirer" title="Supprimer définitivement le type de validation"></a>
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -10,9 +10,9 @@ use Application\Form\ModifierRattachement\ModifierRattachementFormAwareTrait;
 use Application\Form\ParcoursDeFormation\ParcoursDeFormationFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ParcoursDeFormationController extends AbstractActionController
 {

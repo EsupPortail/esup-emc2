@@ -2,11 +2,12 @@
 
 namespace Formation\Form\FormationGroupe;
 
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Application\Form\HasDescription\HasDescriptionFieldset;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class FormationGroupeForm extends Form
 {
@@ -22,6 +23,14 @@ class FormationGroupeForm extends Form
             ],
             'attributes' => [
                 'id' => 'libelle',
+            ],
+        ]);
+        //description
+        $this->add([
+            'name' => 'HasDescription',
+            'type' => HasDescriptionFieldset::class,
+            'attributes' => [
+                'id' => 'description',
             ],
         ]);
         //ordre
@@ -64,6 +73,7 @@ class FormationGroupeForm extends Form
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
+            'description' => ['required' => false,],
             'ordre' => ['required' => false,],
 //            'couleur'   => [ 'required' => false, ],
         ]));

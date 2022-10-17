@@ -8,10 +8,10 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ObservationController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;

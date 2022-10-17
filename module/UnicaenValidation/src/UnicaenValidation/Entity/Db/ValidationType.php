@@ -2,7 +2,7 @@
 
 namespace UnicaenValidation\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class ValidationType {
     use HistoriqueAwareTrait;

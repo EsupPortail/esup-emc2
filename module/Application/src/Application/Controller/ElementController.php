@@ -17,9 +17,9 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ElementController extends AbstractActionController {
     use AgentServiceAwareTrait;

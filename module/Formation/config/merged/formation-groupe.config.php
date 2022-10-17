@@ -14,8 +14,8 @@ use Formation\Provider\Privilege\FormationgroupePrivileges;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationGroupe\FormationGroupeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -88,7 +88,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'groupe_' => [
-                                'label'    => 'Groupes de formation',
+                                'label'    => 'Thèmes de formation',
                                 'route'    => 'formation-groupe',
                                 'resource' => PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
                                 'order'    => 320,

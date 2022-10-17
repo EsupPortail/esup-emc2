@@ -6,7 +6,7 @@ use Element\Entity\Db\Competence;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class CompetenceHydrator implements HydratorInterface {
     use CompetenceServiceAwareTrait;
@@ -17,7 +17,7 @@ class CompetenceHydrator implements HydratorInterface {
      * @param Competence $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [];
         $data['libelle'] = $object->getLibelle();

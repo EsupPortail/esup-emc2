@@ -5,8 +5,8 @@ namespace EntretienProfessionnel\Entity\Db;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Sursis implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;

@@ -7,8 +7,8 @@ use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use DateTime;
+use Laminas\Hydrator\HydratorInterface;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
 
 class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -19,7 +19,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
      * @param AgentMissionSpecifique $object
      * @return array
      */
-    public function extract($object)
+    public function extract(object $object) : array
     {
         $data = [
             'mission'   => ($object->getMission()?$object->getMission()->getId():null),
@@ -39,7 +39,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
      * @param AgentMissionSpecifique $object
      * @return AgentMissionSpecifique
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, object $object)
     {
         $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']);
         $agent = $this->getAgentService()->getAgent($data['agent']['id']);

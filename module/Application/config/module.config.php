@@ -21,6 +21,8 @@ use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
+use Application\Service\Macro\MacroService;
+use Application\Service\Macro\MacroServiceFactory;
 use Application\Service\Notification\NotificationService;
 use Application\Service\Notification\NotificationServiceFactory;
 use Application\Service\Url\UrlService;
@@ -40,7 +42,7 @@ use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
-use Zend\Router\Http\Literal;
+use Laminas\Router\Http\Literal;
 
 return [
     'bjyauthorize' => [
@@ -72,7 +74,6 @@ return [
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
                         FormationPrivileges::FORMATION_ACCES,
-                        ActivitePrivileges::ACTIVITE_AFFICHER,
                         ActivitePrivileges::ACTIVITE_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         PostePrivileges::POSTE_INDEX,
@@ -278,6 +279,7 @@ return [
         ],
         'factories' => [
 //            RoleService::class => RoleServiceFactory::class,
+            MacroService::class => MacroServiceFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 
@@ -334,17 +336,18 @@ return [
 
     'public_files' => [
         'inline_scripts' => [
-            '110_' => 'vendor/DataTables-1.10.18/datatables.min.js',
-            '114_' => 'vendor/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js',
+            '110_' => 'vendor/DataTables-1.12.1/datatables.min.js',
+            '120_bootstrap-select' => '/vendor/bootstrap-select-1.14.0-beta3/js/bootstrap-select.min.js',
+            '120_bootstrap-select-fr' => '/vendor/bootstrap-select-1.14.0-beta3/js/i18n/defaults-fr_FR.js',
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
         ],
         'stylesheets' => [
             '050_bootstrap-theme' => '',
-            '110_' => 'vendor/DataTables-1.10.18/datatables.min.css',
+            '110_' => 'vendor/DataTables-1.12.1/datatables.min.css',
             '112_' => 'vendor/font-awesome-5.15.2/css/all.min.css',
-            '114_' => 'vendor/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css',
+            '300_bs' => '/vendor/bootstrap-select-1.14.0-beta3/css/bootstrap-select.min.css',
             '990_' => 'css/ubuntu.css',
             '991_' => 'css/raleway.css',
             '060_unicaen' => 'css/unicaen.css',

@@ -6,14 +6,14 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Date;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Element\Time;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Callback;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Date;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Time;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Callback;
 
 class EntretienProfessionnelForm extends Form {
     use CampagneServiceAwareTrait;
@@ -44,7 +44,7 @@ class EntretienProfessionnelForm extends Form {
     public function init()
     {
         //Responsable
-        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon icon-information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $responsable
             ->setAutocompleteSource($this->urlResponsable)
             ->setSelectionRequired(true)

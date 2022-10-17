@@ -3,11 +3,11 @@
 namespace UnicaenValidation\Form\ValidationInstance;
 
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class ValidationInstanceForm extends Form {
     use ValidationTypeServiceAwareTrait;

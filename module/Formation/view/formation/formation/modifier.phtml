@@ -37,7 +37,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
             <a      href="<?php echo $this->url('formation/modifier-formation-informations', ['formation' => $formation->getId()], [], true); ?>"
                     class="btn btn-primary action ajax-modal" data-event="modification"
             >
-                <span class="icon editer"></span>
+                <span class="icon icon-editer"></span>
                 Modifier les informations
             </a>
         <?php endif; ?>
@@ -45,7 +45,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
         <?php /** @see FormationController::indexAction() */ ?>
         <a      href="<?php echo $this->url('formation', [], ['fragment' => "formation"], true); ?>"
                 class="btn btn-info action">
-            <span class="icon retour"></span>
+            <span class="icon icon-retour"></span>
             Retour à l'index des formations
 
         </a>
@@ -82,7 +82,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
             <a      href="<?php echo $this->url('formation-instance/ajouter', ['formation' => $formation->getId()], [], true); ?>"
                     class="btn btn-primary action"
             >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter une session
             </a>
         <?php endif; ?>

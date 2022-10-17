@@ -4,16 +4,17 @@ namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FicheMetier;
+use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Metier\Entity\Db\Reference;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Hidden;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Checkbox;
+use Laminas\Form\Element\Hidden;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;
@@ -174,7 +175,7 @@ class AjouterFicheMetierForm extends Form {
         $fiches = array_filter($fiches, function (FicheMetier $a) use ($agent) {
             return (
                 $a->estNonHistorise() AND
-                $a->getEtat()->getCode() === FicheMetier::ETAT_VALIDE AND
+                $a->getEtat()->getCode() === FicheMetierEtats::ETAT_VALIDE AND
                 ($a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
         });
 

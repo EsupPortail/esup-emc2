@@ -3,7 +3,7 @@
 namespace Fichier\Form\Upload;
 
 use Fichier\Entity\Db\Fichier;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class UploadHydrator implements HydratorInterface {
 
@@ -11,10 +11,10 @@ class UploadHydrator implements HydratorInterface {
      * @var Fichier $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
-            'nature' => ($object)?$object->getNature()->getId():null,
+            'nature' => ($object AND $object->getNature())?$object->getNature()->getId():null,
         ];
         return $data;
     }

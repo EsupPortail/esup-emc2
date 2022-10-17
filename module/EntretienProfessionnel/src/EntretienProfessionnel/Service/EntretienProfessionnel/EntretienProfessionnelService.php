@@ -27,7 +27,7 @@ use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
     use AgentServiceAwareTrait;
@@ -256,7 +256,7 @@ class EntretienProfessionnelService {
     public function getEntretienProfessionnel(?int $id) : ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
-            ->addSelect('formulaireInstance')->join('entretien.formulaireInstance', 'formulaireInstance')
+            ->addSelect('formulaireInstance')->leftJoin('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
             ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
             ->addSelect('categorie')->leftJoin('champ.categorie', 'categorie')

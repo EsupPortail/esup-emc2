@@ -20,8 +20,8 @@ use UnicaenEtat\Service\Etat\EtatServiceFactory;
 use UnicaenEtat\View\Helper\EtatBadgeViewHelper;
 use UnicaenEtat\View\Helper\EtatBadgeViewHelperFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -22,8 +22,8 @@ use Application\View\Helper\ParcoursApplicationViewHelperFactory;
 use Application\View\Helper\ParcoursDeFormationViewHelperFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -55,32 +55,32 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'parcours-de-formation' => [
-                                'label'    => 'Parcours de formation',
-                                'route'    => 'parcours-de-formation',
-                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
-                                'order'    => 340,
-                                'icon' => 'fas fa-angle-right',
-                                'pages' => [
-                                    'modifier-parcours-de-foamtion' => [
-                                        'label'    => 'Parcours de formation',
-                                        'route'    => 'parcours-de-formation/modifier',
-                                        'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
-                                    ]
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'default' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'parcours-de-formation' => [
+//                                'label'    => 'Parcours de formation',
+//                                'route'    => 'parcours-de-formation',
+//                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+//                                'order'    => 340,
+//                                'icon' => 'fas fa-angle-right',
+//                                'pages' => [
+//                                    'modifier-parcours-de-foamtion' => [
+//                                        'label'    => 'Parcours de formation',
+//                                        'route'    => 'parcours-de-formation/modifier',
+//                                        'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER),
+//                                    ]
+//                                ],
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

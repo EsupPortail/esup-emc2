@@ -2,13 +2,15 @@
 
 namespace EntretienProfessionnel\Service\Notification;
 
+use Application\Entity\Db\Agent;
+use DateInterval;
+use EntretienProfessionnel\Provider\Template\MailTemplates;
 use Structure\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use Structure\Entity\Db\Structure;
@@ -67,12 +69,7 @@ class NotificationService {
     public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $superieurs_structures = $this->getAgentService()->getResponsablesHierarchiques($agent);
-        $superieurs_nommees = $this->getAgentService()->getSuperieursByAgent($agent);
-
-        $superieurs = [];
-        foreach ($superieurs_structures as $superieur) $superieurs[$superieur->getId()] = $superieur;
-        foreach ($superieurs_nommees as $superieur) $superieurs[$superieur->getId()] = $superieur;
+        $superieurs =  $this->getAgentService()->computeSuperieures($agent);
 
         $emails = [];
         foreach ($superieurs as $superieur) {
@@ -90,12 +87,7 @@ class NotificationService {
     public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $autorites_structures = $this->getAgentService()->getAutoritesHierarchiques($agent);
-        $autorites_nommes = $this->getAgentService()->getAutoritesByAgent($agent);
-
-        $autorites = [];
-        foreach ($autorites_structures as $autorite) $autorites[$autorite->getId()] = $autorite;
-        foreach ($autorites_nommes as $autorite) $autorites[$autorite->getId()] = $autorite;
+        $autorites = $this->getAgentService()->computeAutorites($agent);
 
         $emails = [];
         foreach ($autorites as $autorite) {
@@ -111,7 +103,7 @@ class NotificationService {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_DAC, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_DAC, $vars);
         $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
         $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mailDac);
@@ -124,7 +116,7 @@ class NotificationService {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CAMPAGNE_OUVERTURE_BIATSS, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_BIATSS, $vars);
         $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
         $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mailBiats);
@@ -142,7 +134,7 @@ class NotificationService {
         $vars = ['campagne' => $campagne, 'agent' => $agent, 'structure' => $structure, 'UrlService' => $this->getUrlService()];
 
         $email = $agent->getEmail();
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('CAMPAGNE_DELEGUE', $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_DELEGUE, $vars);
         $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$campagne->generateTag(), $agent->generateTag(), $structure->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -158,7 +150,7 @@ class NotificationService {
         $url->setVariables($vars);
         $vars['UrlService'] = $url;
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ENVOI", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ENVOI, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -174,7 +166,7 @@ class NotificationService {
             'agent' => $entretien->getAgent(),
             'UrlService' => $this->getUrlService()
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_CONVOCATION_ACCEPTER", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_CONVOCATION_ACCEPTER, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -188,7 +180,7 @@ class NotificationService {
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_1-RESPONSABLE", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_1_RESPONSABLE, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -202,17 +194,17 @@ class NotificationService {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
 
         if ($entretien->getObservationActive() !== null) {
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-OBSERVATION", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_OBSERVATION, $vars);
             $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
 
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-OBSERVATION_TRANSMISSION", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_OBSERVATION_TRANSMISSION, $vars);
             $mail = $this->getMailService()->sendMail($this->getEmailResponsable($entretien), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
         } else {
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-PAS_D_OBSERVATION", $vars);
+            $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_PAS_D_OBSERVATION, $vars);
             $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
@@ -224,7 +216,7 @@ class NotificationService {
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_2-PAS_D_OBSERVATION", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_PAS_D_OBSERVATION, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -236,7 +228,7 @@ class NotificationService {
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_VALIDATION_3-HIERARCHIE", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_3_HIERARCHIE, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -247,7 +239,7 @@ class NotificationService {
     public function triggerRappelEntretien(?EntretienProfessionnel $entretien) : Mail
     {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("ENTRETIEN_RAPPEL_AGENT", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ENTRETIEN_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -264,6 +256,12 @@ class NotificationService {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgents = array_merge($agents, $agentsForces);
 
+        $date = DateTime::createFromFormat('d/m/Y',$campagne->getDateFin()->format('d/m/Y'));
+        $date = $date->sub(new DateInterval('P12M'));
+
+        $allAgents = array_filter($allAgents,
+            function (Agent $a) use ($date) { return $a->getTControatLong() === 'O' AND !empty($a->getAffectationsActifs($date));}
+        );
 
         $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);
         $entretiensFaits  = $this->getCampagneService()->getAgentsAvecEntretiensFaits($campagne, $allAgents);
@@ -290,7 +288,6 @@ class NotificationService {
 
         }
 
-
         $emails = [];
         foreach ($structure->getResponsables() as $responsable) {
             $emails[] = $responsable->getAgent()->getEmail();
@@ -300,7 +297,7 @@ class NotificationService {
             'structure' => $structure,
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode("CAMPAGNE_AVANCEMENT", $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT, $vars);
         $mail = $this->getMailService()->sendMail(implode(',', $emails), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
         $mail->setMotsClefs(["CAMPAGNE_" .$campagne->getId(), "CAMPAGNE_AVANCEMENT" , "DATE_". (new DateTime())->format('d/m/Y')]);
         $this->getMailService()->update($mail);

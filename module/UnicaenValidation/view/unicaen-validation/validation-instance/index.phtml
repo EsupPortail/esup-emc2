@@ -30,7 +30,7 @@ $canDetruire = $this->isAllowed(ValidationinstancePrivileges::getResourceId(Vali
             class="btn btn-primary action ajax-modal"
             data-event="modification"
         >
-            <span class="icon ajouter"> Ajouter une instance de validation</span>
+            <span class="icon icon-ajouter"> Ajouter une instance de validation</span>
         </a>
     <?php endif; ?>
 
@@ -63,7 +63,7 @@ $canDetruire = $this->isAllowed(ValidationinstancePrivileges::getResourceId(Vali
                             href="<?php echo $this->url('validation/instance/modifier', ['validation' => $instance->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer" title="Modifier l'instance de validation"></a>
+                            <span class="icon icon-editer" title="Modifier l'instance de validation"></a>
                     <?php endif; ?>
 
                     <?php if ($canHistoriser): ?>
@@ -72,14 +72,14 @@ $canDetruire = $this->isAllowed(ValidationinstancePrivileges::getResourceId(Vali
                                 <?php /** @see \UnicaenValidation\Controller\ValidationInstanceController::modifierAction() */?>
                                 href="<?php echo $this->url('validation/instance/historiser', ['validation' => $instance->getId()], [], true); ?>"
                             >
-                                <span class="icon historiser" title="Historiser l'instance de validation"></a>
+                                <span class="icon icon-historiser" title="Historiser l'instance de validation"></a>
                         <?php else : ?>
 
                             <a
                                 <?php /** @see \UnicaenValidation\Controller\ValidationInstanceController::modifierAction() */?>
                                 href="<?php echo $this->url('validation/instance/restaurer', ['validation' => $instance->getId()], [], true); ?>"
                             >
-                                <span class="icon restaurer" title="Restaurer l'instance de validation"></a>
+                                <span class="icon icon-restaurer" title="Restaurer l'instance de validation"></a>
                         <?php endif; ?>
                     <?php endif; ?>
 
@@ -89,7 +89,7 @@ $canDetruire = $this->isAllowed(ValidationinstancePrivileges::getResourceId(Vali
                             href="<?php echo $this->url('validation/instance/detruire', ['validation' => $instance->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon detruire" title="Supprimer définitivement l'instance de validation"></a>
+                            <span class="icon icon-retirer" title="Supprimer définitivement l'instance de validation"></a>
                     <?php endif; ?>
                 </td>
             </tr>

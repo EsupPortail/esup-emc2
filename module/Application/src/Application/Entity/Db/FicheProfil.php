@@ -4,8 +4,8 @@ namespace Application\Entity\Db;
 
 use DateTime;
 use Structure\Entity\Db\Structure;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheProfil implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

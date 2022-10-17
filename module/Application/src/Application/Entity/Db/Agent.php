@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Application\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\Niveau;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
@@ -25,7 +26,7 @@ use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use UnicaenUtilisateur\Entity\Db\User;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Agent implements
     ResourceInterface,
@@ -206,7 +207,10 @@ class Agent implements
      */
     public function getDenomination() : ?string
     {
-        return ucwords(strtolower($this->getPrenom()), "-") . ' ' . $this->getNomUsuel();
+        $prenom = $this->getPrenom();
+        $prenom = str_replace("É", "é", $prenom);
+        $prenom = str_replace("È", "è", $prenom);
+        return ucwords(strtolower($prenom), "-") . ' ' . $this->getNomUsuel();
 
     }
 
@@ -735,10 +739,10 @@ class Agent implements
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
             if ($fiche->isEnCours() AND $fiche->estNonHistorise()) {
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE)) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePoste::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePoste::ETAT_CODE_OK))) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePoste::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
+                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
             }
         }
         return $best;
@@ -760,5 +764,29 @@ class Agent implements
         if ($ficheposte === null) return 'Aucun fiche de poste au format EMC2';
 
         return $ficheposte->toStringCompositionFichesMetiers();
+    }
+
+    public function getStatutToString(?DateTime $date = null) : string
+    {
+        $result = "";
+
+        $statuts =  $this->getStatutsActifs($date);
+        $isTitulaire = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isTitulaire()) { $isTitulaire = true; break;}
+        }
+        if ($isTitulaire) $result .= "Titulaire ";
+        $isCDI = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isCdi()) { $isCDI = true; break;}
+        }
+        if ($isCDI) $result .= "C.D.I. ";
+        $isCDD = false;
+        foreach ($statuts as $statut) {
+            if ($statut->isCdd()) { $isCDD = true; break;}
+        }
+        if ($isCDD) $result .= "C.D.D. ";
+
+        return $result;
     }
 }

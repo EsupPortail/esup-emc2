@@ -13,11 +13,12 @@ trait DbImportableAwareTrait {
     /** @var DateTime */
     private $deleted_on;
 
+    public function getDeleted() { return $this->deleted_on; }
 
     public function isDeleted(DateTime $date = null) : bool
     {
         if ($date === null) return ($this->deleted_on !== null);
-        return $this->deleted_on < $date;
+        return ($this->deleted_on !== null AND $this->deleted_on < $date);
     }
 
     public function setCreatedOn(DateTime $date = null)

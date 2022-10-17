@@ -13,6 +13,9 @@ use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 
 class FormationControllerFactory
 {
@@ -20,6 +23,8 @@ class FormationControllerFactory
     /**
      * @param ContainerInterface $container
      * @return FormationController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : FormationController
     {
@@ -28,11 +33,15 @@ class FormationControllerFactory
          * @var FormationElementService $formationElementService
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
+         * @var SourceService $sourceService
          */
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $sourceService = $container->get(SourceService::class);
+        $sourceService->setEntityManager($entityManager);
 
         /**
          * @var FormationForm $formationForm
@@ -60,6 +69,7 @@ class FormationControllerFactory
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationForm($formationForm);
         $controller->setSelectionFormationForm($selectionFormationForm);
+        $controller->setSourceService($sourceService);
 
         $controller->setApplicationElementService($applicationElementService);
         $controller->setApplicationElementForm($applicationElementForm);

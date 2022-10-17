@@ -3,12 +3,14 @@
 namespace Formation\Form\Formation;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
+use Formation\Entity\Db\Formation;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Radio;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class FormationForm extends Form
 {
@@ -65,6 +67,39 @@ class FormationForm extends Form
                 'id' => 'lien',
             ],
         ]);
+
+        // type
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'affichage',
+            'options' => [
+                'label' => "Affichage dans le 'plan de formation à venir'  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'value_options' => [
+                    true => "Oui",
+                    false => "Non",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'affichage',
+            ],
+        ]);
+        //rattachement
+        $this->add([
+            'type' => Select::class,
+            'name' => 'rattachement',
+            'options' => [
+                'label' => "Action de formation rattachée  :",
+                'empty_option' => "Aucun rattachement particulier",
+                'value_options' => [
+                    Formation::RATTACHEMENT_PREVENTION => 'service de prévention',
+                    Formation::RATTACHEMENT_BIBLIOTHEQUE => 'service de documentation',
+                ],
+            ],
+            'attributes' => [
+                'id' => 'rattachement',
+            ],
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -87,6 +122,8 @@ class FormationForm extends Form
             'groupe' => ['required' => false,],
             'description' => ['required' => false,],
             'lien' => ['required' => false,],
+            'affichage' => ['required' => true,],
+            'rattachement' => ['required' => false,],
         ]));
     }
 }

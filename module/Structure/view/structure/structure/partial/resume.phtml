@@ -7,6 +7,7 @@
  * @var StructureGestionnaire[] $gestionnaires
  */
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -16,8 +17,8 @@ $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRU
 $canEditerGestionnaire  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 $canEditerResponsable  = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
 
-$responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted() OR !$r->isImported(); });
-$gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted() OR !$r->isImported(); });
+$responsables = array_filter($responsables, function (StructureResponsable $r) { return !$r->isDeleted() ; });
+$gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $r) { return !$r->isDeleted(); });
 
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
@@ -36,17 +37,17 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     class="ajax-modal"
                     data-event="modification"
                 >
-                    <span class="icon editer" data-toggle="tooltip" data-html="true"
+                    <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
                 <a
                     <?php /** @see \Application\Controller\StructureController::toggleResumeMereAction() */ ?>
                         href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], [], true); ?>"
                 >
                     <?php if ($structure->getRepriseResumeMere()) : ?>
-                        <span class="icon ko" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-retirer" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ne plus réutiliser le résumé de la structure mère"></span></a>
                     <?php else : ?>
-                        <span class="icon ok" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
                           title="Réutiliser le résumé de la structure mère"></span></a>
                     <?php endif; ?>
 
@@ -56,14 +57,14 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
 
         <?php if ($structure->getRepriseResumeMere()) : ?>
             <div class="alert alert-info">
-                <span class="icon information"></span>
+                <span class="icon icon-information"></span>
                 Reprise du résumé de la structure mère.
             </div>
         <?php endif; ?>
         <?php if ($structure->getDescriptionComplete()) : ?>
             <?php echo $structure->getDescriptionComplete(); ?>
         <?php else : ?>
-            <span class="probleme"> <span class="icon attention"></span> Aucune description. </span>
+            <span class="probleme"> <span class="icon icon-attention"></span> Aucune description. </span>
         <?php endif; ?>
 
         <dl class="dl-horizontal">
@@ -87,7 +88,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
     <div class="col-md-6">
         <h2 style="border-bottom:1px solid black;">
             Rôles
-            <span class="icon information" style="color:var(--content-background)"></span>
+            <span class="icon icon-information" style="color:var(--content-background)"></span>
         </h2>
 
         <?php //echo $this->portenote('StructureController::indexAction()>Role', '', []); ?>
@@ -95,15 +96,15 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Responsables
             <span class="badge"><?php echo count($responsables); ?></span>
-            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
             <?php if ($canEditerResponsable) : ?>
                 <a
-                    <?php /** @see \Application\Controller\StructureController::ajouterResponsable() */ ?>
+                    <?php /** @see \Structure\Controller\StructureController::ajouterResponsableAction() */ ?>
                         href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
                         class="ajax-modal"
                         data-event="modification"
                 >
-                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ajouter un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
             <?php endif; ?>
@@ -114,10 +115,10 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
                         <?php echo $responsable->getAgent()->getDenomination(); ?>
                     </span>
-                    <?php if (! $responsable->isImported() AND $canEditerResponsable) : ?>
+                    <?php if ($responsable->getSource()->getCode() !== HasSourceInterface::SOURCE_OCTOPUS AND $canEditerResponsable) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerResponsableAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-responsable', ['structure'=>$structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>">
-                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
                                   title="Retirer un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
                         </a>
                     <?php endif ?>
@@ -128,7 +129,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Gestionnaires
             <span class="badge"><?php echo count($gestionnaires); ?></span>
-            <span class="icon synchoniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
                 <?php if ($canEditerGestionnaire) : ?>
                     <a
                         <?php /** @see \Structure\Controller\StructureController::ajouterGestionnaireAction() */ ?>
@@ -136,7 +137,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon ajouter" data-toggle="tooltip" data-html="true"
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
                               title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
                         </span></a>
                 <?php endif; ?>
@@ -147,10 +148,10 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     <span title="Responsabilité valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
                         <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
                     </span>
-                    <?php if (! $gestionnaire->isImported() AND $canEditerGestionnaire) : ?>
+                    <?php if ($gestionnaire->getSource()->getCode() !== HasSourceInterface::SOURCE_OCTOPUS AND $canEditerGestionnaire) : ?>
                         <?php /** @see \Structure\Controller\StructureController::retirerGestionnaireAction()  */?>
                         <a href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure'=>$structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>">
-                            <span class="icon retirer" data-toggle="tooltip" data-html="true"
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
                                   title="Retirer un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
                         </a>
                     <?php endif ?>
@@ -159,7 +160,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         </ul>
         <h2 style="border-bottom:1px solid black;">
             Structures
-            <span class="icon information" style="color:var(--content-background)"></span>
+            <span class="icon icon-information" style="color:var(--content-background)"></span>
         </h2>
 
         <?php //echo $this->portenote('StructureController::indexAction()>structures_liees', '', []); ?>

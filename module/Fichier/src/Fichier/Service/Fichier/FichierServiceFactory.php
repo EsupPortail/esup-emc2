@@ -5,7 +5,7 @@ namespace Fichier\Service\Fichier;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenUtilisateur\Service\User\UserService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class FichierServiceFactory {
 

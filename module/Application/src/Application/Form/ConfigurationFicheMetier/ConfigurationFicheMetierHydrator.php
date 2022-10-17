@@ -3,7 +3,7 @@
 namespace Application\Form\ConfigurationFicheMetier;
 
 use Application\Entity\Db\ConfigurationFicheMetier;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ConfigurationFicheMetierHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ConfigurationFicheMetierHydrator implements HydratorInterface {
      * @param ConfigurationFicheMetier $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'operation' => $object->getOperation(),

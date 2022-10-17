@@ -3,7 +3,7 @@
 namespace Fichier\Entity\Db;
 
 
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Fichier {
     use HistoriqueAwareTrait;

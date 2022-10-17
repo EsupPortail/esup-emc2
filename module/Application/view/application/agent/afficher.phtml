@@ -14,12 +14,12 @@ use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use UnicaenUtilisateur\Entity\Db\User;
 
 /**
  * @see AgentController::afficherAction()
  * @var Agent   $agent
  * @var EntretienProfessionnel[] $entretiens
+ * @var Agent[]  $superieures
  * @var Agent[]  $responsables
  * @var Agent[]  $autorites
  * @var array $parcoursArray
@@ -88,50 +88,44 @@ if ($agent !== null) {
 
     <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-            <li>
-                <a href="#informations" aria-controls="informations" role="tab" data-toggle="tabz">
+            <li class="nav-item">
+                <a href="#informations" class="nav-link" aria-controls="informations" role="tab" data-toggle="tabz">
                    Informations <br/> générales
                 </a>
             </li>
-            <li>
-                <a href="#entretiens" aria-controls="entretiens" role="tab" data-toggle="tabz">
-                    Entretiens <br/>
-                    professionnels
-                </a>
-            </li>
-            <li>
-                <a href="#fiches" aria-controls="fiches" role="tab" data-toggle="tabz">
+            <li class="nav-item">
+                <a href="#fiches" class="nav-link" aria-controls="fiches" role="tab" data-toggle="tabz">
                     Fiches de poste et <br/>
                     missions spécifiques
                 </a>
             </li>
             <?php if ($displayParcours === true) : ?>
-            <li>
-                <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
+            <li class="nav-item">
+                <a href="#parcours" class="nav-link" aria-controls="parcours" role="tab" data-toggle="tabz">
                     Parcours de formation<br/> et logiciels metiers
                 </a>
             </li>
             <?php endif; ?>
             <?php if ($canPortfolio) : ?>
-                <li>
-                    <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
+                <li class="nav-item">
+                    <a href="#acquis" class="nav-link" aria-controls="acquis" role="tab" data-toggle="tabz">
                         Acquis de l'agent <br/> &nbsp;
                     </a>
                 </li>
-                <li>
-                    <a href="#portfolio" aria-controls="portfolio" role="tab" data-toggle="tabz">
+                <li class="nav-item">
+                    <a href="#portfolio" class="nav-link" aria-controls="portfolio" role="tab" data-toggle="tabz">
                         Portfolio <br/> &nbsp;
                     </a>
                 </li>
             <?php endif; ?>
             <?php if ($canCCC === true) : ?>
-                <li>
-                    <a href="#ppp" aria-controls="ppp" role="tab" data-toggle="tabz">
+                <li class="nav-item">
+                    <a href="#ppp" class="nav-link" aria-controls="ppp" role="tab" data-toggle="tabz">
                         Projet professionnel <br/> &nbsp;personnel
                     </a>
                 </li>
-                <li>
-                    <a href="#tutorat" aria-controls="tutorat" role="tab" data-toggle="tabz">
+                <li class="nav-item">
+                    <a href="#tutorat" class="nav-link" aria-controls="tutorat" role="tab" data-toggle="tabz">
                         Tutorats et <br/> encadrements
                     </a>
                 </li>
@@ -146,7 +140,7 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/informations-generales',
                     ['agent' => $agent,
                         'affectations' => $affectations,
-                        'responsables' => $responsables, 'autorites' => $autorites,
+                        'superieures' => $superieures, 'responsables' => $responsables, 'autorites' => $autorites,
                         'statuts' => $statuts, 'echelon' => $echelon, 'grades' => $grades, 'quotite' => $quotite,
                         'canInfoSource' => $canInfoSource]); ?>
             </div>
@@ -155,25 +149,7 @@ if ($agent !== null) {
                     ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
                 <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
             </div>
-            <div id="entretiens" class="tab-pane " role="tabpanel">
-                <h2> Entretiens professionnels </h2>
 
-                <div class="alert alert-info">
-                    <span class="icon attention"></span> Seuls les entretiens professionnels validés par le&middot;a supérieur·e hiérarchique direct·e (ou son&middot;a délégué&middot;e) sont visualisables par les agents.
-                </div>
-
-                <?php echo $this->entretienProfessionnelArray($entretiens,
-                    [
-                        'affichages' => ['agent' => false, 'lieu' => false],
-                        'droits' => ['modifier' => false, 'historiser' => false,  'supprimer' => false, 'sursis' => false]
-                    ]
-                ); ?>
-
-                <br/>
-                <div class="alert alert-info">
-                    <span class="icon attention"></span> Vous pouvez retrouvez sur l'intranet les documents vous permettant de préparer votre entretien : <?php echo $intranet; ?>.
-                </div>
-            </div>
 
             <?php if ($displayParcours === true) : ?>
             <div id="parcours" class="tab-pane " role="tabpanel">
@@ -182,7 +158,7 @@ if ($agent !== null) {
                 </h2>
 
                 <div class="alert alert-info">
-                    <strong><span class="icon attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
+                    <strong><span class="icon icon-attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
                     Il est possible qu'un domaine ou un métier ne possède pas de parcours.
                 </div>
 
@@ -193,7 +169,7 @@ if ($agent !== null) {
                 <h2> Applications, compétences et formations</h2>
 
                 <div class="alert alert-info">
-                    <strong><span class="icon attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
+                    <strong><span class="icon icon-attention"> Affichage des applications, compétences et formations directement liées à l'agent.</strong> <br/>
                     Dans ces listes, les applications, compétences et formations associées aux fiches de postes d'un agent ne sont pas mentionnées.
                 </div>
 

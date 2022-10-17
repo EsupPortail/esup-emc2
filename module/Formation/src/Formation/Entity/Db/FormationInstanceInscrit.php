@@ -6,25 +6,22 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Application\Entity\HasAgentInterface;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface, HasSourceInterface, ResourceInterface
 {
     use HasEtatTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
-
-    const ETAT_DEMANDE_INSCRIPTION      = 'DEMANDE_INSCRIPTION';
-    const ETAT_VALIDATION_RESPONSABLE   = 'VALIDATION_RESPONSABLE';
-    const ETAT_VALIDATION_INSCRIPTION   = 'VALIDATION_INSCRIPTION';
-    const ETAT_REFUS_INSCRIPTION        = 'REFUS_INSCRIPTION';
 
     public function getResourceId()
     {
@@ -42,7 +39,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $agent;
     /** @var string */
     private $liste;
-    /** @var ArrayCollection (FormationInstancePresence) */
+    /** @var ArrayCollection (Presence) */
     private $presences;
     /** @var FormationInstanceFrais */
     private $frais;
@@ -50,6 +47,12 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private $questionnaire;
     /** @var string|null */
     private $complement;
+    private ?DateTime $validationEnquete;
+    private Collection $reponsesEnquete;
+
+    private ?string $justificationAgent = null;
+    private ?string $justificationResponsable = null;
+    private ?string $justificationRefus = null;
 
     /**
      * @return int
@@ -151,31 +154,68 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     }
 
     /**
-     * @return string|null
+     * @return EnqueteReponse[]
      */
-    public function getComplement(): ?string
+    public function getReponsesEnquete(): array
     {
-        return $this->complement;
+        if ($this->reponsesEnquete === null) return [];
+        $responses = $this->reponsesEnquete->toArray();
+        $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
+        return $responses;
     }
 
-    /**
-     * @param string|null $complement
-     * @return FormationInstanceInscrit
-     */
-    public function setComplement(?string $complement): FormationInstanceInscrit
+    /** JUSTIFICATIONS  *************************************************************************************/
+
+    public function getJustificationAgent(): ?string
     {
-        $this->complement = $complement;
-        return $this;
+        return $this->justificationAgent;
     }
+
+    public function setJustificationAgent(?string $justificationAgent): void
+    {
+        $this->justificationAgent = $justificationAgent;
+    }
+
+    public function getJustificationResponsable(): ?string
+    {
+        return $this->justificationResponsable;
+    }
+
+    public function setJustificationResponsable(?string $justificationResponsable): void
+    {
+        $this->justificationResponsable = $justificationResponsable;
+    }
+
+    public function getJustificationRefus(): ?string
+    {
+        return $this->justificationRefus;
+    }
+
+    public function setJustificationRefus(?string $justificationRefus): void
+    {
+        $this->justificationRefus = $justificationRefus;
+    }
+
+    public function getValidationEnquete(): ?DateTime
+    {
+        return $this->validationEnquete;
+    }
+
+    public function setValidationEnquete(?DateTime $validationEnquete): void
+    {
+        $this->validationEnquete = $validationEnquete;
+    }
+
+    /** PRESENCES *****************************************************************************************************/
 
     public function getPresences() : array
     {
         return $this->presences->toArray();
     }
 
-    public function wasPresent(FormationInstanceJournee $journee)
+    public function wasPresent(Seance $journee) : bool
     {
-        /** @var FormationInstancePresence $presence */
+        /** @var Presence $presence */
         foreach ($this->presences as $presence) {
             if ($presence->getJournee() === $journee) return $presence->isPresent();
         }
@@ -185,16 +225,23 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     public function getDureePresence() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
-        /** @var FormationInstancePresence[] $presences */
-        $presences = array_filter($this->presences->toArray(), function (FormationInstancePresence $a) {
+        /** @var Presence[] $presences */
+        $presences = array_filter($this->presences->toArray(), function (Presence $a) {
             return $a->estNonHistorise() and $a->isPresent();
         });
         foreach ($presences as $presence) {
             $journee = $presence->getJournee();
-            $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
-            $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-            $duree = $fin->diff($debut);
-            $sum->add($duree);
+            if ($journee->getType() === Seance::TYPE_SEANCE) {
+                $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+                $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
+                $duree = $debut->diff($fin);
+                $sum->add($duree);
+            }
+            if ($journee->getType() === Seance::TYPE_VOLUME) {
+                $volume = $journee->getVolume();
+                $temp = new DateInterval('PT'.$volume.'H');
+                $sum->add($temp);
+            }
         }
 
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
@@ -203,5 +250,6 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
         return $text;
     }
+
 
 }

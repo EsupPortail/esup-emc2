@@ -7,13 +7,16 @@
         </id>
 
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
+        <field name="description"   column="description"    type="string"       length="9999"  />
         <field name="couleur"       column="couleur"        type="string"       length="256"   />
         <field name="ordre"         column="ordre"          type="integer"   />
 
        <one-to-many target-entity="Formation\Entity\Db\Formation" mapped-by="groupe" field="formations"/>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
+        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
+            <join-column name="source_id" referenced-column-name="ID" />
+        </many-to-one>
         <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

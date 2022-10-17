@@ -10,6 +10,9 @@
  * @var User $connectedUser
  * @var Mail[] $mails
  * @var string[] $documents
+ *
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  */
 
 use Application\Entity\Db\Agent;
@@ -18,6 +21,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -50,45 +54,47 @@ $date = $entretien->getMaxSaisiObservation();
 $depasseObs = ($date !== null AND $date < $now);
 
 $step = 0;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE) $step = 1;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION OR $depasseObs) $step = 2;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE)  $step = 3;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_AGENT)       $step = 4;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE) $step = 1;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION OR $depasseObs) $step = 2;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)  $step = 3;
+if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)       $step = 4;
 
 ?>
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <h1 class="page-header">
             Entretien professionnel <?php echo $entretien->getAnnee(); ?> <br/>
             <?php echo $agent->getPrenom(); ?>
             <?php echo $agent->getNomUsuel(); ?>
         </h1>
     </div>
+    <div class="col-md-3">
     <?php $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser; ?>
     <?php if ($isAgent AND (
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER OR
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION )) : ?>
     <?php else : ?>
         <?php if ($canExporterEP) : ?>
             <div class="pull-right">
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>
                 <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                    class="btn btn-primary action">
-                    <span class="icon pdf"></span>
+                    <span class="icon icon-pdf"></span>
                     Exporter le CREP
                 </a>
                 <br/>
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */?>
                 <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true) ?>" target="_blank"
                    class="btn btn-primary action">
-                    <span class="icon pdf"></span>
+                    <span class="icon icon-pdf"></span>
                     Exporter le CREF
                 </a>
             </div>
         <?php endif; ?>
     <?php endif; ?>
+    </div>
 </div>
 
 
@@ -96,81 +102,82 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
     echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
 
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        <li>
-            <a href="#formulaire" aria-controls="formulaire" role="tab" data-toggle="tabz">
-                Compte-rendu <br/> d'entretien <br/> professionnel
-            </a>
-        </li>
-        <li>
-            <a href="#formations" aria-controls="formations" role="tab" data-toggle="tabz">
-                Compte-rendu <br/> d'entretien <br/> de formation &nbsp;
-            </a>
-        </li>
-        <?php if ($displayParcours === true) : ?>
-            <li>
-                <a href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">
-                    Parcours de <br/> formation et <br/> logiciels metiers
-                </a>
-            </li>
-        <?php endif; ?>
-        <?php if ($displayAcquis === true) : ?>
-        <li>
-            <a href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">
-                Acquis de <br/> l'agent <br/> &nbsp;
-            </a>
-        </li>
-        <?php endif ?>
-        <li>
-            <a href="#validation" aria-controls="validation" role="tab" data-toggle="tabz" >
-                Observations et <br/> validations <br/> <span class="badge" style="margin-left:7rem;"><?php echo $step; ?>/4</span>
-            </a>
-        </li>
-        <li class="pull-right">
-            <a href="#mails" aria-controls="mails" role="tab" data-toggle="tabz" >
-                <br/> Mails <br/> &nbsp;
-            </a>
-        </li>
-    </ul>
+<ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="#formulaire" aria-controls="formulaire">
+            Compte-rendu <br/> d'entretien professionnel
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#formations" aria-controls="formations">
+            Compte-rendu <br/> d'entretien de formation &nbsp;
+        </a>
+    </li>
+<!--        --><?php //if ($displayParcours === true) : ?>
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">-->
+<!--                    Parcours de <br/> formation et <br/> logiciels metiers-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        --><?php //endif; ?>
+<!--        --><?php //if ($displayAcquis === true) : ?>
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link" href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">-->
+<!--                Acquis de <br/> l'agent <br/> &nbsp;-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        --><?php //endif ?>
+    <li class="nav-item">
+        <a class="nav-link" href="#validation" aria-controls="validation">
+            Observations et <br/> validations <span class="badge" style="margin-left:1rem;"><?php echo $step; ?>/4</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#mails" aria-controls="mails">
+            Mails <br/> &nbsp;
+        </a>
+    </li>
+</ul>
 
-    <div class="main-with-tab">
 
-        <div class="tab-content">
+    <div class="tab-content">
 
-            <div id="formulaire" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
-            </div>
+    <div id="formulaire" class="tab-pane" >
+        <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
+    </div>
 
-            <div id="formations" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
-            </div>
+    <div id="formations" class="tab-pane">
+        <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+    </div>
 
 <!--            --><?php //if ($displayParcours === true) : ?>
-<!--                <div id="parcours" class="tab-pane " role="tabpanel">-->
+<!--                <div id="parcours" class="tab-pane">-->
 <!--                    --><?php //echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
 <!--                </div>-->
 <!--            --><?php //endif; ?>
-            <?php if ($displayAcquis === true) : ?>
-            <div id="acquis" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
-            </div>
-            <?php endif; ?>
 
-            <div id="validation" class="tab-pane " role="tabpanel">
-                <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction', 'droits' => $droits, 'step' => $step]); ?>
-            </div>
-            <div id="mails" class="tab-pane " role="tabpanel">
+<!--            --><?php //if ($displayAcquis === true) : ?>
+<!--            <div id="acquis" class="tab-pane">-->
+<!--                --><?php //echo $this->partial('partial/acquis.phtml', ['entretien' => $entretien, 'agent' => $agent, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+<!--            </div>-->
+<!--            --><?php //endif; ?>
 
-                <br/>
-                <div>
-                    <?php echo $this->mails($mails); ?>
-                </div>
-            </div>
-        </div>
+    <div id="validation" class="tab-pane">
+        <?php echo $this->partial('partial/validation', [
+                'entretien' => $entretien, 'source' => 'renseignerAction',
+                'superieures' => $superieures, 'autorites' => $autorites,
+                'droits' => $droits, 'step' => $step]); ?>
     </div>
 
+    <div id="mails" class="tab-pane">
+
+        <br/>
+        <div>
+            <?php echo $this->mails($mails); ?>
+        </div>
+    </div>
 </div>
+
 
 <style>
     h3.categorie {
@@ -196,8 +203,10 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION
 
         $('a[aria-controls=' + name + ']').tab('show');
 
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
             $(this).tab('show');
         });
 

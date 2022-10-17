@@ -8,8 +8,8 @@ use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Service\Corps\CorpsService;
 use Carriere\Service\Corps\CorpsServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

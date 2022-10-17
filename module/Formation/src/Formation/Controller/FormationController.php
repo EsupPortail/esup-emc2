@@ -17,11 +17,16 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
+
+/** @method FlashMessenger flashMessenger() */
 
 class FormationController extends AbstractActionController
 {
@@ -30,12 +35,13 @@ class FormationController extends AbstractActionController
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
-    use FormationFormAwareTrait;
+    use SourceServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use CompetenceElementFormAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use FormationFormAwareTrait;
     use SelectionFormationFormAwareTrait;
 
     /** CRUD **********************************************************************************************************/
@@ -77,10 +83,16 @@ class FormationController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+
                 $this->getFormationService()->create($formation);
-                $formation->setSource(HasSourceInterface::SOURCE_EMC2);
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $formation->setSource($source);
                 $formation->setIdSource($formation->getId());
                 $this->getFormationService()->update($formation);
+
+                $url = $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()], ['force_canonical' => true], true);
+                $this->flashMessenger()->addSuccessMessage("Action de formation <strong>".$formation->getLibelle()."</strong> créée. Pour accéder à celle-ci vous pouvez utiliser le lien suivant : <a href='".$url."'>".$url."</a>");
                 exit;
             }
         }
@@ -268,6 +280,16 @@ class FormationController extends AbstractActionController
         if (($term = $this->params()->fromQuery('term'))) {
             $formations = $this->getFormationService()->findFormationByTerm($term);
             $result = $this->getFormationService()->formatFormationtJSON($formations);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    public function rechercherFormateurAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $formateurs = $this->getFormationService()->findFormateurByTerm($term);
+            $result = $this->getFormationService()->formatFormateurJSON($formateurs);
             return new JsonModel($result);
         }
         exit;

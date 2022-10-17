@@ -3,11 +3,11 @@
 namespace Application\Form\FonctionActivite;
 
 use Application\Service\Fonction\FonctionServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class FonctionActiviteForm extends Form {
     use FonctionServiceAwareTrait;

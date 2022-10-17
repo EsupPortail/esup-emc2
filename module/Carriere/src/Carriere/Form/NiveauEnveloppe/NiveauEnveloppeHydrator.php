@@ -4,7 +4,7 @@ namespace Carriere\Form\NiveauEnveloppe;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class NiveauEnveloppeHydrator implements HydratorInterface {
     use NiveauServiceAwareTrait;
@@ -13,7 +13,7 @@ class NiveauEnveloppeHydrator implements HydratorInterface {
      * @param NiveauEnveloppe $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'borne_inferieure' => ($object->getBorneInferieure())?$object->getBorneInferieure()->getId():null,

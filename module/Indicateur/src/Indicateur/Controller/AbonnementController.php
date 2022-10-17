@@ -8,8 +8,8 @@ use Indicateur\Entity\Db\Abonnement;
 use Indicateur\Service\Abonnement\AbonnementServiceAwareTrait;
 use Indicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class AbonnementController extends AbstractActionController {
     use AbonnementServiceAwareTrait;

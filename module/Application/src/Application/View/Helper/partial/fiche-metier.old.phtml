@@ -73,7 +73,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        --><?php ///** @see FicheMetierController::editerLibelleAction() */ ?>
 <!--        <a  class="btn btn-primary action ajax-modal" data-event="modification"-->
 <!--            href="--><?php //echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fichemetier->getId()], [] , true); ?><!--">-->
-<!--            <span class="icon editer"></span>-->
+<!--            <span class="icon icon-editer"></span>-->
 <!--            Modifier libellé-->
 <!--        </a>-->
 <!---->
@@ -86,7 +86,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                <span class="icon retirer"></span>-->
 <!--                Retirer expertise-->
 <!--            --><?php //else: ?>
-<!--                <span class="icon ajouter"></span>-->
+<!--                <span class="icon icon-ajouter"></span>-->
 <!--                Ajouter expertise-->
 <!--            --><?php //endif; ?>
 <!--        </a>-->
@@ -114,14 +114,14 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--<div class="main">-->
 <!--    --><?php //if ($ficheposte === null) : ?>
 <!--    <br/>-->
-<!--    <div class="panel panel-info">-->
-<!--        <div class="panel-heading">-->
+<!--    <div class="card panel-info">-->
+<!--        <div class="card-header">-->
 <!--            <h2>-->
 <!--                Missions principales-->
 <!--                <span class="badge"> --><?php //echo count($activitesRestantes); ?><!--/--><?php //echo count($activites); ?><!-- </span>-->
 <!--            </h2>-->
 <!--        </div>-->
-<!--        <div class="panel-body">-->
+<!--        <div class="card-body">-->
 <!--            <div class="row">-->
 <!--                --><?php //if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
 <!--                    --><?php ///** @see FicheMetierController::ajouterNouvelleActiviteAction() */ ?>
@@ -129,7 +129,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                        href="--><?php //echo $this->url('fiche-metier-type/ajouter-nouvelle-activite', ['id' => $fichemetier->getId()], [] , true); ?><!--"-->
 <!--                        data-event="modification"-->
 <!--                    >-->
-<!--                        <span class="icon ajouter"></span>-->
+<!--                        <span class="icon icon-ajouter"></span>-->
 <!--                        Ajouter une nouvelle activité-->
 <!--                    </a>-->
 <!--                    --><?php ///** @see FicheMetierController::ajouterActiviteExistanteAction() */ ?>
@@ -156,7 +156,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                    href="--><?php //echo $this->url('fiche-poste/selectionner-activite', ['fiche-poste' => $ficheposte->getId(), 'fiche-type-externe' => $ficheexterne->getId()], [], true); ?><!--"-->
 <!--                                    class="ajax-modal" data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon listing" title="Sélectionner les activités associées"></span></a>-->
+<!--                                <span class="icon icon-listing" title="Sélectionner les activités associées"></span></a>-->
 <!--                        --><?php //endif; ?>
 <!--                    </div>-->
 <!--                </div>-->
@@ -186,8 +186,8 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--            </div>-->
 <!--        --><?php //else : ?>
 <!--            --><?php //$dictionnaireCompetence = $options['competences']; ?>
-<!--            <div class="panel panel-info">-->
-<!--                <div class="panel-heading">-->
+<!--            <div class="card panel-info">-->
+<!--                <div class="card-header">-->
 <!--                    <div class="row">-->
 <!--                        <div class="col-md-8">-->
 <!--                            <h2>-->
@@ -204,14 +204,14 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                <a href="--><?php //echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--                                   class="btn btn-primary action ajax-modal"-->
 <!--                                >-->
-<!--                                    <span class="icon graphique"></span>-->
+<!--                                    <span class="icon icon-diagramme"></span>-->
 <!--                                    Afficher les compétences-->
 <!--                                </a>-->
 <!--                            --><?php //endif; ?>
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
-<!--                <div class="panel-body">-->
+<!--                <div class="card-body">-->
 <!--                    <div class="row">-->
 <!--                    <div class="pull-right">-->
 <!--                        --><?php //if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier') : ?>
@@ -220,7 +220,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                               class="btn btn-primary action ajax-modal"-->
 <!--                               data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon ajouter"></span>-->
+<!--                                <span class="icon icon-ajouter"></span>-->
 <!--                                Ajouter une compétence-->
 <!--                            </a>-->
 <!--                        --><?php //endif; ?>
@@ -241,8 +241,8 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--            </div>-->
 <!--        --><?php //else : ?>
 <!--            --><?php //$dictionnaireApplication = $options['applications']; ?>
-<!--            <div class="panel panel-info">-->
-<!--                <div class="panel-heading">-->
+<!--            <div class="card panel-info">-->
+<!--                <div class="card-header">-->
 <!--                    <div class="row">-->
 <!--                        <div class="col-md-8">-->
 <!--                            <h2>-->
@@ -259,14 +259,14 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                                <a href="--><?php //echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--                                   class="btn btn-primary action ajax-modal"-->
 <!--                                >-->
-<!--                                    <span class="icon graphique"></span>-->
+<!--                                    <span class="icon icon-diagramme"></span>-->
 <!--                                    Afficher les applications-->
 <!--                                </a>-->
 <!--                            --><?php //endif; ?>
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
-<!--                <div class="panel-body">-->
+<!--                <div class="card-body">-->
 <!--                    <div class="row">-->
 <!--                        <div class="pull-right">-->
 <!--                        --><?php //if (isset($options['mode']) AND $options['mode'] === 'edition-fiche-metier'): ?>
@@ -275,7 +275,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                               class="btn btn-primary action ajax-modal"-->
 <!--                               data-event="modification"-->
 <!--                            >-->
-<!--                                <span class="icon ajouter"></span>-->
+<!--                                <span class="icon icon-ajouter"></span>-->
 <!--                                Ajouter une application-->
 <!--                            </a>-->
 <!--                        --><?php //endif; ?>
@@ -296,14 +296,14 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--                Le parcours de formation n'est pas fourni.-->
 <!--            </div>-->
 <!--        --><?php //else : ?>
-<!--            <div class="panel panel-info">-->
-<!--            <div class="panel-heading">-->
+<!--            <div class="card panel-info">-->
+<!--            <div class="card-header">-->
 <!--                <h2>-->
 <!--                    <span class="icon formation"></span>-->
 <!--                    Parcours de formation-->
 <!--                </h2>-->
 <!--            </div>-->
-<!--            <div class="panel-body">-->
+<!--            <div class="card-body">-->
 <!--                <div class="row">-->
 <!--                    <div class="col-md-1"></div>-->
 <!--                    <div class="col-md-10">-->
@@ -330,7 +330,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        <a href="--><?php //echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--           class="btn btn-primary action ajax-modal"-->
 <!--        >-->
-<!--            <span class="icon graphique"></span>-->
+<!--            <span class="icon icon-diagramme"></span>-->
 <!--            Afficher les compétences-->
 <!--        </a>-->
 <!---->
@@ -338,7 +338,7 @@ use Application\Entity\Db\FicheTypeExterne;
 <!--        <a href="--><?php //echo $this->url('fiche-metier-type/graphique-applications', ['fiche-metier' => $fichemetier->getId(), 'agent' => ($agent)?$agent->getId():null], [], true); ?><!--"-->
 <!--           class="btn btn-primary action ajax-modal"-->
 <!--        >-->
-<!--            <span class="icon graphique"></span>-->
+<!--            <span class="icon icon-diagramme"></span>-->
 <!--            Afficher les applications-->
 <!--        </a>-->
 <?php //endif; ?>

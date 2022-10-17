@@ -6,10 +6,10 @@ use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Metier\Entity\Db\FamilleProfessionnelle;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class FamilleProfessionnelleController extends AbstractActionController {
     use FamilleProfessionnelleServiceAwareTrait;

@@ -9,8 +9,8 @@ use Application\Service\SpecificiteActivite\SpecificiteActiviteService;
 use Application\Service\SpecificiteActivite\SpecificiteActiviteServiceFactory;
 use Application\View\Helper\SpecificiteActiviteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

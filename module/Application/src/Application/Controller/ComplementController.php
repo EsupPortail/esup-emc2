@@ -9,9 +9,9 @@ use Application\Form\Complement\ComplementFormAwareTrait;
 use Application\Service\Complement\ComplementServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class ComplementController extends AbstractActionController {
     use EntityManagerAwareTrait;

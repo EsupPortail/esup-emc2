@@ -6,6 +6,6 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FormationinstancepresencePrivileges extends Privileges
 {
-    const FORMATIONINSTANCEPRESENCE_AFFICHER = 'FormationInstancePresence-FormationInstancePresence_afficher';
-    const FORMATIONINSTANCEPRESENCE_MODIFIER = 'FormationInstancePresence-FormationInstancePresence_modifier';
+    const FORMATIONINSTANCEPRESENCE_AFFICHER = 'formationinstancepresence-formationinstancepresence_afficher';
+    const FORMATIONINSTANCEPRESENCE_MODIFIER = 'formationinstancepresence-formationinstancepresence_modifier';
 }

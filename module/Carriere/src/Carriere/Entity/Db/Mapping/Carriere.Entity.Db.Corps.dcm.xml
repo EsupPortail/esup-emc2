@@ -9,13 +9,10 @@
         <field name="libelleLong"   column="lib_long"       type="string"       length="200" />
         <field name="code"          column="code"           type="string"       length="10"  />
         <field name="categorie"     column="categorie"      type="string"       length="10"  />
-        <many-to-one target-entity="Carriere\Entity\Db\Niveau"  field="niveau">
-            <join-column name="niveau_id" referenced-column-name="id"/>
-        </many-to-one>
+
         <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveaux">
             <join-column name="niveaux_id" referenced-column-name="id"/>
         </many-to-one>
-        <field name="histo"         column="histo"          type="datetime"                  />
 
         <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="corps"/>
 

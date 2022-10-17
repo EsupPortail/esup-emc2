@@ -9,8 +9,9 @@
 
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenUtilisateur\Entity\Db\User;
 
 $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser;
@@ -27,7 +28,7 @@ $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entreti
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 
 ?>
@@ -37,8 +38,8 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
 <?php if ($isAgent AND (
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER OR
-        $entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION )) : ?>
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
+        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER )) : ?>
 
     <div class="alert alert-info">
         Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.

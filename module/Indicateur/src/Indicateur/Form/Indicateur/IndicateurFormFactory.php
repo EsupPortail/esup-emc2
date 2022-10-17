@@ -3,7 +3,7 @@
 namespace Indicateur\Form\Indicateur;
 
 use Interop\Container\ContainerInterface;
-use Zend\Form\FormElementManager;
+use Laminas\Form\FormElementManager;
 
 class IndicateurFormFactory {
 

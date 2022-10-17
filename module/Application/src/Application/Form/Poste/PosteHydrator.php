@@ -7,7 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
@@ -19,7 +19,7 @@ class PosteHydrator implements HydratorInterface {
      * @param Poste $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
 
         $data = [

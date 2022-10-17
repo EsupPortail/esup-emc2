@@ -9,107 +9,16 @@ span.icon:before {
     /*font-size: large;*/
 }
 
-span.icon.retour:before {
-    content: "\f104";
-}
-
-span.icon.retour-double:before {
-    content: "\f100";
-}
-
-span.icon.voir:before {
-    content: "\f06e";
-}
-
-span.icon.pdf:before {
-    content: "\f1c1";
-}
-
-span.icon.ajouter:before {
-    content: "\f0fe";
-}
-
-span.icon.editer:before {
-    content: "\f303";
-}
-
-span.icon.historiser:before {
-    content: "\f1f8";
-}
-
-span.icon.restaurer:before {
-    content: "\f829";
-}
-
 span.icon.detruire:before {
     content: "\f00d";
-}
-
-span.icon.monter:before {
-    content: "\f062";
-}
-
-span.icon.descendre:before {
-    content: "\f063";
-}
-
-span.icon.synchoniser:before {
-    content: "\f021";
-}
-
-span.icon.information:before {
-    content: "\f05a";
 }
 
 span.icon.users:before {
     content:"\f0c0";
 }
-span.icon.ajouter-user:before {
-    content: "\f234";
-}
-
-span.icon.retirer-user:before {
-    content: "\f503";
-}
-
-span.icon.listing:before {
-    content: "\f0ae";
-}
-
-span.icon.selectionner:before {
-    content: "\f65e";
-}
-
-span.icon.entretiens:before {
-    content: "\f51c";
-}
-
-span.icon.fichiers:before {
-    content: "\f07c";
-}
-
-span.icon.donnees:before {
-    content: "\f2c2";
-}
 
 span.icon.acceder:before {
     content: "\f064";
-}
-
-span.icon.power:before {
-    content: "\f011";
-}
-
-span.icon.plus:before {
-    content: "\f067";
-}
-
-span.icon.minus:before {
-    content: "\f068";
-}
-
-span.icon.batiment:before {
-    content: "\f1ad";
 }
 
 span.icon.formation:before {
@@ -118,30 +27,6 @@ span.icon.formation:before {
 
 span.icon.effacer:before {
     content: "\f12d";
-}
-
-span.icon.exporter:before {
-    content: "\f6dd ";
-}
-
-span.icon.ok:before {
-    content: "\f00c ";
-}
-
-span.icon.ko:before {
-    content: "\f00d ";
-}
-
-span.icon.attention:before {
-    content: "\f071 ";
-}
-
-span.icon.question:before {
-    content: "\f059 ";
-}
-
-span.icon.cloner:before {
-    content: "\f24d ";
 }
 
 span.icon.competence:before {
@@ -164,10 +49,6 @@ span.icon.fiche-metier:before {
     content: "\f1b3 ";
 }
 
-span.icon.agent:before {
-    content: "\f007 ";
-}
-
 span.icon.verification:before {
     content: "\f0a3 ";
 }
@@ -176,61 +57,20 @@ span.icon.toggle-on:before {
     content: "\f205";
 }
 
-span.icon.toogle-off:before {
-    content: "\f007";
-}
-
-div.survol:hover {
-    background-color: lightgoldenrodyellow;
-}
-
-span.icon.csv:before {
-    content: "\f6dd";
-}
-
-span.icon.code:before {
-    content: "\f1c9";
-}
 
 span.icon.retirer:before {
     content: "\f146";
-}
-
-span.icon.ajouter-plusieurs:before {
-    content: "\f067";
-}
-
-span.icon.valider:before {
-    content: "\f00c";
-}
-
-span.icon.affecter:before {
-    content: "\f055";
-}
-
-span.icon.etudiant:before {
-    content: "\f501";
 }
 
 span.icon.personnel:before {
     content: "\f007";
 }
 
-span.icon.synchroniser:before {
-    content: "\f021";
-}
-
-span.icon.notifier:before {
-    content: "\f0e0";
-}
 
 span.icon.gerer:before {
     content: "\f013 ";
 }
 
-span.icon.rejouer:before {
-    content: "\f03d ";
-}
 
 span.icon.validation-do:before {
     content: "\f058 ";
@@ -240,55 +80,10 @@ span.icon.validation-undo:before {
     content: "\f057 ";
 }
 
-span.icon.telecharger:before {
-    content: "\f019";
-}
-
-span.icon.televerser:before {
-    content: "\f093";
-}
-
-span.icon.fiche-poste:before {
-    content: "\f1c4";
-}
-
-span.icon.euro:before {
-    content: "\f153";
-}
-
-span.icon.paragraph:before {
-    content: "\f039";
-}
-
-span.icon.filtrer:before {
-    content: "\f0b0";
-}
-
-span.icon.rappel:before,
 span.icon.sursis:before {
     content:"\f017";
 }
 
-span.icon.attente:before {
-    content:"\f254";
-}
-
-span.icon.clef:before {
-    content:"\f084";
-}
-
-span.icon.mail:before,
-span.icon.courrier:before {
-    content:"\f0e0";
-}
-
-span.icon.texte:before {
-    content:"\f15c";
-}
-
-span.icon.code:before {
-    content:"\f121";
-}
 
 span.icon.inscription-ouverture:before {
     content:"\f044";
@@ -302,49 +97,16 @@ span.icon.desinscription:before {
     content:"\f410";
 }
 
-span.icon.graphique:before {
-    content:"\f080";
-}
-
 span.icon.aucune:before {
     content:"\f128";
 }
 
-span.icon.star:before {
-    content: "\f005";
-}
 
-span.icon.convoquer:before {
-    content: "\f4ad";
-}
-
-span.icon.parametrer:before {
-    content: "\f0ad";
-}
 
 span.icon.cloturer:before {
     content: "\f28d";
 }
 
-span.icon.reference:before {
-    content: "\f02d";
-}
-
-span.icon.reset:before,
-span.icon.remise-a-zero:before {
-    content: "\f12d";
-}
-
-span.icon.merge:before,
-span.icon.fusionner:before
-{
-    content: "\f247";
-}
-span.icon.unmerge:before,
-span.icon.defusionner:before
-{
-    content: "\f248";
-}
 
 span.icon.dots:before,
 span.icon.actions:before {
@@ -357,4 +119,13 @@ span.icon.hourglass:before {
 
 span.icon.obligatoire:before {
     content: "\f069";
+}
+
+
+.icon.icon-follow:before {
+    content: "\f0f3";
+}
+
+.icon.icon-unfollow:before {
+    content: "\f1f6";
 }

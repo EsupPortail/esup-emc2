@@ -11,8 +11,8 @@ use Application\View\Helper\FormationBlocViewHelper;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

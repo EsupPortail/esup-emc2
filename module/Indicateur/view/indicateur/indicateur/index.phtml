@@ -26,7 +26,7 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
             <a href="<?php echo $this->url("indicateur/creer", [], [], true); ?>"
                class="btn btn-primary ajax-modal action" data-event="modification"
             >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Créer un nouvel indicateur
             </a>
 
@@ -34,7 +34,7 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
             <a href="<?php echo $this->url("abonnement/notifier", [], [], true); ?>"
                class="btn btn-primary action"
             >
-                <span class="icon ok"></span>
+                <span class="icon icon-checked"></span>
                 Notifier
             </a>
         <?php endif; ?>
@@ -61,12 +61,12 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
                         <?php if ($abonnements[$indicateur->getId()]) : ?>
                             <?php /** @see AbonnementController::resilierAction() */?>
                             <a href="<?php echo $this->url("abonnement/resilier", ['indicateur' => $indicateur->getId()], [], true); ?>">
-                                <span class="icon ok" style="color:darkgreen;" title="Vous êtes abonné&middot;e à cet indicateur"></span>
+                                <span class="icon icon-checked" style="color:darkgreen;" title="Vous êtes abonné&middot;e à cet indicateur"></span>
                             </a>
                         <?php else : ?>
                             <?php /** @see AbonnementController::souscrireAction() */?>
                             <a href="<?php echo $this->url("abonnement/souscrire", ['indicateur' => $indicateur->getId()], [], true); ?>">
-                                <span class="icon ko" style="color:darkred;" title="Vous n'êtes pas abonné&middot;e à cet indicateur"></span>
+                                <span class="icon icon-retirer" style="color:darkred;" title="Vous n'êtes pas abonné&middot;e à cet indicateur"></span>
                             </a>
                         <?php endif;?>
                     </td>
@@ -74,26 +74,26 @@ $canDetruire = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPr
                         <?php if ($canVoir): ?>
                             <?php /** @see IndicateurController::afficherAction() */?>
                             <a href="<?php echo $this->url("indicateur/afficher", ['indicateur' => $indicateur->getId()], [], true); ?>">
-                                <span class="icon voir" title="Visualiser l'indicateur"></span></a>
+                                <span class="icon icon-voir" title="Visualiser l'indicateur"></span></a>
                         <?php else : ?>
-                            <span class="icon voir" style="color:lightgray"></span>
+                            <span class="icon icon-voir" style="color:lightgray"></span>
                         <?php endif; ?>
 
                         <?php if ($canEditer): ?>
                             <?php /** @see IndicateurController::modifierAction() */?>
                             <a href="<?php echo $this->url("indicateur/modifier", ['indicateur' => $indicateur->getId()], [], true); ?>"
                                class="ajax-modal" data-event="modification">
-                                <span class="icon editer" title="Modifier l'indicateur"></span></a>
+                                <span class="icon icon-editer" title="Modifier l'indicateur"></span></a>
                         <?php else : ?>
-                            <span class="icon editer" style="color:lightgray"></span>
+                            <span class="icon icon-editer" style="color:lightgray"></span>
                         <?php endif; ?>
 
                         <?php if ($canDetruire): ?>
                             <?php /** @see IndicateurController::detruireAction() */?>
                             <a href="<?php echo $this->url("indicateur/detruire", ['indicateur' => $indicateur->getId()], [], true); ?>">
-                                <span class="icon detruire" title="Détruire l'indicateur"></span></a>
+                                <span class="icon icon-retirer" title="Détruire l'indicateur"></span></a>
                         <?php else : ?>
-                            <span class="icon detruire" style="color:lightgray"></span>
+                            <span class="icon icon-retirer" style="color:lightgray"></span>
                         <?php endif; ?>
 
 

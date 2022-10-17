@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @see \Metier\View\Helper\TypeFonctionViewHelper
+ * @var Domaine $domaine
+ */
+
+use Metier\Entity\Db\Domaine;
+
+$type = $domaine->getTypeFonction();
+?>
+
+<span class="badge" id="<?php echo $type; ?>">
+    <?php echo $type; ?>
+</span>
+
+<style>
+    span.badge#Support {
+        display: inline-block;
+        background-color: seagreen;
+    }
+    span.badge#Soutien {
+        display: inline-block;
+        background-color: darkslateblue;
+    }
+</style>

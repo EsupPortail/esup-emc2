@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\Service\Evenement;
 
 use Application\Service\Agent\AgentService;
-use EntretienProfessionnel\Provider\EvenementProvider;
+use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;

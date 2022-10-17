@@ -4,7 +4,7 @@ namespace Element\Form\Application;
 
 use Element\Entity\Db\Application;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ApplicationHydrator implements HydratorInterface {
     use ApplicationThemeServiceAwareTrait;
@@ -13,7 +13,7 @@ class ApplicationHydrator implements HydratorInterface {
      * @param Application $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $data = [
             'libelle' => $object->getLibelle(),

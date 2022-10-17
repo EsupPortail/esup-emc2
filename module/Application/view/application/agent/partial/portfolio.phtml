@@ -29,7 +29,7 @@ $canDetruireFichier     = $droits['detruire'];
                 href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], [], true); ?>"
                 class="btn btn-primary ajax-modal" data-event="modification"
             >
-                <span class="icon televerser"></span>
+                <span class="icon icon-televerser"></span>
                 Téléverser un fichier
             </a>
         <?php endif; ?>
@@ -58,14 +58,14 @@ $canDetruireFichier     = $droits['detruire'];
                         href="<?php echo $this->url('historiser-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
                         data-event="modification"
                         >
-                        <span class="icon historiser" title="Historiser le fichier"></span></a>
+                        <span class="icon icon-historiser" title="Historiser le fichier"></span></a>
                 <?php else : ?>
                     <a
                         <?php /** @see \Fichier\Controller\FichierController::restaurerAction() */?>
                         href="<?php echo $this->url('restaurer-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]] ,true); ?>"
                         data-event="modification"
                     >
-                        <span class="icon restaurer" title="Restaurer le fichier"></span></a>
+                        <span class="icon icon-restaurer" title="Restaurer le fichier"></span></a>
                 <?php endif; ?>
             <?php endif; ?>
 
@@ -74,7 +74,7 @@ $canDetruireFichier     = $droits['detruire'];
                 <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
                 href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
             >
-                <span class="icon detruire" title="supprimer le fichier"></span></a>
+                <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
             <?php endif; ?>
         </li>
     <?php endforeach; ?>

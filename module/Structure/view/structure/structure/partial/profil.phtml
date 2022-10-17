@@ -43,14 +43,14 @@ ksort($fichesRecrutements)
             <?php /** @see \Application\Controller\StructureController::ajouterFichePosteRecrutementAction() */?>
                 href="<?php echo $this->url('structure/ajouter-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true); ?>"
                 class="btn btn-primary">
-            <span class="icon ajouter"></span>
+            <span class="icon icon-ajouter"></span>
             Ajouter une fiche
         </a>
         <a
             <?php /** @see \Application\Controller\StructureController::dupliquerFichePosteRecrutementAction() */?>
                 href="<?php echo $this->url('structure/dupliquer-fiche-poste-recrutement', ['structure' => $structure->getId()], [], true); ?>"
                 class="btn btn-primary ajax-modal" data-event="modification">
-            <span class="icon cloner"></span>
+            <span class="icon icon-cloner"></span>
             Dupliquer une fiche
         </a>
     </div>
@@ -72,7 +72,7 @@ ksort($fichesRecrutements)
         <a class="btn btn-primary action"
            href="<?php echo $this->url('fiche-profil/ajouter', ['structure' => $structure->getId()], [], true); ?>"
         >
-            <span class="icon ajouter"> Ajouter un profil de recrutement</span>
+            <span class="icon icon-ajouter"> Ajouter un profil de recrutement</span>
         </a>
     </div>
 </div>
@@ -94,9 +94,9 @@ ksort($fichesRecrutements)
                 <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
                 <td>
                     <?php if ($profil->isVacanceEmploi()) : ?>
-                        <span class="icon ok" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                        <span class="icon icon-checked" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                     <?php else : ?>
-                        <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                        <span class="icon icon-retirer" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                     <?php endif; ?>
                 </td>
                 <td>
@@ -110,22 +110,22 @@ ksort($fichesRecrutements)
                     <?php if ($canExporter) : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
                         <a href="<?php echo $this->url('fiche-profil/exporter', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                            <span class="icon pdf" title="Exportation en PDF" data-toggle="tooltip" data-html="true"></span></a>
+                            <span class="icon icon-pdf" title="Exportation en PDF" data-bs-toggle="tooltip" data-bs-html="true"></span></a>
                     <?php endif; ?>
                     <?php if ($canModifier) : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::modifierAction() */?>
                         <a href="<?php echo $this->url('fiche-profil/modifier', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                            <span class="icon editer" title="Modifier le profil de recrutement" data-toggle="tooltip" data-html="true"></span></a>
+                            <span class="icon icon-editer" title="Modifier le profil de recrutement" data-bs-toggle="tooltip" data-bs-html="true"></span></a>
                     <?php endif; ?>
                     <?php if ($canHistoriser) : ?>
                         <?php if ($profil->estNonHistorise()) : ?>
                             <?php /** @see \Application\Controller\FicheProfilController::historiserAction() */?>
                             <a href="<?php echo $this->url('fiche-profil/historiser', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                                <span class="icon historiser"></span></a>
+                                <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see \Application\Controller\FicheProfilController::restaurerAction() */?>
                             <a href="<?php echo $this->url('fiche-profil/restaurer', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                                <span class="icon restaurer"></span></a>
+                                <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canSupprimer) : ?>
@@ -133,7 +133,7 @@ ksort($fichesRecrutements)
                         <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon detruire"></span></a>
+                            <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -164,9 +164,9 @@ ksort($fichesRecrutements)
             <td> <?php echo $profil->getStructure()->getLibelleLong(); ?> </td>
             <td>
                 <?php if ($profil->isVacanceEmploi()) : ?>
-                    <span class="icon ok" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                    <span class="icon icon-checked" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php else : ?>
-                    <span class="icon ko" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-toggle="tooltip" data-html="true"></span>
+                    <span class="icon icon-retirer" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
             <td> <?php echo $profil->getDateDossier()->format('d/m/Y'); ?> </td>
@@ -174,20 +174,20 @@ ksort($fichesRecrutements)
                 <?php if ($canExporter) : ?>
                     <?php /** @see \Application\Controller\FicheProfilController::exporterAction() */?>
                     <a href="<?php echo $this->url('fiche-profil/exporter', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                        <span class="icon pdf" title="Exportation en PDF" data-toggle="tooltip" data-html="true"></span></a>
+                        <span class="icon icon-pdf" title="Exportation en PDF" data-bs-toggle="tooltip" data-bs-html="true"></span></a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
-                    <span class="icon editer" style="color:whitesmoke"></span>
+                    <span class="icon icon-editer" style="color:whitesmoke"></span>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($profil->estNonHistorise()) : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::historiserAction() */?>
                         <a href="<?php echo $this->url('fiche-profil/historiser', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                            <span class="icon historiser"></span></a>
+                            <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
                         <?php /** @see \Application\Controller\FicheProfilController::restaurerAction() */?>
                         <a href="<?php echo $this->url('fiche-profil/restaurer', ['fiche-profil' => $profil->getId()], [], true); ?>">
-                            <span class="icon restaurer"></span></a>
+                            <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canSupprimer) : ?>
@@ -195,7 +195,7 @@ ksort($fichesRecrutements)
                     <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"></span></a>
+                        <span class="icon icon-retirer"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

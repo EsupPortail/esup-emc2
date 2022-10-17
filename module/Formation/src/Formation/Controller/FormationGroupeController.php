@@ -8,10 +8,12 @@ use Formation\Form\FormationGroupe\FormationGroupeFormAwareTrait;
 use Formation\Form\SelectionFormationGroupe\SelectionFormationGroupeFormAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Octopus\Entity\Db\Source;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 
 class FormationGroupeController extends AbstractActionController
 {
@@ -19,6 +21,7 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationGroupeFormAwareTrait;
     use SelectionFormationGroupeFormAwareTrait;
+    use SourceServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -47,7 +50,7 @@ class FormationGroupeController extends AbstractActionController
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
         return new ViewModel([
-            'title' => 'Affichage du groupe',
+            'title' => 'Affichage du thème',
             'groupe' => $groupe,
         ]);
     }
@@ -65,8 +68,10 @@ class FormationGroupeController extends AbstractActionController
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
+                /** @var Source $source */
+                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
+                $groupe->setSource($source);
                 $this->getFormationGroupeService()->create($groupe);
-                $groupe->setSource(HasSourceInterface::SOURCE_EMC2);
                 $this->getFormationGroupeService()->update($groupe);
             }
         }
@@ -74,7 +79,7 @@ class FormationGroupeController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajouter un groupe de formation',
+            'title' => 'Ajouter un thème de formation',
             'form' => $form,
         ]);
         return $vm;
@@ -100,7 +105,7 @@ class FormationGroupeController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Modifier un groupe de formation',
+            'title' => 'Modifier un thème de formation',
             'form' => $form,
         ]);
         return $vm;
@@ -142,7 +147,7 @@ class FormationGroupeController extends AbstractActionController
         if ($groupe !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du groupe de formation [" . $groupe->getLibelle() . "]",
+                'title' => "Suppression du thème de formation [" . $groupe->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation-groupe/detruire', ["formation-groupe" => $groupe->getId()], [], true),
             ]);

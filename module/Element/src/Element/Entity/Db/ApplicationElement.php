@@ -4,8 +4,8 @@ namespace Element\Entity\Db;
 
 use Element\Entity\Db\Interfaces\HasNiveauInterface;
 use Element\Entity\Db\Traits\HasNiveauTrait;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\ValidableAwareTrait;
 use UnicaenValidation\Entity\ValidableInterface;
 

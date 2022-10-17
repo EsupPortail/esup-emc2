@@ -58,8 +58,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                             $listing = "<u><b>Responsable(s) : </b></u><br/>";
                             foreach ($responsables as $responsable) { $listing .= $responsable->getAgent()->getDenomination() . "<br/>"; }
                         ?>
-                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true" <?php if (empty($responsables)) echo ' style="color:darkred;" '; ?> >
-                        <?php echo count($responsables); ?> <span class="icon agent"></span>
+                        <span title="<?php echo $listing; ?>" data-bs-toggle="tooltip" data-bs-html="true" <?php if (empty($responsables)) echo ' style="color:darkred;" '; ?> >
+                        <?php echo count($responsables); ?> <span class="icon icon-user"></span>
                         </span>
 
                         /
@@ -70,8 +70,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                             $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
                             foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getAgent()->getDenomination() . "<br/>"; }
                         ?>
-                        <span title="<?php echo $listing; ?>" data-toggle="tooltip" data-html="true"  >
-                        <?php echo count($gestionnaires); ?> <span class="icon agent"></span>
+                        <span title="<?php echo $listing; ?>" data-bs-toggle="tooltip" data-bs-html="true"  >
+                        <?php echo count($gestionnaires); ?> <span class="icon icon-user"></span>
                         </span>
                     </td>
                     <td>
@@ -79,7 +79,7 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                             <a
                                     href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getId()], [], true); ?>"
                             >
-                                <span class="icon voir"   title="Afficher la structure"></span></a>
+                                <span class="icon icon-voir"   title="Afficher la structure"></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -2,10 +2,10 @@
 
 namespace Formation\Service\Emargement;
 
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use UnicaenPdf\Exporter\PdfExporter as PdfExporter;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\TemplatePathStack;
 
 class EmargementPdfExporter extends PdfExporter
 {
@@ -36,7 +36,7 @@ class EmargementPdfExporter extends PdfExporter
     }
 
     /**
-     * @param FormationInstanceJournee[] $journees
+     * @param Seance[] $journees
      * @param null $filename
      * @param string $destination
      * @param null $memoryLimit

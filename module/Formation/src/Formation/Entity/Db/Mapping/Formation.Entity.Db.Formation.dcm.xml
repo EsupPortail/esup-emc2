@@ -9,12 +9,15 @@
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
         <field name="description"   column="description"    type="string"       length="2048"  />
         <field name="lien"          column="lien"           type="string"       length="1024"  />
+        <field name="affichage"     column="affichage"      type="boolean"      />
+        <field name="rattachement"          type="string" length="1024"      column="rattachement"                        nullable="true"/>
 
         <many-to-one target-entity="Formation\Entity\Db\FormationGroupe"  field="groupe">
             <join-column name="groupe_id" referenced-column-name="id"/>
         </many-to-one>
 
         <one-to-many field="instances" target-entity="Formation\Entity\Db\FormationInstance" mapped-by="formation"/>
+        <one-to-many field="abonnements" target-entity="Formation\Entity\Db\FormationAbonnement" mapped-by="formation"/>
 
         <many-to-many field="applications" target-entity="Element\Entity\Db\ApplicationElement" inversed-by="application" fetch="LAZY">
             <join-table name="formation_obtenue_application">
@@ -39,7 +42,9 @@
         </many-to-many>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
+        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
+            <join-column name="source_id" referenced-column-name="ID" />
+        </many-to-one>
         <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

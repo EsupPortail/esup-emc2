@@ -6,7 +6,7 @@ use Application\Entity\Db\AgentPPP;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use DateTime;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class AgentPPPHydrator implements HydratorInterface {
     use EtatServiceAwareTrait;
@@ -15,7 +15,7 @@ class AgentPPPHydrator implements HydratorInterface {
      * @param AgentPPP $object
      * @return array
      */
-    public function extract($object)
+    public function extract(object $object) : array
     {
         $data = [
             'type'              => $object->getType(),
@@ -41,7 +41,7 @@ class AgentPPPHydrator implements HydratorInterface {
      * @param AgentPPP $object
      * @return AgentPPP
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, object $object)
     {
         $type = (isset($data['type']) AND trim($data['type']) !== '')?trim($data['type']):null;
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;

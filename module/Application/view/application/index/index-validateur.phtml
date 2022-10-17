@@ -39,7 +39,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
 <div class="main">
 
     <h2>
-        Demandes en attentes
+        Demandes en attente
         <span class="badge">
             <?php echo count($enAttentes); ?>
         </span>
@@ -73,9 +73,9 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                     <td>
                         <?php if ($canVoir) : ?>
                             <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
-                                <span class="icon voir" ></span></a>
+                                <span class="icon icon-voir" ></span></a>
                         <?php else : ?>
-                            <span class="icon voir" style="color:lightgrey;"></span>
+                            <span class="icon icon-voir" style="color:lightgrey;"></span>
                         <?php endif; ?>
 
                         <?php if ($canValider) : ?>
@@ -134,9 +134,9 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                     <?php
                     if ($canVoir) : ?>
                         <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
-                            <span class="icon voir" ></span></a>
+                            <span class="icon icon-voir" ></span></a>
                     <?php else : ?>
-                        <span class="icon voir" style="color:lightgrey;"></span>
+                        <span class="icon icon-voir" style="color:lightgrey;"></span>
                     <?php endif; ?>
 
                     <?php if ($canValider) : ?>

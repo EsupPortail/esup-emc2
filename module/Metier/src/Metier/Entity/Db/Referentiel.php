@@ -2,8 +2,8 @@
 
 namespace Metier\Entity\Db;
 
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Referentiel implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

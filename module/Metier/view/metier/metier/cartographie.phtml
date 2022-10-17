@@ -19,7 +19,9 @@ $this->headTitle('Cartographie des métiers');
 
         <div class="col-md-5" >
             <?php if ($canCarto) : ?>
-                <span class="export btn btn-primary action" id="cartographie"></span>
+                <span class="export btn btn-primary action" id="cartographie">
+                    <span class="icon icon-csv"></span> Télécharger la cartographie
+                </span>
             <?php endif ; ?>
         </div>
 
@@ -103,9 +105,5 @@ $this->headTitle('Cartographie des métiers');
     span.export {
         cursor: pointer;
         width: 20rem:;
-    }
-
-    span.export::before{
-        content: "Télécharger la cartographie";
     }
 </style>

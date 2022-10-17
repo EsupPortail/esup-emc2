@@ -4,7 +4,8 @@ namespace EntretienProfessionnel\Service\Evenement;
 
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\EvenementProvider;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
@@ -48,7 +49,7 @@ class RappelPasObservationService extends EvenementService {
 
         try {
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($parametres['entretien']);
-            if ($entretien->getEtat()->getCode() === EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE) {
+            if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE) {
                 $this->getNotificationService()->triggerPasObservations($entretien);
                 $evenement->setLog('Notification effectuée');
             } else {

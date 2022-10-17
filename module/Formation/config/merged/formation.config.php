@@ -28,8 +28,8 @@ use Formation\Service\HasFormationCollection\HasFormationCollectionServiceFactor
 use Formation\View\Helper\FormationInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -67,6 +67,7 @@ return [
                     'controller' => FormationController::class,
                     'action' => [
                         'rechercher-formation',
+                        'rechercher-formateur',
                     ],
                     'roles' => [],
                 ],
@@ -247,6 +248,17 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'rechercher-formation',
+                            ],
+                        ],
+                    ],
+                    'rechercher-formateur' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/rechercher-formateur',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'rechercher-formateur',
                             ],
                         ],
                     ],

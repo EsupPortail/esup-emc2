@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @var Agent $agent
+ * @var DemandeExterne[] $demandes
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+
+$canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER));
+?>
+
+<h2>
+    S'inscire à un stage hors du plan de formation
+</h2>
+
+<div class="row">
+<div class="col-md-7">
+    Afin de réaliser cette demande :
+    <ol>
+        <li> remplir le formulaire ;</li>
+        <li> déposer au moins un devis (ou document équivalent) ;</li>
+        <li> valider votre demande.</li>
+    </ol>
+</div>
+<div class="col-md-5">
+    <?php /** @see \Formation\Controller\DemandeExterneController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('formation/demande-externe/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal <?php if (!$canAjouterDemande) echo " disabled "; ?> " data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Je remplis le formulaire
+    </a>
+</div>
+</div>
+
+<br/>
+
+<h2> Demandes que je n'ai pas encore validées </h2>
+
+<?php foreach($demandes as $demande) : ?>
+    <?php
+        $url = $this->url('inscription-formation', [], ['force_canonical' => true, 'fragment' => 'demandes'], true);
+        echo $this->demandeExterne($demande, ['retour' => $url]);
+    ?>
+<?php endforeach; ?>
+
+

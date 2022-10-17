@@ -2,24 +2,24 @@
 
 namespace Application\Assertion;
 
-use Application\Constant\RoleConstant;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePosteAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
     use FichePosteServiceAwareTrait;
-//    use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null)
+    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
     {
         /** @var  */
         if (! $entity instanceof FichePoste) {
@@ -45,10 +45,10 @@ class FichePosteAssertion extends AbstractAssertion {
 
             case FichePostePrivileges::FICHEPOSTE_AFFICHER :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::OBSERVATEUR:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::OBSERVATEUR:
+                    case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
@@ -64,9 +64,9 @@ class FichePosteAssertion extends AbstractAssertion {
                         $autorite = $this->getAgentService()->getAgentByUser($user);
                         $isAutorite = $agent->hasAutoriteHierarchique($autorite);
                         return $isAutorite;
-                    case RoleConstant::PERSONNEL:
+                    case AppRoleProvider::AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
-                        return $isAgent AND ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE);
+                        return $isAgent AND ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE);
                     default:
                         return false;
                 }
@@ -74,11 +74,11 @@ class FichePosteAssertion extends AbstractAssertion {
             case FichePostePrivileges::FICHEPOSTE_MODIFIER :
             case FichePostePrivileges::FICHEPOSTE_HISTORISER :
                 // REMARQUE on ne peut plus agir sur une fiche signée et plus active
-                if ($entity->getEtat()->getCode() === FichePoste::ETAT_CODE_SIGNEE) return false;
+                if ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return false;
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
                         return $isGestionnaire;
@@ -99,25 +99,25 @@ class FichePosteAssertion extends AbstractAssertion {
                 }
             case FichePostePrivileges::FICHEPOSTE_DETRUIRE :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
-                    case RoleConstant::DRH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
+                    case AppRoleProvider::DRH:
                         return true;
                     default:
                         return false;
                 }
             case FichePostePrivileges::FICHEPOSTE_ETAT :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
                     default :
                         return false;
                 }
             case FichePostePrivileges::FICHEPOSTE_VALIDER_RESPONSABLE :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
                     case Agent::ROLE_AUTORITE:
                         $agent = $entity->getAgent();
@@ -136,10 +136,10 @@ class FichePosteAssertion extends AbstractAssertion {
                 }
             case FichePostePrivileges::FICHEPOSTE_VALIDER_AGENT :
                 switch ($role->getRoleId()) {
-                    case RoleConstant::ADMIN_FONC:
-                    case RoleConstant::ADMIN_TECH:
+                    case AppRoleProvider::ADMIN_FONC:
+                    case AppRoleProvider::ADMIN_TECH:
                         return true;
-                    case RoleConstant::PERSONNEL:
+                    case AppRoleProvider::AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
                         return $isAgent;
                     default:

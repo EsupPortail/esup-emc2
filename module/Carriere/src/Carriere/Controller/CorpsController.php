@@ -4,13 +4,14 @@ namespace Carriere\Controller;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class CorpsController extends AbstractActionController {
     use CategorieServiceAwareTrait;
@@ -21,7 +22,7 @@ class CorpsController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode('carriere','CorpsAvecAgent');
+        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::CORPS_AVEC_AGENT);
         $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
         $corps = $this->getCorpsService()->getCorps('libelleLong', 'ASC', $bool);
 

@@ -6,13 +6,13 @@ use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Application\Entity\HasAgentInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenValidation\Entity\HasValidationsTrait;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface {
     use FichePosteMacroTrait;
@@ -20,19 +20,9 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     use HasEtatTrait;
     use HasValidationsTrait;
 
-    const ETAT_TYPE_FICHEPOSTE  = 'FICHE_POSTE';
-    const ETAT_CODE_MASQUEE     = 'FICHE_POSTE_MASQUEE';
-    const ETAT_CODE_REDACTION   = 'FICHE_POSTE_REDACTION';
-    const ETAT_CODE_OK          = 'FICHE_POSTE_OK';
-    const ETAT_CODE_SIGNEE      = 'FICHE_POSTE_SIGNEE';
-
-
     const TYPE_DEFAULT  = 'DEFAULT';
     const TYPE_INCLUSIF = 'INCLUSIF';
     const TYPE_GENRE    = 'GENRE';
-
-    const VALIDATION_RESPONSABLE    = 'FICHEPOSTE_RESPONSABLE';
-    const VALIDATION_AGENT          = 'FICHEPOSTE_AGENT';
 
     public function getResourceId()
     {

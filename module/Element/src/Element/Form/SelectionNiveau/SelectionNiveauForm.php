@@ -3,11 +3,11 @@
 namespace Element\Form\SelectionNiveau;
 
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Checkbox;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class SelectionNiveauForm extends Form {
     use NiveauServiceAwareTrait;

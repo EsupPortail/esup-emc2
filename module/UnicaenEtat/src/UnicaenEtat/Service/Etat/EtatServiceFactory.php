@@ -4,7 +4,7 @@ namespace UnicaenEtat\Service\Etat;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class EtatServiceFactory {
 

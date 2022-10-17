@@ -3,10 +3,10 @@
 namespace Formation\Form\SelectionFormationGroupe;
 
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Select;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class SelectionFormationGroupeForm extends Form
 {
@@ -19,8 +19,8 @@ class SelectionFormationGroupeForm extends Form
             'type' => Select::class,
             'name' => 'groupes',
             'options' => [
-                'label' => "Groupes de formation:",
-                'empty_option' => "Sélectionner le ou les groupes de formation",
+                'label' => "Thèmes de formation:",
+                'empty_option' => "Sélectionner le ou les thèmes de formation",
                 'value_options' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
             ],
             'attributes' => [

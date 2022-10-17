@@ -2,17 +2,18 @@
 
 namespace Application\Entity\Db\Traits;
 
+use UnicaenDbImport\Entity\Db\Source;
+
 trait HasSourceTrait {
 
-    /** @var string */
-    private $source;
+    private ?Source $source = null;
     /** @var string */
     private $idSource;
 
     /**
-     * @return string|null
+     * @return Source|null
      */
-    public function getSource() : ?string
+    public function getSource() : ?Source
     {
         return $this->source;
     }
@@ -26,10 +27,10 @@ trait HasSourceTrait {
     }
 
     /**
-     * @param string|null $source
+     * @param Source|null $source
      * @return self
      */
-    public function setSource(?string $source) : self
+    public function setSource(?Source $source) : self
     {
         $this->source = $source;
         return $this;

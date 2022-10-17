@@ -37,7 +37,7 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                     class="btn btn-primary action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon ajouter"></span>
+                <span class="icon icon-ajouter"></span>
                 Ajouter une application
             </a>
         <?php endif; ?>
@@ -45,7 +45,7 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
             <a href="<?php echo $this->url('element/application/cartographie'); ?>"
                class="btn btn-primary"
             >
-                <span class="icon voir"> Cartographie </span>
+                <span class="icon icon-voir"> Cartographie </span>
             </a>
         <?php endif; ?>
     </div>
@@ -111,25 +111,25 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                     <a
                         <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
                             href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
-                        <span class="icon voir"        title="Voir l'application"></span></a>
+                        <span class="icon icon-voir"        title="Voir l'application"></span></a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
                     <a
                         <?php /** @see \Element\Controller\ApplicationController::editerAction() */?>
                             href="<?php echo $this->url('element/application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
-                        <span class="icon editer" title="Modifier l'application"></span></a>
+                        <span class="icon icon-editer" title="Modifier l'application"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($application->estNonHistorise()) : ?>
                         <a
                             <?php /** @see \Element\Controller\ApplicationController::historiserAction() */?>
                                 href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>">
-                            <span class="icon historiser" title="Historiser l'application"></span></a>
+                            <span class="icon icon-historiser" title="Historiser l'application"></span></a>
                     <?php else : ?>
                         <a
                             <?php /** @see \Element\Controller\ApplicationController::restaurerAction() */?>
                                 href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>">
-                            <span class="icon restaurer" title="Restaurer l'application"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer l'application"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
 
@@ -139,7 +139,7 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                             href="<?php echo $this->url('element/application/effacer', ['id' => $application->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                        <span class="icon icon-retirer"  title="Supprimer l'application"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

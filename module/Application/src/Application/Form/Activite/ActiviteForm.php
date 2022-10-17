@@ -5,10 +5,10 @@ namespace Application\Form\Activite;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
 
 class ActiviteForm extends Form {
     use ApplicationServiceAwareTrait;

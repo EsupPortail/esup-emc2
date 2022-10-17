@@ -10,8 +10,8 @@ use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydrato
 use EntretienProfessionnel\Form\ConfigurationRecopie\ConfigurationRecopieHydratorFactory;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -31,17 +31,19 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
             Liste des métiers
         </h1>
     </div>
-    <div class="pull-right">
-        <?php if ($canAjouter) : ?>
-            <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
-                    href="<?php echo $this->url('metier/ajouter', [], [], true);?>"
-                    class="btn btn-primary action ajax-modal"
-                    data-event="modification"
-            >
-                <span class="icon ajouter"></span>
-                Ajouter un métier
-            </a>
-        <?php endif;?>
+    <div class="col-md-3">
+        <div class="float-end">
+            <?php if ($canAjouter) : ?>
+                <a  <?php /** @see \Metier\Controller\MetierController::ajouterAction() */ ?>
+                        href="<?php echo $this->url('metier/ajouter', [], [], true);?>"
+                        class="btn btn-primary action ajax-modal"
+                        data-event="modification"
+                >
+                    <span class="icon icon-ajouter"></span>
+                    Ajouter un métier
+                </a>
+            <?php endif;?>
+        </div>
     </div>
 </div>
 
@@ -96,13 +98,13 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                             href="<?php echo $this->url('metier/reference/modifier', ['reference' => $reference->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier la référence"></span></a>
+                        <span class="icon icon-editer" title="Modifier la référence"></span></a>
                     <a href="">
                         <a  <?php /** @see \Metier\Controller\ReferenceController::supprimerAction() */ ?>
                                 href="<?php echo $this->url('metier/reference/supprimer', ['reference' => $reference->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon detruire" title="Supprimer la référence"></span></a>
+                            <span class="icon icon-retirer" title="Supprimer la référence"></span></a>
                         <?php endif; ?>
                         <br/>
                     <?php endforeach ?>
@@ -119,13 +121,13 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                         <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer"></span></a>
+                            <span class="icon icon-editer"></span></a>
                     <?php else : ?>
                         <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
                         <a href="<?php echo $this->url('metier/modifier-niveaux', ['metier' => $metier->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon ajouter"></span></a>
+                            <span class="icon icon-ajouter"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
@@ -138,7 +140,6 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     >
                         <span class="icon users" title="Afficher la liste des agents liées"></span></a>
                 <?php endif; ?>
-                <br/>
                 <?php if ($canEditer) : ?>
                     <a
                         <?php /** @see \Metier\Controller\MetierController::modifierAction() */ ?>
@@ -146,7 +147,7 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                             class="ajax-modal"
                             data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier le métier"></span></a>
+                        <span class="icon icon-editer" title="Modifier le métier"></span></a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a
@@ -155,19 +156,19 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                             class="ajax-modal"
                             data-event="modification"
                     >
-                        <span class="icon ajouter" title="ajouter une référence"></span></a>
+                        <span class="icon icon-ajouter" title="ajouter une référence"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($metier->estNonHistorise()) : ?>
                         <a  <?php /** @see \Metier\Controller\MetierController::historiserAction() */ ?>
                                 href="<?php echo $this->url('metier/historiser', ['metier' => $metier->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser le métier"></span></a>
+                            <span class="icon icon-historiser" title="Historiser le métier"></span></a>
                     <?php else : ?>
                         <a  <?php /** @see \Application\Controller\MetierController::restaurerAction() */ ?>
                                 href="<?php echo $this->url('metier/restaurer', ['metier' => $metier->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer le métier"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le métier"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
@@ -175,7 +176,7 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                             href="<?php echo $this->url('metier/supprimer', ['metier' => $metier->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"  title="Supprimer l'application"></span></a>
+                        <span class="icon icon-retirer"  title="Supprimer l'application"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

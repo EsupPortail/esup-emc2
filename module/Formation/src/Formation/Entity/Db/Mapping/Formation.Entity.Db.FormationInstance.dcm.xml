@@ -20,15 +20,19 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <one-to-many field="journees"   target-entity="Formation\Entity\Db\FormationInstanceJournee"    mapped-by="instance"/>
+        <one-to-many field="journees"   target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
         <one-to-many field="inscrits"   target-entity="Formation\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
-        <one-to-many field="formateurs" target-entity="Formation\Entity\Db\FormationInstanceFormateur"    mapped-by="instance"/>
+        <one-to-many field="formateurs" target-entity="Formation\Entity\Db\Formateur"    mapped-by="instance"/>
 
         <field name="coutHt"                type="float"     column="cout_ht"                  nullable="true"/>
         <field name="coutTtc"               type="float"     column="cout_ttc"                 nullable="true"/>
 
+        <field name="affichage"             type="boolean"   column="affichage"                nullable="true"/>
+
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
+        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
+            <join-column name="source_id" referenced-column-name="ID" />
+        </many-to-one>
         <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

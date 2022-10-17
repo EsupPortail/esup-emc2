@@ -3,12 +3,14 @@
 namespace Formation\Service\FormationInstance;
 
 use Doctrine\ORM\EntityManager;
-use Formation\Service\Url\UrlService;
+use Formation\Service\Abonnement\AbonnementService;
+use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 use UnicaenEtat\Service\Etat\EtatService;
-use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FormationInstanceServiceFactory
 {
@@ -16,34 +18,37 @@ class FormationInstanceServiceFactory
     /**
      * @param ContainerInterface $container
      * @return FormationInstanceService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : FormationInstanceService
     {
         /**
          * @var EntityManager $entityManager
+         * @var AbonnementService $abonnementService
          * @var EtatService $etatService
-         * @var MailService $mailService
+         * @var NotificationService $notificationService
          * @var ParametreService $parametreService
-         * @var RenduService $renduService
-         * @var UrlService $urlService
+         * @var SourceService $sourceService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $abonnementService = $container->get(AbonnementService::class);
         $etatService = $container->get(EtatService::class);
-        $mailingService = $container->get(MailService::class);
+        $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
-        $renduService = $container->get(RenduService::class);
-        $urlService = $container->get(UrlService::class);
+        $sourceService = $container->get(SourceService::class);
+        $sourceService->setEntityManager($entityManager);
 
         /**
          * @var FormationInstanceService $service
          */
         $service = new FormationInstanceService();
         $service->setEntityManager($entityManager);
+        $service->setAbonnementService($abonnementService);
         $service->setEtatService($etatService);
-        $service->setMailService($mailingService);
+        $service->setNotificationService($notificationService);
         $service->setParametreService($parametreService);
-        $service->setRenduService($renduService);
-        $service->setUrlService($urlService);
+        $service->setSourceService($sourceService);
         return $service;
     }
 }

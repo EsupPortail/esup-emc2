@@ -5,9 +5,9 @@ namespace Formation;
 use Formation\Controller\FormationConsoleController;
 use Formation\Controller\FormationConsoleControllerFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Mvc\Console\Router\Simple;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Mvc\Console\Router\Simple;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

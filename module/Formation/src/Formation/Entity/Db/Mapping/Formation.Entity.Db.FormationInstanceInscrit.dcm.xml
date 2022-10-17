@@ -16,7 +16,7 @@
 
         <field name="liste"             type="string" length="64"       column="liste"     nullable="true"/>
         <one-to-one field="frais"       target-entity="Formation\Entity\Db\FormationInstanceFrais"      mapped-by="inscrit" />
-        <one-to-many field="presences"  target-entity="Formation\Entity\Db\FormationInstancePresence"   mapped-by="inscrit" />
+        <one-to-many field="presences"  target-entity="Formation\Entity\Db\Presence"   mapped-by="inscrit" />
 
         <one-to-one target-entity="UnicaenAutoform\Entity\Db\FormulaireInstance"  field="questionnaire">
             <join-column name="questionnaire_id" referenced-column-name="id"/>
@@ -25,10 +25,17 @@
             <join-column name="etat_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="complement"        type="string" length="9999"     column="complement"         nullable="true"/>
+        <field name="justificationAgent"        column="justification_agent"                type="string" length="9999"         nullable="true"/>
+        <field name="justificationResponsable"  column="justification_responsable"          type="string" length="9999"         nullable="true"/>
+        <field name="justificationRefus"        column="justification_refus"                type="string" length="9999"         nullable="true"/>
+
+        <field name="validationEnquete"  type="datetime"                 column="validation_enquete"  nullable="true"/>
+        <one-to-many field="reponsesEnquete" target-entity="Formation\Entity\Db\EnqueteReponse" mapped-by="inscription"/>
 
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <field name="source"            type="string" length="256"      column="source"             nullable="true"/>
+        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
+            <join-column name="source_id" referenced-column-name="ID" />
+        </many-to-one>
         <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

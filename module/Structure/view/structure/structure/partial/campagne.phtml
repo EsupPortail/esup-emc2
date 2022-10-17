@@ -5,6 +5,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use Structure\Entity\Db\Structure;
@@ -48,8 +49,9 @@ foreach ($agents as $agent) {
     }
 
     if ($entretien === null) {
-        $date = new DateTime();
-        $date = $date->sub(new DateInterval('P6M'));
+        $date = $campagne->getDateFin();
+        $date = DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y'));
+        $date = $date->sub(new DateInterval('P12M'));
         if ($agent->isContratLong() AND !empty($agent->getAffectationsActifs($date))) {
             $sans[$agent->getDenomination()] = $agent;
         } else {
@@ -70,7 +72,8 @@ $enCours = $campagne->estEnCours();
 $planifie = [];
 $fait = [];
 foreach ($encours as $epro) {
-    if ($epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTATION || $epro->getEtat()->getCode() === EntretienProfessionnel::ETAT_ACCEPTER) {
+    if ($epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
+        $epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) {
         $planifie[] = $epro;
     } else {
         $fait[] = $epro;
@@ -92,9 +95,9 @@ foreach ($encours as $epro) {
         <dt> En cours </dt>
         <dd>
             <?php if ($enCours) : ?>
-                <span style="color:darkgreen;"><span class="icon ok"></span>Oui</span>
+                <span style="color:darkgreen;"><span class="icon icon-checked"></span>Oui</span>
             <?php else : ?>
-                <span style="color:darkred;"><span class="icon ko"></span>Non</span>
+                <span style="color:darkred;"><span class="icon icon-retirer"></span>Non</span>
             <?php endif; ?>
         </dd>
     </dl>
@@ -104,9 +107,9 @@ foreach ($encours as $epro) {
             <?php if ($canGererDelegue AND $enCours) : ?>
                 <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
-                   data-toggle="tooltip" data-html="true" class="ajax-modal" data-event="modification"
+                   data-bs-toggle="tooltip" data-bs-html="true" class="ajax-modal" data-event="modification"
                 >
-                    <span class="icon ajouter"></span>
+                    <span class="icon icon-ajouter"></span>
                 </a>
             <?php endif; ?>
         </h3>
@@ -117,13 +120,13 @@ foreach ($encours as $epro) {
             <ul>
                 <?php foreach ($deleguesCampagne as $delegue) : ?>
                     <li>
-                        <span title="<?php echo $delegue->getDescription(); ?>" data-toggle="tooltip" data-html="true">
+                        <span title="<?php echo $delegue->getDescription(); ?>" data-bs-toggle="tooltip" data-bs-html="true">
                             <?php echo $delegue->getAgent()->getDenomination(); ?>
                         </span>
                         <?php if ($canGererDelegue AND $enCours) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\DelegueController::retirerAction() */ ?>
                             <a href="<?php echo $this->url('entretien-professionnel/retirer-delegue', ['delegue' => $delegue->getId()], [], true); ?>">
-                                <span class="icon detruire"></span>
+                                <span class="icon icon-retirer"></span>
                             </a>
                         <?php endif; ?>
                     </li>
@@ -238,7 +241,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                                 target="_blank"
                                 title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                             >
                                 <span class="icon personnel"></span></a>
                         <?php endif; ?>
@@ -248,9 +251,9 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
                                 title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                 class="ajax-modal" data-event="entretien"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                             >
-                                <span class="icon ajouter"></span></a>
+                                <span class="icon icon-ajouter"></span></a>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
@@ -300,7 +303,7 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                                 target="_blank"
                                 title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                         >
                             <span class="icon personnel"></span></a>
                     <?php endif; ?>
@@ -310,9 +313,9 @@ foreach ($encours as $epro) {
                                 href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
                                 title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                 class="ajax-modal" data-event="entretien"
-                                data-toggle="tooltip" data-html="true"
+                                data-bs-toggle="tooltip" data-bs-html="true"
                         >
-                            <span class="icon ajouter"></span></a>
+                            <span class="icon icon-ajouter"></span></a>
                     <?php endif; ?>
                 </td>
             <?php endif; ?>

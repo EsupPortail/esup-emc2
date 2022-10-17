@@ -55,10 +55,11 @@ use Application\View\Helper\AgentAffectationViewHelper;
 use Application\View\Helper\AgentGradeViewHelper;
 use Application\View\Helper\AgentStatutViewHelper;
 use Application\View\Helper\AgentViewHelper;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -647,10 +648,17 @@ return [
                     ],
                     'donnees' => [
                         'order' => 0100,
-                        'label' => 'Mes données',
+                        'label' => 'Données personnelles',
                         'title' => "Gestion des données d'un agent",
                         'route' => 'agent/afficher',
                         'resource' => AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER_DONNEES),
+                    ],
+                    'entretien' => [
+                        'order' => 0101,
+                        'label' => 'Entretiens professionnels',
+                        'title' => "Gestion des données d'un agent",
+                        'route' => 'entretien-professionnel/index-agent',
+                        'resource' => AgentPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MESENTRETIENS),
                     ],
                 ],
             ],

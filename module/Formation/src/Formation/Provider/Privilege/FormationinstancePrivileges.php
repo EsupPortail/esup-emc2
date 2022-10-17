@@ -6,10 +6,15 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FormationinstancePrivileges extends Privileges
 {
-    const FORMATIONINSTANCE_AFFICHER = 'FormationInstance-FormationInstance_afficher';
-    const FORMATIONINSTANCE_AJOUTER = 'FormationInstance-FormationInstance_ajouter';
-    const FORMATIONINSTANCE_MODIFIER = 'FormationInstance-FormationInstance_modifier';
-    const FORMATIONINSTANCE_HISTORISER = 'FormationInstance-FormationInstance_historiser';
-    const FORMATIONINSTANCE_SUPPRIMER = 'FormationInstance-FormationInstance_supprimer';
-    const FORMATIONINSTANCE_GERER_INSCRIPTION = 'FormationInstance-FormationInstance_gerer_inscription';
+    const FORMATIONINSTANCE_AFFICHER = 'formationinstance-formationinstance_afficher';
+    const FORMATIONINSTANCE_AJOUTER = 'formationinstance-formationinstance_ajouter';
+    const FORMATIONINSTANCE_MODIFIER = 'formationinstance-formationinstance_modifier';
+    const FORMATIONINSTANCE_HISTORISER = 'formationinstance-formationinstance_historiser';
+    const FORMATIONINSTANCE_SUPPRIMER = 'formationinstance-formationinstance_supprimer';
+
+    const FORMATIONINSTANCE_GERER_INSCRIPTION = 'formationinstance-formationinstance_gerer_inscription';
+    const FORMATIONINSTANCE_GERER_SEANCE = 'formationinstance-formationinstance_gerer_seance';
+    const FORMATIONINSTANCE_GERER_FORMATEUR = 'formationinstance-formationinstance_gerer_formateur';
+    const FORMATIONINSTANCE_ANNULER =  'formationinstance-formationinstance_annuler';
+    const FORMATIONINSTANCE_QUESTIONNAIRE = 'formationinstance-formationinstance_questionnaire';
 }

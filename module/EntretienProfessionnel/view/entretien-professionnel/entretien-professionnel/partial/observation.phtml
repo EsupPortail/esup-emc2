@@ -7,10 +7,10 @@
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Entity\Db\Observation;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
 $canAfficherObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_AFFICHER));
 $canAjouterObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_AJOUTER));
@@ -18,15 +18,15 @@ $canModifierObservation = $this->isAllowed(ObservationPrivileges::getResourceId(
 $canHistoriserObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_HISTORISER));
 $canDetruireObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_SUPPRIMER));
 
-$validationObservation  = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION);
+$validationObservation  = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
 
 $date_non_depassee = ($date !== null AND $date >= $now);
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
-$validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
+$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
 ?>
 
 <!-- Observation de l'agent : CONTROLE -------------------------------------------------------------------------------->
@@ -58,7 +58,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                             href="<?php echo $this->url('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true); ?>"
                             class="btn btn-primary action ajax-modal" data-event="modification"
                     >
-                        <span class="icon editer"> Modifier les observations </span>
+                        <span class="icon icon-editer"> Modifier les observations </span>
                     </a>
                 <?php endif; ?>
                 <?php if ($canHistoriserObservation) : ?>
@@ -67,7 +67,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                             href="<?php echo $this->url('entretien-professionnel/observation/historiser', ['observation' => $observation->getId()], [], true); ?>"
                             class="btn btn-primary action ajax-modal" data-event="modification"
                     >
-                        <span class="icon historiser"> Supprimer les observations </span>
+                        <span class="icon icon-historiser"> Supprimer les observations </span>
                     </a>
                 <?php endif; ?>
                 <?php if ($canDetruireObservation) : ?>
@@ -76,7 +76,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                             href="<?php echo $this->url('entretien-professionnel/observation/supprimer', ['observation' => $observation->getId()], [], true); ?>"
                             class="btn btn-primary ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire"> </span> Détruire les observations
+                        <span class="icon icon-retirer"> </span> Détruire les observations
                     </a>
                 <?php endif; ?>
             <?php endif; ?>
@@ -87,7 +87,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelCo
                         href="<?php echo $this->url('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification"
                 >
-                    <span class="icon ajouter"> Ajouter une observation </span>
+                    <span class="icon icon-ajouter"> Ajouter une observation </span>
                 </a>
             <?php endif; ?>
         <?php endif; ?>

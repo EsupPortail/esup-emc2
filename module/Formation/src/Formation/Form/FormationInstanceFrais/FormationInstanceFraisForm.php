@@ -2,11 +2,11 @@
 
 namespace Formation\Form\FormationInstanceFrais;
 
-use Zend\Form\Element\Button;
-use Zend\Form\Element\Text;
-use Zend\Form\Form;
-use Zend\InputFilter\Factory;
-use Zend\Validator\Regex;
+use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\Factory;
+use Laminas\Validator\Regex;
 
 class FormationInstanceFraisForm extends Form
 {

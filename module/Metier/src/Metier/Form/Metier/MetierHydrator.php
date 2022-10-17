@@ -5,7 +5,7 @@ namespace Metier\Form\Metier;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Metier\Entity\Db\Metier;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class MetierHydrator implements HydratorInterface {
     use CategorieServiceAwareTrait;
@@ -15,7 +15,7 @@ class MetierHydrator implements HydratorInterface {
      * @param Metier $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $domaineIds = [];
         $domaines = $object->getDomaines();

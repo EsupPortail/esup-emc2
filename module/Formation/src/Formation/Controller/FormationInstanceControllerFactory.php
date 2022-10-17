@@ -2,6 +2,10 @@
 
 namespace Formation\Controller;
 
+use Formation\Service\Notification\NotificationService;
+use Formation\Service\Presence\PresenceService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
@@ -19,6 +23,8 @@ class FormationInstanceControllerFactory
     /**
      * @param ContainerInterface $container
      * @return FormationInstanceController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : FormationInstanceController
     {
@@ -29,7 +35,9 @@ class FormationInstanceControllerFactory
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
+         * @var NotificationService $notificationService
          * @var ParametreService $parametreService
+         * @var PresenceService $presenceService
          * @var RappelAgentAvantFormationService $rappelAgentAvantFormationService
          */
         $etatService = $container->get(EtatService::class);
@@ -38,7 +46,9 @@ class FormationInstanceControllerFactory
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
+        $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
+        $presenceService = $container->get(PresenceService::class);
         $rappelAgentAvantFormationService = $container->get(RappelAgentAvantFormationService::class);
 
         /**
@@ -55,7 +65,9 @@ class FormationInstanceControllerFactory
         $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setMailService($mailService);
+        $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
+        $controller->setPresenceService($presenceService);
         $controller->setRappelAgentAvantFormationService($rappelAgentAvantFormationService);
         return $controller;
     }

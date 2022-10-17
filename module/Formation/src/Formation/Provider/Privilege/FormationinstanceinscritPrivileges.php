@@ -6,5 +6,7 @@ use UnicaenPrivilege\Provider\Privilege\Privileges;
 
 class FormationinstanceinscritPrivileges extends Privileges
 {
-    const FORMATIONINSTANCEINSCRIT_MODIFIER = 'FormationInstanceInscrit-FormationInstanceInscrit_modifier';
+    const FORMATIONINSTANCEINSCRIT_MODIFIER = 'formationinstanceinscrit-formationinstanceinscrit_modifier';
+    const INSCRIPTION_VALIDER_SUPERIEURE = 'formationinstanceinscrit-inscription_valider_superieure';
+    const INSCRIPTION_VALIDER_GESTIONNAIRE = 'formationinstanceinscrit-inscription_valider_gestionnaire';
 }

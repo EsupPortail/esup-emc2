@@ -3,7 +3,7 @@
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ConfigurationRecopieHydrator implements HydratorInterface {
 
@@ -11,7 +11,7 @@ class ConfigurationRecopieHydrator implements HydratorInterface {
      * @param ConfigurationEntretienProfessionnel $object
      * @return array
      */
-    public function extract($object)
+    public function extract($object): array
     {
         $splits = explode(";",$object->getValeur());
         $data = [

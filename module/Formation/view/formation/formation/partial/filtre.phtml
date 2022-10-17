@@ -11,49 +11,51 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 
 ?>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <span class="icon filtrer"></span>
-        Filtrage des groupes de formation
+<div class="card default">
+    <div class="card-header">
+        <span class="icon icon-filtrer"></span>
+        Filtrage des thèmes de formation
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
-            <div class="col-md-3">
-                <label for="groupe">Groupe de formation : </label>
-                <select id="groupe" name="groupe" class="selectpicker" data-live-search="true">
-                    <option value=""> Tous les groupes </option>
-                    <?php foreach ($groupes as $id => $libelle) : ?>
-                    <option value="<?php echo $id; ?>"> <?php echo $libelle['label']; ?> </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="source">Source : </label>
-                <select id="source" name="source" class="selectpicker">
-                    <option value=""> Toutes les sources </option>
-                    <option value="<?php echo HasSourceInterface::SOURCE_EMC2; ?>"> <?php echo HasSourceInterface::SOURCE_EMC2; ?> </option>
-                    <option value="<?php echo HasSourceInterface::SOURCE_LAGAF; ?>"> <?php echo HasSourceInterface::SOURCE_LAGAF; ?> </option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label for="historise">Historisé : </label>
-                <select id="historise" name="historise" class="selectpicker">
-                    <option value=""> Peu importe </option>
-                    <option value="1"> Historisé </option>
-                    <option value="0"> Non historisé </option>
-                </select>
-            </div>
-            <!-- BOUTON -->
-            <div class="col-md-3">
-                <div class="pull-right">
-                    <button class="btn btn-primary action" id="clear">
-                        <span class="icon effacer"></span>
-                    </button>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="groupe">Thème de formation : </label>
+                    <select id="groupe" name="groupe" class="selectpicker" data-live-search="true">
+                        <option value=""> Tous les groupes </option>
+                        <?php foreach ($groupes as $id => $libelle) : ?>
+                        <option value="<?php echo $id; ?>"> <?php echo $libelle['label']; ?> </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="source">Source : </label>
+                    <select id="source" name="source" class="selectpicker">
+                        <option value=""> Toutes les sources </option>
+                        <option value="<?php echo HasSourceInterface::SOURCE_EMC2; ?>"> <?php echo HasSourceInterface::SOURCE_EMC2; ?> </option>
+                        <option value="<?php echo HasSourceInterface::SOURCE_LAGAF; ?>"> <?php echo HasSourceInterface::SOURCE_LAGAF; ?> </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="historise">Historisé : </label>
+                    <select id="historise" name="historise" class="selectpicker">
+                        <option value=""> Peu importe </option>
+                        <option value="1"> Historisé </option>
+                        <option value="0"> Non historisé </option>
+                    </select>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <div class="pull-right">
+                        <button class="btn btn-primary action" id="clear">
+                            <span class="icon icon-gommer"></span> Remise à zéro
+                        </button>
 
-                    <button class="btn btn-primary action" id="filter">
-                        <span class="icon filtrer"></span>
-                        Filtrer
-                    </button>
+                        <button class="btn btn-primary action" id="filter">
+                            <span class="icon icon-filtrer"></span>
+                            Filtrer
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>

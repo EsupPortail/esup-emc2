@@ -12,8 +12,8 @@ use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\Configuration\ConfigurationServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

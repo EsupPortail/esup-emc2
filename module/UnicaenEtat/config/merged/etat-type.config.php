@@ -13,8 +13,8 @@ use UnicaenEtat\Provider\Privilege\EtatPrivileges;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

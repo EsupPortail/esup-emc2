@@ -1,1 +1,0 @@
-INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Agent', 'Agent', true, null, null, true, true);

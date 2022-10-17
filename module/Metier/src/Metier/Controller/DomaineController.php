@@ -6,10 +6,10 @@ use Metier\Entity\Db\Domaine;
 use Metier\Form\Domaine\DomaineFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class DomaineController extends AbstractActionController {
     use DomaineServiceAwareTrait;

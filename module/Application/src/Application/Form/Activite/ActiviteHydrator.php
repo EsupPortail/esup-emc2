@@ -6,7 +6,7 @@ use Application\Entity\Db\Activite;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 class ActiviteHydrator implements HydratorInterface {
     use ApplicationServiceAwareTrait;
@@ -17,7 +17,7 @@ class ActiviteHydrator implements HydratorInterface {
      * @param Activite $object
      * @return array
      */
-    public function extract($object)
+    public function extract(object $object) : array
     {
 //        $applicationIds = [];
 //        foreach ($object->getApplications() as $application) {
@@ -47,7 +47,7 @@ class ActiviteHydrator implements HydratorInterface {
      * @param Activite $object
      * @return Activite
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, object $object)
     {
 //        $object->clearApplications();
 //        if (isset($data['applications'])) {

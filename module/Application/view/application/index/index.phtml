@@ -36,9 +36,6 @@ use UnicaenUtilisateur\Entity\Db\User;
 
     <br/>
 
-<!--    --><?php //var_dump($individu); ?>
-
-<!--    <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>-->
 
     <?php if ($user): ?>
     <p>
@@ -49,7 +46,7 @@ use UnicaenUtilisateur\Entity\Db\User;
     <?php else: ?>
 
         <a class="btn btn-success btn-large" href="<?php echo $this->url('zfcuser/login') ?>">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="icon icon-user"></span>
             <?php echo $this->translate('Se connecter') ?>
         </a>
 
@@ -61,6 +58,8 @@ use UnicaenUtilisateur\Entity\Db\User;
     div.jumbotron {
         margin-top: auto;
         margin-bottom: auto;
+        border-radius: 0.5rem ;
+        padding: 1rem;
     }
     div#contenu-principal {
         background: var(--body-background);

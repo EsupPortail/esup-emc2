@@ -12,8 +12,8 @@ use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use EntretienProfessionnel\Service\Observation\ObservationServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

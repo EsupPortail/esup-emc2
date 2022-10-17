@@ -6,10 +6,10 @@ use EntretienProfessionnel\Entity\Db\Sursis;
 use EntretienProfessionnel\Form\Sursis\SursisFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Sursis\SursisServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class SursisController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;

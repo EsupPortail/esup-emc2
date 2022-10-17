@@ -8,8 +8,8 @@ use Application\Provider\Privilege\MissionspecifiquetypePrivileges;
 use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeService;
 use Application\Service\MissionSpecifiqueType\MissionSpecifiqueTypeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ZendSkeletonApplication\n"
+"Project-Id-Version: LaminasSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
 "PO-Revision-Date: 2013-04-08 08:49+0100\n"
@@ -32,16 +32,16 @@ msgstr ""
 
 #: ../view/application/index/index.phtml:2
 #, php-format
-msgid "Welcome to %sZend Framework 2%s"
+msgid "Welcome to %sLaminas Framework 2%s"
 msgstr ""
 
 #: ../view/application/index/index.phtml:3
 #, php-format
-msgid "Congratulations! You have successfully installed the %sZF2 Skeleton Application%s. You are currently running Zend Framework version %s. This skeleton can serve as a simple starting point for you to begin building your application on ZF2."
+msgid "Congratulations! You have successfully installed the %sZF2 Skeleton Application%s. You are currently running Laminas Framework version %s. This skeleton can serve as a simple starting point for you to begin building your application on ZF2."
 msgstr ""
 
 #: ../view/application/index/index.phtml:4
-msgid "Fork Zend Framework 2 on GitHub"
+msgid "Fork Laminas Framework 2 on GitHub"
 msgstr ""
 
 #: ../view/application/index/index.phtml:10
@@ -50,7 +50,7 @@ msgstr ""
 
 #: ../view/application/index/index.phtml:11
 #, php-format
-msgid "Zend Framework 2 is under active development. If you are interested in following the development of ZF2, there is a special ZF2 portal on the official Zend Framework website which provides links to the ZF2 %swiki%s, %sdev blog%s, %sissue tracker%s, and much more. This is a great resource for staying up to date with the latest developments!"
+msgid "Laminas Framework 2 is under active development. If you are interested in following the development of ZF2, there is a special ZF2 portal on the official Laminas Framework website which provides links to the ZF2 %swiki%s, %sdev blog%s, %sissue tracker%s, and much more. This is a great resource for staying up to date with the latest developments!"
 msgstr ""
 
 #: ../view/application/index/index.phtml:12

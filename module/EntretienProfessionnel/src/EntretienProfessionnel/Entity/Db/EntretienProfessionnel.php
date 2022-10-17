@@ -4,18 +4,20 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
     use HistoriqueAwareTrait;
@@ -24,12 +26,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
 
-    const ETAT_ACCEPTATION                  = 'ENTRETIEN_ACCEPTATION';
-    const ETAT_ACCEPTER                     = 'ENTRETIEN_ACCEPTER';
-    const ETAT_VALIDATION_RESPONSABLE       = 'ENTRETIEN_VALIDATION_RESPONSABLE';
-    const ETAT_VALIDATION_OBSERVATION       = 'ENTRETIEN_VALIDATION_OBSERVATION';
-    const ETAT_VALIDATION_HIERARCHIE        = 'ENTRETIEN_VALIDATION_HIERARCHIE';
-    const ETAT_VALIDATION_AGENT             = 'ENTRETIEN_VALIDATION_AGENT';
     const DELAI_OBSERVATION                 = 8;
 
 
@@ -185,7 +181,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
      */
     public function isComplete() : bool
     {
-        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === self::ETAT_VALIDATION_AGENT);
+        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
     }
 
     /**
@@ -327,7 +323,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function getMaxSaisiObservation() : ?DateTime
     {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
         $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
@@ -537,7 +533,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationAgent() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_AGENT);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -545,7 +541,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationResponsable() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -553,7 +549,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     public function  toStringValidationHierarchie() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelConstant::VALIDATION_DRH);
+        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }

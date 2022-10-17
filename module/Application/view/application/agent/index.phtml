@@ -2,7 +2,7 @@
 
 /**
  * @see \Application\Controller\AgentController::indexAction()
- * @var array $agents ['id' => string, 'prenom' => string, 'nom_usage' => string, 'utilisateur' => string ]
+ * @var Agent[] $agents
  */
 
 use Application\Entity\Db\Agent;
@@ -17,7 +17,7 @@ $this->headTitle("Index des agents")
     <div class="col-md-6">
     <h1 class="page-header">
         Index des agents
-        <span class="badge">
+        <span class="badge bg-secondary">
                <?php echo count($agents); ?>
            </span>
     </h1>
@@ -25,7 +25,7 @@ $this->headTitle("Index des agents")
     <div class="pull-right col-md-5">
         <br/>
         <div class=" alert alert-info">
-            <span class="icon synchoniser"></span>
+            <span class="icon icon-synchroniser"></span>
             Les agents sont synchronisés depuis Octopus.
         </div>
     </div>
@@ -34,7 +34,7 @@ $this->headTitle("Index des agents")
 <div class="main">
 
     <?php if (count($agents) > 0) : ?>
-        <table id="agents" class="datatable table table-condensed">
+        <table id="agents" class="datatable table table-condensed table-hover">
             <thead>
             <tr>
                 <th> Source Id </th>
@@ -46,22 +46,27 @@ $this->headTitle("Index des agents")
             <tbody>
             <?php foreach ($agents as $agent) : ?>
                 <tr>
-                    <td> <span class="badge">Octopus - <?php echo $agent['id']; ?></span></td>
-                    <td> <?php echo $agent['prenom']; ?> <?php echo $agent['nom_usage']; ?> </td>
                     <td>
-                        <?php if ($agent['utilisateur'] !== null) : ?>
-                            <span class="icon ok" style="color:darkgreen;" title="<?php echo $agent['utilisateur']; ?>"></span>
+                        <span class="badge">Octopus - <?php echo $agent->getId(); ?>
+                    </td>
+                    <td>
+                        <?php echo $agent->getDenomination(); ?>
+                    </td>
+                    <td>
+                        <?php if ($agent->getUtilisateur() !== null) : ?>
+                            <span class="icon icon-checked" style="color:darkgreen;" title="<?php echo $agent->getUtilisateur()->getDisplayName(); ?>"></span>
+                            <?php echo $agent->getUtilisateur()->getUsername(); ?>
                         <?php else: ?>
-                            <span class="icon ko" style="color:darkred;"></span>
+                            <span class="icon icon-retirer" style="color:darkred;"></span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($canAfficher) : ?>
                             <a
                                 <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent['id']], [], true); ?>"
+                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                             >
-                                <span class="icon voir"  title="Afficher l'agent"></span></a>
+                                <span class="icon icon-voir"  title="Afficher l'agent"></span></a>
                         <?php endif; ?>
                     </td>
                 </tr>

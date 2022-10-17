@@ -14,15 +14,15 @@ $canAfficher        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
 $canAjouter         = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AJOUTER));
 $canEditer          = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_MODIFIER));
 $canHistoriser      = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_HISTORISER));
-$canDedoublonner    = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_SUPPRIMER));
 
+$this->headTitle("Thèmes de formation");
 ?>
 
 <div class="row">
     <div class="col-md-8">
         <h2 class="page-header">
-            Groupes des formations
+            Thèmes de formations
         </h2>
     </div>
     <div class="pull-right">
@@ -33,8 +33,8 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                 href="<?php echo $this->url('formation-groupe/ajouter', [], [], true); ?>"
                 class="btn btn-primary action ajax-modal"
                 data-event="modification">
-                <span class="icon ajouter"></span>
-                Ajouter un groupe
+                <span class="icon icon-ajouter"></span>
+                Ajouter un thème
             </a>
         <?php endif; ?>
     </div>
@@ -62,9 +62,9 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                     <a  <?php /** @see FormationGroupeController::afficherGroupeAction() */ ?>
                         href="<?php echo $this->url('formation-groupe/afficher', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal">
-                        <span class="icon voir" title="Afficher le groupe"></span></a>
+                        <span class="icon icon-voir" title="Afficher le thème"></span></a>
                 <?php else : ?>
-                    <span class="icon voir" style="color:lightgrey;"></span>
+                    <span class="icon icon-voir" style="color:lightgrey;"></span>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <a
@@ -73,9 +73,9 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier le groupe"></span></a>
+                        <span class="icon icon-editer" title="Modifier le thème"></span></a>
                 <?php else : ?>
-                    <span class="icon editer" style="color:lightgrey;"></span>
+                    <span class="icon icon-editer" style="color:lightgrey;"></span>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($groupe->estNonHistorise()) : ?>
@@ -83,43 +83,31 @@ $canDetruire        = $this->isAllowed(FormationgroupePrivileges::getResourceId(
                             <?php /** @see FormationGroupeController::historiserGroupeAction() */ ?>
                             href="<?php  echo $this->url('formation-groupe/historiser', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         >
-                            <span class="icon historiser" title="Historiser le groupe"></span></a>
+                            <span class="icon icon-historiser" title="Supprimer le thème"></span></a>
                     <?php else : ?>
 
                         <a
                             <?php /** @see FormationGroupeController::restaurerGroupeAction() */ ?>
                             href="<?php  echo $this->url('formation-groupe/restaurer', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         >
-                            <span class="icon restaurer" title="Restaurer le groupe"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer le thème"></span></a>
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if ($groupe->estNonHistorise()) : ?>
-                        <span class="icon historiser" style="color:lightgrey;"></span>
+                        <span class="icon icon-historiser" style="color:lightgrey;"></span>
                     <?php else : ?>
-                        <span class="icon restaurer" style="color:lightgrey;"></span>
+                        <span class="icon icon-restaurer" style="color:lightgrey;"></span>
                     <?php endif; ?>
                 <?php endif; ?>
-                <?php if (false) : ?>
-                <?php if ($canDedoublonner) : ?>
-                        <a
-                            <?php /** @see FormationGroupeController::dedoublonnerAction() */ ?>
-                                href="<?php  echo $this->url('formation-groupe/dedoublonner', ['formation-groupe' => $groupe->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon fusionner" title="Dedoublonner le groupe"></span></a>
-                    <?php else : ?>
-                        <span class="icon fusionner" style="color:lightgrey;"></span>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canDetruire) : ?>
+                <?php if ($canDetruire AND $groupe->estHistorise()) : ?>
                     <a
                         <?php /** @see FormationGroupeController::detruireGroupeAction() */ ?>
                         href="<?php  echo $this->url('formation-groupe/detruire', ['formation-groupe' => $groupe->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon detruire text-danger" title="Supprimer le groupe"></span></a>
+                        <span class="icon icon-retirer text-danger" title="Supprimer définitivement le thème"></span></a>
                 <?php else : ?>
-                    <span class="icon detruire" style="color:lightgrey;"></span>
+                    <span class="icon icon-retirer" style="color:lightgrey;"></span>
                 <?php endif; ?>
             </td>
         </tr>

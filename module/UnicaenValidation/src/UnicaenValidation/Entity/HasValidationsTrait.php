@@ -55,6 +55,7 @@ trait HasValidationsTrait {
      */
     public function getValidationByTypeCode(string $typeCode) : ?ValidationInstance
     {
+        if (empty($this->validations)) return null;
         /** @var ValidationInstance $validation */
         foreach ($this->validations as $validation) {
             if ($validation->getType()->getCode() === $typeCode AND $validation->estNonHistorise()) return $validation;

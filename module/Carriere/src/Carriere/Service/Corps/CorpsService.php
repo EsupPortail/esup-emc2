@@ -9,7 +9,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class CorpsService {
     use EntityManagerAwareTrait;
@@ -52,7 +52,6 @@ class CorpsService {
     public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('corps.histo IS NULL')
             ->orderBy('corps.' . $champ, $ordre)
         ;
 

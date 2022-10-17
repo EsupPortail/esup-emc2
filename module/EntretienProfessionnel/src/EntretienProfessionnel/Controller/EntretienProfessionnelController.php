@@ -8,30 +8,33 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnelConstant;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\TemplateProvider;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
+use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -89,6 +92,18 @@ class EntretienProfessionnelController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($user);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByDelegue($agent);
+
+        return new ViewModel([
+            'entretiens' => $entretiens,
+        ]);
+    }
+
+    public function indexAgentAction() : ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($user);
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
 
         return new ViewModel([
             'entretiens' => $entretiens,
@@ -170,7 +185,7 @@ class EntretienProfessionnelController extends AbstractActionController
         if ($agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) {
             /** @see EntretienProfessionnelController::accederAction() */
-            return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien" => $entretien->getId()], [], true);
+            return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
         $entretien = new EntretienProfessionnel();
@@ -204,7 +219,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 if ($entretien->getDateEntretien() < $jplus15 ) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
-               $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
+               $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION));
                $this->getEntretienProfessionnelService()->initialiser($entretien);
                $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
@@ -253,7 +268,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
 
-                $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTATION));
+                $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION));
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
 
@@ -272,8 +287,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function accederAction() : ViewModel
     {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $agent = $this->getAgentService()->getAgent($entretien->getAgent()->getId());
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
+        $agent = $entretien->getAgent();
         $ficheposte = $agent->getFichePosteBest();
         $fichesmetiers = [];
         $mails = $this->getMailService()->getMailsByMotClef($entretien->generateTag());
@@ -283,10 +298,16 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        $autorites = $this->getAgentService()->computeAutorites($agent);
+
         return new ViewModel([
             'entretien' => $entretien,
 
             'agent'         => $agent,
+            'superieures'   => $superieures,
+            'autorites'     => $autorites,
+
             'ficheposte'    => $ficheposte,
             'fichesmetiers' => $fichesmetiers,
             'connectedUser' => $this->getUserService()->getConnectedUser(),
@@ -351,8 +372,8 @@ class EntretienProfessionnelController extends AbstractActionController
             }
             if ($validation !== null) {
                 switch ($type) {
-                    case EntretienProfessionnelConstant::VALIDATION_RESPONSABLE :
-                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
+                    case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
+                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
                         $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
@@ -361,22 +382,22 @@ class EntretienProfessionnelController extends AbstractActionController
                         $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
                         break;
 
-                    case EntretienProfessionnelConstant::VALIDATION_OBSERVATION:
-                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION));
+                    case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
+                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
                         $this->getNotificationService()->triggerObservations($entretien);
                         break;
 
-                    case EntretienProfessionnelConstant::VALIDATION_DRH :
-                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
+                    case EntretienProfessionnelValidations::VALIDATION_DRH :
+                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE));
                         $this->getEntretienProfessionnelService()->update($entretien);
 
                         $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
                         break;
 
-                    case EntretienProfessionnelConstant::VALIDATION_AGENT :
-                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_AGENT));
+                    case EntretienProfessionnelValidations::VALIDATION_AGENT :
+                        $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT));
                         $this->getEntretienProfessionnelService()->update($entretien);
                         break;
                 }
@@ -404,21 +425,21 @@ class EntretienProfessionnelController extends AbstractActionController
         /** @var EntretienProfessionnel $entity */
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
-        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_RESPONSABLE) {
-            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) {
+            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER));
         }
-        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_OBSERVATION) {
-            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_OBSERVATION) {
+            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
         }
-        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_DRH) {
-            if ($entity->getValidationByType(EntretienProfessionnelConstant::VALIDATION_OBSERVATION) !== null) {
-                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_OBSERVATION));
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_DRH) {
+            if ($entity->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
+                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION));
             } else {
-                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_RESPONSABLE));
+                $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
             }
         }
-        if ($validation->getType()->getCode() === EntretienProfessionnelConstant::VALIDATION_AGENT) {
-            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_VALIDATION_HIERARCHIE));
+        if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_AGENT) {
+            $entity->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE));
         }
 
         try {
@@ -428,7 +449,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */
-        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien' => $entity->getId()], ['fragment' => 'validation'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 
     public function exporterCrepAction() : string
@@ -440,7 +461,17 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREP, $vars);
-        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch(MpdfException $e) {
+            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
+        }
     }
 
     public function exporterCrefAction() : string
@@ -454,7 +485,18 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREF, $vars);
-        return $this->getRenduService()->generate($rendu->getSujet(), $rendu->getCorps());
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch(MpdfException $e) {
+            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
+        }
+        
     }
 
     public function accepterEntretienAction() : ViewModel
@@ -478,7 +520,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
             $entretien->setToken(null);
             $entretien->setAcceptation((new DateTime()));
-            $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnel::ETAT_ACCEPTER));
+            $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER));
             $this->getEntretienProfessionnelService()->update($entretien);
 
             $this->getNotificationService()->triggerConvocationAcceptation($entretien);

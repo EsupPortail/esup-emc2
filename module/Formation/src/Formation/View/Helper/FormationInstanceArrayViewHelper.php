@@ -4,9 +4,9 @@ namespace Formation\View\Helper;
 
 use Application\View\Renderer\PhpRenderer;
 use Formation\Entity\Db\FormationInstance;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\Partial;
-use Zend\View\Resolver\TemplatePathStack;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\Partial;
+use Laminas\View\Resolver\TemplatePathStack;
 
 /**
  * le tableau d'options peut recevoir un ensemble de booléen pour les droits afin de ne pas recalculer ou transmettre des valeurs différentes.

@@ -1,7 +1,7 @@
 <?php
 
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Entity\Db\FormationInstanceJournee;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
@@ -48,11 +48,16 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
 
                     <table class="presence">
                     <tr>
-                    <?php /** @var FormationInstanceJournee $journee */?>
+                    <?php /** @var Seance $journee */?>
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="journee">
-                        <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>
-                        <?php echo $journee->getDebut(); ?> &rightarrow; <?php echo $journee->getFin(); ?>
+                            <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                                <?php echo $journee->getJour()->format('d/m/Y'); ?> <br/>
+                                <?php echo $journee->getDebut(); ?> &rightarrow; <?php echo $journee->getFin(); ?>
+                            <?php endif; ?>
+                            <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                                <?php echo $journee->getVolume(); ?> heures
+                            <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
                     </tr>
@@ -60,9 +65,9 @@ $canRenseigner  = $this->isAllowed($inscrit, FormationPrivileges::FORMATION_QUES
                     <?php foreach ($instancef->getJournees() as $journee) : ?>
                         <td class="reponse">
                             <?php if ($inscrit->wasPresent($journee)) : ?>
-                                <span class="icon ok" style="color:darkgreen;" ></span>
+                                <span class="icon icon-checked" style="color:darkgreen;" ></span>
                             <?php else : ?>
-                                <span class="icon ko" style="color:darkred;" ></span>
+                                <span class="icon icon-retirer" style="color:darkred;" ></span>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>

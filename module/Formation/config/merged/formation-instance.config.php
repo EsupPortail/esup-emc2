@@ -14,9 +14,9 @@ use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
 use Formation\View\Helper\FormationInstanceArrayViewHelper;
 use Formation\View\Helper\FormationInstanceInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Mvc\Console\Router\Simple;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Mvc\Console\Router\Simple;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -56,11 +56,18 @@ return [
                         'modifier-informations',
                         'export-emargement',
                         'export-tous-emargements',
-
-                        'renseigner-questionnaire',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'renseigner-questionnaire',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_QUESTIONNAIRE,
                     ],
                 ],
                 [
@@ -74,6 +81,16 @@ return [
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'annuler',
+                        'reouvrir',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER,
                     ],
                 ],
                 [
@@ -197,6 +214,26 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'annuler' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/annuler/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'annuler',
+                            ],
+                        ],
+                    ],
+                    'reouvrir' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/reouvrir/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'reouvrir',
                             ],
                         ],
                     ],

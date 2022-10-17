@@ -4,8 +4,8 @@ namespace UnicaenEtat\Form\EtatFieldset;
 
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Zend\Form\Element\Select;
-use Zend\Form\Fieldset;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Fieldset;
 
 class EtatFieldset extends Fieldset
 {

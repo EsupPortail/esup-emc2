@@ -13,9 +13,9 @@ use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrai
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
-use Zend\Http\Request;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class MetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;

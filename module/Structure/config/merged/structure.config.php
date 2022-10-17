@@ -6,6 +6,8 @@ use Structure\Assertion\StructureAssertion;
 use Structure\Assertion\StructureAssertionFactory;
 use Structure\Controller\StructureController;
 use Structure\Controller\StructureControllerFactory;
+use Structure\Event\InfoStructure\InfoStructureEvent;
+use Structure\Event\InfoStructure\InfoStructureEventFactory;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireFormFactory;
 use Structure\Form\AjouterGestionnaire\AjouterGestionnaireHydrator;
@@ -15,14 +17,16 @@ use Structure\Form\AjouterResponsable\AjouterResponsableFormFactory;
 use Structure\Form\AjouterResponsable\AjouterResponsableHydrator;
 use Structure\Form\AjouterResponsable\AjouterResponsableHydratorFactory;
 use Structure\Provider\Privilege\StructurePrivileges;
+use Structure\Service\Notification\NotificationService;
+use Structure\Service\Notification\NotificationServiceFactory;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\Structure\StructureServiceFactory;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -128,7 +132,7 @@ return [
                             'structure' => [
                                 'label' => 'Structures',
                                 'route' => 'structure',
-                                'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_AFFICHER) ,
+                                'resource' =>  StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_INDEX) ,
                                 'order'    => 110,
                                 'icon' => 'fas fa-angle-right',
                             ],
@@ -390,6 +394,8 @@ return [
             StructureAgentForceService::class => StructureAgentForceServiceFactory::class,
 
             StructureAssertion::class => StructureAssertionFactory::class,
+            NotificationService::class => NotificationServiceFactory::class,
+            InfoStructureEvent::class => InfoStructureEventFactory::class,
         ],
     ],
     'controllers'     => [

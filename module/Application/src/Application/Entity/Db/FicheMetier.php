@@ -14,8 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Entity\Db\Metier;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
@@ -24,17 +24,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
-    const TYPE_FICHEMETIER = 'FICHE_METIER';
-    const ETAT_REDACTION = 'FICHE_METIER_REDACTION';
-    const ETAT_VALIDE    = 'FICHE_METIER_OK';
-    const ETAT_MASQUE    = 'FICHE_METIER_MASQUEE';
-
     /** @var int */
     private $id;
-    /** @var Metier */
-    private $metier;
-    /** @var boolean */
-    private $hasExpertise;
+    private ?Metier $metier = null;
+    private bool $hasExpertise = false;
 
     /** @var ArrayCollection */
     private $activites;

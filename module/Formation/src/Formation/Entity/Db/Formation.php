@@ -3,6 +3,8 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Activite;
+use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
@@ -12,8 +14,8 @@ use Application\Entity\Db\Traits\HasSourceTrait;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Formation implements HistoriqueAwareInterface,
     HasDescriptionInterface, HasSourceInterface,
@@ -25,24 +27,33 @@ class Formation implements HistoriqueAwareInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $lien;
-    /** @var FormationGroupe */
-    private $groupe;
+    const RATTACHEMENT_PREVENTION = 'prévention';
+    const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
-    /** @var ArrayCollection */
-    private $missions;
-    /** @var ArrayCollection (FormationInstance) */
-    private $instances;
+    private ?int $id = -1;
+    private ?string $libelle = null;
+    private ?string $lien = null;
+    private ?FormationGroupe $groupe = null;
+    private bool $affichage = true;
 
+    private Collection $missions;
+    private Collection $instances;
+    private Collection $abonnements;
+
+    private ?string $rattachement = null;
 
     public function __construct()
     {
         $this->missions = new ArrayCollection();
+        $this->instances = new ArrayCollection();
+        $this->abonnements = new ArrayCollection();
+    }
+
+    public static function getAnnee(?DateTime $date = null) : ?int
+    {
+        if ($date === null) $date = new DateTime();
+        if ((int) $date->format("m") > 8) return (int) $date->format('Y');
+        return ((int) $date->format('Y') - 1);
     }
 
     /**
@@ -108,6 +119,22 @@ class Formation implements HistoriqueAwareInterface,
     }
 
     /**
+     * @return bool
+     */
+    public function getAffichage(): bool
+    {
+        return $this->affichage;
+    }
+
+    /**
+     * @param bool $affichage
+     */
+    public function setAffichage(bool $affichage): void
+    {
+        $this->affichage = $affichage;
+    }
+
+    /**
      * @return Activite[]
      */
     public function getMissions() : array
@@ -165,6 +192,17 @@ class Formation implements HistoriqueAwareInterface,
         return $options;
     }
 
+
+    public function getRattachement(): ?string
+    {
+        return $this->rattachement;
+    }
+
+    public function setRattachement(?string $rattachement): void
+    {
+        $this->rattachement = $rattachement;
+    }
+
     /** Formation Instances *******************************************************************************************/
 
     /**
@@ -173,6 +211,14 @@ class Formation implements HistoriqueAwareInterface,
     public function getInstances() : array
     {
         return $this->instances->toArray();
+    }
+
+    /**
+     * @return FormationAbonnement[]
+     */
+    public function getAbonnements() : array
+    {
+        return $this->abonnements->toArray();
     }
 
 }

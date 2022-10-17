@@ -3,8 +3,8 @@
 namespace Metier\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenApp\Entity\HistoriqueAwareInterface;
-use UnicaenApp\Entity\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FamilleProfessionnelle implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;

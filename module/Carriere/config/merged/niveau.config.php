@@ -23,8 +23,8 @@ use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceFactory;
 use Carriere\View\Helper\NiveauEnveloppeViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

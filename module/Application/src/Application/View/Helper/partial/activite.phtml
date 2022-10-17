@@ -84,7 +84,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 class="btn btn-primary ajax-modal"
                 data-event="modification"
         >
-            <span class="icon editer"></span>
+            <span class="icon icon-editer"></span>
             Modifier le libellé
         </a>
         <a  <?php /** @see ActiviteController::ajouterDescriptionAction() */?>
@@ -92,7 +92,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 class="btn btn-primary ajax-modal"
                 data-event="modification"
         >
-            <span class="icon editer"></span>
+            <span class="icon icon-editer"></span>
             Ajouter une description
         </a>
         <a  <?php /** @see ActiviteController::ajouterDescriptionsAction() */?>
@@ -100,7 +100,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                 class="btn btn-primary ajax-modal"
                 data-event="modification"
         >
-            <span class="icon editer"></span>
+            <span class="icon icon-editer"></span>
             Ajouter plusieurs descriptions
         </a>
     <?php endif; ?>
@@ -110,28 +110,28 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
             <a href="<?php echo $this->url('activite/modifier', ['activite' => $activite->getId()], [], true); ?>"
                class="btn btn-primary" target="_blank"
             >
-                <span class="icon editer"></span>
+                <span class="icon icon-editer"></span>
                 Modifier l'activité
             </a>
 
             <?php /** @see FicheMetierController::retirerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
                class="btn btn-primary">
-                <span class="icon detruire"></span>
+                <span class="icon icon-retirer"></span>
                 Retirer l'activité
             </a>
 
             <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
                class="btn btn-primary">
-                <span class="icon monter"></span>
+                <span class="icon icon-monter"></span>
                 Remonter l'activité
             </a>
 
             <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
                class="btn btn-primary">
-                <span class="icon descendre"></span>
+                <span class="icon icon-descendre"></span>
                 Descendre l'activité
             </a>
         </div>
@@ -160,11 +160,11 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                             class="ajax-modal"
                             data-event="modification"
                     >
-                        <span class="icon editer" title="Modifier la description"></span></a>
+                        <span class="icon icon-editer" title="Modifier la description"></span></a>
                     <a  <?php /** @see ActiviteController::supprimerDescriptionAction() */?>
                             href="<?php echo $this->url('activite/supprimer-description', ['description' => $description->getId()], [], true); ?>"
                     >
-                        <span class="icon historiser" title="Historiser la description"></span></a>
+                        <span class="icon icon-historiser" title="Historiser la description"></span></a>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
@@ -186,7 +186,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                                     href="<?php echo $this->url("activite/modifier-competence", ["activite" => $activite->getId()], [], true); ?>"
                                     class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon editer" title="Modifier les compétences associées à la mission"></span></a>
+                                <span class="icon icon-editer" title="Modifier les compétences associées à la mission"></span></a>
                         <?php endif; ?>
                     </h4>
                     <ul>
@@ -210,7 +210,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                                     href="<?php echo $this->url("activite/modifier-application", ["activite" => $activite->getId()], [], true); ?>"
                                     class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon editer" title="Modifier les applications associées à la mission"></span></a>
+                                <span class="icon icon-editer" title="Modifier les applications associées à la mission"></span></a>
                         <?php endif; ?>
                     </h4>
 
@@ -236,7 +236,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                                     class="ajax-modal"
                                     data-event="modification"
                             >
-                                <span class="icon editer" title="Modifier les formations associées à la mission"></span></a>
+                                <span class="icon icon-editer" title="Modifier les formations associées à la mission"></span></a>
                         <?php endif; ?>
                     </h4>
                     <ul>

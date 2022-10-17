@@ -16,8 +16,8 @@ use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelHyd
 use EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [
@@ -72,6 +72,15 @@ return [
                     ],
                     'privileges' => [
                         EntretienproPrivileges::ENTRETIENPRO_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => EntretienProfessionnelController::class,
+                    'action' => [
+                        'index-agent',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                     ],
                 ],
                 [
@@ -165,6 +174,17 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'index-delegue',
+                            ],
+                        ],
+                    ],
+                    'index-agent' => [
+                        'type'  => Literal::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/index-agent',
+                            'defaults' => [
+                                'controller' => EntretienProfessionnelController::class,
+                                'action'     => 'index-agent',
                             ],
                         ],
                     ],
@@ -282,7 +302,7 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/acceder/:entretien',
+                            'route'    => '/acceder/:entretien-professionnel',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'acceder',

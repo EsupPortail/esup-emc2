@@ -7,7 +7,7 @@ use Element\Entity\Db\CompetenceTheme;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class CompetenceImporterController extends AbstractActionController {
     use CompetenceServiceAwareTrait;

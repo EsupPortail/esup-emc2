@@ -15,13 +15,13 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
-use Structure\Provider\RoleProvider;
+use Structure\Provider\Role\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class StructureService
 {
@@ -229,7 +229,7 @@ select
     st.libelle AS TYPE
 from structure s
 left join structure_type st on st.id = s.type_id
-where s.fermeture IS NULL
+where s.d_fermeture IS NULL
 EOS;
 
         $tmp = null;
@@ -348,7 +348,7 @@ EOS;
             if (    ($gestionnaire->getAgent() === $agent)
                 AND ($gestionnaire->getDateDebut() === NULL OR $gestionnaire->getDateDebut() <= $date)
                 AND ($gestionnaire->getDateFin() === NULL OR $gestionnaire->getDateFin() >= $date)
-                AND (!$gestionnaire->isImported() OR !$gestionnaire->isDeleted())
+                AND (!$gestionnaire->isDeleted())
             ) return true;
         }
         if ($structure->getParent()) return $this->isGestionnaire($structure->getParent(), $agent);
@@ -384,7 +384,7 @@ EOS;
             if (    ($responsable->getAgent() === $agent)
                 AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
                 AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+                AND (!$responsable->isDeleted())
             ) return true;
         }
         if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
@@ -423,7 +423,7 @@ EOS;
             if (    ($responsable->getAgent() === $agent)
                 AND ($responsable->getDateDebut() === NULL OR $responsable->getDateDebut() <= $date)
                 AND ($responsable->getDateFin() === NULL OR $responsable->getDateFin() >= $date)
-                AND (!$responsable->isImported() OR !$responsable->isDeleted())
+                AND (!$responsable->isDeleted())
             ) return true;
         }
         return false;

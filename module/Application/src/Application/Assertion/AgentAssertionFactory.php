@@ -3,31 +3,39 @@
 namespace Application\Assertion;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAffectation\AgentAffectationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenUtilisateur\Service\User\UserService;
-use Zend\Mvc\Application;
+use Laminas\Mvc\Application;
 
 class AgentAssertionFactory {
 
     /**
      * @param ContainerInterface $container
      * @return AgentAssertion
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function  __invoke(ContainerInterface $container)
+    public function  __invoke(ContainerInterface $container): AgentAssertion
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAffectationService $agentAffectationService
          * @var StructureService $structureService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAffectationService = $container->get(AgentAffectationService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
         /** @var AgentAssertion $assertion */
         $assertion = new AgentAssertion();
         $assertion->setAgentService($agentService);
+        $assertion->setAgentAffectationService($agentAffectationService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 

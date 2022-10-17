@@ -12,8 +12,8 @@ use Element\Provider\Privilege\ApplicationthemePrivileges;
 use Element\Service\ApplicationTheme\ApplicationThemeService;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Segment;
 
 return [
     'bjyauthorize' => [

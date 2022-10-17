@@ -67,7 +67,7 @@ $this->headTitle("Index des postes")
                             href="<?php echo $this->url('poste/afficher', ['poste' => $poste->getId()], [], true); ?>"
                             class="ajax-modal"
                         >
-                            <span class="icon voir" title="Afficher le poste"></span>
+                            <span class="icon icon-voir" title="Afficher le poste"></span>
                         </a>
                     <?php endif; ?>
                     <?php if($canModifierPoste) : ?>
@@ -76,7 +76,7 @@ $this->headTitle("Index des postes")
                             href="<?php echo $this->url('poste/modifier', ['poste' => $poste->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon editer" title="Modifier le poste"></span>
+                            <span class="icon icon-editer" title="Modifier le poste"></span>
                         </a>
                     <?php endif; ?>
                     <?php if($canSupprimerPoste) : ?>
@@ -84,7 +84,7 @@ $this->headTitle("Index des postes")
                             href="<?php echo $this->url('poste/supprimer', ['poste' => $poste->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon detruire" title="Supprimer le poste"></span>
+                            <span class="icon icon-retirer" title="Supprimer le poste"></span>
                         </a>
                     <?php endif; ?>
                 </td>

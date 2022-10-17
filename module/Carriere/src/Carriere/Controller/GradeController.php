@@ -2,10 +2,11 @@
 
 namespace Carriere\Controller;
 
+use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class GradeController extends AbstractActionController {
     use GradeServiceAwareTrait;
@@ -13,7 +14,7 @@ class GradeController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $avecAgent = $this->getParametreService()->getParametreByCode('carriere','GradeAvecAgent');
+        $avecAgent = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::GRADE_AVEC_AGENT);
         $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
         $grades = $this->getGradeService()->getGrades('libelleLong', 'ASC', $bool);
 
