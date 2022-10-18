@@ -104,7 +104,6 @@ trait HasPeriodeTrait {
             ->andWhere($entityName . '.dateDebut IS NULL OR ' . $entityName . '.dateDebut <= :date')
             ->andWhere($entityName . '.dateFin IS NULL OR ' . $entityName . '.dateFin >= :date')
             ->andWhere($entityName . '.id IS NOT NULL')
-            ->andWhere($entityName . '.deleted_on IS NULL')
             ->setParameter('date', $date);
         return $qb;
     }

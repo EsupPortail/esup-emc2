@@ -275,6 +275,11 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $text;
     }
 
+    public function toString() : string
+    {
+        return $this->__toString();
+    }
+
     /** MACRO *********************************************************************************************************/
 
     /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */

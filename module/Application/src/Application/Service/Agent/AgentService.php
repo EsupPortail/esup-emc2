@@ -59,6 +59,7 @@ class AgentService {
 
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
             ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('affectation.deleted_on IS NULL')
         ;
         return $qb;
     }
@@ -627,7 +628,9 @@ class AgentService {
             $qb = AgentService::decorateWithStructure($qb, $structures);
         }
         if ($encours === '1') {
-            $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
+            $qb = AgentAffectation::decorateWithActif($qb, 'affectation')
+                ->andWhere('affectation.deleted_on IS NULL')
+            ;
         }
 
 
