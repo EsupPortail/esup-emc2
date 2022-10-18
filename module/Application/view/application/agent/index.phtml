@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\AgentController::indexAction()
  * @var Agent[] $agents
+ * @var array $params
  */
 
 use Application\Entity\Db\Agent;
@@ -10,7 +11,8 @@ use Application\Provider\Privilege\AgentPrivileges;
 
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 
-$this->headTitle("Index des agents")
+$this->headTitle("Index des agents");
+$nbAgent = count($agents);
 ?>
 
 <div class="row">
@@ -18,7 +20,7 @@ $this->headTitle("Index des agents")
     <h1 class="page-header">
         Index des agents
         <span class="badge bg-secondary">
-               <?php echo count($agents); ?>
+               <?php echo $nbAgent; ?>
            </span>
     </h1>
     </div>
@@ -33,12 +35,15 @@ $this->headTitle("Index des agents")
 
 <div class="main">
 
-    <?php if (count($agents) > 0) : ?>
+    <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
+
+    <?php if ($nbAgent > 0 AND $nbAgent < 500) : ?>
         <table id="agents" class="datatable table table-condensed table-hover">
             <thead>
             <tr>
                 <th> Source Id </th>
                 <th> Dénomination </th>
+                <th> Affectations </th>
                 <th> <span title="Lié à un utilisateur de l'application">Lié</span> </th>
                 <th class="action"> Action </th>
             </tr>
@@ -51,6 +56,18 @@ $this->headTitle("Index des agents")
                     </td>
                     <td>
                         <?php echo $agent->getDenomination(); ?>
+                    </td>
+                    <td>
+                        <?php $affectations = $agent->getAffectationsActifs(); ?>
+                        <ul>
+                        <?php foreach ($affectations as $affectation) : ?>
+                            <li>
+                                <?php if ($affectation->isPrincipale()) { echo "<strong>"; } ?>
+                                <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                                <?php if ($affectation->isPrincipale()) { echo "</strong>"; } ?>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
                     </td>
                     <td>
                         <?php if ($agent->getUtilisateur() !== null) : ?>
@@ -73,6 +90,13 @@ $this->headTitle("Index des agents")
             <?php endforeach; ?>
             </tbody>
         </table>
+    <?php else : ?>
+        <?php if ($nbAgent === 0) : ?>
+            Aucun résultat pour votre réquête
+        <?php endif; ?>
+        <?php if ($nbAgent > 500) : ?>
+            Plus de 500 agents de remontés. Pas d'affichage sous formes de tableaux
+        <?php endif; ?>
     <?php endif; ?>
 
 </div>

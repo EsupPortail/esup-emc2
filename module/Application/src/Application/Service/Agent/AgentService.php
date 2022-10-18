@@ -3,6 +3,7 @@
 namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\Complement;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
@@ -62,6 +63,22 @@ class AgentService {
         return $qb;
     }
 
+    public static function decorateWithTerm(QueryBuilder $qb, string $term, ?string $entityName = 'agent') : QueryBuilder
+    {
+        $qb = $qb->andWhere("LOWER(CONCAT(". $entityName. ".nomUsuel, ' ', ".$entityName.".prenom)) like :search OR LOWER(CONCAT(". $entityName. ".prenom, ' ', ".$entityName.".nomUsuel)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+        ;
+        return $qb;
+    }
+
+    public static function decorateWithStructure(QueryBuilder $qb, array $structures, ?string $entityName = 'affectation') : QueryBuilder
+    {
+        $qb = $qb->andWhere($entityName. ".structure in (:structures)")
+            ->setParameter('structures', $structures)
+        ;
+        return $qb;
+    }
+
     /**
      * @return Agent[]
      */
@@ -83,13 +100,15 @@ class AgentService {
     {
         $date = new DateTime();
         $qb = $this->createQueryBuilder()
-            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
             ->addSelect('structure')->join('affectation.structure', 'structure')
             ->andWhere('affectation.dateDebut <= :date OR affectation.dateDebut IS NULL')
             ->andWhere('affectation.dateFin >= :date OR affectation.dateFin IS NULL')
             ->setParameter('date', $date)
-            ->setParameter('search', '%'.strtolower($term).'%')
         ;
+
+        if ($term !== null) {
+            $qb = AgentService::decorateWithTerm($qb, $term);
+        }
 
         if ($structures !== null) {
             $qb = $qb
@@ -588,6 +607,34 @@ class AgentService {
         $qb = HasPeriodeTrait::decorateWithActif($qb,'affectation', $date);
 
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @return Agent[]
+     */
+    public function getAgentsWithFiltre($params) : array
+    {
+        $term = (isset($params['denomination']) AND trim($params['denomination']) !== '')?trim($params['denomination']):null;
+        $encours = (isset($params['encours']))?$params['encours']:null;
+        $structure = (isset($params['structure-filtre']) AND isset($params['structure-filtre']['id']))?$this->getStructureService()->getStructure($params['structure-filtre']['id']):null;
+
+        $qb = $this->createQueryBuilder();
+        if ($term !== null) $qb = AgentService::decorateWithTerm($qb, $term);
+        if ($structure !== null) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
+            $qb = AgentService::decorateWithStructure($qb, $structures);
+        }
+        if ($encours === '1') {
+            $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
+        }
+
+
+        $result = $qb->getQuery()->getResult();
+//        if ($encours === '1') {
+//            $result = array_filter($result, function(Agent $a) { return !empty($a->getAffectationsActifs()); });
+//        }
         return $result;
     }
 

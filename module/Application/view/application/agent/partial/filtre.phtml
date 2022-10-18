@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @var array $params
+ */
+
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+
+$denomination = (isset($params['denomination']) AND trim($params['denomination']) !== '')?trim($params['denomination']):null;
+?>
+
+<div class="card card-default">
+    <div class="card-header">
+        Filtre de sélection des agents
+    </div>
+    <div class="card-body">
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="denomination">Dénomination : </label>
+                            <input type="text" id="denomination" name="denomination"/>
+                        </div>
+                        <div class="col-md-4">
+                            <?php
+                            /** @see \Structure\Controller\StructureController::rechercherAction() */
+                            $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
+                            $structureF
+                                ->setAutocompleteSource($this->url('structure/rechercher'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'structure-filtre',
+                                    'placeholder' => "Nom de la structure ...",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($structureF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="encours">Affectation en cours : </label>
+                            <select id="encours" name="encours" class="selectpicker">
+                                <option value="1"> Oui </option>
+                                <option value="0"> Indifférent </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <div class="pull-right">
+                        <button class="btn btn-primary action" id="clear">
+                            <span class="icon icon-gommer"></span> Remise à zéro
+                        </button>
+
+                        <button class="btn btn-primary action" id="filter">
+                            <span class="icon icon-filtrer"></span>
+                            Filtrer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('button#clear').click(function() {
+        window.location.href = '?';
+    });
+
+    $('input#denomination').val(<?php echo '"'.$params['denomination'].'"'; ?>);
+    //TODO structure
+    //TODO affectation
+</script>

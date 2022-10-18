@@ -108,9 +108,16 @@ class AgentController extends AbstractActionController
 
     public function indexAction()  : ViewModel
     {
-        $agents = $this->getAgentService()->getAgents();
+        $params = $this->params()->fromQuery();
+
+        $agents = [];
+        if ($params !== null AND !empty($params)) {
+            $agents = $this->getAgentService()->getAgentsWithFiltre($params);
+        }
+
         return new ViewModel([
             'agents' => $agents,
+            'params' => $params,
         ]);
     }
 
