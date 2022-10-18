@@ -70,7 +70,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
 
     $('input#denomination').val(<?php echo '"'.$params['denomination'].'"'; ?>);
     <?php if ($params['structure-filtre'] !== null) :?>
-    $('input[name="structure-filtre[label]"]').val(" <?php echo $params['structure-filtre']['label']; ?> ");
+    $('input[name="structure-filtre[label]"]').val("<?php echo trim($params['structure-filtre']['label']); ?>");
     $('input[name="structure-filtre[id]"]').val("<?php echo $params['structure-filtre']['id']; ?>");
     <?php endif; ?>
     $('select#encours option[value=<?php echo $params['encours']; ?>]').prop('selected', true);
