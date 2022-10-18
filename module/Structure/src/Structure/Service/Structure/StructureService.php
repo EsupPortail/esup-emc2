@@ -544,6 +544,7 @@ EOS;
     public function getResponsables(?Structure $structure, ?DateTime $date = null) : array
     {
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('responsable')
+//            ->join('responsable.source', 'source')->addSelect('source')
             ->join('responsable.agent', 'agent')->addSelect('agent')
             ->andWhere('responsable.structure = :structure')
             ->setParameter('structure', $structure)

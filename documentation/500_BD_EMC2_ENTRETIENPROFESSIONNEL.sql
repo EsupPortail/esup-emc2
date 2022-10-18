@@ -123,10 +123,7 @@ create table entretienprofessionnel_critere_competence
     histo_destruction     timestamp,
     histo_destructeur_id  integer
 );
-
-
-create unique index entretienprofessionnel_critere_competence_id_uindex
-    on entretienprofessionnel_critere_competence (id);
+create unique index entretienprofessionnel_critere_competence_id_uindex on entretienprofessionnel_critere_competence (id);
 
 create table entretienprofessionnel_critere_contribution
 (
@@ -141,10 +138,7 @@ create table entretienprofessionnel_critere_contribution
     histo_destruction     timestamp,
     histo_destructeur_id  integer
 );
-
-
-create unique index entretienprofessionnel_critere_contribution_id_uindex
-    on entretienprofessionnel_critere_contribution (id);
+create unique index entretienprofessionnel_critere_contribution_id_uindex on entretienprofessionnel_critere_contribution (id);
 
 create table entretienprofessionnel_critere_personnelle
 (
@@ -159,9 +153,7 @@ create table entretienprofessionnel_critere_personnelle
     histo_destruction     timestamp,
     histo_destructeur_id  integer
 );
-
-create unique index entretienprofessionnel_critere_qualitepersonnelle_id_uindex
-    on entretienprofessionnel_critere_personnelle (id);
+create unique index entretienprofessionnel_critere_qualitepersonnelle_id_uindex   on entretienprofessionnel_critere_personnelle (id);
 
 create table entretienprofessionnel_critere_encadrement
 (
@@ -176,10 +168,7 @@ create table entretienprofessionnel_critere_encadrement
     histo_destruction     timestamp,
     histo_destructeur_id  integer
 );
-
-
-create unique index entretienprofessionnel_critere_encadrement_id_uindex
-    on entretienprofessionnel_critere_encadrement (id);
+create unique index entretienprofessionnel_critere_encadrement_id_uindex on entretienprofessionnel_critere_encadrement (id);
 
 
 --------------------------------------------------------------------------------

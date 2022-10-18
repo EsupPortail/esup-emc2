@@ -10,6 +10,12 @@ create table formation_demande_externe
     id                    serial
         constraint formation_demande_externe_pk
             primary key,
+    agent_id              varchar(40)             not null
+        constraint formation_demande_externe_agent_c_individu_fk
+            references agent,
+    etat_id                 integer
+        constraint formation_demande_externe_etat_etat_id_fk
+            references unicaen_etat_etat,
     libelle               varchar(1024)           not null,
     organisme             varchar(1024)           not null,
     contact               varchar(1024)           not null,
@@ -21,6 +27,10 @@ create table formation_demande_externe
     motivation            text                    not null,
     prise_en_charge       boolean   default false not null,
     cofinanceur           varchar(1024),
+    modalite              varchar(1024),
+    justification_agent   text,
+    justification_responsable   text,
+    justification_refus   text,
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
         constraint formation_demande_externe_unicaen_utilisateur_user_id_fk
@@ -32,10 +42,7 @@ create table formation_demande_externe
     histo_destruction     timestamp,
     histo_destructeur_id  integer
         constraint formation_demande_externe_unicaen_utilisateur_user_id_fk_3
-            references unicaen_utilisateur_user,
-    agent_id              varchar(40)             not null
-        constraint formation_demande_externe_agent_c_individu_fk
-            references agent
+            references unicaen_utilisateur_user
 );
 
 create unique index formation_demande_externe_id_uindex
@@ -449,3 +456,208 @@ create unique index formation_parcours_formation_id_uindex
 
 INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Gestionnaire de formation', 'Gestionnaire de formation', false);
 INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Formateur·trice', 'Formateur·trice', false);
+
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion) VALUES ('notification_nouvelle_session', 'notification_nouvelle_session', 'Notification hebdomadaire de nouvelle session de formation', null, 'P1W');
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion) VALUES ('notification_rappel_session_imminente', 'notification_rappel_session_imminente', 'Notification de rappel d''une session de formation', null, null);
+INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recursion) VALUES ('cloture_automatique_inscription', 'cloture_automatique_inscription', 'cloture_automatique_inscription', null, 'P1D');
+
+-- VALIDATION --------------------------------------------------------------------
+
+INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_AGENT', 'Validation d''un demande de formation externe par l''agent', false, now(), 0);
+INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_RESPONSABLE', 'Validation d''un demande de formation externe par le responsable de l''agent', false, now(), 0);
+INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_DRH', 'Validation d''un demande de formation externe par la DRH', false , now(), 0);
+INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_REFUS', 'Refus d''une demande externe', false, now(), 0);
+
+
+-- PRIVILEGE ----------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('demandeexterne', 'Gestion des demandes de formations externes', 10000, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'demandeexterne_index', 'Accéder l''index', 10 UNION
+    SELECT 'demandeexterne_afficher', 'Afficher une demande', 20 UNION
+    SELECT 'demandeexterne_ajouter', 'Ajouter une demande', 30 UNION
+    SELECT 'demandeexterne_modifier', 'Modifier une demande', 40 UNION
+    SELECT 'demandeexterne_historiser', 'Historiser/restaurer une demande', 50 UNION
+    SELECT 'demandeexterne_supprimer', 'Supprimer une demande ', 60 UNION
+    SELECT 'demandeexterne_valider_agent', 'Valider une demande en tant qu''agent', 110 UNION
+    SELECT 'demandeexterne_valider_responsable', 'Valider une demande en tant que responsable', 120 UNION
+    SELECT 'demandeexterne_valider_drh', 'Valider une demande en tant que gestionnaire des formations', 130 UNION
+    SELECT 'demandeexterne_gerer', 'Gérer la demande externe', 140
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'demandeexterne';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formation', 'Gestion des formations ', 100, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formation_acces', 'Accés à l''index des formations', 10 UNION
+    SELECT 'formation_afficher', 'Afficher une formation ', 20 UNION
+    SELECT 'formation_ajouter', 'Ajouter une formation ', 30 UNION
+    SELECT 'formation_modifier', 'Modifier une formation ', 40 UNION
+    SELECT 'formation_historiser', 'Historiser/Restaurer une formation ', 50 UNION
+    SELECT 'formation_supprimer', 'Supprimer une formation ', 60 UNION
+    SELECT 'formation_questionnaire_visualiser', 'Afficher les questionnaires de retour de formation', 110 UNION
+    SELECT 'formation_questionnaire_modifier', 'Renseigner les questionnaires de retour de formation', 120
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formation';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationabonnement', 'Gestion du abonnement aux formations', 1100, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationabonnement_abonner', 'S''abonner une formation', 0 UNION
+    SELECT 'formationabonnement_desabonner', 'Se desinscrire d''une formation', 10 UNION
+    SELECT 'formationabonnement_liste_agent', 'Lister les abonnements par agents', 20 UNION
+    SELECT 'formationabonnement_liste_formation', 'Lister les abonnements par foramtions', 40 UNION
+    SELECT 'formationabonnement_gerer', 'Gérer les abonnements', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationabonnement';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationinstancedocument', 'Gestion des formations - Documents', 319, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstancedocument_convocation', 'Génération des convocations', 10 UNION
+    SELECT 'formationinstancedocument_emargement', 'Génération des listes d''émargement', 20 UNION
+    SELECT 'formationinstancedocument_attestation', 'Génération des attestations de formation', 30 UNION
+    SELECT 'formationinstancedocument_historique', 'Génération des historiques de formation', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstancedocument';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationenquete', 'Gestion de l''enquête', 1200, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'enquete_index', 'Accés à la configuration de l''enquête ', 10 UNION
+    SELECT 'enquete_ajouter', 'Ajouter une catégorie ou un question', 20 UNION
+    SELECT 'enquete_modifier', 'Modifier une catégorie ou une question', 30 UNION
+    SELECT 'enquete_historiser', 'Historiser/restaurer une catégorie ou une question', 40 UNION
+    SELECT 'enquete_supprimer', 'Supprimer une catégorie ou une question', 50 UNION
+    SELECT 'enquete_resultat', 'Afficher les résultats', 100 UNION
+    SELECT 'enquete_repondre', 'Répondre à l''enquête', 110
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationenquete';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationinstance', 'Gestion des formations - Actions de formation', 313, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstance_afficher', 'Afficher une action de formation', 10 UNION
+    SELECT 'formationinstance_ajouter', 'Ajouter une action de formation', 20 UNION
+    SELECT 'formationinstance_modifier', 'Modifier une action de formation', 30 UNION
+    SELECT 'formationinstance_historiser', 'Historiser/Restaurer une action de formation', 40 UNION
+    SELECT 'formationinstance_supprimer', 'Supprimer une instance de formation', 50 UNION
+    SELECT 'formationinstance_gerer_inscription', 'Gérer les inscriptions à une instance de formation', 100 UNION
+    SELECT 'formationinstance_gerer_seance', 'Gérer les séances d''une instance de formation', 110 UNION
+    SELECT 'formationinstance_gerer_formateur', 'Gérer les formations d''une instance de formation', 120 UNION
+    SELECT 'formationinstance_annuler', 'Annuler une session', 130 UNION
+    SELECT 'formationinstance_questionnaire', 'Renseigner le questionnaire', 140
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstance';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('projetpersonnel', 'Gestion du projet personnel', 1050, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'projetpersonnel_acces', 'Accéder au projet personnel', 10
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'projetpersonnel';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('planformation', 'Gestion du plan de formation', 1000, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'planformation_acces', 'Accéder au plan de formation', 0
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'planformation';
+
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('lagaf', 'Importation depuis les données de LAGAF', 99998, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'import_lagaf', 'Lancer l''importation', 1
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'lagaf';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationgroupe', 'Gestion des formations - Groupe', 311, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationgroupe_afficher', 'Afficher un groupe de formation', 10 UNION
+    SELECT 'formationgroupe_ajouter', 'Ajouter un groupe de formation', 20 UNION
+    SELECT 'formationgroupe_modifier', 'Modifier un groupe de formation', 30 UNION
+    SELECT 'formationgroupe_historiser', 'Historiser/Restaurer un groupe de formation', 40 UNION
+    SELECT 'formationgroupe_supprimer', 'Supprimer un groupe de formation ', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationgroupe';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationtheme', 'Gestion des formations - Thème', 312, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationtheme_afficher', 'Afficher un thème de formation ', 10 UNION
+    SELECT 'formationtheme_ajouter', 'Ajouter un thème de formation', 20 UNION
+    SELECT 'formationtheme_modifier', 'Modifier un thème de formation', 30 UNION
+    SELECT 'formationtheme_historiser', 'Modifier un thème de formation ', 40 UNION
+    SELECT 'formationtheme_supprimer', 'Supprimer un thème de formation ', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationtheme';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationinstanceinscrit', 'Gestion des formations - Inscrits', 316, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstanceinscrit_modifier', 'Modifier un inscrit à une action de formation', 10 UNION
+    SELECT 'inscription_valider_superieure', 'Valider une demande en tant que supérieure hiérarchique', 20 UNION
+    SELECT 'inscription_valider_gestionnaire', 'Valider une inscription en tant que gestionnaire', 30
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstanceinscrit';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationinstancepresence', 'Gestion des formations - Présences', 314, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstancepresence_afficher', 'Afficher les présences d''une action de formation', 10 UNION
+    SELECT 'formationinstancepresence_modifier', 'Modifier les présences d''une action de formation', 30
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstancepresence';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationinstancefrais', 'Gestion des formations - Frais', 317, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstancefrais_afficher', 'Afficher les frais d''un agent', 10 UNION
+    SELECT 'formationinstancefrais_modifier', 'Modifier les frais d''un agent', 20
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstancefrais';

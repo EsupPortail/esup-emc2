@@ -912,6 +912,53 @@ create table unicaen_aide_documentation_lien
 create unique index unicaen_aide_documentation_lien_id_uindex
     on unicaen_aide_documentation_lien (id);
 
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('unicaenaideglossaire', 'UnicaenAide - Glossaire', 100300, 'UnicaenAide\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'glossaire_afficher', 'Affichage du glossaire', 10 UNION
+    SELECT 'glossaire_index', 'Accès à l''index des défintions', 100 UNION
+    SELECT 'glossaire_ajouter', 'Ajouter une définition', 110 UNION
+    SELECT 'glossaire_modifier', 'Modifier une définition', 120 UNION
+    SELECT 'glossaire_historiser', 'Historiser/restaurer une définition', 130 UNION
+    SELECT 'glossaire_supprimer', 'Supprimer une supprimer', 140
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaenaideglossaire';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('unicaenaidefaq', 'UnicaenAide - F.A.Q.', 100200, 'UnicaenAide\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'faq_afficher', 'Afficher la FAQ', 10 UNION
+    SELECT 'faq_index', 'Accès à l''index des questions', 20 UNION
+    SELECT 'faq_ajouter', 'Ajouter une question', 30 UNION
+    SELECT 'faq_modifier', 'Modifier une question', 40 UNION
+    SELECT 'faq_historiser', 'Historiser/restaurer une question', 50 UNION
+    SELECT 'faq_supprimer', 'Supprimer une question', 60
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaenaidefaq';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('unicaenaidedocumentation', 'UnicaenAide - Documentation', 100400, 'UnicaenAide\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'documentation_afficher', 'Afficher la documentation', 10 UNION
+    SELECT 'documentation_index', 'Accès à l''index des documentations', 20 UNION
+    SELECT 'documentation_ajouter', 'Ajouter une documentation', 30 UNION
+    SELECT 'documentation_modifier', 'Modifier une documentation', 40 UNION
+    SELECT 'documentation_historiser', 'Historiser/restaurer une documentation', 50 UNION
+    SELECT 'documentation_supprimer', 'Supprimer une documentation', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaenaidedocumentation';
+
 -----------------------------------------------------------------------------------------------
 -- INSERT -------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------
