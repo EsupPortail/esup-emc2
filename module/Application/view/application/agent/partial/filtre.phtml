@@ -6,7 +6,6 @@
 
 use UnicaenApp\Form\Element\SearchAndSelect;
 
-
 $denomination = (isset($params['denomination']) AND trim($params['denomination']) !== '')?trim($params['denomination']):null;
 ?>
 
@@ -70,6 +69,9 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
     });
 
     $('input#denomination').val(<?php echo '"'.$params['denomination'].'"'; ?>);
-    //TODO structure
-    //TODO affectation
+    <?php if ($params['structure-filtre'] !== null) :?>
+    $('input[name="structure-filtre[label]"]').val(" <?php echo $params['structure-filtre']['label']; ?> ");
+    $('input[name="structure-filtre[id]"]').val("<?php echo $params['structure-filtre']['id']; ?>");
+    <?php endif; ?>
+    $('select#encours option[value=<?php echo $params['encours']; ?>]').prop('selected', true);
 </script>
