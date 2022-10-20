@@ -2,12 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Form\AgentAccompagnement\AgentAccompagnementForm;
-use Application\Form\AgentPPP\AgentPPPForm;
-use Application\Form\AgentStageObservation\AgentStageObservationForm;
-use Application\Form\AgentTutorat\AgentTutoratForm;
-use Element\Form\ApplicationElement\ApplicationElementForm;
-use Element\Form\CompetenceElement\CompetenceElementForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Application\Service\AgentAffectation\AgentAffectationService;
@@ -18,14 +12,16 @@ use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStatut\AgentStatutService;
 use Application\Service\AgentTutorat\AgentTutoratService;
+use Application\Service\FichePoste\FichePosteService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
+use Carriere\Service\Categorie\CategorieService;
+use Element\Form\ApplicationElement\ApplicationElementForm;
+use Element\Form\CompetenceElement\CompetenceElementForm;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
-use Application\Service\FichePoste\FichePosteService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
-use Carriere\Service\Categorie\CategorieService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -34,8 +30,10 @@ use Formation\Form\FormationElement\FormationElementForm;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
-use Structure\Service\Structure\StructureService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -48,6 +46,8 @@ class AgentControllerFactory {
     /**
      * @param ContainerInterface $container
      * @return AgentController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : AgentController
     {
@@ -161,32 +161,20 @@ class AgentControllerFactory {
         $controller->setUploadForm($uploadForm);
 
         /**
-         * @var AgentPPPService $agentPPPService
-         * @var AgentPPPForm $agentPPPForm
+         * @var AgentPPPService $agentPppService
          * @var AgentStageObservationService $agentStageObservationService
-         * @var AgentStageObservationForm $agentStageObservationForm
          * @var AgentTutoratService $agentTutoratService
-         * @var AgentTutoratForm $agentTutoratForm
          * @var AgentAccompagnementService $agentAccompagnementService
-         * @var AgentAccompagnementForm $agentAccompagnementForm
          */
-        $agentPPPService = $container->get(AgentPPPService::class);
-        $agentPPPForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
+        $agentPppService = $container->get(AgentPPPService::class);
         $agentStageObservationService = $container->get(AgentStageObservationService::class);
-        $agentStageObservationForm = $container->get('FormElementManager')->get(AgentStageObservationForm::class);
         $agentTutoratService = $container->get(AgentTutoratService::class);
-        $agentTutoratForm = $container->get('FormElementManager')->get(AgentTutoratForm::class);
         $agentAccompagnementService = $container->get(AgentAccompagnementService::class);
-        $agentAccompagnementForm = $container->get('FormElementManager')->get(AgentAccompagnementForm::class);
 
-        $controller->setAgentPPPService($agentPPPService);
-        $controller->setAgentPPPForm($agentPPPForm);
+        $controller->setAgentPPPService($agentPppService);
         $controller->setAgentStageObservationService($agentStageObservationService);
-        $controller->setAgentStageObservationForm($agentStageObservationForm);
         $controller->setAgentTutoratService($agentTutoratService);
-        $controller->setAgentTutoratForm($agentTutoratForm);
         $controller->setAgentAccompagnementService($agentAccompagnementService);
-        $controller->setAgentAccompagnementForm($agentAccompagnementForm);
 
         /**
          * @var EtatService $etatService
