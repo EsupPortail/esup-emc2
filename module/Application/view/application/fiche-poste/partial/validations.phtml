@@ -47,7 +47,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
             <?php if ($canFichePosteValiderResponsable AND $validationAgent === null) :?>
                 <?php if ($validationResponsable === null) : ?>
                     <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_RESPONSABLE], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePosteValidations::VALIDATION_RESPONSABLE], [], true); ?>"
                        class="btn btn-success action ajax-modal" data-event="modification">
                         <span class="icon icon-checked"></span>
                         Valider la fiche de poste (responsable)
@@ -64,7 +64,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
             <?php if ($canFichePosteValiderAgent AND $validationResponsable !== null) :?>
                 <?php if ($validationAgent === null) : ?>
                     <?php  /** @see \Application\Controller\FichePosteController::validerAction() */ ?>
-                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePoste::VALIDATION_AGENT], [], true); ?>"
+                    <a href="<?php echo $this->url('fiche-poste/valider', ['fiche-poste' => $fiche->getId(), 'type' => FichePosteValidations::VALIDATION_AGENT], [], true); ?>"
                        class="btn btn-success action ajax-modal" data-event="modification">
                         <span class="icon icon-checked"></span>
                         Valider la fiche de poste (agent)

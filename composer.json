@@ -24,7 +24,7 @@
     "unicaen/autoform": "^5",
     "unicaen/aide": "dev-master",
     "ext-json": "*",
-    "unicaen/db-import": "^5.2",
+    "unicaen/db-import": "dev-utilisateur",
     "unicaen/alerte": "^1.1"
   },
   "require-dev": {
