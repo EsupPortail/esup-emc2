@@ -16,10 +16,10 @@ class FormationInstanceHydrator implements HydratorInterface
     {
         $data = [
             'description' => ($object AND $object->getComplement()) ?: null,
-            'principale' => ($object AND $object->getNbPlacePrincipale()) ?: 0,
-            'complementaire' => ($object AND $object->getNbPlaceComplementaire()) ?: 0,
-            'lieu' => ($object AND $object->getLieu()) ?: null,
-            'type' => ($object AND $object->getType()) ?: null,
+            'principale' => ($object AND $object->getNbPlacePrincipale()) ?$object->getNbPlacePrincipale(): 0,
+            'complementaire' => ($object AND $object->getNbPlaceComplementaire()) ?$object->getNbPlaceComplementaire(): 0,
+            'lieu' => ($object AND $object->getLieu()) ?  $object->getLieu() : null,
+            'type' => ($object AND $object->getType()) ? $object->getType() : null,
             'inscription' => ($object) ? $object->isAutoInscription() : null,
             'cout_ht' => ($object) ? $object->getCoutHt() : null,
             'cout_ttc' => ($object) ? $object->getCoutTtc() : null,

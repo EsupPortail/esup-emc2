@@ -45,6 +45,8 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
     </div>
 </div>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <table class="datatable table table-condensed">
     <thead>
     <tr>
