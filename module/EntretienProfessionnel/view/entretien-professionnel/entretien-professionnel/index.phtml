@@ -41,14 +41,77 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => []], [], true); ?>
 
-<?php echo $this->entretienProfessionnelArray($entretiens,
-    [
-        'affichages' => ['lieu' => false],
-        'droits' => []
-    ]
-); ?>
+<?php if ($params === null or $params === []) : ?>
+    <div class="alert alert-info">
+        <span class="icon icon-information"></span>
+        Aucun critère de recherche.
+    </div>
+<?php else : ?>
+    <?php if (empty($entretiens)) : ?>
+    <div class="alert alert-warning">
+        <span class="icon icon-information"></span>
+        Aucun entretien professionnel pour les critères de recherche.
+    </div>
+<?php else : ?>
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Année </th>
+        <th> Structure </th>
+        <th> Agent </th>
+        <th> Responsable </th>
+        <th> Date </th>
+        <th id="etat"> État </th>
+        <th id="action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($entretiens as $entretien) : ?>
+        <tr class=" <?php if ($entretien->estHistorise()) echo " historise "; ?> ">
+            <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>
+            <td>
+                <ul>
+                    <?php $affectations = $entretien->getAgent()->getAffectations($entretien->getDateEntretien()); ?>
+                    <?php foreach ($affectations as $affectation) : ?>
+                        <li> <?php echo $affectation->getStructure()->getLibelleCourt(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+            <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
+            <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </td>
+            <td> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
+            <td>
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>">
+                    <span class="icon icon-voir"></span></a>
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>">
+                    <span class="icon gerer"></span></a>
+                <?php if ($entretien->estNonHistorise()) : ?>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>">
+                        <span class="icon icon-historiser"></span></a>
+                <?php else : ?>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/restaurer', ['entretien' => $entretien->getId()], [], true); ?>">
+                        <span class="icon icon-restaurer"></span></a>
+                <?php endif; ?>
+                <?php if ($entretien->estHistorise()) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification">
+                    <span class="icon icon-retirer text-danger"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
+<?php endif; ?>
 
 
 <style>
@@ -58,8 +121,8 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
     }
 
     th#action {
-        width:11rem;
-        min-width: 6rem;
+        width:9rem;
+        min-width: 9rem;
     }
 
     @media (min-width: 0) and (max-width: 768px) {

@@ -60,29 +60,17 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function indexAction() : ViewModel
     {
-        $fromQueries  = $this->params()->fromQuery();
-        $agent        = $this->getAgentService()->getAgent($fromQueries['agent']);
-        $responsable  = $this->getAgentService()->getAgent($fromQueries['responsable']);
-        $structure    = $this->getStructureService()->getStructure($fromQueries['structure']);
-        $campagne     = $this->getCampagneService()->getCampagne((trim($fromQueries['campagne']) !== '')?trim($fromQueries['campagne']):null);
-        $etat         = $this->getEtatService()->getEtat((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null);
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
-
-        $campagnes = $this->getCampagneService()->getCampagnes();
-        $etats = $this->getEtatService()->getEtatsByTypeCode('ENTRETIEN_PROFESSIONNEL');
+        $params  = $this->params()->fromQuery();
+        $entretiens = [];
+        if ($params !== null AND !empty($params)) {
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsWithFiltre($params);
+        }
 
         return new ViewModel([
             'entretiens' => $entretiens,
-            'campagnes' => $campagnes,
-            'etats' => $etats,
-
-            'params' => [
-                'campagneId' => ($campagne)?$campagne->getId():null,
-                'etatId' => ($etat)?$etat->getId():null,
-                'agent' => $agent,
-                'responsable' => $responsable,
-                'structure' => $structure,
-            ],
+            'params' => $params,
+            'campagnes' => $this->getCampagneService()->getCampagnes(),
+            'etats' => $this->getEtatService()->getEtatsByTypeCode('ENTRETIEN_PROFESSIONNEL'),
         ]);
     }
 

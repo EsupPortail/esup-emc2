@@ -121,13 +121,13 @@ class EntretienProfessionnelService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(bool $withAffectation = true) : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->addSelect('agent')->join('entretien.agent', 'agent')
             ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
-            ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->addSelect('astructure')->join('affectation.structure', 'astructure')
+            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+            ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
 
             ->addSelect('responsable')->join('entretien.responsable', 'responsable')
             ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
@@ -137,7 +137,7 @@ class EntretienProfessionnelService {
         ;
 
         $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
-        $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
+        if ($withAffectation) $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
         return $qb;
     }
 
@@ -255,7 +255,7 @@ class EntretienProfessionnelService {
      */
     public function getEntretienProfessionnel(?int $id) : ?EntretienProfessionnel
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder(false)
             ->addSelect('formulaireInstance')->leftJoin('entretien.formulaireInstance', 'formulaireInstance')
             ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
             ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
@@ -525,5 +525,27 @@ class EntretienProfessionnelService {
         $entretien->addValidation($validation);
         $this->update($entretien);
         return $validation;
+    }
+
+    /**
+     * @param array $params
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensProfessionnelsWithFiltre(array $params) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+
+//        $agent        = $this->getAgentService()->getAgent($fromQueries['agent']);
+//        $responsable  = $this->getAgentService()->getAgent($fromQueries['responsable']);
+//        $structure    = $this->getStructureService()->getStructure($fromQueries['structure']);
+//        $campagne     = $this->getCampagneService()->getCampagne((trim($fromQueries['campagne']) !== '')?trim($fromQueries['campagne']):null);
+//        $etat         = $this->getEtatService()->getEtat((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null);
+//        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
     }
 }
