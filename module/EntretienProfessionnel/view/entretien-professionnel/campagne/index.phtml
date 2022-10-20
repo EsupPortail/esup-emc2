@@ -109,3 +109,11 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<script>
+    $("body").on("modification", function (event) {
+        event.div.modal('hide');
+        window.location.reload();
+    });
+</script>
