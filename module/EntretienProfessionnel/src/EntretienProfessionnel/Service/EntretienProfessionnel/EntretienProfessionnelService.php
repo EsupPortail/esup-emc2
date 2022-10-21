@@ -118,9 +118,6 @@ class EntretienProfessionnelService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder(bool $withAffectation = true) : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
@@ -534,18 +531,36 @@ class EntretienProfessionnelService {
     public function getEntretiensProfessionnelsWithFiltre(array $params) : array
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
             ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
+            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
+            ->join('entretien.etat', 'etat')->addSelect('etat')
+            ->join('etat.type', 'etype')->addSelect('etype')
         ;
+
+        if ($params['campagne'] !== null  and $params['campagne'] !== "") {
+            $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
+        }
+        if ($params['etat'] !== null and $params['etat'] !== "") {
+            $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $params['etat']);
+        }
+        if ($params['structure-filtre'] !== null and $params['structure-filtre']['id'] !== "") {
+            $qb = $qb
+                ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
+                ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
+                ->andWhere('structure.id = :etat')->setParameter('structure', $params['structure-filtre']['id'])
+                ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= entretien.date')
+                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.date')
+                ->andWhere('affectation.id IS NOT NULL');
+        }
+        if ($params['agent-filtre'] !== null and $params['agent-filtre']['id'] !== "") {
+            $qb = $qb->andWhere('agent.id = :id')->setParameter('id', $params['agent-filtre']['id']);
+        }
+        if ($params['responsable-filtre'] !== null and $params['responsable-filtre']['id'] !== "") {
+            $qb = $qb->andWhere('responsable.id = :id')->setParameter('id', $params['responsable-filtre']['id']);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
-
-//        $agent        = $this->getAgentService()->getAgent($fromQueries['agent']);
-//        $responsable  = $this->getAgentService()->getAgent($fromQueries['responsable']);
-//        $structure    = $this->getStructureService()->getStructure($fromQueries['structure']);
-//        $campagne     = $this->getCampagneService()->getCampagne((trim($fromQueries['campagne']) !== '')?trim($fromQueries['campagne']):null);
-//        $etat         = $this->getEtatService()->getEtat((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null);
-//        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnels($agent, $responsable, $structure, $campagne, $etat);
     }
 }
