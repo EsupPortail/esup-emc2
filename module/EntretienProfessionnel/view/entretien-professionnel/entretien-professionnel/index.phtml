@@ -41,7 +41,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => []], [], true); ?>
+<?php echo $this->partial('partial/filtre', ['etats' => $etats, 'campagnes' => $campagnes, 'params' => $params], [], true); ?>
 
 <?php if ($params === null or $params === []) : ?>
     <div class="alert alert-info">

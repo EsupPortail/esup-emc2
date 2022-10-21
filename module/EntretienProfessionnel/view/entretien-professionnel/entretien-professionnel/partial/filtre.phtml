@@ -78,10 +78,7 @@ use UnicaenEtat\Entity\Db\Etat;
                             <select id="campagne" name="campagne" class="form-control selectpicker show-tick" data-live-search="false">
                                 <option value=""> Toutes les campagnes </option>
                                 <?php foreach($campagnes as $campagne) : ?>
-                                    <option
-                                            value="<?php echo $campagne->getId(); ?>"
-                                        <?php if ($campagne->getId() == $params['campagneId']) echo " selected "; ?>
-                                    >
+                                    <option value="<?php echo $campagne->getId(); ?>">
                                         <?php echo $campagne->getAnnee(); ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -95,7 +92,6 @@ use UnicaenEtat\Entity\Db\Etat;
                                 <option
                                         value="<?php echo $etat->getId(); ?>"
                                         data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
-                                    <?php if ($etat->getId() == $params['etatId']) echo " selected "; ?>
                                 >
                                     <?php echo $etat->getLibelle(); ?>
                                 </option>
@@ -105,13 +101,14 @@ use UnicaenEtat\Entity\Db\Etat;
                     </div>
                 </div>
                 <div class="col-md-3">
-                        <button class="btn btn-primary" id="filter">
-                            <span class="icon icon-filtrer"></span>
-                            Filtrer
-                        </button>
-                        <button class="btn btn-primary" id="clear">
-                            <span class="icon icon-erase"></span>
-                        </button>
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span> Remise à zéro
+                    </button>
+
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
                     </div>
                 </div>
         </form>
@@ -133,43 +130,32 @@ use UnicaenEtat\Entity\Db\Etat;
 </style>
 
 <script>
-    $("form#filtre").submit(function(e){
+
+    $('button#clear').click(function(e) {
         e.preventDefault();
+        window.location.href = 'entretien-professionnel?';
     });
 
-    $('button#clear').click(function() {
-        window.location.href = 'entretien-professionnel#entretien';
-    });
 
-    $('button#filter').click(function() {
-        let structureId = $('input[name="structure-filtre[id]').val();
-        let agentId = $('input[name="agent-filtre[id]').val();
-        let responsableId = $('input[name="responsable-filtre[id]').val();
-        let campagneId = $('select#campagne option:selected').val();
-        let etatId = $('select#etat option:selected').val();
-        console.log("structure=" + structureId + " | " + "agent=" + agentId + " | " + "responsable=" + responsableId+ " | " + "campagne=" + campagneId + " | " + "etat=" + etatId);
-
-        let query = "";
-        query += "structure=" + structureId;
-        query += "&agent=" + agentId;
-        query += "&responsable=" + responsableId;
-        query += "&campagne=" + campagneId;
-        query += "&etat=" + etatId;
-        window.location.href = 'entretien-professionnel?'+ query + '#entretien';
-    });
-
-    <?php if ($params['structure'] !== null) :?>
-    $('input[name="structure-filtre[label]').val(" <?php echo $params['structure']->getLibelleLong(); ?> ");
-    $('input[name="structure-filtre[id]').val(<?php echo $params['structure']->getId(); ?>);
+    <?php if ($params['structure-filtre'] !== null) :?>
+        $('input[name="structure-filtre[label]"]').val("<?php echo trim($params['structure-filtre']['label']); ?>");
+        $('input[name="structure-filtre[id]"]').val("<?php echo $params['structure-filtre']['id']; ?>");
     <?php endif; ?>
 
-    <?php if ($params['agent'] !== null) :?>
-    $('input[name="agent-filtre[label]').val(" <?php echo $params['agent']->getDenomination(); ?> ");
-    $('input[name="agent-filtre[id]').val(<?php echo $params['agent']->getId(); ?>);
+    <?php if ($params['agent-filtre'] !== null) :?>
+        $('input[name="agent-filtre[label]"]').val("<?php echo trim($params['agent-filtre']['label']); ?>");
+        $('input[name="agent-filtre[id]"]').val("<?php echo $params['agent-filtre']['id']; ?>");
     <?php endif; ?>
 
-    <?php if ($params['responsable'] !== null) :?>
-    $('input[name="responsable-filtre[label]').val(" <?php echo $params['responsable']->getDenomination(); ?> ");
-    $('input[name="responsable-filtre[id]').val(<?php echo $params['responsable']->getId(); ?>);
+    <?php if ($params['responsable-filtre'] !== null) :?>
+        $('input[name="responsable-filtre[label]"]').val("<?php echo trim($params['responsable-filtre']['label']); ?>");
+        $('input[name="responsable-filtre[id]"]').val("<?php echo $params['responsable-filtre']['id']; ?>");
+    <?php endif; ?>
+
+    <?php if ($params['campagne'] !== null) : ?>
+        $('select#campagne option[value=<?php echo $params['campagne']; ?>]').prop('selected', true);
+    <?php endif; ?>
+    <?php if ($params['etat'] !== null) : ?>
+        $('select#etat option[value=<?php echo $params['etat']; ?>]').prop('selected', true);
     <?php endif; ?>
 </script>

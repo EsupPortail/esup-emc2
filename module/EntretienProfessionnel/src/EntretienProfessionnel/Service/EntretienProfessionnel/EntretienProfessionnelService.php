@@ -188,7 +188,7 @@ class EntretienProfessionnelService {
      */
     public function findAgentByTerm(string $texte) : array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder(false)
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
             ->setParameter('search', '%'.strtolower($texte).'%');
         $result = $qb->getQuery()->getResult();
@@ -208,7 +208,7 @@ class EntretienProfessionnelService {
      */
     public function findResponsableByTerm(string $texte) : array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder(false)
             ->andWhere("LOWER(CONCAT(responsable.prenom, ' ', responsable.nomUsuel)) like :search OR LOWER(CONCAT(responsable.nomUsuel, ' ', responsable.prenom)) like :search")
             ->setParameter('search', '%'.strtolower($texte).'%');
         $result = $qb->getQuery()->getResult();
@@ -228,7 +228,7 @@ class EntretienProfessionnelService {
      */
     public function findStructureByTerm(string $texte) : array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder(false)
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($texte).'%')

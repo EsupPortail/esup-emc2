@@ -37,7 +37,14 @@ $nbAgent = count($agents);
 
     <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
 
-    <?php if ($nbAgent > 0 AND $nbAgent < 500) : ?>
+
+    <?php if ($params === null or $params === []) : ?>
+        <div class="alert alert-info">
+            <span class="icon icon-information"></span>
+            Aucun critère de recherche.
+        </div>
+    <?php else : ?>
+        <?php if ($nbAgent > 0 AND $nbAgent < 500) : ?>
         <table id="agents" class="datatable table table-condensed table-hover">
             <thead>
             <tr>
@@ -92,11 +99,18 @@ $nbAgent = count($agents);
         </table>
     <?php else : ?>
         <?php if ($nbAgent === 0) : ?>
+        <div class="alert alert-warning">
+            <span class="icon icon-information"></span>
             Aucun résultat pour votre réquête
+        </div>
         <?php endif; ?>
         <?php if ($nbAgent > 500) : ?>
+        <div class="alert alert-warning">
+            <span class="icon icon-attention"></span>
             Plus de 500 agents de remontés. Pas d'affichage sous formes de tableaux
+        </div>
         <?php endif; ?>
+    <?php endif; ?>
     <?php endif; ?>
 
 </div>
