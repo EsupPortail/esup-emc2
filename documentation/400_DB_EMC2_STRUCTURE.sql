@@ -55,7 +55,7 @@ create table structure
 create table structure_responsable
 (
     id  bigserial constraint structure_responsable_pk primary key,
-    structure_id          integer                                                            not null,
+    structure_id          bigint                                                            not null,
     agent_id              varchar(40)                                                        not null,
     fonction_id           integer,
     date_debut            timestamp,
@@ -73,7 +73,7 @@ create table structure_responsable
 create table structure_gestionnaire
 (
     id  bigserial  constraint structure_gestionnaire_pk primary key,
-    structure_id          integer                                                            not null,
+    structure_id          bigint                                                            not null,
     agent_id              varchar(40)                                                        not null,
     fonction_id           integer,
     date_debut            timestamp,
@@ -91,7 +91,7 @@ create table structure_gestionnaire
 create table structure_agent_force
 (
     id  serial constraint structure_agent_force_pk primary key,
-    structure_id          integer     not null,
+    structure_id          bigint     not null,
     agent_id              varchar(40) not null constraint saf_agent_c_individu_fk references agent,
     histo_creation        timestamp   not null,
     histo_createur_id     integer     not null constraint saf_unicaen_utilisateur_user_id_fk_1 references unicaen_utilisateur_user,
@@ -104,7 +104,7 @@ create unique index structure_agent_force_id_uindex  on structure_agent_force (i
 
 create table structure_ficheposte
 (
-    structure_id  integer not null,
+    structure_id  bigint not null,
     ficheposte_id integer not null constraint structure_ficheposte_fiche_poste_id_fk references ficheposte on delete cascade,
     constraint structure_ficheposte_pk primary key (structure_id, ficheposte_id)
 );
@@ -119,7 +119,7 @@ create table agent_missionspecifique
         constraint agent_missionspecifique_mission_specifique_id_fk
             references mission_specifique
             on delete cascade,
-    structure_id          integer,
+    structure_id          bigint,
     date_debut            timestamp,
     date_fin              timestamp,
     commentaire           varchar(2048),

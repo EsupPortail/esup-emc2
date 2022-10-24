@@ -83,7 +83,7 @@ create table agent_carriere_grade
 (
     id varchar(40) not null constraint agent_grade_pk primary key,
     agent_id varchar(40) not null,
-    structure_id integer,
+    structure_id bigint,
     grade_id integer,
     corps_id integer,
     bap_id integer,
@@ -103,7 +103,7 @@ create table agent_carriere_statut
 (
     id BIGINT not null constraint agent_statut_pk primary key,
     agent_id varchar(40) not null,
-    structure_id integer,
+    structure_id bigint,
     grade_id integer,
     corps_id integer,
     bap_id integer,
@@ -181,7 +181,7 @@ create table agent_ccc_stageobs
         constraint agent_stageobs_agent_c_individu_fk
             references agent
             on delete cascade,
-    structure_id          integer,
+    structure_id          bigint,
     metier_id             integer
         constraint agent_stageobs_metier_id_fk
             references metier_metier

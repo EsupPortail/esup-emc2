@@ -126,7 +126,7 @@ WHERE ia.type_id = 1;
 create table structure_responsable
 (
     id           serial                             constraint structure_reponsable_pk primary key,
-    structure_id integer     not null,
+    structure_id bigint     not null,
     individu_id  integer     not null,
     fonction_id  integer,
     date_debut   date        not null,
@@ -137,7 +137,7 @@ create unique index structure_reponsable_id_uindex on structure_responsable (id)
 create table structure_gestionnaire
 (
     id           serial                             constraint structure_gestionnaire_pk primary key,
-    structure_id integer not null,
+    structure_id bigint not null,
     individu_id  integer not null,
     fonction_id  integer,
     date_debut   date    not null,
@@ -171,7 +171,7 @@ create table individu_grade
     id                integer not null                    constraint individu_grade_pk primary key,
     id_orig           varchar(1024),
     agent_id          integer not null,
-    structure_id      integer,
+    structure_id      bigint,
     corps_id          integer,
     grade_id          integer,
     correspondance_id integer,
@@ -186,7 +186,7 @@ create table individu_statut
     id_orig          varchar(255)   not null            constraint un_ind_sta_idorig unique deferrable initially deferred,
     c_source         varchar(10)    not null            constraint fk_ind_sta_csource references source deferrable,
     individu_id      integer        not null            constraint fk_ind_sta_ind references individu deferrable,
-    structure_id     integer                            constraint fk_ind_sta_str references structure deferrable,
+    structure_id     bigint                            constraint fk_ind_sta_str references structure deferrable,
     d_debut          date,
     d_fin            date,
     t_titulaire      varchar(1) default 'N'::character varying not null,
@@ -238,7 +238,7 @@ create table individu_affectation
 (
     id              serial                           constraint pk_individu_affectation primary key,
     individu_id     integer     not null             constraint fk_individu_affectation_ind references individu deferrable,
-    structure_id    integer     not null             constraint fk_individu_affectation_str references structure deferrable,
+    structure_id    bigint     not null             constraint fk_individu_affectation_str references structure deferrable,
     type_id         integer     not null             constraint fk_individu_affectation_typ references individu_affectation_type deferrable,
     source_id       varchar(10) not null             constraint fk_individu_affectation_src references source deferrable,
     date_debut      date        not null,

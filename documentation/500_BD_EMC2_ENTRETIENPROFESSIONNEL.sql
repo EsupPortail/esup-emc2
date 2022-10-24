@@ -78,7 +78,7 @@ create table entretienprofessionnel_delegue
     id serial not null constraint entretienprofessionnel_delegue_pk primary key,
     campagne_id integer not null constraint entretienprofessionnel_delegue_entretienprofessionnel_campagne_ references entretienprofessionnel_campagne on delete cascade,
     agent_id varchar(40) not null constraint entretienprofessionnel_delegue_agent_c_individu_fk references agent on delete cascade,
-    structure_id integer not null constraint entretienprofessionnel_delegue_structure_id_fk references structure on delete cascade,
+    structure_id bigint not null constraint entretienprofessionnel_delegue_structure_id_fk references structure on delete cascade,
     description text,
     histo_creation timestamp not null,
     histo_createur_id integer not null constraint entretienprofessionnel_delegue_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,

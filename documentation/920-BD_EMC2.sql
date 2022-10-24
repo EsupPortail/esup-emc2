@@ -11,7 +11,7 @@ create table ficheprofil
     renumeration text,
     date_dossier timestamp not null,
     lieu text,
-    structure_id integer not null constraint ficheprofil_structure_id_fk references structure,
+    structure_id bigint not null constraint ficheprofil_structure_id_fk references structure,
     vacance_emploi boolean default false not null,
     adresse varchar(1024) not null,
     date_audition date,
