@@ -300,4 +300,27 @@ class FormationInstanceInscritService
         $result = $this->getInscriptionsValideesByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }
+
+    public function getInscriptionsWithFiltre(array $params)
+    {
+        $qb = $this->createQueryBuilder()->orderBy('inscrit.histoCreation', 'asc');
+
+        if (isset($params['etat'])) $qb = $qb->andWhere('inscrit.etat = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['historise'])) {
+            if ($params['historise'] === '1') $qb = $qb->andWhere('inscrit.histoDestruction IS NOT NULL');
+            if ($params['historise'] === '0') $qb = $qb->andWhere('inscrit.histoDestruction IS NULL');
+        }
+        if (isset($params['annee']) AND $params['annee'] !== '') {
+            $annee = (int) $params['annee'];
+            $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
+            $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+            $qb = $qb
+                ->andWhere('journee.jour >= :debut')->setParameter('debut', $debut)
+                ->andWhere('journee.jour <= :fin')->setParameter('fin', $fin)
+            ;
+        }
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

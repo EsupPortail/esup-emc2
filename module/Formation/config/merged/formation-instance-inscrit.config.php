@@ -27,6 +27,7 @@ return [
                 [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
+                        'afficher-agent',
                         'ajouter-agent',
                         'historiser-agent',
                         'restaurer-agent',
@@ -211,6 +212,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'ajouter-agent',
+                            ],
+                        ],
+                    ],
+                    'afficher-agent' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher-agent/:inscrit',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'afficher-agent',
                             ],
                         ],
                     ],

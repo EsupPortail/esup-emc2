@@ -44,6 +44,16 @@ class FormationInstanceInscritController extends AbstractActionController
     use InscriptionFormAwareTrait;
     use SelectionAgentFormAwareTrait;
 
+
+    public function afficherAgentAction() : ViewModel
+    {
+        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        return new ViewModel([
+            'agent' => $inscrit->getAgent(),
+            'demande' => $inscrit,
+        ]);
+    }
+
     public function ajouterAgentAction() : ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
@@ -86,7 +96,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAgentAction() : Response
+        public function historiserAgentAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $inscrit->setListe(null);

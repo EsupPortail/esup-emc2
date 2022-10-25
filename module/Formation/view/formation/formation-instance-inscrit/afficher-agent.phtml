@@ -1,0 +1,113 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Fichier\Entity\Db\Fichier;
+use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Seance;
+
+/**
+ * @see \Formation\Controller\FormationInstanceInscritController::afficherAgentAction()
+ * @var FormationInstanceInscrit $demande
+ * @var Agent $agent;
+ */
+
+$session = $demande->getInstance();
+$formation = $session->getFormation();
+
+?>
+
+
+<div class="card card-info">
+    <div class="card-header">
+        Informations à propos de l'Agent demandant le stage
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-md-2"> Prénom </dt>
+            <dd class="col-md-4"> <?php echo $agent->getPrenom(); ?> </dd>
+            <dt class="col-md-2"> Nom </dt>
+            <dd class="col-md-4"> <?php echo $agent->getNomUsuel()??$agent->getNomFamille(); ?> </dd>
+            <dt class="col-md-2"> Adresse électronique </dt>
+            <dd class="col-md-10"> <?php echo $agent->getEmail(); ?> </dd>
+            <dt class="col-md-2"> Statut </dt>
+            <dd class="col-md-4"> <?php echo $agent->getStatutToString(); ?> </dd>
+            <dt class="col-md-2"> Corps </dt>
+            <dd class="col-md-4">
+                <?php $corps = $agent->getGradesActifs(); ?>
+                <?php foreach ($corps as $corp) echo $corp->getCorps()->getLibelleLong(); ?>
+            </dd>
+            <dt class="col-md-2"> Service </dt>
+            <dd class="col-md-10">
+                <?php $affectations = $agent->getAffectationsActifs(); ?>
+                <?php foreach ($affectations as $affectation) {
+                    $structure = $affectation->getStructure();
+                    $niv2 = $structure->getNiv2();
+                    if ($niv2 !== null AND $niv2 !== $structure) echo $niv2->getLibelleLong() . " > ";
+                    echo $affectation->getStructure()->getLibelleLong();
+                }
+                ?>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-info">
+    <div class="card-header">
+        Formulaire de demande de formation externe
+    </div>
+    <div class="card-body">
+
+        <h3> Description de la formation demandée </h3>
+        <dl class="row">
+            <dt class="col-md-4"> Thème de l'action de  formation : </dt>
+            <dd class="col-md-8"> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Aucun groupe"; ?> </dd>
+            <dt class="col-md-4"> Libellé de l'action de formation: </dt>
+            <dd class="col-md-8"> <?php echo $formation->getLibelle(); ?> </dd>
+            <dt class="col-md-4"> Type :</dt>
+            <dd class="col-md-8"> <?php echo $session->getType(); ?> </dd>
+        </dl>
+
+
+        <h3> Description de la session </h3>
+        <dl class="row">
+            <dt class="col-md-4"> Séances </dt>
+            <dd class="col-md-8">
+                <ul>
+                    <?php /** @var Seance $journee */ ?>
+                    <?php foreach ($session->getJournees() as $journee) : ?>
+                    <li>
+                        <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                            Volume horaire de <?php echo $journee->getVolume(); ?>.<br/>
+                            À réaliser sur la période du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?>
+                        <?php endif;?>
+                        <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                            Séance du <?php echo $journee->getJour()->format('d/m/Y'); ?> de <?php echo $journee->getDebut(); ?> à <?php echo $journee->getFin(); ?>
+                            (<?php echo $journee->getLieu(); ?>)
+                        <?php endif; ?>
+                    </li>
+                    <?php endforeach; ?>
+
+                </ul>
+            </dd>
+        </dl>
+
+    </div>
+</div>
+
+<div class="card card-info">
+    <div class="card-header">
+        Validation
+    </div>
+    <div class="card-body">
+        <dl class="row">
+                <dt class="col-md-4"> Validation de l'agent </dt>
+                <dd class="col-md-8">
+                    <?php echo $demande->getJustificationAgent(); ?>
+                </dd>
+                <dt class="col-md-4"> Validation du responsable </dt>
+                <dd class="col-md-8">
+                    <?php echo $demande->getJustificationResponsable(); ?>
+                </dd>
+        </dl>
+    </div>
+</div>

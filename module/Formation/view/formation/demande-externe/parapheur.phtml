@@ -1,11 +1,13 @@
 <?php
 
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 /**
  * @see \Formation\Controller\DemandeExterneController::parapheurAction()
- * @var DemandeExterne[] $demandes
+ * @var FormationInstanceInscrit[] $demandesInternes
+ * @var DemandeExterne[] $demandesExternes
  */
 
 $this->headTitle("Parapheur des formations externes");
@@ -20,21 +22,100 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 ?>
 
 <h1 class="page-header">
-    Parapheurs des demandes de formations externes
+    Parapheurs des demandes de formations
 </h1>
+
+<h2>
+    Demandes de formation interne
+</h2>
+
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th class="agent"> Agent             </th>
+        <th class="formation"> Formation </th>
+        <th> Type </th>
+        <th class="etat"> État </th>
+        <th class="action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($demandesInternes as $demande) : ?>
+        <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
+            <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo $demande->getInstance()->getFormation()->getLibelle(); ?> </td>
+            <td> <?php echo $demande->getInstance()->getType(); ?> </td>
+            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Formation\Controller\FormationInstanceInscritController::afficherAgentAction() */ ?>
+                    <a href="<?php echo $this->url('formation-instance/afficher-agent', ['inscrit' => $demande->getId()], [], true); ?>"
+                       class="ajax-modal">
+                        <span class="icon icon-voir"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-voir nope"></span>
+                <?php endif; ?>
+                <?php if ($canValider) : ?>
+                    <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon icon-ok text-success"></span></a>
+                    <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                        <span class="icon icon-ko text-danger"></span></a>
+                <?php else: ?>
+                    <span class="icon icon-ok nope"></span>
+                    <span class="icon icon-ko nope"></span>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($demande->estNonHistorise()) : ?>
+                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::historiserAgentAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $demande->getId()], [], true); ?>"
+                           title="Supprimer la demande externe"
+                        >
+                            <span class="icon icon-historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::restaurerAgentAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/restaurer-agent', ["inscrit" => $demande->getId()], [], true); ?>"
+                           title="Restaurer la demande externe"
+                        >
+                            <span class="icon icon-restaurer"></span></a>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <span class="icon icon-historiser nope"></span>
+                <?php endif; ?>
+<!--                --><?php //if ($canSupprimer) : ?>
+<!--                    --><?php ///** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?><!--"-->
+<!--                       class="ajax-modal" data-event="modification"-->
+<!--                       title="Supprimer définitivement la demande externe"-->
+<!--                    >-->
+<!--                        <span class="icon icon-retirer text-danger"></span></a>-->
+<!--                --><?php //else : ?>
+<!--                    <span class="icon icon-retirer nope"></span>-->
+<!--                --><?php //endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<h2>
+    Demandes de formation externe
+</h2>
 
 <table class="table table-condensed table-hover">
     <thead>
         <tr>
-            <th> Agent             </th>
-            <th> Formation </th>
+            <th class="agent"> Agent             </th>
+            <th class="formation"> Formation </th>
             <th> Organisme </th>
-            <th> État </th>
+            <th class="etat"> État </th>
             <th class="action"> Action </th>
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($demandes as $demande) : ?>
+    <?php foreach ($demandesExternes as $demande) : ?>
         <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo $demande->getLibelle(); ?> </td>
@@ -53,11 +134,11 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                     <?php /** @see \Formation\Controller\DemandeExterneController::validerDrhAction() */ ?>
                     <a href="<?php echo $this->url('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-ok"></span></a>
+                        <span class="icon icon-ok text-success"></span></a>
                     <?php /** @see \Formation\Controller\DemandeExterneController::refuserDrhAction() */ ?>
                     <a href="<?php echo $this->url('formation/demande-externe/refuser-drh', ['demande-externe' => $demande->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-ko"></span></a>
+                        <span class="icon icon-ko text-danger"></span></a>
                 <?php else: ?>
                     <span class="icon icon-ok nope"></span>
                     <span class="icon icon-ko nope"></span>
@@ -79,16 +160,16 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                 <?php else : ?>
                     <span class="icon icon-historiser nope"></span>
                 <?php endif; ?>
-                <?php if ($canSupprimer) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
-                       title="Supprimer définitivement la demande externe"
-                    >
-                        <span class="icon icon-retirer text-danger"></span></a>
-                <?php else : ?>
-                    <span class="icon icon-retirer nope"></span>
-                <?php endif; ?>
+<!--                --><?php //if ($canSupprimer) : ?>
+<!--                    --><?php ///** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?><!--"-->
+<!--                       class="ajax-modal" data-event="modification"-->
+<!--                       title="Supprimer définitivement la demande externe"-->
+<!--                    >-->
+<!--                        <span class="icon icon-retirer text-danger"></span></a>-->
+<!--                --><?php //else : ?>
+<!--                    <span class="icon icon-retirer nope"></span>-->
+<!--                --><?php //endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -105,3 +186,24 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
         });
     });
 </script>
+
+<style>
+    th.etat {
+        min-width:6rem;
+        width:6rem;
+    }
+
+    th.action {
+        min-width:7rem;
+        width:7rem;
+    }
+
+    th.agent {
+        min-width:20rem;
+        width:20rem;
+    }
+    th.formation {
+        min-width:30rem;
+        width:30rem;
+    }
+</style>

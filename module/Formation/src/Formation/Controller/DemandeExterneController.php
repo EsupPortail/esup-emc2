@@ -13,6 +13,7 @@ use Formation\Form\Demande2Formation\Demande2FormationFormAwareTrait;
 use Formation\Form\DemandeExterne\DemandeExterneFormAwareTrait;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -345,16 +346,23 @@ class DemandeExterneController extends AbstractActionController {
     /** GESTION DES DEMANDES *************************************************************************/
     public function parapheurAction() : ViewModel
     {
-        $params = [
+        $paramsInternes = [
+            'etat' => $this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_RESPONSABLE),
+            'historise' => '0',
+            'annee' => Formation::getAnnee(),
+        ];
+        $demandesInternes = $this->getDemandeExterneService()->getFormationInstanceInscritService()->getInscriptionsWithFiltre($paramsInternes);
+
+        $paramsExternes = [
             'etat' => $this->getEtatService()->getEtatByCode(DemandeExterneEtats::ETAT_VALIDATION_RESP),
             'historise' => '0',
             'annee' => Formation::getAnnee(),
         ];
-
-        $demandes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($params);
+        $demandesExternes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes);
 
         return new ViewModel([
-            'demandes' => $demandes,
+            'demandesInternes' => $demandesInternes,
+            'demandesExternes' => $demandesExternes,
         ]);
     }
 
