@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var Agent[] $agents
+ */
+
+use Application\Entity\Db\Agent;
+
+?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Agent </th>
+            <th> Affectation </th>
+            <th> Fiches de poste </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($agents as $agent) : ?>
+        <tr>
+            <td> <?php echo $agent->getDenomination(); ?> </td>
+            <td>
+                <?php $affectations = $agent->getAffectationsActifs(); ?>
+                <ul>
+                    <?php foreach ($affectations as $affectation) : ?>
+                        <li>
+                            <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+        </tr>
+
+    <?php endforeach; ?>
+    </tbody>
+</table>

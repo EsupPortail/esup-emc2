@@ -323,4 +323,26 @@ class FormationInstanceInscritService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    public function getInscrpitionsByAgentsAndAnnee(array $agents, ?int $annee = null) : array
+    {
+        if ($annee === null) $annee = Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y H:i', '01/09/'.$annee.' 08:00');
+        $fin = DateTime::createFromFormat('d/m/Y H:i', '31/08/'.($annee+1).' 18:00');
+
+        $qb = $this->createQueryBuilder()->orderBy('inscrit.histoCreation', 'asc')
+            ->andWhere('inscrit.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('inscrit.histoCreation >= :debut')->setParameter('debut', $debut)
+            ->andWhere('inscrit.histoCreation <= :fin')->setParameter('fin', $fin)
+        ;
+        /** @var FormationInstanceInscrit[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $inscriptions = [];
+        foreach ($result as $item) {
+            $inscriptions[$item->getAgent()->getId()][] = $item;
+        }
+
+        return $inscriptions;
+    }
 }

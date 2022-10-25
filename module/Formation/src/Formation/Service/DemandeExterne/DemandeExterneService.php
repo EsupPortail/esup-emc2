@@ -276,6 +276,28 @@ class DemandeExterneService {
         return $result;
     }
 
+    public function getDemandesExternesByAgentsAndAnnee(array $agents, ?int $annee = null) : array
+    {
+        if ($annee === null) $annee = Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y H:i', '01/09/'.$annee.' 08:00');
+        $fin = DateTime::createFromFormat('d/m/Y H:i', '31/08/'.($annee+1).' 18:00');
+
+        $qb = $this->createQueryBuilder()->orderBy('demande.histoCreation', 'asc')
+            ->andWhere('demande.agent in (:agents)')->setParameter('agents', $agents)
+            ->andWhere('demande.histoCreation >= :debut')->setParameter('debut', $debut)
+            ->andWhere('demande.histoCreation <= :fin')->setParameter('fin', $fin)
+        ;
+        /** @var FormationInstanceInscrit[] $result */
+        $result = $qb->getQuery()->getResult();
+
+        $inscriptions = [];
+        foreach ($result as $item) {
+            $inscriptions[$item->getAgent()->getId()][] = $item;
+        }
+
+        return $inscriptions;
+    }
+
     /** FONCTION POUR LA RECHERCHE ************************************************************************************/
 
     /**

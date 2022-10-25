@@ -6,8 +6,12 @@ namespace Application\Controller;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use EntretienProfessionnel\Provider\Role\EntretienProfessionnelRoles;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
+use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -27,6 +31,10 @@ class IndexController extends AbstractActionController
     use UserServiceAwareTrait;
     use UserContextServiceAwareTrait;
 
+    use FichePosteServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
+    use FormationInstanceInscritServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
 
     public function indexAction()
     {
@@ -103,12 +111,23 @@ class IndexController extends AbstractActionController
                 if ($agent !== null) $agents[$agent->getId()] = $agent;
             }
         }
+        $fiches = [];
+        $fichesRAW = $this->getFichePosteService()->getFichesPostesbyAgents($agents);
+        foreach ($fichesRAW as $fiche) {
+//            $fiches[$fiche->getAgent()->getId()][] = $fiche;
+        }
+
+
 
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
             'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
             'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
+
+            'fiches' => $fiches,
+            'demandesInternes' => $this->getFormationInstanceInscritService()->getInscrpitionsByAgentsAndAnnee($agents),
+            'demandesExternes' => $this->getDemandeExterneService()->getDemandesExternesByAgentsAndAnnee($agents),
         ]);
     }
 
