@@ -67,6 +67,14 @@ $canDetruire    = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePri
             <td> <?php echo ($campagne->getPrecede())?$campagne->getPrecede()->getAnnee():"---"; ?> </td>
             <td> <?php echo count($campagne->getEntretiensProfessionnels()); ?> </td>
             <td>
+                <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::afficherAction() */?>
+                            href="<?php echo $this->url('entretien-professionnel/campagne/afficher', ['campagne' => $campagne->getId()], [], true); ?>"
+                            title="Affichage des informations de la campagne <?php echo $campagne->getAnnee(); ?>"
+                    >
+                        <span class="icon icon-voir"></span></a>
+                <?php endif; ?>
                 <?php if ($canModifier) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\CampagneController::modifierAction() */?>

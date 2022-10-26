@@ -87,6 +87,9 @@ class AgentService {
     {
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
+            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
+//            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+            ->andWhere('agent.deleted_on IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom');
         $result =  $qb->getQuery()->getResult();
         return $result;

@@ -356,10 +356,13 @@ class Agent implements
     /**
      * @return AgentStatut[]
      */
-    public function getStatuts() : array
+    public function getStatuts(?DateTime $date = null) : array
     {
         $statuts = $this->statuts->toArray();
-        $statuts = array_filter($statuts, function (AgentStatut $as) { return !$as->isDeleted();});
+        $statuts = array_filter($statuts, function (AgentStatut $as) { return (!$as->isDeleted());});
+        if ($date) {
+            $statuts = array_filter($statuts, function (AgentStatut $as) use ($date) { return ($as->estEnCours($date));});
+        }
         usort($statuts, function (AgentStatut $a, AgentStatut $b) {
             return $a->getDateDebut() < $b->getDateDebut();
         });

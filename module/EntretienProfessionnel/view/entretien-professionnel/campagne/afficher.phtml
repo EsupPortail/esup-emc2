@@ -1,0 +1,166 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::afficherAction()
+ * @var Campagne $campagne
+ * @var Agent[] $agents
+ * @var EntretienProfessionnel[] $entretiens
+ *
+ * @var EntretienProfessionnel[] $entretiensResponsable
+ * @var EntretienProfessionnel[] $entretiensAutorite
+ * @var EntretienProfessionnel[] $entretiensAgent
+ */
+
+
+$nbAgent = count($agents);
+
+$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee());
+
+$canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
+
+$condition = "Les agents titulaires ou contratuel en poste depuis XX mois doivent passer un entretien professionnel.";
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php /** @see \EntretienProfessionnel\Controller\CampagneController::indexAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/campagne', [], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-listing"></span>
+            Accéder aux campagnes
+        </a>
+    </div>
+</div>
+
+<div class="card card-info">
+    <div class="card-header">
+        Informations générales à propos de la campagne
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                <dt class="col-md-4"> Année </dt>
+                <dd class="col-md-8"> <?php echo $campagne->getAnnee(); ?></dd>
+                <dt class="col-md-4"> Précède </dt>
+                <dd class="col-md-8"> <?php echo ($campagne->getPrecede())?"La campagne ".$campagne->getPrecede()->getAnnee():"Aucune campagne"; ?></dd>
+                <dt class="col-md-4"> Statut </dt>
+                <dd class="col-md-8">
+                    <?php if ($campagne->estEnCours()) : ?>
+                        <span class="text-success"><span class="icon icon-checked"></span> Campagne en cours </span>
+                    <?php else : ?>
+                        <?php if ($campagne->estFini()) : ?>
+                            <span class="text-danger"><span class="icon icon-retirer"></span> Campagne est terminée </span>
+                        <?php else : ?>
+                            <span class="text-info"><span class="icon icon-attente"></span> Campagne n'est pas encore commencée </span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </dd>
+            </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-md-4"> Date de la circulaire </dt>
+                    <dd class="col-md-8"> <?php echo $campagne->getDateCirculaire()->format('d/m/y'); ?></dd>
+                    <dt class="col-md-4"> Date de début </dt>
+                    <dd class="col-md-8"> <?php echo $campagne->getDateDebut()->format('d/m/y'); ?></dd>
+                    <dt class="col-md-4"> Date de fin </dt>
+                    <dd class="col-md-8"> <?php echo $campagne->getDateFin()->format('d/m/y'); ?></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-info">
+    <div class="card-header">
+        Complétion de la campagne
+    </div>
+    <div class="card-body">
+        <h2>Agents éligibles pour un entretien </h2>
+
+        <div class="alert alert-warning">
+            Attention le comptage des agents est qu'une estimation et le calcul est long. <span class="todo">REWORK</span>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-md-5"> Nombre d'agent <span class="icon icon-information" title="<?php echo $condition; ?>>"></span>: </dt>
+                    <dd class="col-md-7"> <?php echo $nbAgent; ?></dd>
+                    <dt class="col-md-5"> Nombre d'entretien :  </dt>
+                    <dd class="col-md-7"> <?php echo count($entretiens); ?> </dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <a href=""
+                   class="btn btn-primary disabled"
+               >
+                    <span class="icon icon-csv"></span>
+                    Extraire la liste des agents
+                </a>
+                <a href=""
+                   class="btn btn-primary disabled"
+                   title="Seules les structures dont des entretiens sont manquants seront notifiées"
+                >
+                    <span class="icon icon-notifier"></span>
+                    Notifier responsable de structure
+                </a>
+            </div>
+        </div>
+
+        <h2> Entretiens de la campagne </h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-md-5"> Attente validation responsable : </dt>
+                    <dd class="col-md-7"> <?php echo count($entretiensResponsable); ?></dd>
+                    <dt class="col-md-5"> Attente validation autorité : </dt>
+                    <dd class="col-md-7"> <?php echo count($entretiensAutorite); ?></dd>
+                    <dt class="col-md-5"> Attente validation agent : </dt>
+                    <dd class="col-md-7"> <?php echo count($entretiensAgent); ?></dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <a href=""
+                   class="btn btn-primary disabled"
+                >
+                    <span class="icon icon-csv"></span>
+                    Extraire les entretiens en attente
+                </a>
+                <a href=""
+                   class="btn btn-primary disabled"
+                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+                >
+                    <span class="icon icon-notifier"></span>
+                    Notifier les responsables
+                </a>
+                <a href=""
+                   class="btn btn-primary disabled"
+                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+                >
+                    <span class="icon icon-notifier"></span>
+                    Notifier les autorités
+                </a>
+                <a href=""
+                   class="btn btn-primary disabled"
+                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+                >
+                    <span class="icon icon-notifier"></span>
+                    Notifier les responsables
+                </a>
+            </div>
+        </div>
+        <span class="todo">Faire les actions associées aux boutons </span>
+    </div>
+</div>

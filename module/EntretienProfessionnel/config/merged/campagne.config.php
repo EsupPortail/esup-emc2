@@ -23,6 +23,7 @@ return [
                     'controller' => CampagneController::class,
                     'action' => [
                         'index',
+                        'afficher',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -92,6 +93,17 @@ return [
                                     'defaults' => [
                                         'controller' => CampagneController::class,
                                         'action'     => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'afficher' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/afficher/:campagne',
+                                    'defaults' => [
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'afficher',
                                     ],
                                 ],
                             ],

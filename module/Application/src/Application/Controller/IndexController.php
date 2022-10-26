@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;

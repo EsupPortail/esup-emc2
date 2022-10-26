@@ -2,10 +2,12 @@
 
 namespace EntretienProfessionnel\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use DateInterval;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -13,30 +15,12 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $annee;
-    /** @var Campagne */
-    private $precede;
-    /** @var DateTime|null */
-    private $dateCirculaire;
+    private ?int $id = -1;
+    private ?string $annee = null;
+    private ?Campagne $precede = null;
+    private ?DateTime $dateCirculaire = null;
+    private Collection $entretiens;
 
-    /** @var ArrayCollection (EntretienProfessionnel) */
-    private $entretiens;
-
-
-    /**
-     * @return string
-     */
-    public function generateTag() : string
-    {
-        return 'Campagne_' . $this->getId();
-    }
-
-    /**
-     * @return int
-     */
     public function getId() : ?int
     {
         return $this->id;
@@ -52,12 +36,10 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
 
     /**
      * @param string|null $annee (par exemple : 2019/2020)
-     * @return Campagne
      */
-    public function setAnnee(?string $annee) : Campagne
+    public function setAnnee(?string $annee) : void
     {
         $this->annee = $annee;
-        return $this;
     }
 
     /**
@@ -68,32 +50,19 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
         return $this->precede;
     }
 
-    /**
-     * @param Campagne|null $precede
-     * @return Campagne
-     */
-    public function setPrecede(?Campagne $precede) : Campagne
+    public function setPrecede(?Campagne $precede) : void
     {
         $this->precede = $precede;
-        return $this;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getDateCirculaire(): ?DateTime
     {
         return $this->dateCirculaire;
     }
 
-    /**
-     * @param DateTime|null $dateCirculaire
-     * @return Campagne
-     */
-    public function setDateCirculaire(?DateTime $dateCirculaire): Campagne
+    public function setDateCirculaire(?DateTime $dateCirculaire): void
     {
         $this->dateCirculaire = $dateCirculaire;
-        return $this;
     }
 
     /**
@@ -104,7 +73,32 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
         return $this->entretiens->toArray();
     }
 
+    /** prédicats *****************************************************************************************************/
+
+    public function isEligible(Agent $agent) : bool
+    {
+        $statuts = $agent->getStatuts($this->getDateDebut());
+        foreach ($statuts as $statut) {
+            if (!$statut->isEnseignant()) {
+                if ($statut->isTitulaire()) return true;
+                if ($statut->isCdi()) return true;
+                if ($statut->isCdd()) {
+//                    $date = DateTime::createFromFormat('d/m/Y', $this->getDateFin()->format('d/m/Y'));
+//                    $date = $date->sub(new DateInterval('P12M'));
+                    return $agent->isContratLong() ;
+//                    AND !empty($agent->getAffectationsActifs($date));
+                }
+            }
+        }
+        return false;
+    }
+
     /** Fonctions pour les macros *************************************************************************************/
+
+    public function generateTag() : string
+    {
+        return 'Campagne_' . $this->getId();
+    }
 
     public function getDateDebutToString() : string
     {

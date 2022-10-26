@@ -31,6 +31,20 @@ class CampagneController extends AbstractActionController {
         ]);
     }
 
+    public function afficherAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'entretiens' => $this->getCampagneService()->getEntretiensProfessionnels($campagne),
+            'agents' => $this->getCampagneService()->getAgentsEligibles($campagne),
+            'entretiensResponsable' => $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne),
+            'entretiensAutorite' => $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne),
+            'entretiensAgent' => $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne),
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         $campagne = new Campagne();

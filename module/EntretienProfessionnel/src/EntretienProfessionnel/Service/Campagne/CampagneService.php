@@ -2,6 +2,8 @@
 
 namespace EntretienProfessionnel\Service\Campagne;
 
+use Application\Entity\Db\Agent;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -13,9 +15,13 @@ use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
+    use AgentServiceAwareTrait;
+    use EtatServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -291,6 +297,94 @@ class CampagneService {
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensProfessionnels(Campagne $campagne) : array
+    {
+        $entretiens = [];
+        foreach ($campagne->getEntretiensProfessionnels() as $entretien) {
+            if ($entretien->estNonHistorise()) {
+                $entretiens[$entretien->getAgent()->getId()][] = $entretien;
+            }
+        }
+        return $entretiens;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @param Etat[] $etats
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
+            ->andWhere('entretien.etat in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('entretien.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $entretiens = [];
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($result as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()][] = $entretien;
+        }
+        return $entretiens;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensEnAttenteResponsable(Campagne $campagne) : array
+    {
+        $etats = [
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
+        ];
+
+        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
+        return $entretiens;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensEnAttenteAutorite(Campagne $campagne) : array
+    {
+        $etats = [
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
+        ];
+
+        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
+        return $entretiens;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensEnAttenteAgent(Campagne $campagne) : array
+    {
+        $etats = [
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
+        ];
+
+        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
+        return $entretiens;
+    }
+
+    public function getAgentsEligibles(Campagne $campagne) : array
+    {
+        $agents = $this->getAgentService()->getAgents();
+        $agents = array_filter($agents, function (Agent $a) use ($campagne) { return $campagne->isEligible($a); });
+        return $agents;
     }
 
     /** FACADE ********************************************************************************************************/
