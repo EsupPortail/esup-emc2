@@ -23,6 +23,8 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use Laminas\Form\Form;
+use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
@@ -325,6 +327,21 @@ class FicheMetierService {
     }
 
     /** FACADE ********************************************************************************************************/
+
+    /**
+     * @param Request $request
+     * @param Form $form
+     * @param $service
+     */
+    public function updateFromForm(Request $request, Form $form, $service)
+    {
+        $data = $request->getPost();
+        $form->setData($data);
+        if ($form->isValid()) {
+            $service->update($form->getObject());
+        }
+    }
+
 
     /**
      * @param FicheMetier $fiche
