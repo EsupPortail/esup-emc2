@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
@@ -545,7 +544,15 @@ class FicheMetierController extends AbstractActionController
 
             $csvInfos = $this->genererInfosFromCSV($fichier_path);
 
-            if ($mode === 'preview') {
+            if ($mode !== null) {
+                if ($mode === 'import') {
+                    if ($csvInfos['metier'] !== null and empty($csvInfos['competences']['Manquantes'])) {
+                        $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
+
+                        /** @see \Application\Controller\FicheMetierController::afficherAction() */
+                        return $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
+                    }
+                }
                 return new ViewModel([
                     'fichier_path' => $fichier_path,
                     'form' => $form,
@@ -557,27 +564,6 @@ class FicheMetierController extends AbstractActionController
                     'applications' => $csvInfos['applications'],
                     'competences' => $csvInfos['competences'],
                 ]);
-            }
-            if ($mode === 'import') {
-                if ($csvInfos['metier'] !== null AND empty( $csvInfos['competences']['Manquantes']))
-                {
-                    $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
-
-                    /** @see \Application\Controller\FicheMetierController::afficherAction() */
-                    return $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
-                } else {
-                    return new ViewModel([
-                        'fichier_path' => $fichier_path,
-                        'form' => $form,
-                        'mode' => $mode,
-                        'code' => $csvInfos['code'],
-                        'metier' => $csvInfos['metier'],
-                        'mission' => $csvInfos['mission'],
-                        'activites' => $csvInfos['activites'],
-                        'applications' => $csvInfos['applications'],
-                        'competences' => $csvInfos['competences'],
-                    ]);
-                }
             }
         }
 

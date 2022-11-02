@@ -4,7 +4,6 @@ namespace Application\Service\FicheMetier;
 
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
-use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
@@ -12,7 +11,6 @@ use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
-use Formation\Service\Formation\FormationService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
@@ -38,7 +36,6 @@ class FicheMetierServiceFactory {
          * @var CompetenceElementService $competenceElementService
          * @var DomaineService $domaineService
          * @var EtatService $etatService
-         * @var FormationService $formationService
          *
          * @var ActiviteService $activiteService
          * @var ActiviteDescriptionService $activiteDescriptionService
@@ -53,7 +50,6 @@ class FicheMetierServiceFactory {
         $competenceElementService = $container->get(CompetenceElementService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
-        $formationService = $container->get(FormationService::class);
 
         $activiteService = $container->get(ActiviteService::class);
         $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
@@ -71,7 +67,6 @@ class FicheMetierServiceFactory {
         $service->setCompetenceElementService($competenceElementService);
         $service->setDomaineService($domaineService);
         $service->setEtatService($etatService);
-        $service->setFormationService($formationService);
 
         $service->setActiviteService($activiteService);
         $service->setActiviteDescriptionService($activiteDescriptionService);

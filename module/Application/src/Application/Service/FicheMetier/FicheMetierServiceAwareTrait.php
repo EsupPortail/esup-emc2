@@ -4,27 +4,16 @@ namespace Application\Service\FicheMetier;
 
 trait FicheMetierServiceAwareTrait
 {
-    /**
-     * @var FicheMetierService
-     */
-    private $ficheMetierService;
+    private FicheMetierService $ficheMetierService;
 
-    /**
-     * @return FicheMetierService
-     */
-    public function getFicheMetierService()
+    public function getFicheMetierService() : FicheMetierService
     {
         return $this->ficheMetierService;
     }
 
-    /**
-     * @param  FicheMetierService $ficheMetierService
-     * @return FicheMetierService
-     */
-    public function setFicheMetierService($ficheMetierService)
+    public function setFicheMetierService($ficheMetierService) : void
     {
         $this->ficheMetierService = $ficheMetierService;
-        return $ficheMetierService;
     }
 }
 

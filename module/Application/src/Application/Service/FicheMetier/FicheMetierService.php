@@ -7,12 +7,10 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
-use Application\Form\EntityFormManagmentTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -25,7 +23,6 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
-use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
@@ -41,7 +38,6 @@ class FicheMetierService {
     use CompetenceElementServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
-    use FormationServiceAwareTrait;
     use EntityManagerAwareTrait;
 
     use ActiviteServiceAwareTrait;
@@ -49,8 +45,6 @@ class FicheMetierService {
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
-
-    use EntityFormManagmentTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -138,29 +132,14 @@ class FicheMetierService {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
-//            ->addSelect('famille')->join('domaine.famille', 'famille')
-//            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
-//            ->addSelect('etype')->join('etat.type', 'etype')
+            ->addSelect('famille')->join('domaine.famille', 'famille')
+            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
+            ->addSelect('etype')->join('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
-        $qb = NiveauService::decorateWithNiveau($qb,'metier','niveaux');
+        $qb = NiveauService::decorateWithNiveau($qb,'metier');
         return $qb;
-    }
-
-    /**
-     * @return FicheMetier[]
-     */
-    public function getFichesMetiersForIndex() : array
-    {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
-            ->addSelect('etype')->join('etat.type', 'etype')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
     }
 
     /**
@@ -306,16 +285,6 @@ class FicheMetierService {
     }
 
     /**
-     * @param string $order
-     * @return FicheMetier
-     */
-    public function getLastFicheMetier(string $order = 'id') : FicheMetier
-    {
-        $fiches = $this->getFichesMetiers($order);
-        return end($fiches);
-    }
-
-    /**
      * @param Domaine $domaine
      * @return FicheMetier[]
      */
@@ -355,36 +324,19 @@ class FicheMetierService {
         return $options;
     }
 
-    /**
-     * @param int $niveau
-     * @return array
-     */
-    public function getFichesMetiersAsOptions(int $niveau =0) : array
-    {
-        $fiches = $this->getFichesMetiersWithNiveau($niveau);
-        $array = [];
-        foreach ($fiches as $fiche) {
-            $array[$fiche->getId()] = $fiche->getMetier()->getLibelle();
-        }
-        return $array;
-    }
+    /** FACADE ********************************************************************************************************/
 
     /**
      * @param FicheMetier $fiche
      * @param bool $asElement
-     * @param DateTime|null $date
      * @return array
      */
-    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null) : array
+    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false) : array
     {
         $dictionnaire = [];
 
         foreach ($fiche->getApplicationListe() as $applicationElement) {
-            if ($asElement) {
-                $application = $applicationElement;
-            } else {
-                $application = $applicationElement->getApplication();
-            }
+            $application = ($asElement)?$applicationElement:$applicationElement->getApplication();
             $dictionnaire[$application->getId()]["entite"] = $application;
             $dictionnaire[$application->getId()]["raison"][] = $fiche;
             $dictionnaire[$application->getId()]["conserve"] = true;
@@ -392,11 +344,7 @@ class FicheMetierService {
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
-                if ($asElement) {
-                    $application = $applicationElement;
-                } else {
-                    $application = $applicationElement->getApplication();
-                }
+                $application = ($asElement)?$applicationElement:$applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
                 $dictionnaire[$application->getId()]["raison"][] = $activite;
                 $dictionnaire[$application->getId()]["conserve"] = true;
@@ -409,19 +357,14 @@ class FicheMetierService {
     /**
      * @param FicheMetier $fiche
      * @param bool $asElement
-     * @param DateTime|null $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false, ?DateTime $date = null) : array
+    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false) : array
     {
         $dictionnaire = [];
 
         foreach ($fiche->getCompetenceListe() as $competenceElement) {
-            if ($asElement) {
-                $competence = $competenceElement;
-            } else {
-                $competence = $competenceElement->getCompetence();
-            }
+            $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
             $dictionnaire[$competence->getId()]["entite"] = $competence;
             $dictionnaire[$competence->getId()]["raison"][] = $fiche;
             $dictionnaire[$competence->getId()]["conserve"] = true;
@@ -429,11 +372,7 @@ class FicheMetierService {
 
         foreach ($fiche->getActivites() as $activite) {
             foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
-                if ($asElement) {
-                    $competence = $competenceElement;
-                } else {
-                    $competence = $competenceElement->getCompetence();
-                }
+                $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
                 $dictionnaire[$competence->getId()]["raison"][] = $activite;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
@@ -566,7 +505,7 @@ class FicheMetierService {
             'mission' => $mission_libelle,
             'activites' => $activites_libelle,
             'competences' => $competences,
-            'competencesListe' => $competencesListe, //todo keep here ?
+            'competencesListe' => $competencesListe,
             'applications' => $applications,
 
         ];
