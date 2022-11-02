@@ -468,6 +468,53 @@ INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, h
 INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_DRH', 'Validation d''un demande de formation externe par la DRH', false , now(), 0);
 INSERT INTO unicaen_validation_type (code, libelle, refusable, histo_creation, histo_createur_id) VALUES ('FORMATION_DEMANDE_REFUS', 'Refus d''une demande externe', false, now(), 0);
 
+-- ETAT ---------------------------------------------------------------------------
+
+INSERT INTO unicaen_etat_etat_type (code, libelle, icone, couleur, histo_creation, histo_createur_id)
+VALUES ('FORMATION_SESSION', 'Gestion des sessions de formation', 'fas fa-chalkboard', '#3465a4', now(), 0);
+INSERT INTO unicaen_etat_etat(type_id, CODE, LIBELLE, ICONE, COULEUR, histo_creation, histo_createur_id)
+WITH d(code, lib, icone, couleur, histo_creation, histo_createur) AS (
+    SELECT 'EN_CREATION', 'En cours de saisie', 'fas fa-edit', '#75507b', now(), 0 UNION
+    SELECT 'INSCRIPTION_OUVERTE', 'Inscription ouverte', 'fas fa-book-open', '#729fcf', now(), 0 UNION
+    SELECT 'INSCRIPTION_FERMEE', 'Inscription close', 'fas fa-book', '#204a87', now(), 0 UNION
+    SELECT 'CONVOCATION', 'Convocations envoyées', 'fas fa-file-contract', '#fcaf3e', now(), 0 UNION
+    SELECT 'ATTENTE_RETOUR', 'Demande des retours', 'far fa-comments', '#ce5c00', now(), 0 UNION
+    SELECT 'FERMEE', 'Session fermée', 'far fa-check-square', '#4e9a06', now(), 0 UNION
+    SELECT 'SESSION_ANNULEE', 'Session de formation annulée', 'fas fa-times', '#a40000', now(), 0
+
+)
+SELECT cp.id, d.code, d.lib, d.icone, d.couleur, d.histo_creation, d.histo_createur
+FROM d
+JOIN unicaen_etat_etat_type cp ON cp.CODE = 'FORMATION_SESSION';
+
+INSERT INTO unicaen_etat_etat_type (code, libelle, icone, couleur, histo_creation, histo_createur_id)
+VALUES ('FORMATION_INSCRIPTION', 'Gestion des inscriptions au formation', 'fas fa-chalkboard-teacher', '#204a87', now(), 0);
+INSERT INTO unicaen_etat_etat(type_id, CODE, LIBELLE, ICONE, COULEUR, histo_creation, histo_createur_id)
+WITH d(code, lib, icone, couleur, histo_creation, histo_createur) AS (
+    SELECT 'FORMATION_INSCRIPTION_DRH', 'Demande validée', 'far fa-check-square', '#4e9a06', now(), 0 UNION
+    SELECT 'FORMATION_INSCRIPTION_REFUSER', 'Demande refusée', 'fas fa-times', '#a40000', now(), 0 UNION
+    SELECT 'FORMATION_INSCRIPTION_DEMANDE', 'Demande d''inscription en cours de validation', 'fas fa-user', '#f57900', now(), 0 UNION
+    SELECT 'FORMATION_INSCRIPTION_RESPONSABLE', 'Demande validée par le responsable', 'fas fa-user-tie', '#edd400', now(), 0
+)
+SELECT cp.id, d.code, d.lib, d.icone, d.couleur, d.histo_creation, d.histo_createur
+FROM d
+JOIN unicaen_etat_etat_type cp ON cp.CODE = 'FORMATION_INSCRIPTION';
+
+INSERT INTO unicaen_etat_etat_type (code, libelle, icone, couleur, histo_creation, histo_createur_id)
+VALUES ('DEMANDE_EXTERNE', 'Gestion des demandes de formations externes', 'fas fa-school', '#729fcf', now(), 0);
+INSERT INTO unicaen_etat_etat(type_id, CODE, LIBELLE, ICONE, COULEUR, histo_creation, histo_createur_id)
+WITH d(code, lib, icone, couleur, histo_creation, histo_createur) AS (
+    SELECT 'DEMANDE_EXTERNE_AGENT', 'Validation de l''agent', 'fas fa-user', '#f57900', now(), 0 UNION
+    SELECT 'DEMANDE_EXTERNE_REDACTION', 'Demande en cours de rédaction', 'fas fa-edit', '#75507b', now(), 0 UNION
+    SELECT 'DEMANDE_EXTERNE_RESP', 'Validation du responsable de l''agent', 'fas fa-user-tie', '#edd400', now(), 0 UNION
+    SELECT 'DEMANDE_EXTERNE_DRH', 'Validation par le bureau de gestion des formations', 'fas fa-user-check', '#8ae234', now(), 0 UNION
+    SELECT 'DEMANDE_EXTERNE_TERMINEE', 'Demande de formation externe traitée', 'far fa-check-square', '#4e9a06', now(), 0 UNION
+    SELECT 'DEMANDE_EXTERNE_REJETEE', 'Demande de formation externe rejetée', 'fas fa-times', '#a40000', now(), 0
+
+)
+SELECT cp.id, d.code, d.lib, d.icone, d.couleur, d.histo_creation, d.histo_createur
+FROM d
+JOIN unicaen_etat_etat_type cp ON cp.CODE = 'DEMANDE_EXTERNE';
 
 -- PRIVILEGE ----------------------------------------------------------------------
 
