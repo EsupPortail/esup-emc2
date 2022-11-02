@@ -336,4 +336,20 @@ EOS;
             }
             return $tmp;
     }
+
+    /**
+     * @param string $referentiel
+     * @param string $reference
+     * @return Metier|null
+     */
+    public function getMetierByReference(string $referentiel, string $reference) : ?Metier
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('reference.referentiel', 'referentiel')->addSelect('referentiel')
+            ->andWhere('referentiel.libelleCourt = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('reference.code = :reference')->setParameter('reference', $reference)
+        ;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        return $result;
+    }
 }

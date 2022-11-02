@@ -4,6 +4,7 @@ namespace Element\Service\HasCompetenceCollection;
 
 use DateTime;
 use Doctrine\ORM\ORMException;
+use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
@@ -61,7 +62,12 @@ class HasCompetenceCollectionService
         }
         //Ajout des applications plus présentes
         foreach ($competenceIds as $competenceId) {
-            $competence = $this->getCompetenceService()->getCompetence($competenceId);
+            if ($competenceId instanceof Competence) {
+                $competence = $competenceId;
+            } else {
+                $competence = $this->getCompetenceService()->getCompetence($competenceId);
+            }
+
             if ($competence !== null and !$object->hasCompetence($competence)) {
                 $competenceElement = new CompetenceElement();
                 $competenceElement->setCompetence($competence);

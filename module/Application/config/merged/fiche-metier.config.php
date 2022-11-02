@@ -8,6 +8,10 @@ use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormFactory;
 use Application\Form\FicheMetier\LibelleHydrator;
 use Application\Form\FicheMetier\LibelleHydratorFactory;
+use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Application\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
+use Application\Form\FicheMetierImportation\FichierMetierImportationHydrator;
+use Application\Form\FicheMetierImportation\FichierMetierImportationHydratorFactory;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
@@ -54,6 +58,7 @@ return [
                     'action' => [
                         'ajouter',
                         'dupliquer',
+                        'importer-depuis-csv',
 //                        'ajouter-terminer',
                     ],
                     'privileges' => [
@@ -230,6 +235,17 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'dupliquer',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'importer-depuis-csv' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/importer-depuis-csv[/:importation]',
+                            'defaults' => [
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'importer-depuis-csv',
                             ],
                         ],
                         'may_terminate' => true,
@@ -508,11 +524,13 @@ return [
         'factories' => [
             LibelleForm::class => LibelleFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
+            FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             LibelleHydrator::class => LibelleHydratorFactory::class,
+            FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

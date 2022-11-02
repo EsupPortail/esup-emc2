@@ -1,0 +1,174 @@
+<?php
+
+use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Element\Entity\Db\Application;use Metier\Entity\Db\Metier;
+
+/**
+ * @see \Application\Controller\FicheMetierController::importerDepuisCsvAction()
+ * @var FicheMetierImportationForm $form
+ * @var string $mode
+ *
+ * @var string $code
+ * @var Metier $metier
+ * @var string $mission
+ * @var string[] $activites
+ * @var array $competences
+ * @var Application[] $applications
+ */
+
+?>
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Importation d'une fiche métier depuis un csv
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <a href="<?php echo $this->url("fiche-metier-type", [], [], true); ?>"
+           class="btn btn-primary">
+            <span class="icon icon-listing"></span>
+            Retour à l'index des fiches métier
+        </a>
+    </div>
+</div>
+
+<div class="card card-default">
+    <div class="card-header">
+        <h2>
+            <span class="icon icon-csv"></span>
+            Importer depuis un fichier csv (de REFERENS 3)
+        </h2>
+    </div>
+    <div class="card-body">
+        <?php echo $this->form($form); ?>
+    </div>
+</div>
+
+
+<?php if ($mode !== null) : ?>
+
+    <?php if ($metier !== null AND empty($competences['Manquantes'])) : ?>
+        <a href=""
+           class="btn btn-primary action">
+            Importer la fiche
+        </a>
+    <?php else : ?>
+        <?php if ($mode === 'import') : ?>
+            <?php if ($metier === null) : ?>
+            <div class="alert alert-danger">
+                <p><strong>
+                    <span class="icon icon-attention"></span>
+                    Impossible d'importer la fiche, car le métier n'a pas été trouvé
+                </strong></p>
+                Possibles résultions du problème :
+                <ul>
+                    <li> le métier n'a pas été créé, ajoutez le dans l'application ;</li>
+                    <li> le métier n'a pas la bonne référence, ajouter celle-ci au métier.</li>
+                </ul>
+            </div>
+        <?php endif; ?>
+            <?php if (!empty($competences['Manquantes']) === null) : ?>
+            <div class="alert alert-danger">
+                <p><strong>
+                    <span class="icon icon-attention"></span>
+                    Au moins une compétence n'est pas présente dans la liste connue de EMC2
+                </strong></p>
+                Possibles résultions du problème :
+                <ul>
+                    <li> réimporter le dictionnaire de compétence fourni par REFERENS 3.</li>
+                </ul>
+            </div>
+        <?php endif; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <div class="card card-default">
+    <div class="card-header">
+        <h2>Métier associé </h2>
+    </div>
+    <div class="card-body">
+        <?php if ($metier ===null) : ?>
+            <div class="alert alert-danger">
+                Aucun métier de trouver pour le code <code><?php echo $code; ?> </code>
+            </div>
+        <?php else : ?>
+            <dl class="row">
+                <dt class="col-md-4"> Code </dt>
+                <dl class="col-md-8"> <?php echo $code; ?> </dl>
+                <dt class="col-md-4"> Métier </dt>
+                <dl class="col-md-8"> <?php echo $metier->getLibelle(); ?> </dl>
+                <dt class="col-md-4"> Domaine </dt>
+                <dl class="col-md-8">
+                    <?php foreach ($metier->getDomaines() as $domaine) : ?>
+                        <?php echo $domaine->getLibelle(); ?> <br/>
+                    <?php endforeach; ?>
+                </dl>
+                <dt class="col-md-4">Niveau associé</dt>
+                <dl class="col-md-8">
+                    <?php $enveloppe = $metier->getNiveaux(); ?>
+                    <?php if ($enveloppe !== null) : ?>
+                        De <?php echo $enveloppe->getBorneInferieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneInferieure()->getEtiquette(); ?>)
+                        à <?php echo $enveloppe->getBorneSuperieure()->getLibelle(); ?> (<?php echo $enveloppe->getBorneSuperieure()->getEtiquette(); ?>)
+                    <?php else : ?>
+                        Non renseigné
+                    <?php endif; ?> </dl>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+
+    <div class="card card-default">
+    <div class="card-header">
+        <h2>Missions principales</h2>
+    </div>
+    <div class="card-body">
+        <div class="titre-bloc">
+            <h3> <?php echo $mission; ?> </h3>
+        </div>
+        <ul>
+            <?php foreach ($activites as $activite) : ?>
+            <li> <?php echo $activite; ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+    <div class="card card-default">
+    <div class="card-header">
+        <h2><span class="icon competence"> Compétences </h2>
+    </div>
+    <div class="card-body">
+        <?php foreach (['Connaissances','Opérationnelles','Comportementales'] as $type) : ?>
+            <?php if (! empty($competences[$type])) : ?>
+                <h3> <?php echo $type; ?> </h3>
+                <ul>
+                    <?php foreach ($competences[$type] as $competence) : ?>
+                        <li> <?php echo $competence->getLibelle(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif ; ?>
+        <?php endforeach ; ?>
+    </div>
+
+    <?php if (!empty($competences["Manquantes"])) : ?>
+        <div class="alert alert-danger">
+            Attention des compétences non pas été trouvées dans emc2 : <?php echo implode(', ', $competences['Manquantes']); ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+    <div class="card card-default">
+    <div class="card-header">
+        <h2><span class="icon application"> Applications </h2>
+    </div>
+    <div class="card-body">
+        <ul>
+            <?php foreach ($applications as $application) : ?>
+                <li> <?php echo $application->getLibelle(); ?> </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>
+

@@ -18,7 +18,7 @@ class CompetenceImporterController extends AbstractActionController {
 
     public function importerAction()
     {
-        $file_path = "/tmp/competence_referens3.csv";
+        $file_path = "/var/www/html/data/competence_referens3.csv";
         $content = file_get_contents($file_path);
 
         $types = [
@@ -32,7 +32,14 @@ class CompetenceImporterController extends AbstractActionController {
 
         for($position = 1 ; $position < $nbLine; $position++) {
             $line = $lines[$position];
-            $elements = explode(";", $line);
+            $depth = 0;
+            for ($i = 0; $i < strlen($line) ; $i++) {
+                if ($line[$i] === ';' and $depth === 0) $line[$i] = '|';
+                if ($line[$i] === "\"") {
+                    if ($depth === 0) $depth = 1; else $depth = 0;
+                }
+            }
+            $elements = explode("|", $line);
             $domaine = $elements[0];
             $registre = $elements[1];
             $libelle = $elements[2];

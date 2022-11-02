@@ -2,6 +2,7 @@
 
 namespace Element\Service\HasApplicationCollection;
 
+use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Service\Application\ApplicationServiceAwareTrait;
@@ -61,7 +62,13 @@ class HasApplicationCollectionService
         }
         //Ajout des applications plus présentes
         foreach ($applicationIds as $applicationId) {
-            $application = $this->getApplicationService()->getApplication($applicationId);
+
+            if ($applicationId instanceof Application) {
+                $application = $applicationId;
+            } else {
+                $application = $this->getApplicationService()->getApplication($applicationId);
+            }
+
             if ($application !== null and !$object->hasApplication($application)) {
                 $applicationElement = new ApplicationElement();
                 $applicationElement->setApplication($application);

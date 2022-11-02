@@ -3,28 +3,38 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use Application\Provider\Etat\FicheMetierEtats;
-use Application\Provider\Template\PdfTemplate;
-use Element\Entity\Db\ApplicationElement;
-use Element\Entity\Db\CompetenceElement;
+use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
-use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
-use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
+use Application\Provider\Etat\FicheMetierEtats;
+use Application\Provider\Template\PdfTemplate;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
-use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
-use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Doctrine\ORM\ORMException;
+use Element\Entity\Db\Application;
+use Element\Entity\Db\ApplicationElement;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceElement;
+use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
+use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
+use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
@@ -34,18 +44,14 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
 class FicheMetierController extends AbstractActionController
 {
-    /** Traits associé aux services */
+    /** Traits associés aux services */
     use ActiviteServiceAwareTrait;
+    use ActiviteDescriptionServiceAwareTrait;
     use AgentServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
@@ -58,15 +64,18 @@ class FicheMetierController extends AbstractActionController
     use ParcoursDeFormationServiceAwareTrait;
     use RenduServiceAwareTrait;
 
-    /** Traits associé aux formulaires */
+    /** Traits associés aux formulaires */
     use ActiviteFormAwareTrait;
     use LibelleFormAwareTrait;
+    use FicheMetierImportationFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionFicheMetierFormAwareTrait;
     use SelectionFormationFormAwareTrait;
 
+
+    const REFERENS_SEP = "|";
 
     /** CRUD **********************************************************************************************************/
 
@@ -490,6 +499,94 @@ class FicheMetierController extends AbstractActionController
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    /** IMPORTATION ***************************************************************************************************/
+
+    private function genererInfosFromCSV(string $fichier_path) : array
+    {
+        $csvInfos = $this->getFicheMetierService()->readFromCSV($fichier_path);
+
+        $ajouts = $this->getConfigurationService()->getConfigurationsFicheMetier();
+        foreach ($ajouts as $ajout) {
+            if ($ajout->getEntityType() === Application::class) {
+                $application = $ajout->getEntity();
+                $csvInfos['applications'][$application->getId()] = $application;
+            }
+            if ($ajout->getEntityType() === Competence::class) {
+                $competence = $ajout->getEntity();
+                $csvInfos['competencesListe'][$competence->getId()] = $competence;
+                $csvInfos['competences'][$competence->getType()->getLibelle()][$competence->getId()] = $competence;
+            }
+        }
+
+        // tri
+        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
+            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {return $a->getLibelle() > $b->getLibelle();});
+        }
+        usort($csvInfos['applications'], function (Application $a, Application $b) {return $a->getLibelle() > $b->getLibelle();});
+
+        return $csvInfos;
+    }
+
+    public function importerDepuisCsvAction()
+    {
+        $form = $this->getFicheMetierImportationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/importer-depuis-csv', ['mode' => 'preview', 'path' => null], [], true));
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $file = $request->getFiles();
+
+            $fichier_path = $file['fichier']['tmp_name'];
+            $mode = $data['mode'];
+
+            $csvInfos = $this->genererInfosFromCSV($fichier_path);
+
+            if ($mode === 'preview') {
+                return new ViewModel([
+                    'fichier_path' => $fichier_path,
+                    'form' => $form,
+                    'mode' => $mode,
+                    'code' => $csvInfos['code'],
+                    'metier' => $csvInfos['metier'],
+                    'mission' => $csvInfos['mission'],
+                    'activites' => $csvInfos['activites'],
+                    'applications' => $csvInfos['applications'],
+                    'competences' => $csvInfos['competences'],
+                ]);
+            }
+            if ($mode === 'import') {
+                if ($csvInfos['metier'] !== null AND empty( $csvInfos['competences']['Manquantes']))
+                {
+                    $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
+
+                    /** @see \Application\Controller\FicheMetierController::afficherAction() */
+                    return $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
+                } else {
+                    return new ViewModel([
+                        'fichier_path' => $fichier_path,
+                        'form' => $form,
+                        'mode' => $mode,
+                        'code' => $csvInfos['code'],
+                        'metier' => $csvInfos['metier'],
+                        'mission' => $csvInfos['mission'],
+                        'activites' => $csvInfos['activites'],
+                        'applications' => $csvInfos['applications'],
+                        'competences' => $csvInfos['competences'],
+                    ]);
+                }
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Importation d'une fiche métier",
+            'form' => $form,
+        ]);
+        return $vm;
+
     }
 
     /** Graphique *****************************************************************************************************/

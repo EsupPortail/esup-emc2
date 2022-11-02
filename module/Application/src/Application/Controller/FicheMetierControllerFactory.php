@@ -4,6 +4,8 @@ namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\LibelleForm;
+use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
@@ -18,6 +20,8 @@ use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
@@ -26,10 +30,17 @@ use UnicaenRenderer\Service\Rendu\RenduService;
 class FicheMetierControllerFactory
 {
 
+    /**
+     * @param ContainerInterface $container
+     * @return FicheMetierController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): FicheMetierController
     {
         /**
          * @var ActiviteService $activiteService
+         * @var ActiviteDescriptionService $activiteDescriptionService
          * @var AgentService $agentService ;
          * @var RenduService $renduService ;
          * @var DomaineService $domaineService
@@ -43,6 +54,7 @@ class FicheMetierControllerFactory
          * @var ParcoursDeFormationService $parcoursService
          */
         $activiteService = $container->get(ActiviteService::class);
+        $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
         $agentService = $container->get(AgentService::class);
         $renduService = $container->get(RenduService::class);
         $domaineService = $container->get(DomaineService::class);
@@ -57,6 +69,7 @@ class FicheMetierControllerFactory
 
         /**
          * @var LibelleForm $libelleForm
+         * @var FicheMetierImportationForm $ficheMetierImportationForm
          * @var ActiviteForm $activiteForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
@@ -71,11 +84,13 @@ class FicheMetierControllerFactory
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionFicheMetierForm = $container->get('FormElementManager')->get(SelectionFicheMetierForm::class);
+        $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
 
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
 
         $controller->setActiviteService($activiteService);
+        $controller->setActiviteDescriptionService($activiteDescriptionService);
         $controller->setAgentService($agentService);
         $controller->setRenduService($renduService);
         $controller->setDomaineService($domaineService);
@@ -95,6 +110,7 @@ class FicheMetierControllerFactory
         $controller->setSelectionFormationForm($selectionFormationForm);
         $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSelectionFicheMetierForm($selectionFicheMetierForm);
+        $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
 
         return $controller;
     }

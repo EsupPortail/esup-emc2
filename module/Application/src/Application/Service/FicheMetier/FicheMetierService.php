@@ -2,10 +2,15 @@
 
 namespace Application\Service\FicheMetier;
 
+use Application\Controller\FicheMetierController;
+use Application\Entity\Db\Activite;
+use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Form\EntityFormManagmentTrait;
 use Application\Provider\Etat\FicheMetierEtats;
+use Application\Service\Activite\ActiviteServiceAwareTrait;
+use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
@@ -18,10 +23,13 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
+use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
@@ -35,6 +43,12 @@ class FicheMetierService {
     use EtatServiceAwareTrait;
     use FormationServiceAwareTrait;
     use EntityManagerAwareTrait;
+
+    use ActiviteServiceAwareTrait;
+    use ActiviteDescriptionServiceAwareTrait;
+    use HasApplicationCollectionServiceAwareTrait;
+    use HasCompetenceCollectionServiceAwareTrait;
+    use MetierServiceAwareTrait;
 
     use EntityFormManagmentTrait;
 
@@ -124,9 +138,9 @@ class FicheMetierService {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.famille', 'famille')
-            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
-            ->addSelect('etype')->join('etat.type', 'etype')
+//            ->addSelect('famille')->join('domaine.famille', 'famille')
+//            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
+//            ->addSelect('etype')->join('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
@@ -508,6 +522,83 @@ class FicheMetierService {
         $this->update($duplicata);
 
         return $duplicata;
+    }
+
+    public function readFromCSV($fichier_path) : array
+    {
+        $handle = fopen($fichier_path, "r");
+
+        $array = [];
+        while ($content = fgetcsv ( $handle, 0, ";")) {
+            $array[] = $content;
+        }
+
+        $code_index = array_search('Code emploi type', $array[0]);
+        $code_libelle =  $array[1][$code_index];
+        $metier = $this->getMetierService()->getMetierByReference('REFERENS', $code_libelle);
+        $mission_index = array_search('Mission', $array[0]);
+        $mission_libelle = $array[1][$mission_index];
+        $activites_index = array_search('Activités principales', $array[0]);
+        $activites_libelle = explode(FicheMetierController::REFERENS_SEP ,$array[1][$activites_index]);
+
+        $competences_index = array_search('COMPETENCES_ID', $array[0]);
+        $competences_ids   = explode(FicheMetierController::REFERENS_SEP ,$array[1][$competences_index]);
+
+        $competences['Connaissances'] = [];
+        $competences['Opérationnelles'] = [];
+        $competences['Comportementales'] = [];
+        $competences['Manquantes'] = [];
+        $competencesListe = [];
+        foreach ($competences_ids as $competence_id) {
+            $competence = $this->getCompetenceService()->getCompetenceByIdSource('REFERENS 3', $competence_id);
+            if ($competence !== null) {
+                $competences[$competence->getType()->getLibelle()][$competence->getId()] = $competence;
+                $competencesListe[$competence->getId()] = $competence;
+            } else {
+                $competences['Manquantes'][] = $competence_id;
+            }
+        }
+        $applications = [];
+
+        return [
+            'code' => $code_libelle,
+            'metier' => $metier,
+            'mission' => $mission_libelle,
+            'activites' => $activites_libelle,
+            'competences' => $competences,
+            'competencesListe' => $competencesListe, //todo keep here ?
+            'applications' => $applications,
+
+        ];
+    }
+
+    public function importFromCsvArray(array $csvInfos) : FicheMetier
+    {
+        //init
+        $fiche = new FicheMetier();
+        $fiche->setMetier($csvInfos['metier']);
+        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $this->create($fiche);
+
+        // MISSIONS PRINCIPALES
+        $activite = new Activite();
+        $this->getActiviteService()->create($activite);
+        $this->getActiviteService()->updateLibelle($activite, ['libelle' => $csvInfos['metier']]);
+        foreach ($csvInfos['activites'] as $libelle) {
+            $description = new ActiviteDescription();
+            $description->setActivite($activite);
+            $description->setDescription($libelle);
+            $this->getActiviteDescriptionService()->create($description);
+        }
+        $this->getActiviteService()->createFicheMetierActivite($fiche, $activite);
+
+        //APPLICATION
+        $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
+
+        //COMPETENCE
+        $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
+
+        return $fiche;
     }
 
 }
