@@ -18,7 +18,7 @@ class FicheMetierImportationForm extends Form {
             'type' => File::class,
             'name' => 'fichier',
             'options' => [
-                'label' => 'Fiche métier au format CSV <span class="icon icon-star" title="Champ obligatoire"></span> :',
+                'label' => 'Fiche métier au format CSV <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
         ]);
@@ -27,7 +27,7 @@ class FicheMetierImportationForm extends Form {
             'type' => Select::class,
             'name' => 'mode',
             'options' => [
-                'label' => 'Mode  <span class="icon icon-star" title="Champ obligatoire"></span> :',
+                'label' => 'Mode  <span class="icon icon-asterisque" title="Champ obligatoire"></span> :',
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'value_options' => [
                     'preview' => "Prévisualisation",

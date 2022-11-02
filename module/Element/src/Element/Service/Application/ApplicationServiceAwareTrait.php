@@ -4,25 +4,16 @@ namespace Element\Service\Application;
 
 Trait ApplicationServiceAwareTrait {
 
-    /** @var ApplicationService */
-    private $applicationService;
+    private ApplicationService $applicationService;
 
-    /**
-     * @return ApplicationService
-     */
     public function getApplicationService() : ApplicationService
     {
         return $this->applicationService;
     }
 
-    /**
-     * @param ApplicationService $applicationService
-     * @return ApplicationService
-     */
-    public function setApplicationService(ApplicationService $applicationService) : ApplicationService
+    public function setApplicationService(ApplicationService $applicationService) : void
     {
         $this->applicationService = $applicationService;
-        return $this->applicationService;
     }
 
 }

@@ -11,98 +11,54 @@ class Application implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $url;
-    /** @var boolean */
-    private $actif;
-    /** @var ApplicationTheme */
-    private $groupe;
+    private ?int  $id = -1;
+    private ?string $libelle = null;
+    private ?string $url = null;
+    private bool $actif = true;
+    private ?ApplicationTheme $groupe = null;
 
-    public function __construct()
-    {
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string $libelle
-     * @return Application
-     */
-    public function setLibelle($libelle)
+    public function setLibelle(string $libelle) : void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl() : ?string
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url
-     * @return Application
-     */
-    public function setUrl($url)
+    public function setUrl(?string $url) : void
     {
         $this->url = $url;
-        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActif()
+    public function isActif() : bool
     {
         return $this->actif;
     }
 
-    /**
-     * @param bool $actif
-     * @return Application
-     */
-    public function setActif($actif)
+    public function setActif(bool $actif) : void
     {
         $this->actif = $actif;
-        return $this;
     }
 
-    /**
-     * @return ApplicationTheme
-     */
-    public function getGroupe()
+    public function getGroupe() : ?ApplicationTheme
     {
         return $this->groupe;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return Application
-     */
-    public function setGroupe($groupe)
+    public function setGroupe(?ApplicationTheme $groupe) : void
     {
         $this->groupe = $groupe;
-        return $this;
     }
 }
