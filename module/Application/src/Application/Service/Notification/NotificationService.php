@@ -47,9 +47,9 @@ class NotificationService
         $emails = [];
         if ($ficheposte !== null) {
             $agent = $ficheposte->getAgent();
-            $responsables = $this->getAgentService()->getResposabiliteStructure($agent);
-            foreach ($responsables as $responsable) {
-                if ($responsable and $responsable->getAgent()->getEmail()) $emails[] = $responsable->getAgent()->getEmail();
+            $responsables = $this->getAgentService()->computeSuperieures($agent);
+            foreach ($responsables as $key => $agent) {
+                if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
             }
         }
         return $emails;
