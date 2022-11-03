@@ -112,7 +112,8 @@ class DemandeExterneService {
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
-            ->join('demande.agent', 'agent')->addSelect('agent');
+            ->join('demande.agent', 'agent')->addSelect('agent')
+        ;
         return $qb;
     }
 

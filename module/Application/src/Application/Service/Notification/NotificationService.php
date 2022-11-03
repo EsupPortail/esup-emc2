@@ -3,7 +3,7 @@
 namespace Application\Service\Notification;
 
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Template\FichePosteTemplates;
+use Application\Provider\Template\MailTemplates;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
@@ -63,7 +63,7 @@ class NotificationService
         $UrlService = $this->getUrlService()->setVariables($vars);
         $vars['UrlService'] = $UrlService;
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(FichePosteTemplates::MAIL_VALIDATION_RESPONSABLE, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_RESPONSABLE, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($ficheposte), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -78,7 +78,7 @@ class NotificationService
         $UrlService = $this->getUrlService()->setVariables($vars);
         $vars['UrlService'] = $UrlService;
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(FichePosteTemplates::MAIL_VALIDATION_AGENT, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailResponsable($ficheposte), $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);

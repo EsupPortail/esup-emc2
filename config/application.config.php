@@ -54,7 +54,8 @@ $modules = [
     'Element',
     'Application',
 
-    //'ZendDeveloperTools',
+    'Laminas\DeveloperTools',
+//    'UnicaenTest',
 
 ];
 
