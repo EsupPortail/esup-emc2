@@ -342,10 +342,13 @@ class AgentService {
 
     /**
      * @param Agent $agent
+     * @param DateTime|null $date
      * @return array
      */
-    public function computeSuperieures(Agent $agent) : array
+    public function computeSuperieures(Agent $agent, ?DateTime $date = null) : array
     {
+        if ($date === null) $date = new DateTime();
+
         $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_RESPONSABLE);
         if (!empty($liste)) return $liste;
 
@@ -357,7 +360,7 @@ class AgentService {
        do {
            $responsablesAll = array_map(function (StructureResponsable $a) {
                return $a->getAgent();
-           }, $this->getStructureService()->getResponsables($structure));
+           }, $this->getStructureService()->getResponsables($structure, $date));
            if (!in_array($agent, $responsablesAll)) {
                $responsables = [];
                foreach ($responsablesAll as $responsable) {
@@ -375,15 +378,18 @@ class AgentService {
     /**
      * @param Agent $agent
      * @param array|null $superieurs
+     * @param DateTime|null $date
      * @return array
      */
-    public function computeAutorites(Agent $agent, ?array $superieurs = null) : array
+    public function computeAutorites(Agent $agent, ?array $superieurs = null, ?DateTime $date = null) : array
     {
+        if ($date === null) $date = new DateTime();
+
         $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_AUTORITE);
         if (!empty($liste)) return $liste;
 
         // fetching superieurs if not given
-        if ($superieurs === null) $superieurs = $this->computeSuperieures($agent);
+        if ($superieurs === null) $superieurs = $this->computeSuperieures($agent, $date);
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
@@ -393,7 +399,7 @@ class AgentService {
         do {
             $responsablesAll = array_map(function (StructureResponsable $a) {
                 return $a->getAgent();
-            }, $this->getStructureService()->getResponsables($structure));
+            }, $this->getStructureService()->getResponsables($structure, $date));
             if (!in_array($agent, $responsablesAll)) {
                 $responsables = [];
                 foreach ($responsablesAll as $responsable) {
