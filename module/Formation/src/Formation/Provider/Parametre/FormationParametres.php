@@ -17,4 +17,7 @@ class FormationParametres {
 
     const AUTO_FERMETURE = 'AUTO_FERMETURE';
     const AUTO_CONVOCATION = 'AUTO_CONVOCATION';
+    const AUTO_RETOUR = 'AUTO_RETOUR';
+    const AUTO_CLOTURE = 'AUTO_CLOTURE';
+
 }

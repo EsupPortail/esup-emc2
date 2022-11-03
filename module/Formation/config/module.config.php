@@ -6,8 +6,12 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Formation\Event\Convocation\ConvocationEvent;
 use Formation\Event\Convocation\ConvocationEventFactory;
+use Formation\Event\DemandeRetour\DemandeRetourEvent;
+use Formation\Event\DemandeRetour\DemandeRetourEventFactory;
+use Formation\Event\DemandeRetour\SessionClotureEventFactory;
 use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEventFactory;
+use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
@@ -81,6 +85,8 @@ return [
             RappelAgentAvantFormationService::class => RappelAgentAvantFormationServiceFactory::class,
             InscriptionClotureEvent::class => InscriptionClotureEventFactory::class,
             ConvocationEvent::class => ConvocationEventFactory::class,
+            DemandeRetourEvent::class => DemandeRetourEventFactory::class,
+            SessionClotureEvent::class => SessionClotureEventFactory::class,
         ],
     ],
     'controllers'     => [

@@ -9,7 +9,9 @@ use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use Formation\Event\Convocation\ConvocationEvent;
+use Formation\Event\DemandeRetour\DemandeRetourEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
+use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Event\EvenementProvider as FormationEvenementProvider;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
@@ -31,6 +33,8 @@ return [
             FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT                                    => RappelAgentAvantFormationService::class,
             FormationEvenementProvider::INSCRIPTION_CLOTURE                                             => InscriptionClotureEvent::class,
             FormationEvenementProvider::CONVOCATION                                                     => ConvocationEvent::class,
+            FormationEvenementProvider::DEMANDE_RETOUR                                                  => DemandeRetourEvent::class,
+            FormationEvenementProvider::SESSION_CLOTURE                                                 => SessionClotureEvent::class,
 
             EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT                         => RappelCampagneAvancementService::class,
             EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL                     => RappelEntretienProfessionnelService::class,
