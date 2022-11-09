@@ -7,8 +7,7 @@ use UnicaenDbImport\Entity\Db\Source;
 trait HasSourceTrait {
 
     private ?Source $source = null;
-    /** @var string */
-    private $idSource;
+    private ?string $idSource = null;
 
     /**
      * @return Source|null

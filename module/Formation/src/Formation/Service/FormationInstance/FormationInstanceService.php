@@ -135,7 +135,8 @@ class FormationInstanceService
      */
     public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+            ->join('Finstance.source', 'source')->addSelect('source')
             ->orderBy('Finstance.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();
@@ -209,8 +210,12 @@ class FormationInstanceService
      * @param string $idSource
      * @return FormationInstance|null
      */
-    public function getFormationInstanceBySource(Source $source, string $idSource): ?FormationInstance
+    public function getFormationInstanceBySource( $source,  $idSource): ?FormationInstance
     {
+
+        if (!($source instanceof  Source)) {
+            var_dump($source);
+        }
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.source = :source')
             ->andWhere('Finstance.idSource = :idSource')

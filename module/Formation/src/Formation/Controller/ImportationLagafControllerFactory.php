@@ -50,7 +50,7 @@ namespace Formation\Controller;
          /**
           * @var SourceService $sourceService
           */
-         $entityManager = $container->get('doctrine.entitymanger.orm_default');
+         $entityManager = $container->get('doctrine.entitymanager.orm_default');
          $sourceService = $container->get(SourceService::class);
          $sourceService->setEntityManager($entityManager);
          $lagaf = $sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_LAGAF]);

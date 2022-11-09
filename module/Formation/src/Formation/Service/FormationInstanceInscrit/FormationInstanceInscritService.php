@@ -8,6 +8,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\InscriptionEtats;
@@ -17,6 +18,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Entity\Db\Etat;
 
 class FormationInstanceInscritService
@@ -129,9 +131,9 @@ class FormationInstanceInscritService
     /**
      * @param string $champ
      * @param string $ordre
-     * @return FormationInstanceInscrit
+     * @return FormationInstanceInscrit[]
      */
-    public function getFormationsInstancesInscrits($champ = 'id', $ordre = 'ASC')
+    public function getFormationsInstancesInscrits(string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->orderBy('inscrit.' . $champ, $ordre);
@@ -344,5 +346,15 @@ class FormationInstanceInscritService
         }
 
         return $inscriptions;
+    }
+
+    public function getFormationInstanceInscritBySource(?Source $source, string $id) : ?FormationInstanceInscrit
+    {
+        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
+            ->andWhere('inscrit.source = :source')->setParameter('source', $source)
+            ->andWhere('inscrit.idSource = :id')->setParameter('id', $id)
+        ;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        return $result;
     }
 }

@@ -26,6 +26,7 @@ return [
                         'inscription',
                         'presence',
                         'element',
+                        'theme',
                     ],
                     'privileges' => [
                         LagafPrivileges::IMPORT_LAGAF,
@@ -66,6 +67,16 @@ return [
                                     'defaults' => [
                                         'controller' => ImportationLagafController::class,
                                         'action' => 'action',
+                                    ]
+                                ],
+                            ],
+                            'theme' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/theme[/:id]',
+                                    'defaults' => [
+                                        'controller' => ImportationLagafController::class,
+                                        'action' => 'theme',
                                     ]
                                 ],
                             ],
