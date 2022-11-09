@@ -3,9 +3,11 @@
 /**
  * @var FormationInstanceInscrit[] $formations
  * @var Agent $agent
+ * @var string|null $mailcontact
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
@@ -38,13 +40,24 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
 <?php else : ?>
     <?php foreach ($realisees as $inscription) : ?>
         <div class="row formation-inscription">
-            <div class="col-md-8 description">
+            <div class="col-md-7 description">
                 <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
                 <br/>
                 <br/>
             </div>
-            <div class="col-md-4">
-                <?php if ($inscription->getValidationEnquete() === null) : ?>
+            <div class="col-md-5">
+                <?php if ($inscription->getSource()->getCode() === HasSourceInterface::SOURCE_LAGAF) : ?>
+                    <div class="alert alert-warning">
+                        <span class="icon icon-information"></span>
+                        Formation gérée par LAGAF, pour obtenir votre attestion veuillez contacter
+                        <?php if ($mailcontact === null) : ?>
+                            la DRH
+                        <?php else : ?>
+                            <a href="mailto:<?php echo $mailcontact; ?>"><?php echo $mailcontact; ?></a>
+                        <?php endif; ?>
+                    </div>
+                <?php else : ?>
+                    <?php if ($inscription->getValidationEnquete() === null) : ?>
                     <a
                         <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
                             href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
@@ -71,6 +84,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 >
                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
+                <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>

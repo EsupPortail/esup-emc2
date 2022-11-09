@@ -11,6 +11,7 @@ use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
@@ -215,7 +216,8 @@ class FormationInstanceInscritController extends AbstractActionController
 
         $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
-            $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
+        $mail = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::MAIL_DRH_FORMATION);
         return new ViewModel([
             'instances' => $instances,
             'inscriptions' => $inscriptions,
@@ -223,6 +225,7 @@ class FormationInstanceInscritController extends AbstractActionController
             'agent' => $agent,
             'texteParcours' => $rendu->getCorps(),
             'demandes' => $demandesValidees,
+            'mailcontact' => ($mail)?$mail->getValeur():null,
         ]);
     }
 

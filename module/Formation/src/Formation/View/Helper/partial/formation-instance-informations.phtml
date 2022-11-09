@@ -7,6 +7,7 @@
  * @var array $options
  */
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationInstance;
 
 ?>
@@ -54,8 +55,13 @@ use Formation\Entity\Db\FormationInstance;
     <br/>
     Session <?php echo $instance->getId(); ?> du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?>
     <br/>
-    <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?> -
-    Liste principale <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
+    <?php if ($instance->getSource()->getCode() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+        <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?> -
+    <?php endif; ?>
+    Liste principale
+    <?php if ($instance->getSource()->getCode() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+        <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
+    <?php endif; ?>
 <!--    --->
 <!--    Liste complémentaire --><?php //echo count($instance->getListeComplementaire());  ?><!--/--><?php //echo $instance->getNbPlaceComplementaire(); ?>
 <?php endif; ?>

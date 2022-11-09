@@ -8,6 +8,7 @@
  * @var FormationInstanceInscrit[] $inscriptions
  * @var Agent $agent
  * @var string $texteParcours
+ * @var string|null $mailcontact
  */
 
 use Application\Entity\Db\Agent;
@@ -53,7 +54,7 @@ $this->headTitle("Liste des actions de formations proposées");
 
     <!-- Type---------------------------------------------------------------------------------------------->
     <div id="formations" class="tab-pane " role="tabpanel">
-        <?php echo $this->partial('partial/formations', ['formations' => $formations, 'agent' => $agent]); ?>
+        <?php echo $this->partial('partial/formations', ['formations' => $formations, 'agent' => $agent, 'mailcontact' => $mailcontact]); ?>
     </div>
 
     <!-- Type---------------------------------------------------------------------------------------------->
