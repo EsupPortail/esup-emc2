@@ -136,7 +136,7 @@ class FormationInstanceDocumentController extends AbstractActionController
                 $libelle = $session->getFormation()->getLibelle();
                 $periode = $session->getPeriode();
                 $texte .= "<li>";
-                $texte .= $libelle . " ". $periode . "<br/>";
+                $texte .= $libelle . " (". $periode . ")<br/>";
                 $texte .= $dureeSuivie . " suivies sur " . $session->getDuree() . " de formation";
                 $texte .= "</li>";
             }
