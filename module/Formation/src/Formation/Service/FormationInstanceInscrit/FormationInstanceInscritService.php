@@ -272,9 +272,10 @@ class FormationInstanceInscritService
         ;
 
         $result = $qb->getQuery()->getResult();
-        array_filter($result, function(FormationInstanceInscrit $a) use ($debut, $fin) {
-            return $a->getInstance()->getDebut() >= $debut
-                AND $a->getInstance()->getFin() >= $fin;
+        $result = array_filter($result, function(FormationInstanceInscrit $a) use ($debut, $fin) {
+            $sessionDebut   = DateTime::createFromFormat('d/m/Y',$a->getInstance()->getDebut());
+            $sessionFin     = DateTime::createFromFormat('d/m/Y',$a->getInstance()->getFin());
+            return ($sessionDebut >= $debut AND $sessionFin <= $fin);
         });
         return $result;
     }
