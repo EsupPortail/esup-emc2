@@ -23,7 +23,9 @@
  *
  * @var Campagne $last
  * @var Agent[] $agentsLast
+ * @var EntretienProfessionnel[] $entretiensLast
  * @var Campagne[] $campagnes
+ * @var EntretienProfessionnel[] $entretiensArray
  * @var Delegue[] $delegues
  *
  * // FORMATION ///////////////////////////
@@ -38,6 +40,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Structure\Entity\Db\Structure;
@@ -205,12 +208,12 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <?php if ($last !== null) : ?>
                     <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/precedente', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents]); ?>
+                        <?php echo $this->partial('partial/precedente', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents, 'entretiens' => $entretiensLast]); ?>
                     </div>
                 <?php endif; ?>
                 <?php foreach ($campagnes as $campagne) : ?>
                     <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues]); ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues, 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
                     </div>
                 <?php endforeach; ?>
 

@@ -3,7 +3,6 @@
 namespace Application\Entity\Db;
 
 use Application\Provider\Etat\FichePosteEtats;
-use Carriere\Entity\Db\Niveau;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;

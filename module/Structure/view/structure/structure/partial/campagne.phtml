@@ -16,6 +16,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure $structure
  * @var Agent[] $agents
  * @var Delegue[] $delegues
+ * @var EntretienProfessionnel[] $entretiens
  */
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -39,14 +40,7 @@ $sans = [];
 $facultatifs = [];
 
 foreach ($agents as $agent) {
-    //todo déplcer cela dans campagne ou dans le service de la campagne
-    $entretien = null;
-    foreach ($campagne->getEntretiensProfessionnels() as $e) {
-        if ($e->getAgent() === $agent) {
-            $entretien = $e;
-            break;
-        }
-    }
+    $entretien = $entretiens[$agent->getId()]??null;
 
     if ($entretien === null) {
         $date = $campagne->getDateFin();

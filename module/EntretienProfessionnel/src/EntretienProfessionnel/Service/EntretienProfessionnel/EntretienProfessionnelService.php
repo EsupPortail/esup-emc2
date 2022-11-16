@@ -563,4 +563,24 @@ class EntretienProfessionnelService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /**
+     * @param Campagne $campagne
+     * @param array $agents
+     * @return EntretienProfessionnel[] @desc [agentId => entretien]
+     */
+    public function getEntretienProfessionnelByCampagneAndAgents(Campagne $campagne, array $agents) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $dictionnaire = [];
+        foreach ($result as $entretien) {
+            $dictionnaire[$entretien->getAgent()->getId()] = $entretien;
+        }
+        return $dictionnaire;
+    }
 }

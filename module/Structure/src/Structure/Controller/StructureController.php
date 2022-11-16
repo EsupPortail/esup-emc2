@@ -115,12 +115,20 @@ class StructureController extends AbstractActionController {
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
+
         /** Récupération des agents et postes liés aux structures */
         $agentsLast = ($last !== null)?$this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut()):[];
         $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
         $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
+        $entretiensLast = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($last, $allAgentsLast);
+
 
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $entretiensArray = [];
+        foreach ($campagnes as $campagne) {
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $allAgents);
+            $entretiensArray[$campagne->getId()] = $entretiens;
+        }
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
 //        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
@@ -157,7 +165,9 @@ class StructureController extends AbstractActionController {
 
             'last' => $last,
             'agentsLast' => $allAgentsLast,
+            'entretiensLast' => $entretiensLast,
             'campagnes' => $campagnes,
+            'entretiensArray' => $entretiensArray,
             'delegues' => $delegues,
 
             //formations

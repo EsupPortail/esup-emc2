@@ -53,7 +53,9 @@ class StructureService
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->addSelect('gestionnaire')->leftJoin('structure.gestionnaires', 'gestionnaire')
+            ->leftJoin('gestionnaire.agent', 'gAgent')->addSelect('gAgent')
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
+            ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
             ->addSelect('type')->join('structure.type', 'type')
             ->andWhere('structure.deleted_on IS NULL')
             ->orderBy('structure.code')
@@ -232,7 +234,6 @@ left join structure_type st on st.id = s.type_id
 where s.d_fermeture IS NULL
 EOS;
 
-        $tmp = null;
         try {
             $res = $this->getEntityManager()->getConnection()->executeQuery($sql, []);
             try {
@@ -444,41 +445,6 @@ EOS;
     }
 
     /**
-     * @param Structure $structure
-     * @param bool $filles
-     * @return User[]
-     */
-    public function getGestionnairesByStructure(Structure $structure, bool $filles = true) : array
-    {
-        $gestionnaires = [];
-        $vue = [];
-
-        $structures = [];
-        $structures[] = $structure;
-        $vue[$structure->getId()] = true;
-
-        while (! empty($structures)) {
-            $current = array_shift($structures);
-            foreach ($current->getGestionnaires() as $gestionnaire) {
-                $gestionnaires[$gestionnaire->getId()] = $gestionnaire;
-            }
-            foreach ($current->getResponsables() as $responsable) {
-                $gestionnaires[$responsable->getId()] = $responsable;
-            }
-            if ($filles) {
-                foreach ($current->getEnfants() as $enfant) {
-                    if ($vue[$enfant->getId()] !== true) {
-                        $structures[] = $enfant;
-                        $vue[$enfant->getId()] = true;
-                    }
-                }
-            }
-        }
-        return $gestionnaires;
-    }
-
-
-    /**
      * @return Structure[]
      */
     public function getStructuresByCurrentRole(User $user, Role $role) : array
@@ -505,7 +471,7 @@ EOS;
         if ($date === null) $date = new DateTime();
         $qb = $this->getEntityManager()->getRepository(AgentAffectation::class)->createQueryBuilder('affectation')
 //            ->join('affectation.agent', 'agent')->addSelect('agent')
-            // affecation en cours non principale dans la structure
+            // affectation en cours non principale dans la structure
             ->andWhere('affectation.structure = :structure')
             ->setParameter('structure', $structure)
             ->andWhere('affectation.principale IS NULL OR affectation.principale = :N')
@@ -523,7 +489,7 @@ EOS;
         $listing = [];
         foreach ($result as $affectation) {
             $agent = $affectation->getAgent();
-            $affectationPrincipale = $agent->getAffectationPrincipale($date);
+            $affectationPrincipale = $agent->getAffectationPrincipale();
             if ($affectationPrincipale) {
                 $structurePrincipale = $affectationPrincipale->getStructure();
                 $listing[$structurePrincipale->getLibelleLong()][] = $agent->getDenomination();
@@ -533,8 +499,6 @@ EOS;
         }
         return $listing;
     }
-
-    //TODO RESPONSABLE_SERVICE ???
 
     /**
      * @param Structure|null $structure
