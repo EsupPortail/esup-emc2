@@ -266,6 +266,7 @@ class FormationInstanceInscritService
             ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
             ->join('inscription.agent', 'agent')->addSelect('agent')
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+            ->leftJoin('inscription.frais', 'frais')->addSelect('frais')
             ->leftJoin('inscription.instance', 'session')->addSelect('session')
             ->leftJoin('session.journees', 'journee')->addSelect('journee')
             ->andWhere('session.histoDestruction IS NULL')

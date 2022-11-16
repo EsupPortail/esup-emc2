@@ -14,14 +14,8 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure $structure
  * @var Campagne $campagne
  * @var Agent[] $agents
+ * @var EntretienProfessionnel[] $entretiens
  */
-
-$entretiens = [];
-
-foreach ($agents as $agent) {
-    $entretien = $agent->getEntretienProfessionnelByCampagne($campagne);
-    if ($entretien !== null) $entretiens[$agent->getId()] = $entretien;
-}
 
 ?>
 
