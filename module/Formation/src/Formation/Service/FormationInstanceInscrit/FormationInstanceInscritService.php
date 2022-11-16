@@ -8,8 +8,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationGroupe;
-use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -143,9 +141,9 @@ class FormationInstanceInscritService
 
     /**
      * @param integer $id
-     * @return FormationInstanceInscrit
+     * @return FormationInstanceInscrit|null
      */
-    public function getFormationInstanceInscrit(int $id)
+    public function getFormationInstanceInscrit(int $id) : ?FormationInstanceInscrit
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.id = :id')
@@ -161,9 +159,9 @@ class FormationInstanceInscritService
     /**
      * @param AbstractActionController $controller
      * @param string $param
-     * @return FormationInstanceInscrit
+     * @return FormationInstanceInscrit|null
      */
-    public function getRequestedFormationInstanceInscrit(AbstractActionController $controller, $param = 'inscrit')
+    public function getRequestedFormationInstanceInscrit(AbstractActionController $controller, string $param = 'inscrit') : ?FormationInstanceInscrit
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstanceInscrit($id);
@@ -264,11 +262,13 @@ class FormationInstanceInscritService
         $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscription')
             ->andWhere('inscription.histoDestruction IS NULL')
             ->join('inscription.etat', 'etat')->addSelect('etat')
+            ->join('etat.type', 'etype')->addSelect('etype')
             ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
-//            ->andWhere('inscription.debut > :debut')->setParameter('debut', $debut)
-//            ->andWhere('inscription.debut < :fin')->setParameter('fin', $fin)
             ->join('inscription.agent', 'agent')->addSelect('agent')
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
+            ->leftJoin('inscription.instance', 'session')->addSelect('session')
+            ->leftJoin('session.journees', 'journee')->addSelect('journee')
+            ->andWhere('session.histoDestruction IS NULL')
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -355,7 +355,11 @@ class FormationInstanceInscritService
             ->andWhere('inscrit.source = :source')->setParameter('source', $source)
             ->andWhere('inscrit.idSource = :id')->setParameter('id', $id)
         ;
-        $result = $qb->getQuery()->getOneOrNullResult();
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Inscription partagent la même source [".$source->getCode().",".$id."]");
+        }
         return $result;
     }
 }
