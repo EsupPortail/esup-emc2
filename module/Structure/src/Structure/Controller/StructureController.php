@@ -8,6 +8,7 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -20,6 +21,11 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Formation\Entity\Db\Formation;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -33,18 +39,15 @@ use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 use UnicaenDbImport\Entity\Db\Source;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
-use Laminas\View\Model\ViewModel;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
+    use EtatServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
@@ -155,6 +158,7 @@ class StructureController extends AbstractActionController {
             'missions' => $missionsSpecifiques,
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
             'fichespostes_pdf' => $fichespostes_pdf,
+            'fichePosteEtats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
 //            'fichesRecrutements' => $fichesRecrutements,
 //            'profils' => $profils,
             'agents' => $agents,

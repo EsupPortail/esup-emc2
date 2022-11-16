@@ -4,6 +4,7 @@ namespace UnicaenEtat\View\Helper;
 
 use Application\View\Renderer\PhpRenderer;
 use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -13,7 +14,7 @@ class EtatBadgeViewHelper extends AbstractHelper
 {
     use EtatServiceAwareTrait;
     /**
-     * @param Etat|string|int|null $etat
+     * @param Etat|EtatType|string|int|null $etat
      * @param array $options
      * @return string|Partial
      */
@@ -21,6 +22,10 @@ class EtatBadgeViewHelper extends AbstractHelper
     {
         if (is_int($etat)) { $etat = $this->getEtatService()->getEtat($etat); }
         if (is_string($etat)) { $etat = $this->getEtatService()->getEtatByCode($etat); }
+        if ($etat instanceof EtatType) {
+            $type = $etat;
+            $etat = new Etat(); $etat->setType($type);
+        }
 
         /** @var PhpRenderer $view */
         $view = $this->getView();

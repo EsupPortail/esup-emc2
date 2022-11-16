@@ -12,6 +12,7 @@
  * @var FichePoste[] $fichespostes_pdf
  * @var FichePoste[] $fichesCompletes
  * @var FichePoste[] $fichesIncompletes
+ * @var EtatType[] $fichePosteEtats
 // * @var FichePoste[] $fichesRecrutements
  * @var Agent[] $agents
  * @var Agent[] $agentsForces
@@ -47,6 +48,7 @@ use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Privilege\StructurePrivileges;
+use UnicaenEtat\Entity\Db\EtatType;
 
 $this->headTitle($structure->getLibelleLong());
 
@@ -195,7 +197,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="informations" class="tab-pane">
-                    <?php echo $this->partial('partial/fiches-postes', ['agents' => $agentsAll, 'structure' => $structure, 'fichespostes' => $fichespostes, 'fichespostes_pdf' => $fichespostes_pdf]); ?>
+                    <?php echo $this->partial('partial/fiches-postes', ['agents' => $agentsAll, 'structure' => $structure, 'fichespostes' => $fichespostes, 'fichespostes_pdf' => $fichespostes_pdf, 'etats' => $fichePosteEtats]); ?>
                 </div>
 
                 <!-- Missions spécifique ------------------------------------------------------------------------------------->

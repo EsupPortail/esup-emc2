@@ -193,7 +193,13 @@ class EtatService {
             ->setParameter('code', $code)
             ->orderBy('etat.ordre', 'ASC')
         ;
-        return $qb->getQuery()->getResult();
+        $result = $qb->getQuery()->getResult();
+
+        $dictionnaire = [];
+        foreach ($result as $etat) {
+            $dictionnaire[$etat->getCode()] = $etat;
+        }
+        return $dictionnaire;
     }
 
 

@@ -5,15 +5,16 @@
  * @var Agent[] $agents
  * @var Structure $structure
  * @var array $fichespostes_pdf
+ * @var EtatType[] $etats
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FichePoste;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Fichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
+use UnicaenEtat\Entity\Db\EtatType;
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
 $canExporterFichePoste      = $canVoirFichePoste;
@@ -145,7 +146,7 @@ $date = new DateTime();
                                     <?php if ($fin === null AND $ficheposte['etat_code'] !== FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
                                 </td>
                                 <td class="etat">
-                                    <?php echo $this->etatbadge($ficheposte['etat_code']); ?>
+                                    <?php echo $this->etatbadge($etats[$ficheposte['etat_code']]); ?>
                                 </td>
                                 <td class="action">
                                     <?php if ($canVoirFichePoste) : ?>

@@ -10,7 +10,6 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
-use Application\Service\Poste\PosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
@@ -25,6 +24,7 @@ use Structure\Form\AjouterResponsable\AjouterResponsableForm;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
+use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
@@ -42,6 +42,7 @@ class StructureControllerFactory {
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
+         * @var EtatService $etatService
          * @var DelegueService $delegueService
          * @var DemandeExterneService $demandeService
          * @var FichePosteService $fichePosteService
@@ -58,6 +59,7 @@ class StructureControllerFactory {
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
+        $etatService = $container->get(EtatService::class);
         $demandeService = $container->get(DemandeExterneService::class);
         $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -92,6 +94,7 @@ class StructureControllerFactory {
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setCampagneService($campagneService);
+        $controller->setEtatService($etatService);
         $controller->setDelegueService($delegueService);
         $controller->setDemandeExterneService($demandeService);
         $controller->setFichePosteService($fichePosteService);

@@ -1,14 +1,9 @@
 <?php
 
 use Application\Entity\Db\Agent;
-use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use Structure\Entity\Db\Structure;
-use Structure\Provider\Privilege\StructurePrivileges;
 
 /**
  * @var Structure $structure
@@ -23,21 +18,22 @@ use Structure\Provider\Privilege\StructurePrivileges;
 
 <div class="row">
     <div class="col-md-6">
-        <dl class="dl-horizontal">
-            <dt> Année </dt>
-            <dd> <?php echo $campagne->getAnnee(); ?> </dd>
-            <dt> Début de la campagne </dt>
-            <dd> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
-            <dt> Fin de la campagne </dt>
-            <dd> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
-            <dt> En cours </dt>
-            <dd>
+        <dl class="row">
+            <dt class="col-md-3"> Année </dt>
+            <dd class="col-md-3"> <?php echo $campagne->getAnnee(); ?> </dd>
+            <dt class="col-md-3"> En cours </dt>
+            <dd class="col-md-3">
                 <?php if ($campagne->estEnCours()) : ?>
                     <span style="color:darkgreen;"><span class="icon icon-checked"></span>Oui</span>
                 <?php else : ?>
                     <span style="color:darkred;"><span class="icon icon-retirer"></span>Non</span>
                 <?php endif; ?>
             </dd>
+            <dt class="col-md-6"> Début de la campagne </dt>
+            <dd class="col-md-6"> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
+            <dt class="col-md-6"> Fin de la campagne </dt>
+            <dd  class="col-md-6"> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
+
         </dl>
     </div>
 </div>

@@ -104,14 +104,20 @@ class EtatTypeService {
     /**
      * @param string $champ
      * @param string $ordre
-     * @return EtatType[]
+     * @return EtatType[] @desc [code => etat]
      */
-    public function getEtatTypes($champ = 'code', $ordre='ASC')
+    public function getEtatTypes(string $champ = 'code', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('etype.'.$champ, $ordre)
         ;
-        return $qb->getQuery()->getResult();
+        $result =  $qb->getQuery()->getResult();
+
+        $dictionnaire = [];
+        foreach ($result as $etat) {
+            $dictionnaire[$etat->getCode()] = $etat;
+        }
+        return $dictionnaire;
     }
 
     /**
