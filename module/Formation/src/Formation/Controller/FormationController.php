@@ -54,7 +54,7 @@ class FormationController extends AbstractActionController
         $historise = $this->params()->fromQuery('historise');
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource() === $source; });
+        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource()->getCode() === $source; });
         if ($historise !== null AND $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
             if ($historise === "1") return $a->estHistorise();
             if ($historise === "0") return $a->estNonHistorise();
