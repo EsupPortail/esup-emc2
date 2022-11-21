@@ -34,7 +34,7 @@ return [
         'app_infos' => [
             'nom'     => "EMC2",
             'desc'    => "Emploi Mobilité Carrière Compétences",
-            'version' => "1.2.0",
+            'version' => "3.0.0",
             'date'    => "11/04/2022",
             'contact' => ['mail' => "assistance-emc2@unicaen.fr", /*'tel' => "01 02 03 04 05"*/],
             'mentionsLegales'        => "http://www.unicaen.fr/acces-direct/mentions-legales/",
