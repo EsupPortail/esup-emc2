@@ -1,9 +1,8 @@
 <?php
 
-namespace Formation\Event\DemandeRetour;
+namespace Formation\Event\SessionCloture;
 
 use Doctrine\ORM\EntityManager;
-use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Psr\Container\ContainerExceptionInterface;

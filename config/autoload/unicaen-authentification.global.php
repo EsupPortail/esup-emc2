@@ -17,7 +17,9 @@ return [
          * Attribut LDAP utilisé pour le username des utilisateurs
          * A personnaliser au besoin
          */
-        //'ldap_username' => 'supannaliaslogin',
+//        'ldap_username' => 'uid',
+//        'ldap_username' => 'supannaliaslogin',
+
     ],
 ];
 
