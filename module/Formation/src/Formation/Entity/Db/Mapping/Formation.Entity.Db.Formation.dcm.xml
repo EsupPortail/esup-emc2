@@ -16,6 +16,10 @@
             <join-column name="groupe_id" referenced-column-name="id"/>
         </many-to-one>
 
+        <field name="type"            column="type"             type="string" length="64"/>
+        <field name="objectifs"       column="objectifs"        type="string" />
+        <field name="programme"       column="programme"        type="string" />
+
         <one-to-many field="instances" target-entity="Formation\Entity\Db\FormationInstance" mapped-by="formation"/>
         <one-to-many field="abonnements" target-entity="Formation\Entity\Db\FormationAbonnement" mapped-by="formation"/>
 

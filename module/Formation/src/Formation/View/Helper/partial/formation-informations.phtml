@@ -28,9 +28,23 @@ use Formation\Entity\Db\Formation;
             <dt class="col-md-3"> Description </dt>
             <dd class="col-md-9"> <?php echo $formation->getDescription(); ?> </dd>
         <?php endif; ?>
+
+        <?php if ($formation->getType() !== null AND trim($formation->getType() !== '')) : ?>
+            <dt class="col-md-3"> Type/Modalité </dt>
+            <dd class="col-md-9"> <?php echo Formation::TYPES[$formation->getType()]; ?> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getObjectifs() !== null AND trim($formation->getObjectifs() !== '')) : ?>
+            <dt class="col-md-3"> Objectifs </dt>
+            <dd class="col-md-9"> <?php echo $formation->getObjectifs(); ?> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getProgramme() !== null AND trim($formation->getProgramme() !== '')) : ?>
+            <dt class="col-md-3"> Programme </dt>
+            <dd class="col-md-9"> <?php echo $formation->getProgramme(); ?> </dd>
+        <?php endif; ?>
+
         <dt class="col-md-3"> Affichage "plan" </dt>
         <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>
-        <?php if ($formation->getRattachement() !== null) : ?>
+        <?php if ($formation->getRattachement() !== null AND trim($formation->getRattachement() !== '')) : ?>
             <dt class="col-md-3"> Rattachement </dt>
             <dd class="col-md-9"> <?php echo $formation->getRattachement(); ?> </dd>
         <?php endif; ?>

@@ -23,6 +23,11 @@ class FormationHydrator implements HydratorInterface
             'groupe' => ($object->getGroupe()) ? $object->getGroupe()->getId() : null,
             'affichage' => $object->getAffichage(),
             'rattachement' => $object->getRattachement(),
+
+            'type' => $object->getType(),
+            'objectifs' => $object->getObjectifs(),
+            'programme' => $object->getProgramme(),
+
         ];
 
         return $data;
@@ -33,12 +38,15 @@ class FormationHydrator implements HydratorInterface
      * @param Formation $object
      * @return Formation
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data,object $object) : object
     {
         $groupe = (isset($data['groupe']) && $data['groupe'] !== "") ? $this->getFormationGroupeService()->getFormationGroupe($data['groupe']) : null;
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
         $affichage = !((isset($data['affichage']) and $data['affichage'] === '0'));
         $rattachement = $data['rattachement'] ?? null;
+        $type = $data['type'] ?? null;
+        $objectifs = $data['objectifs'] ?? null;
+        $programme = $data['programme'] ?? null;
 
         $object->setLibelle($data['libelle']);
         $object->setDescription($description);
@@ -46,6 +54,10 @@ class FormationHydrator implements HydratorInterface
         $object->setGroupe($groupe);
         $object->setAffichage($affichage);
         $object->setRattachement($rattachement);
+
+        $object->setType($type);
+        $object->setObjectifs($objectifs);
+        $object->setProgramme($programme);
         return $object;
     }
 

@@ -9,6 +9,7 @@ use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
@@ -24,7 +25,8 @@ class FormationForm extends Form
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -56,6 +58,48 @@ class FormationForm extends Form
                 'id' => 'description',
             ],
         ]);
+        //type
+        $this->add([
+            'name' => 'type',
+            'type' => Select::class,
+            'options' => [
+                'label' => "Modalité de présence/formation <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [ 'class' => 'control-label', ],
+                'empty_option' => 'Sélectionner un mode ...',
+                'value_options' => Formation::TYPES,
+            ],
+            'attributes' => [
+                'class' => 'description form-control show-tick',
+                'data-live-search'  => 'true',
+                'style' => 'height:300px;',
+            ]
+        ]);
+        //objectifs
+        $this->add([
+            'type' => Textarea::class,
+            'name' => 'objectifs',
+            'options' => [
+                'label' => "Objectif :",
+            ],
+            'attributes' => [
+                'id' => 'objectifs',
+                'class' => 'type2 form-control',
+            ],
+        ]);
+        //programme
+        $this->add([
+            'type' => Textarea::class,
+            'name' => 'programme',
+            'options' => [
+                'label' => "Programme :",
+            ],
+            'attributes' => [
+                'id' => 'programme',
+                'class' => 'type2 form-control',
+            ],
+        ]);
+
         //lien
         $this->add([
             'type' => Text::class,
@@ -73,7 +117,7 @@ class FormationForm extends Form
             'type' => Radio::class,
             'name' => 'affichage',
             'options' => [
-                'label' => "Affichage dans le 'plan de formation à venir'  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label' => "Affichage dans le 'plan de formation à venir'  <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'value_options' => [
                     true => "Oui",
@@ -106,9 +150,7 @@ class FormationForm extends Form
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer l\'activité',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -124,6 +166,9 @@ class FormationForm extends Form
             'lien' => ['required' => false,],
             'affichage' => ['required' => true,],
             'rattachement' => ['required' => false,],
+            'type' => ['required' => true,],
+            'objectifs' => ['required' => false,],
+            'programme' => ['required' => false,],
         ]));
     }
 }

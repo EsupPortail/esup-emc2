@@ -55,7 +55,7 @@ $this->headTitle("Formation :  " . $formation->getSource() . " " . $formation->g
 <!-- ACQUIS FOURNIS PAR LA FORMATION ---------------------------------------------------------------------------------->
 
 <div>
-    <h2> Applications et compétences obtenues après cette formation</h2>
+    <h2> Applications et compétences obtenues après cette formation </h2>
 
     <?php echo $this->applicationBloc($formation->getApplicationDictionnaire(), $formation, [
             'actions' => ['afficher' => true, 'valider' => false, 'modifier' => $canModifierInformations, 'supprimer' => $canModifierInformations],

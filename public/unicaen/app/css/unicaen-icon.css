@@ -281,6 +281,7 @@
     content: "\f0c1";
 }
 
-.icon.icon-asterisque:before {
+.icon.icon-asterisque:before,
+.icon.icon-obligatoire:before {
     content: "\f069";
 }

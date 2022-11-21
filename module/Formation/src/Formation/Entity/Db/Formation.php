@@ -30,11 +30,25 @@ class Formation implements HistoriqueAwareInterface,
     const RATTACHEMENT_PREVENTION = 'prévention';
     const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
+    const TYPE_PRESENTIEL = 'Présentiel';
+    const TYPE_DISTANCIEL = 'Distanciel';
+    const TYPE_MIXTE      = 'Mixte';
+    const TYPES = [
+        Formation::TYPE_PRESENTIEL => 'Formation en présentiel',
+        Formation::TYPE_DISTANCIEL => 'Formation en distanciel',
+        Formation::TYPE_MIXTE => 'Formation en présentiel/distanciel'
+    ];
+
     private ?int $id = -1;
     private ?string $libelle = null;
     private ?string $lien = null;
     private ?FormationGroupe $groupe = null;
     private bool $affichage = true;
+
+    // information sur l'action de formation
+    private ?string $type = null;
+    private ?string $objectifs = null;
+    private ?string $programme = null;
 
     private Collection $missions;
     private Collection $instances;
@@ -201,6 +215,38 @@ class Formation implements HistoriqueAwareInterface,
     public function setRattachement(?string $rattachement): void
     {
         $this->rattachement = $rattachement;
+    }
+
+    /** INFORMATION SUR L'ACTION DE FORMATION *************************************************************************/
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getObjectifs(): ?string
+    {
+        return $this->objectifs;
+    }
+
+    public function setObjectifs(?string $objectifs): void
+    {
+        $this->objectifs = $objectifs;
+    }
+
+    public function getProgramme(): ?string
+    {
+        return $this->programme;
+    }
+
+    public function setProgramme(?string $programme): void
+    {
+        $this->programme = $programme;
     }
 
     /** Formation Instances *******************************************************************************************/
