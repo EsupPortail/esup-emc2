@@ -243,11 +243,18 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getDebut(bool $datetime = false) : ?string
     {
         $minimum = null;
+        /** @var Seance $journee */
         foreach ($this->journees as $journee) {
-            if ($journee->estNonHistorise() AND $journee->getType() === Seance::TYPE_SEANCE) {
-                $split = explode("/", $journee->getJour()->format('d/m/Y'));
-                $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
-                if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
+            if ($journee->estNonHistorise()) {
+                if ($journee->getType() === Seance::TYPE_SEANCE) {
+                    $split = explode("/", $journee->getJour()->format('d/m/Y'));
+                    $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
+                    if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
+                }
+                if ($journee->getType() === Seance::TYPE_VOLUME) {
+                    $debut = $journee->getVolumeDebut()->format("Y/m/d");
+                    if ($minimum === null or $debut < $minimum) $minimum = $debut;
+                }
             }
         }
         if ($minimum !== null) {
@@ -269,10 +276,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $maximum = null;
         /** @var Seance $journee */
         foreach ($this->journees as $journee) {
-            if ($journee->estNonHistorise() AND $journee->getType() === Seance::TYPE_SEANCE) {
-                $split = explode("/", $journee->getJour()->format('d/m/Y'));
-                $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
-                if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
+            if ($journee->estNonHistorise()) {
+                if ($journee->getType() === Seance::TYPE_SEANCE) {
+                    $split = explode("/", $journee->getJour()->format('d/m/Y'));
+                    $reversed = $split[2] . "/" . $split[1] . "/" . $split[0];
+                    if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
+                }
+                if ($journee->getType() === Seance::TYPE_VOLUME) {
+                    $fin = $journee->getVolumeFin()->format("Y/m/d");
+                    if ($maximum === null or $fin > $maximum) $maximum = $fin;
+                }
             }
         }
         if ($maximum !== null) {
@@ -587,8 +600,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             if ($journee->getType() === Seance::TYPE_SEANCE) {
                 $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
                 $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-                $duree = $debut->diff($fin);
-                $sum->add($duree);
+                if ($debut instanceof DateTime AND $fin instanceof DateTime) {
+                    $duree = $debut->diff($fin);
+                    $sum->add($duree);
+                }
             }
             if ($journee->getType() === Seance::TYPE_VOLUME) {
                 $volume = $journee->getVolume();

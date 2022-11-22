@@ -23,6 +23,8 @@ class SeanceHydrator implements HydratorInterface
             'fin' => $object->getFin(),
             'lieu' => $object->getLieu(),
             'volume' => $object->getVolume(),
+            'volume_debut' => $object->getVolumeDebut(),
+            'volume_fin' => $object->getVolumeFin(),
         ];
         return $data;
     }
@@ -41,6 +43,8 @@ class SeanceHydrator implements HydratorInterface
         $fin = (isset($data['fin'])) ? $data['fin'] : null;
         $lieu = (isset($data['lieu'])) ? $data['lieu'] : null;
         $volume = (isset($data['volume'])) ? ((float) $data['volume']) : null;
+        $volumeDebut = (isset($data['volume_debut'])) ? DateTime::createFromFormat('d/m/Y', $data['volume_debut']) : null;
+        $volumeFin = (isset($data['volume_fin'])) ? DateTime::createFromFormat('d/m/Y',$data['volume_fin']) : null;
 
         $object->setType($type);
         $object->setJour($jour);
@@ -48,6 +52,8 @@ class SeanceHydrator implements HydratorInterface
         $object->setFin($fin);
         $object->setLieu($lieu);
         $object->setVolume($volume);
+        $object->setVolumeDebut($volumeDebut);
+        $object->setVolumeFin($volumeFin);
 
         return $object;
     }

@@ -19,7 +19,7 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
  * @var Mail[] $mails
  */
 
-$estAnnulee = ($instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+$estAnnulee = ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
 
 $canInformation     = (!$estAnnulee AND $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
 $canAfficherMail    = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
@@ -120,7 +120,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php endif; ?>
             <?php if ($canAnnuler) : ?>
                 <br/>
-                <?php if ($instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
+                <?php if ($instance->getEtat() AND $instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
                     <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-danger action">
@@ -179,7 +179,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                             Modifier les informations<!-- de la session -->
                         </a>
                         <br/>
-                        <?php if ($instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS) : ?>
+                        <?php if ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS) : ?>
                             <?php /** @see FormationInstancePresenceController::renseignerPresencesAction() */ ?>
                             <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
                                class="btn btn-primary action">
@@ -331,7 +331,9 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 <?php endif; ?>
                 <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
                     <td> Volume horaire </td>
-                    <td colspan="3"> <?php echo $journee->getVolume(); ?> heures </td>
+                    <td> <?php echo $journee->getVolume(); ?> heures </td>
+                    <td> <?php echo ($journee->getVolumeDebut())?$journee->getVolumeDebut()->format('d/m/Y'):"N.C."; ?> </td>
+                    <td> <?php echo ($journee->getVolumeFin())?$journee->getVolumeFin()->format('d/m/Y'):"N.C."; ?> </td>
                 <?php endif; ?>
                 <td> <?php echo $journee->getLieu(); ?></td>
                 <td>

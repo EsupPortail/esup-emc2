@@ -15,7 +15,7 @@ $principales = $instance->getListePrincipale();
 $complementaires = $instance->getListeComplementaire();
 $historises = $instance->getListeHistorisee();
 
-$estAnnulee = ($instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+$estAnnulee = ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
 
 $canInscritModifier     = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));

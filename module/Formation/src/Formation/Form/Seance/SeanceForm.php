@@ -6,7 +6,6 @@ use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Number;
-use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -37,6 +36,8 @@ class SeanceForm extends Form
             ]
 
         );
+
+        /* SEANCE *********************************************************************/
 
         //jour
         $this->add([
@@ -74,6 +75,9 @@ class SeanceForm extends Form
                 'id' => 'fin',
             ],
         ]);
+
+        /* VOLUME *********************************************************************/
+
         //number
         $this->add([
             'type' => Number::class,
@@ -86,6 +90,31 @@ class SeanceForm extends Form
                 'id' => 'volume',
             ],
         ]);
+        //jour
+        $this->add([
+            'type' => Date::class,
+            'name' => 'volume_debut',
+            'options' => [
+                'label' => "Date d'ouverture du volume * :",
+                'format' => 'd/m/Y',
+            ],
+            'attributes' => [
+                'id' => 'volume_debut',
+            ],
+        ]);
+        //jour
+        $this->add([
+            'type' => Date::class,
+            'name' => 'volume_fin',
+            'options' => [
+                'label' => "Date de fermeture du volume * :",
+                'format' => 'd/m/Y',
+            ],
+            'attributes' => [
+                'id' => 'volume_fin',
+            ],
+        ]);
+
         //salle
         $this->add([
             'type' => Text::class,
@@ -124,7 +153,7 @@ class SeanceForm extends Form
                             Callback::INVALID_VALUE => "Une information obligatoire est manquante",
                         ],
                         'callback' => function ($value, $context = []) {
-                            if($context['type'] === Seance::TYPE_VOLUME) return $context['volume'] !== '';
+                            if($context['type'] === Seance::TYPE_VOLUME) return ($context['volume'] !== '' AND $context['volume_debut'] AND $context['volume_fin'] !== '');
                             if($context['type'] === Seance::TYPE_SEANCE) return ($context['jour'] !== '' AND $context['debut'] !== '' AND $context['fin'] !== '');
                             return true;
                         },
@@ -137,6 +166,8 @@ class SeanceForm extends Form
             'debut' => ['required' => false,],
             'fin' => ['required' => false,],
             'volume' => ['required' => false,],
+            'volume_debut' => ['required' => false,],
+            'volume_fin' => ['required' => false,],
             'lieu' => ['required' => true,],
         ]));
     }

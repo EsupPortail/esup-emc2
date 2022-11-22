@@ -20,6 +20,8 @@ use Formation\Form\Seance\SeanceForm;
 </div>
 <div id="volume">
     <?php echo $this->formControlGroup($form->get('volume')); ?>
+    <?php echo $this->formControlGroup($form->get('volume_debut')); ?>
+    <?php echo $this->formControlGroup($form->get('volume_fin')); ?>
 </div>
 <?php echo $this->formControlGroup($form->get('lieu')); ?>
 <?php echo $this->formControlGroup($form->get('creer')); ?>
