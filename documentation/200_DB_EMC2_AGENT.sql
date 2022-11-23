@@ -24,8 +24,9 @@ create table agent
 
 create table agent_carriere_affectation
 (
-    id                    bigint not null unique
+    affectation_id        bigint not null unique
         constraint agent_affectation_pk primary key,
+    id bigint,
     agent_id              varchar(40) not null,
     structure_id          bigint not null,
     date_debut            timestamp not null,
