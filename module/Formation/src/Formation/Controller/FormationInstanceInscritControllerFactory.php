@@ -12,6 +12,7 @@ use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -72,6 +73,11 @@ class FormationInstanceInscritControllerFactory
         $controller->setUserService($userService);
         $controller->setInscriptionForm($inscriptionForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
+
+        $sourceService = $container->get(SourceService::class);
+        $source = $sourceService->getRepository()->findOneBy(['code' => 'EMC2']);
+        $controller->setSourceEmc2($source);
+
         return $controller;
     }
 }

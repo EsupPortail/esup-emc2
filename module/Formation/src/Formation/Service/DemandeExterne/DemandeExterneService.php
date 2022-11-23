@@ -29,6 +29,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -50,6 +51,9 @@ class DemandeExterneService {
     use StructureServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
+
+    private Source $sourceEMC2;
+    public function setSourceEmc2(Source $source) { $this->sourceEMC2 = $source; }
 
     /** GESTION ENTITE ************************************************************************************************/
 
@@ -369,7 +373,7 @@ class DemandeExterneService {
         $session->setNbPlacePrincipale(1);
         $session->setNbPlaceComplementaire(0);
         $session->setType("stage externe");
-        //source ... todo
+        $session->setSource($this->sourceEMC2);
         $this->getFormationInstanceService()->create($session);
 
         //inscription
@@ -378,7 +382,7 @@ class DemandeExterneService {
         $inscription->setInstance($session);
         $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
         $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
-        //source ... todo
+        $inscription->setSource($this->sourceEMC2);
         $this->getFormationInstanceInscritService()->create($inscription);
 
         $absence = $volume - $suivi;
