@@ -12,6 +12,7 @@ use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
 $realisees  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->estRealisee();} );
+usort($realisees, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getInstance()->getDebut(true) < $b->getInstance()->getDebut(true); });
 
 $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
 
