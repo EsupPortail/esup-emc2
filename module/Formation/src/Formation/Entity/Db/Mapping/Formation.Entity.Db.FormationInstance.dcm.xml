@@ -29,6 +29,10 @@
 
         <field name="affichage"             type="boolean"   column="affichage"                nullable="true"/>
 
+        <one-to-one field="parametre" target-entity="Formation\Entity\Db\SessionParametre">
+            <join-column name="parametre_id" referenced-column-name="id" />
+        </one-to-one>
+
         <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
             <join-column name="source_id" referenced-column-name="ID" />

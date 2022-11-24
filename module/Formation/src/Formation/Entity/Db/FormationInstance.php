@@ -52,6 +52,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** @var ArrayCollection (Formateur) */
     private $formateurs;
 
+    private ?SessionParametre $parametre = null;
+
     /**
      * @return string
      */
@@ -446,6 +448,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->coutTtc = $coutTtc;
     }
 
+    public function getParametre(): ?SessionParametre
+    {
+        return $this->parametre;
+    }
+
+    public function setParametre(?SessionParametre $parametre): void
+    {
+        $this->parametre = $parametre;
+    }
+
     /** PREDICAT D'ETAT *********************************************************************************************/
 
     public function estPreparation() : bool
@@ -478,6 +490,12 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getInstanceLibelle() : string
     {
         return $this->getFormation()->getLibelle();
+    }
+
+
+    public function getLieuString() : string
+    {
+        return ($this->getLieu())?" à ".$this->getLieu():"";
     }
 
     public function getInstanceCode() : string
