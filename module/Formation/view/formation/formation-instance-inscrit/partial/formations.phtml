@@ -58,7 +58,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                         <?php endif; ?>
                     </div>
                 <?php else : ?>
-                    <?php if ($inscription->getValidationEnquete() === null) : ?>
+                    <?php if ($inscription->getInstance()->getParametre() AND $inscription->getInstance()->getParametre()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
                     <a
                         <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
                             href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
@@ -81,7 +81,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
                         href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
-                        class="btn btn-primary action <?php if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
+                        class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                 >
                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
