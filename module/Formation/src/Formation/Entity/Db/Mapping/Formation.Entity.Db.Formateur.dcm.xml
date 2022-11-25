@@ -10,11 +10,18 @@
             <join-column name="instance_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="false"/>
-        <field name="nom"                 column="nom"              type="string"  length="256"    nullable="false"/>
-        <field name="email"               column="email"            type="string"  length="1024"   nullable="false"/>
+        <field name="type"                column="type"             type="string"  length="64"    nullable="false"/>
+
+        <field name="organisme"           column="organisme"        type="string"  length="1024"   nullable="true"/>
+
+        <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="true"/>
+        <field name="nom"                 column="nom"              type="string"  length="256"    nullable="true"/>
         <field name="attachement"         column="attachement"      type="string"  length="1024"   nullable="true"/>
 
+        <field name="email"               column="email"            type="string"  length="1024"   nullable="true"/>
+        <field name="telephone"           column="telephone"        type="string"  length="64"     nullable="true"/>
+
+        <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
         <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>

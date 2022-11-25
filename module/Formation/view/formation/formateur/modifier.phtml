@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @var Form $form
+ */
+
+use Laminas\Form\Form;
+
+?>
+
+<?php //echo $this->form($form); ?>
+
+
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('type')); ?>
+
+<div id="Organisme">
+    <?php echo $this->formControlGroup($form->get('organisme')); ?>
+</div>
+<div id="Formateur">
+    <?php echo $this->formControlGroup($form->get('nom')); ?>
+    <?php echo $this->formControlGroup($form->get('prenom')); ?>
+    <?php echo $this->formControlGroup($form->get('attachement')); ?>
+</div>
+<?php echo $this->formControlGroup($form->get('email')); ?>
+<?php echo $this->formControlGroup($form->get('telephone')); ?>
+<?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+<script>
+    function checkType() {
+        let type = $('select#type').val();
+        console.log(type);
+        if (type === 'Formateur') {
+            $('div#Formateur').show();
+            $('div#Organisme').hide();
+        }
+        if (type === 'Organisme') {
+            $('div#Formateur').hide();
+            $('div#Organisme').show();
+        }
+    }
+
+    checkType();
+    $('select#type').change(
+        function() {
+            console.log(type);
+            checkType();
+        }
+    );
+
+    $('select').selectpicker();
+
+</script>
+
+<style>
+    .ui-datepicker{
+        position: absolute;
+        z-index:1050 !important;
+    }
+</style>

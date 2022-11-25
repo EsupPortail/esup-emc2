@@ -39,7 +39,7 @@ class FormateurController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('formation/formateur/modifier');
         $vm->setVariables([
             'title' => "Ajout d'un formateur de formation",
             'form' => $form,
@@ -65,7 +65,7 @@ class FormateurController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('formation/formateur/modifier');
         $vm->setVariables([
             'title' => "Modification d'un formateur de formation",
             'form' => $form,

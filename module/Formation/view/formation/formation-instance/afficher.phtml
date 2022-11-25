@@ -242,14 +242,14 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <thead>
             <tr>
                 <th> Dénomination </th>
-                <th> Structure de rattachement / Organisme </th>
+                <th> Structure de rattachement </th>
                 <th> Action </th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($formateurs as $formateur) : ?>
                 <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
-                    <td> <?php echo $formateur->getPrenom(); ?> <?php echo $formateur->getNom(); ?> </td>
+                    <td> <?php echo $formateur->getDenomination(); ?> </td>
                     <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
                     <td>
                         <?php if ($canFormateurModifier) : ?>
