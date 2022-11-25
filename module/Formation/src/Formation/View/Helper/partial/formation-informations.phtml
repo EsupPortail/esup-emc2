@@ -8,16 +8,38 @@
  */
 
 use Formation\Entity\Db\Formation;
+use Formation\Provider\Privilege\FormationgroupePrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
+
+
+$canAfficherActionFormation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAfficherGroupeFormation = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER));
 
 ?>
 
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> Libellé </dt>
-        <dd class="col-md-9"> <?php echo $formation->getLibelle(); ?> </dd>
+        <dd class="col-md-9">
+            <?php if ($canAfficherActionFormation) : ?>
+                <a href="<?php echo $this->url("formation/editer", ['formation' => $formation->getId()], [], true); ?>" title="Accéder à l'action de formation">
+                    <?php echo $formation->getLibelle(); ?>
+                </a>
+            <?php else : ?>
+                <?php echo $formation->getLibelle(); ?>
+            <?php endif; ?>
+        </dd>
         <?php if ($formation->getGroupe() !== null) : ?>
             <dt class="col-md-3"> Groupe </dt>
-            <dd class="col-md-9"> <?php echo $formation->getGroupe()->getLibelle(); ?> </dd>
+            <dd class="col-md-9">
+                <?php if ($canAfficherGroupeFormation) : ?>
+                    <a href="<?php echo $this->url("formation-groupe/afficher", ['formation-groupe' => $formation->getGroupe()->getId()], [], true); ?>" title="Accéder au groupe de formation">
+                        <?php echo $formation->getGroupe()->getLibelle(); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $formation->getGroupe()->getLibelle(); ?>
+                <?php endif; ?>
+            </dd>
         <?php endif; ?>
         <?php if ($formation->getLien() !== null AND trim ($formation->getLien()) !== "") : ?>
             <dt class="col-md-3"> Lien </dt>
