@@ -70,7 +70,11 @@ class StructureService
     public function getStructures(bool $ouverte = true) : array
     {
         $qb = $this->createQueryBuilder();
-        if ($ouverte) $qb = $qb->andWhere("structure.fermeture IS NULL");
+        if ($ouverte)
+            $qb = $qb
+                ->andWhere("coalesce(structure.fermetureOW,structure.fermeture) IS NULL OR coalesce(structure.fermetureOW,structure.fermeture) >= :now")
+                ->setParameter('now', new DateTime())
+            ;
         $result = $qb->getQuery()->getResult();
 
         return $result;
