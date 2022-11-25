@@ -58,7 +58,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                         <?php endif; ?>
                     </div>
                 <?php else : ?>
-                    <?php if ($inscription->getInstance()->getParametre() AND $inscription->getInstance()->getParametre()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
+                    <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
                     <a
                         <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
                             href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscrit' => $inscription->getId()], [], true); ?>"

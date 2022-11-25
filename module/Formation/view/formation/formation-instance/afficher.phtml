@@ -192,16 +192,15 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             </div>
 
             <h2> Paramètrage de la session </h2>
-            <?php $parametre = $instance->getParametre(); ?>
             <div class="row">
                 <div class="col-md-9">
                     <dl class="row">
                         <dt class="col-md-6"> Envoi des courriers électronique <span class="icon icon-information text-info" title="Envoi des mails vers les agents (convocations, rappels, ...)"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($parametre AND $parametre->isMailActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
+                        <dd class="col-md-6"> <?php echo  ($instance->isMailActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
                         <dt class="col-md-6"> Création des événements <span class="icon icon-information text-info" title="Active la gestion automatique de la session (clotûre automatique, convocation automatique, ...)"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($parametre AND $parametre->isEvenementActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
+                        <dd class="col-md-6"> <?php echo  ($instance->isEvenementActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
                         <dt class="col-md-6"> Demande du formulaire de retour  <span class="icon icon-information text-info" title="Proposition de l'enquête et exige sa complétion pour avoir l'attestation"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($parametre AND $parametre->isEnqueteActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
+                        <dd class="col-md-6"> <?php echo  ($instance->isEnqueteActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-retirer'></span> Désactivé</span>"; ?> </dd>
                     </dl>
                 </div>
                 <div class="col-md-3">

@@ -44,8 +44,9 @@ class NotificationService {
     }
     /** GESTION DES INSCRIPTIONS **************************************************************************************/
 
-    public function triggerInscriptionAgent(Agent $agent, FormationInstance $instance) : Mail
+    public function triggerInscriptionAgent(Agent $agent, FormationInstance $instance) : ?Mail
     {
+        if (!$instance->isMailActive()) return null;
         $vars = [
             'agent' => $agent,
             'session' => $instance,
@@ -67,9 +68,11 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerResponsableValidation(FormationInstanceInscrit $inscription) : Mail
+    public function triggerResponsableValidation(FormationInstanceInscrit $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
+        if (!$instance->isMailActive()) return null;
+
         $agent = $inscription->getAgent();
 
         $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
@@ -95,9 +98,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerResponsableRefus(FormationInstanceInscrit $inscription) : Mail
+    public function triggerResponsableRefus(FormationInstanceInscrit $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscription->getAgent();
 
         $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_DRH_FORMATION')->getValeur();
@@ -120,9 +124,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerDrhValidation(FormationInstanceInscrit $inscription) : Mail
+    public function triggerDrhValidation(FormationInstanceInscrit $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscription->getAgent();
 
         $vars = [
@@ -141,9 +146,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerPrevention(FormationInstanceInscrit $inscription) : Mail
+    public function triggerPrevention(FormationInstanceInscrit $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscription->getAgent();
 
         $email = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE,FormationParametres::MAIL_PREVENTION_FORMATION)->getValeur();
@@ -166,9 +172,10 @@ class NotificationService {
 
 
 
-    public function triggerDrhRefus(FormationInstanceInscrit $inscription) : Mail
+    public function triggerDrhRefus(FormationInstanceInscrit $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscription->getAgent();
 
         $vars = [
@@ -188,9 +195,10 @@ class NotificationService {
     }
 
 
-    public function triggerListePrincipale(FormationInstanceInscrit $inscrit) : Mail
+    public function triggerListePrincipale(FormationInstanceInscrit $inscrit) : ?Mail
     {
         $instance = $inscrit->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscrit->getAgent();
 
         $vars = [
@@ -209,9 +217,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerListeComplementaire(FormationInstanceInscrit $inscrit) : Mail
+    public function triggerListeComplementaire(FormationInstanceInscrit $inscrit) : ?Mail
     {
         $instance = $inscrit->getInstance();
+        if (!$instance->isMailActive()) return null;
         $agent = $inscrit->getAgent();
 
         $vars = [
@@ -230,9 +239,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerConvocation(FormationInstanceInscrit $inscrit) : Mail
+    public function triggerConvocation(FormationInstanceInscrit $inscrit) : ?Mail
     {
         $instance = $inscrit->getInstance();
+        if (!$instance->isMailActive()) return null;
 
         $vars = [
             'session' => $instance,
@@ -248,9 +258,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerDemandeRetour(FormationInstanceInscrit $inscrit) : Mail
+    public function triggerDemandeRetour(FormationInstanceInscrit $inscrit) : ?Mail
     {
         $instance = $inscrit->getInstance();
+        if (!$instance->isMailActive() OR !$instance->isEnqueteActive()) return null;
 
         $vars = [
             'session' => $instance,
@@ -266,9 +277,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerSessionAnnulee(FormationInstanceInscrit $inscrit) : Mail
+    public function triggerSessionAnnulee(FormationInstanceInscrit $inscrit) : ?Mail
     {
         $instance = $inscrit->getInstance();
+        if (!$instance->isMailActive()) return null;
 
         $vars = [
             'session' => $instance,
@@ -284,8 +296,9 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerLienPourEmargement(FormationInstance $instance) : Mail
+    public function triggerLienPourEmargement(FormationInstance $instance) : ?Mail
     {
+        if (!$instance->isMailActive()) return null;
         $mails = [];
         foreach ($instance->getFormateurs() as $formateur) {
             $mails[] = $formateur->getEmail();
@@ -305,6 +318,7 @@ class NotificationService {
 
     public function triggerRappelAgentAvantFormation(FormationInstance $instance) : array
     {
+        if (!$instance->isMailActive()) return [];
         $vars = [
             'session' => $instance,
             'UrlService' => $this->getUrlService(),

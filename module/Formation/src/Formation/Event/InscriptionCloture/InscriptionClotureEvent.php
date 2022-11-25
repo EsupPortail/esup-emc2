@@ -54,11 +54,13 @@ class InscriptionClotureEvent extends  EvenementService
             $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
             $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
             foreach ($sessions as $session) {
-                $dateDebut = ($session->getDebut() !== null)?DateTime::createFromFormat('d/m/Y', $session->getDebut()):null;
-                if ($dateDebut >= $deadline) {
-                    $this->getFormationInstanceService()->fermerInscription($session);
-                    $log .= "Fermeture des inscriptions de la session : " . $session->getInstanceLibelle() . "(". $session->getInstanceCode().")";
-                    $closes[] = $session;
+                if ($session->isEvenementActive()) {
+                    $dateDebut = ($session->getDebut() !== null) ? DateTime::createFromFormat('d/m/Y', $session->getDebut()) : null;
+                    if ($dateDebut >= $deadline) {
+                        $this->getFormationInstanceService()->fermerInscription($session);
+                        $log .= "Fermeture des inscriptions de la session : " . $session->getInstanceLibelle() . "(" . $session->getInstanceCode() . ")";
+                        $closes[] = $session;
+                    }
                 }
             }
             $this->getNotificationService()->triggerNotifierInscriptionClotureAutomatique($closes);

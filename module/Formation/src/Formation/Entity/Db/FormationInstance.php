@@ -448,6 +448,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->coutTtc = $coutTtc;
     }
 
+    /** PARAMETRES ***************************************************************************************************/
+
     public function getParametre(): ?SessionParametre
     {
         return $this->parametre;
@@ -456,6 +458,24 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function setParametre(?SessionParametre $parametre): void
     {
         $this->parametre = $parametre;
+    }
+
+    public function isMailActive() : bool
+    {
+        if ($this->parametre === null) return true;
+        return $this->parametre->isMailActive();
+    }
+
+    public function isEvenementActive() : bool
+    {
+        if ($this->parametre === null) return true;
+        return $this->parametre->isEvenementActive();
+    }
+
+    public function isEnqueteActive() : bool
+    {
+        if ($this->parametre === null) return true;
+        return $this->parametre->isEnqueteActive();
     }
 
     /** PREDICAT D'ETAT *********************************************************************************************/

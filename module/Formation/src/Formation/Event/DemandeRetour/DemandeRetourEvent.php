@@ -50,11 +50,13 @@ class DemandeRetourEvent extends  EvenementService
             $sessions = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_FORMATION_CONVOCATION);
             $deadline = (new DateTime())->sub(new DateInterval($this->deadline));
             foreach ($sessions as $session) {
-                $dateFin = ($session->getFin() !== null)?DateTime::createFromFormat('d/m/Y', $session->getFin()):null;
-                if ($dateFin < $deadline) {
-                    $this->getFormationInstanceService()->demanderRetour($session);
-                    $log .= "Traitement de la session ".$session->getInstanceCode()." ".$session->getInstanceLibelle()."<br>";
-                    $nbSession++;
+                if ($session->isEvenementActive()) {
+                    $dateFin = ($session->getFin() !== null) ? DateTime::createFromFormat('d/m/Y', $session->getFin()) : null;
+                    if ($dateFin < $deadline) {
+                        $this->getFormationInstanceService()->demanderRetour($session);
+                        $log .= "Traitement de la session " . $session->getInstanceCode() . " " . $session->getInstanceLibelle() . "<br>";
+                        $nbSession++;
+                    }
                 }
             }
         } catch(Exception $e) {
