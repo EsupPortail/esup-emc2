@@ -71,6 +71,10 @@ class FormationInstanceInscritController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-agent', ['formulaire-instance' => $instance->getId()], [], true));
         $form->bind($inscrit);
 
+        /** Elargissement de la recherche pour les agents sans affectations ... **/
+        $urlLarge = $this->url()->fromRoute('agent/rechercher-large', [], [], true);
+        $form->get('agent')->setAutocompleteSource($urlLarge);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
