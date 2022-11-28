@@ -4,6 +4,8 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\PdfTemplates;
@@ -127,21 +129,35 @@ class FormationInstanceDocumentController extends AbstractActionController
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
 
-        $texte  = "<ul>";
+        $array = [];
         foreach ($inscriptions as $inscription) {
-            $dureeSuivie = $inscription->getDureePresence();
-            $session = $inscription->getInstance();
-            $sessionEtat = $session->getEtat()->getCode();
-            if ($dureeSuivie != '0 heures ' AND ($sessionEtat === SessionEtats::ETAT_CLOTURE_INSTANCE OR $sessionEtat === SessionEtats::ETAT_ATTENTE_RETOURS)) {
-                $libelle = $session->getFormation()->getLibelle();
-                $periode = $session->getPeriode();
-                $texte .= "<li>";
-                $texte .= $libelle . " (". $periode . ")<br/>";
-                $texte .= $dureeSuivie . " suivies sur " . $session->getDuree() . " de formation";
-                $texte .= "</li>";
-            }
+            $annee = Formation::getAnnee($inscription->getInstance()->getDebut(true));
+            $array[$annee][] = $inscription;
         }
-        $texte .= "<ul>";
+        ksort($array);
+        $array = array_reverse($array, true);
+
+        $texte = "";
+        foreach ($array as $annee => $inscriptions) {
+            usort($inscriptions, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getInstance()->getDebut(true) > $b->getInstance()->getDebut(true);});
+            $texte .= "<div>";
+            $texte .= "<h3>Formations pour l'année ".$annee."/" . ($annee+1)."</h3>";
+            $texte .= "<ul>";
+            foreach ($inscriptions as $inscription) {
+                $dureeSuivie = $inscription->getDureePresence();
+                $session = $inscription->getInstance();
+                $sessionEtat = $session->getEtat()->getCode();
+                if ($dureeSuivie != '0 heures ' and ($sessionEtat === SessionEtats::ETAT_CLOTURE_INSTANCE or $sessionEtat === SessionEtats::ETAT_ATTENTE_RETOURS)) {
+                    $libelle = $session->getFormation()->getLibelle();
+                    $periode = $session->getPeriode();
+                    $texte .= "<li>";
+                    $texte .= $libelle . " (" . $periode . ")<br/>";
+                    $texte .= $dureeSuivie . " suivies sur " . $session->getDuree() . " de formation";
+                    $texte .= "</li>";
+                }
+            }
+            $texte .= "</ul>";
+        }
 
         $vars = [
             'agent' => $agent,
@@ -153,6 +169,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->getMpdf()->SetMargins(0,0,50);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($corps);
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
