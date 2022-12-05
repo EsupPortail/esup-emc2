@@ -5,3 +5,4 @@ config/autoload/*local*
 composer.lock
 vendor
 !/public/vendor
+public/css/logos.css
