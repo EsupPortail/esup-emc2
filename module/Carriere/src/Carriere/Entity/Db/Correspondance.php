@@ -23,6 +23,10 @@ class Correspondance  {
     /** @var ArrayCollection (AgentGrade) */
     private $agentGrades;
     private ?CorrespondanceType $type = null;
+
+    private ?DateTime $dateOuverture = null;
+    private ?DateTime $dateFermeture = null;
+
     /**
      * @return int
      */
@@ -112,6 +116,32 @@ class Correspondance  {
     public function setType(?CorrespondanceType $type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDateOuverture(): ?DateTime
+    {
+        return $this->dateOuverture;
+    }
+
+    /**
+     * @param DateTime|null $dateOuverture
+     */
+    public function setDateOuverture(?DateTime $dateOuverture): void
+    {
+        $this->dateOuverture = $dateOuverture;
+    }
+
+    public function getDateFermeture(): ?DateTime
+    {
+        return $this->dateFermeture;
+    }
+
+    public function setDateFermeture(?DateTime $dateFermeture): void
+    {
+        $this->dateFermeture = $dateFermeture;
     }
 
     /**

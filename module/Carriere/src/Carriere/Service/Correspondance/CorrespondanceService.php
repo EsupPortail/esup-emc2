@@ -64,7 +64,7 @@ class CorrespondanceService {
         $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         $options = [];
         foreach($correspondances as $correspondance) {
-            $options[$correspondance->getId()] = $correspondance->getCategorie() . " - " . $correspondance->getLibelleLong();
+            $options[$correspondance->getId()] = (($correspondance->getType())?$correspondance->getType()->getLibelleCourt():""). " ". $correspondance->getLibelleCourt() . " - " . $correspondance->getLibelleLong();
         }
         return $options;
     }

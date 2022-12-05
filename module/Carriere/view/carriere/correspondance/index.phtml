@@ -8,6 +8,9 @@
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 
+$date = new DateTime();
+$correspondances = array_filter($correspondances, function (Correspondance $a) use ($date) { return $a->getDateFermeture() === null OR $a->getDateFermeture() > $date;});
+
 $canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
 
 $this->headTitle("Liste des correspondances");
