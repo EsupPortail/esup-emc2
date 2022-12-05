@@ -105,7 +105,7 @@ return [
                             'unicaen-utilisateur' =>
                             [
                                 'label' => 'Gestion des rôles et utilisateurs',
-                                'route' => 'utilisateur-preecog',
+                                'route' => 'unicaen-utilisateur',
                                 'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
                                 'order'    => 20000,
                                 'dropdown-header' => true,
@@ -119,7 +119,7 @@ return [
                                 'pages' => [
                                     'listing-utilisateur' => [
                                         'label' => 'Listing',
-                                        'route' => 'unicaen-utilisateur/listing',
+                                        'route' => 'unicaen-utilisateur/lister',
                                         'resource' => UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AFFICHER),
                                         'order'    => 20210,
                                     ],

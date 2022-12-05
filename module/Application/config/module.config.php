@@ -355,6 +355,7 @@ return [
             '997_' => 'css/highlight.css',
             '998_' => 'css/tooltip.css',
             '070_app' => 'css/app.css',
+            '099_logos' => 'css/logos.css',
         ],
     ],
 ];

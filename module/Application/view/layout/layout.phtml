@@ -66,16 +66,14 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
     <footer>
         <div>
             <?php $options = $this->navigation('navigation'); ?>
-            <a class="footer-logo-normandie-universite" target="_blank" href="http://normandie-univ.fr/">
-                <img src="/img/normandie-universite-logo.svg" alt="Logo Nomandie Université" class="footer-logo-normandie-universite" />
-            </a>
+            <div id="comue"></div>
+
             <div id="menu-footer">
                 <?php echo $navigationHelper->menuPiedDePage('navigation'); ?>
             </div>
             <img src="/img/republique-francaise-logo.svg" alt="Logo République française" class="footer-logo-republique-francaise" />
-            <a class="footer-logo-unicaen" target="_blank" href="http://www.unicaen.fr/">
-                <img src="/img/unicaen-logo-noir.svg" alt="Logo UniCaen" class="footer-logo-unicaen" />
-            </a>
+
+            <div id="etablissement"></div>
         </div>
     </footer>
 
