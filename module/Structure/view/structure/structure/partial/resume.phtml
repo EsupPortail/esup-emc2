@@ -93,7 +93,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Responsables
             <span class="badge"><?php echo count($responsables); ?></span>
-            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé"></span>
             <?php if ($canEditerResponsable) : ?>
                 <a
                     <?php /** @see \Structure\Controller\StructureController::ajouterResponsableAction() */ ?>
@@ -126,7 +126,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <h3>
             Gestionnaires
             <span class="badge"><?php echo count($gestionnaires); ?></span>
-            <span class="icon icon-synchroniser" title="En partie synchronisé depuis OCTOPUS"></span>
+            <span class="icon icon-synchroniser" title="En partie synchronisé"></span>
                 <?php if ($canEditerGestionnaire) : ?>
                     <a
                         <?php /** @see \Structure\Controller\StructureController::ajouterGestionnaireAction() */ ?>

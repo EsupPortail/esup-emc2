@@ -28,7 +28,7 @@ $nbAgent = count($agents);
         <br/>
         <div class=" alert alert-info">
             <span class="icon icon-synchroniser"></span>
-            Les agents sont synchronisés depuis Octopus.
+            Les agents sont synchronisés.
         </div>
     </div>
 </div>
@@ -59,7 +59,7 @@ $nbAgent = count($agents);
             <?php foreach ($agents as $agent) : ?>
                 <tr>
                     <td>
-                        <span class="badge">Octopus - <?php echo $agent->getId(); ?>
+                        <span class="badge"><?php echo $agent->getId(); ?>
                     </td>
                     <td>
                         <?php echo $agent->getDenomination(); ?>
