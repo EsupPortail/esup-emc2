@@ -55,6 +55,8 @@ $this->headTitle("Liste des correspondances");
                     data-bs-toggle="tooltip" data-bs-html="true"
                 >
                 <?php echo $correspondance->getLibelleLong(); ?>
+                #
+                <?php echo $this->correspondance($correspondance); ?>
                 </span>
             </td>
             <td>

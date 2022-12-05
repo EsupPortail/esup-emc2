@@ -11,6 +11,7 @@ use Carriere\Service\Correspondance\CorrespondanceService;
 use Carriere\Service\Correspondance\CorrespondanceServiceFactory;
 use Carriere\Service\CorrespondanceType\CorrespondanceTypeService;
 use Carriere\Service\CorrespondanceType\CorrespondanceTypeServiceFactory;
+use Carriere\View\Helper\CorrespondanceViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -146,6 +147,10 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
-    ]
-
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'correspondance' => CorrespondanceViewHelper::class
+        ],
+    ],
 ];

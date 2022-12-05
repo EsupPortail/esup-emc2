@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @see \Carriere\View\Helper\CorrespondanceViewHelper
+ * @var Correspondance|null $correspondance
+ * @var array $options
+ */
+
+use Carriere\Entity\Db\Correspondance;
+
+?>
+
+<?php if ($correspondance === null) : ?>
+    <span class="text-warning">
+        Aucune correspondance
+    </span>
+<?php else: ?>
+    <?php if ($correspondance->getType() === null) : ?>
+        <span class="text-warning">
+            Aucun type
+        </span>
+    <?php else : ?>
+        <span title="<?php echo $correspondance->getType()->getLibelleLong(); ?>">
+            <?php echo $correspondance->getType()->getLibelleCourt(); ?>
+        </span>
+    <?php endif; ?>
+    -
+    <span title="<?php echo $correspondance->getLibelleLong(); ?>">
+        <?php echo $correspondance->getCategorie(); ?>
+    </span>
+<?php endif; ?>
+

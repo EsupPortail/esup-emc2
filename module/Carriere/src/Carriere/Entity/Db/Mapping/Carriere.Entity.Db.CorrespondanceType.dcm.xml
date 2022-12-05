@@ -12,7 +12,7 @@
         <field name="dateOuverture" column="d_ouverture"    type="datetime"  />
         <field name="dateFermeture" column="d_fermeture"    type="datetime"  />
 
-<!--        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="bap"/>-->
+        <one-to-many field="correspondances" target-entity="Carriere\Entity\Db\Correspondance" mapped-by="type"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
