@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Carriere\Entity\Db\CorrespondanceType" table="carriere_correspondance_type">
+
+        <id name="id"               column="id"             type="integer">
+        </id>
+
+        <field name="code"          column="code"           type="string"       length="64"   />
+        <field name="libelleCourt"  column="libelle_court"  type="string"       length="256"   />
+        <field name="libelleLong"   column="libelle_long"   type="string"       length="1024"  />
+        <field name="description"   column="description"    type="string"       length="9999"  />
+        <field name="dateOuverture" column="d_ouverture"    type="datetime"  />
+        <field name="dateFermeture" column="d_fermeture"    type="datetime"  />
+
+<!--        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="bap"/>-->
+
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+
+    </entity>
+</doctrine-mapping>

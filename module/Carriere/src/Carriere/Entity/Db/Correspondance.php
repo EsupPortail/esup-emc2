@@ -2,6 +2,7 @@
 
 namespace Carriere\Entity\Db;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ class Correspondance  {
     private $histo;
     /** @var ArrayCollection (AgentGrade) */
     private $agentGrades;
-
+    private ?CorrespondanceType $type = null;
     /**
      * @return int
      */
@@ -103,6 +104,16 @@ class Correspondance  {
         return $this;
     }
 
+    public function getType(): ?CorrespondanceType
+    {
+        return $this->type;
+    }
+
+    public function setType(?CorrespondanceType $type): void
+    {
+        $this->type = $type;
+    }
+
     /**
      * @return DateTime
      */
@@ -147,6 +158,12 @@ class Correspondance  {
         $text .= "<br/>";
         $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
         return $text;
+    }
+
+    public function isHisto(?DateTime $date = null) : bool
+    {
+        if ($date === null) $date = new DateTime();
+        return ($this->histo !== null AND $date < $this->histo);
     }
 
 }

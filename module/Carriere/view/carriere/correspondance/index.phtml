@@ -14,7 +14,7 @@ $this->headTitle("Liste des correspondances");
 ?>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <h1 class="page-header">
             Liste des correspondances
             <span class="badge">
@@ -22,18 +22,26 @@ $this->headTitle("Liste des correspondances");
             </span>
         </h1>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="alert alert-info">
             <span class="icon icon-synchroniser"></span>
-            Synchoniser depuis Octopus
+            Données synchronisées
         </div>
     </div>
 </div>
+
+<a href="<?php echo $this->url('carriere/correspondance-type'); ?>"
+   class="btn btn-secondary"
+>
+    <span class="icon icon-lister"></span>
+    Accéder aux types de correspondance
+</a>
 
 <table class="datatable table table-condensed table-hover">
     <thead>
     <tr>
         <th style="width:70%;"> Libellé </th>
+        <th> Type </th>
         <th> #Agent/Grade </th>
         <th> Action </th>
     </tr>
@@ -48,6 +56,15 @@ $this->headTitle("Liste des correspondances");
                 >
                 <?php echo $correspondance->getLibelleLong(); ?>
                 </span>
+            </td>
+            <td>
+                <?php if ($correspondance->getType()) : ?>
+                    <span title="<?php echo $correspondance->getType()->getLibelleLong(); ?>">
+                        <?php echo $correspondance->getType()->getLibelleCourt(); ?>
+                    </span>
+                <?php else : ?>
+                    Aucun
+                <?php endif; ?>
             </td>
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
             <td>

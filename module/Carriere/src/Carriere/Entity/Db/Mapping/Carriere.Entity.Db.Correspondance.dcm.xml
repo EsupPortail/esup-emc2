@@ -9,6 +9,10 @@
         <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
         <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
 
+        <many-to-one target-entity="Carriere\Entity\Db\CorrespondanceType"  field="type">
+            <join-column name="type_id" referenced-column-name="id"/>
+        </many-to-one>
+
         <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="bap"/>
 
         <!-- DB IMPORT #############################  -->

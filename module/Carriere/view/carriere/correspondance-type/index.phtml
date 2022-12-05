@@ -1,0 +1,68 @@
+<?php
+
+use Carriere\Entity\Db\CorrespondanceType;
+use Carriere\Provider\Privilege\CorrespondancePrivileges;
+
+/**
+ * @see \Carriere\Controller\CorrespondanceTypeController::indexAction()
+ * @var CorrespondanceType[] $types
+ */
+
+$this->headTitle("Types de correspondance");
+
+
+$canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
+?>
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Types de correspondance
+        </h1>
+    </div>
+    <div class="col-md-3">
+        <div class="alert alert-info">
+            <span class="icon icon-synchroniser"></span>
+            Données synchronisées
+        </div>
+    </div>
+</div>
+
+<a href="<?php echo $this->url('correspondance'); ?>"
+   class="btn btn-secondary"
+>
+    <span class="icon icon-lister"></span>
+    Accéder aux correspondances
+</a>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Code </th>
+        <th> Libellé court </th>
+        <th> Libellé long </th>
+        <th> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($types as $type) : ?>
+        <tr>
+            <td>
+                <?php echo $type->getCode(); ?>
+                <?php if ($type->getDescription() !== null AND trim($type->getDescription()) !== '') : ?>
+                    <span class="icon icon-information" title="<?php echo $type->getDescription(); ?>"></span>
+                <?php endif; ?>
+            </td>
+            <td> <?php echo $type->getLibelleCourt(); ?> </td>
+            <td> <?php echo $type->getLibelleLong(); ?> </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a href="<?php echo $this->url('carriere/correspondance-type/afficher', ['type' => $type->getId()], [], true); ?>"
+                       class="ajax-modal">
+                            <span class="icon icon-voir"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

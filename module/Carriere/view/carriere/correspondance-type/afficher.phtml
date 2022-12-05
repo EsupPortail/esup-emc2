@@ -1,0 +1,50 @@
+<?php
+
+use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\CorrespondanceType;
+
+/**
+ * @see \Carriere\Controller\CorrespondanceTypeController::afficherAction()
+ * @var CorrespondanceType $type
+ * @var Correspondance[] $correspondances
+ */
+
+?>
+
+<h2> Informations </h2>
+
+<dl class="row">
+    <dt class="col-md-4"> Code </dt>
+    <dd class="col-md-8"> <?php echo $type->getCode(); ?> </dd>
+    <dt class="col-md-4"> Libellé court </dt>
+    <dd class="col-md-8"> <?php echo $type->getLibelleCourt(); ?> </dd>
+    <dt class="col-md-4"> Libellé long </dt>
+    <dd class="col-md-8"> <?php echo $type->getLibelleLong(); ?> </dd>
+    <dt class="col-md-4"> Description </dt>
+    <dd class="col-md-8"> <?php echo $type->getDescription()??"Aucune"; ?> </dd>
+    <dt class="col-md-4"> Date d'ouverture </dt>
+    <dd class="col-md-8"> <?php echo $type->getDateOuverture()?$type->getDateOuverture()->format('d/m/Y'):"Aucune"; ?> </dd>
+    <dt class="col-md-4"> Date de fermeture </dt>
+    <dd class="col-md-8"> <?php echo $type->getDateFermeture()?$type->getDateFermeture()->format('d/m/Y'):"Aucune"; ?> </dd>
+</dl>
+
+<h2> Correspondances </h2>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Code </th>
+            <th> Libellé court </th>
+            <th> Libellé long </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($correspondances as $correspondance) : ?>
+        <tr class="<?php if ($correspondance->isHisto()) echo " historise ";?>">
+            <td> <?php echo $correspondance->getCategorie() ;?></td>
+            <td> <?php echo $correspondance->getLibelleCourt() ;?></td>
+            <td> <?php echo $correspondance->getLibelleLong() ;?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

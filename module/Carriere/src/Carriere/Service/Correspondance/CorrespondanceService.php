@@ -3,6 +3,7 @@
 namespace Carriere\Service\Correspondance;
 
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\CorrespondanceType;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -94,14 +95,23 @@ class CorrespondanceService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Correspondance
-     */
-    public function getRequestedCorrespondance(AbstractActionController $controller, string $param = 'correspondance')
+    public function getRequestedCorrespondance(AbstractActionController $controller, string $param = 'correspondance') : ?Correspondance
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getCorrespondance($id);
+    }
+
+    /**
+     * @param CorrespondanceType|null $type
+     * @return Correspondance[]
+     */
+    public function getCorrespondancesByType(?CorrespondanceType $type) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('correspondance.type = :type')->setParameter('type', $type)
+            ->orderBy('correspondance.libelleCourt', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }
