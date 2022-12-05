@@ -392,7 +392,7 @@ trait FichePosteMacroTrait {
         if ($metier === null) return $texte;
         if ($metier->getCategorie())            $texte .= "Catégorie : " . $metier->getCategorie()->getCode() . "<br/>";
         if (true /**$metier->getNiveau()**/)    $texte .= "Corps : " . "Lien manquant" . "<br/>";
-        if (true /**$metier->getBap()**/)       $texte .= "BAP : " . "Lien manquant" . "<br/>";
+        if (true /**$metier->getBap()**/)       $texte .= "Correspondance : " . "Lien manquant" . "<br/>";
         return $texte;
     }
 

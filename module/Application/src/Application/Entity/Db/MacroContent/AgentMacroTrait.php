@@ -124,7 +124,12 @@ trait AgentMacroTrait
         foreach ($grades as $grade) {
 //            $texte .= "<li>";
             $grade_libelle = $grade->getCorps()->getLibelleLong();
-            $grade_bap = ($grade->getBap() !== null)?$grade->getBap()->getCategorie():"";
+            $correspondance = $grade->getBap();
+            if ($correspondance) {
+                $grade_bap = $correspondance->getType()->getLibelleCourt(). " " .$correspondance->getLibelleCourt();
+            } else {
+                $grade_bap = "";
+            }
             $texte .= $grade_libelle . " ". $grade_bap;
             $texte .= " (";
             if($grade->estFini()) {

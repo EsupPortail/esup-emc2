@@ -135,7 +135,7 @@ $canDetruirePPP     = $canAjouterPPP;
     <thead>
     <tr>
         <th> Agent </th>
-        <th> BAP </th>
+        <th> Correspondance </th>
         <th> Corps </th>
         <th> Période </th>
         <th> Compléments </th>
@@ -148,7 +148,13 @@ $canDetruirePPP     = $canAjouterPPP;
     <?php foreach ($accompagnements as $accompagnement) : ?>
         <tr <?php if ($accompagnement->estHistorise()) echo " class='historise' "; ?>>
             <td> <?php echo $accompagnement->getCible()->getDenomination(); ?> </td>
-            <td> <?php echo ($accompagnement->getBap())?$accompagnement->getBap()->getLibelleCourt():"Aucun"; ?> </td>
+            <td>
+                <?php if ($accompagnement->getBap()) : ?>
+                    <?php echo $this->correspondance($accompagnement->getBap()); ?>
+                <?php else : ?>
+                    Aucun
+                <?php endif; ?>
+            </td>>
             <td> <?php echo ($accompagnement->getCorps())?$accompagnement->getCorps()->getLibelleCourt():"Aucun"; ?> </td>
             <td>
                 <?php echo $accompagnement->getDateDebutToString(); ?>
