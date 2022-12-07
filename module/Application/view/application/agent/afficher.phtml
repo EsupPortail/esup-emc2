@@ -20,7 +20,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var Agent   $agent
  * @var EntretienProfessionnel[] $entretiens
  * @var Agent[]  $superieures
- * @var Agent[]  $responsables
  * @var Agent[]  $autorites
  * @var array $parcoursArray
  * @var FichePoste[] $fichespostes
@@ -140,7 +139,7 @@ if ($agent !== null) {
                 <?php echo $this->partial('partial/informations-generales',
                     ['agent' => $agent,
                         'affectations' => $affectations,
-                        'superieures' => $superieures, 'responsables' => $responsables, 'autorites' => $autorites,
+                        'superieures' => $superieures, 'autorites' => $autorites,
                         'statuts' => $statuts, 'echelon' => $echelon, 'grades' => $grades, 'quotite' => $quotite,
                         'canInfoSource' => $canInfoSource]); ?>
             </div>
