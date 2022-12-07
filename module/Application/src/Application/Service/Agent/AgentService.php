@@ -393,9 +393,16 @@ class AgentService {
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
-        if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent");
-
-        $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
+        $structure = null;
+        if (count($affectationsPrincipales) === 1) {
+            $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
+        } else {
+            foreach ($affectationsPrincipales as $affectation) {
+                $niveau2 = $affectation->getStructure()->getNiv2();
+                if ($structure === null OR $niveau2 === $structure) $structure = $niveau2;
+                else return []; //throw new LogicException("Différentes structures de niveau2 affectations principales pour l'agent");
+            }
+        }
         do {
             $responsablesAll = array_map(function (StructureResponsable $a) {
                 return $a->getAgent();
