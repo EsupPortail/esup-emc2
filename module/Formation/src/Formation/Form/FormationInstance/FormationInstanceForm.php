@@ -80,7 +80,7 @@ class FormationInstanceForm extends Form
                 'empty_option' => "Sélectionner un type d'inscription ...",
                 'value_options' => [
                     false => 'Non, les agents sont inscrits par les gestionnaires de formation',
-                    true => 'Oui, les agents peuvent s\'inscrire direcement dans l\'application',
+                    true => 'Oui, les agents peuvent s\'inscrire directement dans l\'application',
                 ],
             ],
             'attributes' => [
