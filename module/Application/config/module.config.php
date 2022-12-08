@@ -342,6 +342,7 @@ return [
             '150_' => 'js/tinymce/js/tinymce/tinymce.js',
             '151_' => 'js/form_fiche.js',
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
+            '020_app'         => '',
         ],
         'stylesheets' => [
             '050_bootstrap-theme' => '',
