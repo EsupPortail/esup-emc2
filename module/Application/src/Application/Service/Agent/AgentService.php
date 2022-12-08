@@ -417,7 +417,7 @@ class AgentService {
                 if (!empty($responsables)) return $responsables;
             }
 
-            $structure = $structure->getParent();
+            $structure = ($structure)?$structure->getParent():null;
         } while($structure !== null);
 
         return [];
