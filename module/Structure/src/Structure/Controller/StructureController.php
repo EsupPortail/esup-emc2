@@ -136,10 +136,7 @@ class StructureController extends AbstractActionController {
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
 //        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
-        $fichespostes_pdf = [];
-        foreach ($allAgents as $agent) {
-            $fichespostes_pdf[$agent->getId()] = $agent->getFichiersByCode("FICHE_POSTE");
-        }
+        $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
         //formations
         $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());

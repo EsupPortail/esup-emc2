@@ -12,6 +12,7 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\FormationElement;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
@@ -655,6 +656,29 @@ class AgentService {
 //            $result = array_filter($result, function(Agent $a) { return !empty($a->getAffectationsActifs()); });
 //        }
         return $result;
+    }
+
+    /** FICHE DE POSTE PDF */
+
+    /**
+     * @param Agent[]$agents
+     * @return Fichier[] :: [AgentId => Fichier]
+     */
+    public function getFichesPostesPdfByAgents(array $agents) : array
+    {
+        $ids = array_map(function (Agent $a) {return $a->getId(); }, $agents);
+
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->leftJoin('agent.fichiers', 'fichier')->addSelect('fichier')
+            ->leftJoin('fichier.nature', 'nature')->addSelect('nature')
+            ->andWhere('nature.code = :ficheposte')->setParameter('ficheposte', "FICHE_POSTE")
+            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids);
+
+        $result = $qb->getQuery()->getResult();
+
+        $fiches = [];
+        foreach ($result as $item) $fiches[$item->getId()] = $item->getFichiersByCode("FICHE_POSTE");
+        return $fiches;
     }
 
 }

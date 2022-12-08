@@ -1,0 +1,13 @@
+div#comue {
+    background-image: url('../img/normandie-universite-logo.svg');
+    height: 85px;
+    width: 146px;
+    margin-top: -20px;
+}
+
+div#etablissement {
+    background-image: url('../img/unicaen-logo-noir.svg');
+    height:85px;
+    width:160px;
+    margin-top: -20px;
+}
