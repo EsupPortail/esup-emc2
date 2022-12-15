@@ -47,15 +47,16 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <br/>
             </div>
             <div class="col-md-5">
-                <?php if ($inscription->getSource()->getCode() === HasSourceInterface::SOURCE_LAGAF) : ?>
+                <?php if ($inscription->getSource()->getCode() !== HasSourceInterface::SOURCE_EMC2) : ?>
                     <div class="alert alert-warning">
                         <span class="icon icon-information"></span>
-                        Formation gérée par LAGAF, pour obtenir votre attestion veuillez contacter
-                        <?php if ($mailcontact === null) : ?>
-                            la DRH
-                        <?php else : ?>
-                            <a href="mailto:<?php echo $mailcontact; ?>"><?php echo $mailcontact; ?></a>
-                        <?php endif; ?>
+                            Formation gérée par <?php echo $inscription->getSource()->getLibelle(); ?>, EMC2 ne peut pas vous fournir d'attestation.
+<!--                        Formation gérée par LAGAF, pour obtenir votre attestion veuillez contacter-->
+<!--                        --><?php //if ($mailcontact === null) : ?>
+<!--                            la DRH-->
+<!--                        --><?php //else : ?>
+<!--                            <a href="mailto:--><?php //echo $mailcontact; ?><!--">--><?php //echo $mailcontact; ?><!--</a>-->
+<!--                        --><?php //endif; ?>
                     </div>
                 <?php else : ?>
                     <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
