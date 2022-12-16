@@ -103,7 +103,7 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
             <?php if ($echelon and $echelon->getEchelon() !== 0) : ?>
                 <dt class="col-md-3"> Échelon</dt>
                 <dd class="col-md-9"> <?php echo $echelon->getEchelon(); ?> (date de passage
-                    : <?php echo $echelon->getDate()->format('d/m/Y'); ?>)
+                    : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>)
                 </dd>
             <?php endif; ?>
         </dl>

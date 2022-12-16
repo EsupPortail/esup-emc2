@@ -97,7 +97,7 @@ $this->headTitle("Vérification de l'installation");
     </div>
 
     <!-- PARAMETRE ---------------------------------------------------------------------------------------------------->
-    <?php $path = file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre'); ?>
+    <?php $path = $installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre'; ?>
     <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre')); ?>
     <div class="card bg-default ">
         <div class="card-header">

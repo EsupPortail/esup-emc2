@@ -15,77 +15,27 @@ use Structure\Entity\Db\Structure;
  * Données synchronisées depuis Octopus :
  * - pas de setter sur les données ainsi remontées
  */
-class AgentEchelon {
+class AgentEchelon implements HasPeriodeInterface {
     use DbImportableAwareTrait;
+    use HasPeriodeTrait;
 
-    /** @var int */
-    private $id;
-    /** @var Agent */
-    private $agent;
-    /** @var int */
-    private  $echelon;
-    /** @var DateTime */
-    private $date;
+    private ?int $id = -1;
+    private ?Agent $agent = null;
+    private ?int $echelon = null;
 
-    /**
-     * @return int|null
-     */
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Agent|null
-     */
     public function getAgent(): ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent $agent
-     * @return AgentEchelon
-     */
-    public function setAgent(Agent $agent): AgentEchelon
-    {
-        $this->agent = $agent;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getEchelon(): ?int
     {
         return $this->echelon;
     }
 
-    /**
-     * @param int $echelon
-     * @return AgentEchelon
-     */
-    public function setEchelon(int $echelon): AgentEchelon
-    {
-        $this->echelon = $echelon;
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getDate(): ?DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTime $date
-     * @return AgentEchelon
-     */
-    public function setDate(DateTime $date): AgentEchelon
-    {
-        $this->date = $date;
-        return $this;
-    }
 }

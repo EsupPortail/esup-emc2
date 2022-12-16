@@ -7,45 +7,27 @@ use Doctrine\ORM\QueryBuilder;
 
 trait HasPeriodeTrait {
 
-    /** @var DateTime|null */
-    private $dateDebut;
-    /** @var DateTime|null */
-    private $dateFin;
+    private ?DateTime $dateDebut = null;
+    private ?DateTime $dateFin = null;
 
-    /**
-     * @return DateTime|null
-     */
     public function getDateDebut() : ?DateTime
     {
         return $this->dateDebut;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return self
-     */
-    public function setDateDebut(?DateTime $date) : self
+    public function setDateDebut(?DateTime $date) : void
     {
         $this->dateDebut = $date;
-        return $this;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getDateFin() : ?DateTime
     {
         return $this->dateFin;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return self
-     */
-    public function setDateFin(?DateTime $date) : self
+    public function setDateFin(?DateTime $date) : void
     {
         $this->dateFin = $date;
-        return $this;
     }
 
     /**

@@ -416,18 +416,21 @@ class Agent implements
         $echelons = $this->echelons->toArray();
         $grades = array_filter($echelons, function (AgentEchelon $ag) { return !$ag->isDeleted();});
         usort($grades, function (AgentEchelon $a, AgentEchelon $b) {
-            return $a->getDate() > $b->getDate();
+            return $a->getDateDebut() > $b->getDateDebut();
         });
         return $grades;
     }
 
-    /**
-     * @return AgentEchelon|null
-     */
-    public function getEchelonActif() : ?AgentEchelon
+    public function getEchelonActif(?DateTime $date = null) : ?AgentEchelon
     {
+        if ($date === null) $date = new DateTime();
         $echelons = $this->getEchelons();
-        $echelon = (!empty($echelons))?$echelons[0]:null;
+        $echelons = array_filter($echelons, function (AgentEchelon $a) use ($date) {return $a->estEnCours($date);});
+
+        $echelon = null;
+        foreach ($echelons as $echelon_) {
+            if ($echelon === null OR $echelon_->getDateDebut() > $echelon->getDateDebut()) $echelon = $echelon_;
+        }
         return $echelon;
     }
 

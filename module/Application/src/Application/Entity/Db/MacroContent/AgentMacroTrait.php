@@ -343,7 +343,7 @@ trait AgentMacroTrait
         $echelon = $agent->getEchelonActif();
 
         if ($echelon) {
-            return $echelon->getDate()->format('d/m/Y');
+            return $echelon->getDateDebut()->format('d/m/Y');
         }
         return "";
     }
