@@ -32,7 +32,7 @@ class VerificationController extends AbstractActionController {
 
         return new ViewModel([
             'modules' => $modules,
-            'installation_path' => $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH),
+            'installation_path' => $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH)->getValeur(),
             'templateService' => $this->getTemplateService(),
             'privilegeService' => $this->getPrivilegeService(),
             'etatService' => $this->getEtatService(),
