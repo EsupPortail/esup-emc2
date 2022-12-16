@@ -379,6 +379,23 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
+    /** Vérification lien Utilisateur <=> Agent **/
+
+    public function verifierLienAction() : ViewModel
+    {
+        $user = $this->getUserService()->getRequestedUser($this);
+        if ($user === null) $user = $this->getUserService()->getConnectedUser();
+
+        $agentByUser = $this->getAgentService()->getAgentByUser($user);
+        $agentByLogin = $this->getAgentService()->getAgentByLogin($user->getUsername());
+
+        return new ViewModel([
+            'utilisateur' => $user,
+            'agentByUser' => $agentByUser,
+            'agentByLogin' => $agentByLogin,
+        ]);
+    }
+
     /** Recherche d'agent  ********************************************************************************************/
 
     public function rechercherLargeAction() : JsonModel

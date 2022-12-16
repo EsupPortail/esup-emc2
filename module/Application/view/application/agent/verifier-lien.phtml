@@ -1,0 +1,80 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use UnicaenUtilisateur\Entity\Db\User;
+
+/** @see \Application\Controller\AgentController::verifierLienAction()
+ * @var User|null $utilisateur
+ * @var Agent|null $agentByLogin
+ * @var Agent|null $agentByUser
+ */
+
+?>
+
+<h1 class="page-header">
+    Vérification du lien
+</h1>
+
+<div class="card card-default">
+    <div class="card-header">
+        Information sur l'utilisateur·trice
+    </div>
+    <div class="card-body">
+        <?php if ($utilisateur === null) : ?>
+            Aucun·e utilisateur·trice
+        <?php else : ?>
+            <dl class="row">
+                <dt class="col-md-4">Id </dt>
+                <dd class="col-md-8"><?php echo $utilisateur->getId(); ?></dd>
+                <dt class="col-md-4">Username </dt>
+                <dd class="col-md-8"><?php echo $utilisateur->getUsername(); ?></dd>
+                <dt class="col-md-4">DisplayName </dt>
+                <dd class="col-md-8"><?php echo $utilisateur->getDisplayName(); ?></dd>
+                <dt class="col-md-4">Email </dt>
+                <dd class="col-md-8"><?php echo $utilisateur->getEmail(); ?></dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<div class="card card-default">
+    <div class="card-header">
+        Agent (récupérer by User [exploité pour la récupération des dossiers])
+    </div>
+    <div class="card-body">
+        <?php if ($agentByUser === null) : ?>
+            Aucun agent
+        <?php else : ?>
+            <dl class="row">
+                <dt class="col-md-4">Id </dt>
+                <dd class="col-md-8"><?php echo $agentByUser->getId(); ?></dd>
+                <dt class="col-md-4">Dénomination </dt>
+                <dd class="col-md-8"><?php echo $agentByUser->getDenomination(); ?></dd>
+                <dt class="col-md-4">Email </dt>
+                <dd class="col-md-8"><?php echo $agentByUser->getEmail(); ?></dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="card card-default">
+    <div class="card-header">
+        Agent (récupéré by login [pas exploiter pour la récupération des dossiers])
+    </div>
+    <div class="card-body">
+        <?php if ($agentByLogin === null) : ?>
+            Aucun agent
+        <?php else : ?>
+            <dl class="row">
+                <dt class="col-md-4">Id </dt>
+                <dd class="col-md-8"><?php echo $agentByLogin->getId(); ?></dd>
+                <dt class="col-md-4">Dénomination </dt>
+                <dd class="col-md-8"><?php echo $agentByLogin->getDenomination(); ?></dd>
+                <dt class="col-md-4">Email </dt>
+                <dd class="col-md-8"><?php echo $agentByLogin->getEmail(); ?></dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+

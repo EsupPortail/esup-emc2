@@ -681,4 +681,15 @@ class AgentService {
         return $fiches;
     }
 
+    public function getAgentByLogin(string $login) : ?Agent
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent.login = :login')->setParameter('login', $login);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs Agent partagent le même login [".$login."]",0, $e);
+        }
+        return $result;
+    }
 }
