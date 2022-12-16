@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\VerificationController::indexAction()
  * @var string[] $modules
+ * @var string $installation_path
  *
  * @var TemplateService $templateService
  * @var PrivilegeService $privilegeService
@@ -58,7 +59,7 @@ $this->headTitle("Vérification de l'installation");
     <h2> Vérification du module <em><?php echo $module; ?></em></h2>
 
     <!-- ROLE --------------------------------------------------------------------------------------------------------->
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Role')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Role')); ?>
     <div class="card bg-default ">
         <div class="card-header">
             Role
@@ -68,7 +69,7 @@ $this->headTitle("Vérification de l'installation");
             <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Role</code> !</span>
             <?php else : ?>
             <?php
-            $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Role'), ['.', '..']);
+            $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Role'), ['.', '..']);
             foreach ($filenames as $filename) {
                 $res = explode('.', $filename);
                 $path = $module ."\\Provider\\Role\\".$res[0];
@@ -96,17 +97,18 @@ $this->headTitle("Vérification de l'installation");
     </div>
 
     <!-- PARAMETRE ---------------------------------------------------------------------------------------------------->
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Parametre')); ?>
+    <?php $path = file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre'); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre')); ?>
     <div class="card bg-default ">
         <div class="card-header">
-            Parametres
+            Parametres [Path:<code><?php echo $path; ?></code>]
         </div>
         <div class="card-body">
             <?php if (!$exist) : ?>
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Parametre</code> !</span>
             <?php else : ?>
                 <?php
-                $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Parametre'), ['.', '..']);
+                $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Parametre'), ['.', '..']);
 
                 foreach ($filenames as $filename) {
                     $res = explode('.', $filename);
@@ -149,7 +151,7 @@ $this->headTitle("Vérification de l'installation");
     </div>
 
     <!-- TEMPLATE ----------------------------------------------------------------------------------------------------->
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Template')); ?>
     <div class="card bg-default ">
         <div class="card-header">
             Templates : Mail, Pdf, Texte
@@ -159,7 +161,7 @@ $this->headTitle("Vérification de l'installation");
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Template</code> !</span>
             <?php else : ?>
             <?php
-        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Template'), ['.', '..']);
+        $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Template'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
             $path = $module ."\\Provider\\Template\\".$res[0];
@@ -185,7 +187,7 @@ $this->headTitle("Vérification de l'installation");
         </div>
     </div>
 
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Etat')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Etat')); ?>
     <div class="card bg-default">
         <div class="card-header">
             États et types d'état
@@ -195,7 +197,7 @@ $this->headTitle("Vérification de l'installation");
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Etat</code> !</span>
             <?php else : ?>
             <?php
-            $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Etat'), ['.', '..']);
+            $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Etat'), ['.', '..']);
 
             foreach ($filenames as $filename) {
                 $res = explode('.', $filename);
@@ -238,7 +240,7 @@ $this->headTitle("Vérification de l'installation");
         </div>
     </div>
 
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Validation')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Validation')); ?>
     <div class="card bg-default">
         <div class="card-header">
             Type de validation
@@ -248,7 +250,7 @@ $this->headTitle("Vérification de l'installation");
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Validation</code> !</span>
             <?php else : ?>
                 <?php
-                $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Validation'), ['.', '..']);
+                $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Validation'), ['.', '..']);
 
                 foreach ($filenames as $filename) {
                     $res = explode('.', $filename);
@@ -276,7 +278,7 @@ $this->headTitle("Vérification de l'installation");
         </div>
     </div>
 
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Event')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Event')); ?>
     <div class="card bg-default">
         <div class="card-header">
             Événements
@@ -286,7 +288,7 @@ $this->headTitle("Vérification de l'installation");
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Event</code> !</span>
             <?php else : ?>
             <?php
-        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Event'), ['.', '..']);
+        $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Event'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
             $path = $module ."\\Provider\\Event\\".$res[0];
@@ -312,7 +314,7 @@ $this->headTitle("Vérification de l'installation");
         </div>
     </div>
 
-    <?php $exist =  (file_exists('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege')); ?>
+    <?php $exist =  (file_exists($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Privilege')); ?>
     <div class="card bg-default">
         <div class="card-header">
             Privilèges
@@ -322,7 +324,7 @@ $this->headTitle("Vérification de l'installation");
                 <span class="text-danger"><span class="icon icon-information"></span> Aucun répertoire <code>Privilege</code> !</span>
             <?php else : ?>
             <?php
-        $filenames = array_diff(scandir('/var/www/html/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
+        $filenames = array_diff(scandir($installation_path . '/module/' . $module . '/src/' . $module . '/Provider/Privilege'), ['.', '..']);
         foreach ($filenames as $filename) {
             $res = explode('.', $filename);
             $path = $module ."\\Provider\\Privilege\\".$res[0];

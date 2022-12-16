@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Provider\Parametre\GlobalParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
@@ -31,6 +32,7 @@ class VerificationController extends AbstractActionController {
 
         return new ViewModel([
             'modules' => $modules,
+            'installation_path' => $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH),
             'templateService' => $this->getTemplateService(),
             'privilegeService' => $this->getPrivilegeService(),
             'etatService' => $this->getEtatService(),
