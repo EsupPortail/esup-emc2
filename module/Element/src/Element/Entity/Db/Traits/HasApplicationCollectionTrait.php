@@ -2,25 +2,20 @@
 
 namespace Element\Entity\Db\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
-use Doctrine\Common\Collections\ArrayCollection;
 
 trait HasApplicationCollectionTrait
 {
 
-    /** @var ArrayCollection */
-    private $applications;
+    private Collection $applications;
 
-    public function getApplicationCollection()
+    public function getApplicationCollection() : Collection
     {
         return $this->applications;
     }
 
-    /**
-     * @param bool $avecHisto
-     * @return ApplicationElement[]
-     */
     public function getApplicationListe(bool $avecHisto = false): array
     {
         $applications = [];
@@ -31,7 +26,7 @@ trait HasApplicationCollectionTrait
         return $applications;
     }
 
-    public function getApplicationDictionnaire()
+    public function getApplicationDictionnaire() : array
     {
         $dictionnaire = [];
         foreach ($this->applications as $applicationElement) {
@@ -44,10 +39,6 @@ trait HasApplicationCollectionTrait
         return $dictionnaire;
     }
 
-    /**
-     * @param Application $application
-     * @return ApplicationElement|null
-     */
     public function hasApplication(Application $application): ?ApplicationElement
     {
         /** @var ApplicationElement $applicationElement */
@@ -57,12 +48,12 @@ trait HasApplicationCollectionTrait
         return null;
     }
 
-    public function addApplicationElement(ApplicationElement $element)
+    public function addApplicationElement(ApplicationElement $element) : void
     {
         $this->applications->add($element);
     }
 
-    public function removeApplicationElement(ApplicationElement $element)
+    public function removeApplicationElement(ApplicationElement $element) : void
     {
         $this->applications->removeElement($element);
     }

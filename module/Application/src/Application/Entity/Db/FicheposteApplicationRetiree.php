@@ -2,61 +2,39 @@
 
 namespace Application\Entity\Db;
 
+use Element\Entity\Db\Application;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class FicheposteApplicationRetiree implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var FichePoste */
-    private $fichePoste;
-    /** @var Application */
-    private $application;
+    private ?int $id = null;
+    private ?FichePoste $fichePoste = null;
+    private ?Application $application = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FichePoste
-     */
-    public function getFichePoste()
+    public function getFichePoste() : ?FichePoste
     {
         return $this->fichePoste;
     }
 
-    /**
-     * @param FichePoste $fichePoste
-     * @return FicheposteApplicationRetiree
-     */
-    public function setFichePoste($fichePoste)
+    public function setFichePoste(?FichePoste $fichePoste) : void
     {
         $this->fichePoste = $fichePoste;
-        return $this;
     }
 
-
-    /**
-     * @return Application
-     */
-    public function getApplication()
+    public function getApplication() : ?Application
     {
         return $this->application;
     }
 
-    /**
-     * @param Application $application
-     * @return FicheposteApplicationRetiree
-     */
-    public function setApplication($application)
+    public function setApplication(?Application $application) : void
     {
         $this->application = $application;
-        return $this;
     }
 }

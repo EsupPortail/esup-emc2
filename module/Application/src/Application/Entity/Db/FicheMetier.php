@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
@@ -24,13 +25,11 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
-    /** @var int */
     private ?int $id = -1;
     private ?Metier $metier = null;
     private ?bool $hasExpertise = false;
 
-    /** @var ArrayCollection */
-    private $activites;
+    private Collection $activites;
 
     public function __construct()
     {
