@@ -16,7 +16,7 @@ use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormFactory;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeHydrator;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeHydratorFactory;
-use Carriere\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\Niveau\NiveauServiceFactory;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
@@ -34,14 +34,46 @@ return [
                     'controller' => NiveauController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
+                    ],
+                    'privileges' => [
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'supprimer',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_AFFICHER,
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_SUPPRIMER,
                     ],
                 ],
             ],

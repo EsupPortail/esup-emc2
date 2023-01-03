@@ -111,19 +111,24 @@ class NiveauService {
     /**
      * @param string $champs
      * @param string $ordre
+     * @param bool $avecHisto
      * @return Niveau[]
      */
-    public function getNiveaux(string $champs = 'niveau', string $ordre = 'ASC') : array
+    public function getNiveaux(string $champs = 'niveau', string $ordre = 'ASC', bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('niveau.' . $champs, $ordre);
+
+        if ($avecHisto === false) {
+            $qb = $qb->andWhere('niveau.histoDestruction IS NULL');
+        }
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getNiveauxAsOptions(string $champs = 'niveau', string $ordre = 'ASC') : array
+    public function getNiveauxAsOptions(string $champs = 'niveau', string $ordre = 'ASC', bool $avecHisto = false) : array
     {
-        $niveaux = $this->getNiveaux($champs, $ordre);
+        $niveaux = $this->getNiveaux($champs, $ordre, $avecHisto);
         $options = [];
         foreach ($niveaux as $niveau) {
             $options[$niveau->getId()] = "" . $niveau->getEtiquette() . " - " . $niveau->getLibelle();
@@ -144,7 +149,7 @@ class NiveauService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Niveau partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs Niveau partagent le même id [".$id."]",0,$e);
         }
         return $result;
     }

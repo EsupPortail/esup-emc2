@@ -5,6 +5,7 @@ namespace Carriere\Controller;
 use Carriere\Entity\Db\Niveau;
 use Carriere\Form\Niveau\NiveauFormAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -14,13 +15,13 @@ class NiveauController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $niveaux = $this->getNiveauService()->getNiveaux();
+        $niveaux = $this->getNiveauService()->getNiveaux('niveau', 'ASC', true);
         return new ViewModel([
             'niveaux' => $niveaux,
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $niveau = new Niveau();
 
@@ -45,7 +46,7 @@ class NiveauController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $niveau = $this->getNiveauService()->getRequestedNiveau($this);
 
@@ -70,7 +71,7 @@ class NiveauController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $niveau = $this->getNiveauService()->getRequestedNiveau($this);
         $retour = $this->params()->fromQuery('retour');
@@ -81,7 +82,7 @@ class NiveauController extends AbstractActionController {
         return $this->redirect()->toRoute('niveau');
     }
 
-    public function restaurerAction()
+    public function restaurerAction(): Response
     {
         $niveau = $this->getNiveauService()->getRequestedNiveau($this);
         $retour = $this->params()->fromQuery('retour');
@@ -92,7 +93,7 @@ class NiveauController extends AbstractActionController {
         return $this->redirect()->toRoute('niveau');
     }
 
-    public function supprimerAction()
+    public function supprimerAction(): ViewModel
     {
         $niveau = $this->getNiveauService()->getRequestedNiveau($this);
 

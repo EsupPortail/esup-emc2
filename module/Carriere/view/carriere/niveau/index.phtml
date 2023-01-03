@@ -1,6 +1,7 @@
 <?php
 
 use Carriere\Entity\Db\Niveau;
+use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
 
 /**
  * @see \Carriere\Controller\NiveauController::indexAction()
@@ -9,10 +10,10 @@ use Carriere\Entity\Db\Niveau;
 
 $this->headTitle('Index des niveaux');
 
-$canAjouterNiveau = true;
-$canModifierNiveau = true;
-$canHistoriserNiveau = true;
-$canSupprimerNiveau = true;
+$canAjouterNiveau    = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_AJOUTER));
+$canModifierNiveau   = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_MODIFIER));
+$canHistoriserNiveau = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_HISTORISER));
+$canSupprimerNiveau  = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_SUPPRIMER));
 
 ?>
 
@@ -24,8 +25,8 @@ $canSupprimerNiveau = true;
     </div>
     <div class="pull-right">
         <?php if ($canAjouterNiveau) : ?>
-            <?php /** @see \Element\Controller\NiveauController::ajouterAction() */ ?>
-            <a href="<?php echo $this->url('element/niveau/ajouter', [], [], true); ?>"
+            <?php /** @see Carriere\Controller\NiveauController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('niveau/ajouter', [], [], true); ?>"
                class="ajax-modal btn btn-primary" data-event="modification"
             >
                 <span class="icon icon-ajouter"></span>
@@ -35,7 +36,7 @@ $canSupprimerNiveau = true;
     </div>
 </div>
 
-<table class="table table-condensed">
+<table class="table table-condensed table-hover">
     <thead>
         <tr>
             <th> Niveau </th>
@@ -46,7 +47,7 @@ $canSupprimerNiveau = true;
     </thead>
     <tbody>
         <?php foreach ($niveaux as $niveau) : ?>
-            <tr>
+            <tr class=" <?php if ($niveau->estHistorise()) echo " historise "; ?>">
                 <td> <?php echo $niveau->getNiveau(); ?> </td>
                 <td> <?php echo $niveau->getEtiquette(); ?> </td>
                 <td>
@@ -57,10 +58,10 @@ $canSupprimerNiveau = true;
                         ></span>
                     <?php endif; ?>
                 </td>
-                <td>
+                <td class="action">
                     <?php if ($canModifierNiveau) : ?>
-                        <?php /** @see \Element\Controller\NiveauController::modifierAction() */?>
-                        <a href="<?php echo $this->url('element/niveau/modifier', ['maitrise' => $niveau->getId()], [], true); ?>"
+                        <?php /** @see \Carriere\Controller\NiveauController::modifierAction() */?>
+                        <a href="<?php echo $this->url('niveau/modifier', ['niveau' => $niveau->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                            data-toogle="tooltip" data-bs-html="true" title="Modifier le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
@@ -68,22 +69,22 @@ $canSupprimerNiveau = true;
                     <?php endif; ?>
                     <?php if ($canHistoriserNiveau) : ?>
                         <?php if($niveau->estNonHistorise()) : ?>
-                            <?php /** @see \Element\Controller\NiveauController::historiserAction() */?>
-                            <a href="<?php echo $this->url('element/niveau/historiser', ['maitrise' => $niveau->getId()], [], true); ?>"
+                            <?php /** @see \Carriere\Controller\NiveauController::historiserAction() */?>
+                            <a href="<?php echo $this->url('niveau/historiser', ['niveau' => $niveau->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Historiser le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see \Element\Controller\NiveauController::restaurerAction() */?>
-                            <a href="<?php echo $this->url('element/niveau/restaurer', ['maitrise' => $niveau->getId()], [], true); ?>"
+                            <a href="<?php echo $this->url('niveau/restaurer', ['niveau' => $niveau->getId()], [], true); ?>"
                                data-toogle="tooltip" data-bs-html="true" title="Rstaurer le niveau <?php echo $niveau->getEtiquette(); ?>"
                             >
                                 <span class="icon icon-restaurer"></span></a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if ($canSupprimerNiveau) : ?>
-                        <?php /** @see \Element\Controller\NiveauController::supprimerAction() */?>
-                        <a href="<?php echo $this->url('element/niveau/supprimer', ['maitrise' => $niveau->getId()], [], true); ?>"
+                        <?php /** @see \Carriere\Controller\NiveauController::supprimerAction() */?>
+                        <a href="<?php echo $this->url('niveau/supprimer', ['niveau' => $niveau->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                            data-toogle="tooltip" data-bs-html="true" title="Supprimer le niveau <?php echo $niveau->getEtiquette(); ?>"
                         >
