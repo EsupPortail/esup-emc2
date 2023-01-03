@@ -3,107 +3,55 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Interfaces\HasDescriptionInterface;
+use Application\Entity\Db\Traits\HasDescriptionTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class NiveauEnveloppe implements HistoriqueAwareInterface {
+class NiveauEnveloppe implements HistoriqueAwareInterface, HasDescriptionInterface {
     use HistoriqueAwareTrait;
+    use HasDescriptionTrait;
 
-    /** @var int */
-    private $id;
-    /** @var Niveau */
-    private $borneInferieure;
-    /** @var Niveau */
-    private $borneSuperieure;
-    /** @var Niveau|null */
-    private $valeurRecommandee;
-    /** @var string|null */
-    private $description;
+    private ?int $id = null;
+    private ?Niveau $borneInferieure = null;
+    private ?Niveau $borneSuperieure = null;
+    private ?niveau $valeurRecommandee = null;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return Niveau|null
-     */
     public function getBorneInferieure(): ?Niveau
     {
         return $this->borneInferieure;
     }
 
-    /**
-     * @param Niveau $borneInferieure
-     * @return NiveauEnveloppe
-     */
-    public function setBorneInferieure(Niveau $borneInferieure): NiveauEnveloppe
+    public function setBorneInferieure(Niveau $borneInferieure): void
     {
         $this->borneInferieure = $borneInferieure;
-        return $this;
     }
 
-    /**
-     * @return Niveau|null
-     */
     public function getBorneSuperieure(): ?Niveau
     {
         return $this->borneSuperieure;
     }
 
-    /**
-     * @param Niveau $borneSuperieure
-     * @return NiveauEnveloppe
-     */
-    public function setBorneSuperieure(Niveau $borneSuperieure): NiveauEnveloppe
+    public function setBorneSuperieure(Niveau $borneSuperieure): void
     {
         $this->borneSuperieure = $borneSuperieure;
-        return $this;
     }
 
-    /**
-     * @return Niveau|null
-     */
     public function getValeurRecommandee(): ?Niveau
     {
         return $this->valeurRecommandee;
     }
 
-    /**
-     * @param Niveau|null $valeurRecommandee
-     * @return NiveauEnveloppe
-     */
-    public function setValeurRecommandee(?Niveau $valeurRecommandee): NiveauEnveloppe
+    public function setValeurRecommandee(?Niveau $valeurRecommandee): void
     {
         $this->valeurRecommandee = $valeurRecommandee;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     * @return NiveauEnveloppe
-     */
-    public function setDescription(?string $description): NiveauEnveloppe
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param Agent|null $agent
-     * @return int|null
-     */
     public function getDeltaWithAgent(?Agent $agent = null) : ?int
     {
         if ($agent === null) { return null; }
@@ -116,11 +64,6 @@ class NiveauEnveloppe implements HistoriqueAwareInterface {
         return max (($niveauSup - $niveauxAgent->getBorneSuperieure()->getNiveau()), ($niveauxAgent->getBorneInferieure()->getNiveau() - $niveauInf));
     }
 
-    /**
-     * @param NiveauEnveloppe $niveauA
-     * @param NiveauEnveloppe $niveauB
-     * @return bool
-     */
     static public function isCompatible(NiveauEnveloppe $niveauA, NiveauEnveloppe $niveauB) : bool
     {
         if ($niveauA->getBorneInferieure()->getNiveau() < $niveauB->getBorneSuperieure()->getNiveau()) return false;

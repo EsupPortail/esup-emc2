@@ -9,7 +9,6 @@ use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -40,9 +39,6 @@ class CorpsController extends AbstractActionController {
             'corps' => $corps,
         ]);
     }
-
-    /** GESTION DES NIVEAUX *******************************************************************************************/
-
 
     public function modifierNiveauxAction() : ViewModel
     {

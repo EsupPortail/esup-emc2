@@ -156,8 +156,7 @@ class StructureController extends AbstractActionController {
             'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
             'fichespostes_pdf' => $fichespostes_pdf,
             'fichePosteEtats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
-//            'fichesRecrutements' => $fichesRecrutements,
-//            'profils' => $profils,
+
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
@@ -176,6 +175,10 @@ class StructureController extends AbstractActionController {
             'demandesValidees' => $demandesValidees,
             'inscriptionsNonValidees' => $inscriptionsNonValidees,
             'inscriptionsValidees' => $inscriptionsValidees,
+
+            // - Fiches de recrutement - //
+//            'fichesRecrutements' => $fichesRecrutements,
+//            'profils' => $profils,
         ]);
     }
 

@@ -3,67 +3,51 @@
 namespace Carriere\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Metier\Entity\Db\Metier;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Categorie implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $code;
-    /** @var string */
-    private $libelle;
-    /** @var ArrayCollection (Metier) */
-    private $metiers;
+    private ?int $id = null;
+    private ?string $code = null;
+    private ?string $libelle = null;
+    private Collection $metiers;
 
-    /**
-     * @return int
-     */
+    public function __construct()
+    {
+        $this->metiers = new ArrayCollection();
+    }
+
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCode() : ?string
     {
         return $this->code;
     }
 
-    /**
-     * @param string $code
-     * @return Categorie
-     */
-    public function setCode(string $code) : Categorie
+    public function setCode(string $code) : void
     {
         $this->code = $code;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string $libelle
-     * @return Categorie
-     */
-    public function setLibelle(string $libelle) : Categorie
+    public function setLibelle(string $libelle) : void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
     /**
-     * @return array
+     * @return Metier[]
      */
     public function getMetiers(): array
     {

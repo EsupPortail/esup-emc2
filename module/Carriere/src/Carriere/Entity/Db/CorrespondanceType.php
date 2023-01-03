@@ -5,6 +5,7 @@ namespace Carriere\Entity\Db;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class CorrespondanceType  {
@@ -19,6 +20,11 @@ class CorrespondanceType  {
     private ?DateTime $dateFermeture = null;
 
     private Collection $correspondances;
+
+    public function __construct()
+    {
+        $this->correspondances = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

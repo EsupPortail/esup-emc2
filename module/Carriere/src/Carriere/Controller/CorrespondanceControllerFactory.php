@@ -4,10 +4,18 @@ namespace Carriere\Controller;
 
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
 class CorrespondanceControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return CorrespondanceController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : CorrespondanceController
     {
         /**

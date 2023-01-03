@@ -7,6 +7,8 @@ use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Corps\CorpsService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
 class CorpsControllerFactory {
@@ -14,6 +16,8 @@ class CorpsControllerFactory {
     /**
      * @param ContainerInterface $container
      * @return CorpsController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : CorpsController
     {
@@ -33,7 +37,6 @@ class CorpsControllerFactory {
          */
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
 
-        /** @var CorpsController $controller */
         $controller = new CorpsController();
         $controller->setCategorieService($categorieService);
         $controller->setCorpsService($corpsService);

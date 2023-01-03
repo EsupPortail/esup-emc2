@@ -2,123 +2,86 @@
 
 namespace Carriere\Entity\Db;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
-class Grade {
+class Grade  {
     use DbImportableAwareTrait;
 
-    /** @var string */
-    private $id;
-    /** @var string */
-    private $libelleCourt;
-    /** @var string */
-    private $libelleLong;
-    /** @var string */
-    private $code;
-    /** @var DateTime */
-    private $histo;
-    /** @var ArrayCollection (AgentGrade) */
-    private $agentGrades;
+    private ?int $id = null;
+    private ?string $libelleCourt = null;
+    private ?string $libelleLong = null;
+    private ?string $code = null;
+    private ?DateTime $histo = null;
+    private Collection $agentGrades;
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function __construct()
+    {
+        $this->agentGrades = new ArrayCollection();
+    }
+
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelleCourt()
+    public function getLibelleCourt() : ?string
     {
         return $this->libelleCourt;
     }
 
-    /**
-     * @param string $libelleCourt
-     * @return Grade
-     */
-    public function setLibelleCourt($libelleCourt)
+    public function setLibelleCourt(?string $libelleCourt) : void
     {
         $this->libelleCourt = $libelleCourt;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelleLong()
+    public function getLibelleLong() : ?string
     {
         return $this->libelleLong;
     }
 
-    /**
-     * @param string $libelleLong
-     * @return Grade
-     */
-    public function setLibelleLong($libelleLong)
+    public function setLibelleLong(?string $libelleLong) : void
     {
         $this->libelleLong = $libelleLong;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCode()
+    public function getCode() : ?string
     {
         return $this->code;
     }
 
-    /**
-     * @param string $code
-     * @return Grade
-     */
-    public function setCode($code)
+    public function setCode(?string $code) : void
     {
         $this->code = $code;
-        return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getHisto()
+    public function getHisto() : ?DateTime
     {
         return $this->histo;
     }
 
-    /**
-     * @param DateTime $histo
-     * @return Grade
-     */
-    public function setHisto($histo)
+    public function setHisto(?DateTime $histo) : void
     {
         $this->histo = $histo;
-        return $this;
     }
 
     /**
      * @return AgentGrade[]
      */
-    public function getAgentGrades()
+    public function getAgentGrades() : array
     {
         return $this->agentGrades->toArray();
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return $this->getLibelleCourt();
     }
 
-    /**
-     * @return string
-     */
-    public function generateTooltip()
+    public function generateTooltip() : string
     {
         $text  = "";
         $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";

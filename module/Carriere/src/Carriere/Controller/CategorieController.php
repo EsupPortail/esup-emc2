@@ -110,7 +110,6 @@ class CategorieController extends AbstractActionController
     {
         $categorie = $this->getCategorieService()->getRequestedCategorie($this);
 
-        /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();

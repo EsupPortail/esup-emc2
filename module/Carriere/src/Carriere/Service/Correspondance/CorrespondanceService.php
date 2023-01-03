@@ -77,7 +77,7 @@ class CorrespondanceService {
     public function getCorrespondance(int $id, bool $avecAgent = true)
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('correspondance.source_id = :id')
+            ->andWhere('correspondance.id = :id')
             ->setParameter('id', $id)
         ;
 
