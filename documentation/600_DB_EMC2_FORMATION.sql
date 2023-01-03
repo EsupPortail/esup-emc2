@@ -137,7 +137,7 @@ create table formation_instance_inscrit
             references unicaen_autoform_formulaire_instance
             on delete set null,
     source_id                 bigint,
-    id_source                 integer,
+    id_source                 varchar(100),
     etat_id                   integer
         constraint formation_instance_inscrit_unicaen_etat_etat_id_fk
             references unicaen_etat_etat
