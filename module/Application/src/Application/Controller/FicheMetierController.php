@@ -81,9 +81,9 @@ class FicheMetierController extends AbstractActionController
     public function indexAction() : ViewModel
     {
         $fromQueries  = $this->params()->fromQuery();
-        $etatId       = $fromQueries['etat'];
-        $domaineId    = $fromQueries['domaine'];
-        $expertise    = $fromQueries['expertise'];
+        $etatId       = $fromQueries['etat'] ?? null;
+        $domaineId    = $fromQueries['domaine'] ?? null;
+        $expertise    = $fromQueries['expertise'] ?? null;
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
         $type = $this->getEtatTypeService()->getEtatTypeByCode(FicheMetierEtats::TYPE);

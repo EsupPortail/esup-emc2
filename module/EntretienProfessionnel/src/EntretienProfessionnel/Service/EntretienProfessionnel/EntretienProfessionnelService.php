@@ -565,12 +565,14 @@ class EntretienProfessionnelService {
     }
 
     /**
-     * @param Campagne $campagne
+     * @param Campagne|null $campagne
      * @param array $agents
      * @return EntretienProfessionnel[] @desc [agentId => entretien]
      */
-    public function getEntretienProfessionnelByCampagneAndAgents(Campagne $campagne, array $agents) : array
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents) : array
     {
+        if ($campagne === null) return [];
+
         $qb = $this->createQueryBuilder()
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)

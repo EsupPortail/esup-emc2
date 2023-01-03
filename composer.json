@@ -11,7 +11,7 @@
   "require": {
     "unicaen/app": "^5",
     "unicaen/authentification": "^5",
-    "unicaen/utilisateur": "^5",
+    "unicaen/utilisateur": "5.0.3",
     "unicaen/privilege": "^5",
     "unicaen/renderer": "^5",
     "unicaen/pdf": "^5",
