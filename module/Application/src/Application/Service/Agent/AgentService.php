@@ -235,8 +235,8 @@ class AgentService {
             ->andWhere('affectation.deleted_on IS NULL')
             //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
-            ->andWhere('statut.dateDebut <= :today')
+//            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
+//            ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
 //            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
@@ -247,8 +247,8 @@ class AgentService {
             ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
             ->addSelect('gcorrespondance')->leftjoin('grade.bap', 'gcorrespondance')
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
-            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-            ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
+//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
+//            ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
             ->andWhere('grade.deleted_on IS NULL')
             //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')

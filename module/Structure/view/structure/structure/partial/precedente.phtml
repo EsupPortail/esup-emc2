@@ -41,6 +41,11 @@ use Structure\Entity\Db\Structure;
 <h2> Entretiens professionnels des agents actuellements dans la structure </h2>
 
 <?php
+    usort($entretiens, function (EntretienProfessionnel $a, EntretienProfessionnel $b) {
+       $aaa = $a->getAgent()->getNomUsuel() . " " . $a->getAgent()->getPrenom();
+       $bbb = $b->getAgent()->getNomUsuel() . " " . $b->getAgent()->getPrenom();
+       return $aaa > $bbb;
+    });
     echo $this->entretienProfessionnelArray($entretiens, [
         'affichages' => ['annee' => false, 'structure' => true, 'lieu' => false, 'width' => '8rem'],
         'droits' => ['modifier' => false, 'sursis' => false, 'historiser' => false, 'supprimer' => false],
