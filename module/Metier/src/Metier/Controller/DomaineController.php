@@ -26,7 +26,9 @@ class DomaineController extends AbstractActionController {
         $historise = $this->params()->fromQuery('historise');
 
         $domaines = $this->getDomaineService()->getDomaines();
-        if ($famille_ !== null) $domaines = array_filter($domaines, function (Domaine $m) use ($famille_) { return $m->getFamille() === $famille_; });
+        if ($famille_ !== null) $domaines = array_filter($domaines, function (Domaine $m) use ($famille_) {
+            return in_array($famille_, $m->getFamilles());
+        });
         if ($type !== null and $type !== ' ') $domaines = array_filter($domaines, function (Domaine $m) use ($type) { return $m->getTypeFonction() === $type; });
         if ($historise !== null and $historise !== ' ') $domaines = array_filter($domaines, function (Domaine $m) use ($historise) { if ($historise === '1') return $m->estHistorise(); else return $m->estNonHistorise(); });
 

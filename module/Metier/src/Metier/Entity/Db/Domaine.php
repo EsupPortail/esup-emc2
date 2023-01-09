@@ -3,122 +3,81 @@
 namespace Metier\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Domaine implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $typeFonction;
-    /** @var FamilleProfessionnelle */
-    private $famille;
-    /** @var ArrayCollection */
-    private $metiers;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private ?string $typeFonction = null;
+
+    private Collection $familles;
+    private Collection $metiers;
 
     public function __construct()
     {
         $this->metiers = new ArrayCollection();
+        $this->familles = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string $libelle
-     * @return Domaine
-     */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle) : void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeFonction()
+    public function getTypeFonction() : ?string
     {
         return $this->typeFonction;
     }
 
-    /**
-     * @param string $typeFonction
-     * @return Domaine
-     */
-    public function setTypeFonction($typeFonction)
+    public function setTypeFonction(?string $typeFonction) : void
     {
         $this->typeFonction = $typeFonction;
-        return $this;
     }
 
     /**
-     * @return FamilleProfessionnelle
+     * @return FamilleProfessionnelle[]
      */
-    public function getFamille()
+    public function getFamilles() : array
     {
-        return $this->famille;
+        $familles =  $this->familles->toArray();
+        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() > $b->getLibelle();});
+        return $familles;
     }
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return Domaine
-     */
-    public function setFamille($famille)
+
+    public function clearFamilles() : void
     {
-        $this->famille = $famille;
-        return $this;
+        $this->familles->clear();
+    }
+
+    public function addFamille(FamilleProfessionnelle $famille) : void
+    {
+        $this->familles->add($famille);
     }
 
     /**
      * @return Metier[]
      */
-    public function getMetiers()
+    public function getMetiers() : array
     {
         return $this->metiers->toArray();
     }
 
-    /**
-     * @param Metier $metier
-     * @return Domaine
-     */
-    public function addMetier($metier)
-    {
-        $this->metiers->add($metier);
-        return $this;
-    }
-
-    /**
-     * @param Metier $metier
-     * @return Domaine
-     */
-    public function removeMetier($metier)
-    {
-        $this->metiers->removeElement($metier);
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->getLibelle();
     }

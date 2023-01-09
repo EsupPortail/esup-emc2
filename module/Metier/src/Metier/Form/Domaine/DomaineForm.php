@@ -53,6 +53,7 @@ class DomaineForm extends Form {
             ],
             'attributes' => [
                 'id' => 'famille',
+                'multiple'          => 'multiple',
                 'class'             => 'bootstrap-selectpicker show-tick',
                 'data-live-search'  => 'true',
             ],

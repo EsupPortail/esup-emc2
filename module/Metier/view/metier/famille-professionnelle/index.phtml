@@ -43,7 +43,7 @@ $canEffacer        = $this->isAllowed(FamilleprofessionnellePrivileges::getResou
     <thead>
     <tr>
         <th> Libelle </th>
-        <th> #domaines </th>
+        <th> Domaines </th>
         <th style="min-width: 10rem;"> Action </th>
     </tr>
     </thead>
@@ -52,7 +52,13 @@ $canEffacer        = $this->isAllowed(FamilleprofessionnellePrivileges::getResou
         <tr <?php if ($famille->estHistorise()) echo ' class="historise" '; ?>>
             <td> <?php echo $famille->getLibelle(); ?> </td>
             <td>
-                <?php echo count($famille->getDomaines()); ?>
+                <ul>
+                    <?php foreach ($famille->getDomaines() as $domaine_) : ?>
+                        <li>
+                            <?php echo $domaine_->getLibelle(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </td>
             <td>
                 <?php if ($canEditer) : ?>

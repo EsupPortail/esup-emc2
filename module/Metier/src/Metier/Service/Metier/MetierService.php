@@ -6,6 +6,7 @@ use Carriere\Service\Niveau\NiveauService;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\ORMException;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -101,7 +102,7 @@ class MetierService {
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
             ->addSelect('domaine')->leftJoin('metier.domaines','domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille','famille')
+            ->addSelect('famille')->leftJoin('domaine.familles','famille')
             ->addSelect('fichemetier')->leftJoin('metier.fichesMetiers', 'fichemetier')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
@@ -214,8 +215,9 @@ class MetierService {
             if (empty($domaines)) $domaines[] = null;
 
             foreach ($domaines as $domaine) {
-                $famille = ($domaine) ? $domaine->getFamille() : null;
                 $fonction = ($domaine) ? $domaine->getTypeFonction() : null;
+                $familles = ($domaine) ? $domaine->getFamilles() : [];
+                $fTexte = implode(', ', array_map(function (FamilleProfessionnelle $a) { return $a->getLibelle(); }, $familles));
 
                 $entry = [
                     'metier' => $metier->__toString(),
@@ -224,7 +226,7 @@ class MetierService {
                     'références' => implode("<br/>", $references),
                     'domaine' => ($domaine) ? $domaine->__toString() : "---",
                     'fonction' => ($fonction) ?: "---",
-                    'famille' => ($famille) ? $famille->__toString() : "---",
+                    'famille' => ($fTexte) ? $fTexte : "---",
                     'nbFiche' => count($metier->getFichesMetiers()),
                 ];
                 $results[] = $entry;

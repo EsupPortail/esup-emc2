@@ -28,9 +28,6 @@ create table metier_domaine
         constraint domaine_pk
         primary key,
     libelle               varchar(256)            not null,
-    famille_id            integer
-        constraint domaine_famille_professionnelle_id_fk
-        references metier_familleprofessionnelle,
     type_fonction         varchar(256),
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
@@ -159,6 +156,17 @@ create table metier_reference
 create unique index metier_reference_id_uindex
     on metier_reference (id);
 
+create table metier_domaine_famille
+(
+    domaine_id integer not null
+        constraint metier_domaine_famille_metier_domaine_id_fk
+            references metier_domaine,
+    famille_id integer not null
+        constraint metier_domaine_famille_metier_familleprofessionnelle_id_fk
+            references metier_familleprofessionnelle,
+    constraint metier_domaine_famille_pk
+        primary key (domaine_id, famille_id)
+);
 
 ----------------------------------------------------------------------------------------
 -- PRIVILEGE ---------------------------------------------------------------------------

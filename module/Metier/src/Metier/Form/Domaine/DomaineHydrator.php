@@ -3,6 +3,7 @@
 namespace Metier\Form\Domaine;
 
 use Metier\Entity\Db\Domaine;
+use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
@@ -15,9 +16,10 @@ class DomaineHydrator implements HydratorInterface {
      */
     public function extract($object)  : array
     {
+        $familles_id = array_map(function (FamilleProfessionnelle $a) { return $a->getId();} , $object->getFamilles());
         $data = [
             'libelle' => $object->getLibelle(),
-            'famille' => ($object->getFamille())?$object->getFamille()->getId():null,
+            'famille' => $familles_id,
             'fonction' => $object->getTypeFonction(),
         ];
         return $data;
@@ -30,12 +32,14 @@ class DomaineHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, $object) : Domaine
     {
-        $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($data['famille']);
+        $object->clearFamilles();
+        foreach ($data['famille'] as $id) {
+            $famille = $this->getFamilleProfessionnelleService()->getFamilleProfessionnelle($id);
+            if ($famille) $object->addFamille($famille);
+        }
 
         $object->setLibelle($data['libelle']);
         $object->setTypeFonction($data['fonction']);
-        $object->setFamille($famille);
-
 
         return $object;
     }

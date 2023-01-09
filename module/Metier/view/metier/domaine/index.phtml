@@ -67,7 +67,15 @@ $this->headTitle('Liste des domaines')
             <td>
                 <?php echo $this->typefonction($domaine); ?>
             </td>
-            <td> <?php echo $domaine->getFamille(); ?> </td>
+            <td>
+                <ul>
+                <?php foreach ($domaine->getFamilles() as $famille_) :  ?>
+                    <li>
+                        <?php echo $famille_->getLibelle(); ?>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            </td>
             <td>
                 <?php echo count($domaine->getMetiers()); ?>
             </td>

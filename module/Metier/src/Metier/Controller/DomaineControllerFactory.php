@@ -6,14 +6,18 @@ use Metier\Form\Domaine\DomaineForm;
 use Metier\Service\Domaine\DomaineService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class DomaineControllerFactory {
 
     /**
      * @param ContainerInterface $container
      * @return DomaineController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : DomaineController
     {
         /**
          * @var DomaineService $domaineService

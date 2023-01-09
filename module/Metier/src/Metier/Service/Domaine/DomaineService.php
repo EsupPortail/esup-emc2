@@ -97,7 +97,7 @@ class DomaineService {
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
-            ->addSelect('famille')->leftJoin('domaine.famille', 'famille')
+            ->addSelect('famille')->leftJoin('domaine.familles', 'famille')
             ->addSelect('metier')->leftJoin('domaine.metiers', 'metier')
         ;
         return $qb;

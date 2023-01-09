@@ -249,7 +249,16 @@ class Metier implements HistoriqueAwareInterface {
         /** @var Domaine $domaine */
         $texte .= "<ul>";
         foreach ($this->domaines as $domaine) {
-            $texte .= "<li>" . $domaine->getLibelle() . " / " . $domaine->getFamille()->getLibelle() . "</li>";
+            $texte .= "<li>";
+            $texte .= $domaine->getLibelle();
+            $texte .= "<ul>";
+            foreach ($domaine->getFamilles() as $famille) {
+                $texte .= "<li>";
+                $texte .= $famille->getLibelle();
+                $texte .= "</li>";
+            }
+            $texte .= "</ul>";
+            $texte .= "</li>";
         }
         $texte .= "</ul>";
         return $texte;
