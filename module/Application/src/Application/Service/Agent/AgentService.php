@@ -200,7 +200,7 @@ class AgentService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Agent liés au même User [".$user->getId()."]", $e);
+            throw new RuntimeException("Plusieurs Agent liés au même User [Id:".$user->getId()." Username:".$user->getUsername()."]", $e);
         }
         if ($result !== null) return $result;
 

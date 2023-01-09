@@ -388,6 +388,13 @@ class AgentController extends AbstractActionController
 
         $agentByUser = $this->getAgentService()->getAgentByUser($user);
         $agentByLogin = $this->getAgentService()->getAgentByLogin($user->getUsername());
+        if ($agentByUser === null AND $agentByLogin === null) {
+            throw new RuntimeException(
+            "
+                Aucun agent de trouver depuis l'utilisateur·trice connecté·e
+                [id:".$user->getId()." username:".$user->getUsername()."] 
+            ",0);
+        }
 
         return new ViewModel([
             'utilisateur' => $user,
