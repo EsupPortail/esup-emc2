@@ -43,8 +43,8 @@ $modules = [
     'UnicaenEvenement',
     'UnicaenAide',
     'UnicaenAlerte',
+    'UnicaenIndicateur',
 
-    'Indicateur',
     'EntretienProfessionnel',
     'Carriere',
     'Metier',

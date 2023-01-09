@@ -25,7 +25,8 @@
     "unicaen/aide": "dev-master",
     "ext-json": "*",
     "unicaen/db-import": "dev-utilisateur",
-    "unicaen/alerte": "^1.1"
+    "unicaen/alerte": "^1.1",
+    "unicaen/indicateur": "^0.0.4"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"
