@@ -134,7 +134,7 @@ class FicheMetierService {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.famille', 'famille')
+            ->addSelect('famille')->join('domaine.familles', 'famille')
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
             ->addSelect('etype')->join('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
