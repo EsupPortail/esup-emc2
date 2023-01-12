@@ -29,12 +29,12 @@ if (isset($options["mode"])) $mode = $options["mode"];
     <?php endif; ?>
 
     <?php if ($specificite->getRelationsInternes()) : ?>
-        <h3> Relations internes à l'unicaen </h3>
+        <h3> Relations internes à l'université </h3>
         <?php echo $specificite->getRelationsInternes(); ?>
     <?php endif; ?>
 
     <?php if ($specificite->getRelationsExternes()) : ?>
-        <h3> Relations externes à l'unicaen </h3>
+        <h3> Relations externes à l'université </h3>
         <?php echo $specificite->getRelationsExternes(); ?>
     <?php endif; ?>
 

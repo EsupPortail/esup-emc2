@@ -33,9 +33,23 @@ class LdapIndividu implements RechercheIndividuResultatInterface {
         return $this->people->getId();
     }
     
-    public function getUsername()
+    public function getUsername(string $attribut = "supannAliasLogin") : ?string
+    {
+        switch ($attribut) {
+            case 'supannAliasLogin' : return $this->getSupannAliasLogin();
+            case 'uid' : return $this->getUid();
+        }
+        return null;
+    }
+
+    public function getSupannAliasLogin()
     {
         return $this->people->get('supannAliasLogin');
+    }
+
+    public function getUid()
+    {
+        return $this->people->get('uid');
     }
 
     public function getDisplayname()

@@ -42,7 +42,7 @@ class SpecificitePosteForm extends Form {
             'name' => 'relations_internes',
             'type' => 'textarea',
             'options' => [
-                'label' => 'Relations internes à l\'unicaen : ',
+                'label' => 'Relations internes à l\'université : ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -56,7 +56,7 @@ class SpecificitePosteForm extends Form {
             'name' => 'relations_externes',
             'type' => 'textarea',
             'options' => [
-                'label' => 'Relations externes à l\'unicaen ',
+                'label' => 'Relations externes à l\'université ',
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],

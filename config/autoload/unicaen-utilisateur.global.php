@@ -69,8 +69,8 @@ return [
     'unicaen-utilisateur' => [
         'recherche-individu' => [
             'app'       => UserService::class,
-//            'ldap'      => LdapService::class,
-            'octopus'   => OctopusService::class,
+            'ldap'      => LdapService::class,
+//            'octopus'   => OctopusService::class,
         ],
         'identity-provider' => [
             IdentityProvider::class,
