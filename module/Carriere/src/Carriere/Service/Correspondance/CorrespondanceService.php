@@ -36,7 +36,8 @@ class CorrespondanceService {
      * @param bool $avecAgent
      * @return Correspondance[]
      */
-    public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true) {
+    public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true) : array
+    {
         $qb = $this->createQueryBuilder()
             ->orderBy('correspondance.' . $champ, $ordre)
         ;
@@ -46,6 +47,7 @@ class CorrespondanceService {
                 ->addSelect('agent')->join('agentGrade.agent','agent')
                 ->andWhere('agent.deleted_on IS NULL')
                 ->andWhere('agentGrade.deleted_on IS NULL')
+
             ;
         }
 

@@ -4,6 +4,9 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Formation\Controller\FormationController;
+use Formation\Controller\IndexController;
+use Formation\Controller\IndexControllerFactory;
 use Formation\Event\Convocation\ConvocationEvent;
 use Formation\Event\Convocation\ConvocationEventFactory;
 use Formation\Event\DemandeRetour\DemandeRetourEvent;
@@ -21,12 +24,36 @@ use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
 use Formation\Service\Url\UrlServiceFactory;
+use Laminas\Console\Console;
+use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
+
+
+switch(getenv('APPLICATION_ENV')) {
+    case 'development':
+        $hostname = 'mes-formations.n302z-dsi008.png.unicaen.fr:8443';
+        break;
+    case 'test':
+        $hostname = 'mes-formations-pp.unicaen.fr';
+        break;
+    case 'production':
+    default:
+        $hostname = 'mes-formations.unicaen.fr';
+        break;
+}
+
 
 return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -54,6 +81,36 @@ return [
         ],
     ],
 
+
+    'router' => [
+        'routes' => [
+            'mes-formations' => [
+                'type' => 'Hostname',
+                'options' => [
+                    'route' => ':hostname',
+                    'constraints' => [
+                        'hostname' => 'mes-formations(-pp)?(.n302z-dsi008)?.unicaen.fr',
+                    ],
+                    'defaults' => [
+                        'hostname' => !Console::isConsole() ? $hostname : '',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'home' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/',
+                            'defaults' => [
+                                'controller' => IndexController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'navigation'      => [
         'default' => [
@@ -91,6 +148,7 @@ return [
     ],
     'controllers'     => [
         'factories' => [
+            IndexController::class => IndexControllerFactory::class,
         ]
     ],
     'form_elements' => [
