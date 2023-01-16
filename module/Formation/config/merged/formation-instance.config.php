@@ -124,25 +124,25 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'formation' => [
-//            'home' => [
-//                'pages' => [
-//                    'ressource' => [
-//                        'pages' => [
-//                            'session_' => [
-//                                'label'    => 'Session en cours',
-//                                'route'    => 'formation-instance',
-//                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
-//                                'order'    => 330,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'pages' => [
+                            'session_' => [
+                                'label'    => 'Session en cours',
+                                'route'    => 'formation-instance',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
+                                'order'    => 330,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

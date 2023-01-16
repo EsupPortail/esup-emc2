@@ -58,6 +58,16 @@ body {
     padding-top: 0;
 }
 
+body.test {
+    background-image: url('../img/test.png');
+    background-repeat: repeat-y;
+}
+
+body.development {
+    background-image: url('../img/development.png');
+    background-repeat: repeat-y;
+}
+
 /** NAVBAR --------------------------------------------------------------------------------------------------------- **/
 
 header {

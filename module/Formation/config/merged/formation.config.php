@@ -6,6 +6,7 @@ use Formation\Assertion\FormationInstanceInscritAssertion;
 use Formation\Assertion\FormationInstanceInscritAssertionFactory;
 use Formation\Controller\FormationController;
 use Formation\Controller\FormationControllerFactory;
+use Formation\Controller\IndexController;
 use Formation\Form\Formation\FormationForm;
 use Formation\Form\Formation\FormationFormFactory;
 use Formation\Form\Formation\FormationHydrator;
@@ -117,25 +118,22 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'formation' => [
-//            'home' => [
-//                'pages' => [
-//                    'ressource' => [
-//                        'pages' => [
-//                            'formation_' => [
-//                                'label'    => 'Actions de formation',
-//                                'route'    => 'formation',
-//                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index') ,
-//                                'order'    => 310,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'order' => 1000,
+                        'label' => 'Gestion des formations',
+                        'title' => "Gestion des formations",
+                        'route' => 'gestion',
+                        'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
+                        'dropdown-header' => true,
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router'          => [
         'routes' => [

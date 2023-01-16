@@ -2,9 +2,10 @@
 
 namespace Formation\Controller;
 
+use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class IndexController extends AbstractController {
+class IndexController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {

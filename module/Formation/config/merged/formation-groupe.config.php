@@ -81,25 +81,25 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'formation' => [
-//            'home' => [
-//                'pages' => [
-//                    'ressource' => [
-//                        'pages' => [
-//                            'groupe_' => [
-//                                'label'    => 'Thèmes de formation',
-//                                'route'    => 'formation-groupe',
-//                                'resource' => PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
-//                                'order'    => 320,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'pages' => [
+                            'groupe_' => [
+                                'label'    => 'Thèmes de formation',
+                                'route'    => 'formation-groupe',
+                                'resource' => PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
+                                'order'    => 320,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router' => [
         'routes' => [

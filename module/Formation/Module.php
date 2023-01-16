@@ -2,6 +2,9 @@
 
 namespace Formation;
 
+use Formation\Controller\AbstractController;
+use Laminas\Loader\StandardAutoloader;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ArrayUtils;
@@ -12,10 +15,20 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $application = $e->getApplication();
+        $eventManager = $application->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
+        $sharedEvents = $eventManager->getSharedManager();
+        $sharedEvents->attach(AbstractActionController::class, 'dispatch', function($e) {
+            /** @var $e MvcEvent */
+            $controller = $e->getTarget();
+            $hostname = $controller->getRequest()->getUri()->getHost();
+            if(preg_match('/mes-formations.*/', $hostname)) {
+                $controller->layout('layout/layout-formation');
+            }
+        }, 100);
     }
 
     public function getConfig()
@@ -31,14 +44,27 @@ class Module
         return ConfigFactory::fromFiles($configFiles);
     }
 
-    public function getAutoloaderConfig()
+//    public function getViewHelperConfig() {
+//        return [
+//            'factories' => [
+//                'itemsInNavigation' => function($helpers) {
+//                    $navigation = $helpers->get('Application')->getServiceManager()->get('Laminas\Navigation\Formation');
+//                    return new ItemsInNavigation($navigation);
+//                },
+//
+//            ]
+//        ];
+//    }
+
+    public function getAutoloaderConfig(): array
     {
-        return array(
-            'Laminas\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+        return [
+            StandardAutoloader::class => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
+
 }

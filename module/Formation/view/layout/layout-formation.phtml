@@ -45,8 +45,8 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
 
                 <?php echo $navigationHelper
                     ->menu()
-                    ->setUlClass('nav navbar-nav')
-                    ->setPartial('layout/navigation.phtml');
+                    ->setUlClass('navbar-nav me-auto')
+                    ->setPartial('layout/navigation-formation.phtml');
                 ?>
 
                 <div id="connexion" class="navbar-text text-end">

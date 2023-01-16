@@ -1,22 +1,20 @@
 <?php
-/* @var $container Laminas\Navigation\Navigation */
-// On récupère le container en-dessous du 'home'
+// Pointeur sur la première page du conteneur
+$this->container->rewind();
+// On récupère le conteneur en-dessous du 'home'
 $container = $this->container->getChildren();
 ?>
-<ul class="<?php echo $this->navigation($container)->menu()->getUlClass(); ?>">
+<ul class="<?php echo $this->navigation()->menu()->getUlClass(); ?>">
     <?php foreach ($container as $page): ?>
         <?php if (!$this->navigation()->accept($page)) continue; ?>
         <?php /* @var $page Laminas\Navigation\Page\Mvc */ ?>
         <?php $hasChildren = $page->hasPages() ?>
         <?php if (!$hasChildren): ?>
             <li<?php if ($page->isActive()) echo ' class="active"' ?>>
-                <a
-                    class="nav-header"
-                    href="<?php echo $page->getHref() ?>"
+                <a class="nav-header" href="<?php echo $page->getHref() ?>"
                     <?php if ($page->getTarget() != ""): ?>
                         target="<?php echo $page->getTarget(); ?>"
-                    <?php endif; ?>
-                >
+                    <?php endif; ?>>
                     <?php if ($page->get("icon") !== ""): ?>
                         <span class="<?php echo $page->get("icon"); ?>"></span>
                     <?php endif; ?>
@@ -42,7 +40,7 @@ $container = $this->container->getChildren();
                             </span>
                         <?php endif; ?>
                         <?php echo $this->escapeHtml($this->translate($page->getLabel(), $this->navigation($container)->getTranslatorTextDomain())); ?>
-                        <b class="caret"></b>
+                        <!--                        <b class="caret"></b>-->
                     </a>
                     <ul class="dropdown-menu">
                         <?php foreach ($page->getPages() as $child): ?>

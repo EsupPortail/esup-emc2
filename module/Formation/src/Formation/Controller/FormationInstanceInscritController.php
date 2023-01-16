@@ -211,31 +211,39 @@ class FormationInstanceInscritController extends AbstractActionController
         ]);
     }
 
-    public function listeFormationsInstancesAction() : ViewModel
+    /** Retourne la liste des formations suivis et passé */
+    public function formationsAction() : ViewModel
     {
-        $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
-        //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+
+        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
+        $mail = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::MAIL_DRH_FORMATION);
+
+        return new ViewModel([
+            'agent' => $agent,
+            'formations' => $formations,
+            'mailcontact' => ($mail)?$mail->getValeur():null,
+        ]);
+    }
+
+    /** Retourne la liste des inscriptions en cours */
+    public function inscriptionsAction() : ViewModel
+    {
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
 
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
-        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
-
         $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode('PARCOURS_ENTREE_TEXTE', []);
-        $mail = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::MAIL_DRH_FORMATION);
         return new ViewModel([
-            'instances' => $instances,
-            'inscriptions' => $inscriptions,
-            'formations' => $formations,
             'agent' => $agent,
-            'texteParcours' => $rendu->getCorps(),
+
+            'inscriptions' => $inscriptions,
             'demandes' => $demandesValidees,
-            'mailcontact' => ($mail)?$mail->getValeur():null,
         ]);
     }
 

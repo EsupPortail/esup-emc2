@@ -43,10 +43,12 @@ return [
                 [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
-                        'liste-formations-instances',
                         'inscription-formation',
                         'inscription',
                         'desinscription',
+
+                        'formations',
+                        'inscriptions',
                     ],
                     'roles' => [
                         'Agent',
@@ -75,54 +77,80 @@ return [
             ],
         ],
     ],
-//    'navigation' => [
-//        'formation' => [
-//            'home' => [
-//                'pages' => [
-//                    'formations' => [
-//                        'order' => 1000,
-//                        'label' => 'Formations',
-//                        'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
-//                        'route' => 'liste-formations-instances',
-//                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
-//                        'pages' => [
-//                            [
-//                                'order' => 200,
-//                                'label' => 'Plan de formation '. $annee,
-//                                'route' => 'plan-formation',
-//                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                            [
-//                                'order' => 405,
-//                                'label' => "S'inscrire à une formation",
-//                                'route' => 'inscription-formation',
-//                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                            [
-//                                'order' => 405,
-//                                'label' => 'Mes formations',
-//                                'route' => 'liste-formations-instances',
-//                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                            [
-//                                'order' => 410,
-//                                'label' => 'Mon projet personnel',
-//                                'route' => 'projet-personnel',
-//                                'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation' => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    [
+                        'order' => 100,
+                        'label' => "Plan de formation",
+                        'route' => 'plan-formation',
+                        'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                    ],
+                    [
+                        'order' => 200,
+                        'label' => "M'inscrire",
+                        'route' => 'inscription-formation',
+                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
+                    ],
+                    [
+                        'order' => 300,
+                        'label' => 'Mes formations',
+                        'title' => 'Mes formations choucroute',
+                        'route' => 'inscriptions',
+                        'resources' => [
+                            PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscriptions'),
+                            PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'formations'),
+                        ],
+                        'dropdown-header' => true,
+                        'pages' => [
+                            [
+                                'order' => 310,
+                                'label' => 'Mes inscriptions en cours',
+                                'route' => 'inscriptions',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscriptions'),
+                            ],
+                            [
+                                'order' => 320,
+                                'label' => 'Mes formations réalisées',
+                                'route' => 'formations',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'formations'),
+                            ],
+                        ],
+                    ],
+                    [
+                        'order' => 400,
+                        'label' => 'Mon projet personnel',
+                        'route' => 'projet-personnel',
+                        'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router'          => [
         'routes' => [
+            'formations' => [
+                'type'  => Segment::class,
+                'options' => [
+                    'route'    => '/mes-formations[/:agent]',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'formations',
+                    ],
+                ],
+            ],
+            'inscriptions' => [
+                'type'  => Segment::class,
+                'options' => [
+                    'route'    => '/mes-inscriptions[/:agent]',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'inscriptions',
+                    ],
+                ],
+            ],
             'inscription-formation' => [
                 'type'  => Literal::class,
                 'options' => [
@@ -130,16 +158,6 @@ return [
                     'defaults' => [
                         'controller' => FormationInstanceInscritController::class,
                         'action'     => 'inscription-formation',
-                    ],
-                ],
-            ],
-            'liste-formations-instances' => [
-                'type'  => Literal::class,
-                'options' => [
-                    'route'    => '/liste-formations-instances',
-                    'defaults' => [
-                        'controller' => FormationInstanceInscritController::class,
-                        'action'     => 'liste-formations-instances',
                     ],
                 ],
             ],
