@@ -1,0 +1,16 @@
+:root {
+ --header-background-mes-formations : #1b415e;
+}
+
+html#mes-formations nav {
+ background: var(--header-background-mes-formations);
+}
+
+.text-mesformations {
+  color : var(--header-background-mes-formations);
+}
+
+div#connexion {
+    position: absolute;
+    right:10px;
+}

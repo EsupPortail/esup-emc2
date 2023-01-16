@@ -26,25 +26,25 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'planformation_' => [
-                                'label'    => 'Plan de formation à venir',
-                                'route'    => 'plan-formation',
-                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
-                                'order'    => 302,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'formation' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'planformation_' => [
+//                                'label'    => 'Plan de formation à venir',
+//                                'route'    => 'plan-formation',
+//                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+//                                'order'    => 302,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

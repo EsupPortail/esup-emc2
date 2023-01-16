@@ -164,32 +164,32 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'demande-externe' => [
-                                'label'    => 'Demandes externes',
-                                'route'    => 'formation/demande-externe',
-                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'index') ,
-                                'order'    => 331,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            'demande-externe-parapheur' => [
-                                'label'    => 'Parapheur des demandes',
-                                'route'    => 'formation/demande-externe/parapheur',
-                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'parapheur') ,
-                                'order'    => 332,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'formation' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'demande-externe' => [
+//                                'label'    => 'Demandes externes',
+//                                'route'    => 'formation/demande-externe',
+//                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'index') ,
+//                                'order'    => 331,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                            'demande-externe-parapheur' => [
+//                                'label'    => 'Parapheur des demandes',
+//                                'route'    => 'formation/demande-externe/parapheur',
+//                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'parapheur') ,
+//                                'order'    => 332,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router' => [
         'routes' => [

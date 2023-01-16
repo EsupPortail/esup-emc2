@@ -117,25 +117,25 @@ return [
         ],
     ],
 
-    'navigation'      => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'formation_' => [
-                                'label'    => 'Actions de formation',
-                                'route'    => 'formation',
-                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index') ,
-                                'order'    => 310,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation'      => [
+//        'formation' => [
+//            'home' => [
+//                'pages' => [
+//                    'ressource' => [
+//                        'pages' => [
+//                            'formation_' => [
+//                                'label'    => 'Actions de formation',
+//                                'route'    => 'formation',
+//                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index') ,
+//                                'order'    => 310,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [

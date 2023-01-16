@@ -4,7 +4,6 @@ namespace Formation;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use Formation\Controller\FormationController;
 use Formation\Controller\IndexController;
 use Formation\Controller\IndexControllerFactory;
 use Formation\Event\Convocation\ConvocationEvent;
@@ -113,6 +112,14 @@ return [
     ],
 
     'navigation'      => [
+        'formation' => [
+            'home' => [
+                'label' => _("Accueil"),
+                'route' => 'home',
+                'pages' => [
+                ],
+            ],
+        ],
         'default' => [
             'home' => [
                 'pages' => [
@@ -167,6 +174,18 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'template_map' => [
+            'mes-formations/layout' => realpath('./module/Formation/view/layout/layout.phtml'),
+        ],
     ],
 
+    'public_files' => [
+        'head_scripts'   => [
+        ],
+        'inline_scripts' => [
+        ],
+        'stylesheets' => [
+            '090_appcss'                  => 'css/mes-formations.css',
+        ],
+    ],
 ];

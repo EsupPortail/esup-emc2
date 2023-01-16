@@ -75,51 +75,51 @@ return [
             ],
         ],
     ],
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'formations' => [
-                        'order' => 1000,
-                        'label' => 'Formations',
-                        'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
-                        'route' => 'liste-formations-instances',
-                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
-                        'pages' => [
-                            [
-                                'order' => 200,
-                                'label' => 'Plan de formation '. $annee,
-                                'route' => 'plan-formation',
-                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'order' => 405,
-                                'label' => "S'inscrire à une formation",
-                                'route' => 'inscription-formation',
-                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'order' => 405,
-                                'label' => 'Mes formations',
-                                'route' => 'liste-formations-instances',
-                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                            [
-                                'order' => 410,
-                                'label' => 'Mon projet personnel',
-                                'route' => 'projet-personnel',
-                                'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+//    'navigation' => [
+//        'formation' => [
+//            'home' => [
+//                'pages' => [
+//                    'formations' => [
+//                        'order' => 1000,
+//                        'label' => 'Formations',
+//                        'title' => "Gestion des actions de formations et des inscriptions à celles-ci",
+//                        'route' => 'liste-formations-instances',
+//                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+//                        'pages' => [
+//                            [
+//                                'order' => 200,
+//                                'label' => 'Plan de formation '. $annee,
+//                                'route' => 'plan-formation',
+//                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                            [
+//                                'order' => 405,
+//                                'label' => "S'inscrire à une formation",
+//                                'route' => 'inscription-formation',
+//                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                            [
+//                                'order' => 405,
+//                                'label' => 'Mes formations',
+//                                'route' => 'liste-formations-instances',
+//                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'liste-formations-instances'),
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                            [
+//                                'order' => 410,
+//                                'label' => 'Mon projet personnel',
+//                                'route' => 'projet-personnel',
+//                                'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
+//                                'icon' => 'fas fa-angle-right',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ],
+//    ],
 
     'router'          => [
         'routes' => [
