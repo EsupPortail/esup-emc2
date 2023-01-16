@@ -129,6 +129,15 @@ return [
                         'route' => 'gestion',
                         'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
                         'dropdown-header' => true,
+                        'pages' => [
+                            'action-formation' => [
+                                'order' => 325,
+                                'label' => 'Actions de formation',
+                                'route' => 'formation',
+                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],

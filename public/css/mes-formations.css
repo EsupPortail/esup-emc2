@@ -1,41 +1,32 @@
 :root {
  --header-background-mes-formations : #1b415e;
+ --header-background-mes-formations-hover : #3374ab;
 }
 
 html#mes-formations nav {
  background: var(--header-background-mes-formations);
 }
 
+html#mes-formations nav ul li.nav-item a.nav-link:hover {
+    background: var(--header-background-mes-formations-hover);
+}
+
+html#mes-formations a:hover {
+    background: var(--header-background-mes-formations-hover);
+    color: black;
+}
+
 html#mes-formations ul.nav {
     border-bottom: none;
 }
 
-
-/*html#mes-formations nav div#menuPrincipalNavbar li {*/
-/*    padding-top: calc(var(--header-height) * 0.4);*/
-/*    padding-left: 1rem;*/
-/*    padding-right: 1rem;*/
-/*    height : calc(var(--header-height) + 9px);*/
-/*    border-right: 2px solid var(--body-background);*/
-/*}*/
-
-/*html#mes-formations nav div#menuPrincipalNavbar li a {*/
-/*    text-decoration: none;*/
-/*}*/
-
-/*html#mes-formations nav div#menuPrincipalNavbar li:first-child {*/
-/*    border-left: 2px solid var(--body-background);*/
-/*    margin-left: 1rem;*/
-/*}*/
+html#mes-formations .dropdown-item.active {
+    background: var(--header-background-mes-formations);
+}
 
 .text-mesformations {
   color : var(--header-background-mes-formations);
 }
-
-/*div#connexion {*/
-/*    position: absolute;*/
-/*    right:10px;*/
-/*}*/
 
 html#mes-formations ul.nav.navbar-nav li a.nav-header {
     margin: 1rem;

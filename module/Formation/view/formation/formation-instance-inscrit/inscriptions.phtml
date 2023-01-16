@@ -125,3 +125,12 @@ foreach ($inscriptions as $inscription) {
     <?php endforeach; ?>
 <?php endif; ?>
 
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

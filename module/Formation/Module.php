@@ -2,7 +2,6 @@
 
 namespace Formation;
 
-use Formation\Controller\AbstractController;
 use Laminas\Loader\StandardAutoloader;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\ModuleRouteListener;

@@ -93,3 +93,13 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
         </div>
     <?php endforeach; ?>
 <?php endif; ?>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

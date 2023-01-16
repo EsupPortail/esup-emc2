@@ -183,35 +183,46 @@ class FormationInstanceInscritController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getInstance()->getId()], [], true);
     }
 
-    public function inscriptionFormationAction() : ViewModel
+    /**
+     * ONGLET '''M'isncrire'''
+     * TODO faire un controller dédié au chose de l'agents ?
+     */
+
+    public function inscriptionInterneAction() : ViewModel
     {
         $instances = $this->getFormationInstanceService()->getFormationsInstancesByEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE);
-        //$instances = array_filter($instances, function (FormationInstance $a) { return $a->isAutoInscription();});
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
 
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
-        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
 
-        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        return new ViewModel([
+            'instances' => $instances,
+            'inscriptions' => $inscriptions,
+            'agent' => $agent,
+        ]);
+    }
+    public function inscriptionExterneAction() : ViewModel
+    {
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
         $demandesNonValidees = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
         return new ViewModel([
-            'instances' => $instances,
-            'inscriptions' => $inscriptions,
-            'formations' => $formations,
             'agent' => $agent,
-
             'demandes' => $demandesNonValidees,
-
-            'superieures' => $superieures,
         ]);
     }
 
-    /** Retourne la liste des formations suivis et passé */
+    /**
+     * ONGLET '''Mes formations'''
+     * TODO faire un controller dédié au chose de l'agents ?
+     */
+
     public function formationsAction() : ViewModel
     {
         $utilisateur = $this->getUserService()->getConnectedUser();
@@ -227,7 +238,6 @@ class FormationInstanceInscritController extends AbstractActionController
         ]);
     }
 
-    /** Retourne la liste des inscriptions en cours */
     public function inscriptionsAction() : ViewModel
     {
         $utilisateur = $this->getUserService()->getConnectedUser();

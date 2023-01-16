@@ -137,7 +137,7 @@ class DemandeExterneController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('liste-formations-instances', [], [], true);
+        return $this->redirect()->toRoute('inscriptions', [], [], true);
     }
 
     public function restaurerAction() : Response
@@ -147,7 +147,7 @@ class DemandeExterneController extends AbstractActionController {
 
         $retour = $this->params()->fromRoute('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('liste-formations-instances', [], [], true);
+        return $this->redirect()->toRoute('inscriptions', [], [], true);
     }
 
     public function supprimerAction() : ViewModel

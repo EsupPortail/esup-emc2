@@ -11,6 +11,11 @@
 
 /** MODAL *************************************************************************************************************/
 
+div.alert{
+    margin-top:1rem;
+    margin-bottom:1.5rem;
+}
+
 div.modal div.modal-dialog {
     width: 80%;
     max-width: none;

@@ -49,6 +49,8 @@ return [
 
                         'formations',
                         'inscriptions',
+                        'inscription-interne',
+                        'inscription-externe',
                     ],
                     'roles' => [
                         'Agent',
@@ -90,14 +92,32 @@ return [
                     [
                         'order' => 200,
                         'label' => "M'inscrire",
-                        'route' => 'inscription-formation',
-                        'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-formation'),
+                        'route' => 'home',
+                        'resources' => [
+                            PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-interne'),
+                            PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-externe'),
+                        ],
+                        'dropdown-header' => true,
+                        'pages' => [
+                            [
+                                'order' => 310,
+                                'label' => 'Formation du plan de formation',
+                                'route' => 'inscription-interne',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-interne'),
+                            ],
+                            [
+                                'order' => 320,
+                                'label' => 'Stage hors plan de formation',
+                                'route' => 'inscription-externe',
+                                'resource' => PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscription-externe'),
+                            ],
+                        ],
                     ],
                     [
                         'order' => 300,
                         'label' => 'Mes formations',
                         'title' => 'Mes formations choucroute',
-                        'route' => 'inscriptions',
+                        'route' => 'home',
                         'resources' => [
                             PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'inscriptions'),
                             PrivilegeController::getResourceId(FormationInstanceInscritController::class, 'formations'),
@@ -151,6 +171,27 @@ return [
                     ],
                 ],
             ],
+            'inscription-interne' => [
+                'type'  => Segment::class,
+                'options' => [
+                    'route'    => '/inscription-interne[/:agent]',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'inscription-interne',
+                    ],
+                ],
+            ],
+            'inscription-externe' => [
+                'type'  => Segment::class,
+                'options' => [
+                    'route'    => '/inscription-externe[/:agent]',
+                    'defaults' => [
+                        'controller' => FormationInstanceInscritController::class,
+                        'action'     => 'inscription-externe',
+                    ],
+                ],
+            ],
+
             'inscription-formation' => [
                 'type'  => Literal::class,
                 'options' => [

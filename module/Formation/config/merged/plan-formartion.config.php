@@ -2,7 +2,6 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationController;
 use Formation\Controller\PlanFormationController;
 use Formation\Controller\PlanFormationControllerFactory;
 use Formation\Provider\Privilege\PlanformationPrivileges;
@@ -26,25 +25,25 @@ return [
         ],
     ],
 
-//    'navigation'      => [
-//        'formation' => [
-//            'home' => [
-//                'pages' => [
-//                    'ressource' => [
-//                        'pages' => [
-//                            'planformation_' => [
-//                                'label'    => 'Plan de formation à venir',
-//                                'route'    => 'plan-formation',
-//                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
-//                                'order'    => 302,
-//                                'icon' => 'fas fa-angle-right',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ],
-//    ],
+    'navigation'      => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'pages' => [
+                            'planformation_' => [
+                                'label'    => 'Plan de formation à venir',
+                                'route'    => 'plan-formation',
+                                'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                                'order'    => 302,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
 
     'router'          => [
         'routes' => [
