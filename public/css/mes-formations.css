@@ -11,31 +11,31 @@ html#mes-formations ul.nav {
 }
 
 
-html#mes-formations nav div#menuPrincipalNavbar li {
-    padding-top: calc(var(--header-height) * 0.4);
-    padding-left: 1rem;
-    padding-right: 1rem;
-    height : calc(var(--header-height) + 9px);
-    border-right: 2px solid var(--body-background);
-}
+/*html#mes-formations nav div#menuPrincipalNavbar li {*/
+/*    padding-top: calc(var(--header-height) * 0.4);*/
+/*    padding-left: 1rem;*/
+/*    padding-right: 1rem;*/
+/*    height : calc(var(--header-height) + 9px);*/
+/*    border-right: 2px solid var(--body-background);*/
+/*}*/
 
-html#mes-formations nav div#menuPrincipalNavbar li a {
-    text-decoration: none;
-}
+/*html#mes-formations nav div#menuPrincipalNavbar li a {*/
+/*    text-decoration: none;*/
+/*}*/
 
-html#mes-formations nav div#menuPrincipalNavbar li:first-child {
-    border-left: 2px solid var(--body-background);
-    margin-left: 1rem;
-}
+/*html#mes-formations nav div#menuPrincipalNavbar li:first-child {*/
+/*    border-left: 2px solid var(--body-background);*/
+/*    margin-left: 1rem;*/
+/*}*/
 
 .text-mesformations {
   color : var(--header-background-mes-formations);
 }
 
-div#connexion {
-    position: absolute;
-    right:10px;
-}
+/*div#connexion {*/
+/*    position: absolute;*/
+/*    right:10px;*/
+/*}*/
 
 html#mes-formations ul.nav.navbar-nav li a.nav-header {
     margin: 1rem;

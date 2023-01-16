@@ -38,9 +38,9 @@ foreach ($inscriptions as $inscription) {
 }
 
 ?>
-<h2>
+<h1>
     Mes inscriptions validées
-</h2>
+</h1>
 
 <?php if (empty($formationValidees) AND empty($demandesValidees)) : ?>
     <em> Aucune formation validée </em>
@@ -82,9 +82,9 @@ foreach ($inscriptions as $inscription) {
     <?php endforeach; ?>
 <?php endif; ?>
 
-<h2>
+<h1>
     Mes inscriptions en attente de validation
-</h2>
+</h1>
 
 <?php if (empty($formationsAttentes) AND empty($demandesAttentes)) : ?>
     <em> Aucune formation en attente de validation </em>
