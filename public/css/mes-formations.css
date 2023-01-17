@@ -1,7 +1,27 @@
 :root {
  --header-background-mes-formations : #1b415e;
  --header-background-mes-formations-hover : #3374ab;
+
+ --bs-primary: rgb(27,65, 94);
+ --bs-primary-lighter: rgb(27,75, 94);
+ --bs-primary-darker: rgb(27,55, 94);
+
+ --bs-secondary: #37495d;
+
+ --bs-success: rgb(0, 90, 0);
+ --bs-danger: rgb(90, 0, 0);
+ --bs-info: rgb(0, 0, 90);
+ --bs-warning: rgb(159, 53, 28);
 }
+
+html#mes-formations .btn-primary {
+    background: var(--bs-primary);
+}
+html#mes-formations .btn-primary:hover {
+    background: var(--bs-primary-lighter);
+}
+
+
 
 html#mes-formations nav {
  background: var(--header-background-mes-formations);
@@ -11,10 +31,10 @@ html#mes-formations nav ul li.nav-item a.nav-link:hover {
     background: var(--header-background-mes-formations-hover);
 }
 
-html#mes-formations a:hover {
-    background: var(--header-background-mes-formations-hover);
-    color: black;
-}
+/*html#mes-formations a:hover {*/
+/*    background: var(--header-background-mes-formations-hover);*/
+/*    color: black;*/
+/*}*/
 
 html#mes-formations ul.nav {
     border-bottom: none;
@@ -32,3 +52,9 @@ html#mes-formations ul.nav.navbar-nav li a.nav-header {
     margin: 1rem;
 }
 
+div.modal div.modal-header {
+    border-radius : 0;
+    border : 1px solid black;
+    background-color: var(--header-background-mes-formations);
+    color: white;
+}

@@ -7,6 +7,7 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -18,11 +19,13 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
 
     private ?int $id = -1;
     private ?string $libelle = null;
-    private ?string $couleur = null;
-    /** @var string */
-    private $ordre;
-    /** @var ArrayCollection (Formation) */
-    private $formations;
+    private ?int $ordre = 0;
+    private Collection $formations;
+
+    public function __construct()
+    {
+        $this->formations = new ArrayCollection();
+    }
 
     public function getId() : int
     {
@@ -47,32 +50,14 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
         $this->libelle = $libelle;
     }
 
-    public function getCouleur() : ?string
-    {
-        return $this->couleur;
-    }
-
-    public function setCouleur(?string $couleur) : void
-    {
-        $this->couleur = $couleur;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getOrdre() : ?string
+    public function getOrdre() : ?int
     {
         return $this->ordre;
     }
 
-    /**
-     * @param string|null $ordre
-     * @return FormationGroupe
-     */
-    public function setOrdre(?string $ordre) : FormationGroupe
+    public function setOrdre(?string $ordre) : void
     {
         $this->ordre = $ordre;
-        return $this;
     }
 
     /**
@@ -82,35 +67,5 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
     {
         return $this->formations->toArray();
     }
-
-    /**
-     * @param Formation $formation
-     * @return FormationGroupe
-     */
-    public function addFormation(Formation $formation) : FormationGroupe
-    {
-        $this->formations->add($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return FormationGroupe
-     */
-    public function removeFormation(Formation $formation) : FormationGroupe
-    {
-        $this->formations->removeElement($formation);
-        return $this;
-    }
-
-    /**
-     * @param Formation $formation
-     * @return boolean
-     */
-    public function hasFormation(Formation $formation) : bool
-    {
-        return $this->formations->contains($formation);
-    }
-
 
 }
