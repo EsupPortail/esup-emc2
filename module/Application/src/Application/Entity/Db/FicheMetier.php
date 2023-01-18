@@ -28,6 +28,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     private ?int $id = -1;
     private ?Metier $metier = null;
     private ?bool $hasExpertise = false;
+    private ?string $raison = null;
 
     private Collection $activites;
 
@@ -80,6 +81,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     {
         $this->hasExpertise = $has;
         return $this;
+    }
+
+    public function getRaison(): ?string
+    {
+        return $this->raison;
+    }
+
+    public function setRaison(?string $raison): void
+    {
+        $this->raison = $raison;
     }
 
      /**

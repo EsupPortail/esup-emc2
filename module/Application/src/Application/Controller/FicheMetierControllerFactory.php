@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Application\Form\Raison\RaisonForm;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
@@ -71,6 +72,7 @@ class FicheMetierControllerFactory
          * @var LibelleForm $libelleForm
          * @var FicheMetierImportationForm $ficheMetierImportationForm
          * @var ActiviteForm $activiteForm
+         * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionApplicationForm
          * @var SelectionCompetenceForm $selectionCompetenceForm
          * @var SelectionFormationForm $selectionFormationForm
@@ -79,6 +81,7 @@ class FicheMetierControllerFactory
          */
         $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
+        $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionFormationForm = $container->get('FormElementManager')->get(SelectionFormationForm::class);
@@ -105,6 +108,7 @@ class FicheMetierControllerFactory
 
         $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
+        $controller->setRaisonForm($raisonForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
         $controller->setSelectionCompetenceForm($selectionCompetenceForm);
         $controller->setSelectionFormationForm($selectionFormationForm);

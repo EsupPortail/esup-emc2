@@ -1,0 +1,87 @@
+<?php
+
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationInstanceInscrit;
+
+/**
+ * @var FormationInstanceInscrit[] $inscriptions
+ * @var DemandeExterne[] $demandes
+ */
+
+$dictionnaryInscriptions = [];
+foreach ($inscriptions as $inscription) {
+    $dictionnaryInscriptions[$inscription->getAgent()->getId()][] = $inscription;
+}
+usort($dictionnaryInscriptions,
+    function ($a, $b) {
+        /** @var FormationInstanceInscrit[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        return $aaa > $bbb;
+    }
+);
+
+$dictionnaryDemandes = [];
+foreach ($demandes as $demande) {
+    $dictionnaryDemandes[$demande->getAgent()->getId()][] = $demande;
+}
+usort($dictionnaryDemandes,
+    function ($a, $b) {
+        /** @var DemandeExterne[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        return $aaa > $bbb;
+    }
+);
+?>
+
+
+<h2> Liste des formations des agents <?php echo Formation::getAnnee(); ?>/<?php echo Formation::getAnnee()+1; ?> </h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Formations du plan de formation</h3>
+
+        <?php /** @var FormationInstanceInscrit[] $ds */ ?>
+        <ul>
+            <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
+                <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+                <li>
+                    <?php echo $ds[0]->getAgent()->getDenomination(); ?>
+
+                    <?php foreach ($ds as $d) : ?>
+                        <br/>
+                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
+                        (<?php echo $d->getInstance()->getPeriode(); ?>)
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h3>Demandes de stage externe</h3>
+
+        <?php /** @var DemandeExterne[] $ds */ ?>
+        <ul>
+        <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
+            <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+            <li>
+            <?php echo $ds[0]->getAgent()->getDenomination(); ?>
+
+                <?php foreach ($ds as $d) : ?>
+                    <br/>
+                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $d->getLibelle(); ?>
+                        (<?php echo $d->getPeriodeAsString(); ?>)
+                <?php endforeach; ?>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+
+    </div>
+
+</div>
+

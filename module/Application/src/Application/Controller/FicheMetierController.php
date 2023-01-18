@@ -10,6 +10,7 @@ use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
+use Application\Form\Raison\RaisonFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
@@ -67,6 +68,7 @@ class FicheMetierController extends AbstractActionController
     use ActiviteFormAwareTrait;
     use LibelleFormAwareTrait;
     use FicheMetierImportationFormAwareTrait;
+    use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
@@ -246,6 +248,34 @@ class FicheMetierController extends AbstractActionController
     }
 
     /** Action lier à l'édition d'une fiche métier ********************************************************************/
+
+    public function editerRaisonAction() : ViewModel
+    {
+        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+
+        $form = $this->getRaisonForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-raison', ['fiche-metier' => $fiche->getId()], [], true));
+        $form->bind($fiche);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->update($fiche);
+                $this->flashMessenger()->addSuccessMessage("Mise à jour de la \"raison d'être du métier\" effectuée.");
+                exit();
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Modification de la raison d'être du métier",
+            'form' => $form,
+            'info' => "Laisser vide si aucun raison n'est nécessaire",
+        ]);
+        $vm->setTemplate('application/default/default-form');
+        return $vm;
+    }
 
     public function editerLibelleAction() : ViewModel
     {

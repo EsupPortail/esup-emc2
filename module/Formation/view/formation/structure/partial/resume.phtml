@@ -1,0 +1,125 @@
+<?php
+
+use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
+
+/**
+ * @var Structure $structure
+ * @var Structure[] $filles
+ * @var StructureResponsable[] $responsables
+ * @var StructureResponsable[] $gestionnaires
+ */
+
+
+$canEditerResponsable = false;
+$canEditerGestionnaire = false;
+?>
+
+<div class="row">
+    <div class="col-md-6">
+            <h2 style="border-bottom:1px solid black;">
+                Rôles dans la structure
+            </h2>
+        <h3>
+
+            Responsables
+            <span class="badge"><?php echo count($responsables); ?></span>
+            <?php if ($canEditerResponsable) : ?>
+                <a
+                    <?php /** @see \Structure\Controller\StructureController::ajouterResponsableAction() */ ?>
+                    href="<?php echo $this->url('structure/ajouter-responsable', ['structure' => $structure->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
+                >
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
+                              title="Ajouter un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                        </span></a>
+            <?php endif; ?>
+        </h3>
+        <ul>
+            <?php foreach ($responsables as $responsable) : ?>
+                <li>
+                    <span title="Responsabilité valide sur la période du <?php echo ($responsable->getDateDebut())?$responsable->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($responsable->getDateFin())?$responsable->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <?php echo $responsable->getAgent()->getDenomination(); ?>
+                    </span>
+                    <?php if ($responsable->getSource() AND $responsable->getSource()->getCode() === HasSourceInterface::SOURCE_EMC2 AND $canEditerResponsable) : ?>
+                        <?php /** @see \Structure\Controller\StructureController::retirerResponsableAction()  */?>
+                        <a href="<?php echo $this->url('structure/retirer-responsable', ['structure'=>$structure->getId(), 'responsable' => $responsable->getId()], [], true); ?>">
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
+                                  title="Retirer un responsable à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
+                        </a>
+                    <?php endif ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <h3>
+            Gestionnaires
+            <span class="badge"><?php echo count($gestionnaires); ?></span>
+            <?php if ($canEditerGestionnaire) : ?>
+                <a
+                    <?php /** @see \Structure\Controller\StructureController::ajouterGestionnaireAction() */ ?>
+                    href="<?php echo $this->url('structure/ajouter-gestionnaire', ['structure' => $structure->getId()], [], true); ?>"
+                    class="ajax-modal"
+                    data-event="modification"
+                >
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true"
+                              title="Ajouter un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>">
+                        </span></a>
+            <?php endif; ?>
+        </h3>
+        <ul>
+            <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                <li>
+                    <span title="Responsabilité valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                        <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
+                    </span>
+                    <?php if ($gestionnaire->getSource() AND  $gestionnaire->getSource()->getCode() === HasSourceInterface::SOURCE_EMC2 AND $canEditerGestionnaire) : ?>
+                        <?php /** @see \Structure\Controller\StructureController::retirerGestionnaireAction()  */?>
+                        <a href="<?php echo $this->url('structure/retirer-gestionnaire', ['structure'=>$structure->getId(), 'gestionnaire' => $gestionnaire->getId()], [], true); ?>">
+                            <span class="icon retirer" data-bs-toggle="tooltip" data-bs-html="true"
+                                  title="Retirer un gestionnaire à la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span>
+                        </a>
+                    <?php endif ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2 style="border-bottom:1px solid black;">
+            Structures
+        </h2>
+
+        <h3> Structure mère <tt>n+1</tt> </h3>
+        <?php if ($structure->getParent() !== null) :?>
+            <ul>
+                <li>
+                    <a href="<?php echo $this->url('formation/structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
+                        <?php echo $structure->getParent()->getLibelleCourt(); ?>
+                        -
+                        <?php echo $structure->getParent()->getLibelleLong(); ?>
+                    </a></li>
+            </ul>
+        <?php else : ?>
+            Aucune structure mère
+        <?php endif; ?>
+        <h3>
+            Structures filles <tt>n-1</tt>
+            <span class="badge">
+                    <?php echo count($filles); ?>
+                </span>
+        </h3>
+        <ul>
+            <?php foreach ($filles as $enfant) : ?>
+                <li>
+                    <a href="<?php echo $this->url('formation/structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
+                        <?php echo $enfant->getLibelleCourt(); ?>
+                        -
+                        <?php echo $enfant->getLibelleLong(); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

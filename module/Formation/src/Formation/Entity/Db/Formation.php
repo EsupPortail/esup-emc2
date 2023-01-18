@@ -53,6 +53,7 @@ class Formation implements HistoriqueAwareInterface,
     private Collection $missions;
     private Collection $instances;
     private Collection $abonnements;
+    private Collection $plans;
 
     private ?string $rattachement = null;
 
@@ -61,6 +62,7 @@ class Formation implements HistoriqueAwareInterface,
         $this->missions = new ArrayCollection();
         $this->instances = new ArrayCollection();
         $this->abonnements = new ArrayCollection();
+        $this->plans = new ArrayCollection();
     }
 
     public static function getAnnee(?DateTime $date = null) : ?int
@@ -266,5 +268,14 @@ class Formation implements HistoriqueAwareInterface,
     {
         return $this->abonnements->toArray();
     }
+
+    /**
+     * @return PlanDeFormation[]
+     */
+    public function getPlans(): array
+    {
+        return $this->plans->toArray();
+    }
+
 
 }

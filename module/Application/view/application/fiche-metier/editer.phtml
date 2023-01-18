@@ -18,6 +18,7 @@ $libelle = ($fiche->getMetier())?$fiche->getMetier()->getLibelle():"Aucun libell
 $this->headTitle('Modification de la fiche métier #' . $fiche->getId(). " : " . $libelle);
 
 echo $this->partial('partial/entete', ['fichemetier' => $fiche, 'mode' => $mode], [], true);
+echo $this->partial('partial/raison', ['fichemetier' => $fiche, 'mode' => $mode], [], true);
 echo $this->partial('partial/missions-principales', ['fichemetier' => $fiche, 'missionsprincipales' => $fiche->getActivites(), 'mode' => $mode], [], true);
 echo $this->partial('partial/competences', ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode], [], true);
 echo $this->partial('partial/applications', ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode], [], true);

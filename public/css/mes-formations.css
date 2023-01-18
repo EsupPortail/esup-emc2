@@ -1,17 +1,19 @@
 :root {
- --header-background-mes-formations : #1b415e;
- --header-background-mes-formations-hover : #3374ab;
-
  --bs-primary: rgb(27,65, 94);
  --bs-primary-lighter: rgb(27,75, 94);
  --bs-primary-darker: rgb(27,55, 94);
 
- --bs-secondary: #37495d;
+ --bs-secondary: rgb(55,95,93);
+ --bs-secondary-lighter: rgb(55,105,93);
+ --bs-secondary-darker: rgb(55,85,93);
 
  --bs-success: rgb(0, 90, 0);
  --bs-danger: rgb(90, 0, 0);
  --bs-info: rgb(0, 0, 90);
  --bs-warning: rgb(159, 53, 28);
+
+ --header-background-mes-formations : var(--bs-primary);
+ --header-background-mes-formations-hover : var(--bs-primary-lighter);
 }
 
 html#mes-formations .btn-primary {
@@ -21,7 +23,16 @@ html#mes-formations .btn-primary:hover {
     background: var(--bs-primary-lighter);
 }
 
+html#mes-formations .btn-secondary {
+    background: var(--bs-secondary);
+}
+html#mes-formations .btn-secondary:hover {
+    background: var(--bs-secondary-lighter);
+}
 
+html#mes-formations table thead {
+    background: var(--header-background-mes-formations);
+}
 
 html#mes-formations nav {
  background: var(--header-background-mes-formations);

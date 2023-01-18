@@ -1,0 +1,48 @@
+<?php
+
+use Application\Entity\Db\FicheMetier;
+use Application\Provider\Privilege\FicheMetierPrivileges;
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var string $mode
+ */
+
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+
+?>
+
+<?php if ($fichemetier->getRaison() !== null OR $mode === 'edition-fiche-metier' ) : ?>
+
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
+<div class="card bg-default">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Raison d'être du métier dans l'établissement</h2>
+            </div>
+            <div class="col-md-4">
+                <?php if ($canEditer AND $mode === 'edition-fiche-metier' ) : ?>
+                    <?php /** @see \Application\Controller\FicheMetierController::editerRaisonAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier-type/editer-raison', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                       class="btn btn-primary ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer">
+                            Modifier la raison
+                        </span>
+                    </a>
+               <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <?php if ($fichemetier->getRaison() !== null) : ?>
+            <?php echo $fichemetier->getRaison(); ?>
+        <?php else :?>
+            Aucune raison de fournie
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php endif; ?>

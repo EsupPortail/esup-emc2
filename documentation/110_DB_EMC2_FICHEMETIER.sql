@@ -6,6 +6,7 @@ create table fichemetier
     metier_id             integer   not null
         constraint fichetype_metier__fk
         references metier_metier,
+    raison                text,
     expertise             boolean default false,
     etat_id               integer default 0
         constraint fichemetier_unicaen_etat_etat_id_fk

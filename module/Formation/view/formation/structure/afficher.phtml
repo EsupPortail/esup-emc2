@@ -1,0 +1,125 @@
+<?php
+
+
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\FormationInstanceInscrit;
+use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureResponsable;
+
+/**
+ * @see \Formation\Controller\StructureController::afficherAction()
+ * @var Structure $structure
+ * @var StructureResponsable[] $responsables
+ * @var StructureResponsable[] $gestionnaires
+ * @var FormationInstanceInscrit[] $inscriptionsNonValidees
+ * @var FormationInstanceInscrit[] $inscriptionsValidees
+ * @var DemandeExterne[] $demandesNonValidees
+ * @var DemandeExterne[] $demandesValidees
+ *
+ */
+
+$this->headTitle("Structure : " . $structure->getLibelleLong());
+
+$now = new DateTime();
+
+$filles = $structure->getEnfants();
+$filles = array_filter($filles, function (Structure $a) use ($now) {
+    $fermeture = $a->getFermetureOW() ?? $a->getFermeture();
+    return ($a->getDeleted() === null AND ($fermeture === null OR $fermeture > $now));  });
+?>
+
+<h1 class="page-header">
+Structure
+<?php echo $structure->getLibelleLong(); ?>
+</h1>
+
+<?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles, 'responsables' => $responsables, 'gestionnaires' => $gestionnaires]); ?>
+
+<ul class="nav">
+    <li class="nav-item">
+        <a href="#formation-demande" class="nav-link" aria-controls="formation-demande">
+            Demandes de <br/> formations
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#formation-liste" class="nav-link" aria-controls="formation-liste">
+            Listes des <br/> formations
+        </a>
+    </li>
+
+
+<!--    <li class="nav-item">-->
+<!--        <a href="#extraction" class="nav-link" aria-controls="extraction">-->
+<!--            Extractions  <br/> &nbsp;-->
+<!--        </a>-->
+<!--    </li>-->
+</ul>
+
+<div class="tab-content">
+    <div id="formation-demande" class="tab-pane">
+        <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptionsNonValidees, 'demandes' => $demandesNonValidees]); ?>
+    </div>
+
+    <div id="formation-liste" class="tab-pane">
+        <?php echo $this->partial('partial/liste-formation', ['inscriptions' => $inscriptionsValidees, 'demandes' => $demandesValidees]); ?>
+    </div>
+
+    <!-- Extraction ------------------------------------------------------------------------------------->
+    <div id="extraction" class="tab-pane">
+        <?php echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
+    </div>
+</div>
+
+
+
+<script>
+    // $("body").on("modification", function (event) {
+    //     event.div.modal('hide');
+    //     window.location.reload();
+    // });
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "agents";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+
+    });
+
+    $(function() {
+        $('select#structure-selecteur').change(function() {
+            let id = $('select#structure-selecteur option:selected').val();
+            if (id !== "" && id !== "<?php echo $structure->getId(); ?>") {
+                window.location.href = './' + id;
+            }
+        });
+    });
+
+
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formation-demande";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+

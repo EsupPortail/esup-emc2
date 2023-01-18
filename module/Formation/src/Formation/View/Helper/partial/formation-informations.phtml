@@ -70,5 +70,19 @@ $canAfficherGroupeFormation = $this->isAllowed(FormationgroupePrivileges::getRes
             <dt class="col-md-3"> Rattachement </dt>
             <dd class="col-md-9"> <?php echo $formation->getRattachement(); ?> </dd>
         <?php endif; ?>
+
+        <dt class="col-md-3"> Dans les plans de formation</dt>
+        <dd class="col-md-9">
+            <?php $plans = $formation->getPlans(); ?>
+            <?php if (empty($plans)) : ?>
+                Aucun
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($plans as $plan) : ?>
+                        <li> <?php echo $plan->getAnnee(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
     </dl>
 <?php endif; ?>

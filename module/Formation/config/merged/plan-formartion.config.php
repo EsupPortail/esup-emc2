@@ -2,6 +2,9 @@
 
 namespace Formation;
 
+use Formation\Controller\FormationController;
+use Formation\Controller\FormationGroupeController;
+use Formation\Controller\FormationInstanceController;
 use Formation\Controller\PlanFormationController;
 use Formation\Controller\PlanFormationControllerFactory;
 use Formation\Provider\Privilege\PlanformationPrivileges;
@@ -31,6 +34,18 @@ return [
                 'pages' => [
                     'gestion-formation' => [
                         'pages' => [
+                            [
+                                'label' => "Gestion de l'offre de formation",
+                                'route' => 'home',
+                                'resources' => [
+                                    PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                                    PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
+                                    PrivilegeController::getResourceId(FormationController::class, 'index') ,
+                                    PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
+                                ],
+                                'order'    => 300,
+                                'dropdown-header' => true,
+                            ],
                             'planformation_' => [
                                 'label'    => 'Plan de formation à venir',
                                 'route'    => 'plan-formation',
