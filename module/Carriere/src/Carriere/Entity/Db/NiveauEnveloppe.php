@@ -64,8 +64,9 @@ class NiveauEnveloppe implements HistoriqueAwareInterface, HasDescriptionInterfa
         return max (($niveauSup - $niveauxAgent->getBorneSuperieure()->getNiveau()), ($niveauxAgent->getBorneInferieure()->getNiveau() - $niveauInf));
     }
 
-    static public function isCompatible(NiveauEnveloppe $niveauA, NiveauEnveloppe $niveauB) : bool
+    static public function isCompatible(?NiveauEnveloppe $niveauA, ?NiveauEnveloppe $niveauB) : bool
     {
+        if ($niveauA === null or $niveauB === null) return true; //todo statuer
         if ($niveauA->getBorneInferieure()->getNiveau() < $niveauB->getBorneSuperieure()->getNiveau()) return false;
         if ($niveauA->getBorneSuperieure()->getNiveau() > $niveauB->getBorneInferieure()->getNiveau()) return false;
         return true;
