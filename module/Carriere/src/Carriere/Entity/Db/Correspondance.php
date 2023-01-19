@@ -3,13 +3,17 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class Correspondance  {
+//todo utiliser interface HasPeriodeInterface
+class Correspondance  implements HasPeriodeInterface {
     use DbImportableAwareTrait;
+    use HasPeriodeTrait;
 
     private ?int  $id = null;
     private ?string $categorie = null;
@@ -18,7 +22,6 @@ class Correspondance  {
     private ?DateTime $histo = null;
     private Collection $agentGrades;
     private ?CorrespondanceType $type = null;
-    private ?DateTime $dateOuverture = null;
     private ?DateTime $dateFermeture = null;
 
     public function __construct()
@@ -69,26 +72,6 @@ class Correspondance  {
     public function setType(?CorrespondanceType $type): void
     {
         $this->type = $type;
-    }
-
-    public function getDateOuverture(): ?DateTime
-    {
-        return $this->dateOuverture;
-    }
-
-    public function setDateOuverture(?DateTime $dateOuverture): void
-    {
-        $this->dateOuverture = $dateOuverture;
-    }
-
-    public function getDateFermeture(): ?DateTime
-    {
-        return $this->dateFermeture;
-    }
-
-    public function setDateFermeture(?DateTime $dateFermeture): void
-    {
-        $this->dateFermeture = $dateFermeture;
     }
 
     public function getHisto() : ?DateTime

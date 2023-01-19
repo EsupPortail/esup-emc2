@@ -22,8 +22,13 @@ class CorrespondanceController extends AbstractActionController
         $bool = ($avecAgent) && ($avecAgent->getValeur() === "true");
         $correspondances = $this->getCorrespondanceService()->getCorrespondances('libelleLong', 'ASC', $bool);
 
+        $agentGrades = [];
+        foreach ($correspondances as $correspondance) {
+            $agentGrades[$correspondance->getId()] = $this->getAgentGradeService()->getAgentGradesByCorrespondance($correspondance);
+        }
         return new ViewModel([
             'correspondances' => $correspondances,
+            'agentGrades' => $agentGrades,
         ]);
     }
 

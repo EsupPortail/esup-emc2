@@ -2,6 +2,8 @@
 
 namespace Carriere\Service\Correspondance;
 
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
 use Doctrine\ORM\NonUniqueResultException;
@@ -34,9 +36,10 @@ class CorrespondanceService {
      * @param string $champ
      * @param string $ordre
      * @param bool $avecAgent
-     * @return Correspondance[]
+     * @param bool $avecHisto
+     * @return Correspondance
      */
-    public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true) : array
+    public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true, bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('correspondance.' . $champ, $ordre)
@@ -49,6 +52,11 @@ class CorrespondanceService {
                 ->addSelect('agent')->join('agentGrade.agent','agent')
                 ->andWhere('agent.deleted_on IS NULL')
             ;
+            $qb = HasPeriodeTrait::decorateWithActif($qb, 'agentGrade');
+        }
+
+        if ($avecHisto === false) {
+            $qb = HasPeriodeTrait::decorateWithActif($qb, 'correspondance');
         }
 
         $result = $qb->getQuery()->getResult();
