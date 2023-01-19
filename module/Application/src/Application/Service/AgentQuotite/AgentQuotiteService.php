@@ -34,6 +34,7 @@ class AgentQuotiteService {
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentquotite.agent = :agent')
+            ->andWhere('agentquotite.delete_on IS NULL')
             ->setParameter('agent', $agent)
         ;
 
