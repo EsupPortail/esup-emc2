@@ -45,7 +45,7 @@ class OctopusIndividu implements RechercheIndividuResultatInterface {
         return $this->individu->getCIndividuChaine();
     }
 
-    public function getUsername()
+    public function getUsername(string $attribut = "supannAliasLogin")
     {
         $login = $this->getLogin();
         if ($login !== null) return $login;
