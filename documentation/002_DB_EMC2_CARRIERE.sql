@@ -121,7 +121,8 @@ INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE) AS (
     SELECT 'CorpsAvecAgent', 'Affichage seulement des corps avec agent', null, 'Boolean', 'true', 100 UNION
     SELECT 'GradeAvecAgent', 'Affichage seulement des grades avec agent', null, 'Boolean', 'true', 200 UNION
-    SELECT 'CorrespondanceAvecAgent', 'Affichage seulement des correspondance ayant un agent', null, 'Boolean', 'true', 30
+    SELECT 'CorrespondanceAvecAgent', 'Affichage seulement des correspondance ayant un agent', null, 'Boolean', 'true', 300 UNION
+    SELECT 'ACTIF_ONLY','Ne considérer que les Corps/Correspondances/Grades actifs',null,'Boolean',true, 1000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.VALEUR, d.ORDRE
 FROM d

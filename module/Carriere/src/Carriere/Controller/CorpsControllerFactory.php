@@ -2,6 +2,7 @@
 
 namespace Carriere\Controller;
 
+use Application\Service\AgentGrade\AgentGradeService;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\Categorie\CategorieService;
 use Carriere\Service\Corps\CorpsService;
@@ -22,11 +23,13 @@ class CorpsControllerFactory {
     public function __invoke(ContainerInterface $container) : CorpsController
     {
         /**
+         * @var AgentGradeService $agentGradeService
          * @var CategorieService $categorieService
          * @var CorpsService $corpsService
          * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ParametreService $parametreService
          */
+        $agentGradeService = $container->get(AgentGradeService::class);
         $categorieService = $container->get(CategorieService::class);
         $corpsService = $container->get(CorpsService::class);
         $niveauEnveloppeService = $container->get(NiveauEnveloppeService::class);
@@ -38,6 +41,7 @@ class CorpsControllerFactory {
         $niveauEnveloppeForm = $container->get('FormElementManager')->get(NiveauEnveloppeForm::class);
 
         $controller = new CorpsController();
+        $controller->setAgentGradeService($agentGradeService);
         $controller->setCategorieService($categorieService);
         $controller->setCorpsService($corpsService);
         $controller->setNiveauEnveloppeService($niveauEnveloppeService);

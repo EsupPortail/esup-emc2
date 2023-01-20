@@ -29,11 +29,11 @@ class CorrespondanceController extends AbstractActionController
 
     public function afficherAgentsAction() : ViewModel
     {
-        $actifOnly = true; //todo recup param
+        $actifOnly = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::ACTIF_ONLY);
+        $bool = ($actifOnly) && ($actifOnly->getValeur() === "true");
 
         $correspondance = $this->getCorrespondanceService()->getRequestedCorrespondance($this);
-        /** @var AgentGrade[] $agentGrades */
-        $agentGrades = $this->getAgentGradeService()->getAgentGradesByCorrespondance($correspondance, $actifOnly);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByCorrespondance($correspondance, $bool);
         $agents = [];
         foreach ($agentGrades as $agentGrade) {
             $agents[$agentGrade->getAgent()->getId()] = $agentGrade->getAgent();

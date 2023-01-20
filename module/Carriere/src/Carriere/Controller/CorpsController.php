@@ -2,6 +2,7 @@
 
 namespace Carriere\Controller;
 
+use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;
@@ -13,6 +14,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class CorpsController extends AbstractActionController {
+    use AgentGradeServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use CorpsServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
@@ -32,11 +34,21 @@ class CorpsController extends AbstractActionController {
 
     public function afficherAgentsAction() : ViewModel
     {
+        $actifOnly = $this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::ACTIF_ONLY);
+        $bool = ($actifOnly) && ($actifOnly->getValeur() === "true");
+
         $corps = $this->getCorpsService()->getRequestedCorps($this);
+        $agentGrades = $this->getAgentGradeService()->getAgentGradesByCorps($corps, $bool);
+        $agents = [];
+        foreach ($agentGrades as $agentGrade) {
+            $agents[$agentGrade->getAgent()->getId()] = $agentGrade->getAgent();
+        }
 
         return new ViewModel([
             'title' => 'Agents ayant le corps ['. $corps->getLibelleCourt().']',
             'corps' => $corps,
+            'agentGrades' => $agentGrades,
+            'agents' => $agents,
         ]);
     }
 

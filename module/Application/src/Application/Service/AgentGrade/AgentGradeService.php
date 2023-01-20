@@ -79,6 +79,7 @@ class AgentGradeService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.grade = :grade')
             ->setParameter('grade', $grade)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
@@ -97,6 +98,7 @@ class AgentGradeService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.corps = :corps')
             ->setParameter('corps', $corps)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
@@ -115,6 +117,7 @@ class AgentGradeService {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentgrade.bap = :correspondance')
             ->setParameter('correspondance', $correspondance)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
 
         if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');

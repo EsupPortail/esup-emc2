@@ -3,8 +3,11 @@
 /**
  * @see \Carriere\Controller\CorpsController::afficherAgentsAvecCorpsAction();
  * @var Corps $corps
+ * @var AgentGrade[] $agentGrades
+ * @var Agent[] $agents
  */
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 
@@ -21,8 +24,10 @@ usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->ge
         <dl class="row">
             <dt class="col-md-5"> Corps </dt>
             <dd class="col-md-7">[#<?php echo $corps->getId(); ?>] <?php echo $corps->getLibelleLong(); ?></dd>
+<!--            <dt class="col-md-5"> #Agent </dt>-->
+<!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
             <dt class="col-md-5"> #AgentGrade </dt>
-            <dd class="col-md-7"> <?php echo count($agents); ?></dd>
+            <dd class="col-md-7"> <?php echo count($agentGrades); ?></dd>
         </dl>
     </div>
     <div class="col-md-6">
@@ -45,7 +50,7 @@ usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->ge
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($agents as $agent) : ?>
+        <?php foreach ($agentGrades as $agent) : ?>
         <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
             <td> <?php echo $agent->getId(); ?> </td>
             <td> <?php echo $agent->getAgent()->getDenomination(); ?> </td>
