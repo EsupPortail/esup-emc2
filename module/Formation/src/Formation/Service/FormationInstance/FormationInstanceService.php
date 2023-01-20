@@ -171,6 +171,22 @@ class FormationInstanceService
         return $result;
     }
 
+    public function getFormationsInstancesOuvertesByFormation(Formation $formation)
+    {
+        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+            ->addSelect('formation')->join('Finstance.formation', 'formation')
+            ->addSelect('etat')->join('Finstance.etat', 'etat')
+            ->addSelect('inscrit')->leftjoin('Finstance.inscrits', 'inscrit')
+            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
+            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
+            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
+            ->andWhere('etat.code in (:etats)')->setParameter('etats', [SessionEtats::ETAT_INSCRIPTION_OUVERTE])
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
     /**
      * @param string $etatCode
      * @return FormationInstance[]
@@ -430,6 +446,5 @@ class FormationInstanceService
 
         return $result;
     }
-
 
 }

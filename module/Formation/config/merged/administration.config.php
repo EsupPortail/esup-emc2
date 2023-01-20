@@ -11,6 +11,7 @@ use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenRenderer\Controller\IndexController;
+use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
 return [
     'bjyauthorize' => [
@@ -23,6 +24,15 @@ return [
                     ],
                     'privileges' => [
                         ParametrecategoriePrivileges::PARAMETRECATEGORIE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => AdministrationController::class,
+                    'action' => [
+                        'template',
+                    ],
+                    'privileges' => [
+                        DocumenttemplatePrivileges::DOCUMENTTEMPLATE_INDEX,
                     ],
                 ],
             ],
@@ -52,7 +62,7 @@ return [
                             'template' => [
                                 'order' => 2000,
                                 'label' => 'Templates et macros',
-                                'route' => 'contenu/template',
+                                'route' => 'formation/administration/template',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
                                 'icon' => 'fas fa-angle-right',
                             ],
@@ -85,6 +95,17 @@ return [
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
                                         'action'     => 'parametre',
+                                    ],
+                                ],
+                            ],
+                            'template' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    /** @see AdministrationController::templateAction() */
+                                    'route'    => '/template',
+                                    'defaults' => [
+                                        'controller' => AdministrationController::class,
+                                        'action'     => 'template',
                                     ],
                                 ],
                             ],

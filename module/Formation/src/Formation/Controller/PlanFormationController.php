@@ -9,6 +9,7 @@ use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
@@ -17,42 +18,40 @@ class PlanFormationController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationServiceAwareTrait;
+    use PlanDeFormationServiceAwareTrait;
+
     use FormationInstanceServiceAwareTrait;
 
     public function afficherAction() : ViewModel
     {
-        $groupes = $this->getFormationGroupeService()->getFormationsGroupes('libelle');
-        $groupes = array_filter($groupes, function (FormationGroupe $a) {
-            $formationsListes = $a->getFormations();
-            $formationsListes = array_filter($formationsListes, function (Formation $a) {
-                return $a->getAffichage() and $a->estNonHistorise();
-            });
-            return !empty($formationsListes);
-        });
-        $formations = [];
-        $sessions = [];
-        foreach ($groupes as $groupe) {
-            $formationsListes = $this->getFormationService()->getFormationsByGroupe($groupe);
-            $formationsListes = array_filter($formationsListes, function (Formation $a) { return $a->getAffichage();});
+        $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
 
-            $formations[$groupe->getId()] = $formationsListes;
-            foreach ($formations[$groupe->getId()] as $formation) {
-                $sessions[$formation->getId()] = $this->getFormationInstanceService()->getFormationsInstancesByFormation($formation);
-            }
+
+        $formations = $planDeFormation->getFormations();
+
+        $groupes = [];
+        $formationsArrayByGroupe = [];
+        foreach ($formations as $formation) {
+            $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
+            $formationsArrayByGroupe[$formation->getGroupe()->getId()][] = $formation;
+        }
+
+        $sessionsArrayByFormation = [];
+        foreach ($formations as $formation) {
+            //todo recupérer par lot
+            $sessionsArrayByFormation[$formation->getId()] = $this->getFormationInstanceService()->getFormationsInstancesOuvertesByFormation($formation);
         }
 
         $abonnements = [];
         $agent = $this->getAgentService()->getAgentByConnectedUser();
         if ($agent !== null) $abonnements = $this->getAbonnementService()->getAbonnementsByAgent($agent);
 
-
-        $annee = Formation::getAnnee();
-
         return new ViewModel([
-            'groupes' => $groupes,
+            'planDeFormation' => $planDeFormation,
             'formations' => $formations,
-            'sessions' => $sessions,
-            'annee' => $annee ."/" . ($annee+1),
+            'groupes' => $groupes,
+            'formationsArrayByGroupe' => $formationsArrayByGroupe,
+            'sessionsArrayByFormation' => $sessionsArrayByFormation,
             'abonnements' => $abonnements,
         ]);
     }

@@ -7,6 +7,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Categorie\CategorieService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Template\TemplateService;
 
 class AdministrationControllerFactory {
 
@@ -21,13 +22,16 @@ class AdministrationControllerFactory {
         /**
          * @var CategorieService $categorieService
          * @var ParametreService $parametreService
+         * @var TemplateService $templateService
          */
         $categorieService = $container->get(CategorieService::class);
         $parametreService = $container->get(ParametreService::class);
+        $templateService = $container->get(TemplateService::class);
 
         $controller = new AdministrationController();
         $controller->setCategorieService($categorieService);
         $controller->setParametreService($parametreService);
+        $controller->setTemplateService($templateService);
         return $controller;
     }
 }

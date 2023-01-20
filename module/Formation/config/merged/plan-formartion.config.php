@@ -8,6 +8,8 @@ use Formation\Controller\FormationInstanceController;
 use Formation\Controller\PlanFormationController;
 use Formation\Controller\PlanFormationControllerFactory;
 use Formation\Provider\Privilege\PlanformationPrivileges;
+use Formation\Service\PlanDeFormation\PlanDeFormationService;
+use Formation\Service\PlanDeFormation\PlanDeFormationServiceFactory;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -78,7 +80,9 @@ return [
     ],
 
     'service_manager' => [
-        'factories' => [],
+        'factories' => [
+            PlanDeFormationService::class => PlanDeFormationServiceFactory::class,
+        ],
     ],
     'controllers'     => [
         'factories' => [

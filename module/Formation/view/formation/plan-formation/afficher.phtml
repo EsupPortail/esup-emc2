@@ -4,18 +4,20 @@ use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
 
 /**
  * @see \Formation\Controller\PlanFormationController::afficherAction()
+ * @var PlanDeFormation $planDeFormation
  * @var FormationGroupe[] $groupes
+ * @var Formation[] $formationsArrayByGroupe @desc $groupeId => Formation[]
+ * @var Formation[] $sessionsArrayByFormation @desc $formationId => FormationInstance[]
  * @var Formation[] $formations
- * @var FormationInstance[] $sessions
  * @var FormationAbonnement[] $abonnements
- * @var string $annee
  */
 
-$this->headTitle("Plan de formation à venir pour l'année " . $annee);
+$this->headTitle("Plan de formation à venir pour l'année " . $planDeFormation->getAnnee());
 
 $canListerParFormation = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_LISTE_FORMATION));
 $canGererAbonnement = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER));
@@ -25,7 +27,7 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
 ?>
 
 <h1 class="page-header">
-    Plan de formation à venir pour l'année <?php echo $annee; ?>
+    Plan de formation à venir pour l'année <?php echo $planDeFormation->getAnnee(); ?>
 </h1>
 
 <div class="alert alert-info">
@@ -57,12 +59,12 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
     <ul>
         <li>
             <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
-            (<?php echo count($formations[$groupe->getId()]); ?> formations)
+            (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
             <ul>
-                <?php foreach ($formations[$groupe->getId()] as $formation) : ?>
+                <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
                     <li>
                         <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
-                        (<?php echo count($sessions[$formation->getId()]); ?> sessions)
+                        (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
 
                         <?php
                             $abonnement = null;
@@ -77,15 +79,6 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                         <?php if ($abonnement !== null) : ?>
                             <span class="icon icon-checked text-success" title="Vous êtes abonné·e aux notifications liées à cette formation"></span>
                         <?php endif; ?>
-
-                        <?php if ($canListerParFormation) : ?>
-                            <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction() */ ?>
-                            <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true); ?>"
-                               class="ajax-modal"
-                            >
-                                <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
-                        <?php endif; ?>
-
                         <?php if ($canAbonner AND $abonnement === null) : ?>
                             <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
                             <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $formation->getId()], [], true); ?>"
@@ -101,6 +94,13 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                             </a>
                         <?php endif; ?>
 
+                        <?php if ($canListerParFormation) : ?>
+                            <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction() */ ?>
+                            <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true); ?>"
+                               class="ajax-modal"
+                            >
+                                <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
