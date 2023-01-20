@@ -3,13 +3,16 @@
 namespace Carriere\Entity\Db;
 
 use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class Grade  {
+class Grade  implements HasPeriodeInterface {
     use DbImportableAwareTrait;
+    use HasPeriodeTrait;
 
     private ?int $id = null;
     private ?string $libelleCourt = null;

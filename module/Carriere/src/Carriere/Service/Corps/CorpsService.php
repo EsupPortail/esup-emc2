@@ -2,7 +2,7 @@
 
 namespace Carriere\Service\Corps;
 
-use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -47,9 +47,10 @@ class CorpsService {
      * @param string $champ
      * @param string $ordre
      * @param boolean $avecAgent
+     * @param bool $avecHisto
      * @return Corps[]
      */
-    public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true) : array
+    public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true, bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('corps.' . $champ, $ordre)
@@ -61,7 +62,11 @@ class CorpsService {
                     ->andWhere('agent.deleted_on IS NULL')
                     ->andWhere('agentGrade.deleted_on IS NULL')
             ;
-            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
+            $qb = HasPeriodeTrait::decorateWithActif($qb,'agentGrade');
+        }
+
+        if ($avecHisto === false) {
+            $qb = HasPeriodeTrait::decorateWithActif($qb, 'corps');
         }
 
         $result = $qb->getQuery()->getResult();

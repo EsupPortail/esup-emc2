@@ -16,13 +16,30 @@ $now = new DateTime();
 ?>
 
 <dl class="row">
-    <dt class="col-md-4"> Correspondance </dt>
-    <dd class="col-md-8">[#<?php echo $correspondance->getId(); ?>] <?php echo $correspondance->getLibelleLong(); ?></dd>
-    <dt class="col-md-4"> #Agent </dt>
-    <dd class="col-md-8"> <?php echo count($agents); ?></dd>
-    <dt class="col-md-4"> #AgentGrade </dt>
-    <dd class="col-md-8"> <?php echo count($agentGrades); ?></dd>
+
 </dl>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4"> Correspondance </dt>
+            <dd class="col-md-8">[#<?php echo $correspondance->getId(); ?>] <?php echo $correspondance->getLibelleLong(); ?></dd>
+<!--            <dt class="col-md-4"> #Agent </dt>-->
+<!--            <dd class="col-md-8"> --><?php //echo count($agents); ?><!--</dd>-->
+            <dt class="col-md-4"> #AgentGrade </dt>
+            <dd class="col-md-8"> <?php echo count($agentGrades); ?></dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-5"> Date ouverture </dt>
+            <dd class="col-md-7"> <?php echo ($correspondance->getDateDebut())?$correspondance->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture </dt>
+            <dd class="col-md-7"> <?php echo ($correspondance->getDateFin())?$correspondance->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+        </dl>
+    </div>
+</div>
+
 
 <table class="table table-condensed">
     <thead>

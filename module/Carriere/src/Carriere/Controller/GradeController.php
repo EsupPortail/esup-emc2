@@ -4,9 +4,9 @@ namespace Carriere\Controller;
 
 use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Grade\GradeServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class GradeController extends AbstractActionController {
     use GradeServiceAwareTrait;

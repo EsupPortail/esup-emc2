@@ -16,12 +16,24 @@ $agents = array_filter($agents, function (AgentGrade $a) { return !$a->isDeleted
 usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
 ?>
 
-<dl class="dl-horizontal">
-    <dt> Corps </dt>
-    <dd>[#<?php echo $corps->getId(); ?>] <?php echo $corps->getLibelleLong(); ?></dd>
-    <dt> #AgentGrade </dt>
-    <dd> <?php echo count($agents); ?></dd>
-</dl>
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-5"> Corps </dt>
+            <dd class="col-md-7">[#<?php echo $corps->getId(); ?>] <?php echo $corps->getLibelleLong(); ?></dd>
+            <dt class="col-md-5"> #AgentGrade </dt>
+            <dd class="col-md-7"> <?php echo count($agents); ?></dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-5"> Date ouverture </dt>
+            <dd class="col-md-7"> <?php echo ($corps->getDateDebut())?$corps->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture </dt>
+            <dd class="col-md-7"> <?php echo ($corps->getDateFin())?$corps->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+        </dl>
+    </div>
+</div>
 
 <table class="table table-condensed">
     <thead>

@@ -2,7 +2,6 @@
 
 namespace Carriere\Service\Correspondance;
 
-use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;

@@ -9,6 +9,8 @@
         <field name="libelleLong"   column="lib_long"       type="string"       length="200" />
         <field name="code"          column="code"           type="string"       length="10"  />
         <field name="categorie"     column="categorie"      type="string"       length="10"  />
+        <field name="dateDebut"     column="d_ouverture"    type="datetime"  />
+        <field name="dateFin"       column="d_fermeture"    type="datetime"  />
 
         <many-to-one target-entity="Carriere\Entity\Db\NiveauEnveloppe"  field="niveaux">
             <join-column name="niveaux_id" referenced-column-name="id"/>

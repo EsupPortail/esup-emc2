@@ -3,7 +3,6 @@
 /**
  * @see \Carriere\Controller\CorrespondanceController::indexAction()
  * @var Correspondance[] $correspondances
- * @var AgentGrade[] $agentGrades
  */
 
 use Application\Entity\Db\AgentGrade;
@@ -73,7 +72,7 @@ $this->headTitle("Liste des correspondances");
                     Aucun
                 <?php endif; ?>
             </td>
-            <td> <?php echo count($agentGrades[$correspondance->getId()]); ?> </td>
+            <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
             <td>
                 <?php if ($canAfficher) : ?>
                     <a

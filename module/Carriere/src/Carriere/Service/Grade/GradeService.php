@@ -2,13 +2,13 @@
 
 namespace Carriere\Service\Grade;
 
-use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Grade;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class GradeService {
     use EntityManagerAwareTrait;
@@ -48,16 +48,20 @@ class GradeService {
      * @param string $champ
      * @param string $ordre
      * @param bool $avecAgent
+     * @param bool $avecHisto
      * @return Grade[]
      */
-    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true) : array
+    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true, bool $avecHisto=false) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('grade.' . $champ, $ordre)
         ;
         if ($avecAgent) {
             $qb = $this->decorateWithAgent($qb);
-            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
+            $qb = HasPeriodeTrait::decorateWithActif($qb,'agentGrade');
+        }
+        if ($avecHisto === false) {
+            $qb = HasPeriodeTrait::decorateWithActif($qb, 'grade');
         }
 
         $result = $qb->getQuery()->getResult();

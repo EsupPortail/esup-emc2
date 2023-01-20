@@ -8,6 +8,8 @@
         <field name="libelleCourt"  column="lib_court"      type="string"       length="20"   />
         <field name="libelleLong"   column="lib_long"       type="string"       length="200"  />
         <field name="code"          column="code"           type="string"       length="10"   />
+        <field name="dateDebut"     column="d_ouverture"    type="datetime"  />
+        <field name="dateFin"       column="d_fermeture"    type="datetime"  />
 
         <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="grade"/>
 
