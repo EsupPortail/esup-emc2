@@ -283,7 +283,22 @@ foreach ($encours as $epro) {
             <td> <?php echo $denomination; ?> </td>
             <td>
                 <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                    <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                    <?php $structure = $grade->getStructure(); ?>
+                    <?php if ($structure === null) : ?>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Aucun structure
+                        </span>
+                    <?php else : ?>
+                        <?php if ($structure->getLibelleLong() === null) : ?>
+                            <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                    Aucun libellé long pour la structure <?php echo $structure->getId(); ?>
+                            </span>
+                        <?php else : ?>
+                            <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </td>
             <td>
