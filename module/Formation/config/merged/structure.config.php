@@ -21,7 +21,7 @@ return [
                         'afficher',
                     ],
                     'privileges' => [ //TODO privileges
-                        FormationPrivileges::FORMATION_AFFICHER,
+                        FormationPrivileges::FORMATION_MODIFIER,
                     ],
                 ],
             ],
@@ -36,9 +36,8 @@ return [
                         'pages' => [
                             [
                                 'label' => 'Gestion des ressources',
-                                'route' => 'home',
+                                'route' => 'formation/structure',
                                 'resources' => [
-                                    PrivilegeController::getResourceId(FormationController::class, 'index'),
                                     PrivilegeController::getResourceId(StructureController::class, 'index'),
                                 ],
                                 'order'    => 10000,

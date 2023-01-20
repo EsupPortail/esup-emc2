@@ -4,7 +4,7 @@ namespace Formation;
 
 use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
-use Formation\Controller\PlanFormationController;
+use Formation\Controller\PlanDeFormationController;
 use Formation\Controller\ProjetPersonnelController;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\Inscription\InscriptionFormFactory;
@@ -86,8 +86,8 @@ return [
                     [
                         'order' => 100,
                         'label' => "Plan de formation",
-                        'route' => 'plan-formation',
-                        'resource' => PrivilegeController::getResourceId(PlanFormationController::class, 'afficher') ,
+                        'route' => 'plan-de-formation/courant',
+                        'resource' => PrivilegeController::getResourceId(PlanDeFormationController::class, 'courant') ,
                     ],
                     [
                         'order' => 200,

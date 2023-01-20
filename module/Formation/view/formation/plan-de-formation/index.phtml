@@ -1,0 +1,38 @@
+<?php
+
+use Formation\Entity\Db\PlanDeFormation;
+
+/**
+ * @see \Formation\Controller\PlanDeFormationController::indexAction()
+ * @var PlanDeFormation[] $plans
+ */
+
+$this->headTitle("Plans de formation");
+
+?>
+
+<h1 class="page-header">
+    Plans de formation
+</h1>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Annee</th>
+            <th> #Formation </th>
+            <th class="action"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($plans as $plan) : ?>
+        <tr>
+            <td> <?php echo $plan->getAnnee(); ?> </td>
+            <td> <?php echo count($plan->getFormations()); ?> </td>
+            <td class="action">
+                <span class="icon icon-voir"></span>
+                <span class="icon icon-unchecked text-danger"></span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
