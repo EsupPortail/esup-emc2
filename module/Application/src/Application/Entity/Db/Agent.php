@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Application\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Doctrine\Common\Comparable;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasComplementsInterface;
@@ -30,7 +31,8 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class Agent implements
     ResourceInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
-    HasComplementsInterface
+    HasComplementsInterface,
+    Comparable
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
@@ -218,6 +220,15 @@ class Agent implements
         return $this->getDenomination();
     }
 
+    public function compareTo($other) : int
+    {
+        $aaa = $this->getNomUsuel(). '#' . $this->getPrenom() . "#" . $this->id;
+        $bbb = $other->getNomUsuel(). '#' . $other->getPrenom() . "#" . $other->id;
+
+        if ($aaa > $bbb) return 1;
+        if ($aaa < $bbb) return -1;
+        return 0;
+    }
     /**
      * @return string|null
      */

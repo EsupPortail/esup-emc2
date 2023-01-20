@@ -105,6 +105,15 @@ class AgentController extends AbstractActionController
             $agents = $this->getAgentService()->getAgentsWithFiltre($params);
         }
 
+//        $jp = $this->getAgentService()->getAgent('8486');
+//        $jl = $this->getAgentService()->getAgent('13209');
+//        $tv = $this->getAgentService()->getAgent('16089');
+//
+//        $a = ($jp < $jl);
+//        $b = ($jp < $tv);
+//        $array = [$jp, $tv, $jl];
+//        sort($array);
+
         return new ViewModel([
             'agents' => $agents,
             'params' => $params,
