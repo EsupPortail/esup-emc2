@@ -63,9 +63,18 @@ html#mes-formations ul.nav.navbar-nav li a.nav-header {
     margin: 1rem;
 }
 
-div.modal div.modal-header {
+html#mes-formations div.modal div.modal-header {
     border-radius : 0;
     border : 1px solid black;
     background-color: var(--header-background-mes-formations);
     color: white;
+}
+
+
+html#mes-formations th.action {
+    width: 8rem;
+}
+
+html#mes-formations td.action a {
+    text-decoration: none;
 }

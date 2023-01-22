@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
+use Formation\Form\PlanDeFormation\PlanDeFormationForm;
 use Formation\Service\Abonnement\AbonnementService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
@@ -37,6 +38,11 @@ class PlanDeFormationControllerFactory {
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
 
+        /**
+         * @var PlanDeFormationForm $planDeFormationForm
+         */
+        $planDeFormationForm = $container->get('FormElementManager')->get(PlanDeFormationForm::class);
+
         $controller = new PlanDeFormationController();
         $controller->setAbonnementService($abonnementService);
         $controller->setAgentService($agentService);
@@ -44,6 +50,7 @@ class PlanDeFormationControllerFactory {
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setPlanDeFormationService($planDeFormationService);
+        $controller->setPlanDeFormationForm($planDeFormationForm);
         return $controller;
     }
 }

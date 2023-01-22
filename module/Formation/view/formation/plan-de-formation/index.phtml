@@ -9,11 +9,26 @@ use Formation\Entity\Db\PlanDeFormation;
 
 $this->headTitle("Plans de formation");
 
+//todo privilege et tout
+$canAfficher = true;
+$canAjouter = true;
+$canEditer = true;
+$canSupprimer = true;
+
 ?>
 
 <h1 class="page-header">
     Plans de formation
 </h1>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/ajouter', [],[], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon icon-ajouter"></span>
+        Ajouter un plan de formation
+    </a>
+<?php endif; ?>
 
 <table class="table table-condensed table-hover">
     <thead>
@@ -29,10 +44,41 @@ $this->headTitle("Plans de formation");
             <td> <?php echo $plan->getAnnee(); ?> </td>
             <td> <?php echo count($plan->getFormations()); ?> </td>
             <td class="action">
-                <span class="icon icon-voir"></span>
-                <span class="icon icon-unchecked text-danger"></span>
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Formation\Controller\PlanDeFormationController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('plan-de-formation/afficher', ['plan-de-formation' => $plan->getId()], [], true); ?>">
+                        <span class="icon icon-voir"></span> Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canEditer) : ?>
+                    <br/>
+                    <?php /** @see \Formation\Controller\PlanDeFormationController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('plan-de-formation/modifier', ['plan-de-formation' => $plan->getId()], [], true); ?>"
+                        class=" ajax-modal" data-event="modification">
+                        <span class="icon icon-editer"></span> Modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br/>
+                    <?php /** @see \Formation\Controller\PlanDeFormationController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('plan-de-formation/supprimer', ['plan-de-formation' => $plan->getId()], [], true); ?>"
+                       class=" ajax-modal" data-event="modification">
+                    <span class="text-danger"><span class="icon icon-unchecked"></span> Supprimer</span>
+                    </a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors=[];
+            window.location.reload();
+        });
+    });
+</script>

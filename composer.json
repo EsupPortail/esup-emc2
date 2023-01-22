@@ -10,22 +10,22 @@
   "minimum-stability": "dev",
   "require": {
     "unicaen/app": "^5",
-    "unicaen/authentification": "^5",
-    "unicaen/utilisateur": "5.0.3",
-    "unicaen/privilege": "^5",
-    "unicaen/renderer": "^5",
-    "unicaen/pdf": "^5",
-    "unicaen/mail": "^5",
-    "unicaen/parametre": "^5",
+    "unicaen/authentification": "^5.0",
+    "unicaen/utilisateur": "^5.0.5",
+    "unicaen/privilege": "^5.0",
+    "unicaen/renderer": "5.0.5",
+    "unicaen/pdf": "5.0.1",
+    "unicaen/mail": "5.0.3",
+    "unicaen/parametre": "^5.0",
     "unicaen/bjy-authorize": "^4",
     "unicaen/ldap": "^4",
     "unicaen/octopus": "^4",
-    "unicaen/evenement": "^5",
-    "unicaen/autoform": "^5",
+    "unicaen/evenement": "^5.0",
+    "unicaen/autoform": "^5.0",
     "unicaen/aide": "dev-master",
     "ext-json": "*",
     "unicaen/db-import": "dev-utilisateur",
-    "unicaen/indicateur": "^0.0.5"
+    "unicaen/indicateur": "^0.0"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

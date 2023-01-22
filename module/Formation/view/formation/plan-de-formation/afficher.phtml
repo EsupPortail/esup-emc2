@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @see \Formation\Controller\PlanDeFormationController::afficherAction()
+ * @var PlanDeFormation $plan
+ * @var FormationGroupe[] $groupes
+ * @var Formation[]  $formations
+ * @var Formation[] $formationsArrayByGroupe @desc $groupeId => Formation[]
+ * @var Formation[] $sessionsArrayByFormation @desc $formationId => FormationInstance[]
+ */
+
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationGroupe;
+use Formation\Entity\Db\PlanDeFormation;
+
+
+?>
+
+<h1 class="page-header">
+    Plan de formation
+    <span class="highlight plan-de-formation">
+        <?php echo $plan->getAnnee(); ?>
+    </span>
+</h1>
+
+<h2> Formations dans le plan </h2>
+
+
+<?php foreach ($groupes as $groupe) : ?>
+    <ul>
+        <li>
+            <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
+            (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
+            <ul>
+                <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
+                    <li>
+                        <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                        (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+    </ul>
+<?php endforeach; ?>
+
+
+<h2> Autres infos <span class="todo">extra ? ... ?</span></h2>
+

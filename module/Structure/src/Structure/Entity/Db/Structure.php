@@ -71,12 +71,12 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $this->code;
     }
 
-    public function getLibelleCourt() : string
+    public function getLibelleCourt() : ?string
     {
         return $this->libelleCourt;
     }
 
-    public function getLibelleLong() : string
+    public function getLibelleLong() : ?string
     {
         return $this->libelleLong;
     }

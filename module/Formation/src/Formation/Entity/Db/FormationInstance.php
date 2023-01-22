@@ -273,7 +273,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      * @param bool $datetime
      * @return string|null
      */
-    public function getFin(bool $datetime = false) : ?string
+    public function getFin(bool $datetime = false)
     {
         $maximum = null;
         /** @var Seance $journee */

@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -187,6 +188,40 @@ class FormationInstanceService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan)
+    {
+        $annees = explode("/",$plan->getAnnee());
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annees[0]);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.$annees[1]);
+
+        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+            ->addSelect('formation')->join('Finstance.formation', 'formation')
+            ->addSelect('journee')->leftjoin('Finstance.journees', 'journee')
+//            ->addSelect('inscrit')->leftjoin('Finstance.inscrits', 'inscrit')
+//            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+//            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat')
+            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
+//            ->andWhere('journee.jour > :debut')->setParameter('debut', $debut)
+//            ->andWhere('journee.jour < :fin')->setParameter('fin', $fin)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        $trueR = [];
+
+        /** @var FormationInstance $instance */
+        foreach ($result as $instance) {
+            if ($instance->getDebut(true) > $debut AND $instance->getFin(true) < $fin) $trueR[] = $instance;
+
+        }
+//        $debut = $debut->format('d/m/Y');
+//        $fin = $fin->format('d/m/Y');
+//        $formationL = $formation->getLibelle();
+//        $result = $qb->getQuery()->getResult();
+//        $count = count($result);
+        return $trueR;
+    }
+
     /**
      * @param string $etatCode
      * @return FormationInstance[]

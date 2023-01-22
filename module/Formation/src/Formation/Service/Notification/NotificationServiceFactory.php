@@ -5,7 +5,7 @@ namespace Formation\Service\Notification;
 use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\Url\UrlService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\Containerinterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenMail\Service\Mail\MailService;
