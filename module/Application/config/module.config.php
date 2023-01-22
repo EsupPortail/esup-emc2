@@ -19,6 +19,7 @@ use Application\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Privilege\PostePrivileges;
 use Application\Provider\Privilege\SynchroPrivileges;
 use Application\Provider\Privilege\ValidationPrivileges;
+use Application\Provider\Role\RoleProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
 use Application\Service\Macro\MacroService;
@@ -107,8 +108,8 @@ return [
                     'action' => [
                         'infos',
                     ],
-                    'privileges' => [
-                        AdministrationPrivileges::ADMINISTRATION_AFFICHER,
+                    'roles' => [
+                        RoleProvider::ADMIN_TECH,
                     ],
                 ],
             ],

@@ -17,6 +17,7 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -35,6 +36,7 @@ class FormationController extends AbstractActionController
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use PlanDeFormationServiceAwareTrait;
     use SourceServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
@@ -358,4 +360,41 @@ class FormationController extends AbstractActionController
         ]);
         return $vm;
     }
+
+
+    public function ajouterPlanDeFormationAction() : ViewModel
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+        $plans = $this->getPlanDeFormationService()->getPlansDeFormation();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $plan = $this->getPlanDeFormationService()->getPlanDeFormation($data['plan']);
+            $formation->addPlanDeForamtion($plan);
+            $this->getFormationService()->update($formation);
+            exit();
+        }
+
+        $vm = new ViewModel([
+            'title' => "Inclure dans un plan de formation",
+           'formation' => $formation,
+            'plans' => $plans,
+        ]);
+        return $vm;
+    }
+
+    public function retirerPlanDeFormationAction() : Response
+    {
+        $formation = $this->getFormationService()->getRequestedFormation($this);
+        $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
+
+        $formation->removePlanDeFormation($plan);
+        $this->getFormationService()->update($formation);
+
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('formation/editer', ['formation' => $formation->getId()], [], true);
+    }
+
 }

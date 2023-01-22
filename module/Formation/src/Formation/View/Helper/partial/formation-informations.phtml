@@ -15,6 +15,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 $canAfficherActionFormation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 $canAfficherGroupeFormation = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER));
 
+$canModifierPlans = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 ?>
 
 <?php if ($mode === 'liste') : ?>
@@ -79,10 +80,28 @@ $canAfficherGroupeFormation = $this->isAllowed(FormationgroupePrivileges::getRes
             <?php else : ?>
                 <ul>
                     <?php foreach ($plans as $plan) : ?>
-                        <li> <?php echo $plan->getAnnee(); ?></li>
+                        <li>
+                            <?php echo $plan->getAnnee(); ?>
+                            <?php if ($canModifierPlans) : ?>
+                                <?php /** @see \Formation\Controller\FormationController::retirerPlanDeFormationAction() */ ?>
+                                <a href="<?php echo $this->url('formation/retirer-plan-de-formation', ['formation' => $formation->getId(), 'plan-de-formation' => $plan->getId()], [], true); ?>">
+                                    <span class="icon icon-unchecked text-danger" title="Retirer le plan de formation"></span>
+                                </a>
+                            <?php endif; ?>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
         </dd>
     </dl>
+    <?php if ($canModifierPlans) : ?>
+        <?php /** @see \Formation\Controller\FormationController::ajouterPlanDeFormationAction() */ ?>
+        <a href="<?php echo $this->url('formation/ajouter-plan-de-formation', ['formation' => $formation->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification"
+        >
+            <span class="icon icon-ajouter"></span>
+            Ajouter un plan de formation
+        </a>
+    <?php endif; ?>
+
 <?php endif; ?>

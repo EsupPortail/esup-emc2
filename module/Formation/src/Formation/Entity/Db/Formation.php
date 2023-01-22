@@ -269,6 +269,8 @@ class Formation implements HistoriqueAwareInterface,
         return $this->abonnements->toArray();
     }
 
+    /** GESTION DES PLANS DE PLAN DE FORMATION *******************************************************/
+
     /**
      * @return PlanDeFormation[]
      */
@@ -277,5 +279,18 @@ class Formation implements HistoriqueAwareInterface,
         return $this->plans->toArray();
     }
 
+    public function addPlanDeForamtion(PlanDeFormation $plan) : void
+    {
+        $this->plans->add($plan);
+    }
 
+    public function removePlanDeFormation(PlanDeFormation  $plan) : void
+    {
+        $this->plans->removeElement($plan);
+    }
+
+    public function hasPlanDeFormation(PlanDeFormation $plan) : bool
+    {
+        return $this->plans->contains($plan);
+    }
 }

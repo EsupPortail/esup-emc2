@@ -89,6 +89,9 @@ return [
                         'ajouter-instance',
                         'ajouter-application-element',
                         'ajouter-competence-element',
+                        'ajouter-plan-de-formation',
+                        'retirer-plan-de-formation',
+
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_MODIFIER,
@@ -204,6 +207,26 @@ return [
                             'defaults' => [
                                 'controller' => FormationController::class,
                                 'action'     => 'ajouter-competence-element',
+                            ],
+                        ],
+                    ],
+                    'ajouter-plan-de-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-plan-de-formation/:formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'ajouter-plan-de-formation',
+                            ],
+                        ],
+                    ],
+                    'retirer-plan-de-formation' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/retirer-plan-de-formation/:formation/:plan-de-formation',
+                            'defaults' => [
+                                'controller' => FormationController::class,
+                                'action'     => 'retirer-plan-de-formation',
                             ],
                         ],
                     ],
