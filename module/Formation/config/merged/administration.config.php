@@ -9,6 +9,7 @@ use UnicaenParametre\Provider\Privilege\ParametrecategoriePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenRenderer\Controller\IndexController;
 use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
 
@@ -23,6 +24,15 @@ return [
                     ],
                     'privileges' => [
                         ParametrecategoriePrivileges::PARAMETRECATEGORIE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => AdministrationController::class,
+                    'action' => [
+                        'privilege',
+                    ],
+                    'privileges' => [
+                        PrivilegePrivileges::PRIVILEGE_AFFECTER,
                     ],
                 ],
                 [
@@ -57,6 +67,13 @@ return [
                                 'label' => 'Paramètres',
                                 'route' => 'formation/administration/parametre',
                                 'resource' => ParametrecategoriePrivileges::getResourceId(ParametrecategoriePrivileges::PARAMETRECATEGORIE_INDEX),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'privilege' => [
+                                'order' => 1100,
+                                'label' => 'Privilèges',
+                                'route' => 'formation/administration/privilege',
+                                'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AFFECTER),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             'template' => [
@@ -95,6 +112,17 @@ return [
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
                                         'action'     => 'parametre',
+                                    ],
+                                ],
+                            ],
+                            'privilege' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    /** @see AdministrationController::privilegeAction() */
+                                    'route'    => '/privilege',
+                                    'defaults' => [
+                                        'controller' => AdministrationController::class,
+                                        'action'     => 'privilege',
                                     ],
                                 ],
                             ],

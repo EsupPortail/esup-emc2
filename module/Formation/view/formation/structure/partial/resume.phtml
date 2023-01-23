@@ -95,7 +95,7 @@ $canEditerGestionnaire = false;
         <?php if ($structure->getParent() !== null) :?>
             <ul>
                 <li>
-                    <a href="<?php echo $this->url('formation/structure/afficher', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
+                    <a href="<?php echo $this->url('formation/structure', ['structure' => $structure->getParent()->getId()], [] , true); ?> ">
                         <?php echo $structure->getParent()->getLibelleCourt(); ?>
                         -
                         <?php echo $structure->getParent()->getLibelleLong(); ?>
@@ -113,7 +113,7 @@ $canEditerGestionnaire = false;
         <ul>
             <?php foreach ($filles as $enfant) : ?>
                 <li>
-                    <a href="<?php echo $this->url('formation/structure/afficher', ['structure' => $enfant->getId()], [] , true); ?> ">
+                    <a href="<?php echo $this->url('formation/structure', ['structure' => $enfant->getId()], [] , true); ?> ">
                         <?php echo $enfant->getLibelleCourt(); ?>
                         -
                         <?php echo $enfant->getLibelleLong(); ?>

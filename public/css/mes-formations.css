@@ -78,3 +78,9 @@ html#mes-formations th.action {
 html#mes-formations td.action a {
     text-decoration: none;
 }
+
+html#mes-formations div.tab-content {
+    position:relative;
+    top:-9;
+    border-top: 1px solid black;
+}

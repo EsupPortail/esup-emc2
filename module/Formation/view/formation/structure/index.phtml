@@ -34,7 +34,7 @@ $this->headTitle("Structures");
             </td>
             <td> <?php echo ($structure->getType())?$structure->getType()->getLibelle():"Aucun type connu"; ?></td>
             <td class="action">
-                <a href="<?php echo $this->url('formation/structure/afficher', ['structure' => $structure->getId()], [], true); ?>">
+                <a href="<?php echo $this->url('formation/structure', ['structure' => $structure->getId()], [], true); ?>">
                     <span class="icon icon-voir"></span>
                     Accéder
                 </a>

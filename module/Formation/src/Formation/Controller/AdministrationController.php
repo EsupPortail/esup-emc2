@@ -6,12 +6,16 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenParametre\Service\Categorie\CategorieServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenRenderer\Service\Template\TemplateServiceAwareTrait;
+use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 
 class AdministrationController extends AbstractActionController
 {
     use CategorieServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
+    use RoleServiceAwareTrait;
     use TemplateServiceAwareTrait;
 
     public function parametreAction() : ViewModel
@@ -30,6 +34,18 @@ class AdministrationController extends AbstractActionController
 
     public function privilegeAction() : ViewModel
     {
+        $namespace = 'Formation\Provider\Privilege';
+
+        $roles = $this->roleService->findAll();
+        $privilegesByCategorie = $this->privilegeService->listByCategorie($namespace);
+
+        $vm = new ViewModel([
+            'roles' => $roles,
+            'privilegesByCategorie' => $privilegesByCategorie,
+            'gestion' => 'off',
+        ]);
+        $vm->setTemplate('unicaen-privilege/privilege/index');
+        return $vm;
 
     }
 

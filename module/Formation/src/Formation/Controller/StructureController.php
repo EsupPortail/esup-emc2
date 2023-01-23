@@ -11,6 +11,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureController extends AbstractActionController
 {
@@ -18,6 +19,7 @@ class StructureController extends AbstractActionController
     use DemandeExterneServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -40,6 +42,12 @@ class StructureController extends AbstractActionController
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        if (!empty($selecteur) AND $structure===null) $structure = $selecteur[0];
+
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] =  $structure;
 
@@ -56,6 +64,8 @@ class StructureController extends AbstractActionController
         $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
 
         return new ViewModel([
+            'selecteur' => $selecteur,
+
             'structure' => $structure,
             'agents' => $allAgents,
 
