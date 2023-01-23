@@ -385,21 +385,16 @@ $this->headTitle("Vérification de l'installation");
 <script>
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "<?php echo $modules[0]; ?>";
 
         $('a[aria-controls=' + name + ']').tab('show');
 
-        $('.nav a').click(function (e) {
+        $('.nav a').on('click', function (e) {
             let anchor = $(this).attr('aria-controls');
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
             history.replaceState(null, null, "#"+anchor);
             $(this).tab('show');
-        });
-
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
         });
     });
 </script>
