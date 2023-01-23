@@ -2,6 +2,7 @@
 
 namespace Application;
 
+use Application\Controller\IndexController;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Controller\VerificationController;
 use Application\Controller\VerificationControllerFactory;
@@ -49,10 +50,26 @@ return [
                 'pages' => [
                     'administration' => [
                         'pages' => [
-                            'verification' => [
-                                'label'    => 'Vérification installation',
+                            'verification_menu' => [
+                                'label'    => 'Vérification',
                                 'route'    => 'verification',
                                 'resource' => PrivilegeController::getResourceId(VerificationController::class, 'index') ,
+                                'order'    => 999900,
+                                'dropdown-header' => true,
+                            ],
+                            'verification' => [
+                                'label'    => 'Vérification installation',
+                                /** @see VerificationController::indexAction() */
+                                'route'    => 'verification',
+                                'resource' => PrivilegeController::getResourceId(VerificationController::class, 'index') ,
+                                'order'    => 999998,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'phpinfo' => [
+                                'label'    => 'Vérification php',
+                                /** @see IndexController::infosAction() */
+                                'route'    => 'infos',
+                                'resource' => PrivilegeController::getResourceId(IndexController::class, 'infos') ,
                                 'order'    => 999999,
                                 'icon' => 'fas fa-angle-right',
                             ],
