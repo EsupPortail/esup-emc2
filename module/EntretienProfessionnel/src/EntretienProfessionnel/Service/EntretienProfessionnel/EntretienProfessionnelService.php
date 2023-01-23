@@ -548,9 +548,9 @@ class EntretienProfessionnelService {
             $qb = $qb
                 ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
                 ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
-                ->andWhere('structure.id = :etat')->setParameter('structure', $params['structure-filtre']['id'])
-                ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= entretien.date')
-                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.date')
+                ->andWhere('structure.id = :structure')->setParameter('structure', $params['structure-filtre']['id'])
+                ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= entretien.dateEntretien')
+                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
                 ->andWhere('affectation.id IS NOT NULL');
         }
         if ($params['agent-filtre'] !== null and $params['agent-filtre']['id'] !== "") {
