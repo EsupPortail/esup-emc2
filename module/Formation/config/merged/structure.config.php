@@ -2,7 +2,6 @@
 
 namespace Formation;
 
-use Formation\Controller\FormationController;
 use Formation\Controller\StructureController;
 use Formation\Controller\StructureControllerFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -37,14 +36,14 @@ return [
                             [
                                 'label' => 'Gestion des ressources',
                                 'route' => 'formation/structure',
-                                'resources' => [
+                                'resource' =>
                                     PrivilegeController::getResourceId(StructureController::class, 'index'),
-                                ],
-                                'order'    => 10000,
+
+                                'order'    => 400,
                                 'dropdown-header' => true,
                             ],
                             'structure' => [
-                                'order' => 12000,
+                                'order' => 420,
                                 'label' => 'Structure',
                                 'route' => 'formation/structure',
                                 'resource' => PrivilegeController::getResourceId(StructureController::class, 'index'),

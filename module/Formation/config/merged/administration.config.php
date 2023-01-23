@@ -5,7 +5,6 @@ namespace Formation;
 use Formation\Controller\AdministrationController;
 use Formation\Controller\AdministrationControllerFactory;
 use UnicaenParametre\Controller\CategorieController;
-use UnicaenParametre\Controller\ParametreController;
 use UnicaenParametre\Provider\Privilege\ParametrecategoriePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
@@ -47,7 +46,8 @@ return [
                         'label' => 'Administration',
                         'route' => 'home',
                         'resources' => [
-                            PrivilegeController::getResourceId(ParametreController::class, 'index'),
+                            PrivilegeController::getResourceId(AdministrationController::class, 'parametre'),
+                            PrivilegeController::getResourceId(IndexController::class, 'index'),
                         ],
                         'order'    => 20000,
                         'dropdown-header' => true,
@@ -56,7 +56,7 @@ return [
                                 'order' => 1000,
                                 'label' => 'Paramètres',
                                 'route' => 'formation/administration/parametre',
-                                'resource' => PrivilegeController::getResourceId(CategorieController::class, 'index'),
+                                'resource' => ParametrecategoriePrivileges::getResourceId(ParametrecategoriePrivileges::PARAMETRECATEGORIE_INDEX),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             'template' => [

@@ -91,7 +91,7 @@ return [
                                 'label'    => 'Thèmes de formation',
                                 'route'    => 'formation-groupe',
                                 'resource' => PrivilegeController::getResourceId(FormationGroupeController::class, 'index') ,
-                                'order'    => 320,
+                                'order'    => 210,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

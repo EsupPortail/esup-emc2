@@ -61,7 +61,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_AFFICHER,
+                        FormationPrivileges::FORMATION_ACCES,
                     ],
                 ],
                 [
@@ -133,8 +133,16 @@ return [
                         'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
                         'dropdown-header' => true,
                         'pages' => [
+                            'formation_header' => [
+                                'order' => 200,
+                                'label' => 'Gestion des formations',
+                                'route' => 'formation',
+                                'resource' => PrivilegeController::getResourceId(FormationController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
+                                'dropdown-header' => true,
+                            ],
                             'action-formation' => [
-                                'order' => 325,
+                                'order' => 220,
                                 'label' => 'Actions de formation',
                                 'route' => 'formation',
                                 'resource' => PrivilegeController::getResourceId(FormationController::class, 'index'),

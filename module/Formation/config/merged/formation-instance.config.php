@@ -134,7 +134,7 @@ return [
                                 'label'    => 'Session en cours',
                                 'route'    => 'formation-instance',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
-                                'order'    => 330,
+                                'order'    => 230,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

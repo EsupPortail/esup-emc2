@@ -28,6 +28,11 @@ class AdministrationController extends AbstractActionController
         return $vm;
     }
 
+    public function privilegeAction() : ViewModel
+    {
+
+    }
+
     public function templateAction() : ViewModel
     {
         $templates = $this->getTemplateService()->getTemplatesByNamespace('Formation\Provider\Template');

@@ -170,6 +170,13 @@ return [
                 'pages' => [
                     'gestion-formation' => [
                         'pages' => [
+                            'demande-header' => [
+                                'label'    => 'Stages externes',
+                                'route'    => 'formation/demande-externe',
+                                'resource' => PrivilegeController::getResourceId(DemandeExterneController::class, 'index') ,
+                                'order'    => 300,
+                                'dropdown-header' => true,
+                            ],
                             'demande-externe' => [
                                 'label'    => 'Demandes externes',
                                 'route'    => 'formation/demande-externe',

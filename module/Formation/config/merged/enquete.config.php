@@ -116,7 +116,7 @@ return [
                                 'label'    => 'Enquête',
                                 'route'    => 'formation/enquete/question',
                                 'resource' => PrivilegeController::getResourceId(EnqueteQuestionController::class, 'afficher-questions') ,
-                                'order'    => 335,
+                                'order'    => 430,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

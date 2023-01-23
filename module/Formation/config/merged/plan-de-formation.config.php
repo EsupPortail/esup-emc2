@@ -25,20 +25,52 @@ return [
                         'courant',
                     ],
                     'privileges' => [
-                        PlanformationPrivileges::PLANFORMATION_ACCES
+                        PlanformationPrivileges::PLANFORMATION_COURANT
                     ],
                 ],
                 [
                     'controller' => PlanDeFormationController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        PlanformationPrivileges::PLANFORMATION_INDEX
+                    ],
+                ],
+                [
+                    'controller' => PlanDeFormationController::class,
+                    'action' => [
                         'afficher',
+                    ],
+                    'privileges' => [
+                        PlanformationPrivileges::PLANFORMATION_AFFICHER
+                    ],
+                ],
+                [
+                    'controller' => PlanDeFormationController::class,
+                    'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        PlanformationPrivileges::PLANFORMATION_AJOUTER
+                    ],
+                ],
+                [
+                    'controller' => PlanDeFormationController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        PlanformationPrivileges::PLANFORMATION_MODIFIER
+                    ],
+                ],
+                [
+                    'controller' => PlanDeFormationController::class,
+                    'action' => [
                         'supprimer'
                     ],
                     'privileges' => [
-                        PlanformationPrivileges::PLANFORMATION_ACCES
+                        PlanformationPrivileges::PLANFORMATION_SUPPRIMER
                     ],
                 ],
             ],
@@ -51,24 +83,23 @@ return [
                 'pages' => [
                     'gestion-formation' => [
                         'pages' => [
-                            [
+                            'planformation_header' =>[
                                 'label' => "Gestion du plan de formation",
                                 'route' => 'home',
-                                'resources' => [
-                                    PrivilegeController::getResourceId(PlanDeFormationController::class, 'courant') ,
-                                    PrivilegeController::getResourceId(PlanDeFormationController::class, 'index') ,
-                                ],
+                                'resource' =>
+                                    //PrivilegeController::getResourceId(PlanDeFormationController::class, 'index') ,
+                                    PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_INDEX),
                                 'order'    => 100,
                                 'dropdown-header' => true,
                             ],
                             'planformation_courrant' => [
                                 'label'    => 'Plan de formation courant',
                                 'route'    => 'plan-de-formation/courant',
-                                'resource' => PrivilegeController::getResourceId(PlanDeFormationController::class, 'courant') ,
+                                'resource' => PrivilegeController::getResourceId(PlanDeFormationController::class, 'index') ,
                                 'order'    => 110,
                                 'icon' => 'fas fa-angle-right',
                             ],
-                            'plansformation' => [
+                            'plansformation_all' => [
                                 'label'    => 'Plans de formation',
                                 'route'    => 'plan-de-formation',
                                 'resource' => PrivilegeController::getResourceId(PlanDeFormationController::class, 'index') ,
