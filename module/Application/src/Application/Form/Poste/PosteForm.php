@@ -2,142 +2,56 @@
 
 namespace Application\Form\Poste;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
-use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Form\Element\SearchAndSelect;
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class PosteForm extends Form  {
-    use AgentServiceAwareTrait;
-    use CorrespondanceServiceAwareTrait;
-    use DomaineServiceAwareTrait;
-    use StructureServiceAwareTrait;
-
-    /** @var string */
-    private $urlStructure;
-
-    /**
-     * @param string $url
-     * @return PosteForm
-     */
-    public function setUrlStructure($url)
-    {
-        $this->urlStructure = $url;
-        return $this;
-    }
-
-    /** @var string */
-    private $urlRattachement;
-
-    /**
-     * @param string $url
-     * @return PosteForm
-     */
-    public function setUrlRattachement($url)
-    {
-        $this->urlRattachement = $url;
-        return $this;
-    }
 
     public function init()
     {
-        // numero_poste
+        // referentiel
         $this->add([
             'type' => Text::class,
-            'name' => 'numero_poste',
+            'name' => 'referentiel',
             'options' => [
-                'label' => "Numero de poste * :",
+                'label' => "Référentiel :",
             ],
             'attributes' => [
-                'id' => 'numero_poste',
+                'id' => 'referentiel',
             ],
         ]);
-        // structure
-        $structure = new SearchAndSelect('structure', ['label' => "Service/composante/direction d'affectation * :"]);
-        $structure
-            ->setAutocompleteSource($this->urlStructure)
-            ->setSelectionRequired(true)
-            ->setAttributes([
-                'id' => 'structure',
-                'placeholder' => "Nom de la structure...",
-            ]);
-        $this->add($structure);
-
-
-        // correspondance
+        // intitule
         $this->add([
-            'type' => Select::class,
-            'name' => 'correspondance',
+            'type' => Text::class,
+            'name' => 'intitule',
             'options' => [
-                'label' => "Catégorie * :",
-                'empty_option'  => "Sélectionner une correspondance ...",
-                'value_options' => $this->getCorrespondanceService()->getCorrespondancesAsOptions(),
+                'label' => "Intitulé  :",
             ],
             'attributes' => [
-                'id' => 'correspondance',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'intitule',
             ],
         ]);
-
-        // rattachement
-        $rattachement = new SearchAndSelect('rattachement', ['label' => "Rattachement hierarchique * :"]);
-        $rattachement
-            ->setAutocompleteSource($this->urlRattachement)
-            ->setSelectionRequired(true)
-            ->setAttributes([
-                'id' => 'rattachement',
-                'placeholder' => "Nom de l'agent ...",
-            ]);
-        $this->add($rattachement);
-
-        // domaine
+        // referentiel
         $this->add([
-            'type' => Select::class,
-            'name' => 'domaine',
+            'type' => Text::class,
+            'name' => 'poste_id',
             'options' => [
-                'label' => "Domaine * :",
-                'empty_option'  => "Sélectionner un domaine ...",
-                'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
+                'label' => "Identifiant du poste  :",
             ],
             'attributes' => [
-                'id'                => 'domaine',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'poste_id',
             ],
         ]);
 
-        // Fonction
-        $this->add([
-            'type' => Select::class,
-            'name' => 'fonction',
-            'options' => [
-                'label' => "Fonction * :",
-                'empty_option'  => "Sélectionner une fonction ...",
-                'value_options' => [
-                    'Soutien' => 'Soutien',
-                    'Support' => 'Support',
-                ],
-            ],
-            'attributes' => [
-                'id' => 'fonction',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
-            ],
-        ]);
 
         // button
         $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => '<i class="fas fa-save"></i> Enregistrer le poste',
+                'label' => '<i class="fas fa-save"></i> Enregistrer',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -150,13 +64,9 @@ class PosteForm extends Form  {
 
         //inputFIlter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'numero_poste'      => [ 'required' => true,  ],
-            'structure'         => [ 'required' => true,  ],
-            'localisation'      => [ 'required' => false, ],
-            'correspondance'    => [ 'required' => true,  ],
-            'rattachement'      => [ 'required' => true,  ],
-            'domaine'           => [ 'required' => true,  ],
-            'fonction'          => [ 'required' => true,  ],
+            'referentiel'      => [ 'required' => false,  ],
+            'intitule'         => [ 'required' => false,  ],
+            'poste_id'         => [ 'required' => false,  ],
         ]));
     }
 }

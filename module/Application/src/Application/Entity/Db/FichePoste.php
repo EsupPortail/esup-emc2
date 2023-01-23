@@ -41,8 +41,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** @var ArrayCollection (Expertise) */
     private $expertises;
 
-    /** @var Poste */
-    private $poste;
     /** @var int */
     private $rifseep;
     /** @var int */
@@ -62,6 +60,8 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** @var array */
     private $dictionnaires;
+
+    private ?Poste $poste = null;
 
 
     public function __invoke()
@@ -131,22 +131,14 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $this;
     }
 
-    /**
-     * @return Poste
-     */
-    public function getPoste()
+    public function getPoste() : ?Poste
     {
         return $this->poste;
     }
 
-    /**
-     * @param Poste $poste
-     * @return FichePoste
-     */
-    public function setPoste($poste)
+    public function setPoste(?Poste $poste) : void
     {
         $this->poste = $poste;
-        return $this;
     }
 
     /**

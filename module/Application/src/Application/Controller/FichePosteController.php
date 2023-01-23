@@ -9,11 +9,13 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
+use Application\Entity\Db\Poste;
 use Application\Entity\Db\SpecificitePoste;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormAwareTrait;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormAwareTrait;
 use Application\Form\Expertise\ExpertiseFormAwareTrait;
+use Application\Form\Poste\PosteFormAwareTrait;
 use Application\Form\Rifseep\RifseepFormAwareTrait;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
@@ -30,6 +32,7 @@ use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Notification\NotificationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
+use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use Mpdf\MpdfException;
@@ -63,6 +66,7 @@ class FichePosteController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
+    use PosteServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -72,6 +76,7 @@ class FichePosteController extends AbstractActionController {
     use AjouterFicheMetierFormAwareTrait;
     use AssocierTitreFormAwareTrait;
     use ExpertiseFormAwareTrait;
+    use PosteFormAwareTrait;
     use RifseepFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
@@ -316,6 +321,43 @@ class FichePosteController extends AbstractActionController {
         } catch(MpdfException $e) {
             throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
         }
+    }
+
+    /** GESTION DES INFORMATIONS DE POSTE *****************************************************************************/
+
+    public function modifierInformationPosteAction() : ViewModel
+    {
+        $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
+
+        $create = false;
+        /** @var ?Poste $poste */
+        $poste = $ficheposte->getPoste();
+        if ($ficheposte->getPoste() === null)  {
+            $create = true;
+            $poste = new Poste();
+            $poste->setFicheposte($ficheposte);
+        }
+
+        $form = $this->getPosteForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/modifier-information-poste', ['fiche-poste' => $ficheposte->getId()], [], true));
+        $form->bind($poste);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($create) $this->getPosteService()->create($poste);
+                else $this->getPosteService()->update($poste);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier les informations sur le poste",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('application/default/default-form');
+        return $vm;
     }
 
     /** GESTION DES ETATS DES FICHES POSTES ***************************************************************************/

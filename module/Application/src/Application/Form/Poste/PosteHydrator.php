@@ -3,17 +3,9 @@
 namespace Application\Form\Poste;
 
 use Application\Entity\Db\Poste;
-use Application\Service\Agent\AgentServiceAwareTrait;
-use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Structure\Service\Structure\StructureServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class PosteHydrator implements HydratorInterface {
-    use AgentServiceAwareTrait;
-    use CorrespondanceServiceAwareTrait;
-    use DomaineServiceAwareTrait;
-    use StructureServiceAwareTrait;
 
     /**
      * @param Poste $object
@@ -23,12 +15,9 @@ class PosteHydrator implements HydratorInterface {
     {
 
         $data = [
-            'numero_poste'      => $object->getNumeroPoste(),
-            'structure'         => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
-            'correspondance'    => ($object->getCorrespondance())?$object->getCorrespondance()->getId():null,
-            'rattachement'      => ($object->getRattachementHierarchique())?['id' => $object->getRattachementHierarchique()->getId(), 'label' => $object->getRattachementHierarchique()->getDenomination()]:null,
-            'domaine'           => ($object->getDomaine())?$object->getDomaine()->getId():null,
-            'fonction'          => $object->getFonction(),
+            'referentiel' => $object?$object->getReferentiel():null,
+            'intitule' => $object?$object->getIntitule():null,
+            'poste_id' => $object?$object->getPosteId():null,
         ];
         return $data;
     }
@@ -38,19 +27,15 @@ class PosteHydrator implements HydratorInterface {
      * @param Poste $object
      * @return Poste
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
-        $structure = $this->getStructureService()->getStructure($data['structure']['id']);
-        $correspondance = $this->getCorrespondanceService()->getCorrespondance($data['correspondance']);
-        $rattachement = $this->getAgentService()->getAgent($data['rattachement']['id']);
-        $domaine = $this->getDomaineService()->getDomaine($data['domaine']);
+        $refentiel = (isset($data['referentiel']) AND trim($data['referentiel']) !== "")?trim($data['referentiel']):null;
+        $intitule = (isset($data['intitule']) AND trim($data['intitule']) !== "")?trim($data['intitule']):null;
+        $posteId = (isset($data['poste_id']) AND trim($data['poste_id']) !== "")?trim($data['poste_id']):null;
 
-        $object->setNumeroPoste($data['numero_poste']);
-        $object->setStructure($structure);
-        $object->setCorrespondance($correspondance);
-        $object->setRattachementHierarchique($rattachement);
-        $object->setDomaine($domaine);
-        $object->setFonction($data['fonction']);
+        $object->setReferentiel($refentiel);
+        $object->setIntitule($intitule);
+        $object->setPosteId($posteId);
 
         return $object;
     }

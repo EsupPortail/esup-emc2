@@ -1,0 +1,69 @@
+<?php
+
+// echo $this->partial('partial/information-poste', ['fiche' => $fiche, 'mode' => 'affichage']);
+/**
+ * @var FichePoste $fiche
+ * @var string $mode
+ */
+
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\FichePostePrivileges;
+
+$canAfficher = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER_POSTE));
+$canModifier = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER_POSTE));
+?>
+
+<?php if ($canAfficher) : ?>
+    <div class="card bg-default">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>Information sur le poste associé</h2>
+                </div>
+                <div class="col-md-3">
+                    <?php if ($mode === 'edition' AND $canModifier) : ?>
+                        <?php /** @see \Application\Controller\FichePosteController::modifierInformationPosteAction() */ ?>
+                        <a  href="<?php echo $this->url('fiche-poste/modifier-information-poste', ['fiche-poste' => $fiche->getId()], [], true); ?>"
+                            class="btn btn-primary ajax-modal" data-event="modification">
+                            <span class="icon icon-editer"></span>
+                            Modifier les informations
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <?php $poste = $fiche->getPoste(); ?>
+            <?php if ($poste === null) : ?>
+                Informations non renseignées
+            <?php else : ?>
+                <dl class="row">
+                    <dt class="col-md-2"> Référentiel</dt>
+                    <dd class="col-md-2">
+                        <?php if ($poste->getReferentiel()) : ?>
+                            <?php echo $poste->getReferentiel(); ?>
+                        <?php else : ?>
+                            Non renseigné
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-2"> Intitulé </dt>
+                    <dd class="col-md-2">
+                        <?php if ($poste->getIntitule()) : ?>
+                            <?php echo $poste->getIntitule(); ?>
+                        <?php else : ?>
+                            Non renseigné
+                        <?php endif; ?>
+                    </dd>
+                    <dt class="col-md-2"> Identifiant </dt>
+                    <dd class="col-md-2">
+                        <?php if ($poste->getPosteId()) : ?>
+                            <?php echo $poste->getPosteId(); ?>
+                        <?php else : ?>
+                            Non renseigné
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>

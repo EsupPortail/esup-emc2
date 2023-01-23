@@ -22,6 +22,10 @@ use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Expertise\ExpertiseFormFactory;
 use Application\Form\Expertise\ExpertiseHydrator;
 use Application\Form\Expertise\ExpertiseHydratorFactory;
+use Application\Form\Poste\PosteForm;
+use Application\Form\Poste\PosteFormFactory;
+use Application\Form\Poste\PosteHydrator;
+use Application\Form\Poste\PosteHydratorFactory;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\Rifseep\RifseepFormFactory;
 use Application\Form\Rifseep\RifseepHydrator;
@@ -40,6 +44,8 @@ use Application\Service\Expertise\ExpertiseService;
 use Application\Service\Expertise\ExpertiseServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
+use Application\Service\Poste\PosteService;
+use Application\Service\Poste\PosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FichePosteGraphViewHelper;
@@ -112,6 +118,13 @@ return [
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_AJOUTER,
                     'assertion'  => FichePosteAssertion::class,
+                ],
+                [
+                    'controller' => FichePosteController::class,
+                    'action' => [
+                        'modifier-information-poste',
+                    ],
+                    'privileges' => FichePostePrivileges::FICHEPOSTE_MODIFIER_POSTE,
                 ],
                 [
                     'controller' => FichePosteController::class,
@@ -381,6 +394,18 @@ return [
                             ],
                         ],
                     ],
+                    /** @see FichePosteController::modifierInformationPosteAction() */
+                    'modifier-information-poste' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/modifier-information-poste/:fiche-poste',
+                            'defaults' => [
+                                'controller' => FichePosteController::class,
+                                'action'     => 'modifier-information-poste',
+                            ],
+                        ],
+                    ],
                     'ajouter-fiche-metier' => [
                         'type'  => Segment::class,
                         'may_terminate' => true,
@@ -571,6 +596,7 @@ return [
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
             ExpertiseService::class => ExpertiseServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
+            PosteService::class => PosteServiceFactory::class,
             SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],
@@ -585,6 +611,7 @@ return [
             AssocierPosteForm::class => AssocierPosteFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
             ExpertiseForm::class => ExpertiseFormFactory::class,
+            PosteForm::class => PosteFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             RifseepForm::class => RifseepFormFactory::class,
         ],
@@ -598,6 +625,7 @@ return [
             AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
+            PosteHydrator::class => PosteHydratorFactory::class,
             RifseepHydrator::class => RifseepHydratorFactory::class,
         ],
     ],

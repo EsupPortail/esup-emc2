@@ -150,6 +150,33 @@ create table ficheposte_validation
     constraint ficheposte_validations_pk primary key (ficheposte_id, validation_id)
 );
 
+create table ficheposte_poste
+(
+    id                    serial
+        constraint ficheposte_poste_pk
+            primary key,
+    ficheposte_id         integer
+        constraint ficheposte_poste_ficheposte_id_fk
+            references ficheposte
+            on delete cascade,
+    referentiel           varchar(1024),
+    intitule_poste        varchar(1024),
+    poste_id              varchar(1024),
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint ficheposte_poste_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint ficheposte_poste_unicaen_utilisateur_user_id_fk2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint ficheposte_poste_unicaen_utilisateur_user_id_fk3
+            references unicaen_utilisateur_user
+);
+
+
 
 ------------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -----------------------------------------------------------------------------------------------------------
@@ -169,7 +196,10 @@ WITH d(code, lib, ordre) AS (
     SELECT 'ficheposte_etat', 'Modifier l''état', 200 UNION
     SELECT 'ficheposte_valider_responsable', 'Valider en tant que responsable', 250 UNION
     SELECT 'ficheposte_valider_agent', 'Valider en tant qu''agent', 260 UNION
-    SELECT 'ficheposte_graphique', 'Afficher les graphiques de compatibilité', 300
+    SELECT 'ficheposte_graphique', 'Afficher les graphiques de compatibilité', 300 UNION
+
+    SELECT 'ficheposte_afficher_poste', 'Afficher les informations sur le poste', 100 UNION
+    SELECT 'ficheposte_modifier_poste', 'Modifier les informations sur le poste', 110
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

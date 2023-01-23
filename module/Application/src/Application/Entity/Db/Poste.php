@@ -2,163 +2,61 @@
 
 namespace Application\Entity\Db;
 
-use Carriere\Entity\Db\Correspondance;
-use Metier\Entity\Db\Domaine;
-use Structure\Entity\Db\Structure;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Poste {
+class Poste implements HistoriqueAwareInterface {
+    use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $numeroPoste;
-    /** @var Structure */
-    private $structure;
-    /** @var Correspondance */
-    private $correspondance;
-    /** @var Agent */
-    private $rattachementHierarchique;
-    /** @var Domaine */
-    private $domaine;
-    /** @var string */
-    private $fonction;
+    private ?int $id = -1;
+    private ?FichePoste $ficheposte = null;
+    private ?string $referentiel = null;
+    private ?string $intitule = null;
+    private ?string $posteId = null;
 
-    /** @var FichePoste */
-    private $fichePoste;
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumeroPoste()
+    public function getFicheposte(): ?FichePoste
     {
-        return $this->numeroPoste;
+        return $this->ficheposte;
     }
 
-    /**
-     * @param string $numeroPoste
-     * @return Poste
-     */
-    public function setNumeroPoste($numeroPoste)
+    public function setFicheposte(?FichePoste $ficheposte): void
     {
-        $this->numeroPoste = $numeroPoste;
-        return $this;
+        $this->ficheposte = $ficheposte;
     }
 
-    /**
-     * @return Structure
-     */
-    public function getStructure()
+    public function getReferentiel(): ?string
     {
-        return $this->structure;
+        return $this->referentiel;
     }
 
-    /**
-     * @param Structure $structure
-     * @return Poste
-     */
-    public function setStructure($structure)
+    public function setReferentiel(?string $referentiel): void
     {
-        $this->structure = $structure;
-        return $this;
+        $this->referentiel = $referentiel;
     }
 
-    /**
-     * @return Correspondance
-     */
-    public function getCorrespondance()
+    public function getIntitule(): ?string
     {
-        return $this->correspondance;
+        return $this->intitule;
     }
 
-    /**
-     * @param Correspondance $correspondance
-     * @return Poste
-     */
-    public function setCorrespondance($correspondance)
+    public function setIntitule(?string $intitule): void
     {
-        $this->correspondance = $correspondance;
-        return $this;
+        $this->intitule = $intitule;
     }
 
-    /**
-     * @return Agent
-     */
-    public function getRattachementHierarchique()
+    public function getPosteId(): ?string
     {
-        return $this->rattachementHierarchique;
+        return $this->posteId;
     }
 
-    /**
-     * @param Agent $rattachementHierarchique
-     * @return Poste
-     */
-    public function setRattachementHierarchique($rattachementHierarchique)
+    public function setPosteId(?string $posteId): void
     {
-        $this->rattachementHierarchique = $rattachementHierarchique;
-        return $this;
+        $this->posteId = $posteId;
     }
-
-    /**
-     * @return Domaine
-     */
-    public function getDomaine()
-    {
-        return $this->domaine;
-    }
-
-    /**
-     * @param Domaine $domaine
-     * @return Poste
-     */
-    public function setDomaine($domaine)
-    {
-        $this->domaine = $domaine;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFonction()
-    {
-        return $this->fonction;
-    }
-
-    /**
-     * @param string $fonction
-     * @return Poste
-     */
-    public function setFonction($fonction)
-    {
-        $this->fonction = $fonction;
-        return $this;
-    }
-
-    /**
-     * @return FichePoste
-     */
-    public function getFichePoste()
-    {
-        return $this->fichePoste;
-    }
-
-    /**
-     * @param FichePoste $fichePoste
-     * @return Poste
-     */
-    public function setFichePoste($fichePoste)
-    {
-        $this->fichePoste = $fichePoste;
-        return $this;
-    }
-
 
 }

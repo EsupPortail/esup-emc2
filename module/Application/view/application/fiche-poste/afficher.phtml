@@ -85,6 +85,7 @@ $canExport   = $canAfficher;
     </div>
 
     <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'structure' => $structure, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/informations-poste', ['fiche' => $fiche, 'mode' => 'affichage']); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
 
