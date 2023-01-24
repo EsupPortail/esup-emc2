@@ -4,11 +4,10 @@ namespace Formation;
 
 use Formation\Controller\StructureController;
 use Formation\Controller\StructureControllerFactory;
-use Formation\Provider\Privilege\FormationPrivileges;
-use Formation\Provider\Privilege\PlanformationPrivileges;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Formation\Provider\Privilege\FormationstructurePrivileges;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -18,10 +17,9 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'index',
-                        'afficher',
                     ],
-                    'privileges' => [ //TODO privileges
-                        FormationPrivileges::FORMATION_MODIFIER,
+                    'privilege' => [
+                        FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_INDEX),
                     ],
                 ],
                 [
@@ -29,8 +27,9 @@ return [
                     'action' => [
                         'afficher',
                     ],
-                    'privileges' => [ //TODO privileges
-                        PlanformationPrivileges::PLANFORMATION_COURANT,
+                    'privilege' => [
+                        FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_AFFICHER),
+                        FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_MESSTRUCTURES),
                     ],
                 ],
             ],
@@ -42,11 +41,10 @@ return [
             'home' => [
                 'pages' => [
                     'mes-structures' => [
-                        'order' => 100,
+                        'order' => 200,
                         'label' => 'Mes structures',
                         'route' => 'formation/structure',
-//                        'route' => 'gestion',
-                        'resource' => PrivilegeController::getResourceId(StructureController::class, 'afficher'),
+                        'resource' => FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_MESSTRUCTURES),
                         'dropdown-header' => true,
                         'pages' => [],
                     ],
@@ -56,9 +54,9 @@ return [
                             [
                                 'label' => 'Gestion des ressources',
                                 'route' => 'formation/structure/index',
-                                'resource' =>
-                                    PrivilegeController::getResourceId(StructureController::class, 'index'),
-
+                                'resource' => //todo revoir la navigation
+                                    FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_INDEX),
+//                                    FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_INDEX)
                                 'order'    => 400,
                                 'dropdown-header' => true,
                             ],
@@ -66,7 +64,8 @@ return [
                                 'order' => 420,
                                 'label' => 'Structure',
                                 'route' => 'formation/structure-index',
-                                'resource' => PrivilegeController::getResourceId(StructureController::class, 'index'),
+                                'resource' =>
+                                    FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_INDEX),
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -102,18 +101,6 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
-                        'child_routes' => [
-                            'index' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/index',
-                                    'defaults' => [
-                                        'controller' => StructureController::class,
-                                        'action'     => 'index',
-                                    ],
-                                ],
-                            ],
-                        ],
                     ],
                 ],
             ],

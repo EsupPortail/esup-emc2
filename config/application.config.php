@@ -44,12 +44,11 @@ $modules = [
     'UnicaenAide',
 //    'UnicaenAlerte',
     'UnicaenIndicateur',
-
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
-    'Formation',
     'Structure',
+    'Formation',
     'Fichier',
     'Element',
     'Application',
