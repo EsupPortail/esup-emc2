@@ -6,6 +6,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\Formation;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
@@ -23,4 +24,44 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
         <span class="icon icon-pdf"></span>
         Générer l'historique de formation
     </a>
+<?php endif; ?>
+
+<h2> Formations suivies</h2>
+
+
+<?php if (empty($formations)) : ?>
+    <em> Aucune formation </em>
+<?php else : ?>
+    <?php foreach ($formations as $inscription) : ?>
+        <div class="row formation-inscription">
+            <div class="col-md-7 description">
+                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
+                <br/>
+                <br/>
+            </div>
+            <div class="col-md-5">
+                <?php if ($inscription->getSource()->getCode() !== HasSourceInterface::SOURCE_EMC2) : ?>
+                    <div class="alert alert-info">
+                        <span class="icon icon-information"></span>
+                        Formation gérée par <?php echo $inscription->getSource()->getLibelle(); ?>
+                    </div>
+                <?php else : ?>
+                    <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
+                        <div class="alert alert-warning">
+                            <span class="icon icon-information"></span>
+                            Enquête non remplie
+                        </div>
+                    <?php else : ?>
+                        <a
+                            <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
+                                href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                                class="btn btn-primary action"
+                        >
+                            <span class="icon icon-pdf"> Télécharge l'attestation</span>
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
 <?php endif; ?>

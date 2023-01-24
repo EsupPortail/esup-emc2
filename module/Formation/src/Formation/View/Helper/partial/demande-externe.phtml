@@ -12,6 +12,7 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;use Formation\Provider
  */
 
 $retour = $options['retour'] ?? null;
+$action = $options['action'] ?? true;
 ?>
 
 <?php $canModifierDemande = $this->isAllowed($demande, DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER); ?>
@@ -53,6 +54,7 @@ $retour = $options['retour'] ?? null;
     </div>
     <div class="col-md-5">
 
+        <?php if ($action) : ?>
         <!-- ACTION ------------------------------------------------------------------------------------------------------->
         <div>
         <?php
@@ -86,8 +88,8 @@ $retour = $options['retour'] ?? null;
             <span class="icon icon-retirer"></span>
             J'annule mon inscription
         </a>
-
-        <br/>
+        </div>
+        <?php endif; ?>
 
         <!-- VALIDATION  ------------------------------------------------------------------------------------------------------->
         <div>
@@ -110,5 +112,4 @@ $retour = $options['retour'] ?? null;
             </small>
         </div>
     </div>
-</div>
 </div>

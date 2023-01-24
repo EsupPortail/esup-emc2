@@ -1,1 +1,43 @@
-bbbb
+<?php
+
+/**
+ * @var Agent $agent
+ * @var DemandeExterne[] $stages
+ */
+
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Etat\DemandeExterneEtats;
+
+$demandesValidees = [];
+$demandesAttentes = [];
+foreach ($stages as $demande) {
+    if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) {
+        $demandesValidees[] = $demande;
+    } else {
+        $demandesAttentes[] = $demande;
+    }
+}
+?>
+
+<h2> Stages validés </h2>
+
+<?php if (empty($demandesValidees)) : ?>
+    <em> Aucun stage validé </em>
+<?php else : ?>
+    <?php foreach ($demandesValidees as $stage) : ?>
+        <?php echo $this->demandeExterne($stage, ['action' => false]); ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<h2> Stages en attentes </h2>
+
+
+<?php if (empty($demandesAttentes)) : ?>
+    <em> Aucun stage en attente de validation </em>
+<?php else : ?>
+    <?php foreach ($demandesAttentes as $stage) : ?>
+        <?php echo $this->demandeExterne($stage, ['action' => false]); ?>
+    <?php endforeach; ?>
+<?php endif; ?>

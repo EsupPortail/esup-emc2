@@ -6,6 +6,9 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -16,6 +19,7 @@ class AgentController extends AbstractActionController {
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
     use AgentStatutServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -45,8 +49,8 @@ class AgentController extends AbstractActionController {
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
 
         $stages = [];
-//        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
-//        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
 //        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
         return new ViewModel([
@@ -56,7 +60,7 @@ class AgentController extends AbstractActionController {
             'agentStatuts' => $agentStatuts,
 
             'inscriptions' => $inscriptions,
-            'stages' => $stages,
+            'stages' => $demandes,
             'formations' => $formations,
         ]);
     }
