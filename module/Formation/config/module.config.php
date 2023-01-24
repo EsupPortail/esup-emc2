@@ -49,7 +49,9 @@ return [
                 [
                     'controller' => IndexController::class,
                     'action' => [
+                        'apropos',
                         'index',
+                        'contact',
                     ],
                     'roles' => [],
                 ],
@@ -118,6 +120,27 @@ return [
                                 'action'     => 'index',
                             ],
                         ],
+                        'may_terminate' => true,
+                    ],
+                    'apropos' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/mes-formations-apropos',
+                            'defaults' => [
+                                'controller' => IndexController::class,
+                                'action'     => 'apropos',
+                            ],
+                        ],
+                    ],
+                    'contact' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/mes-formations-contact',
+                            'defaults' => [
+                                'controller' => IndexController::class,
+                                'action'     => 'contact',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -130,6 +153,58 @@ return [
                 'label' => _("Accueil"),
                 'route' => 'home',
                 'pages' => [
+                    'apropos'                  => [
+                        'label'    => _("À propos"),
+                        'title'    => _("À propos de cette application"),
+                        'route'    => 'mes-formations/apropos',
+                        'class'    => 'apropos',
+                        'visible'  => false,
+                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+                        'order'    => 1001,
+                    ],
+                    'contact'                  => [
+                        'label'    => _("Contact"),
+                        'title'    => _("Contact concernant l'application"),
+                        'route'    => 'contact',
+                        'class'    => 'contact',
+                        'visible'  => false,
+                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+                        'resource' => 'controller/UnicaenApp\Controller\Application:contact',
+                        'order'    => 1002,
+                    ],
+//                    'plan'                     => [
+//                        'label'    => _("Plan de navigation"),
+//                        'title'    => _("Plan de navigation au sein de l'application"),
+//                        'route'    => 'plan',
+//                        'class'    => 'plan',
+//                        'visible'  => false,
+//                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
+//                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+//                        'resource' => 'controller/UnicaenApp\Controller\Application:plan',
+//                        'order'    => 1003,
+//                    ],
+                    'mentions-legales'         => [
+                        'label'    => _("Mentions légales"),
+                        'title'    => _("Mentions légales"),
+                        'uri'      => 'http://www.unicaen.fr/acces-direct/mentions-legales/',
+                        'class'    => 'ml',
+                        'visible'  => false,
+                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+                        'order'    => 1004,
+                    ],
+                    'informatique-et-libertes' => [
+                        'label'    => _("Vie privée"),
+                        'title'    => _("Vie privée"),
+                        'uri'      => 'http://www.unicaen.fr/acces-direct/vie-privee/',
+                        'class'    => 'il',
+                        'visible'  => false,
+                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
+                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
+                        'order'    => 1005,
+                    ],
                 ],
             ],
         ],

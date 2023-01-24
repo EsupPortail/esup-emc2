@@ -1,0 +1,19 @@
+<?php
+
+use Application\Entity\Db\Agent;
+
+/**
+ * @see \Formation\Controller\AgentController::mesAgentsAction()
+ * @var Agent[] $agents
+ */
+
+$a = true;
+?>
+
+<ul>
+<?php foreach ($agents as $agent) : ?>
+    <li>
+        <?php echo $agent->getDenomination(); ?>
+    </li>
+<?php endforeach; ?>
+</ul>

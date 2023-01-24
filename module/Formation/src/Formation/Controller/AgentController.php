@@ -70,7 +70,7 @@ class AgentController extends AbstractActionController {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
-        $agents = []; //$this->getAgentService()->getAgentsByResponsabilite($user, $role);
+        $agents = $this->getAgentService()->getAgentsByResponsabilite($user, $role);
         return new ViewModel([
             'user' => $user,
             'role' => $role,

@@ -34,4 +34,14 @@ class IndexController extends AbstractActionController {
             'role' => $this->getUserService()->getConnectedRole(),
         ]);
     }
+
+    public function aproposAction() : ViewModel
+    {
+        return new ViewModel([]);
+    }
+
+    public function contactAction() : ViewModel
+    {
+        return new ViewModel([]);
+    }
 }

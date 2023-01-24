@@ -21,6 +21,7 @@ use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -690,6 +691,48 @@ class AgentService {
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Agent partagent le même login [".$login."]",0, $e);
         }
+        return $result;
+    }
+
+    /**
+     * @return Agent[]
+     */
+    public function getAgentsByResponsabilite(?User $user, ?Role $role) : array
+    {
+        $agent = $this->getAgentByUser($user);
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            $qb = $this->getComplementService()->createQueryBuilder()
+                ->select('complement.attachmentId')
+                ->andWhere('complement.type = :type')->setParameter('type', 'RESPONSABLE_HIERARCHIQUE')
+                ->andWhere('complement.complementId = :agentId')->setParameter('agentId', $agent->getId())
+            ;
+            $resultId = $qb->getQuery()->getResult();
+
+            $result = $this->getAgentsByIds($resultId);
+            return $result;
+        }
+
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            $qb = $this->getComplementService()->createQueryBuilder()
+                ->select('complement.attachmentId')
+                ->andWhere('complement.type = :type')->setParameter('type', 'AUTORITE_HIERARCHIQUE')
+                ->andWhere('complement.complementId = :agentId')->setParameter('agentId', $agent->getId())
+            ;
+            $resultId = $qb->getQuery()->getResult();
+
+            $result = $this->getAgentsByIds($resultId);
+            return $result;
+        }
+
+        return [];
+
+    }
+
+    private function getAgentsByIds(array $ids)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids);
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 }
