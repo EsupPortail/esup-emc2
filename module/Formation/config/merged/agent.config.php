@@ -2,7 +2,8 @@
 
 namespace Formation;
 
-use Application\Controller\AgentController;
+use Formation\Controller\AgentController;
+use Formation\Controller\AgentControllerFactory;
 use Formation\Provider\Privilege\FormationagentPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
@@ -12,7 +13,33 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
-
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privilege' => [
+                        FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_INDEX),
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privilege' => [
+                        FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_AFFICHER),
+                    ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'mes-agents',
+                    ],
+                    'privilege' => [
+                        FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_MESAGENTS),
+                    ],
+                ],
             ],
         ],
     ],
@@ -34,7 +61,7 @@ return [
                             'agent' => [
                                 'order' => 420,
                                 'label' => 'Agent',
-                                'route' => 'formation/agent',
+                                'route' => 'formation/agent-index',
                                 'resource' => FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_AFFICHER),
                                 'icon' => 'fas fa-angle-right',
                             ],
@@ -52,6 +79,7 @@ return [
                     'agent-index' => [
                         'type'  => Literal::class,
                         'options' => [
+                            /** @see AgentController::indexAction() */
                             'route'    => '/agent-index',
                             'defaults' => [
                                 'controller' => AgentController::class,
@@ -63,6 +91,7 @@ return [
                     'agent' => [
                         'type'  => Segment::class,
                         'options' => [
+                            /** @see AgentController::afficherAction() */
                             'route'    => '/agent[/:agent]',
                             'defaults' => [
                                 'controller' => AgentController::class,
@@ -74,6 +103,7 @@ return [
                     'mes-agents' => [
                         'type'  => Literal::class,
                         'options' => [
+                            /** @see AgentController::mesAgentsAction() */
                             'route'    => '/mes-agents',
                             'defaults' => [
                                 'controller' => AgentController::class,
@@ -90,7 +120,10 @@ return [
         'factories' => [],
     ],
     'controllers'     => [
-        'factories' => [],
+        'factories' => [
+            AgentController::class => AgentControllerFactory::class,
+
+        ],
     ],
     'form_elements' => [
         'factories' => [],

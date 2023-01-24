@@ -1,0 +1,113 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Formation\Provider\Privilege\FormationagentPrivileges;
+
+/**
+ * @see \Formation\Controller\AgentController::indexAction()
+ * @var array $params
+ * @var Agent[] $agents
+ */
+
+$this->headTitle('Agents');
+$nbAgent = count($agents);
+
+$canAfficher = $this->isAllowed(FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_AFFICHER));
+?>
+
+<h1 class="page-header">
+    Agents
+</h1>
+
+
+<?php echo $this->partial('partial/filtre', ['params' => $params]); ?>
+
+
+<?php if ($params === null or $params === []) : ?>
+    <div class="alert alert-info">
+        <span class="icon icon-information"></span>
+        Aucun critère de recherche.
+    </div>
+<?php else : ?>
+    <?php if ($nbAgent > 0 AND $nbAgent < 500) : ?>
+        <table id="agents" class="datatable table table-condensed table-hover">
+            <thead>
+            <tr>
+                <th> Source Id </th>
+                <th> Dénomination </th>
+                <th> Affectations </th>
+                <th> <span title="Lié à un utilisateur de l'application">Lié</span> </th>
+                <th class="action"> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($agents as $agent) : ?>
+                <tr>
+                    <td>
+                        <span class="badge"><?php echo $agent->getId(); ?>
+                    </td>
+                    <td>
+                        <?php echo $agent->getDenomination(); ?>
+                    </td>
+                    <td>
+                        <?php $affectations = $agent->getAffectationsActifs(); ?>
+                        <ul>
+                            <?php foreach ($affectations as $affectation) : ?>
+                                <li>
+                                    <?php if ($affectation->isPrincipale()) { echo "<strong>"; } ?>
+                                    <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                                    <?php if ($affectation->isPrincipale()) { echo "</strong>"; } ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </td>
+                    <td>
+                        <?php if ($agent->getUtilisateur() !== null) : ?>
+                            <span class="icon icon-checked" style="color:darkgreen;" title="<?php echo $agent->getUtilisateur()->getDisplayName(); ?>"></span>
+                            <?php echo $agent->getUtilisateur()->getUsername(); ?>
+                        <?php else: ?>
+                            <span class="icon icon-retirer" style="color:darkred;"></span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="action">
+                        <?php if ($canAfficher) : ?>
+                            <a
+                                <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
+                                    href="<?php echo $this->url('formation/agent', ['agent' => $agent->getId()], [], true); ?>"
+                            >
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else : ?>
+        <?php if ($nbAgent === 0) : ?>
+            <div class="alert alert-warning">
+                <span class="icon icon-information"></span>
+                Aucun résultat pour votre réquête
+            </div>
+        <?php endif; ?>
+        <?php if ($nbAgent > 500) : ?>
+            <div class="alert alert-warning">
+                <span class="icon icon-attention"></span>
+                Plus de 500 agents de remontés. Pas d'affichage sous formes de tableaux
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+
+<script>
+    $(document).ready(function() {
+        $('#agents').DataTable( {
+            "sorting":   false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
+</script>

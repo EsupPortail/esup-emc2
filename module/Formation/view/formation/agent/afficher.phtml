@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @see \Formation\Controller\AgentController::afficherAction()
+ * @var Agent $agent
+ */
+
+use Application\Entity\Db\Agent;
+
+$this->headTitle("Afficher l'agent " . $agent->getDenomination());
+?>
+
+<h1 class="page-header">
+    Agent :
+    <span class="highlight agent">
+        <?php echo $agent->getDenomination(); ?>
+    </span>
+</h1>
+
+<h2> Information sur l'agent </h2>
+
+<div class="row">
+    <div class="col-md-6">INFO</div>
+    <div class="col-md-6">AFFECTATION</div>
+</div>
+
+
