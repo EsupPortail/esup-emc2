@@ -3,11 +3,30 @@
 /**
  * @see \Formation\Controller\AgentController::afficherAction()
  * @var Agent $agent
+ * @var AgentAffectation[] $agentAffectations
+ * @var AgentGrade[] $agentGrades
+ * @var AgentStatut[] $agentStatuts
+ * @var Formation[] $formations
+ * @var Formation[] $inscriptions
+ * @var DemandeExterne[] $stages
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentGrade;
+use Application\Entity\Db\AgentStatut;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 
 $this->headTitle("Afficher l'agent " . $agent->getDenomination());
+
+$statuts = [];
+foreach ($agentStatuts as $agentStatut) {
+    if ($agentStatut->isTitulaire()) $statuts['Titulaire'] = 'Titulaire';
+    if ($agentStatut->isCdi()) $statuts['C.D.I'] = 'C.D.I.';
+    if ($agentStatut->isCdd()) $statuts['C.D.D'] = 'C.D.D.';
+    if ($agentStatut->isAdministratif()) $statuts['Administratif'] = 'Administratif';
+}
 ?>
 
 <h1 class="page-header">
@@ -20,8 +39,117 @@ $this->headTitle("Afficher l'agent " . $agent->getDenomination());
 <h2> Information sur l'agent </h2>
 
 <div class="row">
-    <div class="col-md-6">INFO</div>
-    <div class="col-md-6">AFFECTATION</div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4"> Dénomination </dt>
+            <dd class="col-md-8"> <?php echo $agent->getDenomination(); ?> </dd>
+            <dt class="col-md-4"> Affectation·s </dt>
+            <dd class="col-m">
+                <ul>
+                <?php foreach ($agentAffectations as $agentAffectation) : ?>
+                    <li>
+                    <?php
+                        $structure = $agentAffectation->getStructure();
+                        $niveau2 = $structure?$structure->getNiv2():null;
+                    ?>
+                    <?php if ($structure) : ?>
+                        <?php echo $structure->getLibelleLong(); ?>
+                        <?php if ($niveau2 AND $niveau2 !== $structure) : ?>
+                            <br/> Rattaché&middot;e à <?php echo $niveau2->getLibelleLong(); ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($agentAffectation->isPrincipale()) : ?>
+                        <br/> <em>Affectation principale</em>
+                    <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-4"> Statut·s </dt>
+            <dd class="col-md-8">
+                <ul>
+                    <?php foreach ($statuts as $statut) : ?>
+                        <li>
+                            <?php echo $statut; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+            <dt class="col-md-4"> Informations supplémentaires </dt>
+            <dd class="col-md-8">
+                <ul>
+                    <?php foreach ($agentGrades as $agentGrade) : ?>
+                        <?php $grade = $agentGrade->getGrade(); ?>
+                        <?php $corps = $agentGrade->getCorps(); ?>
+                        <?php $correspondance = $agentGrade->getBap(); ?>
+                        <li>
+                            <?php echo ($grade)?$grade->getLibelleLong():"Grade non renseigné"; ?> <br/>
+                            <?php echo ($corps)?$corps->getLibelleLong():"Corps non renseigné"; ?> <br/>
+                            <?php echo ($correspondance)?$correspondance->getLibelleLong():"Correspondance non renseignée"; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
 </div>
 
+<div role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#formations" class="nav-link" aria-controls="formations" role="tab" data-toggle="tabz">
+                Formations  <br> suivies
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#inscriptions-internes" class="nav-link" aria-controls="inscriptions-internes" role="tab" data-toggle="tabz">
+                Inscriptions en cours <br>
+                Plan de formation
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#inscriptions-externes" class="nav-link" aria-controls="inscriptions-externes" role="tab" data-toggle="tabz">
+                Inscriptions en cours <br>
+                Stage externe
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div id="formations" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/formations', ['agent' => $agent, 'formations' => $formations], [], true); ?>
+    </div>
+    <div id="inscriptions-internes" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/inscriptions', ['agent' => $agent, 'inscriptions' => $inscriptions], [], true); ?>
+    </div>
+    <div id="inscriptions-externes" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/stages', ['agent' => $agent, 'stages' => $stages], [], true); ?>
+    </div>
+</div>
+
+
+<script>
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formations";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            // No e.preventDefault() here
+            $(this).tab('show');
+        });
+    });
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
 

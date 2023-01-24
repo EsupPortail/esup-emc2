@@ -23,9 +23,12 @@ class Module
         $sharedEvents->attach(AbstractActionController::class, 'dispatch', function($e) {
             /** @var $e MvcEvent */
             $controller = $e->getTarget();
-            $hostname = $controller->getRequest()->getUri()->getHost();
-            if(preg_match('/mes-formations.*/', $hostname)) {
-                $controller->layout('layout/layout-formation');
+            $type = $controller->getRequest()->getParams()['controller'];
+            if ($type !== 'UnicaenDbImport\Controller\ConsoleController') {
+                $hostname = $controller->getRequest()->getUri()->getHost();
+                if (preg_match('/mes-formations.*/', $hostname)) {
+                    $controller->layout('layout/layout-formation');
+                }
             }
         }, 100);
     }

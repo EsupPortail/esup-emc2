@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @var Agent $agent
+ * @var Formation[] $formations
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\Formation;
+use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
+
+
+$canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
+
+
+?>
+
+<?php if ($canHistorique) : ?>
+    <?php /**  @see \Formation\Controller\FormationInstanceDocumentController::genererHistoriqueAction() */ ?>
+    <a href="<?php echo $this->url('formation-instance/generer-historique', ['agent' => $agent->getId()], [], true); ?>"
+       class="btn btn-primary" target="_blank"
+    >
+        <span class="icon icon-pdf"></span>
+        Générer l'historique de formation
+    </a>
+<?php endif; ?>
