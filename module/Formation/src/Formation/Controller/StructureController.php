@@ -2,6 +2,8 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentStatut;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\Formation;
@@ -11,6 +13,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureController extends AbstractActionController
@@ -97,5 +100,46 @@ class StructureController extends AbstractActionController
             'title' => "Liste des agents liés à la structure",
             'agents' => $allAgents,
         ]);
+    }
+
+    public function extractionFormationsAction() : CsvModel
+    {
+        /**  Récupération du sous-arbre des structures */
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] =  $structure;
+
+        /** Récupération des agents et postes liés aux structures */
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
+        $allAgents = array_merge($agents, $agentsForces);
+
+        $header = ['Dénomination', 'Statuts', 'Affectation', 'Formation', 'Période', 'Volume suivi', 'Volume dispensé'];
+        $formations = $this->getFormationInstanceInscritService()->getFormationsByAgents($allAgents);
+
+        $result = [];
+        foreach ($formations as $formation) {
+            $agent = $formation->getAgent();
+            $session = $formation->getInstance();
+            $result[] = [
+                'Dénomination' => $agent->getDenomination(),
+                'Status' => implode("\n",AgentStatut::generateStatutsArray($agent->getStatutsActifs())),
+                'Affectations' => implode("\n",AgentAffectation::generateAffectationsArray($agent->getAffectationsActifs())),
+                'Période' => $session->getPeriode(),
+                'Volume suivi' => $formation->getDureePresence(),
+                'Volume dispensé' => $session->getDuree(),
+            ];
+        }
+
+        $filename = (new DateTime())->format("Ymd-his")."_extraction_formations.csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($header);
+        $CSV->setData($result);
+        $CSV->setFilename($filename);
+        return $CSV;
     }
 }

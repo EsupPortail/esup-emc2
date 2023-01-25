@@ -363,4 +363,18 @@ class FormationInstanceInscritService
         }
         return $result;
     }
+
+    /**
+     * @param Agent[] $agents
+     * @return FormationInstanceInscrit[]
+     */
+    public function getFormationsByAgents(array $agents) : array
+    {
+        $agentIds = array_map(function (Agent $a) { return $a->getId();}, $agents);
+        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
+            ->leftJoin('inscrit.agent', 'agent')->addSelect('agent')
+            ->andWhere('agent.id in (:agentIds)')->setParameter('agentIds', $agentIds)
+        ;
+        return $qb->getQuery()->getResult();
+    }
 }

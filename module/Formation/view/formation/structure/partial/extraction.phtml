@@ -1,1 +1,16 @@
-TODO
+<?php
+
+/**
+ * @var Structure $structure
+ */
+
+use Structure\Entity\Db\Structure;
+
+?>
+
+<?php /** @see \Formation\Controller\StructureController::extractionFormationsAction(); */ ?>
+<a href="<?php echo $this->url('formation/structure/extraction-formations', ['structure' => $structure->getId()], [], true); ?>"
+    class="btn btn-primary">
+        <span class="icon icon-csv"></span>
+        Extraction des formations suivies par les agents de la structure
+</a>

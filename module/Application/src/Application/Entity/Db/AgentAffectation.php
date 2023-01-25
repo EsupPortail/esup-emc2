@@ -26,6 +26,8 @@ class AgentAffectation implements HasPeriodeInterface {
     /** @var string */
     private $principale;
 
+
+
     /**
      * @return int
      */
@@ -66,4 +68,25 @@ class AgentAffectation implements HasPeriodeInterface {
         return ($this->principale === 'O');
     }
 
+    /**
+     * @param AgentAffectation[] $agentAffectations
+     * @return string[]
+     */
+    public static function generateAffectationsArray(array $agentAffectations) : array
+    {
+        $affectations = [];
+        foreach ($agentAffectations as $agentAffectation) {
+            $structure = $agentAffectation->getStructure();
+            $niveau2 = null;
+            if ($structure) $niveau2 = $structure->getNiv2();
+            if ($structure) {
+                $texte = $structure->getLibelleCourt();
+                if ($niveau2 !== null AND $niveau2 !== $structure) $texte = $niveau2->getLibelleCourt() . " > ".$texte;
+                $affectations[] = $texte;
+            } else {
+                $affectations[] = "Structure inconnue";
+            }
+        }
+        return $affectations;
+    }
 }

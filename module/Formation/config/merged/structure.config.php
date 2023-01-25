@@ -27,6 +27,7 @@ return [
                     'action' => [
                         'afficher',
                         'lister-les-agents',
+                        'extraction-formations',
                     ],
                     'privilege' => [
                         FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_AFFICHER),
@@ -110,6 +111,17 @@ return [
                                     'defaults' => [
                                         'controller' => StructureController::class,
                                         'action'     => 'lister-les-agents',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'extraction-formations' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/extraction-formations',
+                                    'defaults' => [
+                                        'controller' => StructureController::class,
+                                        'action'     => 'extraction-formations',
                                     ],
                                 ],
                                 'may_terminate' => true,
