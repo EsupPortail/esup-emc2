@@ -56,7 +56,13 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <?php
                             $responsables = $structure->getResponsables();
                             $listing = "<u><b>Responsable(s) : </b></u><br/>";
-                            foreach ($responsables as $responsable) { $listing .= $responsable->getAgent()->getDenomination() . "<br/>"; }
+                            foreach ($responsables as $responsable) {
+                                if ($responsable->getAgent()) {
+                                    $listing .= $responsable->getAgent()->getDenomination() . "<br/>";
+                                } else {
+                                    $listing .= "Problème avec le responsable [".$responsable->getId()."]". "<br/>";
+                                }
+                            }
                         ?>
                         <span title="<?php echo $listing; ?>" data-bs-toggle="tooltip" data-bs-html="true" <?php if (empty($responsables)) echo ' style="color:darkred;" '; ?> >
                         <?php echo count($responsables); ?> <span class="icon icon-user"></span>
@@ -68,7 +74,13 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <?php
                             $gestionnaires = $structure->getGestionnaires();
                             $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
-                            foreach ($gestionnaires as $gestionnaire) { $listing .= $gestionnaire->getAgent()->getDenomination() . "<br/>"; }
+                            foreach ($gestionnaires as $gestionnaire) {
+                                if ($gestionnaire->getAgent()) {
+                                    $listing .= $gestionnaire->getAgent()->getDenomination() . "<br/>";
+                                } else {
+                                    $listing .=  "Problème avec le gestionnaire [".$gestionnaire->getId()."]". "<br/>";
+                                }
+                            }
                         ?>
                         <span title="<?php echo $listing; ?>" data-bs-toggle="tooltip" data-bs-html="true"  >
                         <?php echo count($gestionnaires); ?> <span class="icon icon-user"></span>
