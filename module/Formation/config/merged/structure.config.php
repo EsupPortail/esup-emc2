@@ -26,6 +26,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'afficher',
+                        'lister-les-agents',
                     ],
                     'privilege' => [
                         FormationstructurePrivileges::getResourceId(FormationstructurePrivileges::FORMATIONSTRUCTURE_AFFICHER),
@@ -101,6 +102,19 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
+                        'child_routes' => [
+                            'lister-les-agents' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/lister-les-agents',
+                                    'defaults' => [
+                                        'controller' => StructureController::class,
+                                        'action'     => 'lister-les-agents',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
                     ],
                 ],
             ],

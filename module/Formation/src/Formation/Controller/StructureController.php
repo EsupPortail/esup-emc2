@@ -78,4 +78,24 @@ class StructureController extends AbstractActionController
             'inscriptionsValidees' => $inscriptionsValidees,
         ]);
     }
+
+    public function listerLesAgentsAction() : ViewModel
+    {
+        /**  Récupération du sous-arbre des structures */
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure);
+        $structures[] =  $structure;
+
+        /** Récupération des agents et postes liés aux structures */
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
+        $allAgents = array_merge($agents, $agentsForces);
+
+        return new ViewModel([
+            'title' => "Liste des agents liés à la structure",
+            'agents' => $allAgents,
+        ]);
+    }
 }

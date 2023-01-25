@@ -20,13 +20,7 @@ use Formation\Entity\Db\Formation;
 
 $this->headTitle("Afficher l'agent " . $agent->getDenomination());
 
-$statuts = [];
-foreach ($agentStatuts as $agentStatut) {
-    if ($agentStatut->isTitulaire()) $statuts['Titulaire'] = 'Titulaire';
-    if ($agentStatut->isCdi()) $statuts['C.D.I'] = 'C.D.I.';
-    if ($agentStatut->isCdd()) $statuts['C.D.D'] = 'C.D.D.';
-    if ($agentStatut->isAdministratif()) $statuts['Administratif'] = 'Administratif';
-}
+$statuts = AgentStatut::generateStatutsArray($agentStatuts);
 ?>
 
 <h1 class="page-header">

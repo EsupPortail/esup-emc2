@@ -35,6 +35,7 @@ return [
                     'controller' => AgentController::class,
                     'action' => [
                         'mes-agents',
+                        'lister-mes-agents',
                     ],
                     'privilege' => [
                         FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_MESAGENTS),
@@ -111,6 +112,20 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
+                        'child_routes' => [
+                            'lister' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    /** @see AgentController::indexAction() */
+                                    'route'    => '/lister',
+                                    'defaults' => [
+                                        'controller' => AgentController::class,
+                                        'action'     => 'lister-mes-agents',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                        ],
                     ],
                 ],
             ],

@@ -1,6 +1,7 @@
 <?php
 
 
+use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Structure\Entity\Db\Structure;
@@ -10,8 +11,11 @@ use Structure\Entity\Db\StructureResponsable;
  * @see \Formation\Controller\StructureController::afficherAction()
  * @var Structure $structure
  * @var Structure[] $selecteur
+ *
  * @var StructureResponsable[] $responsables
  * @var StructureResponsable[] $gestionnaires
+ * @var Agent[] $agents
+ *
  * @var FormationInstanceInscrit[] $inscriptionsNonValidees
  * @var FormationInstanceInscrit[] $inscriptionsValidees
  * @var DemandeExterne[] $demandesNonValidees
@@ -22,6 +26,8 @@ use Structure\Entity\Db\StructureResponsable;
 $this->headTitle("Structure : " . $structure->getLibelleLong());
 
 $now = new DateTime();
+
+$nbAgent = count($agents);
 
 $filles = $structure->getEnfants();
 $filles = array_filter($filles, function (Structure $a) use ($now) {
@@ -53,6 +59,21 @@ $filles = array_filter($filles, function (Structure $a) use ($now) {
 
 <?php echo $this->partial('partial/resume', ['structure' => $structure, 'filles' => $filles, 'responsables' => $responsables, 'gestionnaires' => $gestionnaires]); ?>
 
+<div class="row">
+    <div class="col-md-7">
+        La structure est liée à <?php echo $nbAgent; ?> agent·s.
+    </div>
+    <div class="col-md-5">
+        <?php /** @see \Formation\Controller\StructureController::listerLesAgentsAction() */ ?>
+        <a href="<?php echo $this->url('formation/structure/lister-les-agents', ['structure' => $structure->getId()], [], true); ?>"
+           class="btn btn-secondary ajax-modal"
+       >
+            <span class="icon icon-lister"></span>
+            Lister les agents liés à la structure
+        </a>
+    </div>
+</div>
+
 <ul class="nav">
     <li class="nav-item">
         <a href="#formation-demande" class="nav-link" aria-controls="formation-demande">
@@ -64,8 +85,6 @@ $filles = array_filter($filles, function (Structure $a) use ($now) {
             Listes des <br/> formations
         </a>
     </li>
-
-
 <!--    <li class="nav-item">-->
 <!--        <a href="#extraction" class="nav-link" aria-controls="extraction">-->
 <!--            Extractions  <br/> &nbsp;-->
@@ -91,25 +110,6 @@ $filles = array_filter($filles, function (Structure $a) use ($now) {
 
 
 <script>
-    // $("body").on("modification", function (event) {
-    //     event.div.modal('hide');
-    //     window.location.reload();
-    // });
-
-    $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substr(1);
-        if (name === undefined || name === "") name = "agents";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-
-    });
-
     $(function() {
         $('select#structure-selecteur').change(function() {
             let id = $('select#structure-selecteur option:selected').val();

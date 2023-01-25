@@ -446,4 +446,20 @@ class AgentStatut implements HasPeriodeInterface {
         $this->retraite = $retraite;
         return $this;
     }
+
+    /**
+     * @param AgentStatut[] $agentStatuts
+     * @return string[]
+     */
+    public static function generateStatutsArray(array $agentStatuts) : array
+    {
+        $statuts = [];
+        foreach ($agentStatuts as $agentStatut) {
+            if ($agentStatut->isTitulaire()) $statuts['Titulaire'] = 'Titulaire';
+            if ($agentStatut->isCdi()) $statuts['C.D.I'] = 'C.D.I.';
+            if ($agentStatut->isCdd()) $statuts['C.D.D'] = 'C.D.D.';
+            if ($agentStatut->isAdministratif()) $statuts['Administratif'] = 'Administratif';
+        }
+        return $statuts;
+    }
 }

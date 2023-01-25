@@ -2,11 +2,13 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\Formation;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
@@ -48,7 +50,6 @@ class AgentController extends AbstractActionController {
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
 
-        $stages = [];
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
 //        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
@@ -71,7 +72,38 @@ class AgentController extends AbstractActionController {
         $role = $this->getUserService()->getConnectedRole();
 
         $agents = $this->getAgentService()->getAgentsByResponsabilite($user, $role);
+
+        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($agents, null);
+        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($agents, null);
+        $demandesValidees =  $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($agents, Formation::getAnnee());
+        $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($agents, Formation::getAnnee());
+
+
         return new ViewModel([
+            'user' => $user,
+            'role' => $role,
+            'agents' => $agents,
+
+            'inscriptionsValidees' => $inscriptionsValidees,
+            'inscriptionsNonValidees' => $inscriptionsNonValidees,
+            'demandesValidees' => $demandesValidees,
+            'demandesNonValidees' => $demandesNonValidees,
+        ]);
+    }
+
+    public function listerMesAgentsAction() : ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $role = $this->getUserService()->getConnectedRole();
+
+        $agents = $this->getAgentService()->getAgentsByResponsabilite($user, $role);
+        usort($agents, function (Agent $a, Agent $b) {
+            $aaa = $a->getNomUsuel()." ".$a->getPrenom()." ".$a->getId();
+            $bbb = $b->getNomUsuel()." ".$b->getPrenom()." ".$b->getId();
+            return $aaa > $bbb;
+        });
+        return new ViewModel([
+            'title' => "Liste des agents dont je suis responsable",
             'user' => $user,
             'role' => $role,
             'agents' => $agents,

@@ -1,19 +1,96 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Formation\Entity\Db\DemandeExterne;
+use Formation\Entity\Db\FormationInstanceInscrit;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
 
 /**
  * @see \Formation\Controller\AgentController::mesAgentsAction()
  * @var Agent[] $agents
+ * @var User $user
+ * @var Role $role
+ *
+ * @var FormationInstanceInscrit[] $inscriptionsValidees
+ * @var DemandeExterne[] $demandesValidees
+ * @var FormationInstanceInscrit[] $inscriptionsNonValidees
+ * @var DemandeExterne[] $demandesNonValidees
  */
 
-$a = true;
+$nbAgent = count($agents)
 ?>
 
-<ul>
-<?php foreach ($agents as $agent) : ?>
-    <li>
-        <?php echo $agent->getDenomination(); ?>
+<h1 class="page-header">
+    Mes agents
+</h1>
+
+<div class="row">
+    <div class="col-md-7">
+        Vous êtes le <?php echo $role->getLibelle(); ?> de <?php echo $nbAgent; ?> agent·s.
+    </div>
+    <div class="col-md-5">
+        <?php /** @see \Formation\Controller\AgentController::listerMesAgentsAction() */ ?>
+        <a href="<?php echo $this->url('formation/mes-agents/lister', [], [], true); ?>"
+           class="btn btn-secondary ajax-modal">
+            <span class="icon icon-lister"></span>
+            Lister les agents dont je suis responsable
+        </a>
+    </div>
+</div>
+
+<ul class="nav">
+    <li class="nav-item">
+        <a href="#formation-demande" class="nav-link" aria-controls="formation-demande">
+            Demandes de <br/> formations
+        </a>
     </li>
-<?php endforeach; ?>
+    <li class="nav-item">
+        <a href="#formation-liste" class="nav-link" aria-controls="formation-liste">
+            Listes des <br/> formations
+        </a>
+    </li>
+    <!--    <li class="nav-item">-->
+    <!--        <a href="#extraction" class="nav-link" aria-controls="extraction">-->
+    <!--            Extractions  <br/> &nbsp;-->
+    <!--        </a>-->
+    <!--    </li>-->
 </ul>
+
+<div class="tab-content">
+    <div id="formation-demande" class="tab-pane">
+        <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptionsNonValidees, 'demandes' => $demandesNonValidees]); ?>
+    </div>
+
+    <div id="formation-liste" class="tab-pane">
+        <?php echo $this->partial('partial/liste-formation', ['inscriptions' => $inscriptionsValidees, 'demandes' => $demandesValidees]); ?>
+    </div>
+
+    <!-- Extraction ------------------------------------------------------------------------------------->
+    <div id="extraction" class="tab-pane">
+<!--        --><?php //echo $this->partial('partial/extraction', ['structure' => $structure]); ?>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        let hash = $(location).attr('hash');
+        let name = hash.substr(1);
+        if (name === undefined || name === "") name = "formation-demande";
+
+        $('a[aria-controls=' + name + ']').tab('show');
+
+        $('.nav a').click(function (e) {
+            let anchor = $(this).attr('aria-controls');
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#"+anchor);
+            $(this).tab('show');
+        });
+
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
+
