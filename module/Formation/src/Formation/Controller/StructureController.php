@@ -123,10 +123,12 @@ class StructureController extends AbstractActionController
         foreach ($formations as $formation) {
             $agent = $formation->getAgent();
             $session = $formation->getInstance();
+            $action = $session->getFormation();
             $result[] = [
                 'Dénomination' => $agent->getDenomination(),
                 'Status' => implode("\n",AgentStatut::generateStatutsArray($agent->getStatutsActifs())),
                 'Affectations' => implode("\n",AgentAffectation::generateAffectationsArray($agent->getAffectationsActifs())),
+                'Libellé' => $action->getLibelle(),
                 'Période' => $session->getPeriode(),
                 'Volume suivi' => $formation->getDureePresence(),
                 'Volume dispensé' => $session->getDuree(),
