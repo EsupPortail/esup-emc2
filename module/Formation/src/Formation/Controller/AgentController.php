@@ -46,6 +46,8 @@ class AgentController extends AbstractActionController {
         $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
+        $superieures = $this->getAgentService()->computeSuperieures($agent);
+        $autorites = $this->getAgentService()->computeAutorites($agent);
 
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
@@ -59,6 +61,9 @@ class AgentController extends AbstractActionController {
             'agentAffectations' => $agentAffectations,
             'agentGrades' => $agentGrades,
             'agentStatuts' => $agentStatuts,
+
+            'superieures' => $superieures,
+            'autorites' => $autorites,
 
             'inscriptions' => $inscriptions,
             'stages' => $demandes,

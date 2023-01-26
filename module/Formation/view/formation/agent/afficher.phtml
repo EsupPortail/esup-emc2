@@ -6,6 +6,8 @@
  * @var AgentAffectation[] $agentAffectations
  * @var AgentGrade[] $agentGrades
  * @var AgentStatut[] $agentStatuts
+ * @var Agent[] $superieures
+ * @var Agent[] $autorites
  * @var Formation[] $formations
  * @var Formation[] $inscriptions
  * @var DemandeExterne[] $stages
@@ -61,6 +63,7 @@ $statuts = AgentStatut::generateStatutsArray($agentStatuts);
             </dd>
         </dl>
     </div>
+
     <div class="col-md-6">
         <dl class="row">
             <dt class="col-md-4"> Statut·s </dt>
@@ -91,6 +94,34 @@ $statuts = AgentStatut::generateStatutsArray($agentStatuts);
         </dl>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Supérieur·e·s hiérarchiques direct·e·s</dt>
+            <dd>
+                <ul>
+                    <?php foreach ($superieures as $superieure) : ?>
+                        <li> <?php echo $superieure->getDenomination(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Autorité·e·s hiérarchiques</dt>
+            <dd>
+                <ul>
+                    <?php foreach ($autorites as $autorite) : ?>
+                        <li> <?php echo $autorite->getDenomination(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>
+
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
