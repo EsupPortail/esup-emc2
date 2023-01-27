@@ -44,6 +44,7 @@ $this->headTitle("Liste des correspondances");
 <table class="datatable table table-condensed table-hover">
     <thead>
     <tr>
+        <th> Code </th>
         <th style="width:70%;"> Libellé </th>
         <th> Type </th>
         <th> #Agent/Grade </th>
@@ -53,6 +54,7 @@ $this->headTitle("Liste des correspondances");
     <tbody>
     <?php foreach($correspondances as $correspondance): ?>
         <tr>
+            <td> <?php echo $correspondance->getCategorie(); ?> </td>
             <td>
                 <span
                     title="<?php echo $correspondance->generateTooltip(); ?>"
