@@ -22,6 +22,7 @@ class AgentAffectation implements HasPeriodeInterface {
     private ?string $principale = null;
     private ?string $hierarchique = null;
     private ?string $fonctionnelle = null;
+    private ?int $quotite = null;
 
     public function getId() : ?int
     {
@@ -56,6 +57,11 @@ class AgentAffectation implements HasPeriodeInterface {
     public function isFonctionnelle() : bool
     {
         return ($this->fonctionnelle === 'O');
+    }
+
+    public function getQuotite() : ?int
+    {
+        return $this->quotite;
     }
 
     /**

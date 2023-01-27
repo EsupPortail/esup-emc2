@@ -129,7 +129,7 @@ class AgentController extends AbstractActionController
 
         //Récupération des status
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent,true,true,false);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent,true,false,false);
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
 
         //Récupération des supérieures et autorités

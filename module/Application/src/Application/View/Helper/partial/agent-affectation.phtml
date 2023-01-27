@@ -15,6 +15,17 @@ $displayPeriode     = (isset($options['periode']) AND $options['periode'] !== fa
 $displayIdentifiant = (isset($options['identifiant']) AND $options['identifiant'] !== false);
 $displayAgent       = (isset($options['agent']) AND $options['agent'] !== false);
 $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== false);
+
+$structure = null;
+$niveau2 = null;
+if ($affectation !== null) {
+    $structure = $affectation->getStructure();
+    if ($structure !== null) {
+        if ($structure->getNiv2() !== null and $structure->getNiv2() !== $structure) {
+            $niveau2 = $structure->getNiv2();
+        }
+    }
+}
 ?>
 
 <?php if($debug) : ?>
@@ -35,11 +46,15 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
         <?php if ($affectation === null) : ?>
             Aucune affectation
         <?php else: ?>
-            <?php if ($affectation->getStructure() === null) : ?>
+            <?php if ($structure === null) : ?>
                 Aucune structure
             <?php else : ?>
-                <span class="badge structure" title="<?php echo $affectation->getStructure()->getLibelleLong(); ?>">
-                    <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                <?php
+                    $texte = ""; if ($niveau2) $texte = $niveau2->getLibelleCourt() . " > "; $texte .= $structure->getLibelleCourt();
+                    $tooltip = "<strong>".$structure->getLibelleLong()."</strong>"; if ($niveau2) $tooltip .= "<br/> rattachée à <br/><strong>" . $niveau2->getLibelleLong() ."</strong>";
+                ?>
+                <span class="badge structure" title="<?php echo $tooltip; ?>" data-bs-toggle="tooltip" data-bs-html="true">
+                    <?php echo $texte; ?>
                 </span>
             <?php endif; ?>
         <?php endif; ?>
@@ -79,6 +94,10 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
                     if ($affectation !== null AND $affectation->isFonctionnelle())     echo '<li>Fonctionnelle</li>';
                 ?>
                 </ul>
+        <?php endif; ?>
+
+        <?php if ($affectation->getQuotite() !== null) : ?>
+        Quotité : <?php echo $affectation->getQuotite(); ?>%
         <?php endif; ?>
 
     </div>
