@@ -72,11 +72,11 @@ $displayTemoin      = (isset($options['temoin']) AND $options['temoin'] !== fals
         <?php endif; ?>
 
         <?php if ($displayTemoin) : ?>
-<!--            <strong> Témoins actifs : </strong>--> <br/>
-
                 <ul>
                 <?php
                     if ($affectation !== null AND $affectation->isPrincipale())        echo '<li>Principale</li>';
+                    if ($affectation !== null AND $affectation->isHierarchique())      echo '<li>Hiérarchique</li>';
+                    if ($affectation !== null AND $affectation->isFonctionnelle())     echo '<li>Fonctionnelle</li>';
                 ?>
                 </ul>
         <?php endif; ?>

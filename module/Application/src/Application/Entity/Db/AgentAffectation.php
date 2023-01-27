@@ -15,57 +15,47 @@ class AgentAffectation implements HasPeriodeInterface {
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var Agent */
-    private $agent;
-    /** @var Structure */
-    private $structure;
-    /** @var string */
-    private $idOrig;
-    /** @var string */
-    private $principale;
+    private ?int $id = null;
+    private ?Agent $agent = null;
+    private ?Structure $structure = null;
+    private ?string $idOrig = null;
+    private ?string $principale = null;
+    private ?string $hierarchique = null;
+    private ?string $fonctionnelle = null;
 
-
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Agent
-     */
-    public function getAgent()
+    public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @return Structure
-     */
-    public function getStructure()
+    public function getStructure() : ?Structure
     {
         return $this->structure;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdOrig()
+    public function getIdOrig() : ?string
     {
         return $this->idOrig;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isPrincipale()
+    public function isPrincipale() : bool
     {
         return ($this->principale === 'O');
+    }
+
+    public function isHierarchique() : bool
+    {
+        return ($this->hierarchique === 'O');
+    }
+
+    public function isFonctionnelle() : bool
+    {
+        return ($this->fonctionnelle === 'O');
     }
 
     /**

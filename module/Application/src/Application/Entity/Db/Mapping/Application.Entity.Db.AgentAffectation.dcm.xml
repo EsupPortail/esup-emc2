@@ -16,6 +16,8 @@
         <field name="dateFin"                 column="date_fin"         type="datetime"/>
         <field name="idOrig"                  column="id_orig"          type="string" length="255"/>
         <field name="principale"              column="t_principale"     type="string" length="1"/>
+        <field name="hierarchique"            column="t_hierarchique"   type="string" length="1"/>
+        <field name="fonctionnelle"           column="t_fonctionnelle"  type="string" length="1"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
