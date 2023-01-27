@@ -15,6 +15,7 @@ use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
+use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Doctrine\ORM\ORMException;
 use Element\Entity\Db\ApplicationElement;
@@ -140,11 +141,13 @@ class AgentController extends AbstractActionController
 
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
-        
+        $canAffichageDate = ($this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::DATE_PORTAIL_AGENT)->getValeur() === "true");
+
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
             'affectations' => $agentAffectations,
+            'canAffichageDate' => $canAffichageDate,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
             'echelon' => $agent->getEchelonActif(),

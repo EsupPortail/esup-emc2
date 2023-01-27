@@ -10,6 +10,7 @@
  * @var Agent[] $autorites
  * @var AgentQuotite $quotite
  * @var bool $canInfoSource
+ * @var bool $canAffichageDate
  */
 
 use Application\Entity\Db\Agent;
@@ -145,19 +146,19 @@ use Application\Entity\Db\AgentStatut;
     <div class="col-md-3">
         <h3>Affectation</h3>
         <?php foreach ($affectations as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
         <h3>Statut</h3>
         <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
         <h3>Grade</h3>
         <?php foreach ($grades as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => false, 'temoin' => true]); ?>
+            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
 </div>
