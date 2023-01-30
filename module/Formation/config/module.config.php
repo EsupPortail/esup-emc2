@@ -208,23 +208,6 @@ return [
                 ],
             ],
         ],
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'ressource' => [
-                        'pages' => [
-                            'formation' => [
-                                'label'    => 'Gestion des formations',
-                                'route'    => 'formation',
-                                'resource' => FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_ACCES),
-                                'order'    => 300,
-                                'dropdown-header' => true,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
     ],
 
     'service_manager' => [
@@ -264,6 +247,8 @@ return [
         ],
         'template_map' => [
             'mes-formations/layout' => realpath('./module/Formation/view/layout/layout.phtml'),
+            'error/403'     => realpath('./module/Formation/view/error/403.phtml'),
+            'error/404'     => realpath('./module/Formation/view/error/404.phtml'),
         ],
     ],
 

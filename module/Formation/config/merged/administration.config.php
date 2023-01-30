@@ -4,11 +4,11 @@ namespace Formation;
 
 use Formation\Controller\AdministrationController;
 use Formation\Controller\AdministrationControllerFactory;
-use UnicaenParametre\Controller\CategorieController;
-use UnicaenParametre\Provider\Privilege\ParametrecategoriePrivileges;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenIndicateur\Provider\Privilege\IndicateurPrivileges;
+use UnicaenParametre\Provider\Privilege\ParametrecategoriePrivileges;
+use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenRenderer\Controller\IndexController;
 use UnicaenRenderer\Provider\Privilege\DocumenttemplatePrivileges;
@@ -17,6 +17,15 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => AdministrationController::class,
+                    'action' => [
+                        'indicateur',
+                    ],
+                    'privileges' => [
+                        IndicateurPrivileges::AFFICHER_INDICATEUR,
+                    ],
+                ],
                 [
                     'controller' => AdministrationController::class,
                     'action' => [
@@ -48,7 +57,7 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'formation' => [
             'home' => [
                 'pages' => [
@@ -59,9 +68,16 @@ return [
                             PrivilegeController::getResourceId(AdministrationController::class, 'parametre'),
                             PrivilegeController::getResourceId(IndexController::class, 'index'),
                         ],
-                        'order'    => 20000,
+                        'order' => 20000,
                         'dropdown-header' => true,
                         'pages' => [
+                            'indicateur' => [
+                                'order' => 1000,
+                                'label' => 'Indicateurs et tableaux de bords',
+                                'route' => 'formation/administration/indicateur',
+                                'resource' => ParametrecategoriePrivileges::getResourceId(IndicateurPrivileges::AFFICHER_INDICATEUR),
+                                'icon' => 'fas fa-angle-right',
+                            ],
                             'parametre' => [
                                 'order' => 1000,
                                 'label' => 'Paramètres',
@@ -90,50 +106,61 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'formation' => [
                 'child_routes' => [
                     'administration' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/administration',
+                            'route' => '/administration',
                             'defaults' => [
                                 'controller' => AdministrationController::class,
                             ],
                         ],
                         'may_terminate' => false,
                         'child_routes' => [
-                            'parametre' => [
-                                'type'  => Segment::class,
+                            'indicateur' => [
+                                'type' => Segment::class,
                                 'options' => [
-                                    /** @see AdministrationController::parametreAction() */
-                                    'route'    => '/parametre',
+                                    /** @see AdministrationController::indicateurAction() */
+                                    'route' => '/indicateur',
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
-                                        'action'     => 'parametre',
+                                        'action' => 'indicateur',
+                                    ],
+                                ],
+                            ],
+                            'parametre' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    /** @see AdministrationController::parametreAction() */
+                                    'route' => '/parametre',
+                                    'defaults' => [
+                                        'controller' => AdministrationController::class,
+                                        'action' => 'parametre',
                                     ],
                                 ],
                             ],
                             'privilege' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
                                     /** @see AdministrationController::privilegeAction() */
-                                    'route'    => '/privilege',
+                                    'route' => '/privilege',
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
-                                        'action'     => 'privilege',
+                                        'action' => 'privilege',
                                     ],
                                 ],
                             ],
                             'template' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
                                     /** @see AdministrationController::templateAction() */
-                                    'route'    => '/template',
+                                    'route' => '/template',
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
-                                        'action'     => 'template',
+                                        'action' => 'template',
                                     ],
                                 ],
                             ],
@@ -147,7 +174,7 @@ return [
     'service_manager' => [
         'factories' => [],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             AdministrationController::class => AdministrationControllerFactory::class,
         ],

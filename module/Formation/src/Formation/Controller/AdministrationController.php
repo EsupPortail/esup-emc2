@@ -4,6 +4,8 @@ namespace Formation\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenIndicateur\Service\Indicateur\IndicateurServiceAwareTrait;
+use UnicaenIndicateur\Service\TableauDeBord\TableauDeBordServiceAwareTrait;
 use UnicaenParametre\Service\Categorie\CategorieServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -13,10 +15,26 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 class AdministrationController extends AbstractActionController
 {
     use CategorieServiceAwareTrait;
+    use IndicateurServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use RoleServiceAwareTrait;
+    use TableauDeBordServiceAwareTrait;
     use TemplateServiceAwareTrait;
+
+    public function indicateurAction() : ViewModel
+    {
+        $indicateurs = $this->getIndicateurService()->getIndicateursByNamespace('Formation\Provider\Indicateur');
+        $tableaux = $this->getTableauDeBordService()->getTableauxDeBordByNamespace('Formation\Provider\Indicateur');
+
+        $vm =  new ViewModel([
+            'indicateurs' => $indicateurs,
+            'tableaux' => $tableaux,
+            'retour' => $this->url()->fromRoute('formation/administration/indicateur', [], ['force_canonical' => true], true),
+        ]);
+        return $vm;
+    }
+
 
     public function parametreAction() : ViewModel
     {

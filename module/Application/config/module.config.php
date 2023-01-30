@@ -316,11 +316,12 @@ return [
     'view_manager'    => [
         'template_map'             => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'error/403'     => realpath('./module/Application/view/error/403.phtml'),
+            'error/404'     => realpath('./module/Application/view/error/404.phtml'),
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
-
     ],
 
     'translator'      => [

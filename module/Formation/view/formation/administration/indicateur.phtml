@@ -1,0 +1,91 @@
+<?php
+
+use UnicaenIndicateur\Entity\Db\Indicateur;
+use UnicaenIndicateur\Entity\Db\TableauDeBord;
+
+/**
+ * @see \Formation\Controller\AdministrationController::indicateurAction()
+ * @var Indicateur[] $indicateurs
+ * @var TableauDeBord[] $tableaux
+ * @var string $retour
+ */
+
+$this->headTitle("Indicateurs et tableaux de bords");
+
+?>
+
+<h1 class="page-header">
+    Indicateurs et tableaux de bords
+</h1>
+
+<h2> Tableaux de bord </h2>
+
+<?php if (empty($tableaux)) : ?>
+    <em> Aucun tableau de bord </em>
+<?php else : ?>
+    <table class="table table-condensed table-hover">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($tableaux as $tableau) : ?>
+                <tr>
+                    <td> <?php echo $tableau->getTitre(); ?></td>
+                    <td class="action">
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<h2> Indicateurs </h2>
+
+<div>
+<?php /** @see \UnicaenIndicateur\Controller\IndicateurController::creerAction() */ ?>
+<a href="<?php echo $this->url('indicateur/creer', [], ['query' => ['namespace' => 'Formation\Provider\Indicateur']], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification">
+    <span class="icon icon-ajouter">
+        Ajouter un indicateur
+    </span>
+</a>
+</div>
+
+
+<?php if (empty($indicateurs)) : ?>
+    <em> Aucun indicateur </em>
+<?php else : ?>
+    <table class="table table-condensed table-hover">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($indicateurs as $indicateur) : ?>
+            <tr>
+                <td> <?php echo $indicateur->getTitre(); ?></td>
+                <td class="action">
+                    <span class="icon icon-voir"></span>
+                    Afficher
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

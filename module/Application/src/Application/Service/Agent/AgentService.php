@@ -355,7 +355,7 @@ class AgentService {
         if (!empty($liste)) return $liste;
 
        //checking structure
-       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true, false);
        if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
        $structure = $affectationsPrincipales[0]->getStructure();
@@ -394,7 +394,7 @@ class AgentService {
         if ($superieurs === null) $superieurs = $this->computeSuperieures($agent, $date);
 
         //checking structure
-        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true);
+        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, true, false);
         $structure = null;
         if (count($affectationsPrincipales) === 1) {
             $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
