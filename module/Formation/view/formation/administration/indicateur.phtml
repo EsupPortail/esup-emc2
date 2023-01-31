@@ -2,6 +2,8 @@
 
 use UnicaenIndicateur\Entity\Db\Indicateur;
 use UnicaenIndicateur\Entity\Db\TableauDeBord;
+use UnicaenIndicateur\Provider\Privilege\IndicateurPrivileges;
+use UnicaenIndicateur\Provider\Privilege\TableaudebordPrivileges;
 
 /**
  * @see \Formation\Controller\AdministrationController::indicateurAction()
@@ -12,6 +14,14 @@ use UnicaenIndicateur\Entity\Db\TableauDeBord;
 
 $this->headTitle("Indicateurs et tableaux de bords");
 
+$canAfficherIndicateur  = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::AFFICHER_INDICATEUR));
+$canModifierIndicateur  = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::EDITER_INDICATEUR));
+$canSupprimerIndicateur = $this->isAllowed(IndicateurPrivileges::getResourceId(IndicateurPrivileges::DETRUIRE_INDICATEUR));
+
+$canAfficherTableau  = $this->isAllowed(TableaudebordPrivileges::getResourceId(TableaudebordPrivileges::AFFICHER_TABLEAUDEBORD));
+$canModifierTableau  = $this->isAllowed(TableaudebordPrivileges::getResourceId(TableaudebordPrivileges::EDITER_TABLEAUDEBORD));
+$canSupprimerTableau = $this->isAllowed(TableaudebordPrivileges::getResourceId(TableaudebordPrivileges::DETRUIRE_TABLEAUDEBORD));
+
 ?>
 
 <h1 class="page-header">
@@ -20,13 +30,24 @@ $this->headTitle("Indicateurs et tableaux de bords");
 
 <h2> Tableaux de bord </h2>
 
+<div>
+    <?php /** @see \UnicaenIndicateur\Controller\TableauDeBordController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('tableau-de-bord/ajouter', [], ['query' => ['namespace' => 'Formation\Provider\Indicateur']], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+    <span class="icon icon-ajouter">
+        Ajouter un tableau de bord
+    </span>
+    </a>
+</div>
+
 <?php if (empty($tableaux)) : ?>
     <em> Aucun tableau de bord </em>
 <?php else : ?>
     <table class="table table-condensed table-hover">
         <thead>
         <tr>
-            <th> Libellé </th>
+            <th style="width:40%;"> Libellé </th>
+            <th> Description </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
@@ -34,9 +55,37 @@ $this->headTitle("Indicateurs et tableaux de bords");
             <?php foreach ($tableaux as $tableau) : ?>
                 <tr>
                     <td> <?php echo $tableau->getTitre(); ?></td>
+                    <td> <?php echo $tableau->getDescription()??"Aucune description"; ?></td>
                     <td class="action">
-                        <span class="icon icon-voir"></span>
-                        Afficher
+                        <?php if ($canAfficherTableau) : ?>
+                            <?php /** @see \UnicaenIndicateur\Controller\TableauDeBordController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url("tableau-de-bord/afficher", ['tableau-de-bord' => $tableau->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                            >
+                                <span class="icon icon-voir"></span>
+                                Afficher
+                            </a>
+                            <br/>
+                        <?php endif; ?>
+                        <?php if ($canModifierTableau) : ?>
+                            <?php /** @see \UnicaenIndicateur\Controller\TableauDeBordController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url("tableau-de-bord/modifier", ['tableau-de-bord' => $tableau->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon icon-editer"></span>
+                                Modifier
+                            </a>
+                            <br/>
+                        <?php endif; ?>
+                        <?php if ($canSupprimerTableau) : ?>
+                            <?php /** @see \UnicaenIndicateur\Controller\TableauDeBordController::supprimerAction() */ ?>
+                            <a href="<?php echo $this->url("tableau-de-bord/supprimer", ['tableau-de-bord' => $tableau->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification">
+                            <span class="text-danger">
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                            </span>
+                            </a>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -63,17 +112,51 @@ $this->headTitle("Indicateurs et tableaux de bords");
     <table class="table table-condensed table-hover">
         <thead>
         <tr>
-            <th> Libellé </th>
+            <th style="width:40%;"> Libellé </th>
+            <th> Description </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
         <tbody>
         <?php foreach ($indicateurs as $indicateur) : ?>
             <tr>
-                <td> <?php echo $indicateur->getTitre(); ?></td>
+                <td>
+                    <?php echo $indicateur->getTitre(); ?> <br/>
+                    Dernier rafraichissement :
+                    <?php echo $indicateur->getDernierRafraichissement()?$indicateur->getDernierRafraichissement()->format('d/m/Y à H:i:s'):"Aucun"; ?>
+                </td>
+                <td>
+                    <?php echo $indicateur->getDescription()??"Aucune description"; ?></td>
                 <td class="action">
-                    <span class="icon icon-voir"></span>
-                    Afficher
+                    <?php if ($canAfficherIndicateur) : ?>
+                        <?php /** @see \UnicaenIndicateur\Controller\IndicateurController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url("indicateur/afficher", ['indicateur' => $indicateur->getId()], [], true); ?>"
+                        >
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </a>
+                        <br/>
+                    <?php endif; ?>
+                    <?php if ($canModifierIndicateur) : ?>
+                        <?php /** @see \UnicaenIndicateur\Controller\IndicateurController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url("indicateur/modifier", ['indicateur' => $indicateur->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="icon icon-editer"></span>
+                            Modifier
+                        </a>
+                        <br/>
+                    <?php endif; ?>
+                    <?php if ($canSupprimerIndicateur) : ?>
+                        <?php /** @see \UnicaenIndicateur\Controller\IndicateurController::detruireAction() */ ?>
+                        <a href="<?php echo $this->url("indicateur/detruire", ['indicateur' => $indicateur->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="text-danger">
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                            </span>
+                        </a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
