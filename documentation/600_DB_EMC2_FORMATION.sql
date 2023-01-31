@@ -708,3 +708,56 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstancefrais';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationagent', 'Gestion des agents', 1000, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationagent_mesagents', 'Affichage du menu - Mes agents -', 30 UNION
+    SELECT 'formationagent_afficher', 'Afficher un agent', 20 UNION
+    SELECT 'formationagent_index', 'Accéder à l''index des agents', 10
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationagent';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationstructure', 'Gestion des structures', 1100, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationstructure_messtructures', 'Affichage du menu - Mes structures -', 30 UNION
+    SELECT 'formationstructure_afficher', 'Afficher une structure', 20 UNION
+    SELECT 'formationstructure_index', 'Accéder à l''index des structures', 10
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationstructure';
+
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formationstructure', 'Gestion des structures', 1100, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formationstructure_messtructures', 'Affichage du menu - Mes structures -', 30 UNION
+    SELECT 'formationstructure_afficher', 'Afficher une structure', 20 UNION
+    SELECT 'formationstructure_index', 'Accéder à l''index des structures', 10
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationstructure';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('planformation', 'Gestion du plan de formation', 1100, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'planformation_courant', 'Accéder au plan de formation courant', 10 UNION
+    SELECT 'planformation_index', 'Accéder à l''index', 20 UNION
+    SELECT 'planformation_afficher', 'Afficher un plan de formation', 30 UNION
+    SELECT 'planformation_ajouter', 'Ajouter un plan de formation', 40 UNION
+    SELECT 'planformation_modifier', 'Modifier un plan de formation', 50 UNION
+    SELECT 'planformation_supprimer', 'Supprimer un plan de formation', 60
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'planformation';

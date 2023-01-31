@@ -63,7 +63,7 @@ class AbonnementController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('plan-formation');
+        return $this->redirect()->toRoute('plan-de-formation/courant');
     }
 
     public function retirerAction() : Response
@@ -79,7 +79,7 @@ class AbonnementController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('plan-formation');
+        return $this->redirect()->toRoute('plan-de-formation/courant');
     }
 
     public function listerAbonnementsParAgentAction() : ViewModel
