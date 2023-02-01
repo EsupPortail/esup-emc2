@@ -14,6 +14,7 @@ use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
+use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
@@ -30,6 +31,7 @@ class FormationInstanceService
     use EtatServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use RappelAgentAvantFormationServiceAwareTrait;
     use SourceServiceAwareTrait;
 
 
@@ -314,6 +316,16 @@ class FormationInstanceService
 
     /** Fonctions associées aux états de l'instance *******************************************************************/
 
+
+    public function recreation(FormationInstance $instance) : FormationInstance
+    {
+        $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
+        $this->update($instance);
+
+        return $instance;
+    }
+
+
     /**
      * @param FormationInstance $instance
      * @return FormationInstance
@@ -322,6 +334,12 @@ class FormationInstanceService
     {
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_INSCRIPTION_OUVERTE));
         $this->update($instance);
+
+        //notification abonnement
+        $abonnements = $instance->getFormation()->getAbonnements();
+        foreach ($abonnements as $abonnement) {
+            if ($abonnement->estNonHistorise()) $this->getNotificationService()->triggerNouvelleSession($instance, $abonnement);
+        }
 
         return $instance;
     }
@@ -349,6 +367,11 @@ class FormationInstanceService
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
         }
+
+        $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
+        $dateRappel->sub(new DateInterval('P4D'));
+        $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
+
         return $instance;
     }
 
@@ -481,5 +504,4 @@ class FormationInstanceService
 
         return $result;
     }
-
 }

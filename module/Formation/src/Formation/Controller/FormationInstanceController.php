@@ -2,24 +2,22 @@
 
 namespace Formation\Controller;
 
-use Formation\Service\Notification\NotificationServiceAwareTrait;
-use Formation\Service\Presence\PresenceAwareTrait;
-use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use DateInterval;
-use DateTime;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
-use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenMail\Service\Mail\MailServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\Presence\PresenceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -35,7 +33,6 @@ class FormationInstanceController extends AbstractActionController
     use ParametreServiceAwareTrait;
     use PresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
-    use RappelAgentAvantFormationServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -196,12 +193,6 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->ouvrirInscription($instance);
 
-        //notification abonnement
-        $abonnements = $instance->getFormation()->getAbonnements();
-        foreach ($abonnements as $abonnement) {
-            if ($abonnement->estNonHistorise()) $this->getNotificationService()->triggerNouvelleSession($instance, $abonnement);
-        }
-
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
@@ -210,9 +201,7 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->fermerInscription($instance);
 
-        $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
-        $dateRappel->sub(new DateInterval('P4D'));
-        $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
+
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
@@ -251,5 +240,46 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->reouvrir($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
+    }
+
+    public function changerEtatAction() : ViewModel
+    {
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $etat = $this->getEtatService()->getEtat($data['etat']);
+
+            switch($etat->getCode()) {
+                case SessionEtats::ETAT_CREATION_EN_COURS :
+                    $this->getFormationInstanceService()->recreation($instance);
+                    exit();
+                case SessionEtats::ETAT_INSCRIPTION_OUVERTE :
+                    $this->getFormationInstanceService()->ouvrirInscription($instance);
+                    exit();
+                case SessionEtats::ETAT_INSCRIPTION_FERMEE :
+                    $this->getFormationInstanceService()->fermerInscription($instance);
+                    exit();
+                case SessionEtats::ETAT_FORMATION_CONVOCATION :
+                    $this->getFormationInstanceService()->envoyerConvocation($instance);
+                    exit();
+                case SessionEtats::ETAT_ATTENTE_RETOURS :
+                    $this->getFormationInstanceService()->demanderRetour($instance);
+                    exit();
+                case SessionEtats::ETAT_CLOTURE_INSTANCE :
+                    $this->getFormationInstanceService()->cloturer($instance);
+                    exit();
+                default :
+            }
+
+            exit();
+        }
+
+        return new ViewModel([
+           'title' => "Changer l'état de la session de formation",
+           'etats' => $this->getEtatService()->getEtatsByTypeCode(SessionEtats::TYPE),
+           'instance' => $instance,
+        ]);
     }
 }

@@ -78,6 +78,7 @@ return [
                         'envoyer-convocation',
                         'demander-retour',
                         'cloturer',
+                        'changer-etat',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -304,6 +305,17 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'cloturer',
+                            ],
+                        ],
+                    ],
+                    /** @see FormationInstanceController::changerEtatAction() */
+                    'changer-etat' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/changer-etat/:formation-instance',
+                            'defaults' => [
+                                'controller' => FormationInstanceController::class,
+                                'action'     => 'changer-etat',
                             ],
                         ],
                     ],

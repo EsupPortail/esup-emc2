@@ -2,17 +2,16 @@
 
 namespace Formation\Controller;
 
-use Formation\Service\Notification\NotificationService;
-use Formation\Service\Presence\PresenceService;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Formation\Form\FormationInstance\FormationInstanceForm;
-use Formation\Service\Evenement\RappelAgentAvantFormationService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Notification\NotificationService;
+use Formation\Service\Presence\PresenceService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -38,7 +37,6 @@ class FormationInstanceControllerFactory
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var PresenceService $presenceService
-         * @var RappelAgentAvantFormationService $rappelAgentAvantFormationService
          */
         $etatService = $container->get(EtatService::class);
         $formationService = $container->get(FormationService::class);
@@ -49,7 +47,6 @@ class FormationInstanceControllerFactory
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $presenceService = $container->get(PresenceService::class);
-        $rappelAgentAvantFormationService = $container->get(RappelAgentAvantFormationService::class);
 
         /**
          * @var FormationInstanceForm $formationInstanceForm
@@ -68,7 +65,6 @@ class FormationInstanceControllerFactory
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setPresenceService($presenceService);
-        $controller->setRappelAgentAvantFormationService($rappelAgentAvantFormationService);
         return $controller;
     }
 
