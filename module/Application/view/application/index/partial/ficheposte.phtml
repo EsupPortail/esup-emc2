@@ -24,7 +24,14 @@ use Application\Entity\Db\Agent;
                 <ul>
                     <?php foreach ($affectations as $affectation) : ?>
                         <li>
-                            <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                            <?php if ($affectation->getStructure()) : ?>
+                                <?php echo $affectation->getStructure()->getLibelleCourt(); ?>
+                            <?php else : ?>
+                                <span class="text-warning">
+                                    <span class="icon icon-attention"></span>
+                                    Aucune structure d'affectation
+                                </span>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

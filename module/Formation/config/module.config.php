@@ -88,7 +88,7 @@ return [
              * Adresses des redirections si do_not_send est à true
              */
             'redirect_to' => ['jean-philippe.metivier@unicaen.fr', ],
-            'do_not_send' => true,
+            'do_not_send' => false,
 
             'subject_prefix' => 'Mes formations (test)',
             'from_name' => 'mes-formations.unicaen.fr | Application de gestion des formations du personnel',
