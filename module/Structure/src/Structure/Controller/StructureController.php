@@ -27,15 +27,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
-use Structure\Entity\Db\StructureGestionnaire;
-use Structure\Entity\Db\StructureResponsable;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireFormAwareTrait;
-use Structure\Form\AjouterResponsable\AjouterResponsableForm;
-use Structure\Form\AjouterResponsable\AjouterResponsableFormAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 use UnicaenDbImport\Entity\Db\Source;
@@ -63,8 +56,6 @@ class StructureController extends AbstractActionController {
 
 
     use AgentMissionSpecifiqueFormAwareTrait;
-    use AjouterGestionnaireFormAwareTrait;
-    use AjouterResponsableFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use HasDescriptionFormAwareTrait;
 
@@ -216,111 +207,6 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structure->setRepriseResumeMere(! $structure->getRepriseResumeMere());
         $this->getStructureService()->update($structure);
-
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
-    }
-
-    /** GESTION DES RESPONSABLES ET GESTIONNAIRES *******************************************************************/
-
-    public function ajouterResponsableAction() : ViewModel
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
-
-        $responsable = new StructureResponsable();
-        $responsable->setStructure($structure);
-
-        /** @var AjouterResponsableForm $form */
-        $form = $this->getAjouterResponsableForm();
-        $form->get('responsable')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
-        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-responsable', ['structure' => $structure->getId()]));
-        $form->bind($responsable);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $responsable->setCreatedOn();
-                /** @var Source $source */
-                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
-                $responsable->setSource($source);
-                $this->getStructureService()->getEntityManager()->persist($responsable);
-                $this->getStructureService()->getEntityManager()->flush($responsable);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate("application/default/default-form");
-        $vm->setVariables([
-            'title' => "Ajout d'un responsable à une structure",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function retirerResponsableAction() : Response
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        $responsable = $this->getAgentService()->getEntityManager()->getRepository(StructureResponsable::class)->find($this->params()->fromRoute('responsable'));
-
-        if ($responsable) {
-            $this->getStructureService()->getEntityManager()->remove($responsable);
-            $this->getStructureService()->getEntityManager()->flush($responsable);
-        }
-
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
-    }
-
-    public function ajouterGestionnaireAction() : ViewModel
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        if ($structure === null) throw new RuntimeException("Aucun structure pour l'identifiant [".$this->params()->fromRoute(['structure'])."]");
-
-        $gestionnaire = new StructureGestionnaire();
-        $gestionnaire->setStructure($structure);
-
-        /** @var AjouterGestionnaireForm $form */
-        $form = $this->getAjouterGestionnaireForm();
-        $form->get('gestionnaire')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
-        $form->setAttribute('action', $this->url()->fromRoute('structure/ajouter-gestionnaire', ['structure' => $structure->getId()]));
-        $form->bind($gestionnaire);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $gestionnaire->setCreatedOn();
-                /** @var Source $source */
-                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
-                $gestionnaire->setSource($source);
-                $gestionnaire->setIdSource($structure->getId() ."_". $gestionnaire->getAgent()->getId());
-                $this->getStructureService()->getEntityManager()->persist($gestionnaire);
-                $this->getStructureService()->getEntityManager()->flush($gestionnaire);
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate("application/default/default-form");
-        $vm->setVariables([
-            'title' => "Ajout d'un gestionnaire à une structure",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-    public function retirerGestionnaireAction() : Response
-    {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        $gestionnaire = $this->getAgentService()->getEntityManager()->getRepository(StructureGestionnaire::class)->find($this->params()->fromRoute('gestionnaire'));
-
-        if ($gestionnaire) {
-            $this->getStructureService()->getEntityManager()->remove($gestionnaire);
-            $this->getStructureService()->getEntityManager()->flush($gestionnaire);
-        }
 
         return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
     }

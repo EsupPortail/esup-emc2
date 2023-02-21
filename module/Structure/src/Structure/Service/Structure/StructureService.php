@@ -30,11 +30,7 @@ class StructureService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Structure
-     * @return Structure
-     */
-    public function update($structure) : Structure
+    public function update(Structure $structure) : Structure
     {
         try {
             $this->getEntityManager()->flush($structure);

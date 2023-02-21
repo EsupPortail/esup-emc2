@@ -8,14 +8,6 @@ use Structure\Controller\StructureController;
 use Structure\Controller\StructureControllerFactory;
 use Structure\Event\InfoStructure\InfoStructureEvent;
 use Structure\Event\InfoStructure\InfoStructureEventFactory;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireForm;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireFormFactory;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireHydrator;
-use Structure\Form\AjouterGestionnaire\AjouterGestionnaireHydratorFactory;
-use Structure\Form\AjouterResponsable\AjouterResponsableForm;
-use Structure\Form\AjouterResponsable\AjouterResponsableFormFactory;
-use Structure\Form\AjouterResponsable\AjouterResponsableHydrator;
-use Structure\Form\AjouterResponsable\AjouterResponsableHydratorFactory;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Service\Notification\NotificationService;
 use Structure\Service\Notification\NotificationServiceFactory;
@@ -98,18 +90,6 @@ return [
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_DESCRIPTION,
                     'assertion'  => StructureAssertion::class,
-                ],
-                [
-                    'controller' => StructureController::class,
-                    'action' => [
-                        'ajouter-gestionnaire',
-                        'retirer-gestionnaire',
-                        'ajouter-responsable',
-                        'retirer-responsable',
-                    ],
-                    'privileges' => StructurePrivileges::STRUCTURE_GESTIONNAIRE,
-                    //'assertion'  => StructureAssertion::class,
-
                 ],
                 [
                     'controller' => StructureController::class,
@@ -221,54 +201,6 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'graphe',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'ajouter-gestionnaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-gestionnaire/:structure',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'ajouter-gestionnaire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'retirer-gestionnaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/retirer-gestionnaire/:structure/:gestionnaire',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'retirer-gestionnaire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'ajouter-responsable' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-responsable/:structure',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'ajouter-responsable',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'retirer-responsable' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/retirer-responsable/:structure/:responsable',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'retirer-responsable',
                             ],
                         ],
                         'may_terminate' => true,
@@ -405,14 +337,10 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            AjouterGestionnaireForm::class => AjouterGestionnaireFormFactory::class,
-            AjouterResponsableForm::class => AjouterResponsableFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            AjouterGestionnaireHydrator::class => AjouterGestionnaireHydratorFactory::class,
-            AjouterResponsableHydrator::class => AjouterResponsableHydratorFactory::class,
         ],
     ]
 
