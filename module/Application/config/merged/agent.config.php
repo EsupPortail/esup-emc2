@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\AgentAffichageAssertion;
+use Application\Assertion\AgentAffichageAssertionFactory;
 use Application\Assertion\AgentAssertion;
 use Application\Assertion\AgentAssertionFactory;
 use Application\Controller\AgentController;
@@ -14,6 +16,7 @@ use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Form\SelectionAgent\SelectionAgentFormFactory;
 use Application\Form\SelectionAgent\SelectionAgentHydrator;
 use Application\Form\SelectionAgent\SelectionAgentHydratorFactory;
+use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\Agent\AgentService;
 use Application\Service\Agent\AgentServiceFactory;
@@ -61,6 +64,17 @@ return [
                         ],
                         'resources' => ['Agent'],
                         'assertion' => AgentAssertion::class
+                    ],
+                    [
+                        'privileges' => [
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
+                        ],
+                        'resources' => ['Agent'],
+                        'assertion' => AgentAffichageAssertion::class
                     ],
                 ],
             ],
@@ -376,6 +390,7 @@ return [
     'service_manager' => [
         'factories' => [
             AgentAssertion::class => AgentAssertionFactory::class,
+            AgentAffichageAssertion::class => AgentAffichageAssertionFactory::class,
 
             AgentService::class => AgentServiceFactory::class,
             AgentAffectationService::class => AgentAffectationServiceFactory::class,

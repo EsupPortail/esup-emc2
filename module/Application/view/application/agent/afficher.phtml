@@ -52,7 +52,6 @@ if ($agent !== null) {
     $canHistoriser = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
     $canDetruire = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
     $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
-    $canInfoSource = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_INFO_SOURCE));
     $canAfficherMission = $canVoir;
     $canCCC = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
     $canPortfolio = $canCCC;
@@ -143,7 +142,6 @@ if ($agent !== null) {
                         'affectations' => $affectations,
                         'superieures' => $superieures, 'autorites' => $autorites,
                         'statuts' => $statuts, 'echelon' => $echelon, 'grades' => $grades, 'quotite' => $quotite,
-                        'canInfoSource' => $canInfoSource,
                         'canAffichageDate' => $canAffichageDate]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">

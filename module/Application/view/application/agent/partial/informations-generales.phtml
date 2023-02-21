@@ -9,8 +9,6 @@
  * @var Agent[] $superieures
  * @var Agent[] $autorites
  * @var AgentQuotite $quotite
- * @var bool $canInfoSource
- * @var bool $canAffichageDate
  */
 
 use Application\Entity\Db\Agent;
@@ -19,6 +17,13 @@ use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
+use Application\Provider\Privilege\AgentaffichagePrivileges;
+
+$canAfficherAutorite = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE);
+$canAfficherSuperieure = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR);
+$canAfficherCarriereComplete = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE);
+$canAfficherCarriereDate = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME);
+$canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE);
 
 ?>
 <h2> Informations générales sur l'agent </h2>
@@ -65,52 +70,57 @@ use Application\Entity\Db\AgentStatut;
                     Rattaché&middot;e à <?php echo ($niveau2)?$niveau2->getLibelleLong():"aucune structure de renseignée"; ?>
                 <?php endif; ?>
             </dd>
-            <dt> Autorité hiérarchique </dt>
-            <dd>
-                <?php if ($niveau2) : ?>
-                    <?php if ($autorites AND !empty($autorites)) : ?>
+
+            <?php if ($canAfficherAutorite) : ?>
+                <dt> Autorité hiérarchique </dt>
+                <dd>
+                    <?php if ($niveau2) : ?>
+                        <?php if ($autorites AND !empty($autorites)) : ?>
+                            <ul>
+                            <?php foreach ($autorites as $key => $autorite) : ?>
+                                <li>
+                                    <?php echo $autorite->getDenomination(); ?>
+                                    <?php if (substr($key, 0, 10) === "complement") : ?>
+                                        <span class="icon icon-information" title="Complément non déduit de la structure"></span>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                            </ul>
+                        <?php else : ?>
+                            <span class="probleme">
+                                <span class="icon icon-attention"></span>
+                                Aucune responsable pour la structure de niveau 2 <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                            </span>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <span class="probleme">
+                            <span class="icon icon-attention"></span>
+                            Aucun·e autorité hiérarchique
+                        </span>
+                    <?php endif; ?>
+                </dd>
+            <?php endif; ?>
+            <?php if ($canAfficherSuperieure) : ?>
+                <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
+                <dd>
+                    <?php if (!empty($superieures)) : ?>
                         <ul>
-                        <?php foreach ($autorites as $key => $autorite) : ?>
-                            <li>
-                                <?php echo $autorite->getDenomination(); ?>
-                                <?php if (substr($key, 0, 10) === "complement") : ?>
-                                    <span class="icon icon-information" title="Complément non déduit de la structure"></span>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
+                            <?php foreach ($superieures as $key => $superieure) : ?>
+                                <li> <?php echo $superieure->getDenomination(); ?>
+                                    <?php if (substr($key, 0, 10) === "complement") : ?>
+                                        <span class="icon icon-information" title="Complément non déduit de la structure"></span>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
                     <?php else : ?>
                         <span class="probleme">
                             <span class="icon icon-attention"></span>
-                            Aucune responsable pour la structure de niveau 2 <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
+                            Aucun·e supérieur·e hiérarchique direct·e
                         </span>
                     <?php endif; ?>
-                <?php else : ?>
-                    <span class="probleme">
-                        <span class="icon icon-attention"></span>
-                        Aucun·e autorité hiérarchique
-                    </span>
-                <?php endif; ?>
-            </dd>
-            <dt> Supérieur&middot;e hiérarchique direct&middot;e</dt>
-            <dd>
-                <?php if (!empty($superieures)) : ?>
-                    <ul>
-                        <?php foreach ($superieures as $key => $superieure) : ?>
-                            <li> <?php echo $superieure->getDenomination(); ?>
-                                <?php if (substr($key, 0, 10) === "complement") : ?>
-                                    <span class="icon icon-information" title="Complément non déduit de la structure"></span>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else : ?>
-                    <span class="probleme">
-                        <span class="icon icon-attention"></span>
-                        Aucun·e supérieur·e hiérarchique direct·e
-                    </span>
-                <?php endif; ?>
-            </dd>
+                </dd>
+            <?php endif; ?>
         </dl>
         <?php else : ?>
             <div class="alert alert-danger"> Aucune affectation principale </div>
@@ -118,7 +128,7 @@ use Application\Entity\Db\AgentStatut;
     </div>
 
     <div class="col-md-4">
-        <?php if ($canInfoSource) : ?>
+        <?php if ($canAfficherInfoSource) : ?>
             <dl>
                 <dt> Identifiant sources </dt>
                 <dd>
@@ -146,22 +156,24 @@ use Application\Entity\Db\AgentStatut;
     <div class="col-md-3">
         <h3>Affectation</h3>
         <?php foreach ($affectations as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
         <h3>Statut</h3>
         <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
         <h3>Grade</h3>
         <?php foreach ($grades as $grade) : ?>
-            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => $canAffichageDate, 'temoin' => true]); ?>
+            <?php echo $this->agentGrade($grade, ['echelon' => $echelon, 'structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
         <?php endforeach; ?>
     </div>
 </div>
+
+<?php if ($canAfficherCarriereComplete) : ?>
 <a
     <?php /** @see \Application\Controller\AgentController::afficherStatutsGradesAction() */?>
     href="<?php echo $this->url('agent/afficher-statuts-grades', ['agent' => $agent->getId()], [], true); ?>"
@@ -169,3 +181,4 @@ use Application\Entity\Db\AgentStatut;
 >
     <span class="icon icon-voir"></span> Listing de toutes les affectations, statuts et grades
 </a>
+<?php endif; ?>
