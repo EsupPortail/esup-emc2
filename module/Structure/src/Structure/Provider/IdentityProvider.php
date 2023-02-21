@@ -5,16 +5,14 @@ namespace Structure\Provider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use BjyAuthorize\Provider\Identity\ProviderInterface;
-use UnicaenAuthentification\Provider\Identity\ChainableProvider;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
-
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Provider\Identity\AbstractIdentityProvider;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class IdentityProvider implements ProviderInterface, ChainableProvider
+class IdentityProvider extends AbstractIdentityProvider
 {
     use AgentServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -67,18 +65,4 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
         return $roles;
     }
 
-    /**
-     * @return string[]|RoleInterface[]
-     */
-    public function getIdentityRoles() : array
-    {
-        return $this->computeRolesAutomatiques();
-    }
-
-    /**
-     * @param ChainEvent $e
-     */
-    public function injectIdentityRoles(ChainEvent $e) {
-        $e->addRoles($this->getIdentityRoles());
-    }
 }

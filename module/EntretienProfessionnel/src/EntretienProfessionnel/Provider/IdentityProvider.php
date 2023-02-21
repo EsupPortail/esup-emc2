@@ -3,18 +3,15 @@
 namespace EntretienProfessionnel\Provider;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use BjyAuthorize\Provider\Identity\ProviderInterface;
 use EntretienProfessionnel\Provider\Role\EntretienProfessionnelRoles;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
-use UnicaenAuthentification\Provider\Identity\ChainableProvider;
-use UnicaenAuthentification\Provider\Identity\ChainEvent;
-
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Provider\Identity\AbstractIdentityProvider;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class IdentityProvider implements ProviderInterface, ChainableProvider
+class IdentityProvider extends AbstractIdentityProvider
 {
     use AgentServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -57,20 +54,5 @@ class IdentityProvider implements ProviderInterface, ChainableProvider
         }
 
         return $roles;
-    }
-
-    /**
-     * @return string[]|RoleInterface[]
-     */
-    public function getIdentityRoles()
-    {
-        return $this->computeRolesAutomatiques();
-    }
-
-    /**
-     * @param ChainEvent $e
-     */
-    public function injectIdentityRoles(ChainEvent $e) {
-        $e->addRoles($this->getIdentityRoles());
     }
 }
