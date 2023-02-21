@@ -14,8 +14,6 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use Formation\Service\DemandeExterne\DemandeExterneService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -42,10 +40,8 @@ class StructureControllerFactory {
          * @var CampagneService $campagneService
          * @var EtatService $etatService
          * @var DelegueService $delegueService
-         * @var DemandeExterneService $demandeService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
@@ -58,11 +54,9 @@ class StructureControllerFactory {
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
         $etatService = $container->get(EtatService::class);
-        $demandeService = $container->get(DemandeExterneService::class);
         $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
@@ -90,10 +84,8 @@ class StructureControllerFactory {
         $controller->setCampagneService($campagneService);
         $controller->setEtatService($etatService);
         $controller->setDelegueService($delegueService);
-        $controller->setDemandeExterneService($demandeService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);

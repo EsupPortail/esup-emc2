@@ -29,11 +29,6 @@
  * @var EntretienProfessionnel[] $entretiensArray
  * @var Delegue[] $delegues
  *
- * // FORMATION ///////////////////////////
- * @var DemandeExterne[] $demandesNonValidees
- * @var DemandeExterne[] $demandesValidees
- * @var FormationInstanceInscrit[] $inscriptionsNonValidees
- * @var FormationInstanceInscrit[] $inscriptionsValidees
  */
 
 use Application\Entity\Db\Agent;
@@ -42,8 +37,6 @@ use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -140,18 +133,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 <!--            </li>-->
 
             <li class="nav-item">
-                <a href="#formation-demande" class="nav-link" aria-controls="formation-demande">
-                    Demandes de <br/> formations
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#formation-liste" class="nav-link" aria-controls="formation-liste">
-                    Listes des <br/> formations
-                </a>
-            </li>
-
-
-            <li class="nav-item">
                 <a href="#extraction" class="nav-link" aria-controls="extraction">
                     Extractions  <br/> &nbsp;
                 </a>
@@ -223,15 +204,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 <!--                <div id="profil" class="tab-pane">-->
 <!--                    --><?php //echo $this->partial('partial/profil', ['structure' => $structure, 'profils' => $profils, 'fichesRecrutements' => $fichesRecrutements]); ?>
 <!--                </div>-->
-
-                <!-- Demande de formation ------------------------------->
-                <div id="formation-demande" class="tab-pane">
-                    <?php echo $this->partial('partial/demande-formation', ['inscriptions' => $inscriptionsNonValidees, 'demandes' => $demandesNonValidees]); ?>
-                </div>
-
-                <div id="formation-liste" class="tab-pane">
-                    <?php echo $this->partial('partial/liste-formation', ['inscriptions' => $inscriptionsValidees, 'demandes' => $demandesValidees]); ?>
-                </div>
 
                 <!-- Extraction ------------------------------------------------------------------------------------->
                 <div id="extraction" class="tab-pane">

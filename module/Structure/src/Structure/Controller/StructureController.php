@@ -18,9 +18,6 @@ use DateTime;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use Formation\Entity\Db\Formation;
-use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -39,11 +36,9 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
-    use DemandeExterneServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -129,12 +124,6 @@ class StructureController extends AbstractActionController {
 
         $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
-        //formations
-        $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
-        $demandesValidees =  $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
-
         return new ViewModel([
             'selecteur' => $selecteur,
 
@@ -160,12 +149,6 @@ class StructureController extends AbstractActionController {
             'campagnes' => $campagnes,
             'entretiensArray' => $entretiensArray,
             'delegues' => $delegues,
-
-            //formations
-            'demandesNonValidees' => $demandesNonValidees,
-            'demandesValidees' => $demandesValidees,
-            'inscriptionsNonValidees' => $inscriptionsNonValidees,
-            'inscriptionsValidees' => $inscriptionsValidees,
 
             // - Fiches de recrutement - //
 //            'fichesRecrutements' => $fichesRecrutements,
