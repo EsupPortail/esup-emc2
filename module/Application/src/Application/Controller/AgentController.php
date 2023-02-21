@@ -141,13 +141,11 @@ class AgentController extends AbstractActionController
 
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
-        $canAffichageDate = ($this->getParametreService()->getParametreByCode(CarriereParametres::TYPE,CarriereParametres::DATE_PORTAIL_AGENT)->getValeur() === "true");
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
             'affectations' => $agentAffectations,
-            'canAffichageDate' => $canAffichageDate,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
             'echelon' => $agent->getEchelonActif(),
