@@ -47,10 +47,18 @@ class StagiaireService {
     /**
      * @return LAGAFStagiaire[]
      */
-    public function getStagiaires()
+    public function getStagiaires() : array
     {
         $qb = $this->getEntityManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaires');
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getStagiaire(int $id) : LAGAFStagiaire
+    {
+        $qb = $this->getEntityManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaire')
+            ->andWhere('stagiaire.nStagiaire = :id')->setParameter('id', $id);
+        $result = $qb->getQuery()->getOneOrNullResult();
         return $result;
     }
 }

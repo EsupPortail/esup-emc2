@@ -28,8 +28,8 @@ return [
                         'element',
                         'theme',
                     ],
-                    'privileges' => [
-                        LagafPrivileges::IMPORT_LAGAF,
+                    'roles' => [
+                       // LagafPrivileges::IMPORT_LAGAF,
                     ],
                 ],
             ],
@@ -38,7 +38,7 @@ return [
 
     'router'          => [
         'routes' => [
-            'formation' => [
+//            'formation' => [
 //                'type'  => Literal::class,
 //                'options' => [
 //                    'route'    => '/formation',
@@ -48,7 +48,7 @@ return [
 //                    ],
 //                ],
 //                'may_terminate' => true,
-                'child_routes' => [
+//                'child_routes' => [
                     'import-lagaf' => [
                         'type' => Literal::class,
                         'options' => [
@@ -143,8 +143,8 @@ return [
                         ],
                     ],
                 ],
-            ],
-        ],
+//            ],
+//        ],
     ],
 
     'service_manager' => [

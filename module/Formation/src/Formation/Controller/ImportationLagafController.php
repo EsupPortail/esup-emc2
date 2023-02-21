@@ -403,6 +403,8 @@ class ImportationLagafController extends AbstractActionController {
 
     public function inscriptionAction()
     {
+        $id = $this->params()->fromRoute('id');
+
         $report = "";
         $inscriptions = [];
         $problemes = [];
@@ -432,27 +434,39 @@ class ImportationLagafController extends AbstractActionController {
             }
         }
 
-        $agents = [];
-        $agents_tmp = $this->getStagiaireService()->getAgentService()->getAgents();
-        foreach ($agents_tmp as $agent) $agents[$agent->getId()] = $agent;
-        $stagiaires_tmp = $this->getStagiaireService()->getStagiaires();
         $stagiaires = [];
-        foreach ($stagiaires_tmp as $stagiaire) {
-            $stagiaires[$stagiaire->getNStagiaire()] = $stagiaire;
+        $agents = [];
+
+        if ($id) {
+            $stagiaire = $this->getStagiaireService()->getStagiaire($id);
+            $stagiaires[$id] = $stagiaire;
+            $agents[$stagiaire->getOctopusId()] = $this->getStagiaireService()->getAgentService()->getAgent($stagiaire->getOctopusId());
+        } else {
+            $stagiaires_tmp = $this->getStagiaireService()->getStagiaires();
+            foreach ($stagiaires_tmp as $stagiaire) {
+                $stagiaires[$stagiaire->getNStagiaire()] = $stagiaire;
+            }
+            $agents_tmp = $this->getStagiaireService()->getAgentService()->getAgents();
+            foreach ($agents_tmp as $agent) $agents[$agent->getId()] = $agent;
         }
 
         $lagaf = $this->sourceLagaf;
-        $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
-        $inscrits_tmp = array_filter($inscrits_tmp, function (FormationInstance $a) use ($lagaf) { return $a->getSource() === $lagaf; });
+
+        if ($id) {
+            $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsByInscrit(current($agents));
+        } else {
+            $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
+        }
+        $inscrits_tmp = array_filter($inscrits_tmp, function (FormationInstanceInscrit $a) use ($lagaf) { return $a->getSource() === $lagaf; });
         $inscrits = []; foreach ($inscrits_tmp as $inscrit) $inscrits[$inscrit->getId()] = $inscrit;
 
+        $etat_ok = $this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH);
         $validee = $this->getEtatService()->getEtatByCode('VALIDATION_INSCRIPTION');
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
         $report .= "<tbody>";
 
-        $etat_ok = $this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH);
 
         for($position = 1 ; $position < $nbLine; $position++) {
 
@@ -460,44 +474,53 @@ class ImportationLagafController extends AbstractActionController {
             $st_nstagiaire = $data[$position_stagiaire_id];
             $st_instance = $data[$position_action_id] . "-" . $data[$position_session_id];
 
-            $instance = (isset($instances[$st_instance]))?$instances[$st_instance]:null;
-            $stagiaire = (isset($stagiaires[$st_nstagiaire]))?$stagiaires[$st_nstagiaire]:null;
-            $agent = ($stagiaire !== null AND isset($agents[$stagiaire->getOctopusId()]))?$agents[$stagiaire->getOctopusId()]:null;
+            $instance = (isset($instances[$st_instance])) ? $instances[$st_instance] : null;
+            $stagiaire = (isset($stagiaires[$st_nstagiaire])) ? $stagiaires[$st_nstagiaire] : null;
 
-            $st_iscrit_id = $st_instance . "-". $st_nstagiaire;
+            $agent = ($stagiaire !== null and isset($agents[$stagiaire->getOctopusId()])) ? $agents[$stagiaire->getOctopusId()] : null;
+            $st_iscrit_id = $st_instance . "-" . $st_nstagiaire;
 
-//            $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscritBySource(null, $st_instance . "-" . $st_nstagiaire);
-            if ($agent !== null AND $instance !== null AND $inscrits[$st_iscrit_id] === null) {
-                $inscription = new FormationInstanceInscrit();
-                $inscription->setInstance($instance);
-                $inscription->setAgent($agent);
-                $inscription->setListe("principale");
-                $inscription->setSource($this->sourceLagaf);
-                $inscription->setEtat($validee);
-                $inscription->setIdSource($st_iscrit_id);
-                $inscription->setEtat($etat_ok);
-                $this->getFormationInstanceInscritService()->create($inscription);
-                $inscriptions[] = $inscription;
+            if ($id === null or $st_nstagiaire == $id) {
 
-                $st_frepas = trim($data[$position_FRepas]);
-                $st_ftransport = trim($data[$position_FTransport]);
-                $st_fhebergement = trim($data[$position_FHebergement]);
+                //            $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscritBySource(null, $st_instance . "-" . $st_nstagiaire);
+                if ($agent !== null and $instance !== null and $inscrits[$st_iscrit_id] === null) {
+                    $inscription = new FormationInstanceInscrit();
+                    $inscription->setInstance($instance);
+                    $inscription->setAgent($agent);
+                    $inscription->setListe("principale");
+                    $inscription->setSource($this->sourceLagaf);
+                    $inscription->setEtat($validee);
+                    $inscription->setIdSource($st_iscrit_id);
+                    $inscription->setEtat($etat_ok);
+                    $this->getFormationInstanceInscritService()->create($inscription);
+                    $inscriptions[] = $inscription;
 
-                if ($st_frepas !== "" OR $st_ftransport !== "" OR $st_fhebergement !== "") {
-                    $frais = new FormationInstanceFrais();
-                    if ($st_frepas !== "") $frais->setFraisRepas($st_frepas);
-                    if ($st_ftransport !== "") $frais->setFraisTransport($st_ftransport);
-                    if ($st_fhebergement !== "") $frais->setFraisHebergement($st_fhebergement);
-                    $frais->setInscrit($inscription);
-                    $frais->setSource($this->sourceLagaf);
-                    $frais->setIdSource($st_instance . "-" . $st_nstagiaire);
-                    $this->getFormationInstanceFraisService()->create($frais);
+                    $st_frepas = trim($data[$position_FRepas]);
+                    $st_ftransport = trim($data[$position_FTransport]);
+                    $st_fhebergement = trim($data[$position_FHebergement]);
+
+                    if ($st_frepas !== "" or $st_ftransport !== "" or $st_fhebergement !== "") {
+                        $frais = new FormationInstanceFrais();
+                        if ($st_frepas !== "") $frais->setFraisRepas($st_frepas);
+                        if ($st_ftransport !== "") $frais->setFraisTransport($st_ftransport);
+                        if ($st_fhebergement !== "") $frais->setFraisHebergement($st_fhebergement);
+                        $frais->setInscrit($inscription);
+                        $frais->setSource($this->sourceLagaf);
+                        $frais->setIdSource($st_instance . "-" . $st_nstagiaire);
+                        $this->getFormationInstanceFraisService()->create($frais);
+                    }
+
+                    if ($id !== null) {
+                        $report .= "<tr>";
+                        $report .= "<td>".$agent->getDenomination() ."</td>";
+                        $report .= "<td>".$instance->getFormation()->getLibelle() ."</td>";
+                        $report .= "</tr>";
+                    }
+                } else {
+                    $problemes[] = $data;
                 }
-            } else {
-                $problemes[] = $data;
             }
         }
-
         $report .= "</tbody></table>";
 
 
@@ -510,6 +533,9 @@ class ImportationLagafController extends AbstractActionController {
 
     public function presenceAction()
     {
+
+        $id = $this->params()->fromRoute('id');
+
         $report = "";
         $presences = [];
         $problemes = [];
@@ -561,27 +587,31 @@ class ImportationLagafController extends AbstractActionController {
         for($position = 1 ; $position < $nbLine; $position++) {
 
             $data = $array[$position];
-            $st_journee = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_seance_id] . "-" . $data[$position_plage_id];
-            $st_inscrit = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_stagiaire_id];
 
-            $journee = (isset($journees[$st_journee]))?$journees[$st_journee]:null;
-            $inscrit = (isset($inscrits[$st_inscrit]))?$inscrits[$st_inscrit]:null;
 
-            if ($journee !== null AND $inscrit !== null) {
-                if (!isset($olds[$st_journee . "-" . $st_inscrit])) {
-                    $presence = new Presence();
-                    $presence->setJournee($journee);
-                    $presence->setInscrit($inscrit);
-                    $presence->setPresent($data[$position_presence] === "1");
-                    $presence->setSource($this->sourceLagaf);
-                    $presence->setIdSource($st_journee . "-" . $st_inscrit);
-                    $presence->setPresenceType("LAGAF");
-                    $this->getPresenceService()->create($presence);
+            if ($id === null OR $data[$position_stagiaire_id] == $id) {
 
-                    $presences[] = $presence;
+                $st_journee = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_seance_id] . "-" . $data[$position_plage_id];
+                $st_inscrit = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_stagiaire_id];
+                $journee = (isset($journees[$st_journee])) ? $journees[$st_journee] : null;
+                $inscrit = (isset($inscrits[$st_inscrit])) ? $inscrits[$st_inscrit] : null;
+
+                if ($journee !== null and $inscrit !== null) {
+                    if (!isset($olds[$st_journee . "-" . $st_inscrit])) {
+                        $presence = new Presence();
+                        $presence->setJournee($journee);
+                        $presence->setInscrit($inscrit);
+                        $presence->setPresent($data[$position_presence] === "1");
+                        $presence->setSource($this->sourceLagaf);
+                        $presence->setIdSource($st_journee . "-" . $st_inscrit);
+                        $presence->setPresenceType("LAGAF");
+                        $this->getPresenceService()->create($presence);
+
+                        $presences[] = $presence;
+                    }
+                } else {
+                    $problemes[] = $data;
                 }
-            } else {
-                $problemes[] = $data;
             }
         }
 
