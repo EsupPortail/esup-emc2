@@ -11,6 +11,8 @@
         <field name="icone"             column="icone"                  type="string"    length="256"    nullable="true" />
         <field name="couleur"           column="couleur"                type="string"    length="256"    nullable="true" />
 
+        <one-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\Etat" mapped-by="type"/>
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

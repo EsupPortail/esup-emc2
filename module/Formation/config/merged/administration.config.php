@@ -6,6 +6,7 @@ use Formation\Controller\AdministrationController;
 use Formation\Controller\AdministrationControllerFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenEtat\Provider\Privilege\EtatPrivileges;
 use UnicaenIndicateur\Provider\Privilege\IndicateurPrivileges;
 use UnicaenParametre\Provider\Privilege\ParametrecategoriePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -53,6 +54,15 @@ return [
                         DocumenttemplatePrivileges::DOCUMENTTEMPLATE_INDEX,
                     ],
                 ],
+                [
+                    'controller' => AdministrationController::class,
+                    'action' => [
+                        'etat',
+                    ],
+                    'privileges' => [
+                        EtatPrivileges::ETAT_INDEX,
+                    ],
+                ],
             ],
         ],
     ],
@@ -97,6 +107,14 @@ return [
                                 'label' => 'Templates et macros',
                                 'route' => 'formation/administration/template',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'etat' => [
+                                'order' => 2100,
+                                'label' => 'États',
+                                'route' => 'formation/administration/etat',
+//                                'resource' => PrivilegeController::getResourceId(EtatPrivileges::ETAT_INDEX),
+                                'resource' => PrivilegeController::getResourceId(AdministrationController::class, 'etat'),
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],
@@ -161,6 +179,17 @@ return [
                                     'defaults' => [
                                         'controller' => AdministrationController::class,
                                         'action' => 'template',
+                                    ],
+                                ],
+                            ],
+                            'etat' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    /** @see AdministrationController::etatAction() */
+                                    'route' => '/etat',
+                                    'defaults' => [
+                                        'controller' => AdministrationController::class,
+                                        'action' => 'etat',
                                     ],
                                 ],
                             ],

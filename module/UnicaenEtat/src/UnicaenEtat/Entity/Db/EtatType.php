@@ -2,6 +2,8 @@
 
 namespace UnicaenEtat\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -18,6 +20,13 @@ class EtatType implements HistoriqueAwareInterface {
     private $icone;
     /** @var string */
     private $couleur;
+
+    private Collection $etats;
+
+    public function __invoke()
+    {
+        $this->etats = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -99,5 +108,11 @@ class EtatType implements HistoriqueAwareInterface {
         return $this;
     }
 
-
+    /** @return Etat[] */
+    public function getEtats() : array
+    {
+        $etats = $this->etats->toArray();
+        usort($etats, function (Etat $a, Etat $b) { return $a->getOrdre() > $b->getOrdre();});
+        return $etats;
+    }
 }

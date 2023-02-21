@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenIndicateur\Service\Indicateur\IndicateurService;
 use UnicaenIndicateur\Service\TableauDeBord\TableauDeBordService;
 use UnicaenParametre\Service\Categorie\CategorieService;
@@ -25,6 +26,7 @@ class AdministrationControllerFactory {
     {
         /**
          * @var CategorieService $categorieService
+         * @var EtatTypeService $etatTypeService
          * @var IndicateurService $indicateurService
          * @var ParametreService $parametreService
          * @var PrivilegeService $privilegeService
@@ -33,6 +35,7 @@ class AdministrationControllerFactory {
          * @var TemplateService $templateService
          */
         $categorieService = $container->get(CategorieService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $indicateurService = $container->get(IndicateurService::class);
         $parametreService = $container->get(ParametreService::class);
         $privilegeService = $container->get(PrivilegeService::class);
@@ -42,6 +45,7 @@ class AdministrationControllerFactory {
 
         $controller = new AdministrationController();
         $controller->setCategorieService($categorieService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setIndicateurService($indicateurService);
         $controller->setParametreService($parametreService);
         $controller->setPrivilegeService($privilegeService);

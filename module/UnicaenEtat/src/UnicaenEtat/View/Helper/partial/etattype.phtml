@@ -9,6 +9,6 @@ use UnicaenEtat\Entity\Db\EtatType;
 
 ?>
 
-<span class="badge" title="<?php echo $etatType->getLibelle(); ?>" style="color:color:white; background:<?php echo ($etatType->getCouleur())?:"gray"; ?>">
+<span class="badge" title="<?php echo $etatType->getLibelle(); ?>" style="color:color:white; background-color:<?php echo ($etatType->getCouleur())??"gray"; ?>">
     &nbsp;<span class="<?php echo ($etatType->getIcone())?:"fa fa-question-circle"; ?>" aria-hidden="true"></span>&nbsp;
 </span>

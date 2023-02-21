@@ -2,8 +2,12 @@
 
 namespace Formation\Controller;
 
+use Formation\Provider\Etat\DemandeExterneEtats;
+use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\Etat\SessionEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenIndicateur\Service\Indicateur\IndicateurServiceAwareTrait;
 use UnicaenIndicateur\Service\TableauDeBord\TableauDeBordServiceAwareTrait;
 use UnicaenParametre\Service\Categorie\CategorieServiceAwareTrait;
@@ -15,6 +19,7 @@ use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 class AdministrationController extends AbstractActionController
 {
     use CategorieServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use IndicateurServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
@@ -75,6 +80,20 @@ class AdministrationController extends AbstractActionController
             'templates' => $templates,
         ]);
         $vm->setTemplate('unicaen-renderer/template/index');
+        return $vm;
+    }
+
+    public function etatAction() : ViewModel
+    {
+        $types = [
+            $this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::TYPE),
+            $this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::TYPE),
+            $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::TYPE),
+        ];
+
+        $vm = new ViewModel([
+            'etatTypes' => $types,
+        ]);
         return $vm;
     }
 }
