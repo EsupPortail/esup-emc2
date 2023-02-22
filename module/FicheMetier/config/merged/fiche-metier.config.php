@@ -20,6 +20,27 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
+                        'afficher',
+                        'exporter',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'ajouter',
+                        'dupliquer',
+                        'importer',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
@@ -30,6 +51,17 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'modifier',
+                        'modifier-etat',
                         'modifier-metier',
                         'modifier-raison',
                     ],
@@ -50,6 +82,50 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::afficherAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'exporter' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/exporter/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::exporterAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'exporter',
+                            ],
+                        ],
+                    ],
+                    'dupliquer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/dupliquer/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::dupliquerAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'dupliquer',
+                            ],
+                        ],
+                    ],
+                    'modifier' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
                     'historiser' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -69,6 +145,28 @@ return [
                                 /** @see FicheMetierController::restaurerAction() */
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'restaurer',
+                            ],
+                        ],
+                    ],
+                    'supprimer' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'modifier-etat' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-etat/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierEtatAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'modifier-etat',
                             ],
                         ],
                     ],

@@ -5,6 +5,7 @@ namespace Application\Service\FicheMetier;
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
+use Application\Provider\Template\PdfTemplate;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Etat\FicheMetierEtats;
@@ -29,9 +30,12 @@ use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
+use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class FicheMetierService {
     use ApplicationServiceAwareTrait;
@@ -41,6 +45,7 @@ class FicheMetierService {
     use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use RenduServiceAwareTrait;
 
     use ActiviteServiceAwareTrait;
     use ActiviteDescriptionServiceAwareTrait;
@@ -555,6 +560,26 @@ class FicheMetierService {
         $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
 
         return $fiche;
+    }
+
+    public function exporter(?FicheMetier $fichemetier)
+    {
+        $vars = [
+            'fichemetier' => $fichemetier,
+            'metier' => $fichemetier->getMetier(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_METIER, $vars);
+
+        try {
+            $exporter = new PdfExporter();
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors de l'export en PDF", 0, $e);
+        }
     }
 
 }

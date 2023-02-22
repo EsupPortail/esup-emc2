@@ -36,11 +36,8 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
-                        'afficher',
                         'afficher-applications',
                         'afficher-competences',
-                        'exporter',
-                        'exporter-toutes',
                         'graphique-applications',
                         'graphique-competences',
 
@@ -53,7 +50,6 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'ajouter',
-                        'dupliquer',
                         'importer-depuis-csv',
 //                        'ajouter-terminer',
                     ],
@@ -64,40 +60,17 @@ return [
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
-                        'editer',
-
                         'retirer-activite',
                         'deplacer-activite',
                         'ajouter-nouvelle-activite',
                         'ajouter-activite-existante',
 
                         'changer-expertise',
-                        'changer-etat',
                         'modifier-application',
                         'modifier-formation',
 
                         'cloner-applications',
                         'cloner-competences',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'detruire',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_DETRUIRE,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'ajouter-etat',
-                        'modifier-etat',
-                        'supprimer-etat',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
@@ -157,51 +130,6 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'etat' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/etat',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                            ],
-                        ],
-                        'may_terminate' => false,
-                        'child_routes' => [
-                            'ajouter' => [
-                                'type'  => Literal::class,
-                                'options' => [
-                                    'route'    => '/ajouter',
-                                    'defaults' => [
-                                        'controller' => FicheMetierController::class,
-                                        'action'     => 'ajouter-etat',
-                                    ],
-                                ],
-                                'may_terminate' => true,
-                            ],
-                            'modifier' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/modifier/:etat',
-                                    'defaults' => [
-                                        'controller' => FicheMetierController::class,
-                                        'action'     => 'modifier-etat',
-                                    ],
-                                ],
-                                'may_terminate' => true,
-                            ],
-                            'supprimer' => [
-                                'type'  => Segment::class,
-                                'options' => [
-                                    'route'    => '/supprimer/:etat',
-                                    'defaults' => [
-                                        'controller' => FicheMetierController::class,
-                                        'action'     => 'supprimer-etat',
-                                    ],
-                                ],
-                                'may_terminate' => true,
-                            ],
-                        ],
-                    ],
                     'ajouter' => [
                         'type'  => Literal::class,
                         'options' => [
@@ -290,17 +218,6 @@ return [
 //                        ],
 //                        'may_terminate' => true,
 //                    ],
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'afficher',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'graphique-applications' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -323,50 +240,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'exporter' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/exporter/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'exporter',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'exporter-toutes' => [
-                        'type'  => Literal::class,
-                        'options' => [
-                            'route'    => '/exporter-toutes',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'exporter-toutes',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'editer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer[/:id]',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'detruire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/detruire/:fiche-metier',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'detruire',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'changer-expertise' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -374,17 +247,6 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'changer-expertise',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'changer-etat' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/changer-etat/:fiche-metier',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'changer-etat',
                             ],
                         ],
                         'may_terminate' => true,

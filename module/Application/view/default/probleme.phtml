@@ -3,6 +3,7 @@
 /**
  * @var string $title
  * @var string $text
+ * @var ?string $retour
  */
 
 ?>
@@ -11,5 +12,11 @@
     <p class="lead">
         <?php echo $text; ?>
     </p>
+    <?php if ($retour !== null) : ?>
+        <a href="<?php echo $retour; ?>" class="btn btn-secondary">
+            <span class="icon icon-retour"></span>
+            Retour en arrière
+        </a>
+    <?php endif; ?>
 </div>
 

@@ -1,3 +1,18 @@
+:root {
+    --unistrap-color-default: rgb(111, 133, 111);
+}
+
+.unistrap.unistrap-th-emc2 {
+    --unistrap-color-main: rgb(40,87,40);
+    --unistrap-color-light: rgb(60,107,60);
+    --unistrap-color-dark: rgb(20,67,20);
+    --bs-link-color: #273c83;
+    --unistrap-color-main: #273c83;
+    --unistrap-color-light: #eaeefd;
+    --unistrap-color-dark: #18285c;
+    --bs-link-color: #273c83;
+}
+
 .unistrap.unistrap-th-cata {
     --unistrap-color-main: #273c83;
     --unistrap-color-light: #eaeefd;
@@ -114,6 +129,19 @@ tr.termine {
 
 tr.historise td:not(.action) {
     text-decoration: line-through darkred 2px;
+}
+
+th.action {
+    width: 8rem;
+    text-align: right;
+}
+
+td.action {
+    font-size: small;
+}
+
+td.action a {
+    text-decoration: none;
 }
 
 dt.historise {
@@ -328,6 +356,8 @@ div.listing  td.validation {
     /*background: lightgoldenrodyellow;*/
 }
 
+
+
 div.listing  td.action {
     width: 12rem;
     text-align: right;
@@ -440,4 +470,13 @@ h3.popover-header {
 div.card-header h2 {
      margin-top: 0.5rem;
      font-size: larger;
+}
+
+.bg-default {
+    background: var(--unistrap-color-default);
+    color: black;
+}
+
+.card-body {
+    padding: 0.25rem;
 }

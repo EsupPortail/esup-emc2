@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Form\Raison\RaisonForm;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
@@ -9,6 +10,7 @@ use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
 
 class FicheMetierControllerFactory {
 
@@ -21,23 +23,29 @@ class FicheMetierControllerFactory {
     public function __invoke(ContainerInterface $container) : FicheMetierController
     {
         /**
+         * @var ActiviteService $activiteService
          * @var FicheMetierService $ficheMetierService
          * @var MetierService $metierService
          */
+        $activiteService = $container->get(ActiviteService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $metierService = $container->get(metierService::class);
 
         /**
          * @var RaisonForm $raisonForm
+         * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
+        $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
+        $controller->setActiviteService($activiteService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMetierService($metierService);
         $controller->setRaisonForm($raisonForm);
+        $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);
         return $controller;
     }

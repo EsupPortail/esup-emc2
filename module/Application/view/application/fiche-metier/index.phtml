@@ -72,13 +72,6 @@ $this->headTitle('Index des fiches métiers');
     });
 
     $(function() {
-        $("body").on("destruction", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
-        });
-    });
-
-    $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

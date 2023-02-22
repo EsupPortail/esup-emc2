@@ -17,6 +17,7 @@ use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
 
@@ -42,6 +43,7 @@ class FicheMetierServiceFactory {
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var MetierService $metierService
+         * @var RenduService $renduService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $applicationService = $container->get(ApplicationService::class);
@@ -50,6 +52,7 @@ class FicheMetierServiceFactory {
         $competenceElementService = $container->get(CompetenceElementService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
+        $renduService = $container->get(RenduService::class);
 
         $activiteService = $container->get(ActiviteService::class);
         $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
@@ -67,6 +70,7 @@ class FicheMetierServiceFactory {
         $service->setCompetenceElementService($competenceElementService);
         $service->setDomaineService($domaineService);
         $service->setEtatService($etatService);
+        $service->setRenduService($renduService);
 
         $service->setActiviteService($activiteService);
         $service->setActiviteDescriptionService($activiteDescriptionService);
