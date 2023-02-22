@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 
 /**
@@ -7,27 +8,58 @@ use FicheMetier\Entity\Db\FicheMetier;
  * @var string $mode
  */
 
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
 
 $metier = $fichemetier->getMetier();
 $libelle = $metier->getLibelle(true);
+
 ?>
 
 <div class="row">
     <div class="col-md-8">
-        <h1 class="page-header">
-            <?php echo $libelle; ?>
-        </h1>
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="page-header">
+                    <?php echo $libelle; ?>
+                </h1>
+            </div>
+            <div class="col-md-4">
+                <?php if ($mode === 'edition-fiche-metier') : ?>
+                    <!-- todo check le privilege et l'action -->
+                    <?php /** @see FicheMetierController::modifierMetierAction() */ ?>
+                    <a class="btn btn-sm btn-primary action ajax-modal" data-event="modification"
+                       href="<?php echo $this->url('fiche-metier/modifier-metier', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                        <span class="icon icon-editer"></span>
+                        Modifier le métier
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
 
-        <?php if ($mode === 'edition-fiche-metier') : ?>
-            <?php /** @see FicheMetierController::editerLibelleAction() */ ?>
-            <a class="btn btn-primary action ajax-modal" data-event="modification"
-               href="<?php echo $this->url('fiche-metier-type/editer-libelle', ['id' => $fichemetier->getId()], [], true); ?>">
-                <span class="icon icon-editer"></span>
-                Modifier libellé
-            </a>
-        <?php endif; ?>
-
+        <div class="row" style="border-left: 2px gray solid; margin-bottom: 0.5rem;">
+            <div class="col-md-8">
+                <h3><u>Raison d'être du métier dans l'établissement</u></h3>
+                <?php if ($fichemetier->getRaison() !== null) : ?>
+                    <?php echo $fichemetier->getRaison(); ?>
+                <?php else :?>
+                    Aucune raison de fournie
+                <?php endif; ?>
+            </div>
+            <div class="col-md-4">
+                <?php if ($canEditer AND $mode === 'edition-fiche-metier' ) : ?>
+                    <?php /** @see FicheMetierController::modifierRaisonAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-metier/modifier-raison', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                       class="btn btn-sm btn-primary ajax-modal" data-event="modification"
+                    >
+                <span class="icon icon-editer">
+                    Modifier la raison
+                </span>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
+
     <div class="col-md-4">
         <dl class="row">
             <dt  class="col-md-4"> Domaine </dt>
@@ -78,7 +110,7 @@ $libelle = $metier->getLibelle(true);
                     </a>
                 <?php endif; ?>
             </dd>
-            <dt class="col-md-4"> Niveau associé </dt>
+            <dt class="col-md-4"> Niveau </dt>
             <dd class="col-md-8">
                 <?php $enveloppe = $metier->getNiveaux(); ?>
                 <?php if ($enveloppe !== null) : ?>

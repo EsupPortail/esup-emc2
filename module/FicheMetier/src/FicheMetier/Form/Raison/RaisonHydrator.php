@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form\Raison;
+namespace FicheMetier\Form\Raison;
 
 use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Hydrator\HydratorInterface;

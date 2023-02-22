@@ -8,10 +8,6 @@ use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Application\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use Application\Form\FicheMetierImportation\FichierMetierImportationHydrator;
 use Application\Form\FicheMetierImportation\FichierMetierImportationHydratorFactory;
-use Application\Form\Raison\RaisonForm;
-use Application\Form\Raison\RaisonFormFactory;
-use Application\Form\Raison\RaisonHydrator;
-use Application\Form\Raison\RaisonHydratorFactory;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use Application\Provider\Privilege\FicheMetierPrivileges;
@@ -70,8 +66,6 @@ return [
                     'action' => [
                         'editer',
 
-                        'editer-libelle',
-                        'editer-raison',
                         'retirer-activite',
                         'deplacer-activite',
                         'ajouter-nouvelle-activite',
@@ -87,16 +81,6 @@ return [
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
-                    ],
-                ],
-                [
-                    'controller' => FicheMetierController::class,
-                    'action' => [
-                        'historiser',
-                        'restaurer',
-                    ],
-                    'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_HISTORISER,
                     ],
                 ],
                 [
@@ -372,28 +356,6 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
-                    'historiser' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/historiser/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'historiser',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'restaurer' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/restaurer/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'restaurer',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
                     'detruire' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -423,28 +385,6 @@ return [
                             'defaults' => [
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'changer-etat',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'editer-libelle' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer-libelle/:id',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-libelle',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                    ],
-                    'editer-raison' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/editer-libelle/:fiche-metier',
-                            'defaults' => [
-                                'controller' => FicheMetierController::class,
-                                'action'     => 'editer-raison',
                             ],
                         ],
                         'may_terminate' => true,
@@ -536,13 +476,11 @@ return [
         'factories' => [
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
-            RaisonForm::class => RaisonFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
-            RaisonHydrator::class => RaisonHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

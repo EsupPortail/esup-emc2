@@ -30,7 +30,7 @@ if ($mode === 'edition-fiche-metier') {
                 <div class="float-end">
                     <?php /** @see FicheMetierController::graphiqueCompetencesAction() */ ?>
                     <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
-                       class="btn btn-primary action ajax-modal"
+                       class="btn btn-secondary action ajax-modal"
                     >
                         <span class="icon icon-diagramme"></span>
                         Afficher les compétences

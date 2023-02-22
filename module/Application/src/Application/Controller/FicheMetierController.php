@@ -3,12 +3,10 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
 use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
-use Application\Form\Raison\RaisonFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
@@ -27,6 +25,7 @@ use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -66,7 +65,6 @@ class FicheMetierController extends AbstractActionController
     /** Traits associés aux formulaires */
     use ActiviteFormAwareTrait;
     use FicheMetierImportationFormAwareTrait;
-    use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
@@ -205,20 +203,6 @@ class FicheMetierController extends AbstractActionController
         }
     }
 
-    public function historiserAction() : Response
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-        $this->getFicheMetierService()->historise($fiche);
-        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
-    }
-
-    public function restaurerAction() : Response
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-        $this->getFicheMetierService()->restore($fiche);
-        return $this->redirect()->toRoute('fiche-metier-type', [], [], true);
-    }
-
     public function detruireAction() : ViewModel
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -242,59 +226,6 @@ class FicheMetierController extends AbstractActionController
                 'action' => $this->url()->fromRoute('fiche-metier-type/detruire', ["fiche-metier" => $fiche->getId()], [], true),
             ]);
         }
-        return $vm;
-    }
-
-    /** Action lier à l'édition d'une fiche métier ********************************************************************/
-
-    public function editerRaisonAction() : ViewModel
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-
-        $form = $this->getRaisonForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-raison', ['fiche-metier' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->update($fiche);
-                $this->flashMessenger()->addSuccessMessage("Mise à jour de la \"raison d'être du métier\" effectuée.");
-                exit();
-            }
-        }
-
-        $vm =  new ViewModel([
-            'title' => "Modification de la raison d'être du métier",
-            'form' => $form,
-            'info' => "Laisser vide si aucun raison n'est nécessaire",
-        ]);
-        $vm->setTemplate('application/default/default-form');
-        return $vm;
-    }
-
-    public function editerLibelleAction() : ViewModel
-    {
-        $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
-
-        $form = $this->getSelectionnerMetierForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [], true));
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $this->getFicheMetierService()->updateFromForm($request, $form, $this->getFicheMetierService());
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => 'Modifier le libellé',
-            'form' => $form,
-        ]);
         return $vm;
     }
 

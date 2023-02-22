@@ -53,7 +53,6 @@ input[type=submit],
 a.btn,
 span.btn
 {
-    width:17rem;
     margin: 0.25rem 0.25rem;
 }
 
@@ -436,4 +435,9 @@ div.panel-heading a.btn {
 
 h3.popover-header {
     color: var(--color-dark);
+}
+
+div.card-header h2 {
+     margin-top: 0.5rem;
+     font-size: larger;
 }

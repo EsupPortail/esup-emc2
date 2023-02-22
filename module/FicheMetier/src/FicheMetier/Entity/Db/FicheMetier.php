@@ -2,6 +2,8 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Application\Entity\Db\ActiviteDescription;
+use Application\Entity\Db\FicheMetierActivite;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
@@ -40,30 +42,19 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         $this->competences = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function hasExpertise() : ?bool
+    public function hasExpertise() : bool
     {
-        return $this->hasExpertise;
+        return ($this->hasExpertise === true);
     }
 
-    /**
-     * @param bool $has
-     * @return $this
-     */
-    public function setExpertise(?bool $has = false) : FicheMetier
+    public function setExpertise(?bool $has = false) : void
     {
         $this->hasExpertise = $has;
-        return $this;
     }
 
     public function getRaison(): ?string
@@ -93,10 +84,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
 
     /** ACTIVITE ******************************************************************************************************/
 
-    /**
-     * Pour simplifier le tri selon la position est fait à ce niveau
-     * @return \Application\Entity\Db\FicheMetierActivite
-     */
+    /** @return FicheMetierActivite[] */
     public function getActivites() : array
     {
         $activites =  $this->activites->toArray();
@@ -106,9 +94,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
 
     /** FONCTION POUR MACRO *******************************************************************************************/
 
-    /**
-     * @return string
-     */
     public function getIntitule() : string
     {
         $metier = $this->getMetier();
@@ -116,15 +101,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $metier->getLibelle();
     }
 
-    /**
-     * @return string
-     */
     public function getMissions() : string
     {
         $texte = "";
         foreach ($this->getActivites() as $activite) {
             $texte .= "<h3 class='mission-principale'>" . $activite->getActivite()->getLibelle() . "</h3>";
-            /** @var \Application\Entity\Db\ActiviteDescription $descriptions */
+            /** @var ActiviteDescription $descriptions */
             $descriptions = $activite->getActivite()->getDescriptions();
             $texte .= "<ul>";
             foreach ($descriptions as $description) {
@@ -137,9 +119,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
-    /**
-     * @return string
-     */
     public function getCompetences() : string
     {
         $competences = $this->getCompetenceListe();
@@ -154,10 +133,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
-    /**
-     * @param int $typeId
-     * @return string
-     */
     public function getComptencesByType(int $typeId) : string
     {
         $competences = $this->getCompetenceListe();
@@ -186,33 +161,21 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
-    /**
-     * @return string
-     */
     public function getConnaissances() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_CONNAISSANCE);
     }
 
-    /**
-     * @return string
-     */
     public function getCompetencesOperationnelles() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_OPERATIONNELLE);
     }
 
-    /**
-     * @return string
-     */
     public function getCompetencesComportementales() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationsAffichage() : string
     {
         $applications = $this->getApplicationListe();

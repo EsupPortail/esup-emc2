@@ -94,11 +94,13 @@ $canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMet
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if($fiche->estNonHistorise()) :?>
-                        <a href="<?php echo $this->url('fiche-metier-type/historiser', ['id' => $fiche->getId()], [], true); ?>"
+                        <?php /** @see \Application\Controller\FicheMetierController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/historiser', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                            title="Historiser la fiche metier">
                             <span class="icon icon-historiser"></span></a>
                     <?php else: ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/restaurer', ['id' => $fiche->getId()], [], true); ?>"
+                        <?php /** @see \Application\Controller\FicheMetierController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('fiche-metier/restaurer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                            title="Restaurer la fiche metier">
                             <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
