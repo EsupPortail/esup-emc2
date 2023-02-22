@@ -4,7 +4,7 @@ namespace Application\Service\Activite;
 
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteLibelle;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;

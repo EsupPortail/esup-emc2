@@ -25,7 +25,7 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many target-entity="Application\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
+        <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetier" mapped-by="metier" field="fichesMetiers"/>
 
 
         <many-to-one target-entity="Carriere\Entity\Db\Categorie"  field="categorie">

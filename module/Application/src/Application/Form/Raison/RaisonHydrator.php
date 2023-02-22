@@ -2,7 +2,7 @@
 
 namespace Application\Form\Raison;
 
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Hydrator\HydratorInterface;
 
 class RaisonHydrator implements HydratorInterface {

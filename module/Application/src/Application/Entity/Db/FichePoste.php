@@ -6,13 +6,14 @@ use Application\Entity\Db\MacroContent\FichePosteMacroTrait;
 use Application\Entity\HasAgentInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
-use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsTrait;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface {
     use FichePosteMacroTrait;

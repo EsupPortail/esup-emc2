@@ -3,7 +3,7 @@
 namespace Element\Controller;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use DateTime;

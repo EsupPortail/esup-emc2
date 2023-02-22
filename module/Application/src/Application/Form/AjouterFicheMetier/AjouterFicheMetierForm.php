@@ -3,7 +3,7 @@
 namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;

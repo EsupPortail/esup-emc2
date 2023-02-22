@@ -8,7 +8,7 @@ use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;

@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
 
 class FicheposteActiviteDescriptionRetiree implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
@@ -12,8 +13,7 @@ class FicheposteActiviteDescriptionRetiree implements HistoriqueAwareInterface {
     private $id;
     /** @var FichePoste */
     private $fichePoste;
-    /** @var FicheMetier */
-    private $ficheMetier;
+    private ?FicheMetier $ficheMetier = null;
     /** @var Activite */
     private $activite;
     /** @var ActiviteDescription */

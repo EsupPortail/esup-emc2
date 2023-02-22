@@ -5,7 +5,7 @@ namespace Application\Service\FicheMetier;
 use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Activite\ActiviteServiceAwareTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Entity\Db;
+namespace FicheMetier\Entity\Db;
 
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
@@ -12,7 +12,6 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
-use Metier\Entity\Db\Metier;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
@@ -96,7 +95,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
 
     /**
      * Pour simplifier le tri selon la position est fait à ce niveau
-     * @return FicheMetierActivite[]
+     * @return \Application\Entity\Db\FicheMetierActivite
      */
     public function getActivites() : array
     {
@@ -125,7 +124,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         $texte = "";
         foreach ($this->getActivites() as $activite) {
             $texte .= "<h3 class='mission-principale'>" . $activite->getActivite()->getLibelle() . "</h3>";
-            /** @var ActiviteDescription[] $descriptions */
+            /** @var \Application\Entity\Db\ActiviteDescription $descriptions */
             $descriptions = $activite->getActivite()->getDescriptions();
             $texte .= "<ul>";
             foreach ($descriptions as $description) {

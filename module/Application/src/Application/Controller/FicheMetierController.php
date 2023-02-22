@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;

@@ -10,7 +10,7 @@
             <join-column name="fiche_poste" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\FicheMetier"  field="ficheType">
+        <many-to-one target-entity="FicheMetier\Entity\Db\FicheMetier"  field="ficheType">
             <join-column name="fiche_type" referenced-column-name="id"/>
         </many-to-one>
 

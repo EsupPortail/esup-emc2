@@ -5,7 +5,7 @@ namespace Application\Service\FichePoste;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\DomaineRepartition;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;

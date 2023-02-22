@@ -3,7 +3,7 @@
 namespace Element\Form\SelectionCompetence;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Laminas\Hydrator\HydratorInterface;

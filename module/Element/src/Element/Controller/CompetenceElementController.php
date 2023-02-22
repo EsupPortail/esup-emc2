@@ -3,7 +3,7 @@
 namespace Element\Controller;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Element\Entity\Db\CompetenceElement;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;

@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Expertise;
-use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -35,6 +34,11 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -43,11 +47,6 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -215,8 +214,7 @@ class FichePosteController extends AbstractActionController {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
-        /** @var FichePoste $fiche */
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
         if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
@@ -501,7 +499,6 @@ class FichePosteController extends AbstractActionController {
                 }
 
                 //comportement par defaut (ajout de toutes les activités)
-                /** @var FicheMetier */
                 $activites = $ficheTypeExterne->getFicheType()->getActivites();
                 $tab = [];
                 foreach ($activites as $activite) {
@@ -603,11 +600,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    /**
-     * @param FichePoste $fiche
-     * @param array $data
-     */
-    private function checkValidite(FichePoste $fiche, $data)
+    private function checkValidite(FichePoste $fiche, array $data)
     {
         $cut = false;
         if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {

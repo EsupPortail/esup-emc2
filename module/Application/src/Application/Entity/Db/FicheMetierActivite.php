@@ -2,12 +2,13 @@
 
 namespace Application\Entity\Db;
 
+use FicheMetier\Entity\Db\FicheMetier;
+
 class FicheMetierActivite {
 
     /** @var int */
     private $id;
-    /** @var FicheMetier */
-    private $fiche;
+    private ?FicheMetier $fiche = null;
     /** @var Activite */
     private $activite;
     /** @var int */

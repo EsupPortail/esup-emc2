@@ -3,7 +3,7 @@
 namespace Application\Service\ActivitesDescriptionsRetirees;
 
 use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Doctrine\ORM\ORMException;
