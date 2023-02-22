@@ -1,5 +1,12 @@
 :root {
     --unistrap-color-default: rgb(111, 133, 111);
+
+    --color-dark: rgb(40,87,40);
+    --color-dark-bis: black;
+    --color-medium: #bbb;
+    --color-medium-bis: #999;
+    --color-light: #F3F3F3;
+    --color-light-bis: #FFF;
 }
 
 .unistrap.unistrap-th-emc2 {
@@ -7,21 +14,18 @@
     --unistrap-color-light: rgb(60,107,60);
     --unistrap-color-dark: rgb(20,67,20);
     --bs-link-color: #273c83;
+}
+
+.unistrap.unistrap-th-formation {
     --unistrap-color-main: #273c83;
     --unistrap-color-light: #eaeefd;
     --unistrap-color-dark: #18285c;
     --bs-link-color: #273c83;
 }
 
-.unistrap.unistrap-th-cata {
-    --unistrap-color-main: #273c83;
-    --unistrap-color-light: #eaeefd;
-    --unistrap-color-dark: #18285c;
-    --bs-link-color: #273c83;
-    --unistrap-color-main: #273c83;
-    --unistrap-color-light: #eaeefd;
-    --unistrap-color-dark: #18285c;
-    --bs-link-color: #273c83;
+
+h1 {
+    color: black;
 }
 
 /** MODAL *************************************************************************************************************/

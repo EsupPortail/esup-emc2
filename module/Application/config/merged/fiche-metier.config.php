@@ -51,7 +51,6 @@ return [
                     'action' => [
                         'ajouter',
                         'importer-depuis-csv',
-//                        'ajouter-terminer',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_AJOUTER,

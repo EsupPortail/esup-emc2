@@ -104,6 +104,17 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/ajouter',
+                            'defaults' => [
+                                /** @see FicheMetierController::ajouterAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
                     'dupliquer' => [
                         'type'  => Segment::class,
                         'options' => [

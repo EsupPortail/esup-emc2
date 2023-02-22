@@ -2,26 +2,24 @@
 
 namespace Application\Service\Configuration;
 
+use Application\Entity\Db\ConfigurationEntretienProfessionnel;
+use Application\Entity\Db\ConfigurationFicheMetier;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
-use Application\Entity\Db\ConfigurationEntretienProfessionnel;
-use Application\Entity\Db\ConfigurationFicheMetier;
-use FicheMetier\Entity\Db\FicheMetier;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use FicheMetier\Entity\Db\FicheMetier;
+use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class ConfigurationService {
-    use FicheMetierServiceAwareTrait;
     use EntityManagerAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
@@ -161,7 +159,6 @@ class ConfigurationService {
                 $this->getHasCompetenceCollectionService()->addCompetence($fiche,$competenceElement);
             }
         }
-        $this->getFicheMetierService()->update($fiche);
         return $fiche;
     }
 

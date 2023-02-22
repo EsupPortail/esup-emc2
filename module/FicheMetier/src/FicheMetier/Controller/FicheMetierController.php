@@ -5,6 +5,7 @@ namespace FicheMetier\Controller;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -27,7 +28,7 @@ class FicheMetierController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-
+        return new ViewModel();
     }
 
     /** CRUD **********************************************************************************************************/
@@ -45,6 +46,39 @@ class FicheMetierController extends AbstractActionController {
             'competences' => $competences,
             'applications' => $applications,
         ]);
+    }
+
+    public function ajouterAction(): ViewModel
+    {
+        $fiche = new FicheMetier();
+
+        $form = $this->getSelectionnerMetierForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/ajouter', [], [], true));
+        $form->bind($fiche);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFicheMetierService()->create($fiche);
+                $this->getFicheMetierService()->setDefaultValues($fiche);
+                $this->getFicheMetierService()->update($fiche);
+
+                $libelle = $this->getMetierService()->computeEcritureInclusive($fiche->getMetier()->getLibelleFeminin(), $fiche->getMetier()->getLibelleMasculin());
+                $this->flashMessenger()->addSuccessMessage(
+                    "Une nouvelle fiche métier vient d'être ajoutée pour le métier <strong>" . $libelle . "</strong>.<br/> " .
+                    "Vous pouvez modifier celle-ci en utilisant le lien suivant : <a href='" . $this->url()->fromRoute('fiche-metier/modifier', ['fiche-metier' => $fiche->getId()], [], true) . "'>Modification de la fiche métier #" . $fiche->getId() . "</a>");
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'une fiche metier",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
     public function modifierAction() : ViewModel
@@ -120,8 +154,8 @@ class FicheMetierController extends AbstractActionController {
             return $this->redirect()->toRoute('fiche-metier/modifier', ['fiche-metier' => $duplicata->getId()], [], true);
         }
         $vm = new ViewModel([
-            'title' => "Un problème est survenue lors de la duplication de la fiche",
-            'text' => "Un problème est survenue lors de la duplication de la fiche : <strong>fiche non trouvée</strong>",
+            'title' => "Un problème est survenu lors de la duplication de la fiche",
+            'text' => "Un problème est survenu lors de la duplication de la fiche : <strong>fiche non trouvée</strong>",
             /** @see \Application\Controller\FicheMetierController::indexAction() */
             'retour' => $this->url()->fromRoute('fiche-metier-type', [], [], true),
         ]);

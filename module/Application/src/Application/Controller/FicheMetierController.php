@@ -94,41 +94,7 @@ class FicheMetierController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction(): ViewModel
-    {
-        /** @var FicheMetier $fiche */
-        $fiche = new FicheMetier();
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
 
-        $form = $this->getSelectionnerMetierForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [], true));
-        $form->bind($fiche);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getFicheMetierService()->create($fiche);
-                $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
-                $this->getFicheMetierService()->update($fiche);
-
-                $libelle = $this->getMetierService()->computeEcritureInclusive($fiche->getMetier()->getLibelleFeminin(), $fiche->getMetier()->getLibelleMasculin());
-                $this->flashMessenger()->addSuccessMessage(
-                    "Une nouvelle fiche métier vient d'être ajouter pour le métier <strong>" . $libelle . "</strong>.<br/> " .
-                    "Vous pouvez modifier celle-ci en utilisant le lien suivant : <a href='" . $this->url()->fromRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true) . "'>Modification de la fiche métier #" . $fiche->getId() . "</a>");
-            }
-        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une fiche metier",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
 
     /** ACTIVITE LIEE *************************************************************************************************/
 

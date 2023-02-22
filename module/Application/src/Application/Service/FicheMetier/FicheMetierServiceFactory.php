@@ -4,6 +4,7 @@ namespace Application\Service\FicheMetier;
 
 use Application\Service\Activite\ActiviteService;
 use Application\Service\ActiviteDescription\ActiviteDescriptionService;
+use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
@@ -20,7 +21,6 @@ use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
-
     /**
      * @param ContainerInterface $container
      * @return FicheMetierService
@@ -35,6 +35,7 @@ class FicheMetierServiceFactory {
          * @var ApplicationElementService $applicationElementService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
+         * @var ConfigurationService $configurationService
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          *
@@ -50,6 +51,7 @@ class FicheMetierServiceFactory {
         $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $configurationService = $container->get(ConfigurationService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $renduService = $container->get(RenduService::class);
@@ -60,7 +62,6 @@ class FicheMetierServiceFactory {
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $metierService = $container->get(MetierService::class);
 
-
         /** @var FicheMetierService $service */
         $service = new FicheMetierService();
         $service->setEntityManager($entityManager);
@@ -68,6 +69,7 @@ class FicheMetierServiceFactory {
         $service->setApplicationElementService($applicationElementService);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
+        $service->setConfigurationService($configurationService);
         $service->setDomaineService($domaineService);
         $service->setEtatService($etatService);
         $service->setRenduService($renduService);

@@ -21,15 +21,15 @@ $this->headTitle('Index des fiches métiers');
 ?>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-7">
         <h1 class="page-header">
             Fiches métiers
         </h1>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-5">
         <?php if ($canAjouter) : ?>
-            <?php /** @see \Application\Controller\FicheMetierController::ajouterAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier-type/ajouter', [], [], true); ?>"
+            <?php /** @see FicheMetierController::ajouterAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/ajouter', [], [], true); ?>"
                class="btn btn-primary action ajax-modal" data-event="creation">
                 <span class="icon icon-ajouter"></span>
                 Ajouter une fiche métier
@@ -49,7 +49,6 @@ $this->headTitle('Index des fiches métiers');
 <div class="main">
 
     <?php echo $this->partial('partial/filtre.phtml', ['etats' => $etats, 'domaines'=> $domaines, 'params' => $params]); ?>
-
     <?php echo $this->partial('partial/fiche-metier.phtml', ['fiches' => $fiches, 'domaines' => $domaines]); ?>
 
 </div>

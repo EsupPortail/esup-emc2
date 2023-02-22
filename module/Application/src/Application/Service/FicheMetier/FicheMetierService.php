@@ -6,6 +6,7 @@ use Application\Controller\FicheMetierController;
 use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Provider\Template\PdfTemplate;
+use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Etat\FicheMetierEtats;
@@ -42,6 +43,7 @@ class FicheMetierService {
     use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EntityManagerAwareTrait;
@@ -332,6 +334,13 @@ class FicheMetierService {
     }
 
     /** FACADE ********************************************************************************************************/
+
+    public function setDefaultValues(FicheMetier $fiche) : FicheMetier
+    {
+        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
+        return $fiche;
+    }
 
     /**
      * @param Request $request
