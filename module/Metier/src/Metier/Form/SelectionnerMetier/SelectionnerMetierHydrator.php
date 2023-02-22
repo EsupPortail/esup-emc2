@@ -1,16 +1,16 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Metier\Form\SelectionnerMetier;
 
-use Application\Entity\Db\FicheMetier;
+use Metier\Entity\HasMetierInterface;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
-class LibelleHydrator implements HydratorInterface {
+class SelectionnerMetierHydrator implements HydratorInterface {
     use MetierServiceAwareTrait;
 
     /**
-     * @param FicheMetier $object
+     * @param HasMetierInterface $object
      * @return array
      */
     public function extract($object): array
@@ -23,10 +23,10 @@ class LibelleHydrator implements HydratorInterface {
 
     /**
      * @param array $data
-     * @param FicheMetier $object
-     * @return FicheMetier
+     * @param HasMetierInterface $object
+     * @return HasMetierInterface
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $metier = $this->getMetierService()->getMetier($data['metier']);
         $object->setMetier($metier);

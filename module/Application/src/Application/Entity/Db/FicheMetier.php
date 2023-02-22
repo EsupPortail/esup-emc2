@@ -13,20 +13,22 @@ use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Entity\Db\Metier;
+use Metier\Entity\HasMetierInterface;
+use Metier\Entity\HasMetierTrait;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
+class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMetierInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
     use HistoriqueAwareTrait;
+    use HasMetierTrait;
     use HasEtatTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
     private ?int $id = -1;
-    private ?Metier $metier = null;
     private ?bool $hasExpertise = false;
     private ?string $raison = null;
 
@@ -45,24 +47,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface,
     public function getId() : int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Metier|null
-     */
-    public function getMetier() : ?Metier
-    {
-        return $this->metier;
-    }
-
-    /**
-     * @param Metier|null $metier
-     * @return FicheMetier
-     */
-    public function setMetier(?Metier $metier) : FicheMetier
-    {
-        $this->metier = $metier;
-        return $this;
     }
 
     /**

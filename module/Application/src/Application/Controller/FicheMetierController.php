@@ -7,8 +7,6 @@ use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
-use Application\Form\FicheMetier\LibelleForm;
-use Application\Form\FicheMetier\LibelleFormAwareTrait;
 use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use Application\Form\Raison\RaisonFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
@@ -35,6 +33,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
@@ -66,7 +65,6 @@ class FicheMetierController extends AbstractActionController
 
     /** Traits associés aux formulaires */
     use ActiviteFormAwareTrait;
-    use LibelleFormAwareTrait;
     use FicheMetierImportationFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
@@ -74,6 +72,7 @@ class FicheMetierController extends AbstractActionController
     use SelectionEtatFormAwareTrait;
     use SelectionFicheMetierFormAwareTrait;
     use SelectionFormationFormAwareTrait;
+    use SelectionnerMetierFormAwareTrait;
 
 
     const REFERENS_SEP = "|";
@@ -125,8 +124,7 @@ class FicheMetierController extends AbstractActionController
         $fiche = new FicheMetier();
         $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
 
-        /** @var LibelleForm $form */
-        $form = $this->getLibelleForm();
+        $form = $this->getSelectionnerMetierForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/ajouter', [], [], true));
         $form->bind($fiche);
 
@@ -150,7 +148,7 @@ class FicheMetierController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'une fiche metier',
+            'title' => "Ajout d'une fiche metier",
             'form' => $form,
         ]);
         return $vm;
@@ -281,8 +279,7 @@ class FicheMetierController extends AbstractActionController
     {
         $fiche = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id', true);
 
-        /** @var LibelleForm $form */
-        $form = $this->getLibelleForm();
+        $form = $this->getSelectionnerMetierForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/editer-libelle', ['id' => $fiche->getId()], [], true));
         $form->bind($fiche);
 

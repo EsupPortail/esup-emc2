@@ -4,13 +4,15 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use Metier\Entity\Db\Metier;
+use Metier\Entity\HasMetierInterface;
+use Metier\Entity\HasMetierTrait;
 use Structure\Entity\Db\Structure;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentStageObservation implements HistoriqueAwareInterface, HasPeriodeInterface {
+class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface {
+    use HasMetierTrait;
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
 
@@ -20,8 +22,6 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasPeriodeInter
     private $agent;
     /** @var Structure|null */
     private $structure;
-    /** @var Metier|null */
-    private $metier;
     /** @var string|null */
     private $complement;
     /** @var Etat|null */
@@ -68,24 +68,6 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasPeriodeInter
     public function setStructure(?Structure $structure): AgentStageObservation
     {
         $this->structure = $structure;
-        return $this;
-    }
-
-    /**
-     * @return Metier|null
-     */
-    public function getMetier(): ?Metier
-    {
-        return $this->metier;
-    }
-
-    /**
-     * @param Metier|null $metier
-     * @return AgentStageObservation
-     */
-    public function setMetier(?Metier $metier): AgentStageObservation
-    {
-        $this->metier = $metier;
         return $this;
     }
 

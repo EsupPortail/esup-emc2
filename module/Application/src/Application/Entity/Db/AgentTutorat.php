@@ -5,11 +5,14 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Metier\Entity\Db\Metier;
+use Metier\Entity\HasMetierInterface;
+use Metier\Entity\HasMetierTrait;
 use UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentTutorat implements HistoriqueAwareInterface, HasPeriodeInterface {
+class AgentTutorat implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface {
+    use HasMetierTrait;
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
 
@@ -19,8 +22,6 @@ class AgentTutorat implements HistoriqueAwareInterface, HasPeriodeInterface {
     private $agent;
     /** @var Agent|null  */
     private $cible;
-    /** @var Metier|null */
-    private $metier;
     /** @var string|null */
     private $complement;
     /** @var bool|null */
@@ -69,24 +70,6 @@ class AgentTutorat implements HistoriqueAwareInterface, HasPeriodeInterface {
     public function setCible(?Agent $cible): AgentTutorat
     {
         $this->cible = $cible;
-        return $this;
-    }
-
-    /**
-     * @return Metier|null
-     */
-    public function getMetier(): ?Metier
-    {
-        return $this->metier;
-    }
-
-    /**
-     * @param Metier|null $metier
-     * @return AgentTutorat
-     */
-    public function setMetier(?Metier $metier): AgentTutorat
-    {
-        $this->metier = $metier;
         return $this;
     }
 

@@ -4,10 +4,6 @@ namespace Application;
 
 use Application\Controller\FicheMetierController;
 use Application\Controller\FicheMetierControllerFactory;
-use Application\Form\FicheMetier\LibelleForm;
-use Application\Form\FicheMetier\LibelleFormFactory;
-use Application\Form\FicheMetier\LibelleHydrator;
-use Application\Form\FicheMetier\LibelleHydratorFactory;
 use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Application\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
 use Application\Form\FicheMetierImportation\FichierMetierImportationHydrator;
@@ -24,9 +20,9 @@ use Application\Service\FicheMetier\FicheMetierServiceFactory;
 use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\RaisonsViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -538,7 +534,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            LibelleForm::class => LibelleFormFactory::class,
             SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
             FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
@@ -546,7 +541,6 @@ return [
     ],
     'hydrators' => [
         'factories' => [
-            LibelleHydrator::class => LibelleHydratorFactory::class,
             FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],

@@ -1,13 +1,13 @@
 <?php
 
-namespace Application\Form\FicheMetier;
+namespace Metier\Form\SelectionnerMetier;
 
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 
-class LibelleForm extends Form
+class SelectionnerMetierForm extends Form
 {
     use MetierServiceAwareTrait;
 

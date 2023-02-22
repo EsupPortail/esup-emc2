@@ -13,6 +13,10 @@ use Metier\Form\Metier\MetierForm;
 use Metier\Form\Metier\MetierFormFactory;
 use Metier\Form\Metier\MetierHydrator;
 use Metier\Form\Metier\MetierHydratorFactory;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierFormFactory;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierHydrator;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierHydratorFactory;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Metier\MetierServiceFactory;
@@ -276,11 +280,13 @@ return [
     'form_elements' => [
         'factories' => [
             MetierForm::class => MetierFormFactory::class,
+            SelectionnerMetierForm::class => SelectionnerMetierFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             MetierHydrator::class => MetierHydratorFactory::class,
+            SelectionnerMetierHydrator::class => SelectionnerMetierHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

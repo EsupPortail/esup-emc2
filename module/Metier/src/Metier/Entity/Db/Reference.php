@@ -2,16 +2,17 @@
 
 namespace Metier\Entity\Db;
 
+use Metier\Entity\HasMetierInterface;
+use Metier\Entity\HasMetierTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Reference implements HistoriqueAwareInterface {
+class Reference implements HistoriqueAwareInterface, HasMetierInterface {
     use HistoriqueAwareTrait;
+    use HasMetierTrait;
 
     /** @var integer */
     private $id;
-    /** @var Metier */
-    private $metier;
     /** @var Referentiel */
     private $referentiel;
     /** @var string */
@@ -27,24 +28,6 @@ class Reference implements HistoriqueAwareInterface {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return Metier
-     */
-    public function getMetier()
-    {
-        return $this->metier;
-    }
-
-    /**
-     * @param Metier $metier
-     * @return Reference
-     */
-    public function setMetier(Metier $metier)
-    {
-        $this->metier = $metier;
-        return $this;
     }
 
     /**

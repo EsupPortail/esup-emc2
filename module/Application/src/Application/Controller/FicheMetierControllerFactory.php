@@ -3,22 +3,22 @@
 namespace Application\Controller;
 
 use Application\Form\Activite\ActiviteForm;
-use Application\Form\FicheMetier\LibelleForm;
 use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Application\Form\Raison\RaisonForm;
-use Application\Service\ActiviteDescription\ActiviteDescriptionService;
-use Element\Form\SelectionApplication\SelectionApplicationForm;
-use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierForm;
 use Application\Service\Activite\ActiviteService;
+use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
 use Application\Service\FicheMetier\FicheMetierService;
+use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
+use Element\Form\SelectionApplication\SelectionApplicationForm;
+use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Interop\Container\ContainerInterface;
+use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
@@ -69,7 +69,6 @@ class FicheMetierControllerFactory
         $parcoursService = $container->get(ParcoursDeFormationService::class);
 
         /**
-         * @var LibelleForm $libelleForm
          * @var FicheMetierImportationForm $ficheMetierImportationForm
          * @var ActiviteForm $activiteForm
          * @var RaisonForm $raisonForm
@@ -78,8 +77,8 @@ class FicheMetierControllerFactory
          * @var SelectionFormationForm $selectionFormationForm
          * @var SelectionEtatForm $selectionEtatForm
          * @var SelectionFicheMetierForm $selectionFicheMetierForm
+         * @var SelectionnerMetierForm $selectionnerMetierForm
          */
-        $libelleForm = $container->get('FormElementManager')->get(LibelleForm::class);
         $activiteForm = $container->get('FormElementManager')->get(ActiviteForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
         $selectionApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
@@ -88,6 +87,7 @@ class FicheMetierControllerFactory
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionFicheMetierForm = $container->get('FormElementManager')->get(SelectionFicheMetierForm::class);
         $ficheMetierImportationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
+        $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
 
         /** @var FicheMetierController $controller */
         $controller = new FicheMetierController();
@@ -106,7 +106,6 @@ class FicheMetierControllerFactory
         $controller->setMetierService($metierService);
         $controller->setParcoursDeFormationService($parcoursService);
 
-        $controller->setLibelleForm($libelleForm);
         $controller->setActiviteForm($activiteForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionApplicationForm($selectionApplicationForm);
@@ -115,6 +114,7 @@ class FicheMetierControllerFactory
         $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSelectionFicheMetierForm($selectionFicheMetierForm);
         $controller->setFicheMetierImportationForm($ficheMetierImportationForm);
+        $controller->setSelectionnerMetierForm($selectionnerMetierForm);
 
         return $controller;
     }
