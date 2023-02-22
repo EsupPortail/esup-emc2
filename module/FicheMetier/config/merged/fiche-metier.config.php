@@ -115,6 +115,17 @@ return [
                             ],
                         ],
                     ],
+                    'importer' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/importer',
+                            'defaults' => [
+                                /** @see FicheMetierController::importerAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'importer',
+                            ],
+                        ],
+                    ],
                     'dupliquer' => [
                         'type'  => Segment::class,
                         'options' => [

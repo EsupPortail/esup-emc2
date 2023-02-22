@@ -7,6 +7,7 @@ use Application\Entity\Db\Activite;
 use Application\Entity\Db\ActiviteDescription;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Element\Entity\Db\Application;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Etat\FicheMetierEtats;
@@ -589,6 +590,36 @@ class FicheMetierService {
         } catch (MpdfException $e) {
             throw new RuntimeException("Un problème est survenu lors de l'export en PDF", 0, $e);
         }
+    }
+
+    public function genererInfosFromCSV(string $fichier_path): array
+    {
+        $csvInfos = $this->readFromCSV($fichier_path);
+
+        $ajouts = $this->getConfigurationService()->getConfigurationsFicheMetier();
+        foreach ($ajouts as $ajout) {
+            if ($ajout->getEntityType() === Application::class) {
+                $application = $ajout->getEntity();
+                $csvInfos['applications'][$application->getId()] = $application;
+            }
+            if ($ajout->getEntityType() === Competence::class) {
+                $competence = $ajout->getEntity();
+                $csvInfos['competencesListe'][$competence->getId()] = $competence;
+                $csvInfos['competences'][$competence->getType()->getLibelle()][$competence->getId()] = $competence;
+            }
+        }
+
+        // tri
+        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
+            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
+                return $a->getLibelle() > $b->getLibelle();
+            });
+        }
+        usort($csvInfos['applications'], function (Application $a, Application $b) {
+            return $a->getLibelle() > $b->getLibelle();
+        });
+
+        return $csvInfos;
     }
 
 }

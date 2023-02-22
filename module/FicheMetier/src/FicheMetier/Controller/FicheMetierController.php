@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
@@ -22,6 +23,7 @@ class FicheMetierController extends AbstractActionController {
     use FicheMetierServiceAwareTrait;
     use MetierServiceAwareTrait;
 
+    use FicheMetierImportationFormAwareTrait;
     use RaisonFormAwareTrait;
     use SelectionEtatFormAwareTrait;
     use SelectionnerMetierFormAwareTrait;
@@ -161,6 +163,53 @@ class FicheMetierController extends AbstractActionController {
         ]);
         $vm->setTemplate('default/probleme');
         return $vm;
+    }
+
+    public function importerAction()
+    {
+        $form = $this->getFicheMetierImportationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/importer', ['mode' => 'preview', 'path' => null], [], true));
+
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $file = $request->getFiles();
+
+            $fichier_path = $file['fichier']['tmp_name'];
+            $mode = $data['mode'];
+
+            $csvInfos = $this->getFicheMetierService()->genererInfosFromCSV($fichier_path);
+
+            if ($mode !== null) {
+                if ($mode === 'import') {
+                    if ($csvInfos['metier'] !== null and empty($csvInfos['competences']['Manquantes'])) {
+                        $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
+
+                        /** @see \Application\Controller\FicheMetierController::afficherAction() */
+                        return $this->redirect()->toRoute('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true);
+                    }
+                }
+                return new ViewModel([
+                    'fichier_path' => $fichier_path,
+                    'form' => $form,
+                    'mode' => $mode,
+                    'code' => $csvInfos['code'],
+                    'metier' => $csvInfos['metier'],
+                    'mission' => $csvInfos['mission'],
+                    'activites' => $csvInfos['activites'],
+                    'applications' => $csvInfos['applications'],
+                    'competences' => $csvInfos['competences'],
+                ]);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Importation d'une fiche métier",
+            'form' => $form,
+        ]);
+        return $vm;
+
     }
 
     public function exporterAction() : string

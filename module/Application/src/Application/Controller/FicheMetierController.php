@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Entity\Db\Activite;
 use Application\Form\Activite\ActiviteForm;
 use Application\Form\Activite\ActiviteFormAwareTrait;
-use Application\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait;
 use Application\Form\SelectionFicheMetier\SelectionFicheMetierFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
@@ -15,15 +14,12 @@ use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Doctrine\ORM\ORMException;
-use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
-use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
-use FicheMetier\Entity\Db\FicheMetier;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -59,7 +55,6 @@ class FicheMetierController extends AbstractActionController
 
     /** Traits associés aux formulaires */
     use ActiviteFormAwareTrait;
-    use FicheMetierImportationFormAwareTrait;
     use SelectionApplicationFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
     use SelectionEtatFormAwareTrait;
@@ -295,86 +290,6 @@ class FicheMetierController extends AbstractActionController
         $this->getFicheMetierService()->update($fiche);
 
         return $this->redirect()->toRoute('fiche-metier-type/editer', ['id' => $fiche->getId()], [], true);
-    }
-
-
-    /** IMPORTATION ***************************************************************************************************/
-
-    private function genererInfosFromCSV(string $fichier_path): array
-    {
-        $csvInfos = $this->getFicheMetierService()->readFromCSV($fichier_path);
-
-        $ajouts = $this->getConfigurationService()->getConfigurationsFicheMetier();
-        foreach ($ajouts as $ajout) {
-            if ($ajout->getEntityType() === Application::class) {
-                $application = $ajout->getEntity();
-                $csvInfos['applications'][$application->getId()] = $application;
-            }
-            if ($ajout->getEntityType() === Competence::class) {
-                $competence = $ajout->getEntity();
-                $csvInfos['competencesListe'][$competence->getId()] = $competence;
-                $csvInfos['competences'][$competence->getType()->getLibelle()][$competence->getId()] = $competence;
-            }
-        }
-
-        // tri
-        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
-            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
-                return $a->getLibelle() > $b->getLibelle();
-            });
-        }
-        usort($csvInfos['applications'], function (Application $a, Application $b) {
-            return $a->getLibelle() > $b->getLibelle();
-        });
-
-        return $csvInfos;
-    }
-
-    public function importerDepuisCsvAction()
-    {
-        $form = $this->getFicheMetierImportationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('fiche-metier-type/importer-depuis-csv', ['mode' => 'preview', 'path' => null], [], true));
-
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $file = $request->getFiles();
-
-            $fichier_path = $file['fichier']['tmp_name'];
-            $mode = $data['mode'];
-
-            $csvInfos = $this->genererInfosFromCSV($fichier_path);
-
-            if ($mode !== null) {
-                if ($mode === 'import') {
-                    if ($csvInfos['metier'] !== null and empty($csvInfos['competences']['Manquantes'])) {
-                        $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
-
-                        /** @see \Application\Controller\FicheMetierController::afficherAction() */
-                        return $this->redirect()->toRoute('fiche-metier-type/afficher', ['id' => $fiche->getId()], [], true);
-                    }
-                }
-                return new ViewModel([
-                    'fichier_path' => $fichier_path,
-                    'form' => $form,
-                    'mode' => $mode,
-                    'code' => $csvInfos['code'],
-                    'metier' => $csvInfos['metier'],
-                    'mission' => $csvInfos['mission'],
-                    'activites' => $csvInfos['activites'],
-                    'applications' => $csvInfos['applications'],
-                    'competences' => $csvInfos['competences'],
-                ]);
-            }
-        }
-
-        $vm = new ViewModel([
-            'title' => "Importation d'une fiche métier",
-            'form' => $form,
-        ]);
-        return $vm;
-
     }
 
     /** Graphique *****************************************************************************************************/

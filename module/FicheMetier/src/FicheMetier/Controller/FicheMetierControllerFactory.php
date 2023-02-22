@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Controller;
 
+use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
 use Application\Service\Activite\ActiviteService;
 use Application\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Form\Raison\RaisonForm;
@@ -32,10 +33,12 @@ class FicheMetierControllerFactory {
         $metierService = $container->get(metierService::class);
 
         /**
+         * @var FicheMetierImportationForm $importationForm
          * @var RaisonForm $raisonForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
+        $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
@@ -44,6 +47,7 @@ class FicheMetierControllerFactory {
         $controller->setActiviteService($activiteService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMetierService($metierService);
+        $controller->setFicheMetierImportationForm($importationForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);

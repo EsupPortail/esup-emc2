@@ -34,8 +34,8 @@ $this->headTitle('Index des fiches métiers');
                 <span class="icon icon-ajouter"></span>
                 Ajouter une fiche métier
             </a>
-            <?php /** @see \Application\Controller\FicheMetierController::importerDepuisCsvAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier-type/importer-depuis-csv', [], [], true); ?>"
+            <?php /** @see FicheMetierController::importerAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/importer', [], [], true); ?>"
                class="btn btn-primary action">
                 <span class="icon icon-ajouter"></span>
                 Importer depuis CSV
