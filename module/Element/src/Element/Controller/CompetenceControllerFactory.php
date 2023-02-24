@@ -2,15 +2,15 @@
 
 namespace Element\Controller;
 
-use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Application\Service\Activite\ActiviteService;
-use Application\Service\FicheMetier\FicheMetierService;
 use Element\Form\Competence\CompetenceForm;
+use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Element\Service\Niveau\NiveauService;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 
 class CompetenceControllerFactory

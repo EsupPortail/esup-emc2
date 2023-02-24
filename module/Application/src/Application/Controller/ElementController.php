@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -16,6 +15,7 @@ use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;

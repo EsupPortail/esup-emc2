@@ -3,13 +3,13 @@
 namespace Application\Controller;
 
 use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierForm;
+use Application\Service\Configuration\ConfigurationService;
 use Element\Service\Application\ApplicationService;
 use Element\Service\Competence\CompetenceService;
-use Application\Service\Configuration\ConfigurationService;
-use Application\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Formation\Service\Formation\FormationService;
-use UnicaenAutoform\Service\Formulaire\FormulaireService;
 use Interop\Container\ContainerInterface;
+use UnicaenAutoform\Service\Formulaire\FormulaireService;
 
 class ConfigurationControllerFactory {
 

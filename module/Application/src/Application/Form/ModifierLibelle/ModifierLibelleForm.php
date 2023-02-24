@@ -39,7 +39,7 @@ class ModifierLibelleForm extends Form {
         ]);
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle' => [ 'required' => false, ],
+            'libelle' => [ 'required' => true, ],
         ]));
     }
 }

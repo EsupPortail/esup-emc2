@@ -2,16 +2,21 @@
 
 namespace FicheMetier\Controller;
 
-use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Service\Activite\ActiviteService;
-use Application\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
+use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
+use UnicaenEtat\Service\Etat\EtatService;
 
 class FicheMetierControllerFactory {
 
@@ -24,30 +29,39 @@ class FicheMetierControllerFactory {
     public function __invoke(ContainerInterface $container) : FicheMetierController
     {
         /**
-         * @var ActiviteService $activiteService
+         * @var DomaineService $domaineService
+         * @var EtatService $etatService
          * @var FicheMetierService $ficheMetierService
          * @var MetierService $metierService
+         * @var MissionPrincipaleService $missionPrincipaleService
          */
-        $activiteService = $container->get(ActiviteService::class);
+        $domaineService = $container->get(DomaineService::class);
+        $etatService = $container->get(EtatService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $metierService = $container->get(metierService::class);
+        $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
 
         /**
          * @var FicheMetierImportationForm $importationForm
+         * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
         $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
+        $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
         $controller = new FicheMetierController();
-        $controller->setActiviteService($activiteService);
+        $controller->setDomaineService($domaineService);
+        $controller->setEtatService($etatService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setMetierService($metierService);
+        $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setFicheMetierImportationForm($importationForm);
+        $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);

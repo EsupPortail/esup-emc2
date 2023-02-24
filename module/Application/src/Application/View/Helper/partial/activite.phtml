@@ -111,28 +111,28 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
                class="btn btn-primary" target="_blank"
             >
                 <span class="icon icon-editer"></span>
-                Modifier l'activité
+                Modifier
             </a>
 
-            <?php /** @see FicheMetierController::retirerActiviteAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier-type/retirer-activite', ['id' => $type->getId()], [], true); ?>"
+            <?php /** @see FicheMetierController::supprimerMissionAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/supprimer-mission', ['id' => $type->getId()], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-retirer"></span>
-                Retirer l'activité
+                Supprimer
             </a>
 
-            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
+            <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-monter"></span>
-                Remonter l'activité
+                Remonter
             </a>
 
-            <?php /** @see FicheMetierController::deplacerActiviteAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier-type/deplacer-activite', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
+            <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
+            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-descendre"></span>
-                Descendre l'activité
+                Descendre
             </a>
         </div>
     <?php endif; ?>

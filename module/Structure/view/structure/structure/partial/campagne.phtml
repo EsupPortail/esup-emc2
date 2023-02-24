@@ -221,7 +221,13 @@ foreach ($encours as $epro) {
                 <td> <?php echo $denomination; ?> </td>
                 <td>
                     <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                        <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                        <?php if ($grade->getStructure()) : ?>
+                            <?php echo $grade->getStructure()->getLibelleLong(); ?>
+                        <?php else : ?>
+                            <span class="text-danger">
+                                Aucune structure
+                            </span>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </td>
                 <td>
@@ -287,7 +293,7 @@ foreach ($encours as $epro) {
                     <?php if ($structure === null) : ?>
                         <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
-                            Aucun structure
+                            Aucune structure
                         </span>
                     <?php else : ?>
                         <?php if ($structure->getLibelleLong() === null) : ?>
@@ -322,7 +328,7 @@ foreach ($encours as $epro) {
                         <?php if ($campagne !== null AND $agent !== null) : ?>
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
+                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => ($structure)?$structure->getId():null, 'agent' => ($agent)?$agent->getId():null]], [], true); ?>"
                                     title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                     class="ajax-modal" data-event="entretien"
                                     data-bs-toggle="tooltip" data-bs-html="true"

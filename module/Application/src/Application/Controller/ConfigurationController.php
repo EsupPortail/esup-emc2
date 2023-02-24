@@ -2,22 +2,22 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\ConfigurationFicheMetier;
+use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareTrait;
+use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\Competence;
-use Application\Entity\Db\ConfigurationFicheMetier;
-use Formation\Entity\Db\Formation;
-use Application\Form\ConfigurationFicheMetier\ConfigurationFicheMetierFormAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
-use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use Formation\Entity\Db\Formation;
 use Formation\Service\Formation\FormationServiceAwareTrait;
-use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 

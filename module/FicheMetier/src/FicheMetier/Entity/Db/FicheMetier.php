@@ -52,7 +52,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return ($this->hasExpertise === true);
     }
 
-    public function setExpertise(?bool $has = false) : void
+    public function setExpertise(?bool $has) : void
     {
         $this->hasExpertise = $has;
     }

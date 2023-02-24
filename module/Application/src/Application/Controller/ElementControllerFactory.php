@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Service\Agent\AgentService;
-use Application\Service\FicheMetier\FicheMetierService;
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\CompetenceElement\CompetenceElementForm;
 use Element\Form\SelectionNiveau\SelectionNiveauForm;
@@ -12,6 +11,7 @@ use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\Niveau\NiveauService;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Formation\Service\FormationElement\FormationElementService;
 use Interop\Container\ContainerInterface;
 

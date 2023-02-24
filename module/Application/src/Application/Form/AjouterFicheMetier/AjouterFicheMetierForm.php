@@ -3,18 +3,18 @@
 namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\Agent;
-use FicheMetier\Entity\Db\FicheMetier;
 use Application\Provider\Etat\FicheMetierEtats;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
-use Metier\Entity\Db\Reference;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Entity\Db\Reference;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
 
 class AjouterFicheMetierForm extends Form {
     use FicheMetierServiceAwareTrait;

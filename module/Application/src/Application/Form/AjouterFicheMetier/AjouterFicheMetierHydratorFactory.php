@@ -2,7 +2,7 @@
 
 namespace Application\Form\AjouterFicheMetier;
 
-use Application\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 
 class AjouterFicheMetierHydratorFactory {

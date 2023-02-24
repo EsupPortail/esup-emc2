@@ -103,8 +103,8 @@ $libelle = $metier->getLibelle(true);
                 <?php endif; ?>
                 <?php if ($mode === 'edition-fiche-metier') : ?>
                     <a
-                        <?php /** @see FicheMetierController::changerExpertiseAction() */ ?>
-                        href="<?php echo $this->url('fiche-metier-type/changer-expertise', ['fiche' => $fichemetier->getId()], [], true); ?>"
+                        <?php /** @see FicheMetierController::modifierExpertiseAction() */ ?>
+                        href="<?php echo $this->url('fiche-metier/modifier-expertise', ['fiche-fiche' => $fichemetier->getId()], [], true); ?>"
                     >
                         <span class="icon icon-synchroniser"></span>
                     </a>

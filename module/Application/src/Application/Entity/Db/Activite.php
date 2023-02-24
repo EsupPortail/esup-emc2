@@ -15,12 +15,11 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Activite implements HistoriqueAwareInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
 {
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
-    use HasFormationCollectionTrait;
 
     /** @var int */
     private $id;
@@ -42,7 +41,6 @@ class Activite implements HistoriqueAwareInterface,
         $this->descriptions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
-        $this->formations = new ArrayCollection();
         $this->fiches = new ArrayCollection();
         $this->domaines = new ArrayCollection();
     }

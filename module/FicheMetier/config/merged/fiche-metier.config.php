@@ -4,11 +4,19 @@ namespace FichePoste;
 
 use FicheMetier\Controller\FicheMetierController;
 use FicheMetier\Controller\FicheMetierControllerFactory;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormFactory;
+use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydrator;
+use FicheMetier\Form\FicheMetierImportation\FichierMetierImportationHydratorFactory;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Form\Raison\RaisonFormFactory;
 use FicheMetier\Form\Raison\RaisonHydrator;
 use FicheMetier\Form\Raison\RaisonHydratorFactory;
+use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierForm;
+use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
+use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -17,6 +25,15 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_INDEX,
+                    ],
+                ],
                 [
                     'controller' => FicheMetierController::class,
                     'action' => [
@@ -61,12 +78,52 @@ return [
                     'controller' => FicheMetierController::class,
                     'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
                         'modifier-etat',
+                        'modifier-expertise',
                         'modifier-metier',
                         'modifier-raison',
                     ],
                     'privileges' => [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'ajouter-mission',
+                        'deplacer-mission',
+                        'supprimer-mission',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'fiche-metier' => [
+                                'label' => 'Fiches métiers',
+                                'route' => 'fiche-metier',
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
+                                'order'    => 2020,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -79,6 +136,11 @@ return [
                 'type'  => Literal::class,
                 'options' => [
                     'route'    => '/fiche-metier',
+                    'defaults' => [
+                        /** @see FicheMetierController::indexAction() */
+                        'controller' => FicheMetierController::class,
+                        'action'     => 'index',
+                    ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
@@ -192,6 +254,17 @@ return [
                             ],
                         ],
                     ],
+                    'modifier-expertise' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-expertise/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::modifierExpertiseAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'modifier-expertise',
+                            ],
+                        ],
+                    ],
                     'modifier-metier' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -214,13 +287,48 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-mission/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::ajouterMissionAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'ajouter-mission',
+                            ],
+                        ],
+                    ],
+                    'deplacer-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/deplacer-mission/:id/:direction',
+                            'defaults' => [
+                                /** @see FicheMetierController::deplacerMissionAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'deplacer-mission',
+                            ],
+                        ],
+                    ],
+                    'supprimer-mission' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-mission/:id',
+                            'defaults' => [
+                                /** @see FicheMetierController::supprimerMissionAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'supprimer-mission',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
     ],
 
     'service_manager' => [
-        'factories' => [],
+        'factories' => [
+            FicheMetierService::class => FicheMetierServiceFactory::class,
+        ],
     ],
     'controllers'     => [
         'factories' => [
@@ -229,11 +337,14 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            FicheMetierImportationForm::class => FicheMetierImportationFormFactory::class,
             RaisonForm::class => RaisonFormFactory::class,
+            SelectionFicheMetierForm::class => SelectionFicheMetierFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            FichierMetierImportationHydrator::class => FichierMetierImportationHydratorFactory::class,
             RaisonHydrator::class => RaisonHydratorFactory::class,
         ],
     ]

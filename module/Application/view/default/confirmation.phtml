@@ -3,10 +3,19 @@
 /**
  * @var string $title
  * @var string $text
+ * @var string $warning
  * @var string $action
  */
 
 ?>
+
+<?php if ($warning !== null) : ?>
+    <div class="alert alert-warning">
+        <p class="lead">
+            <?php echo $warning; ?>
+        </p>
+    </div>
+<?php endif; ?>
 
 <p class="lead">
 <?php echo $text; ?>

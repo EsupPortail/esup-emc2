@@ -2,16 +2,16 @@
 
 namespace Element\Controller;
 
-use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Application\Service\Activite\ActiviteServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
+use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;

@@ -1,7 +1,8 @@
 <?php
 
-use Application\Form\FicheMetierImportation\FicheMetierImportationForm;
-use Element\Entity\Db\Application;use Metier\Entity\Db\Metier;
+use Element\Entity\Db\Application;
+use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
+use Metier\Entity\Db\Metier;
 
 /**
  * @see \FicheMetier\Controller\FicheMetierController::importerAction()
@@ -25,7 +26,7 @@ use Element\Entity\Db\Application;use Metier\Entity\Db\Metier;
         </h1>
     </div>
     <div class="col-md-3">
-        <a href="<?php echo $this->url("fiche-metier-type", [], [], true); ?>"
+        <a href="<?php echo $this->url("fiche-metier", [], [], true); ?>"
            class="btn btn-primary">
             <span class="icon icon-listing"></span>
             Retour à l'index des fiches métier

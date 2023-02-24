@@ -105,11 +105,11 @@ class ActiviteService {
 //            ->addSelect('createur')->leftJoin('activite.histoCreateur', 'createur')
 //            ->addSelect('modificateur')->leftJoin('activite.histoModificateur', 'modificateur')
 //            ->addSelect('destructeur')->leftJoin('activite.histoDestructeur', 'destructeur')
-            ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
-            ->addSelect('description')->leftJoin('activite.descriptions', 'description')
-            ->addSelect('applicationelement')->leftJoin('activite.applications', 'applicationelement')
+//            ->addSelect('libelle')->leftJoin('activite.libelles', 'libelle')
+//            ->addSelect('description')->leftJoin('activite.descriptions', 'description')
+//            ->addSelect('applicationelement')->leftJoin('activite.applications', 'applicationelement')
 //            ->addSelect('application')->leftJoin('applicationelement.application', 'application')
-            ->addSelect('competenceelement')->leftJoin('activite.competences', 'competenceelement')
+//            ->addSelect('competenceelement')->leftJoin('activite.competences', 'competenceelement')
 //            ->addSelect('competence')->leftJoin('competenceelement.competence', 'competence')
 //            ->addSelect('formationelement')->leftJoin('activite.formations', 'formationelement')
 //            ->addSelect('formation')->leftJoin('formationelement.formation', 'formation')
@@ -117,7 +117,7 @@ class ActiviteService {
 //            ->andWhere('libelle.histoDestruction IS NULL')
 //            ->andWhere('description.histoDestruction IS NULL')
         ;
-        $qb = NiveauService::decorateWithNiveau($qb, 'activite')
+//        $qb = NiveauService::decorateWithNiveau($qb, 'activite')
         ;
         return $qb;
     }
