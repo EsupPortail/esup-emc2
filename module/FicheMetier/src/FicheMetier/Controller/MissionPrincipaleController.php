@@ -3,6 +3,9 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
+use Carriere\Entity\Db\NiveauEnveloppe;
+use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
+use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
@@ -14,8 +17,10 @@ use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
 class MissionPrincipaleController extends AbstractActionController
 {
     use MissionPrincipaleServiceAwareTrait;
+    use NiveauEnveloppeServiceAwareTrait;
 
     use ModifierLibelleFormAwareTrait;
+    use NiveauEnveloppeFormAwareTrait;
     use SelectionnerDomainesFormAwareTrait;
 
     public function indexAction() : ViewModel
@@ -163,6 +168,42 @@ class MissionPrincipaleController extends AbstractActionController
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function gererNiveauAction() : ViewModel
+    {
+        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+
+        $niveaux = $mission->getNiveau();
+        if ($niveaux === null) {
+            $niveaux = new NiveauEnveloppe();
+        }
+
+        $form = $this->getNiveauEnveloppeForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-niveau', ['mission-principale' => $mission->getId()], [], true));
+        $form->bind($niveaux);
+
+        $request = $this->getRequest();
+        if($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($niveaux->getHistoCreation()) {
+                    $this->getNiveauEnveloppeService()->update($niveaux);
+                } else {
+                    $this->getNiveauEnveloppeService()->create($niveaux);
+                    $mission->setNiveau($niveaux);
+                    $this->getMissionPrincipaleService()->update($mission);
+                }
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modifier le niveau associé à la mission",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('metier/default/default-form');
         return $vm;
     }
 

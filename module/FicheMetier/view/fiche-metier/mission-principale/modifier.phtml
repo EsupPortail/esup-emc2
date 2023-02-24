@@ -84,7 +84,17 @@ $canModifier = ($modification AND $this->isAllowed(MissionPrincipalePrivileges::
             <li> <?php echo $domaine->getLibelle(); ?> </li>
         <?php endforeach; ?>
     </dd>
-    <dt> Niveau </dt>
+    <dt> Niveau
+        <?php if ($canModifier) : ?>
+            <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::gererNiveauAction() */ ?>
+            <a href="<?php echo $this->url('mission-principale/gerer-niveau', ['mission-principale' => $mission->getId()], [], true); ?>"
+               class="btn btn-primary btn-sm ajax-modal" data-event="modification"
+            >
+                <span class="icon icon-editer"></span>
+                Gérer le niveau associé
+            </a>
+        <?php endif; ?>
+    </dt>
     <dd> <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?> </dd>
 </dl>
 

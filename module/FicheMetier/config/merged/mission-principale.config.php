@@ -42,6 +42,7 @@ return [
 
                         'modifier-libelle',
                         'gerer-domaines',
+                        'gerer-niveau',
 
                         'ajouter-activite',
                         'modifier-activite',
@@ -228,6 +229,17 @@ return [
                                 /** @see MissionPrincipaleController::gererDomainesAction() */
                                 'controller' => MissionPrincipaleController::class,
                                 'action'     => 'gerer-domaines',
+                            ],
+                        ],
+                    ],
+                    'gerer-niveau' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-niveau/:mission-principale',
+                            'defaults' => [
+                                /** @see MissionPrincipaleController::gererNiveauAction() */
+                                'controller' => MissionPrincipaleController::class,
+                                'action'     => 'gerer-niveau',
                             ],
                         ],
                     ],

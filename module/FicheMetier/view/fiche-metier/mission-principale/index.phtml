@@ -37,6 +37,7 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
     <thead>
         <tr>
             <th> Libellé </th>
+            <th style="width: 15rem;"> Domaines & niveau</th>
             <th style="width: 10rem;"> Liens </th>
             <th class="action"> Action </th>
         </tr>
@@ -45,6 +46,23 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
     <?php foreach ($missions as $mission) : ?>
         <tr class="<?php if ($mission->estHistorise()) echo " historise ";?>">
             <td> <?php echo $mission->getLibelle(); ?> </td>
+            <td>
+                <?php if (empty($mission->getDomaines())) : ?>
+                    <p><em>Aucun domaine</em></p>
+                <?php else : ?>
+                <ul>
+                    <?php foreach ($mission->getDomaines() as $domaine) : ?>
+                        <li> <?php echo $domaine->getLibelle(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+
+                <?php if ($mission->getNiveau() === null) : ?>
+                    <p><em>Niveau non précisé</em></p>
+                <?php else : ?>
+                    Niveau : <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                <?php endif; ?>
+            </td>
             <td>
                 Fiche métier : <?php echo count($mission->getListeFicheMetier()); ?> <br/>
                 Fiche de poste : <span class="todo"> ?</span>
@@ -63,7 +81,6 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
                     <br/>
                     <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true); ?>"
-                       class="ajax-modal"
                     >
                         <span class="icon icon-editer"></span>
                         modifier
