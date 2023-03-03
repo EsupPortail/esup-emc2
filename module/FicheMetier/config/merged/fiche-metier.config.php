@@ -106,6 +106,16 @@ return [
                         FicheMetierPrivileges::FICHEMETIER_MODIFIER,
                     ],
                 ],
+                [
+                    'controller' => FicheMetierController::class,
+                    'action' => [
+                        'gerer-applications',
+                        'gerer-competences',
+                    ],
+                    'privileges' => [
+                        FicheMetierPrivileges::FICHEMETIER_MODIFIER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -301,7 +311,7 @@ return [
                     'deplacer-mission' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/deplacer-mission/:id/:direction',
+                            'route'    => '/deplacer-mission/:fiche-metier/:mission-principale/:direction',
                             'defaults' => [
                                 /** @see FicheMetierController::deplacerMissionAction() */
                                 'controller' => FicheMetierController::class,
@@ -312,11 +322,33 @@ return [
                     'supprimer-mission' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-mission/:id',
+                            'route'    => '/supprimer-mission/:fiche-metier/:mission-principale',
                             'defaults' => [
                                 /** @see FicheMetierController::supprimerMissionAction() */
                                 'controller' => FicheMetierController::class,
                                 'action'     => 'supprimer-mission',
+                            ],
+                        ],
+                    ],
+                    'gerer-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-application/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::gererApplicationsAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'gerer-applications',
+                            ],
+                        ],
+                    ],
+                    'gerer-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-competences/:fiche-metier',
+                            'defaults' => [
+                                /** @see FicheMetierController::gererCompetencesAction() */
+                                'controller' => FicheMetierController::class,
+                                'action'     => 'gerer-competences',
                             ],
                         ],
                     ],

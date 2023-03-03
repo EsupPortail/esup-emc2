@@ -3,6 +3,8 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Element\Form\SelectionApplication\SelectionApplicationForm;
+use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
@@ -43,12 +45,16 @@ class FicheMetierControllerFactory {
          * @var FicheMetierImportationForm $importationForm
          * @var ModifierLibelleForm $modifierLibelleForm
          * @var RaisonForm $raisonForm
+         * @var SelectionApplicationForm $selectionnerApplicationForm
+         * @var SelectionCompetenceForm $selectionnerCompetenceForm
          * @var SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
         $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);
         $modifierLibelleForm = $container->get('FormElementManager')->get(ModifierLibelleForm::class);
         $selectionnerEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
+        $selectionnerApplicationForm = $container->get('FormElementManager')->get(SelectionApplicationForm::class);
+        $selectionnerCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
         $selectionnerMetierForm = $container->get('FormElementManager')->get(SelectionnerMetierForm::class);
         $raisonForm = $container->get('FormElementManager')->get(RaisonForm::class);
 
@@ -61,6 +67,8 @@ class FicheMetierControllerFactory {
         $controller->setFicheMetierImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);
+        $controller->setSelectionApplicationForm($selectionnerApplicationForm);
+        $controller->setSelectionCompetenceForm($selectionnerCompetenceForm);
         $controller->setSelectionEtatForm($selectionnerEtatForm);
         $controller->setSelectionnerMetierForm($selectionnerMetierForm);
         return $controller;

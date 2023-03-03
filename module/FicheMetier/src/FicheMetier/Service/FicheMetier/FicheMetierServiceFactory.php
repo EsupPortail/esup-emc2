@@ -10,6 +10,7 @@ use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
@@ -36,6 +37,7 @@ class FicheMetierServiceFactory {
          * @var ConfigurationService $configurationService
          * @var DomaineService $domaineService
          * @var EtatService $etatService
+         * @var MissionPrincipaleService $missionPrincipaleService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
@@ -50,6 +52,7 @@ class FicheMetierServiceFactory {
         $configurationService = $container->get(ConfigurationService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
+        $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $renduService = $container->get(RenduService::class);
 
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
@@ -66,6 +69,7 @@ class FicheMetierServiceFactory {
         $service->setConfigurationService($configurationService);
         $service->setDomaineService($domaineService);
         $service->setEtatService($etatService);
+        $service->setMissionPrincipaleService($missionPrincipaleService);
         $service->setRenduService($renduService);
 
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);

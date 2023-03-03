@@ -75,7 +75,6 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $missions;
     }
 
-
     /** FONCTION POUR MACRO *******************************************************************************************/
 
     /**
@@ -100,6 +99,10 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $metier->getLibelle();
     }
 
+    /**
+     * Utiliser dans la macro FICHE_METIER#MISSIONS_PRINCIPALES
+     * @noinspection PhpUnused
+     */
     public function getMissionsAsList() : string
     {
         $texte = "";

@@ -39,12 +39,8 @@ $nbCompetence  = count($competencesListe);
 $applicationsListe  = $mission->getApplicationListe();
 usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() > $b->getApplication()->getLibelle();});
 $nbApplication = count($applicationsListe);
-//$formationsListe    = $mission->getFormationListe();
-//usort($formationsListe, function (FormationElement $a, FormationElement $b) { return $a->getFormation()->getLibelle() > $b->getFormation()->getLibelle();});
-//$nbFormation   = count($formationsListe);
-$nbFormation   = 0;
 
-$nbObject      = $nbCompetence + $nbFormation + $nbApplication;
+$nbObject      = $nbCompetence +  $nbApplication;
 ?>
 
 <div>
@@ -76,32 +72,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
     <?php endif; ?>
 
     <div class="row">
-    <?php if ($canModifier AND $mode === 'modifier-activite') : ?>
-        <a <?php /** @see ActiviteController::modifierLibelleAction() */?>
-                href="<?php echo $this->url("activite/modifier-libelle", ["activite" => $mission->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal"
-                data-event="modification"
-        >
-            <span class="icon icon-editer"></span>
-            Modifier le libellé
-        </a>
-        <a  <?php /** @see ActiviteController::ajouterDescriptionAction() */?>
-                href="<?php echo $this->url('activite/ajouter-description', ['activite' => $mission->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal"
-                data-event="modification"
-        >
-            <span class="icon icon-editer"></span>
-            Ajouter une description
-        </a>
-        <a  <?php /** @see ActiviteController::ajouterDescriptionsAction() */?>
-                href="<?php echo $this->url('activite/ajouter-descriptions', ['activite' => $mission->getId()], [], true); ?>"
-                class="btn btn-primary ajax-modal"
-                data-event="modification"
-        >
-            <span class="icon icon-editer"></span>
-            Ajouter plusieurs descriptions
-        </a>
-    <?php endif; ?>
+
     <?php if ($mode == 'edition-fiche-metier') : ?>
         <div class="pull-right">
             <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
@@ -113,21 +84,21 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
             </a>
 
             <?php /** @see FicheMetierController::supprimerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/supprimer-mission', ['id' => $type->getId()], [], true); ?>"
+            <a href="<?php echo $this->url('fiche-metier/supprimer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId()], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-retirer"></span>
                 Supprimer
             </a>
 
             <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['id' => $type->getId(), 'direction' => 'up'], [], true); ?>"
+            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'up'], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-monter"></span>
                 Remonter
             </a>
 
             <?php /** @see FicheMetierController::deplacerMissionAction() */ ?>
-            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['id' => $type->getId(), 'direction' => 'down'], [], true); ?>"
+            <a href="<?php echo $this->url('fiche-metier/deplacer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId(), 'direction' => 'down'], [], true); ?>"
                class="btn btn-primary">
                 <span class="icon icon-descendre"></span>
                 Descendre
@@ -137,6 +108,7 @@ $nbObject      = $nbCompetence + $nbFormation + $nbApplication;
     </div>
 
     <!-- description -------------------------------------------------------------------------------------------------->
+
     <?php
         $activites = $mission->getActivites();
         usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});

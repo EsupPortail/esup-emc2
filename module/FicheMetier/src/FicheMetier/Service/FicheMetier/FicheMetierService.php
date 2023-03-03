@@ -329,6 +329,71 @@ class FicheMetierService
 
     /** FACADE ********************************************************************************************************/
 
+    // GESTION DES MISSIONS ////////////////////////////////////////////////////////////////////////////////////////////
+    // todo faire un service dédier FicheMetierMission
+    public function addMission(FicheMetier $ficheMetier, Mission $missionPrincipale) {
+
+        $fichemetierMission = new FicheMetierMission();
+        $fichemetierMission->setFicheMetier($ficheMetier);
+        $fichemetierMission->setMission($missionPrincipale);
+        $fichemetierMission->setOrdre(9999 );
+        $this->getEntityManager()->persist($fichemetierMission);
+        $this->getEntityManager()->flush($fichemetierMission);
+    }
+
+    public function moveMission(FicheMetier $ficheMetier, Mission $missionPrincipale, string $direction) : void
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
+            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
+            ->andWhere('fmm.mission = :missionprincipale')->setParameter('missionprincipale', $missionPrincipale)
+        ;
+        $fichemetierMission = $qb->getQuery()->getOneOrNullResult();
+
+        $position = $fichemetierMission->getOrdre();
+        $newPosition = -1;
+        if ($direction === 'up') $newPosition = $position - 1;
+        if ($direction === 'down') $newPosition = $position + 1;
+
+        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
+            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
+            ->andWhere('fmm.ordre = :ordre')->setParameter('ordre', $newPosition)
+        ;
+        $fichemetierMissionBis = $qb->getQuery()->getOneOrNullResult();
+
+        if ($fichemetierMission AND $fichemetierMissionBis AND $fichemetierMission !== $fichemetierMissionBis) {
+            $fichemetierMission->setOrdre($newPosition);
+            $this->getEntityManager()->flush($fichemetierMission);
+            $fichemetierMissionBis->setOrdre($position);
+            $this->getEntityManager()->flush($fichemetierMissionBis);
+        }
+    }
+
+    public function removeMission(FicheMetier $ficheMetier, Mission $missionPrincipale) : void
+    {
+        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
+            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
+            ->andWhere('fmm.mission = :missionprincipale')->setParameter('missionprincipale', $missionPrincipale)
+        ;
+        $fichemetierMission = $qb->getQuery()->getOneOrNullResult();
+
+        if ($fichemetierMission !== null) {
+            $this->getEntityManager()->remove($fichemetierMission);
+            $this->getEntityManager()->flush($fichemetierMission);
+        }
+    }
+
+    public function compressMission(FicheMetier $ficheMetier) {
+        $missions = $ficheMetier->getMissions();
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() > $b->getOrdre();});
+
+        $position = 1;
+        foreach ($missions as $mission) {
+            $mission->setOrdre($position);
+            $this->getEntityManager()->flush($mission);
+            $position++;
+        }
+    }
+
     public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
         $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
@@ -545,8 +610,11 @@ class FicheMetierService
 
         // MISSIONS PRINCIPALES
         $mission = new Mission();
-        $mission->setLibelle($csvInfos['metier']);
+        $mission->setLibelle($csvInfos['mission']);
         $this->getMissionPrincipaleService()->create($mission);
+        $this->addMission($fiche, $mission);
+        $this->compressMission($fiche);
+
         $ordre = 1;
         foreach ($csvInfos['activites'] as $libelle) {
             $activite = new MissionActivite();
@@ -560,7 +628,7 @@ class FicheMetierService
         //APPLICATION (invoker l'hydrator plutôt)
         $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
 
-        //COMPETENCE (invoker l'hydrator plutôt)
+        //COMPETENCE (invoker l'hydrator plutôt)(invoker l'hydrator plutôt)
         $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
 
         return $fiche;
