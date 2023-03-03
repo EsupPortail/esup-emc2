@@ -16,6 +16,7 @@ trait HasCompetenceCollectionTrait {
         return $this->competences;
     }
 
+    /** @return CompetenceElement[] */
     public function getCompetenceListe(bool $avecHisto = false) : array
     {
         $competences = [];

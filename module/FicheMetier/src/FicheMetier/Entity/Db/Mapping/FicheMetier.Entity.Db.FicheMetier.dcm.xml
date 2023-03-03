@@ -35,7 +35,7 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many target-entity="FicheMetier\Entity\Db\Mission" mapped-by="fiche" field="activites"/>
+        <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="ficheMetier" field="missions"/>
 
         <field name="hasExpertise"      type="boolean"                  column="expertise"          nullable="true"  />
         <field name="raison"            type="string" length="9999"     column="raison"             nullable="true"  />

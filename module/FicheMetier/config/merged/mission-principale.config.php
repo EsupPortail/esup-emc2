@@ -2,9 +2,9 @@
 
 namespace FichePoste;
 
+use Application\View\Helper\ActiviteViewHelper;
 use FicheMetier\Controller\MissionPrincipaleController;
 use FicheMetier\Controller\MissionPrincipaleControllerFactory;
-use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
@@ -20,10 +20,19 @@ return [
                     'controller' => MissionPrincipaleController::class,
                     'action' => [
                         'index',
-                        'afficher',
                     ],
                     'privileges' => [
-                        FicheMetierPrivileges::FICHEMETIER_AFFICHER,
+                        MissionPrincipalePrivileges::MISSIONPRINCIPALE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => MissionPrincipaleController::class,
+                    'action' => [
+                        'afficher',
+                        'rechercher',
+                    ],
+                    'privileges' => [
+                        MissionPrincipalePrivileges::MISSIONPRINCIPALE_AFFICHER,
                     ],
                 ],
                 [
@@ -47,6 +56,9 @@ return [
                         'ajouter-activite',
                         'modifier-activite',
                         'supprimer-activite',
+
+                        'gerer-competences',
+                        'gerer-applications',
 
                     ],
                     'privileges' => [
@@ -243,6 +255,39 @@ return [
                             ],
                         ],
                     ],
+                    'gerer-applications' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-applications/:mission-principale',
+                            'defaults' => [
+                                /** @see MissionPrincipaleController::gererApplicationsAction() */
+                                'controller' => MissionPrincipaleController::class,
+                                'action'     => 'gerer-applications',
+                            ],
+                        ],
+                    ],
+                    'gerer-competences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-competences/:mission-principale',
+                            'defaults' => [
+                                /** @see MissionPrincipaleController::gererCompetencesAction() */
+                                'controller' => MissionPrincipaleController::class,
+                                'action'     => 'gerer-competences',
+                            ],
+                        ],
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see MissionPrincipaleController::rechercherAction() */
+                                'controller' => MissionPrincipaleController::class,
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -263,6 +308,11 @@ return [
     ],
     'hydrators' => [
         'factories' => [],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'activite' => ActiviteViewHelper::class,
+        ],
     ]
 
 ];

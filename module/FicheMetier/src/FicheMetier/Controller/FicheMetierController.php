@@ -61,9 +61,9 @@ class FicheMetierController extends AbstractActionController {
     public function afficherAction() : ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $missions = [] ; // todo $this->getActiviteService()->getActivitesByFicheMetierType($fichemetier);
-        $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
-        $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
+        $missions = $fichemetier->getMissions() ; // todo $this->getActiviteService()->getActivitesByFicheMetierType($fichemetier);
+        $applications = []; //$this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
+        $competences = []; //$this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
 
         return new ViewModel([
             'fiche' => $fichemetier,

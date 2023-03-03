@@ -3,12 +3,10 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
-use Application\Service\Activite\ActiviteService;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;

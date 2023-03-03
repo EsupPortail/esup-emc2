@@ -81,40 +81,5 @@ class HasApplicationCollectionService
         return $object;
     }
 
-    /**
-     * @param HasApplicationCollectionInterface $object
-     * @param ApplicationElement $applicationElement
-     * @return HasApplicationCollectionInterface
-     */
-    public function addApplication(HasApplicationCollectionInterface $object, ApplicationElement $applicationElement)
-    {
-        $this->getApplicationElementService()->create($applicationElement);
-        $object->getApplicationCollection()->add($applicationElement);
-        $this->updateObject($object);
-        return $object;
-    }
-
-    /**
-     * @param HasApplicationCollectionInterface $object
-     * @param ApplicationElement $applicationElement
-     * @return HasApplicationCollectionInterface
-     */
-    public function deleteApplication(HasApplicationCollectionInterface $object, ApplicationElement $applicationElement)
-    {
-        $object->getApplicationCollection()->removeElement($applicationElement);
-        $this->updateObject($object);
-        return $object;
-    }
-
-    /**
-     * @param HasApplicationCollectionInterface $object
-     * @return HasApplicationCollectionInterface
-     */
-    public function clearApplication(HasApplicationCollectionInterface $object)
-    {
-        $object->getApplicationCollection()->clear();
-        $this->updateObject($object);
-        return $object;
-    }
 
 }

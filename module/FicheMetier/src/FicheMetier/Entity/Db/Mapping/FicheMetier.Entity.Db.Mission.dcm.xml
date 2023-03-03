@@ -47,6 +47,7 @@
         </many-to-many>
 
         <one-to-many target-entity="FicheMetier\Entity\Db\FicheMetierMission" mapped-by="mission" field="listeFicheMetierMission"/>
+        <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="mission" field="listeFichePosteMission"/>
 
         <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

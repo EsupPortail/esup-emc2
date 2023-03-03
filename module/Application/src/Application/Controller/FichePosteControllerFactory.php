@@ -8,8 +8,6 @@ use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Poste\PosteForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
-use Application\Service\Activite\ActiviteService;
-use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\Agent\AgentService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
@@ -44,8 +42,6 @@ class FichePosteControllerFactory {
          * @var RenduService $renduService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
-         * @var ActiviteService $activiteService
-         * @var ActivitesDescriptionsRetireesService $activitesDescriptionsRetireesSercice
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
          * @var EtatService $etatService
@@ -61,8 +57,6 @@ class FichePosteControllerFactory {
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $structureService = $container->get(StructureService::class);
-        $activiteService = $container->get(ActiviteService::class);
-        $activitesDescriptionsRetireesSercice = $container->get(ActivitesDescriptionsRetireesService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $etatService = $container->get(EtatService::class);
@@ -100,8 +94,6 @@ class FichePosteControllerFactory {
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setStructureService($structureService);
-        $controller->setActiviteService($activiteService);
-        $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesSercice);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setEtatService($etatService);

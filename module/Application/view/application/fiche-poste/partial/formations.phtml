@@ -1,6 +1,6 @@
 <?php
 
-use Application\Entity\Db\Activite;
+//use Application\Entity\Db\Activite;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 
@@ -50,11 +50,11 @@ foreach ($formations as $item) {
                                 F
                             </span>
                         <?php endif; ?>
-                        <?php if ($raison instanceof  Activite) : ?>
-                            <span class="activite" title="<?php echo $raison->getLibelle(); ?>">
-                                A
-                            </span>
-                        <?php endif; ?>
+<!--                        --><?php //if ($raison instanceof  Activite) : ?>
+<!--                            <span class="activite" title="--><?php //echo $raison->getLibelle(); ?><!--">-->
+<!--                                A-->
+<!--                            </span>-->
+<!--                        --><?php //endif; ?>
                     <?php endforeach; ?>
                 </li>
             <?php endforeach; ?>

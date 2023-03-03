@@ -48,6 +48,7 @@ $modules = [
     'Carriere',
     'Metier',
     'FicheMetier',
+    'FichePoste',
     'Structure',
     'Formation',
     'Fichier',

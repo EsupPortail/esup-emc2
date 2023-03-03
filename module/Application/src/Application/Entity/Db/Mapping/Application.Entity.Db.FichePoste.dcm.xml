@@ -20,6 +20,7 @@
         <one-to-many target-entity="Application\Entity\Db\FicheposteApplicationRetiree" mapped-by="fichePoste" field="applicationsRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteCompetenceRetiree" mapped-by="fichePoste" field="competencesRetirees"/>
         <one-to-many target-entity="Application\Entity\Db\FicheposteActiviteDescriptionRetiree" mapped-by="fichePoste" field="descriptionsRetirees"/>
+        <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="ficheposte" field="missionsAdditionnelles"/>
 
         <many-to-one field="etat" target-entity="UnicaenEtat\Entity\Db\Etat">
             <join-column name="etat_id" referenced-column-name="id" />

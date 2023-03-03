@@ -30,6 +30,12 @@ h1 {
 
 /** MODAL *************************************************************************************************************/
 
+table.xdebug-error.xe-warning {
+    margin-top: 4rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 div.alert{
     margin-top:1rem;
     margin-bottom:1.5rem;

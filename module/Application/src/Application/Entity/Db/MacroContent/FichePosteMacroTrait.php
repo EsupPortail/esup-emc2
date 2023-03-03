@@ -303,15 +303,15 @@ trait FichePosteMacroTrait {
 
             $ids = explode(";",$ficheTypeExterne->getActivites());
             foreach ($ids as $id) {
-                foreach ($ficheMetier->getActivites() as $activiteType) {
-                    $activite = $activiteType->getActivite();
-                    if ($activite->getId() === (int) $id) {
-                        $texte .= "<span class='activite-libelle'>". $activite->getLibelle() . "</span>";
+                foreach ($ficheMetier->getMissions() as $activiteType) {
+                    $mission = $activiteType->getMission();
+                    if ($mission->getId() === (int) $id) {
+                        $texte .= "<span class='activite-libelle'>". $mission->getLibelle() . "</span>";
 
                         $texte .= "<ul>";
-                        foreach ($activite->getDescriptions() as $description) {
-                            if (array_search($description->getId(), $descriptionsRetirees) === false) {
-                                $texte .= "<li>" . $description->getLibelle() . "</li>";
+                        foreach ($mission->getActivites() as $activite) {
+                            if (array_search($activite->getId(), $descriptionsRetirees) === false) {
+                                $texte .= "<li>" . $activite->getLibelle() . "</li>";
                             }
                         }
                         $texte .= "</ul>";
@@ -355,13 +355,13 @@ trait FichePosteMacroTrait {
             $ids = explode(";",$ficheTypeExterne->getActivites());
             foreach ($ids as $id) {
                 $texte .= "<ul>";
-                foreach ($ficheMetier->getActivites() as $activiteType) {
-                    $activite = $activiteType->getActivite();
+                foreach ($ficheMetier->getMissions() as $activiteType) {
+                    $mission = $activiteType->getMission();
 
-                    if ($activite->getId() === (int) $id) {
+                    if ($mission->getId() === (int) $id) {
 
                         $texte .= "<li>";
-                        $texte .= "<span class='activite-libelle'>". $activite->getLibelle() . "</span>";
+                        $texte .= "<span class='activite-libelle'>". $mission->getLibelle() . "</span>";
                         $texte .= "</li>";
 
                         break;

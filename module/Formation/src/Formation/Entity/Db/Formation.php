@@ -2,7 +2,6 @@
 
 namespace Formation\Entity\Db;
 
-use Application\Entity\Db\Activite;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
@@ -14,6 +13,7 @@ use Application\Entity\Db\Traits\HasSourceTrait;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use FicheMetier\Entity\Db\Mission;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -151,7 +151,7 @@ class Formation implements HistoriqueAwareInterface,
     }
 
     /**
-     * @return Activite[]
+     * @return Mission[]
      */
     public function getMissions() : array
     {
@@ -159,20 +159,20 @@ class Formation implements HistoriqueAwareInterface,
     }
 
     /**
-     * @param Activite $mission
+     * @param Mission $mission
      * @return Formation
      */
-    public function addMission(Activite $mission) : Formation
+    public function addMission(Mission $mission) : Formation
     {
         $this->missions->add($mission);
         return $this;
     }
 
     /**
-     * @param Activite $mission
+     * @param Mission $mission
      * @return Formation
      */
-    public function removeMission(Activite $mission) : Formation
+    public function removeMission(Mission $mission) : Formation
     {
         $this->missions->removeElement($mission);
         return $this;

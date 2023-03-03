@@ -2,7 +2,6 @@
 
 namespace Application\Service\FichePoste;
 
-use Application\Entity\Db\Activite;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\DomaineRepartition;
 use FicheMetier\Entity\Db\FicheMetier;
@@ -20,6 +19,7 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use FicheMetier\Entity\Db\Mission;
 use Metier\Entity\Db\Domaine;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -579,18 +579,18 @@ EOS;
 
                 //provenant des activités
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
-                foreach ($fichemetier->getActivites() as $activite) {
-                    if (array_search($activite->getId(), $keptActivites) !== false) {
-                        foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
+                foreach ($fichemetier->getMissions() as $mission) {
+                    if (array_search($mission->getId(), $keptActivites) !== false) {
+                        foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
                             $application = $applicationElement->getApplication();
                             if (!isset($applications[$application->getId()])) {
                                 $applications[$application->getId()] = [
                                     'entity' => $application,
                                     'display' => true,
-                                    'raisons' => [[ 'Activité' , $activite->getActivite()]]
+                                    'raisons' => [[ 'Activité' , $mission->getMission()]]
                                 ];
                             } else {
-                                $applications[$application->getId()]['raisons'][] = [ 'Activité' , $activite->getActivite()];
+                                $applications[$application->getId()]['raisons'][] = [ 'Activité' , $mission->getMission()];
                             }
                         }
                     }
@@ -700,8 +700,8 @@ EOS;
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
-            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
-                $id = $metierTypeActivite->getActivite()->getId();
+            foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getMission()->getId();
                 $dictionnaire[$id]["object"] = $metierTypeActivite;
                 $dictionnaire[$id]["conserve"] = (array_search($id, $activitesId) !== false);
             }
@@ -721,20 +721,20 @@ EOS;
 
         /**
          * @var FicheMetier[] $ficheMetier
-         * @var Activite[] $activites
+         * @var Mission[] $missions
          */
         $fichesMetiers = [];
-        $activites = [];
+        $missions = [];
 
         /** Recuperation des fiches metiers */
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
-            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
-                $id = $metierTypeActivite->getActivite()->getId();
+            foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getMission()->getId();
                 if (array_search($id, $activitesId) !== false) {
-                    $activites[] = $metierTypeActivite->getActivite();
+                    $missions[] = $metierTypeActivite->getMission();
                 }
             }
         }
@@ -748,11 +748,11 @@ EOS;
             }
         }
 
-        foreach ($activites as $activite) {
-            foreach ($activite->getApplicationListe() as $applicationElement) {
+        foreach ($missions as $mission) {
+            foreach ($mission->getApplicationListe() as $applicationElement) {
                 $application = $applicationElement->getApplication();
                 $dictionnaire[$application->getId()]["entite"] = $application;
-                $dictionnaire[$application->getId()]["raison"][] = $activite;
+                $dictionnaire[$application->getId()]["raison"][] = $mission;
                 $dictionnaire[$application->getId()]["conserve"] = true;
             }
         }
@@ -777,28 +777,28 @@ EOS;
 
         /**
          * @var FicheMetier[] $ficheMetier
-         * @var Activite[] $activites
+         * @var Mission[] $missions
          */
         $fichesMetiers = [];
-        $activites = [];
+        $missions = [];
 
         /** Recuperation des fiches metiers */
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
-            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
-                $id = $metierTypeActivite->getActivite()->getId();
+            foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getMission()->getId();
                 if (array_search($id, $activitesId) !== false) {
-                    $activites[] = $metierTypeActivite->getActivite();
+                    $missions[] = $metierTypeActivite->getMission();
                 }
             }
         }
 
-        foreach ($activites as $activite) {
-            foreach ($activite->getFormationListe() as $formation) {
+        foreach ($missions as $mission) {
+            foreach ($mission->getFormationListe() as $formation) {
                 $dictionnaire[$formation->getId()]["object"] = $formation;
-                $dictionnaire[$formation->getId()]["raison"][] = $activite;
+                $dictionnaire[$formation->getId()]["raison"][] = $mission;
                 $dictionnaire[$formation->getId()]["conserve"] = true;
             }
         }
@@ -817,20 +817,20 @@ EOS;
 
         /**
          * @var FicheMetier[] $ficheMetier
-         * @var Activite[] $activites
+         * @var Mission[] $missions
          */
         $fichesMetiers = [];
-        $activites = [];
+        $missions = [];
 
         /** Recuperation des fiches metiers */
         foreach ($fiche->getFichesMetiers() as $ficheTypeExterne) {
             $ficheMetier = $ficheTypeExterne->getFicheType();
             $fichesMetiers[] = $ficheMetier;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
-            foreach ($ficheMetier->getActivites() as $metierTypeActivite) {
-                $id = $metierTypeActivite->getActivite()->getId();
+            foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
+                $id = $metierTypeActivite->getMission()->getId();
                 if (array_search($id, $activitesId) !== false) {
-                    $activites[] = $metierTypeActivite->getActivite();
+                    $missions[] = $metierTypeActivite->getMission();
                 }
             }
         }
@@ -845,11 +845,11 @@ EOS;
             }
         }
 
-        foreach ($activites as $activite) {
-            foreach ($activite->getCompetenceListe() as $competenceElement) {
+        foreach ($missions as $mission) {
+            foreach ($mission->getCompetenceListe() as $competenceElement) {
                 $competence = $competenceElement->getCompetence();
                 $dictionnaire[$competence->getId()]["entite"] = $competence;
-                $dictionnaire[$competence->getId()]["raison"][] = $activite;
+                $dictionnaire[$competence->getId()]["raison"][] = $mission;
                 $dictionnaire[$competence->getId()]["conserve"] = true;
             }
         }

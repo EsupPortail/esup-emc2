@@ -2,11 +2,11 @@
 
 namespace Application\Service\ActivitesDescriptionsRetirees;
 
-use Application\Entity\Db\Activite;
-use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Doctrine\ORM\ORMException;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -64,11 +64,11 @@ class ActivitesDescriptionsRetireesService {
     /**
      * @param FichePoste $ficheposte
      * @param FicheMetier $fichemetier
-     * @param Activite $activite
+     * @param Mission $mission
      * @return FicheposteActiviteDescriptionRetiree[]
      */
 
-    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Activite $activite) : array
+    public function getActivitesDescriptionsRetirees(FichePoste $ficheposte, FicheMetier $fichemetier, Mission $mission) : array
     {
         $qb = $this->getEntityManager()->getRepository(FicheposteActiviteDescriptionRetiree::class)->createQueryBuilder('description')
             ->addSelect('ficheposte')->join('description.fichePoste', 'ficheposte')
@@ -79,7 +79,7 @@ class ActivitesDescriptionsRetireesService {
             ->andWhere('description.ficheMetier = :fichemetier')
             ->setParameter('fichemetier', $fichemetier)
             ->andWhere('description.activite = :activite')
-            ->setParameter('activite', $activite);
+            ->setParameter('activite', $mission);
 
         $result = $qb->getQuery()->getResult();
         return $result;

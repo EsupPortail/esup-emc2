@@ -2,8 +2,6 @@
 
 namespace FicheMetier\Entity\Db;
 
-use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\FicheMetierActivite;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
@@ -34,10 +32,12 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
     private ?string $raison = null;
 
     private Collection $activites;
+    private Collection $missions;
 
     public function __construct()
     {
         $this->activites = new ArrayCollection();
+        $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
     }
@@ -67,32 +67,31 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         $this->raison = $raison;
     }
 
-     /**
+    /** @return FicheMetierMission[] */
+    public function getMissions() : array
+    {
+        $missions =  $this->missions->toArray();
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() > $b->getOrdre();});
+        return $missions;
+    }
+
+
+    /** FONCTION POUR MACRO *******************************************************************************************/
+
+    /**
      * @return string
      */
-    public function getMissionsPrincipales() : string
+    public function getActivitesFromFicheMetierAsText() : string
     {
         $texte = '<ul>';
-        $activites = $this->getActivites();
-        usort($activites, function (FicheMetierActivite $a, FicheMetierActivite $b) {return $a->getPosition() > $b->getPosition();});
-        foreach ($activites as $activite) {
-            $texte .= '<li>'.$activite->getActivite()->getLibelle().'</li>';
+        $missions = $this->getMissions();
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {return $a->getOrdre() > $b->getOrdre();});
+        foreach ($missions as $activite) {
+            $texte .= '<li>'.$activite->getMission()->getLibelle().'</li>';
         }
         $texte .= '</ul>';
         return $texte;
     }
-
-    /** ACTIVITE ******************************************************************************************************/
-
-    /** @return FicheMetierActivite[] */
-    public function getActivites() : array
-    {
-        $activites =  $this->activites->toArray();
-        usort($activites, function (FicheMetierActivite $a, FicheMetierActivite $b) { return $a->getPosition() > $b->getPosition();});
-        return $activites;
-    }
-
-    /** FONCTION POUR MACRO *******************************************************************************************/
 
     public function getIntitule() : string
     {
@@ -101,17 +100,16 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $metier->getLibelle();
     }
 
-    public function getMissions() : string
+    public function getMissionsAsList() : string
     {
         $texte = "";
-        foreach ($this->getActivites() as $activite) {
-            $texte .= "<h3 class='mission-principale'>" . $activite->getActivite()->getLibelle() . "</h3>";
-            /** @var ActiviteDescription $descriptions */
-            $descriptions = $activite->getActivite()->getDescriptions();
+        foreach ($this->getMissions() as $mission) {
+            $texte .= "<h3 class='mission-principale'>" . $mission->getMission()->getLibelle() . "</h3>";
+            $activites = $mission->getMission()->getActivites();
             $texte .= "<ul>";
-            foreach ($descriptions as $description) {
+            foreach ($activites as $activite) {
                 $texte .= "<li>";
-                $texte .= $description->getLibelle();
+                $texte .= $activite->getLibelle();
                 $texte .= "</li>";
             }
             $texte .= "</ul>";

@@ -9,6 +9,7 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
+use FichePoste\Entity\Db\MissionAdditionnelle;
 use Metier\Entity\Db\Domaine;
 use Metier\Entity\HasDomainesInterface;
 use Metier\Entity\HasDomainesTrait;
@@ -32,7 +33,7 @@ class Mission implements HistoriqueAwareInterface,
 
     /** Liste des éléments possèdant la mission */
     private Collection $listeFicheMetierMission;
-    private Collection $fichesPostesMissions;
+    private Collection $listeFichePosteMission;
 
     public function __construct()
     {
@@ -42,6 +43,7 @@ class Mission implements HistoriqueAwareInterface,
         $this->competences = new ArrayCollection();
 
         $this->listeFicheMetierMission = new ArrayCollection();
+        $this->listeFichePosteMission = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,6 +88,19 @@ class Mission implements HistoriqueAwareInterface,
         foreach ($this->listeFicheMetierMission as $ficheMetierMission) {
             $result[] = $ficheMetierMission;
         };
+        return $result;
+    }
+
+    /** @return MissionAdditionnelle[] */
+    public function getListeFichePoste(bool $historise = false) : array
+    {
+        $result = [];
+        /** @var MissionAdditionnelle $fichePosteMission */
+        foreach ($this->listeFichePosteMission as $fichePosteMission) {
+            if (!$historise OR $fichePosteMission->estNonHistorise()) {
+                $result[] = $fichePosteMission;
+            }
+        }
         return $result;
     }
 }

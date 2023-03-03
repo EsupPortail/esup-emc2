@@ -19,20 +19,20 @@ return [
             'orm_default' => [
                 'class' => MappingDriverChain::class,
                 'drivers' => [
-                    'Metier\Entity\Db' => 'orm_default_xml_driver',
+                    'FichePoste\Entity\Db' => 'orm_default_xml_driver',
                 ],
             ],
             'orm_default_xml_driver' => [
                 'class' => XmlDriver::class,
                 'cache' => 'apc',
                 'paths' => [
-                    __DIR__ . '/../src/Metier/Entity/Db/Mapping',
+                    __DIR__ . '/../src/FichePoste/Entity/Db/Mapping',
                 ],
             ],
         ],
         'cache' => [
             'apc' => [
-                'namespace' => 'PREECOG__Metier__' . __NAMESPACE__,
+                'namespace' => 'PREECOG__FichePoste__' . __NAMESPACE__,
             ],
         ],
     ],

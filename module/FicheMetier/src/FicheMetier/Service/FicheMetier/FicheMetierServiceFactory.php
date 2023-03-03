@@ -2,8 +2,6 @@
 
 namespace FicheMetier\Service\FicheMetier;
 
-use Application\Service\Activite\ActiviteService;
-use Application\Service\ActiviteDescription\ActiviteDescriptionService;
 use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
 use Element\Service\Application\ApplicationService;
@@ -39,8 +37,6 @@ class FicheMetierServiceFactory {
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          *
-         * @var ActiviteService $activiteService
-         * @var ActiviteDescriptionService $activiteDescriptionService
          * @var HasApplicationCollectionService $hasApplicationCollectionService
          * @var HasCompetenceCollectionService $hasCompetenceCollectionService
          * @var MetierService $metierService
@@ -56,8 +52,6 @@ class FicheMetierServiceFactory {
         $etatService = $container->get(EtatService::class);
         $renduService = $container->get(RenduService::class);
 
-        $activiteService = $container->get(ActiviteService::class);
-        $activiteDescriptionService = $container->get(ActiviteDescriptionService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $metierService = $container->get(MetierService::class);
@@ -74,8 +68,6 @@ class FicheMetierServiceFactory {
         $service->setEtatService($etatService);
         $service->setRenduService($renduService);
 
-        $service->setActiviteService($activiteService);
-        $service->setActiviteDescriptionService($activiteDescriptionService);
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
         $service->setMetierService($metierService);

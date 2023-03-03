@@ -1,100 +1,64 @@
 <?php
 
+namespace FichePoste\Entity\Db;
 
+use Application\Entity\Db\FichePoste;
+use FicheMetier\Entity\Db\Mission;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class MissionAdditionnelle implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var int */
-    private $id;
-    /** @var \Application\Entity\Db\SpecificitePoste */
-    private $specificite;
-    /** @var \Application\Entity\Db\Activite */
-    private $activite;
-    /** @var string|null */
-    private $retrait;
-    /** @var string|null */
-    private $description;
+    private ?int $id = null;
+    private ?FichePoste $ficheposte;
+    private ?Mission  $mission;
+    private ?string $retraits;
+    private ?string $description;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return \Application\Entity\Db\SpecificitePoste|null
-     */
-    public function getSpecificite(): ?\Application\Entity\Db\SpecificitePoste
+    public function getFicheposte(): ?FichePoste
     {
-        return $this->specificite;
+        return $this->ficheposte;
     }
 
-    /**
-     * @param \Application\Entity\Db\SpecificitePoste $specificite
-     * @return \Application\Entity\Db\SpecificiteActivite
-     */
-    public function setSpecificite(\Application\Entity\Db\SpecificitePoste $specificite): MissionAdditionnelle
+    public function setFicheposte(?FichePoste $ficheposte): void
     {
-        $this->specificite = $specificite;
-        return $this;
+        $this->ficheposte = $ficheposte;
     }
 
-    /**
-     * @return \Application\Entity\Db\Activite|null
-     */
-    public function getActivite(): ?\Application\Entity\Db\Activite
+    public function getMission(): ?Mission
     {
-        return $this->activite;
+        return $this->mission;
     }
 
-    /**
-     * @param \Application\Entity\Db\Activite $activite
-     * @return \Application\Entity\Db\SpecificiteActivite
-     */
-    public function setActivite(\Application\Entity\Db\Activite $activite): MissionAdditionnelle
+    public function setMission(?Mission $mission): void
     {
-        $this->activite = $activite;
-        return $this;
+        $this->mission = $mission;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRetrait(): ?string
+    public function getRetraits(): ?string
     {
-        return $this->retrait;
+        return $this->retraits;
     }
 
-    /**
-     * @param string|null $retrait
-     * @return \Application\Entity\Db\SpecificiteActivite
-     */
-    public function setRetrait(?string $retrait): MissionAdditionnelle
+    public function setRetraits(?string $retraits): void
     {
-        $this->retrait = $retrait;
-        return $this;
+        $this->retraits = $retraits;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string|null $description
-     * @return \Application\Entity\Db\SpecificiteActivite
-     */
-    public function setDescription(?string $description): MissionAdditionnelle
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-        return $this;
     }
+
 }

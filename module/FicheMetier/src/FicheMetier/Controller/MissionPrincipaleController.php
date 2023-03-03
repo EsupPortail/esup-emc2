@@ -6,11 +6,14 @@ use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
+use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
+use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
 
@@ -22,6 +25,8 @@ class MissionPrincipaleController extends AbstractActionController
     use ModifierLibelleFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
     use SelectionnerDomainesFormAwareTrait;
+    use SelectionApplicationFormAwareTrait;
+    use SelectionCompetenceFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -43,7 +48,7 @@ class MissionPrincipaleController extends AbstractActionController
             'modification' => false,
             'mission' => $mission,
             'fichesmetiers' => $mission->getListeFicheMetier(),
-            'fichespostes' => [],
+            'fichespostes' =>  $mission->getListeFichePoste(),
         ]);
         $vm->setTemplate('fiche-metier/mission-principale/modifier');
         return $vm;
@@ -64,8 +69,8 @@ class MissionPrincipaleController extends AbstractActionController
         return new ViewModel([
             'mission' => $mission,
             'modification' => true,
-            'fichesmetiers' => [],
-            'fichespostes' => [],
+            'fichesmetiers' => $mission->getListeFicheMetier(),
+            'fichespostes' =>  $mission->getListeFichePoste(),
         ]);
     }
 
@@ -269,4 +274,125 @@ class MissionPrincipaleController extends AbstractActionController
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true);
     }
+
+    public function gererApplicationsAction() : ViewModel
+    {
+        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $form = $this->getSelectionApplicationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-applications', ['mission-principale' => $mission->getId()], [], true));
+        $form->bind($mission);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMissionPrincipaleService()->update($mission);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Gestion des applications associées à la mission",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function gererCompetencesAction() : ViewModel
+    {
+        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
+        $form = $this->getSelectionCompetenceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('mission-principale/gerer-competences', ['mission-principale' => $mission->getId()], [], true));
+        $form->bind($mission);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getMissionPrincipaleService()->update($mission);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Gestion des compétences associées à la mission",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    /** FONCTIONS DE RECHERCHE ****************************************************************************************/
+
+    public function rechercherAction() : JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $missions = $this->getMissionPrincipaleService()->findMissionsPrincipalesByExtendedTerm($term);
+            $result = $this->getMissionPrincipaleService()->formatToJSON($missions);
+            return new JsonModel($result);
+        }
+        exit;
+    }
+
+    /** LEFTOVERS ACTIVITE_CONTROLLER **********************/
+
+//    public function updateOrdreDescriptionAction() : ViewModel
+//    {
+//        $activite = $this->getActiviteService()->getRequestedActivite($this);
+//        $ordre = explode("_",$this->params()->fromRoute('ordre'));
+//        $sort = [];
+//        $position = 1;
+//        foreach ($ordre as $item) {
+//            $sort[$item] = $position;
+//            $position++;
+//        }
+//
+//        $descriptions = $activite->getDescriptions();
+//        foreach ($descriptions as $description) {
+//            if (! isset($sort[$description->getId()]) AND $description->getOrdre() !== null) {
+//                $description->setOrdre(null);
+//                $this->getActiviteDescriptionService()->update($description);
+//            }
+//            if ($description->getOrdre() != $sort[$description->getId()]) {
+//                $description->setOrdre($sort[$description->getId()]);
+//                $this->getActiviteDescriptionService()->update($description);
+//            }
+//        }
+//
+//        return new ViewModel();
+//    }
+
+
+//    public function initialiserNiveauxAction() : Response
+//    {
+//        $activites = $this->getActiviteService()->getActivites();
+//        foreach ($activites as $activite) {
+//            if ($activite->getNiveaux() === null) {
+//                $inferieure = null;
+//                $superieure = null;
+//                /** @var FicheMetierActivite $ficheMetier */
+//                foreach ($activite->getFichesMetiers() as $ficheMetier) {
+//                    $niveaux = $ficheMetier->getFiche()->getMetier()->getNiveaux();
+//                    if ($niveaux) {
+//                        if ($inferieure === null OR $niveaux->getBorneInferieure() < $inferieure) $inferieure = $niveaux->getBorneInferieure();
+//                        if ($superieure === null OR $niveaux->getBorneSuperieure() > $superieure) $superieure = $niveaux->getBorneSuperieure();
+//                    }
+//                }
+//                if ($inferieure !== null AND $superieure !== null) {
+//                    $niveaux = new NiveauEnveloppe();
+//                    $niveaux->setBorneInferieure($inferieure);
+//                    $niveaux->setBorneSuperieure($superieure);
+//                    $niveaux->setDescription("Recupérer de l'ancien système de niveau");
+//                    $this->getNiveauEnveloppeService()->create($niveaux);
+//                    $activite->setNiveaux($niveaux);
+//                    $this->getActiviteService()->update($activite);
+//                }
+//            }
+//        }
+//
+//        return $this->redirect()->toRoute('activite');
+//    }
 }

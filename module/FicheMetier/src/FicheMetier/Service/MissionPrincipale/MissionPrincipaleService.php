@@ -5,6 +5,8 @@ namespace FicheMetier\Service\MissionPrincipale;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Element\Entity\Db\Competence;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -106,7 +108,71 @@ class MissionPrincipaleService {
         return $result;
     }
 
+
+    public function getMissionsHavingCompetence(?Competence $competence)
+    {
+        $qb  = $this->createQueryBuilder()
+            ->leftJoin('mission.competences', 'competence')->addSelect('competence')
+            ->andWhere('competence.id = :comptenceId')->setParameter('competenceId', $competence->getId());
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /** FACADE ********************************************************************************************************/
+
+
+    /** @return Mission[] */
+    public function findMissionsPrincipalesByExtendedTerm(string $texte) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
+            ->andWhere("LOWER(mission.libelle) like :search or LOWER(activite.libelle) like :search")
+            ->andWhere('mission.histoDestruction IS NULL')
+            ->andWhere('activite.histoDestruction IS NULL')
+            ->setParameter('search', '%'.strtolower($texte).'%');
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    public function formatToJSON(array $missions) : array
+    {
+        $result = [];
+        /** @var Mission[] $missions */
+        foreach ($missions as $mission) {
+            $result[] = array(
+                'id' => $mission->getId(),
+                'label' => $mission->getLibelle(),
+//                'description' => 'blabla bli bli',
+//                'extra' => "<span class='badge' style='background-color: slategray;'>" .. "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+    /** TODO faire un service dedié */
+
+    public function createActivite(MissionActivite $activite) : MissionActivite
+    {
+        try {
+            $this->getEntityManager()->persist($activite);
+            $this->getEntityManager()->flush($activite);
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenue en base");
+        }
+        return $activite;
+    }
 
     public function getActivite(?int $id) : ?MissionActivite
     {
@@ -175,5 +241,7 @@ class MissionPrincipaleService {
         }
         return $mission;
     }
+
+
 
 }

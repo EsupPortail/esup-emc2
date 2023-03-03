@@ -12,8 +12,6 @@ use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
-use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
-use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
@@ -22,9 +20,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 class ConfigurationService {
     use EntityManagerAwareTrait;
     use ApplicationElementServiceAwareTrait;
-    use HasApplicationCollectionServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
-    use HasCompetenceCollectionServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -150,13 +146,13 @@ class ConfigurationService {
                 $applicationElement = new ApplicationElement();
                 $applicationElement->setApplication($ajout->getEntity());
                 $this->getApplicationElementService()->create($applicationElement);
-                $this->getHasApplicationCollectionService()->addApplication($fiche,$applicationElement);
+                $fiche->addApplicationElement($applicationElement);
             }
             if ($ajout->getEntityType() === Competence::class  AND !$fiche->hasCompetence($ajout->getEntity())) {
                 $competenceElement = new CompetenceElement();
                 $competenceElement->setCompetence($ajout->getEntity());
                 $this->getCompetenceElementService()->create($competenceElement);
-                $this->getHasCompetenceCollectionService()->addCompetence($fiche,$competenceElement);
+                $fiche->addCompetenceElement($competenceElement);
             }
         }
         return $fiche;

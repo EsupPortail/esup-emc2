@@ -2,7 +2,6 @@
 
 namespace Element\Controller;
 
-use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Element\Entity\Db\Competence;
 use Element\Form\Competence\CompetenceFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
@@ -12,6 +11,7 @@ use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -19,13 +19,13 @@ use Laminas\View\Model\ViewModel;
 
 class CompetenceController extends AbstractActionController
 {
-    use ActiviteServiceAwareTrait;
     use CompetenceServiceAwareTrait;
-    use NiveauServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
+    use NiveauServiceAwareTrait;
 
     use CompetenceFormAwareTrait;
     use SelectionCompetenceFormAwareTrait;
@@ -52,7 +52,7 @@ class CompetenceController extends AbstractActionController
     public function afficherAction() : ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
-        $activites = $this->getActiviteService()->getActivitesbyCompetence($competence);
+        $activites = $this->getMissionPrincipaleService()->getMissionsHavingCompetence($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
         return new ViewModel([
             'title' => "Affiche d'une compétence",

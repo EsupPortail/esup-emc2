@@ -2,13 +2,8 @@
 
 namespace FicheMetier\Service\FicheMetier;
 
-use Application\Entity\Db\Activite;
-use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\FicheMetierActivite;
 use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
-use Application\Service\Activite\ActiviteServiceAwareTrait;
-use Application\Service\ActiviteDescription\ActiviteDescriptionServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,6 +20,10 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Form\Form;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractController;
@@ -38,7 +37,8 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
-class FicheMetierService {
+class FicheMetierService
+{
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
@@ -47,10 +47,9 @@ class FicheMetierService {
     use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
     use RenduServiceAwareTrait;
 
-    use ActiviteServiceAwareTrait;
-    use ActiviteDescriptionServiceAwareTrait;
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -63,7 +62,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function create(FicheMetier $fiche) : FicheMetier
+    public function create(FicheMetier $fiche): FicheMetier
     {
         try {
             $this->getEntityManager()->persist($fiche);
@@ -78,7 +77,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function update(FicheMetier $fiche) : FicheMetier
+    public function update(FicheMetier $fiche): FicheMetier
     {
         try {
             $this->getEntityManager()->flush($fiche);
@@ -92,7 +91,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function historise(FicheMetier $fiche) : FicheMetier
+    public function historise(FicheMetier $fiche): FicheMetier
     {
         try {
             $fiche->historiser();
@@ -107,7 +106,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function restore(FicheMetier $fiche) : FicheMetier
+    public function restore(FicheMetier $fiche): FicheMetier
     {
         try {
             $fiche->dehistoriser();
@@ -122,7 +121,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function delete(FicheMetier $fiche) : FicheMetier
+    public function delete(FicheMetier $fiche): FicheMetier
     {
         try {
             $this->getEntityManager()->remove($fiche);
@@ -138,7 +137,7 @@ class FicheMetierService {
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
@@ -147,9 +146,8 @@ class FicheMetierService {
             ->addSelect('etat')->join('ficheMetier.etat', 'etat')
             ->addSelect('etype')->join('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
-            ;
-        $qb = NiveauService::decorateWithNiveau($qb,'metier');
+            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+        $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
 
@@ -157,14 +155,13 @@ class FicheMetierService {
      * @param string $order an attribute use to sort
      * @return FicheMetier[]
      */
-    public function getFichesMetiers(string $order = 'id') : array
+    public function getFichesMetiers(string $order = 'id'): array
     {
-       $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder()
 //            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
 //            ->addSelect('formation')->leftJoin('ficheMetier.formations', 'formation')
 //            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
-            ->orderBy('ficheMetier.', $order)
-        ;
+            ->orderBy('ficheMetier.', $order);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -176,22 +173,21 @@ class FicheMetierService {
      * @param string $ordre
      * @return FicheMetier[]
      */
-    public function getFichesMetiersWithFiltre(array $filtre, string $champ = 'id', string $ordre = 'DESC') : array
+    public function getFichesMetiersWithFiltre(array $filtre, string $champ = 'id', string $ordre = 'DESC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('ficheMetier.' . $champ, $ordre)
-        ;
+            ->orderBy('ficheMetier.' . $champ, $ordre);
 
-        if (isset($filtre['expertise']) AND $filtre['expertise'] != '') {
+        if (isset($filtre['expertise']) and $filtre['expertise'] != '') {
             $expertise = null;
             if ($filtre['expertise'] == "1") $expertise = true;
             if ($filtre['expertise'] == "0") $expertise = false;
             if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
         }
-        if (isset($filtre['etat']) AND $filtre['etat'] != '') {
+        if (isset($filtre['etat']) and $filtre['etat'] != '') {
             $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $filtre['etat']);
         }
-        if (isset($filtre['domaine']) AND $filtre['domaine'] != '') {
+        if (isset($filtre['domaine']) and $filtre['domaine'] != '') {
             $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);
         }
 
@@ -203,7 +199,7 @@ class FicheMetierService {
      * @param int $niveau
      * @return FicheMetier[]
      */
-    public function getFichesMetiersWithNiveau(int $niveau) : array
+    public function getFichesMetiersWithNiveau(int $niveau): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('niveauxbas.niveau >= :niveau')
@@ -211,8 +207,7 @@ class FicheMetierService {
             ->setParameter('niveau', $niveau)
             ->andWhere('ficheMetier.histoDestruction IS NULL')
             ->andWhere('etat.code = :ok')
-            ->setParameter('ok', FicheMetierEtats::ETAT_VALIDE)
-        ;
+            ->setParameter('ok', FicheMetierEtats::ETAT_VALIDE);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -222,13 +217,12 @@ class FicheMetierService {
      * @param string $order an attribute use to sort
      * @return FicheMetier[]
      */
-    public function getFichesMetiersValides(string $order = 'id') : array
+    public function getFichesMetiersValides(string $order = 'id'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('etat.code = :ucode')
             ->setParameter('ucode', FicheMetierEtats::ETAT_VALIDE)
-            ->orderBy('ficheMetier.', $order)
-        ;
+            ->orderBy('ficheMetier.', $order);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -238,7 +232,7 @@ class FicheMetierService {
      * @param int|null $id
      * @return FicheMetier
      */
-    public function getFicheMetier(?int $id) : ?FicheMetier
+    public function getFicheMetier(?int $id): ?FicheMetier
     {
         $qb = $this->createQueryBuilder()
 //            ->addSelect('fmactivite')->leftJoin('ficheMetier.activites', 'fmactivite')
@@ -269,13 +263,12 @@ class FicheMetierService {
 
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
             ->andWhere('ficheMetier.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs fiches métiers portent le même identifiant [".$id."].");
+            throw new RuntimeException("Plusieurs fiches métiers portent le même identifiant [" . $id . "].");
         }
         return $result;
     }
@@ -286,11 +279,11 @@ class FicheMetierService {
      * @param bool $notNull
      * @return FicheMetier|null
      */
-    public function getRequestedFicheMetier(AbstractController $controller, string $name = 'fiche', bool $notNull = false) : ?FicheMetier
+    public function getRequestedFicheMetier(AbstractController $controller, string $name = 'fiche', bool $notNull = false): ?FicheMetier
     {
         $ficheId = $controller->params()->fromRoute($name);
         $fiche = $this->getFicheMetier($ficheId);
-        if($notNull && !$fiche) throw new RuntimeException("Aucune fiche de trouvée avec l'identifiant [".$ficheId."]");
+        if ($notNull && !$fiche) throw new RuntimeException("Aucune fiche de trouvée avec l'identifiant [" . $ficheId . "]");
 
         return $fiche;
     }
@@ -299,13 +292,12 @@ class FicheMetierService {
      * @param Domaine $domaine
      * @return FicheMetier[]
      */
-    public function getFicheByDomaine(Domaine $domaine) : array
+    public function getFicheByDomaine(Domaine $domaine): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('domaine = :domaine')
             ->setParameter('domaine', $domaine)
-            ->orderBy('metier.libelle')
-        ;
+            ->orderBy('metier.libelle');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -314,7 +306,7 @@ class FicheMetierService {
     /**
      * @return array
      */
-    public function getFichesMetiersAsOptionGroup() : array
+    public function getFichesMetiersAsOptionGroup(): array
     {
         $domaines = $this->getDomaineService()->getDomaines();
         $options = [];
@@ -322,7 +314,7 @@ class FicheMetierService {
         foreach ($domaines as $domaine) {
             $optionsoptions = [];
             foreach ($this->getFicheByDomaine($domaine) as $fiche) {
-                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification ".$fiche->getHistoModification()->format("d/m/Y").")";
+                if ($fiche->estNonHistorise()) $optionsoptions[$fiche->getId()] = $fiche->getMetier()->getLibelle() . " (dernière modification " . $fiche->getHistoModification()->format("d/m/Y") . ")";
             }
             asort($optionsoptions);
             $array = [
@@ -337,7 +329,7 @@ class FicheMetierService {
 
     /** FACADE ********************************************************************************************************/
 
-    public function setDefaultValues(FicheMetier $fiche) : FicheMetier
+    public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
         $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
@@ -364,25 +356,25 @@ class FicheMetierService {
      * @param bool $asElement
      * @return array
      */
-    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false) : array
+    public function getApplicationsDictionnaires(FicheMetier $fiche, bool $asElement = false): array
     {
         $dictionnaire = [];
 
         foreach ($fiche->getApplicationListe() as $applicationElement) {
-            $application = ($asElement)?$applicationElement:$applicationElement->getApplication();
+            $application = ($asElement) ? $applicationElement : $applicationElement->getApplication();
             $dictionnaire[$application->getId()]["entite"] = $application;
             $dictionnaire[$application->getId()]["raison"][] = $fiche;
             $dictionnaire[$application->getId()]["conserve"] = true;
         }
 
-        foreach ($fiche->getActivites() as $activite) {
-            foreach ($activite->getActivite()->getApplicationListe() as $applicationElement) {
-                $application = ($asElement)?$applicationElement:$applicationElement->getApplication();
-                $dictionnaire[$application->getId()]["entite"] = $application;
-                $dictionnaire[$application->getId()]["raison"][] = $activite;
-                $dictionnaire[$application->getId()]["conserve"] = true;
-            }
-        }
+//        foreach ($fiche->getMissions() as $mission) {
+//            foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
+//                $application = ($asElement)?$applicationElement:$applicationElement->getApplication();
+//                $dictionnaire[$application->getId()]["entite"] = $application;
+//                $dictionnaire[$application->getId()]["raison"][] = $mission;
+//                $dictionnaire[$application->getId()]["conserve"] = true;
+//            }
+//        }
 
         return $dictionnaire;
     }
@@ -392,25 +384,26 @@ class FicheMetierService {
      * @param bool $asElement
      * @return array
      */
-    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false) : array
+    public function getCompetencesDictionnaires(FicheMetier $fiche, bool $asElement = false): array
     {
         $dictionnaire = [];
 
         foreach ($fiche->getCompetenceListe() as $competenceElement) {
-            $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
+            $competence = ($asElement) ? $competenceElement : $competenceElement->getCompetence();
             $dictionnaire[$competence->getId()]["entite"] = $competence;
             $dictionnaire[$competence->getId()]["raison"][] = $fiche;
             $dictionnaire[$competence->getId()]["conserve"] = true;
         }
 
-        foreach ($fiche->getActivites() as $activite) {
-            foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
-                $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
-                $dictionnaire[$competence->getId()]["entite"] = $competence;
-                $dictionnaire[$competence->getId()]["raison"][] = $activite;
-                $dictionnaire[$competence->getId()]["conserve"] = true;
-            }
-        }
+        //todo se rebaser sur mission
+//        foreach ($fiche->getActivites() as $activite) {
+//            foreach ($activite->getActivite()->getCompetenceListe() as $competenceElement) {
+//                $competence = ($asElement)?$competenceElement:$competenceElement->getCompetence();
+//                $dictionnaire[$competence->getId()]["entite"] = $competence;
+//                $dictionnaire[$competence->getId()]["raison"][] = $activite;
+//                $dictionnaire[$competence->getId()]["conserve"] = true;
+//            }
+//        }
         return $dictionnaire;
     }
 
@@ -418,15 +411,14 @@ class FicheMetierService {
      * @param Competence $competence
      * @return FicheMetier[]
      */
-    public function getFichesMetiersByCompetence(Competence $competence) : array
+    public function getFichesMetiersByCompetence(Competence $competence): array
     {
         $qb = $this->createQueryBuilder()
             ->addSelect('fiche_competenceelement')->leftJoin('ficheMetier.competences', 'fiche_competenceelement')
             ->addSelect('fiche_competence')->leftJoin('fiche_competenceelement.competence', 'fiche_competence')
             ->andWhere('fiche_competenceelement.competence = :competence')
             ->setParameter('competence', $competence)
-            ->orderBy('metier.libelle', 'ASC')
-        ;
+            ->orderBy('metier.libelle', 'ASC');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -436,7 +428,7 @@ class FicheMetierService {
      * @param FicheMetier $fiche
      * @return FicheMetier
      */
-    public function dupliquerFicheMetier(FicheMetier $fiche) : FicheMetier
+    public function dupliquerFicheMetier(FicheMetier $fiche): FicheMetier
     {
         $duplicata = new FicheMetier();
         //base
@@ -445,12 +437,11 @@ class FicheMetierService {
         $this->create($duplicata);
 
         //missions principales
-        /** @var FicheMetierActivite $activite */
-        foreach ($fiche->getActivites() as $activite) {
-            $activiteDuplicata = new FicheMetierActivite();
-            $activiteDuplicata->setActivite($activite->getActivite());
-            $activiteDuplicata->setPosition($activite->getPosition());
-            $activiteDuplicata->setFiche($duplicata);
+        foreach ($fiche->getMissions() as $mission) {
+            $activiteDuplicata = new FicheMetierMission();
+            $activiteDuplicata->setFicheMetier($duplicata);
+            $activiteDuplicata->setMission($mission->getMission());
+            $activiteDuplicata->setOrdre($mission->getOrdre());
             try {
                 $this->getEntityManager()->persist($activiteDuplicata);
                 $this->getEntityManager()->flush($activiteDuplicata);
@@ -496,25 +487,25 @@ class FicheMetierService {
         return $duplicata;
     }
 
-    public function readFromCSV($fichier_path) : array
+    public function readFromCSV($fichier_path): array
     {
         $handle = fopen($fichier_path, "r");
 
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, ";")) {
+        while ($content = fgetcsv($handle, 0, ";")) {
             $array[] = $content;
         }
 
         $code_index = array_search('Code emploi type', $array[0]);
-        $code_libelle =  $array[1][$code_index];
+        $code_libelle = $array[1][$code_index];
         $metier = $this->getMetierService()->getMetierByReference('REFERENS', $code_libelle);
         $mission_index = array_search('Mission', $array[0]);
         $mission_libelle = $array[1][$mission_index];
         $activites_index = array_search('Activités principales', $array[0]);
-        $activites_libelle = explode(FicheMetierService::REFERENS_SEP ,$array[1][$activites_index]);
+        $activites_libelle = explode(FicheMetierService::REFERENS_SEP, $array[1][$activites_index]);
 
         $competences_index = array_search('COMPETENCES_ID', $array[0]);
-        $competences_ids   = explode(FicheMetierService::REFERENS_SEP ,$array[1][$competences_index]);
+        $competences_ids = explode(FicheMetierService::REFERENS_SEP, $array[1][$competences_index]);
 
         $competences['Connaissances'] = [];
         $competences['Opérationnelles'] = [];
@@ -544,7 +535,7 @@ class FicheMetierService {
         ];
     }
 
-    public function importFromCsvArray(array $csvInfos) : FicheMetier
+    public function importFromCsvArray(array $csvInfos): FicheMetier
     {
         //init
         $fiche = new FicheMetier();
@@ -553,27 +544,29 @@ class FicheMetierService {
         $this->create($fiche);
 
         // MISSIONS PRINCIPALES
-        $activite = new Activite();
-        $this->getActiviteService()->create($activite);
-        $this->getActiviteService()->updateLibelle($activite, ['libelle' => $csvInfos['metier']]);
+        $mission = new Mission();
+        $mission->setLibelle($csvInfos['metier']);
+        $this->getMissionPrincipaleService()->create($mission);
+        $ordre = 1;
         foreach ($csvInfos['activites'] as $libelle) {
-            $description = new ActiviteDescription();
-            $description->setActivite($activite);
-            $description->setDescription($libelle);
-            $this->getActiviteDescriptionService()->create($description);
+            $activite = new MissionActivite();
+            $activite->setMission($mission);
+            $activite->setLibelle($libelle);
+            $activite->setOrdre($ordre);
+            $ordre++;
+            $this->getMissionPrincipaleService()->createActivite($activite);
         }
-        $this->getActiviteService()->createFicheMetierActivite($fiche, $activite);
 
-        //APPLICATION
+        //APPLICATION (invoker l'hydrator plutôt)
         $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
 
-        //COMPETENCE
+        //COMPETENCE (invoker l'hydrator plutôt)
         $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
 
         return $fiche;
     }
 
-    public function exporter(?FicheMetier $fichemetier)
+    public function exporter(?FicheMetier $fichemetier) : string
     {
         $vars = [
             'fichemetier' => $fichemetier,

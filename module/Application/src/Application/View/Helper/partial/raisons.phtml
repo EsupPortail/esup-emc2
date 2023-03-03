@@ -8,7 +8,7 @@
 
 use Application\Entity\Db\Agent;
 use FicheMetier\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierActivite;
+use FicheMetier\Entity\Db\FicheMetierMission;
 use Formation\Entity\Db\Formation;
 
 
@@ -18,25 +18,21 @@ use Formation\Entity\Db\Formation;
         <?php $text = "";
         switch ($raison) {
             case $raison instanceof FicheMetier :
-                $fm = $raison;
-                $text = "";//$fm->getMetier()->getLibelle();
+                $text = $raison->getMetier()->getLibelle();
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;
-            case $raison instanceof FicheMetierActivite :
-                $ac = $raison;
-                $text = $ac->getActivite()->getLibelle();
+            case $raison instanceof FicheMetierMission :
+                $text = $raison->getMission()->getLibelle();
                 $label = "Activité";
                 $class = 'activite';
                 break;
             case $raison instanceof Formation :
-                $fm = $raison;
-                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $fm->getLibelle() . "</span>";
+                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $raison->getLibelle() . "</span>";
                 $label = "Formation";
                 $class = 'raison formation';
                 break;
             case $raison instanceof Agent :
-                $fm = $raison;
                 $text = "Liée à l'agent <span class='highlight formation'>" . $raison->getDenomination() . "</span>";
                 $label = "Agent";
                 $class = 'agent';

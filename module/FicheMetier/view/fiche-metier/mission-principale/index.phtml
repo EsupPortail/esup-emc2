@@ -65,7 +65,7 @@ $canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(Miss
             </td>
             <td>
                 Fiche métier : <?php echo count($mission->getListeFicheMetier()); ?> <br/>
-                Fiche de poste : <span class="todo"> ?</span>
+                Fiche de poste : <?php echo count($mission->getListeFichePoste()); ?>
             </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>

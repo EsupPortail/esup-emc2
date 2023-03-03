@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Application\Entity\Db\FichePoste" table="ficheposte">
+    <entity name="FichePoste\Entity\Db\MissionAdditionnelle" table="ficheposte_missionsadditionnelles">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <field name="libelle"           type="string" length="256"      column="libelle"            nullable="false"/>
-
-        <many-to-one field="agent" target-entity="Application\Entity\Db\Agent">
-            <join-column name="agent" referenced-column-name="c_individu" />
+        <many-to-one field="ficheposte" target-entity="Application\Entity\Db\FichePoste">
+            <join-column name="ficheposte_id" referenced-column-name="id" />
+        </many-to-one>
+        <many-to-one field="mission" target-entity="FicheMetier\Entity\Db\Mission">
+            <join-column name="mission_id" referenced-column-name="id" />
         </many-to-one>
 
-        <one-to-one field="specificite" target-entity="Application\Entity\Db\SpecificitePoste" mapped-by="fiche"/>
+        <field name="retraits"          column="retrait"            type="string" length="1024" nullable="true"/>
+        <field name="description"       column="description"        type="string" length="9999" nullable="true"/>
 
-        <one-to-many target-entity="Application\Entity\Db\Expertise"                mapped-by="ficheposte" field="expertises"/>
-
-        <one-to-many target-entity="Application\Entity\Db\FicheTypeExterne" mapped-by="fichePoste" field="fichesMetiers"/>
-        <one-to-many target-entity="Application\Entity\Db\FicheposteApplicationRetiree" mapped-by="fichePoste" field="applicationsRetirees"/>
-        <one-to-many target-entity="Application\Entity\Db\FicheposteCompetenceRetiree" mapped-by="fichePoste" field="competencesRetirees"/>
-        <one-to-many target-entity="Application\Entity\Db\FicheposteActiviteDescriptionRetiree" mapped-by="fichePoste" field="descriptionsRetirees"/>
-
-        <many-to-one field="etat" target-entity="UnicaenEtat\Entity\Db\Etat">
-            <join-column name="etat_id" referenced-column-name="id" />
-        </many-to-one>
-        <field name="rifseep"           type="integer"      column="rifseep"            nullable="true"/>
-        <field name="nbi"               type="integer"      column="nbi"                nullable="true"/>
-
-        <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
-            <join-table name="ficheposte_validation">
-                <join-columns>
-                    <join-column name="ficheposte_id" referenced-column-name="id" />
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="validation_id" referenced-column-name="id" />
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
-
-        <field name="finValidite"     type="datetime"                 column="fin_validite"     nullable="false"/>
-        <one-to-one field="poste" target-entity="Application\Entity\Db\Poste" mapped-by="ficheposte"/>
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
@@ -53,7 +29,6 @@
         <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
             <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
         </many-to-one>
-
 
     </entity>
 </doctrine-mapping>
