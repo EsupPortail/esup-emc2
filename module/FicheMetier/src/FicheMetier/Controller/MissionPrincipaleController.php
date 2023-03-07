@@ -339,33 +339,6 @@ class MissionPrincipaleController extends AbstractActionController
 
     /** LEFTOVERS ACTIVITE_CONTROLLER **********************/
 
-//    public function updateOrdreDescriptionAction() : ViewModel
-//    {
-//        $activite = $this->getActiviteService()->getRequestedActivite($this);
-//        $ordre = explode("_",$this->params()->fromRoute('ordre'));
-//        $sort = [];
-//        $position = 1;
-//        foreach ($ordre as $item) {
-//            $sort[$item] = $position;
-//            $position++;
-//        }
-//
-//        $descriptions = $activite->getDescriptions();
-//        foreach ($descriptions as $description) {
-//            if (! isset($sort[$description->getId()]) AND $description->getOrdre() !== null) {
-//                $description->setOrdre(null);
-//                $this->getActiviteDescriptionService()->update($description);
-//            }
-//            if ($description->getOrdre() != $sort[$description->getId()]) {
-//                $description->setOrdre($sort[$description->getId()]);
-//                $this->getActiviteDescriptionService()->update($description);
-//            }
-//        }
-//
-//        return new ViewModel();
-//    }
-
-
 //    public function initialiserNiveauxAction() : Response
 //    {
 //        $activites = $this->getActiviteService()->getActivites();

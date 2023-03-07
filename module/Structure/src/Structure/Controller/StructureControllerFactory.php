@@ -17,6 +17,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Referentiel\Service\Synchronisation\SynchronisationService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
@@ -48,6 +49,7 @@ class StructureControllerFactory {
          * @var UserService $userService
          *
          * @var SourceService $sourceService
+         * @var SynchronisationService $synchronisationService
          */
         $agentService = $container->get(AgentService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
@@ -61,6 +63,7 @@ class StructureControllerFactory {
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
         $userService = $container->get(UserService::class);
+        $synchronisationService = $container->get(SynchronisationService::class);
 
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $sourceService = $container->get(SourceService::class);
@@ -91,6 +94,7 @@ class StructureControllerFactory {
         $controller->setStructureAgentForceService($structureAgentForceService);
         $controller->setUserService($userService);
         $controller->setSourceService($sourceService);
+        $controller->setSynchronisationService($synchronisationService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

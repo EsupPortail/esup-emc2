@@ -222,7 +222,6 @@ class FichePosteController extends AbstractActionController {
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //TODO remettre en place après stabilisation
@@ -235,7 +234,6 @@ class FichePosteController extends AbstractActionController {
             'structure' => $structure,
             'applications' => $applications,
             'competences' => $competences,
-            'formations' => $formations,
             'activites' => $activites,
             'parcours' => $parcours,
         ]);

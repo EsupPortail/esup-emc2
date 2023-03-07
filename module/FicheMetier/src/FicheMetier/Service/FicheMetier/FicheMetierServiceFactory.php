@@ -4,6 +4,8 @@ namespace FicheMetier\Service\FicheMetier;
 
 use Application\Service\Configuration\ConfigurationService;
 use Doctrine\ORM\EntityManager;
+use Element\Form\SelectionApplication\SelectionApplicationHydrator;
+use Element\Form\SelectionCompetence\SelectionCompetenceHydrator;
 use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
@@ -54,10 +56,16 @@ class FicheMetierServiceFactory {
         $etatService = $container->get(EtatService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $renduService = $container->get(RenduService::class);
-
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
         $hasCompetenceCollectionService = $container->get(HasCompetenceCollectionService::class);
         $metierService = $container->get(MetierService::class);
+
+        /**
+         * @var SelectionApplicationHydrator $selectionApplicationHydrator
+         * @var SelectionCompetenceHydrator $selectionCompetenceHydrator
+         */
+        $selectionApplicationHydrator = $container->get('HydratorManager')->get(SelectionApplicationHydrator::class);
+        $selectionCompetenceHydrator = $container->get('HydratorManager')->get(SelectionCompetenceHydrator::class);
 
         /** @var FicheMetierService $service */
         $service = new FicheMetierService();
@@ -75,6 +83,9 @@ class FicheMetierServiceFactory {
         $service->setHasApplicationCollectionService($hasApplicationCollectionService);
         $service->setHasCompetenceCollectionService($hasCompetenceCollectionService);
         $service->setMetierService($metierService);
+
+        $service->setSelectionApplicationHydrator($selectionApplicationHydrator);
+        $service->setSelectionCompetenceHydrator($selectionCompetenceHydrator);
 
         return $service;
     }

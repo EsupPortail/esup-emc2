@@ -13,6 +13,8 @@ use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
+use Element\Form\SelectionApplication\SelectionApplicationHydratorAwareTrait;
+use Element\Form\SelectionCompetence\SelectionCompetenceHydratorAwareTrait;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
@@ -53,6 +55,9 @@ class FicheMetierService
     use HasApplicationCollectionServiceAwareTrait;
     use HasCompetenceCollectionServiceAwareTrait;
     use MetierServiceAwareTrait;
+
+    use SelectionApplicationHydratorAwareTrait;
+    use SelectionCompetenceHydratorAwareTrait;
 
     const REFERENS_SEP = "|";
 
@@ -627,10 +632,11 @@ class FicheMetierService
 
         //APPLICATION (invoker l'hydrator plutôt)
         $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
+//        $this->getSelectionApplicationHydrator()->hydrate(['applications' => $csvInfos['applications']], $fiche);
 
         //COMPETENCE (invoker l'hydrator plutôt)(invoker l'hydrator plutôt)
         $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
-
+//        $this->getSelectionCompetenceHydrator()->hydrate(['competences' => $csvInfos['competencesListe']], $fiche);
         return $fiche;
     }
 

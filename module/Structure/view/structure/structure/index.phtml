@@ -24,6 +24,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
         </h1>
     </div>
 </div>
+
+<a href="<?php echo $this->url("structure/synchroniser",[],[],true); ?>" class="btn btn-primary">SYNCHRO</a>
 <div class="main">
 
     <table id="structures" class="datatable table table-condensed table-hover">
