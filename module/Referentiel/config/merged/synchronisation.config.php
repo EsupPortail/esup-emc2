@@ -2,6 +2,9 @@
 
 namespace Carriere;
 
+use Laminas\Mvc\Console\Router\Simple;
+use Referentiel\Controller\SynchronisationConsoleController;
+use Referentiel\Controller\SynchronisationConsoleControllerFactory;
 use Referentiel\Service\Synchronisation\SynchronisationService;
 use Referentiel\Service\Synchronisation\SynchronisationServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
@@ -10,7 +13,32 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => SynchronisationConsoleController::class,
+                    'action' => [
+                        'synchroniser-all',
+                        'synchroniser',
+                    ],
+                    'roles' => [],
+                ],
+            ],
+        ],
+    ],
 
+    'console' => [
+        'router' => [
+            'routes' => [
+                'synchroniser-all' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'synchroniser-all',
+                        'defaults' => [
+                            /** @see SynchronisationConsoleController::synchroniseAllAction() */
+                            'controller' => SynchronisationConsoleController::class,
+                            'action' => 'synchroniser-all'
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -26,7 +54,9 @@ return [
         ],
     ],
     'controllers'     => [
-        'factories' => [],
+        'factories' => [
+            SynchronisationConsoleController::class => SynchronisationConsoleControllerFactory::class
+        ],
     ],
     'form_elements' => [
         'factories' => [],

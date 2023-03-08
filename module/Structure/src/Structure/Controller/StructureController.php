@@ -463,9 +463,15 @@ class StructureController extends AbstractActionController {
     public function synchroniserAction() : ViewModel
     {
         $log = "Synchronisation des données liées aux structures\n";
+
         $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_TYPE");
         $log .= $this->getSynchronisationService()->synchronise("STRUCTURE");
+
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_RESPONSABLE");
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_GESTIONNAIRE");
+
         return new ViewModel(['log' => $log]);
     }
+
 
 }
