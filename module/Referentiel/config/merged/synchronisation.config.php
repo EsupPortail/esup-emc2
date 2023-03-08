@@ -33,9 +33,20 @@ return [
                     'options' => [
                         'route' => 'synchroniser-all',
                         'defaults' => [
-                            /** @see SynchronisationConsoleController::synchroniseAllAction() */
+                            /** @see SynchronisationConsoleController::synchroniserAllAction() */
                             'controller' => SynchronisationConsoleController::class,
                             'action' => 'synchroniser-all'
+                        ],
+                    ],
+                ],
+                'synchroniser' => [
+                    'type' => Simple::class,
+                    'options' => [
+                        'route' => 'synchroniser [--name=]',
+                        'defaults' => [
+                            /** @see SynchronisationConsoleController::synchroniserAction() */
+                            'controller' => SynchronisationConsoleController::class,
+                            'action' => 'synchroniser'
                         ],
                     ],
                 ],

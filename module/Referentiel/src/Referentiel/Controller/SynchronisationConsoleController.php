@@ -25,4 +25,12 @@ class SynchronisationConsoleController extends ConsoleController {
         }
         return "done!\n";
     }
+
+    public function synchroniserAction() : string
+    {
+        $request = $this->getRequest();
+        $name = $request->getParam('name');
+        echo $this->getSynchronisationService()->synchronise($name);
+        return "done!\n";
+    }
 }
