@@ -16,7 +16,6 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Entity\Db\Etat;
 
 class FormationInstanceInscritService
@@ -350,7 +349,7 @@ class FormationInstanceInscritService
         return $inscriptions;
     }
 
-    public function getFormationInstanceInscritBySource(?Source $source, string $id) : ?FormationInstanceInscrit
+    public function getFormationInstanceInscritBySource(?string $source, string $id) : ?FormationInstanceInscrit
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
             ->andWhere('inscrit.source = :source')->setParameter('source', $source)
@@ -359,7 +358,7 @@ class FormationInstanceInscritService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Inscription partagent la même source [".$source->getCode().",".$id."]");
+            throw new RuntimeException("Plusieurs Inscription partagent la même source [".$source.",".$id."]");
         }
         return $result;
     }

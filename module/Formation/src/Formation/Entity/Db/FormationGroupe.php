@@ -21,6 +21,7 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
     private ?string $libelle = null;
     private ?int $ordre = 0;
     private Collection $formations;
+    private ?string $source = null;
 
     public function __construct()
     {

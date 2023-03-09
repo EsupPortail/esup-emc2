@@ -27,7 +27,6 @@ use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -42,7 +41,6 @@ class StructureController extends AbstractActionController {
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use UserServiceAwareTrait;
-    use SourceServiceAwareTrait;
     use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;

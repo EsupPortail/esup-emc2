@@ -10,14 +10,12 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
 
 class SeanceController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use SeanceServiceAwareTrait;
     use SeanceFormAwareTrait;
-    use SourceServiceAwareTrait;
 
     public function ajouterJourneeAction() : ViewModel
     {

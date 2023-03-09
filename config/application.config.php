@@ -24,9 +24,6 @@ $modules = [
     'DoctrineModule', 'DoctrineORMModule', 'ZfcUser', 'BjyAuthorize' => 'BjyAuthorize',
     'UnicaenApp',
     'UnicaenLdap',
-//    'UnicaenLivelog',
-    'UnicaenDbImport',
-    'Octopus',
 
     'UnicaenPrivilege',
     'UnicaenAuthentification',
@@ -42,7 +39,6 @@ $modules = [
     'UnicaenValidation',
     'UnicaenEvenement',
     'UnicaenAide',
-//    'UnicaenAlerte',
     'UnicaenIndicateur',
     'Referentiel',
 

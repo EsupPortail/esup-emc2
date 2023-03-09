@@ -14,13 +14,12 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Synchronisation\SynchronisationService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenUtilisateur\Service\User\UserService;
 
@@ -47,8 +46,6 @@ class StructureControllerFactory {
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
          * @var UserService $userService
-         *
-         * @var SourceService $sourceService
          * @var SynchronisationService $synchronisationService
          */
         $agentService = $container->get(AgentService::class);
@@ -66,7 +63,6 @@ class StructureControllerFactory {
         $synchronisationService = $container->get(SynchronisationService::class);
 
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $sourceService = $container->get(SourceService::class);
         $sourceService->setEntityManager($entityManager);
 
         /**
@@ -93,7 +89,6 @@ class StructureControllerFactory {
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
         $controller->setUserService($userService);
-        $controller->setSourceService($sourceService);
         $controller->setSynchronisationService($synchronisationService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);

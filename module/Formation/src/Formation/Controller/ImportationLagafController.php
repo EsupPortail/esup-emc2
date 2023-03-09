@@ -27,7 +27,6 @@ use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class ImportationLagafController extends AbstractActionController {
@@ -42,22 +41,23 @@ class ImportationLagafController extends AbstractActionController {
     use StagiaireServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
-    public Source $sourceLagaf;
+    public string $sourceLagaf;
 
-    public function indexAction()
+    public function indexAction() : ViewModel
     {
         return new ViewModel();
     }
 
     /** IMPORT SANS REMPLACEMENT **************************************************************************************/
 
-    public function themeAction() {
+    public function themeAction() : ViewModel
+    {
 
         $report = "";
         $file_path = "upload/Source700_020922/Theme.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -92,7 +92,7 @@ class ImportationLagafController extends AbstractActionController {
 
     }
 
-    public function actionAction()
+    public function actionAction() : ViewModel
     {
         $report = "";
         $formations = [];
@@ -102,7 +102,7 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Action.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -165,7 +165,7 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function sessionAction()
+    public function sessionAction(): ViewModel
     {
         $report = "";
         $instances = [];
@@ -174,7 +174,7 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Session.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -247,7 +247,7 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function seanceAction()
+    public function seanceAction(): ViewModel
     {
         $report = "";
         $instances = [];
@@ -256,14 +256,14 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Seance.csv";
         $handle = fopen($file_path, "r");
         $arraySeance = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $arraySeance[] = $content;
         }
 
         $file_path = "upload/Source700_020922/Plage.csv";
         $handle = fopen($file_path, "r");
         $arrayPlage = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $arrayPlage[] = $content;
         }
 
@@ -302,7 +302,7 @@ class ImportationLagafController extends AbstractActionController {
                     return $a[$position_seance2_id] == $seance_id;
                 });
                 foreach ($plages as $plage) {
-                    $plage_id = $action_id . "-" . $session_id . "-" . $seance_id . "-" . $plage[$position_plage_id];;
+                    $plage_id = $action_id . "-" . $session_id . "-" . $seance_id . "-" . $plage[$position_plage_id];
 
                     if ($dictionnaireP[$plage_id] === null) {
                         $seance = new Seance();
@@ -333,7 +333,7 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function stagiaireAction()
+    public function stagiaireAction(): ViewModel
     {
         $report = "";
         $stagiaires = [];
@@ -342,7 +342,7 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Stagiaire.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -376,7 +376,7 @@ class ImportationLagafController extends AbstractActionController {
 
             /** @var Agent $agent */
             $agent = null;
-            $agent = $this->getStagiaireService()->getAgentService()->getAgentByIdentification($st_prenom, $st_nom, $st_annee);
+            $agent = $this->getStagiaireService()->getAgentService()->getAgentByIdentification($st_prenom, $st_nom);
             if ($agent) $stagiaire->setOctopusId($agent->getId());
             $this->getStagiaireService()->create($stagiaire);
             $stagiaires[] = $stagiaire;
@@ -401,7 +401,7 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function inscriptionAction()
+    public function inscriptionAction(): ViewModel
     {
         $id = $this->params()->fromRoute('id');
 
@@ -412,7 +412,7 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Inscription.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -531,7 +531,7 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function presenceAction()
+    public function presenceAction(): ViewModel
     {
 
         $id = $this->params()->fromRoute('id');
@@ -543,7 +543,7 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Presence.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0, "," , '"')) {
+        while ($content = fgetcsv ( $handle, 0)) {
             $array[] = $content;
         }
 
@@ -620,14 +620,12 @@ class ImportationLagafController extends AbstractActionController {
 
         return new ViewModel([
             'report' => $report,
-//            'instances' => $presences,
-            'instances' => [],
-//            'problemes' => $problemes,
-            'problemes' => [],
+            'instances' => $presences,
+            'problemes' => $problemes,
         ]);
     }
 
-    public function elementAction() {
+    public function elementAction() : ViewModel{
 
         $nbElement = 0;
         $formations = $this->getFormationService()->getFormations();

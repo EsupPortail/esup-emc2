@@ -8,7 +8,6 @@ use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 
 class SeanceControllerFactory
 {
@@ -24,11 +23,9 @@ class SeanceControllerFactory
         /**
          * @var FormationInstanceService $formationInstanceService
          * @var SeanceService $seanceService
-         * @var SourceService $sourceService
          */
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $seanceService = $container->get(SeanceService::class);
-        $sourceService = $container->get(SourceService::class);
 
         /**
          * @var SeanceForm $seanceForm
@@ -38,7 +35,6 @@ class SeanceControllerFactory
         $controller = new SeanceController();
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setSeanceService($seanceService);
-        $controller->setSourceService($sourceService);
         $controller->setSeanceForm($seanceForm);
         return $controller;
     }

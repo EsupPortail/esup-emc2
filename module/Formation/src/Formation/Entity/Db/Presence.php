@@ -18,6 +18,7 @@ class Presence implements HistoriqueAwareInterface, HasSourceInterface
     private ?string $presenceType = null;
     private bool $presenceTemoin = false;
     private ?string $commentaire = null;
+    private ?string $source = null;
 
     public function getId(): int
     {

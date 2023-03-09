@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
@@ -21,7 +22,6 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
-use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -46,8 +46,6 @@ class FormationInstanceInscritController extends AbstractActionController
     use InscriptionFormAwareTrait;
     use SelectionAgentFormAwareTrait;
 
-    private Source $sourceEMC2;
-    public function setSourceEmc2(Source $source) { $this->sourceEMC2 = $source; }
 
 
 
@@ -84,7 +82,7 @@ class FormationInstanceInscritController extends AbstractActionController
                 if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
                     $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
-                    $inscrit->setSource($this->sourceEMC2);
+                    $inscrit->setSource(HasSourceInterface::SOURCE_EMC2);
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
                     $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
@@ -279,7 +277,7 @@ class FormationInstanceInscritController extends AbstractActionController
                 if ($inscription->getJustificationAgent() === null) {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec de l'inscription </strong> <br/> Veuillez justifier votre demande d'inscription !");
                 } else {
-                    $inscription->setSource($this->sourceEMC2);
+                    $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
                     $this->getFormationInstanceInscritService()->create($inscription);
                     $this->flashMessenger()->addSuccessMessage("Demande d'inscription faite.");
                     $this->getNotificationService()->triggerInscriptionAgent($agent, $instance);

@@ -36,6 +36,7 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     private ?DateTime $volumeFin = null;
 
     private ?string $remarque = null;
+    private ?string $source = null;
 
     public function getId() : ?int
     {

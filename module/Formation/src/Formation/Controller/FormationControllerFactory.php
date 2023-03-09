@@ -16,7 +16,6 @@ use Formation\Service\PlanDeFormation\PlanDeFormationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 
 class FormationControllerFactory
 {
@@ -35,7 +34,6 @@ class FormationControllerFactory
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
          * @var PlanDeFormationService $planDeFormationService
-         * @var SourceService $sourceService
          */
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
@@ -43,7 +41,6 @@ class FormationControllerFactory
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $sourceService = $container->get(SourceService::class);
         $sourceService->setEntityManager($entityManager);
 
         /**
@@ -73,7 +70,6 @@ class FormationControllerFactory
         $controller->setFormationForm($formationForm);
         $controller->setPlanDeFormationService($planDeFormationService);
         $controller->setSelectionFormationForm($selectionFormationForm);
-        $controller->setSourceService($sourceService);
 
         $controller->setApplicationElementService($applicationElementService);
         $controller->setApplicationElementForm($applicationElementForm);

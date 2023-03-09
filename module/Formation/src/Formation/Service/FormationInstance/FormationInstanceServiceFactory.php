@@ -9,7 +9,6 @@ use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -31,7 +30,6 @@ class FormationInstanceServiceFactory
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var RappelAgentAvantFormationService $rappelAgentAvantForamtionService
-         * @var SourceService $sourceService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $abonnementService = $container->get(AbonnementService::class);
@@ -39,8 +37,6 @@ class FormationInstanceServiceFactory
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $rappelAgentAvantForamtionService = $container->get(RappelAgentAvantFormationService::class);
-        $sourceService = $container->get(SourceService::class);
-        $sourceService->setEntityManager($entityManager);
 
         /**
          * @var FormationInstanceService $service
@@ -52,7 +48,6 @@ class FormationInstanceServiceFactory
         $service->setNotificationService($notificationService);
         $service->setParametreService($parametreService);
         $service->setRappelAgentAvantFormationService($rappelAgentAvantForamtionService);
-        $service->setSourceService($sourceService);
         return $service;
     }
 }

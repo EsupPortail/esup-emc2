@@ -23,12 +23,8 @@
 
         <field name="remarque"          column="remarque"       type="string"  length="4096"   nullable="false"/>
 
-        <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
-            <join-column name="source_id" referenced-column-name="ID" />
-        </many-to-one>
-        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
-
+        <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
+        <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>
 
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

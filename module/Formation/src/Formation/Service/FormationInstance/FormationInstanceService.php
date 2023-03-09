@@ -19,8 +19,6 @@ use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
-use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -32,7 +30,6 @@ class FormationInstanceService
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RappelAgentAvantFormationServiceAwareTrait;
-    use SourceServiceAwareTrait;
 
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -191,7 +188,7 @@ class FormationInstanceService
         return $result;
     }
 
-    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan)
+    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan) : array
     {
         $annees = explode("/",$plan->getAnnee());
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annees[0]);
@@ -268,17 +265,9 @@ class FormationInstanceService
         return $result;
     }
 
-    /**
-     * @param Source $source
-     * @param string $idSource
-     * @return FormationInstance|null
-     */
-    public function getFormationInstanceBySource( $source,  $idSource): ?FormationInstance
+    public function getFormationInstanceBySource( string $source, string $idSource): ?FormationInstance
     {
 
-        if (!($source instanceof  Source)) {
-            var_dump($source);
-        }
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.source = :source')
             ->andWhere('Finstance.idSource = :idSource')
@@ -305,9 +294,7 @@ class FormationInstanceService
         $instance->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CREATION_EN_COURS));
 
         $this->create($instance);
-        /** @var Source  $source */
-        $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
-        $instance->setSource($source);
+        $instance->setSource(HasSourceInterface::SOURCE_EMC2);
         $instance->setIdSource(($formation->getIdSource()) ? (($formation->getIdSource()) . "-" . $instance->getId()) : ($formation->getId() . "-" . $instance->getId()));
         $this->update($instance);
 
@@ -456,6 +443,7 @@ class FormationInstanceService
     }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
+    /** @throws ORMException */
     public function classerInscription(FormationInstanceInscrit $inscription) : FormationInstanceInscrit
     {
         $session = $inscription->getInstance();

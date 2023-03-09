@@ -12,11 +12,8 @@
 
        <one-to-many target-entity="Formation\Entity\Db\Formation" mapped-by="groupe" field="formations"/>
 
-        <!-- SOURCE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <many-to-one target-entity="UnicaenDbImport\Entity\Db\Source" field="source">
-            <join-column name="source_id" referenced-column-name="ID" />
-        </many-to-one>
-        <field name="idSource"          type="string" length="256"      column="id_source"          nullable="true"/>
+        <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
+        <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

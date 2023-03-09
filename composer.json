@@ -19,12 +19,10 @@
     "unicaen/parametre": "^5.0",
     "unicaen/bjy-authorize": "^4",
     "unicaen/ldap": "^4",
-    "unicaen/octopus": "^4",
     "unicaen/evenement": "^5.0",
     "unicaen/autoform": "^5.0",
     "unicaen/aide": "dev-master",
     "ext-json": "*",
-    "unicaen/db-import": "dev-utilisateur",
     "unicaen/indicateur": "^0.0"
   },
   "require-dev": {

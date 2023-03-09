@@ -13,7 +13,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -65,10 +64,6 @@ class DemandeExterneServiceFactory {
         $service->setStructureService($structureService);
         $service->setValidationInstanceService($validationInstanceService);
         $service->setValidationTypeService($validationTypeService);
-
-        $sourceService = $container->get(SourceService::class);
-        $source = $sourceService->getRepository()->findOneBy(['code' => 'EMC2']);
-        $service->setSourceEmc2($source);
 
         return $service;
     }

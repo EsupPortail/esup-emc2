@@ -10,7 +10,6 @@ use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenDbImport\Entity\Db\Source;
 
 class FormationGroupeService
 {
@@ -197,7 +196,7 @@ class FormationGroupeService
         return $result;
     }
 
-    public function getFormationGroupeBySource(Source $source, $id) : ? FormationGroupe
+    public function getFormationGroupeBySource(string $source, $id) : ? FormationGroupe
     {
         $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
             ->andWhere('groupe.source = :source')->setParameter('source', $source)

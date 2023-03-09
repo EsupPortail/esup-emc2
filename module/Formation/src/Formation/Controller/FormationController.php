@@ -24,8 +24,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
-use UnicaenDbImport\Entity\Db\Source;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -37,7 +35,6 @@ class FormationController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
-    use SourceServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
     use ApplicationElementServiceAwareTrait;
@@ -56,7 +53,7 @@ class FormationController extends AbstractActionController
         $historise = $this->params()->fromQuery('historise');
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource()->getCode() === $source; });
+        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource() === $source; });
         if ($historise !== null AND $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
             if ($historise === "1") return $a->estHistorise();
             if ($historise === "0") return $a->estNonHistorise();
@@ -87,9 +84,7 @@ class FormationController extends AbstractActionController
             if ($form->isValid()) {
 
                 $this->getFormationService()->create($formation);
-                /** @var Source $source */
-                $source = $this->sourceService->getRepository()->findOneBy(['code' => HasSourceInterface::SOURCE_EMC2]);
-                $formation->setSource($source);
+                $formation->setSource(HasSourceInterface::SOURCE_EMC2);
                 $formation->setIdSource($formation->getId());
                 $this->getFormationService()->update($formation);
 

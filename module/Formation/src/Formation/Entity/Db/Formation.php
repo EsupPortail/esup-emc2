@@ -2,30 +2,31 @@
 
 namespace Formation\Entity\Db;
 
-use DateTime;
-use Doctrine\Common\Collections\Collection;
-use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
-use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Application\Entity\Db\Traits\HasSourceTrait;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use FicheMetier\Entity\Db\Mission;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class Formation implements HistoriqueAwareInterface,
-    HasDescriptionInterface, HasSourceInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface
+    HasDescriptionInterface,
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface,
+    HasSourceInterface
 {
     use HasDescriptionTrait;
-    use HasSourceTrait;
     use HistoriqueAwareTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
+    use HasSourceTrait;
 
     const RATTACHEMENT_PREVENTION = 'prévention';
     const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
