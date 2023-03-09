@@ -76,7 +76,17 @@ class MissionPrincipaleService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Mission::class)->createQueryBuilder('mission');
+        $qb = $this->getEntityManager()->getRepository(Mission::class)->createQueryBuilder('mission')
+            ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
+            ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
+            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
+            ->leftJoin('mission.domaines', 'domaine')->addSelect('domaine')
+
+//            ->leftJoin('mission.applications', 'applicationelement')->addSelect('applicationelement')
+//            ->leftJoin('applicationelement.application', 'application')->addSelect('application')
+//            ->leftJoin('mission.competences', 'competenceelement')->addSelect('competenceelement')
+//            ->leftJoin('competenceelement.competence', 'competence')->addSelect('competence')
+        ;
         return $qb;
     }
 
