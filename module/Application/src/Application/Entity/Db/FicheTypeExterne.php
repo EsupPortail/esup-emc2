@@ -3,6 +3,7 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use FicheMetier\Entity\Db\FicheMetier;
 
 /**
  * Class FicheTypeExterne
@@ -20,8 +21,7 @@ class FicheTypeExterne {
     private $id;
     /** @var FichePoste */
     private $fichePoste;
-    /** @var FicheMetier */
-    private $ficheType;
+    private ?FicheMetier $ficheType = null;
     /** @var integer */
     private $quotite;
     /** @var boolean */

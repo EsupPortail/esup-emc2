@@ -9,7 +9,6 @@
         <one-to-one field="fiche" target-entity="Application\Entity\Db\FichePoste">
             <join-column name="ficheposte_id" referenced-column-name="id" />
         </one-to-one>
-        <one-to-many field="activites" target-entity="Application\Entity\Db\SpecificiteActivite" mapped-by="specificite" />
 
         <field name="specificite"       type="string" length="2048"     column="specificite"            nullable="true"/>
         <field name="encadrement"       type="string" length="2048"     column="encadrement"            nullable="true"/>

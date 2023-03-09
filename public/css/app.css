@@ -1,15 +1,40 @@
-.unistrap.unistrap-th-cata {
-    --unistrap-color-main: #273c83;
-    --unistrap-color-light: #eaeefd;
-    --unistrap-color-dark: #18285c;
+:root {
+    --unistrap-color-default: rgb(111, 133, 111);
+
+    --color-dark: rgb(40,87,40);
+    --color-dark-bis: black;
+    --color-medium: #bbb;
+    --color-medium-bis: #999;
+    --color-light: #F3F3F3;
+    --color-light-bis: #FFF;
+}
+
+.unistrap.unistrap-th-emc2 {
+    --unistrap-color-main: rgb(40,87,40);
+    --unistrap-color-light: rgb(60,107,60);
+    --unistrap-color-dark: rgb(20,67,20);
     --bs-link-color: #273c83;
+}
+
+.unistrap.unistrap-th-formation {
     --unistrap-color-main: #273c83;
     --unistrap-color-light: #eaeefd;
     --unistrap-color-dark: #18285c;
     --bs-link-color: #273c83;
 }
 
+
+h1 {
+    color: black;
+}
+
 /** MODAL *************************************************************************************************************/
+
+table.xdebug-error.xe-warning {
+    margin-top: 4rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
 
 div.alert{
     margin-top:1rem;
@@ -53,7 +78,6 @@ input[type=submit],
 a.btn,
 span.btn
 {
-    width:17rem;
     margin: 0.25rem 0.25rem;
 }
 
@@ -115,6 +139,19 @@ tr.termine {
 
 tr.historise td:not(.action) {
     text-decoration: line-through darkred 2px;
+}
+
+th.action {
+    width: 8rem;
+    text-align: right;
+}
+
+td.action {
+    font-size: small;
+}
+
+td.action a {
+    text-decoration: none;
 }
 
 dt.historise {
@@ -310,27 +347,28 @@ div.listing td.libelle {
 }
 
 div.listing  td.niveau {
-    width: 10rem;
+    width: 8rem;
     text-align: right;
     padding-left: 1rem;
     /*background: lightblue;*/
 }
 
 div.listing  td.clef {
-    width: 5rem;
+    width: 4rem;
     text-align: center;
     /*background: lightblue;*/
 }
 
 div.listing  td.validation {
-    width: 10rem;
+    width: 8rem;
     text-align: right;
     padding-left: 1rem;
     /*background: lightgoldenrodyellow;*/
 }
 
+
 div.listing  td.action {
-    width: 12rem;
+    width: 10rem;
     text-align: right;
     padding-left: 1rem;
     /*background: lightgreen;*/
@@ -436,4 +474,18 @@ div.panel-heading a.btn {
 
 h3.popover-header {
     color: var(--color-dark);
+}
+
+div.card-header h2 {
+     margin-top: 0.5rem;
+     font-size: larger;
+}
+
+.bg-default {
+    background: var(--unistrap-color-default);
+    color: black;
+}
+
+.card-body {
+    padding: 0.25rem;
 }

@@ -27,4 +27,21 @@ trait DbImportableAwareTrait {
         $this->created_on = $date;
     }
 
+    public function historise(?DateTime $now = null) : void
+    {
+        if ($now === null) {
+            $now = new DateTime();
+        }
+        $this->deleted_on = $now;
+    }
+
+    public function dehistorise(?DateTime $now = null) : void
+    {
+        if ($now === null) {
+            $now = new DateTime();
+        }
+        $this->updated_on = $now;
+        $this->deleted_on = null;
+    }
+
 }

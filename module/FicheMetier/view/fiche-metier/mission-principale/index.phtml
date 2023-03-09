@@ -1,0 +1,130 @@
+<?php
+
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
+
+/**
+ * @see \FicheMetier\Controller\MissionPrincipaleController::indexAction()
+ * @var Mission[] $missions
+ */
+
+$this->headTitle('Missions principales');
+
+$canAfficher = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_AFFICHER));
+$canAjouter = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_AJOUTER));
+$canModifier = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_MODIFIER));
+$canHistoriser = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_HISTORISER));
+$canSupprimer = $this->isAllowed(MissionPrincipalePrivileges::getResourceId(MissionPrincipalePrivileges::MISSIONPRINCIPALE_SUPPRIMER));
+
+?>
+
+
+<h1 class="page-header">
+    Missions principale
+</h1>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('mission-principale/ajouter', [], [], true); ?>"
+       class="ajax-modal btn btn-primary"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une mission principale
+    </a>
+<?php endif; ?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Libellé </th>
+            <th style="width: 15rem;"> Domaines & niveau</th>
+            <th style="width: 10rem;"> Liens </th>
+            <th class="action"> Action </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($missions as $mission) : ?>
+        <tr class="<?php if ($mission->estHistorise()) echo " historise ";?>">
+            <td> <?php echo $mission->getLibelle(); ?> </td>
+            <td>
+                <?php if (empty($mission->getDomaines())) : ?>
+                    <p><em>Aucun domaine</em></p>
+                <?php else : ?>
+                <ul>
+                    <?php foreach ($mission->getDomaines() as $domaine) : ?>
+                        <li> <?php echo $domaine->getLibelle(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+
+                <?php if ($mission->getNiveau() === null) : ?>
+                    <p><em>Niveau non précisé</em></p>
+                <?php else : ?>
+                    Niveau : <?php echo $this->niveauEnveloppe($mission->getNiveau()); ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                Fiche métier : <?php echo count($mission->getListeFicheMetier()); ?> <br/>
+                Fiche de poste : <?php echo count($mission->getListeFichePoste()); ?>
+            </td>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/afficher', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="ajax-modal"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <br/>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/modifier', ['mission-principale' => $mission->getId()], [], true); ?>"
+                    >
+                        <span class="icon icon-editer"></span>
+                        modifier
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <br>
+                    <?php if ($mission->estNonHistorise()): ?>
+                        <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('mission-principale/historiser', ['mission-principale' => $mission->getId()], [], true); ?>">
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else : ?>
+                        <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('mission-principale/restaurer', ['mission-principale' => $mission->getId()], [], true); ?>">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <br>
+                    <?php /** @see \FicheMetier\Controller\MissionPrincipaleController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('mission-principale/supprimer', ['mission-principale' => $mission->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </span>
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

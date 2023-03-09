@@ -2,114 +2,64 @@
 
 namespace Application\Entity\Db;
 
+use FicheMetier\Entity\Db\Mission;
+use FicheMetier\Entity\Db\MissionActivite;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
 
 class FicheposteActiviteDescriptionRetiree implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var FichePoste */
-    private $fichePoste;
-    /** @var FicheMetier */
-    private $ficheMetier;
-    /** @var Activite */
-    private $activite;
-    /** @var ActiviteDescription */
-    private $description;
+    private ?int $id;
+    private ?FichePoste $fichePoste = null;
+    private ?FicheMetier $ficheMetier = null;
+    private ?Mission $mission = null;
+    private ?MissionActivite $activite = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FichePoste
-     */
-    public function getFichePoste()
+    public function getFichePoste() : ?FichePoste
     {
         return $this->fichePoste;
     }
 
-    /**
-     * @param FichePoste $fichePoste
-     * @return FicheposteActiviteDescriptionRetiree
-     */
-    public function setFichePoste($fichePoste)
+    public function setFichePoste(FichePoste $fichePoste) : void
     {
         $this->fichePoste = $fichePoste;
-        return $this;
     }
 
-    /**
-     * @return FicheMetier
-     */
-    public function getFicheMetier()
+    public function getFicheMetier() : ?FicheMetier
     {
         return $this->ficheMetier;
     }
 
-    /**
-     * @param FicheMetier $ficheMetier
-     * @return FicheposteActiviteDescriptionRetiree
-     */
-    public function setFicheMetier($ficheMetier)
+    public function setFicheMetier(?FicheMetier $ficheMetier) : void
     {
         $this->ficheMetier = $ficheMetier;
-        return $this;
     }
 
-    /**
-     * @return Activite
-     */
-    public function getActivite()
+    public function getMission() : Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission) : void
+    {
+        $this->mission = $mission;
+    }
+
+    public function getActivite() : ?MissionActivite
     {
         return $this->activite;
     }
 
-    /**
-     * @param Activite $activite
-     * @return FicheposteActiviteDescriptionRetiree
-     */
-    public function setActivite($activite)
+    public function setActivite(?MissionActivite $activite) : void
     {
         $this->activite = $activite;
-        return $this;
     }
 
-    /**
-     * @return ActiviteDescription
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param ActiviteDescription $description
-     * @return FicheposteActiviteDescriptionRetiree
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param Activite $activite
-     * @param FicheposteActiviteDescriptionRetiree[] $retirees
-     * @return FicheposteActiviteDescriptionRetiree[]
-     */
-    static public function filtrer($activite, $retirees)
-    {
-        $result = [];
-        foreach ($retirees as $retiree) {
-            if ($activite->getId() === $retiree->getDescription()->getActivite()->getId()) $result[] = $retiree;
-        }
-        return $result;
-    }
 }

@@ -7,8 +7,9 @@
  */
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
-use Application\Entity\Db\FicheMetierActivite;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetierMission;
+use FicheMetier\Entity\Db\Mission;
 use Formation\Entity\Db\Formation;
 
 
@@ -18,37 +19,38 @@ use Formation\Entity\Db\Formation;
         <?php $text = "";
         switch ($raison) {
             case $raison instanceof FicheMetier :
-                $fm = $raison;
-                $text = "";//$fm->getMetier()->getLibelle();
+                $text = "Obtenue grâce à la fiche métier [".$raison->getMetier()->getLibelle()."]";
                 $label = "FicheMétier";
                 $class = 'fiche-metier';
                 break;
-            case $raison instanceof FicheMetierActivite :
-                $ac = $raison;
-                $text = $ac->getActivite()->getLibelle();
-                $label = "Activité";
+            case $raison instanceof FicheMetierMission :
+                $text = $raison->getMission()->getLibelle();
+                $label = "Mission";
+                $class = 'activite';
+                break;
+            case $raison instanceof Mission :
+                $text = "Obtenue grâce à la mission [" . $raison->getLibelle()."]";
+                $label = "Mission";
                 $class = 'activite';
                 break;
             case $raison instanceof Formation :
-                $fm = $raison;
-                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $fm->getLibelle() . "</span>";
+                $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $raison->getLibelle() . "</span>";
                 $label = "Formation";
                 $class = 'raison formation';
                 break;
             case $raison instanceof Agent :
-                $fm = $raison;
                 $text = "Liée à l'agent <span class='highlight formation'>" . $raison->getDenomination() . "</span>";
                 $label = "Agent";
                 $class = 'agent';
                 break;
             default :
 //                var_dump($raison);
-                $text = "Provenance inconnue";
+                $text = "Provenance inconnue : (".get_class($raison).")";
                 $label = "???";
                 $class = 'inconnue';
 
         }
         ?>
-        <span class="<?php echo $class; ?>" title="<?php echo $text; ?>" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $label; ?></span>
+        <span class="<?php echo $class; ?>" title="<?php echo $text; ?>" ><?php echo $label; ?></span>
     <?php endforeach;?>
 <?php endif; ?>

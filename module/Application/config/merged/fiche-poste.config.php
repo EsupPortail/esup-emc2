@@ -33,6 +33,7 @@ use Application\Form\Rifseep\RifseepHydratorFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Form\SpecificitePoste\SpecificitePosteFormFactory;
 use Application\Form\SpecificitePoste\SpecificitePosteHydrator;
+use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceFactory;
@@ -48,8 +49,11 @@ use Application\Service\Poste\PosteService;
 use Application\Service\Poste\PosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
+use Application\View\Helper\FicheMetierExterneViewHelper;
 use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
+use Application\View\Helper\RaisonsViewHelper;
+use Application\View\Helper\SpecificitePosteViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Laminas\Router\Http\Literal;
@@ -202,6 +206,13 @@ return [
                 'pages' => [
                     'gestion' => [
                         'pages' => [
+                            'fiches' => [
+                                'label' => 'Gestion des fiches',
+                                'route' => 'fiche-metier-type',
+                                'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
+                                'order'    => 2000,
+                                'dropdown-header' => true,
+                            ],
                             'fiche-poste' => [
                                 'label' => 'Fiches de poste',
                                 'route' => 'fiche-poste',
@@ -631,6 +642,9 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
+            'specificitePoste' => SpecificitePosteViewHelper::class,
+            'ficheMetierExterne' => FicheMetierExterneViewHelper::class,
+            'raisons' => RaisonsViewHelper::class,
             'fichePosteGraph' => FichePosteGraphViewHelper::class,
         ],
         'factories' => [

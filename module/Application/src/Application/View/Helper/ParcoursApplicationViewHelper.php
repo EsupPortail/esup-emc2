@@ -3,7 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\View\Renderer\PhpRenderer;

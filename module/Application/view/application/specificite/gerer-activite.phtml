@@ -2,25 +2,25 @@
 
 /**
  * @see \Application\Controller\SpecificiteController::gererActiviteAction()
- * @var SpecificiteActivite $specificiteActivite
- * @var ActiviteDescription[] $descriptions
+ * @var MissionAdditionnelle $missionAdditionnelle
+ * @var MissionActivite[] $activites
  */
 
-use Application\Entity\Db\ActiviteDescription;
-use Application\Entity\Db\SpecificiteActivite;
+use FicheMetier\Entity\Db\MissionActivite;
+use FichePoste\Entity\Db\MissionAdditionnelle;
 
-usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre()>$b->getOrdre();});
+usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre()>$b->getOrdre();});
 
-$retrait = explode(";",$specificiteActivite->getRetrait());
+$retrait = explode(";",$missionAdditionnelle->getRetraits());
 $retraits = [];
 foreach ($retrait as $item) $retraits[(int) $item] = true;
 ?>
 
 <form
     method="post"
-    action="<?php echo $this->url("specificite/gerer-activite", ["specificite-activite" => $specificiteActivite->getId()], [], true); ?>"
+    action="<?php echo $this->url("specificite/gerer-activite", ["specificite-activite" => $missionAdditionnelle->getId()], [], true); ?>"
 >
-    <?php foreach ($descriptions as $description) : ?>
+    <?php foreach ($activites as $description) : ?>
     <div class="form-check">
         <input type="checkbox" class="form-check-input" id="<?php echo $description->getId(); ?>" name="<?php echo $description->getId(); ?>"
                <?php if (!isset($retraits[$description->getId()])) echo " checked "; ?>

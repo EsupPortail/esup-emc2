@@ -100,6 +100,13 @@ return [
                     'privileges' => StructurePrivileges::STRUCTURE_AGENT_FORCE,
                     'assertion'  => StructureAssertion::class,
                 ],
+                [
+                    'controller' => StructureController::class,
+                    'action' => [
+                        'synchroniser'
+                    ],
+                    'privileges' => StructurePrivileges::STRUCTURE_INDEX,
+                ],
             ],
         ],
     ],
@@ -136,6 +143,18 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'synchroniser' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/synchroniser',
+                            'defaults' => [
+                                'controller' => StructureController::class,
+                                'action'     => 'synchroniser',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [

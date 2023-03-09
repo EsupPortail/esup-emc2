@@ -25,8 +25,6 @@ class SpecificitePoste {
     private $moyens;
     /** @var string */
     private $formations;
-    /** @var ArrayCollection (SpecificiteActivite) */
-    private $activites;
 
     /**
      * @return int

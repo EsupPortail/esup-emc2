@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @var Etat[] $etats
+ * @var Domaine[] $domaines
+ * @var array $params
+ */
+
+use Metier\Entity\Db\Domaine;
+use UnicaenEtat\Entity\Db\Etat;
+
+?>
+
+
+<div class="card">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer"></span> Filtre des fiches métiers
+    </div>
+    <div class="card-body">
+        <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <!-- DOMAINE -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="domaine">Domaine du métier :</label>
+                        <select id="domaine" name="domaine" class="selectpicker">
+                            <option value=""> Tous les domaines </option>
+                            <?php foreach($domaines as $domaine) : ?>
+                                <option
+                                        value="<?php echo $domaine->getId(); ?>"
+                                        <?php if ($domaine->getId() == $params['domaine']) echo " selected "; ?>
+                                >
+                                    <?php echo $domaine->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- ETAT -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="etat">État de la fiche :</label>
+                        <select id="etat" name="etat" class="selectpicker">
+                            <option value=""> Tous les états </option>
+                            <?php foreach($etats as $etat) : ?>
+                                <option
+                                        value="<?php echo $etat->getId(); ?>"
+                                        data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                                    <?php if ($etat->getId() === $params['etat']) echo " selected "; ?>
+                                >
+                                    <?php echo $etat->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- EXPERTISE -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                    <label for="expertise">Sujet à expertise:</label>
+                    <select id="expertise" name="expertise" class="selectpicker">
+                        <option value="">Pas de sélection</option>
+                        <option value="1" <?php if ("1" == $params['expertise']) echo " selected "; ?>>Oui</option>
+                        <option value="0" <?php if ("0" == $params['expertise']) echo " selected "; ?>>Non</option>
+                    </select>
+                    </div>
+                </div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <div class="pull-right">
+                        <button class="btn btn-primary" id="clear">
+                            <span class="icon effacer"></span>
+                            R.A.Z.
+                        </button>
+
+                        <button class="btn btn-primary" id="filter">
+                            <span class="icon icon-filtrer"></span>
+                            Filtrer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = 'fiche-metier-type';
+    });
+
+    $('button#filter').click(function() {
+        let etatId = $('select#etat option:selected').val();
+        let domaineId = $('select#domaine option:selected').val();
+        let expertise = $('select#expertise').val();
+        console.log( "etat=" + etatId + " | " + "domaine=" + domaineId + " | " +"expertise=" + expertise);
+
+        let query = "";
+        query += "&etat=" + etatId;
+        query += "&domaine=" + domaineId;
+        query += "&expertise=" + expertise;
+        window.location.href = 'fiche-metier-type?'+ query;
+    });
+</script>

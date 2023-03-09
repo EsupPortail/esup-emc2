@@ -3,15 +3,14 @@
 /**
  * @see CompetenceController::afficherAction()
  *
- * @var Activite[] $activites
+ * @var Mission[] $missions
  * @var Competence $competence
  * @var FicheMetier[] $fiches
  */
 
-use Application\Controller\CompetenceController;
-use Application\Entity\Db\Activite;
-use Application\Entity\Db\Competence;
-use Application\Entity\Db\FicheMetier;
+use Element\Entity\Db\Competence;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
 
 ?>
 
@@ -45,13 +44,13 @@ use Application\Entity\Db\FicheMetier;
             <?php endforeach; ?>
         </ul>
     </dd>
-    <dt> Activités </dt>
+    <dt> Missions principales </dt>
     <dd>
         <!-- Nombre de fiches metiers : -->
-        <?php echo count($activites); ?>
+        <?php echo count($missions); ?>
         <ul>
-            <?php foreach ($activites as $activite) : ?>
-                <li> <?php echo $activite->getLibelle(); ?> (#<?php echo $activite->getId(); ?>)</li>
+            <?php foreach ($missions as $mission) : ?>
+                <li> <?php echo $mission->getLibelle(); ?> (#<?php echo $mission->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>

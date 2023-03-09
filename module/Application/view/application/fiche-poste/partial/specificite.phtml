@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FichePoste\Entity\Db\MissionAdditionnelle;
 
 /**
  * @var FichePoste $fiche
@@ -40,6 +41,33 @@ $date = new DateTime();
             <?php endif; ?>
             <?php echo $this->specificitePoste($fiche, $fiche->getSpecificite(), ["mode" => $mode]); ?>
         </div>
+
+        <?php
+            $canAjouterActivite = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_MODIFIER);
+            $missionsAdditionnelles = $fiche->getMissionsAdditionnelles();
+            usort($missionsAdditionnelles, function (MissionAdditionnelle $a, MissionAdditionnelle $b) { return $a->getMission()->getLibelle() > $b->getMission()->getLibelle();});
+        ?>
+
+        <?php if (!empty($missionsAdditionnelles)) : ?>
+            <div class="row">
+                <div class="col-md-8">
+                    <h3> Autres missions additionnelles au poste </h3>
+                </div>
+            </div>
+
+            <?php if ($mode === 'edition' AND $canAjouterActivite) : ?>
+                <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
+                <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fiche->getId(), 'specificite-poste' => ($fiche->getSpecificite())?$fiche->getSpecificite()->getId():null], [], true); ?>"
+                   class="btn btn-primary action ajax-modal" data-event="modification">
+                    <span class="icon icon-ajouter"></span>
+                    Ajouter une mission additionnelle
+                </a>
+            <?php endif; ?>
+
+            <?php foreach ($missionsAdditionnelles as $missionAdditionnelle) : ?>
+                <?php echo $this->specificiteActivite($missionAdditionnelle, ['fiche' => $fiche, 'mode' => $mode]); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
     </div>
 <?php endif; ?>
-

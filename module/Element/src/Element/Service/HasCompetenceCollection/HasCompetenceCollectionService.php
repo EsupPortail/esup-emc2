@@ -80,40 +80,5 @@ class HasCompetenceCollectionService
         return $object;
     }
 
-    /**
-     * @param HasCompetenceCollectionInterface $object
-     * @param CompetenceElement $competenceElement
-     * @return HasCompetenceCollectionInterface
-     */
-    public function addCompetence(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
-    {
-        $this->getCompetenceElementService()->create($competenceElement);
-        $object->getCompetenceCollection()->add($competenceElement);
-        $this->updateObject($object);
-        return $object;
-    }
-
-    /**
-     * @param HasCompetenceCollectionInterface $object
-     * @param CompetenceElement $competenceElement
-     * @return HasCompetenceCollectionInterface
-     */
-    public function deleteCompetence(HasCompetenceCollectionInterface $object, CompetenceElement $competenceElement)
-    {
-        $object->getCompetenceCollection()->removeElement($competenceElement);
-        $this->updateObject($object);
-        return $object;
-    }
-
-    /**
-     * @param HasCompetenceCollectionInterface $object
-     * @return HasCompetenceCollectionInterface
-     */
-    public function clearCompetence(HasCompetenceCollectionInterface $object)
-    {
-        $object->getCompetenceCollection()->clear();
-        $this->updateObject($object);
-        return $object;
-    }
 
 }

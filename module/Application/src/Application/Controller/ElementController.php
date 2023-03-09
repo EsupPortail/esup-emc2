@@ -3,9 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -16,12 +14,15 @@ use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class ElementController extends AbstractActionController {
+class ElementController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use ApplicationServiceAwareTrait;
     use ApplicationElementServiceAwareTrait;
@@ -39,7 +40,7 @@ class ElementController extends AbstractActionController {
     const TYPE_COMPETENCE = 'Competence';
     const TYPE_FORMATION = 'Formation';
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $elementType = $this->params()->fromRoute('type');
         $elementId = $this->params()->fromRoute('id');
@@ -58,19 +59,20 @@ class ElementController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => "Affichage d'un élément de type ".$elementType,
+            'title' => "Affichage d'un élément de type " . $elementType,
             'type' => $elementType,
             'id' => $elementId,
             'element' => $element,
         ]);
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $elementType = $this->params()->fromRoute('type');
         $elementId = $this->params()->fromRoute('id');
 
-        $element = null; $service = null;
+        $element = null;
+        $service = null;
         switch ($elementType) {
             case ElementController::TYPE_APPLICATION :
                 $element = $this->getApplicationElementService()->getApplicationElement($elementId);
@@ -106,13 +108,14 @@ class ElementController extends AbstractActionController {
         return $vm;
     }
 
-    public function changerNiveauAction() : ViewModel
+    public function changerNiveauAction(): ViewModel
     {
         $elementType = $this->params()->fromRoute('type');
         $elementId = $this->params()->fromRoute('id');
-        $clef=$this->params()->fromRoute('clef');
+        $clef = $this->params()->fromRoute('clef');
 
-        $element = null; $service = null;
+        $element = null;
+        $service = null;
         switch ($elementType) {
             case ElementController::TYPE_APPLICATION :
                 $element = $this->getApplicationElementService()->getApplicationElement($elementId);
@@ -148,19 +151,21 @@ class ElementController extends AbstractActionController {
         return $vm;
     }
 
-    public function ajouterApplicationElementAction() : ViewModel
+    public function ajouterApplicationElementAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $multiple = $this->params()->fromQuery('multiple');
 
         $hasApplicationElement = null;
-        switch($type) {
-            case Agent::class : $hasApplicationElement = $this->getAgentService()->getRequestedAgent($this, 'id');
+        switch ($type) {
+            case Agent::class :
+                $hasApplicationElement = $this->getAgentService()->getRequestedAgent($this, 'id');
                 break;
-            case FicheMetier::class : $hasApplicationElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+            case FicheMetier::class :
+                $hasApplicationElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
                 break;
         }
-        $clef=$this->params()->fromRoute('clef');
+        $clef = $this->params()->fromRoute('clef');
 
         $application = null;
         if ($applicationId = $this->params()->fromQuery('application')) {
@@ -177,7 +182,9 @@ class ElementController extends AbstractActionController {
             }
 
             $element = new ApplicationElement();
-            if ($application !== null) {$element->setApplication($application);}
+            if ($application !== null) {
+                $element->setApplication($application);
+            }
             if ($clef === 'masquer') $form->masquerClef();
 
             $form->setAttribute('action', $this->url()->fromRoute('element_/ajouter-application-element',
@@ -205,10 +212,10 @@ class ElementController extends AbstractActionController {
                     }
                 } else {
                     $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
-                    $clef = (isset($data['clef']) AND $data['clef'] === "1");
+                    $clef = (isset($data['clef']) and $data['clef'] === "1");
                     foreach ($data['application'] as $applicationId) {
                         $application = $this->getApplicationService()->getApplication($applicationId);
-                        if ($application !== null AND !$hasApplicationElement->hasApplication($application)) {
+                        if ($application !== null and !$hasApplicationElement->hasApplication($application)) {
                             $element = new ApplicationElement();
                             $element->setClef($clef);
                             $element->setApplication($application);
@@ -239,19 +246,21 @@ class ElementController extends AbstractActionController {
         exit();
     }
 
-    public function ajouterCompetenceElementAction() : ViewModel
+    public function ajouterCompetenceElementAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $multiple = $this->params()->fromQuery('multiple');
 
         $hasCompetenceElement = null;
-        switch($type) {
-            case Agent::class : $hasCompetenceElement = $this->getAgentService()->getRequestedAgent($this, 'id');
+        switch ($type) {
+            case Agent::class :
+                $hasCompetenceElement = $this->getAgentService()->getRequestedAgent($this, 'id');
                 break;
-            case FicheMetier::class : $hasCompetenceElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
+            case FicheMetier::class :
+                $hasCompetenceElement = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'id');
                 break;
         }
-        $clef=$this->params()->fromRoute('clef');
+        $clef = $this->params()->fromRoute('clef');
 
         $competence = null;
         if ($competenceId = $this->params()->fromQuery('competence')) {
@@ -268,7 +277,9 @@ class ElementController extends AbstractActionController {
             }
 
             $element = new CompetenceElement();
-            if ($competence !== null) {$element->setCompetence($competence);}
+            if ($competence !== null) {
+                $element->setCompetence($competence);
+            }
             if ($clef === 'masquer') $form->masquerClef();
 
             $form->setAttribute('action', $this->url()->fromRoute('element_/ajouter-competence-element',
@@ -295,10 +306,10 @@ class ElementController extends AbstractActionController {
                     }
                 } else {
                     $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau']);
-                    $clef = (isset($data['clef']) AND $data['clef'] === "1");
+                    $clef = (isset($data['clef']) and $data['clef'] === "1");
                     foreach ($data['competence'] as $competenceId) {
                         $competence = $this->getCompetenceService()->getCompetence($competenceId);
-                        if ($competence !== null AND !$hasCompetenceElement->hasCompetence($competence)) {
+                        if ($competence !== null and !$hasCompetenceElement->hasCompetence($competence)) {
                             $element = new CompetenceElement();
                             $element->setClef($clef);
                             $element->setCompetence($competence);

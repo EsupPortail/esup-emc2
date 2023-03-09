@@ -2,7 +2,7 @@
 
 use Application\Controller\ElementController;
 use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Element\Entity\Db\Application;
@@ -141,7 +141,7 @@ ksort($groupes);
             }
             ?>
             <tr>
-                <td class="libelle">
+                <td >
                     <?php echo $application->getLibelle(); ?>
                     <?php if ($displayRaison) : ?>
                         <?php echo $this->raisons($element['raison']); ?>
@@ -187,7 +187,9 @@ ksort($groupes);
                                     class="ajax-modal"
                                     data-event="modification"
                             >
-                                <span class="icon icon-retirer" title="Supprimer définitivement une application liées à l'agent"></span></a>
+                                <span class="text-danger">
+                                    <span class="icon icon-retirer" title="Supprimer définitivement une application liées à l'agent"></span>
+                                </span></a>
                         <?php endif; ?>
                         <?php if ($canValider) : ?>
                             <?php if ($entite->getValidation() === null) : ?>

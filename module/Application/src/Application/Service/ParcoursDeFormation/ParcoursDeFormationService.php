@@ -2,7 +2,7 @@
 
 namespace Application\Service\ParcoursDeFormation;
 
-use Application\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
 use Application\Entity\Db\ParcoursDeFormationFormation;

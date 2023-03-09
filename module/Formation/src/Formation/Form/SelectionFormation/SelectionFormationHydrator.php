@@ -2,16 +2,16 @@
 
 namespace Formation\Form\SelectionFormation;
 
-use Application\Entity\Db\Activite;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
+use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionFormationHydrator implements HydratorInterface
 {
 
     /**
-     * @param Activite $object
+     * @param HasFormationCollectionInterface $object
      * @return array|void
      */
     public function extract($object): array

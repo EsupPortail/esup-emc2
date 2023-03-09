@@ -423,6 +423,8 @@ return [
             'agentAffectation' => AgentAffectationViewHelper::class,
             'agentStatut' => AgentStatutViewHelper::class,
             'agentGrade' => AgentGradeViewHelper::class,
+
+
         ],
     ],
 

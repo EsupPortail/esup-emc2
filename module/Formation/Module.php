@@ -2,14 +2,14 @@
 
 namespace Formation;
 
+use Laminas\Config\Factory as ConfigFactory;
 use Laminas\Loader\StandardAutoloader;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\Glob;
-use Laminas\Config\Factory as ConfigFactory;
-use UnicaenDbImport\Controller\ConsoleController;
 
 class Module
 {
@@ -24,7 +24,7 @@ class Module
         $sharedEvents->attach(AbstractActionController::class, 'dispatch', function($e) {
             /** @var $e MvcEvent */
             $controller = $e->getTarget();
-            $consoleType = ($controller instanceof ConsoleController);
+            $consoleType = ($controller instanceof AbstractConsoleController) ;
             if (!$consoleType) {
                 $hostname = $controller->getRequest()->getUri()->getHost();
                 if (preg_match('/mes-formations.*/', $hostname)) {

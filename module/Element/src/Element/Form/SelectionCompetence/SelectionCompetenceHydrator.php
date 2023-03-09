@@ -2,16 +2,20 @@
 
 namespace Element\Form\SelectionCompetence;
 
-use Application\Entity\Db\Activite;
-use Application\Entity\Db\FicheMetier;
+use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
+use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Laminas\Form\Element;
 use Laminas\Hydrator\HydratorInterface;
 
 class SelectionCompetenceHydrator implements HydratorInterface {
+    use CompetenceServiceAwareTrait;
+    use CompetenceElementServiceAwareTrait;
 
     /**
-     * @param Activite|FicheMetier $object
+     * @param HasCompetenceCollectionInterface $object
      * @return array|void
      */
     public function extract($object): array
@@ -24,8 +28,36 @@ class SelectionCompetenceHydrator implements HydratorInterface {
         return $data;
     }
 
-    public function hydrate(array $data, $object)
+    /**
+     * @param array $data
+     * @param HasCompetenceCollectionInterface $object
+     * @return HasCompetenceCollectionInterface
+     */
+    public function hydrate(array $data, $object) : object
     {
-        //never used
+        $competenceIds = $data["competences"];
+
+        $competences = [];
+        foreach ($competenceIds as $competenceId) {
+            $competence = $this->getCompetenceService()->getCompetence($competenceId);
+            if ($competence) $competences[$competence->getId()] = $competence;
+        }
+
+        foreach ($object->getCompetenceCollection() as $competenceElement) {
+            if (! isset($competences[$competenceElement->getCompetence()->getId()])) {
+                $this->getCompetenceElementService()->delete($competenceElement);
+            }
+        }
+
+        foreach ($competences as $competence) {
+            if (!$object->hasCompetence($competence)) {
+                $element = new CompetenceElement();
+                $element->setCompetence($competence);
+                $this->getCompetenceElementService()->create($element);
+                $object->addCompetenceElement($element);
+            }
+        }
+
+        return $object;
     }
 }

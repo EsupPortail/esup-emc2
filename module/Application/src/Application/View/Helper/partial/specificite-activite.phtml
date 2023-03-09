@@ -1,39 +1,40 @@
 <?php
 
-use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\SpecificiteActivite;
 use Application\Provider\Privilege\FichePostePrivileges;
+use FicheMetier\Entity\Db\MissionActivite;
+use FichePoste\Entity\Db\MissionAdditionnelle;
 use Metier\Entity\Db\Domaine;
 
 /**
- * @see \Application\View\Helper\SpecificitePosteViewHelper;
- * @var SpecificiteActivite $specificiteActivite
+ * @see \Application\View\Helper\SpecificiteActiviteViewHelper;
+ * @var MissionAdditionnelle $missionAdditionnelle
  * @var array $options
  */
 
-$activite = $specificiteActivite->getActivite();
+$mission = $missionAdditionnelle->getMission();
 $mode = 'affichage';
 if (isset($options["mode"])) $mode = $options["mode"];
 
-$descriptions = $activite->getDescriptions();
-usort($descriptions, function (ActiviteDescription $a, ActiviteDescription $b) { return $a->getOrdre() > $b->getOrdre();});
+$activites = $mission->getActivites();
+usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});
 
-$retrait = explode(";",$specificiteActivite->getRetrait());
+$retrait = explode(";",$missionAdditionnelle->getRetraits());
 $retraits = [];
 foreach ($retrait as $item) $retraits[$item] = true;
 
-$canRetirerActivite = $this->isAllowed($specificiteActivite->getSpecificite()->getFiche(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
+$canRetirerActivite = $this->isAllowed($missionAdditionnelle->getFicheposte(), FichePostePrivileges::FICHEPOSTE_MODIFIER);
 $canGererActivite = $canRetirerActivite;
 
-$agent = $specificiteActivite->getSpecificite()->getFiche()->getAgent();
-$delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($agent):null;
+$agent = $missionAdditionnelle->getFicheposte()->getAgent();
+$delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent):null;
 ?>
 
 <div class="specificite-activite">
     <div class="activite-titre delta_<?php echo $delta; ?>">
         <div class="row">
             <div class="col-md-10">
-                <h3><?php echo $activite->getLibelle(); ?>
+                <h3><?php echo $mission->getLibelle(); ?>
                     <?php if ($delta AND $delta !== 0) : ?>
                         <span class="icon icon-attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
                     <?php endif; ?>
@@ -43,20 +44,20 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
                 <div class="pull-right activite-action">
                     <?php if ($canGererActivite) : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::gererActiviteAction() */ ?>
-                        <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>"
+                        <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-listing"></span></a>
                     <?php endif; ?>
                     <?php if ($canRetirerActivite) : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
-                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $specificiteActivite->getId()], [], true); ?>">
+                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>">
                             <span class="icon icon-retirer"></span></a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
-        <?php $domaines = $activite->getDomaines(); ?>
+        <?php $domaines = $mission->getDomaines(); ?>
         <?php if (!empty($domaines)) : ?>
         <?php foreach ($domaines as $domaine) : ?>
             <?php /** @var Domaine $domaine */ ?>
@@ -74,10 +75,10 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
             <div class="activite-description">
                 Description de l'activité :
                 <ul>
-                    <?php foreach ($descriptions as $description) : ?>
-                        <?php if (!isset($retraits[$description->getId()])) : ?>
+                    <?php foreach ($activites as $activite) : ?>
+                        <?php if (!isset($retraits[$activite->getId()])) : ?>
                             <li>
-                                <?php echo $description->getLibelle(); ?>
+                                <?php echo $activite->getLibelle(); ?>
                             </li>
                         <?php endif; ?>
                     <?php endforeach; ?>
@@ -86,6 +87,13 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
         </div>
         <div class="col-md-4" style="margin-top: 0.5rem;">
 
+            <?php
+                $metiers = [];
+                foreach ($mission->getListeFicheMetier() as $ficheMetier) {
+                    $metier = $ficheMetier->getFicheMetier()->getMetier();
+                    $metiers[$metier->getId()] = $metier;
+                }
+            ?>
             <div class="card panel-default">
                 <div class="card-header">
                     Métiers associés
@@ -93,8 +101,7 @@ $delta = ($activite->getNiveaux())?$activite->getNiveaux()->getDeltaWithAgent($a
                 <div class="card-body">
                     <?php $count = 0; ?>
                     <ul>
-                        <?php foreach ($activite->getFichesMetiers() as $ficheMetier) : ?>
-                            <?php $metier = $ficheMetier->getFiche()->getMetier(); ?>
+                        <?php foreach ($metiers as $metier) : ?>
                             <li>
                                 <?php $count++; ?>
                                 <?php echo $metier->getLibelle(); ?>

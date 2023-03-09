@@ -11,6 +11,7 @@ use Element\Form\Application\ApplicationHydratorFactory;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionApplication\SelectionApplicationFormFactory;
 use Element\Form\SelectionApplication\SelectionApplicationHydrator;
+use Element\Form\SelectionApplication\SelectionApplicationHydratorFactory;
 use Element\Provider\Privilege\ApplicationPrivileges;
 use Element\Service\Application\ApplicationService;
 use Element\Service\Application\ApplicationServiceFactory;
@@ -237,11 +238,10 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            SelectionApplicationHydrator::class => SelectionApplicationHydrator::class,
-        ],
         'factories' => [
             ApplicationHydrator::class => ApplicationHydratorFactory::class,
+            SelectionApplicationHydrator::class => SelectionApplicationHydratorFactory::class,
+
         ],
     ],
     'view_helpers' => [

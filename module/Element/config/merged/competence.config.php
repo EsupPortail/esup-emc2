@@ -11,6 +11,7 @@ use Element\Form\Competence\CompetenceHydratorFactory;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormFactory;
 use Element\Form\SelectionCompetence\SelectionCompetenceHydrator;
+use Element\Form\SelectionCompetence\SelectionCompetenceHydratorFactory;
 use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\Competence\CompetenceServiceFactory;
@@ -206,11 +207,10 @@ return [
         ],
     ],
     'hydrators' => [
-        'invokables' => [
-            SelectionCompetenceHydrator::class => SelectionCompetenceHydrator::class,
-        ],
         'factories' => [
             CompetenceHydrator::class => CompetenceHydratorFactory::class,
+            SelectionCompetenceHydrator::class => SelectionCompetenceHydratorFactory::class,
+
         ],
     ],
     'view_helpers' => [

@@ -44,9 +44,13 @@ $modules = [
     'UnicaenAide',
 //    'UnicaenAlerte',
     'UnicaenIndicateur',
+    'Referentiel',
+
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
+    'FicheMetier',
+    'FichePoste',
     'Structure',
     'Formation',
     'Fichier',

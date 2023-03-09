@@ -8,6 +8,10 @@ use Metier\Form\Domaine\DomaineForm;
 use Metier\Form\Domaine\DomaineFormFactory;
 use Metier\Form\Domaine\DomaineHydrator;
 use Metier\Form\Domaine\DomaineHydratorFactory;
+use Metier\Form\SelectionnerDomaines\SelectionnerDomainesForm;
+use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormFactory;
+use Metier\Form\SelectionnerDomaines\SelectionnerDomainesHydrator;
+use Metier\Form\SelectionnerDomaines\SelectionnerDomainesHydratorFactory;
 use Metier\Provider\Privilege\DomainePrivileges;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Domaine\DomaineServiceFactory;
@@ -153,11 +157,13 @@ return [
     'form_elements' => [
         'factories' => [
             DomaineForm::class => DomaineFormFactory::class,
+            SelectionnerDomainesForm::class => SelectionnerDomainesFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             DomaineHydrator::class => DomaineHydratorFactory::class,
+            SelectionnerDomainesHydrator::class => SelectionnerDomainesHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

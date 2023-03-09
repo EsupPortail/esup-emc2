@@ -20,8 +20,8 @@ $formation = $journee->getInstance()->getFormation();
         <th style="width:8rem; text-align:left; "> Intitulé </th>
         <td> <?php echo $formation->getLibelle(); ?> </td>
     </tr><tr>
-        <th style="width:8rem; text-align:left; "> Horaire </th>
-        <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> du <?php echo $journee->getDebut(); ?> au <?php echo $journee->getFin(); ?> </td>
+        <th style="width:8rem; text-align:left; "> Date </th>
+        <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> de <?php echo $journee->getDebut(); ?> à <?php echo $journee->getFin(); ?> </td>
     </tr><tr>
         <th style="width:8rem; text-align:left; ">Lieu </th>
         <td><?php echo $journee->getLieu(); ?></td>

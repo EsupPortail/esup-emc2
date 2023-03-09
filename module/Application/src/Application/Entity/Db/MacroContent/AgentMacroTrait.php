@@ -288,12 +288,11 @@ trait AgentMacroTrait
 
         if ($fiche === null) return 'Aucune fiche de poste EMC2';
         if ($fiche->getFicheTypeExternePrincipale() === null) return 'Aucune fiche de métier EMC2 principale';
-       $activites = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getActivites();
+       $missions = $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMissions();
 
-        $texte  = "";
-        $texte .= "<ul>";
-        foreach ($activites as $activite) {
-            $texte .= "<li>" . $activite->getActivite()->getCurrentActiviteLibelle()->getLibelle() . "</li>";
+        $texte = "<ul>";
+        foreach ($missions as $mission) {
+            $texte .= "<li>" . $mission->getMission()->getLibelle() . "</li>";
         }
         $texte .= "</ul>";
 

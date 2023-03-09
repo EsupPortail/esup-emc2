@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var array $competences
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+?>
+
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3">
+                <h2>
+                    <span class="icon competence"></span>
+                    Compétences
+                    <span class="badge"><?php echo count($competences); ?></span>
+                </h2>
+            </div>
+            <div class="col-md-9">
+                <div class="float-end">
+                    <?php /** @see \FicheMetier\Controller\GraphiqueController::graphiqueCompetencesAction() */ ?>
+                    <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
+                       class="btn btn-secondary action ajax-modal"
+                    >
+                        <span class="icon icon-diagramme"></span>
+                        Afficher les compétences
+                    </a>
+
+                    <?php if ($actions['modifier'] === true) : ?>
+                        <?php /** @see \Application\Controller\ElementController::ajouterCompetenceElementAction() */ ?>
+                        <a href="<?php echo $this->url('element_/ajouter-competence-element', ['type' => FicheMetier::class, 'id' => $fichemetier->getId()],
+                            ['query' => ['multiple' => true]], true); ?>"
+                           class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"
+                           data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span>
+                            Ajouter des compétences
+                        </a>
+                    <?php endif; ?>
+
+<!--                    --><?php //if ($actions['modifier'] === true) : ?>
+<!--                        --><?php ///** @see \Application\Controller\FicheMetierController::clonerCompetencesAction() */ ?>
+<!--                        <a href="--><?php //echo $this->url('fiche-metier-type/cloner-competences', ['fiche-metier' => $fichemetier->getId()], [], true); ?><!--"-->
+<!--                           class="btn btn-primary action ajax-modal" style="margin: 0 0.5rem;"-->
+<!--                           data-event="modification"-->
+<!--                        >-->
+<!--                            <span class="icon icon-cloner"></span>-->
+<!--                            Cloner depuis une autre fiche-->
+<!--                        </a>-->
+<!--                    --><?php //endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <?php echo $this->competenceBloc($competences, $fichemetier,
+            ['display' => ['titre' => false, 'validation' => false, 'raison' => false],
+                'actions' => $actions]); ?>
+    </div>
+</div>

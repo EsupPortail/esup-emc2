@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @var Mission[] $missionsprincipales
+ * @var FicheMetier $fichemetier
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\Mission;
+
+?>
+
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9"> <h2> Missions principales </h2> </div>
+            <div class="col-md-3">
+                <?php if ($mode === 'edition-fiche-metier') : ?>
+                    <?php /** @see FicheMetierController::ajouterMissionAction() */ ?>
+                    <a class="btn btn-primary ajax-modal" style="margin: 0 0.5rem;"
+                       data-event="modification"
+                    href="<?php echo $this->url('fiche-metier/ajouter-mission', ['fiche-metier' => $fichemetier->getId()], [], true); ?>">
+                    <span class="icon icon-ajouter"></span>
+                    Ajouter une mission
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:rgb(80,80,80);">
+        <?php foreach ($missionsprincipales as $missionprincipale) : ?>
+            <?php echo $this->activite($missionprincipale, $mode, ['fichemetier' => $fichemetier]); ?>
+        <?php endforeach; ?>
+    </div>
+</div>

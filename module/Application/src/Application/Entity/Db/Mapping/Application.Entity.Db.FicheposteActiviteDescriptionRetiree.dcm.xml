@@ -9,13 +9,13 @@
         <many-to-one target-entity="Application\Entity\Db\FichePoste"  field="fichePoste">
             <join-column name="ficheposte_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\FicheMetier"  field="ficheMetier">
+        <many-to-one target-entity="FicheMetier\Entity\Db\FicheMetier"  field="ficheMetier">
             <join-column name="fichemetier_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\Activite"  field="activite">
+        <many-to-one target-entity="FicheMetier\Entity\Db\Mission"  field="mission">
             <join-column name="activite_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Application\Entity\Db\ActiviteDescription"  field="description">
+        <many-to-one target-entity="FicheMetier\Entity\Db\MissionActivite"  field="activite">
             <join-column name="description_id" referenced-column-name="id"/>
         </many-to-one>
 

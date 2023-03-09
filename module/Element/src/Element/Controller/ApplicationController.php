@@ -2,13 +2,9 @@
 
 namespace Element\Controller;
 
-use Application\Entity\Db\Agent;
-use Application\Entity\Db\FicheMetier;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Application;
-use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\ApplicationTheme;
 use Element\Form\Application\ApplicationForm;
 use Element\Form\Application\ApplicationFormAwareTrait;
@@ -17,13 +13,14 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\ApplicationTheme\ApplicationThemeServiceAwareTrait;
 use Element\Service\Niveau\NiveauServiceAwareTrait;
-use Metier\Service\Domaine\DomaineServiceAwareTrait;
-use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenApp\View\Model\CsvModel;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Metier\Service\Domaine\DomaineServiceAwareTrait;
+use Metier\Service\Metier\MetierServiceAwareTrait;
+use UnicaenApp\View\Model\CsvModel;
 
 class ApplicationController  extends AbstractActionController {
     use ApplicationServiceAwareTrait;

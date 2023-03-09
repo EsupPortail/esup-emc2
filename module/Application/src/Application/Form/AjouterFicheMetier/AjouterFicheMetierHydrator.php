@@ -3,7 +3,7 @@
 namespace Application\Form\AjouterFicheMetier;
 
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class AjouterFicheMetierHydrator implements HydratorInterface {

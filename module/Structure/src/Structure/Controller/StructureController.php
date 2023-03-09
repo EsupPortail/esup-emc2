@@ -4,7 +4,6 @@ namespace Structure\Controller;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
@@ -23,12 +22,12 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenDbImport\Entity\Db\Service\Source\SourceServiceAwareTrait;
-use UnicaenDbImport\Entity\Db\Source;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -44,6 +43,7 @@ class StructureController extends AbstractActionController {
     use SpecificitePosteServiceAwareTrait;
     use UserServiceAwareTrait;
     use SourceServiceAwareTrait;
+    use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use DelegueServiceAwareTrait;
@@ -459,5 +459,19 @@ class StructureController extends AbstractActionController {
         $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
         return $pdf->export("temp.pdf");
     }
+
+    public function synchroniserAction() : ViewModel
+    {
+        $log = "Synchronisation des données liées aux structures\n";
+
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_TYPE");
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE");
+
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_RESPONSABLE");
+        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_GESTIONNAIRE");
+
+        return new ViewModel(['log' => $log]);
+    }
+
 
 }

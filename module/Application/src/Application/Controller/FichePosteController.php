@@ -2,10 +2,8 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\ActiviteDescription;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Expertise;
-use Application\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -22,19 +20,25 @@ use Application\Form\SpecificitePoste\SpecificitePosteFormAwareTrait;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Provider\Validation\FichePosteValidations;
-use Application\Service\Activite\ActiviteServiceAwareTrait;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
-use Application\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Notification\NotificationServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\Poste\PosteServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
+use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -43,11 +47,6 @@ use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -55,7 +54,6 @@ class FichePosteController extends AbstractActionController {
     /** Trait utilitaire */
 
     /** Service **/
-    use ActiviteServiceAwareTrait;
     use ActivitesDescriptionsRetireesServiceAwareTrait;
     use AgentServiceAwareTrait;
     use ApplicationsRetireesServiceAwareTrait;
@@ -64,6 +62,7 @@ class FichePosteController extends AbstractActionController {
     use ExpertiseServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
+    use MissionPrincipaleServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParcoursDeFormationServiceAwareTrait;
     use PosteServiceAwareTrait;
@@ -215,8 +214,7 @@ class FichePosteController extends AbstractActionController {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
 
-        /** @var FichePoste $fiche */
-        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this, 'fiche-poste', false);
+        $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
         if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
@@ -224,7 +222,6 @@ class FichePosteController extends AbstractActionController {
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //TODO remettre en place après stabilisation
@@ -237,7 +234,6 @@ class FichePosteController extends AbstractActionController {
             'structure' => $structure,
             'applications' => $applications,
             'competences' => $competences,
-            'formations' => $formations,
             'activites' => $activites,
             'parcours' => $parcours,
         ]);
@@ -501,11 +497,10 @@ class FichePosteController extends AbstractActionController {
                 }
 
                 //comportement par defaut (ajout de toutes les activités)
-                /** @var FicheMetier */
-                $activites = $ficheTypeExterne->getFicheType()->getActivites();
+                $missions = $ficheTypeExterne->getFicheType()->getMissions();
                 $tab = [];
-                foreach ($activites as $activite) {
-                    $tab[] = $activite->getActivite()->getId();
+                foreach ($missions as $mission) {
+                    $tab[] = $mission->getMission()->getId();
                 }
                 $text = implode(";",$tab);
                 $ficheTypeExterne->setActivites($text);
@@ -603,11 +598,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    /**
-     * @param FichePoste $fiche
-     * @param array $data
-     */
-    private function checkValidite(FichePoste $fiche, $data)
+    private function checkValidite(FichePoste $fiche, $data) : ?ViewModel
     {
         $cut = false;
         if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
@@ -625,6 +616,7 @@ class FichePosteController extends AbstractActionController {
         if ($cut) {
             return (new ViewModel(['title' => 'Informations saisies incorrectes']))->setTemplate('layout/flashMessage');
         }
+        return null;
     }
 
     /** Applications et Compétences de la fiche de postes  ************************************************************/
@@ -699,24 +691,24 @@ class FichePosteController extends AbstractActionController {
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
-        $activite = $this->getActiviteService()->getRequestedActivite($this);
+        $mission = $this->getMissionPrincipaleService()->getRequestedMissionPrincipale($this);
 
         /**
-         * @var ActiviteDescription[] $descriptions
+         * @var MissionActivite[] $activites
          * @var FicheposteActiviteDescriptionRetiree[] $retirees
          */
-        $descriptions = $activite->getDescriptions();
-        $retirees = $this->getActivitesDescriptionsRetireesService()->getActivitesDescriptionsRetirees($ficheposte, $fichemetier, $activite);
+        $activites = $mission->getActivites();
+        $retirees = $this->getActivitesDescriptionsRetireesService()->getActivitesDescriptionsRetirees($ficheposte, $fichemetier, $mission);
 
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
 
-            foreach ($descriptions as $description) {
+            foreach ($activites as $description) {
                 $found = null;
                 foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null AND $retiree->getDescription() === $description) {
+                    if ($retiree->getHistoDestruction() === null AND $retiree->getActivite() === $description) {
                         $found = $retiree;
                     }
                 }
@@ -727,8 +719,8 @@ class FichePosteController extends AbstractActionController {
                     $item = new FicheposteActiviteDescriptionRetiree();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
-                    $item->setActivite($activite);
-                    $item->setDescription($description);
+                    $item->setMission($mission);
+                    $item->setActivite($description);
                     $this->getActivitesDescriptionsRetireesService()->create($item);
                 }
             }
@@ -736,11 +728,11 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => "Sélection de sous-activité pour l'activité [" .$activite->getLibelle() ."]",
+            'title' => "Sélection de sous-activité pour l'activité [" .$mission->getLibelle() ."]",
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
-            'activite' => $activite,
-            'descriptions' => $descriptions,
+            'mission' => $mission,
+            'activites' => $activites,
             'retirees' => $retirees,
         ]);
     }

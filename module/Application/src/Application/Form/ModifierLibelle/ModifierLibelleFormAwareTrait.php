@@ -4,25 +4,16 @@ namespace Application\Form\ModifierLibelle;
 
 trait ModifierLibelleFormAwareTrait {
 
-    /** @var ModifierLibelleForm */
-    private $modifierLibelleForm;
+    private ModifierLibelleForm $modifierLibelleForm;
 
-    /**
-     * @return ModifierLibelleForm
-     */
-    public function getModifierLibelleForm()
+    public function getModifierLibelleForm() : ModifierLibelleForm
     {
         return $this->modifierLibelleForm;
     }
 
-    /**
-     * @param ModifierLibelleForm $modifierLibelleForm
-     * @return ModifierLibelleForm
-     */
-    public function setModifierLibelleForm($modifierLibelleForm)
+    public function setModifierLibelleForm(ModifierLibelleForm $modifierLibelleForm) : void
     {
         $this->modifierLibelleForm = $modifierLibelleForm;
-        return $this->modifierLibelleForm;
     }
 
 }
