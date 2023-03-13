@@ -85,7 +85,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         </div>
         <?php if ($this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_GRAPHIQUE)) AND $agent) : ?>
             <div class="pull-right">
-                <a href="<?php echo $this->url('fiche-metier-type/graphique-competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary ajax-modal">Compétences métier/agent</a>
+                <a href="<?php echo $this->url('graphique/competences', ['fiche-metier' => $fichemetier->getId(), 'agent' => $agent->getId()], [], true); ?>" class="btn btn-primary ajax-modal">Compétences métier/agent</a>
             </div>
         <?php endif; ?>
     </div>
