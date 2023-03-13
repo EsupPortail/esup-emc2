@@ -40,8 +40,6 @@ class FormationControllerFactory
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $sourceService->setEntityManager($entityManager);
 
         /**
          * @var FormationForm $formationForm
