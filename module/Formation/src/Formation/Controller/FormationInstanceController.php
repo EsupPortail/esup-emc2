@@ -171,23 +171,6 @@ class FormationInstanceController extends AbstractActionController
         return $vm;
     }
 
-    /** Question suite à la formation */
-
-    public function renseignerQuestionnaireAction() : ViewModel
-    {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
-
-        if ($inscrit->getQuestionnaire() === null) {
-            $questionnaire = $this->getFormulaireInstanceService()->createInstance('QUESTIONNAIRE_FORMATION');
-            $inscrit->setQuestionnaire($questionnaire);
-            $this->getFormationInstanceInscritService()->update($inscrit);
-        }
-
-        return new ViewModel([
-            'inscrit' => $inscrit,
-        ]);
-    }
-
     public function ouvrirInscriptionAction() : Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);

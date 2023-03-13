@@ -52,6 +52,7 @@ class SqlHelperService {
             if ($type === 'destination') $columns[] = $d;
         }
         if ($type === 'destination') $columns[] = 'deleted_on';
+        if ($type === 'destination') $columns[] = 'source_id';
 
         $sql = "select ".implode(" , ", $columns)." from ".$table;
         $data = $this->executeRequeteRef($entityManager, $sql, []);
@@ -69,17 +70,20 @@ class SqlHelperService {
         if ($value === null or $value === '') return "null";
         return "'". str_replace("'","''",$value) . "'";
     }
-    public function insert(EntityManager $entityManager, string $table, array $item, array $correspondance) : void
+    public function insert(EntityManager $entityManager, string $table, array $item, array $correspondance, ?string $source = null) : void
     {
         $columns = []; foreach ($correspondance as $d) $columns[] = $d; $columns[] = "created_on";
+        if ($source !== null) $columns[] = 'source_id';
         $values = []; foreach ($correspondance as $s => $d) $values[] = $this->echapValue($item[$s]); $values[] = "now()";
-        $sql  = "insert into ".$table." (".implode(',',$columns).") values (".implode(',',$values).")";
+        if ($source !== null) $values[] = "'".$source."'";
+            $sql  = "insert into ".$table." (".implode(',',$columns).") values (".implode(',',$values).")";
         $this->executeRequeteRef($entityManager, $sql, []);
     }
 
-    public function update(EntityManager $entityManager, string $table, array $item, array $correspondance, string $id) : void
+    public function update(EntityManager $entityManager, string $table, array $item, array $correspondance, string $id, ?string $source = null) : void
     {
         $values = []; foreach ($correspondance as $s => $d) $values[] = $d."=".$this->echapValue($item[$s]);
+        if ($source !== null) $values[] = "source_id='".$source."'";
         $values[] = "updated_on=now()";
         $sql  = "update ".$table. " set " . implode(" , ", $values). " where id=:id";
         $this->executeRequeteRef($entityManager, $sql, ["id" => $id]);

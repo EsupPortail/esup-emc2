@@ -53,35 +53,6 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
             }
         }
 
-        switch ($privilege) {
-            case FormationPrivileges::FORMATION_QUESTIONNAIRE_VISUALISER:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                    case AppRoleProvider::OBSERVATEUR:
-                    case AppRoleProvider::DRH:
-                        return true;
-                    case RoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    case RoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
-                    case AppRoleProvider::AGENT:
-                        return ($entity->getAgent()->getUtilisateur() !== null and $user === $entity->getAgent()->getUtilisateur());
-                    default :
-                        return false;
-                }
-            case FormationPrivileges::FORMATION_QUESTIONNAIRE_MODIFIER:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                        return true;
-                    case AppRoleProvider::AGENT:
-                        return ($entity->getAgent()->getUtilisateur() !== null and $user === $entity->getAgent()->getUtilisateur());
-                    default :
-                        return false;
-                }
-        }
-
         return true;
     }
 }

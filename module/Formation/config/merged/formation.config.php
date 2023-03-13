@@ -40,18 +40,6 @@ return [
             ],
         ],
         'rule_providers' => [
-            PrivilegeRuleProvider::class => [
-                'allow' => [
-                    [
-                        'privileges' => [
-                            FormationPrivileges::FORMATION_QUESTIONNAIRE_VISUALISER,
-                            FormationPrivileges::FORMATION_QUESTIONNAIRE_MODIFIER,
-                        ],
-                        'resources' => ['Inscrit'],
-                        'assertion' => FormationInstanceInscritAssertion::class
-                    ],
-                ],
-            ],
         ],
         'guards' => [
             PrivilegeController::class => [

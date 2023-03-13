@@ -16,5 +16,4 @@ class FormationinstancePrivileges extends Privileges
     const FORMATIONINSTANCE_GERER_SEANCE = 'formationinstance-formationinstance_gerer_seance';
     const FORMATIONINSTANCE_GERER_FORMATEUR = 'formationinstance-formationinstance_gerer_formateur';
     const FORMATIONINSTANCE_ANNULER =  'formationinstance-formationinstance_annuler';
-    const FORMATIONINSTANCE_QUESTIONNAIRE = 'formationinstance-formationinstance_questionnaire';
 }

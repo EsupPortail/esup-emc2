@@ -55,11 +55,11 @@ use Formation\Entity\Db\FormationInstance;
     <br/>
     Session <?php echo $instance->getId(); ?> du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?>
     <br/>
-    <?php if ($instance->getSource()->getCode() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+    <?php if ($instance->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
         <?php echo $instance->getType(); ?> - <?php echo $instance->getDuree(); ?> -
     <?php endif; ?>
     Liste principale
-    <?php if ($instance->getSource()->getCode() !== HasSourceInterface::SOURCE_LAGAF) : ?>
+    <?php if ($instance->getSource() !== HasSourceInterface::SOURCE_LAGAF) : ?>
         <?php echo count($instance->getListePrincipale());  ?>/<?php echo $instance->getNbPlacePrincipale(); ?>
     <?php endif; ?>
 <!--    --->

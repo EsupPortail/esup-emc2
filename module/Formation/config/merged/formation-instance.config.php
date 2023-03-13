@@ -64,15 +64,6 @@ return [
                 [
                     'controller' => FormationInstanceController::class,
                     'action' => [
-                        'renseigner-questionnaire',
-                    ],
-                    'privileges' => [
-                        FormationinstancePrivileges::FORMATIONINSTANCE_QUESTIONNAIRE,
-                    ],
-                ],
-                [
-                    'controller' => FormationInstanceController::class,
-                    'action' => [
                         'ouvrir-inscription',
                         'fermer-inscription',
                         'envoyer-convocation',
@@ -245,16 +236,6 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'modifier-informations',
-                            ],
-                        ],
-                    ],
-                    'renseigner-questionnaire' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/renseigner-questionnaire/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceController::class,
-                                'action'     => 'renseigner-questionnaire',
                             ],
                         ],
                     ],
