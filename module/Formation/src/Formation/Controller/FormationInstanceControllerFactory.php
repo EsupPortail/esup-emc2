@@ -11,7 +11,6 @@ use Formation\Service\Presence\PresenceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -32,7 +31,6 @@ class FormationInstanceControllerFactory
          * @var FormationService $formationService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var FormulaireInstanceService $formulaireInstanceService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -42,7 +40,6 @@ class FormationInstanceControllerFactory
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -59,7 +56,6 @@ class FormationInstanceControllerFactory
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setFormulaireInstanceService($formulaireInstanceService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
