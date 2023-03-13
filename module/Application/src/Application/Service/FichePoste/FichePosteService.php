@@ -795,14 +795,6 @@ EOS;
             }
         }
 
-        foreach ($missions as $mission) {
-            foreach ($mission->getFormationListe() as $formation) {
-                $dictionnaire[$formation->getId()]["object"] = $formation;
-                $dictionnaire[$formation->getId()]["raison"][] = $mission;
-                $dictionnaire[$formation->getId()]["conserve"] = true;
-            }
-        }
-
         return $dictionnaire;
     }
 
