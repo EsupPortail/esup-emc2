@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Expertise\ExpertiseForm;
-use Application\Form\Poste\PosteForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
@@ -16,7 +15,6 @@ use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\Notification\NotificationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
-use Application\Service\Poste\PosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
@@ -50,7 +48,6 @@ class FichePosteControllerFactory {
          * @var ExpertiseService $expertiseService
          * @var NotificationService $notificationService
          * @var ParcoursDeFormationService $parcoursService
-         * @var PosteService $posteService
          * @var SpecificitePosteService $specificitePosteService
          * @var ValidationInstanceService $validationInstanceService
          */
@@ -65,7 +62,6 @@ class FichePosteControllerFactory {
         $etatService = $container->get(EtatService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $notificationService = $container->get(NotificationService::class);
-        $posteService = $container->get(PosteService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -74,7 +70,6 @@ class FichePosteControllerFactory {
          * @var AjouterFicheMetierForm $ajouterFicheMetierForm
          * @var AssocierTitreForm $associerTitreForm
          * @var ExpertiseForm $expertiseForm
-         * @var PosteForm $posteForm
          * @var RifseepForm $rifseepForm
          * @var SelectionEtatForm $selectionEtatForm
          * @var SpecificitePosteForm $specificiftePosteForm
@@ -82,7 +77,6 @@ class FichePosteControllerFactory {
         $ajouterFicheMetierForm = $container->get('FormElementManager')->get(AjouterFicheMetierForm::class);
         $associerTitreForm = $container->get('FormElementManager')->get(AssocierTitreForm::class);
         $expertiseForm = $container->get('FormElementManager')->get(ExpertiseForm::class);
-        $posteForm = $container->get('FormElementManager')->get(PosteForm::class);
         $rifseepForm = $container->get('FormElementManager')->get(RifseepForm::class);
         $selectionEtatForm = $container->get('FormElementManager')->get(SelectionEtatForm::class);
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
@@ -103,7 +97,6 @@ class FichePosteControllerFactory {
         $controller->setEtatService($etatService);
         $controller->setExpertiseService($expertiseService);
         $controller->setNotificationService($notificationService);
-        $controller->setPosteService($posteService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);
         $controller->setValidationInstanceService($validationInstanceService);
@@ -111,7 +104,6 @@ class FichePosteControllerFactory {
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);
         $controller->setAssocierTitreForm($associerTitreForm);
         $controller->setExpertiseForm($expertiseForm);
-        $controller->setPosteForm($posteForm);
         $controller->setRifseepForm($rifseepForm);
         $controller->setSelectionEtatForm($selectionEtatForm);
         $controller->setSpecificitePosteForm($specificiftePosteForm);

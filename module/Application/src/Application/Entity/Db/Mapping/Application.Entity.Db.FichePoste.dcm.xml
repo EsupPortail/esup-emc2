@@ -40,7 +40,6 @@
         </many-to-many>
 
         <field name="finValidite"     type="datetime"                 column="fin_validite"     nullable="false"/>
-        <one-to-one field="poste" target-entity="Application\Entity\Db\Poste" mapped-by="ficheposte"/>
         <!-- DONNEE POUR L'HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

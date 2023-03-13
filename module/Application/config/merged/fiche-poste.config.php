@@ -10,10 +10,6 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierFormFactory;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydrator;
 use Application\Form\AjouterFicheMetier\AjouterFicheMetierHydratorFactory;
-use Application\Form\AssocierPoste\AssocierPosteForm;
-use Application\Form\AssocierPoste\AssocierPosteFormFactory;
-use Application\Form\AssocierPoste\AssocierPosteHydrator;
-use Application\Form\AssocierPoste\AssocierPosteHydratorFactory;
 use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\AssocierTitre\AssocierTitreFormFactory;
 use Application\Form\AssocierTitre\AssocierTitreHydrator;
@@ -22,10 +18,6 @@ use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Expertise\ExpertiseFormFactory;
 use Application\Form\Expertise\ExpertiseHydrator;
 use Application\Form\Expertise\ExpertiseHydratorFactory;
-use Application\Form\Poste\PosteForm;
-use Application\Form\Poste\PosteFormFactory;
-use Application\Form\Poste\PosteHydrator;
-use Application\Form\Poste\PosteHydratorFactory;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\Rifseep\RifseepFormFactory;
 use Application\Form\Rifseep\RifseepHydrator;
@@ -45,8 +37,6 @@ use Application\Service\Expertise\ExpertiseService;
 use Application\Service\Expertise\ExpertiseServiceFactory;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FichePoste\FichePosteServiceFactory;
-use Application\Service\Poste\PosteService;
-use Application\Service\Poste\PosteServiceFactory;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceFactory;
 use Application\View\Helper\FicheMetierExterneViewHelper;
@@ -54,10 +44,10 @@ use Application\View\Helper\FichePosteGraphViewHelper;
 use Application\View\Helper\FichesPostesAsArrayViewHelperFactory;
 use Application\View\Helper\RaisonsViewHelper;
 use Application\View\Helper\SpecificitePosteViewHelper;
-use UnicaenPrivilege\Guard\PrivilegeController;
-use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
@@ -607,7 +597,6 @@ return [
             CompetencesRetireesService::class => CompetencesRetireesServiceFactory::class,
             ExpertiseService::class => ExpertiseServiceFactory::class,
             FichePosteService::class => FichePosteServiceFactory::class,
-            PosteService::class => PosteServiceFactory::class,
             SpecificitePosteService::class => SpecificitePosteServiceFactory::class,
         ],
     ],
@@ -619,10 +608,8 @@ return [
     'form_elements' => [
         'factories' => [
             AjouterFicheMetierForm::class => AjouterFicheMetierFormFactory::class,
-            AssocierPosteForm::class => AssocierPosteFormFactory::class,
             AssocierTitreForm::class => AssocierTitreFormFactory::class,
             ExpertiseForm::class => ExpertiseFormFactory::class,
-            PosteForm::class => PosteFormFactory::class,
             SpecificitePosteForm::class => SpecificitePosteFormFactory::class,
             RifseepForm::class => RifseepFormFactory::class,
         ],
@@ -633,10 +620,8 @@ return [
         ],
         'factories' => [
             AjouterFicheMetierHydrator::class => AjouterFicheMetierHydratorFactory::class,
-            AssocierPosteHydrator::class => AssocierPosteHydratorFactory::class,
             AssocierTitreHydrator::class => AssocierTitreHydratorFactory::class,
             ExpertiseHydrator::class => ExpertiseHydratorFactory::class,
-            PosteHydrator::class => PosteHydratorFactory::class,
             RifseepHydrator::class => RifseepHydratorFactory::class,
         ],
     ],

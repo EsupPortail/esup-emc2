@@ -5,7 +5,6 @@ namespace Structure\Entity\Db;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
-use Application\Entity\Db\Poste;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use DateTime;
@@ -162,28 +161,6 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $array = $this->responsables->toArray();
         $array = array_filter($array, function (StructureResponsable $a) { return !$a->isDeleted() ;});
         return $array;
-    }
-
-    /** POSTE - STATUER ****************************************************************************************************/
-
-    public function getPostes() : array
-    {
-        return $this->postes->toArray();
-    }
-
-    public function addPoste(Poste $poste) : void
-    {
-        $this->postes->add($poste);
-    }
-
-    public function removePoste(Poste $poste) : void
-    {
-        $this->postes->removeElement($poste);
-    }
-
-    public function hasPoste(Poste $poste) : bool
-    {
-        return $this->postes->contains($poste);
     }
 
     public function getMissions() : array

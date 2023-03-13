@@ -53,9 +53,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** @var array */
     private array $dictionnaires = [];
 
-    private ?Poste $poste = null;
-
-
     public function __invoke()
     {
         $this->fichesMetiers = new ArrayCollection();
@@ -88,16 +85,6 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     public function setAgent(?Agent $agent) : void
     {
         $this->agent = $agent;
-    }
-
-    public function getPoste() : ?Poste
-    {
-        return $this->poste;
-    }
-
-    public function setPoste(?Poste $poste) : void
-    {
-        $this->poste = $poste;
     }
 
     public function getRifseep(): ?int
