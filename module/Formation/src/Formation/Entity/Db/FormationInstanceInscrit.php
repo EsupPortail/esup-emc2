@@ -51,91 +51,53 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $this->reponsesEnquete = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FormationInstance|null
-     */
     public function getInstance() : ?FormationInstance
     {
         return $this->instance;
     }
 
-    /**
-     * @param FormationInstance|null $instance
-     * @return FormationInstanceInscrit
-     */
-    public function setInstance(?FormationInstance $instance): FormationInstanceInscrit
+    public function setInstance(?FormationInstance $instance): void
     {
         $this->instance = $instance;
-        return $this;
     }
 
-    /**
-     * @return Agent
-     */
     public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @return FormationInstanceInscrit
-     */
-    public function setAgent(?Agent $agent) : FormationInstanceInscrit
+    public function setAgent(?Agent $agent) : void
     {
         $this->agent = $agent;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getListe() : ?string
     {
         return $this->liste;
     }
 
-    /**
-     * @param string|null $liste
-     * @return FormationInstanceInscrit
-     */
-    public function setListe(?string $liste) : FormationInstanceInscrit
+    public function setListe(?string $liste) : void
     {
         $this->liste = $liste;
-        return $this;
     }
 
-
-    /**
-     * @return FormationInstanceFrais|null
-     */
     public function getFrais(): ?FormationInstanceFrais
     {
         return $this->frais;
     }
 
-    /**
-     * @param FormationInstanceFrais|null $frais
-     * @return FormationInstanceInscrit
-     */
-    public function setFrais(?FormationInstanceFrais $frais): FormationInstanceInscrit
+    public function setFrais(?FormationInstanceFrais $frais): void
     {
         $this->frais = $frais;
-        return $this;
     }
 
 
-    /**
-     * @return EnqueteReponse[]
-     */
+    /** @return EnqueteReponse[] */
     public function getReponsesEnquete(): array
     {
         $responses = $this->reponsesEnquete->toArray();
