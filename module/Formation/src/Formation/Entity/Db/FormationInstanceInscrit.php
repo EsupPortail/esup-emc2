@@ -10,8 +10,9 @@ use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatInterface;
 use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -23,7 +24,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
-    public function getResourceId()
+    public function getResourceId() : string
     {
         return 'Inscrit';
     }
@@ -31,28 +32,24 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     const PRINCIPALE = 'principale';
     const COMPLEMENTAIRE = 'complementaire';
 
-    /** @var integer */
-    private $id;
-    /** @var FormationInstance */
-    private $instance;
-    /** @var Agent */
-    private $agent;
-    /** @var string */
-    private $liste;
-    /** @var ArrayCollection (Presence) */
-    private $presences;
-    /** @var FormationInstanceFrais */
-    private $frais;
-    /** @var FormulaireInstance */
-    private $questionnaire;
-    /** @var string|null */
-    private $complement;
-    private ?DateTime $validationEnquete;
+    private ?int $id = null;
+    private ?FormationInstance $instance = null;
+    private ?Agent $agent = null;
+    private ?string $liste = null;
+    private Collection $presences;
+    private ?FormationInstanceFrais $frais = null;
+    private ?string $complement = null;
+    private ?DateTime $validationEnquete = null;
     private Collection $reponsesEnquete;
-
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
     private ?string $justificationRefus = null;
+
+    public function __construct()
+    {
+        $this->presences = new ArrayCollection();
+        $this->reponsesEnquete = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -135,30 +132,12 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         return $this;
     }
 
-    /**
-     * @return FormulaireInstance|null
-     */
-    public function getQuestionnaire(): ?FormulaireInstance
-    {
-        return $this->questionnaire;
-    }
-
-    /**
-     * @param FormulaireInstance $questionnaire
-     * @return FormationInstanceInscrit
-     */
-    public function setQuestionnaire(FormulaireInstance $questionnaire): FormationInstanceInscrit
-    {
-        $this->questionnaire = $questionnaire;
-        return $this;
-    }
 
     /**
      * @return EnqueteReponse[]
      */
     public function getReponsesEnquete(): array
     {
-        if ($this->reponsesEnquete === null) return [];
         $responses = $this->reponsesEnquete->toArray();
         $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
         return $responses;
@@ -239,7 +218,11 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
             }
             if ($journee->getType() === Seance::TYPE_VOLUME) {
                 $volume = $journee->getVolume();
-                $temp = new DateInterval('PT'.$volume.'H');
+                try {
+                    $temp = new DateInterval('PT' . $volume . 'H');
+                } catch (Exception $e) {
+                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]");
+                }
                 $sum->add($temp);
             }
         }

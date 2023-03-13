@@ -96,7 +96,7 @@ create table formation_instance
         constraint formation_instance_unicaen_etat_etat_id_fk
             references unicaen_etat_etat,
     auto_inscription        boolean default false not null,
-    source_id               bigint,
+    source_id               varchar(100),
     id_source               varchar(256),
     histo_creation          timestamp             not null,
     histo_createur_id       integer               not null
@@ -132,11 +132,7 @@ create table formation_instance_inscrit
             references agent
             on delete cascade,
     liste                     varchar(64),
-    questionnaire_id          integer
-        constraint formation_instance_inscrit_autoform_formulaire_instance_id_fk
-            references unicaen_autoform_formulaire_instance
-            on delete set null,
-    source_id                 bigint,
+    source_id                 varchar(100),
     id_source                 varchar(100),
     etat_id                   integer
         constraint formation_instance_inscrit_unicaen_etat_etat_id_fk
@@ -546,9 +542,7 @@ WITH d(code, lib, ordre) AS (
     SELECT 'formation_ajouter', 'Ajouter une formation ', 30 UNION
     SELECT 'formation_modifier', 'Modifier une formation ', 40 UNION
     SELECT 'formation_historiser', 'Historiser/Restaurer une formation ', 50 UNION
-    SELECT 'formation_supprimer', 'Supprimer une formation ', 60 UNION
-    SELECT 'formation_questionnaire_visualiser', 'Afficher les questionnaires de retour de formation', 110 UNION
-    SELECT 'formation_questionnaire_modifier', 'Renseigner les questionnaires de retour de formation', 120
+    SELECT 'formation_supprimer', 'Supprimer une formation ', 60
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
