@@ -22,6 +22,7 @@ use Application\Provider\Template\PdfTemplate;
 use Application\Provider\Validation\FichePosteValidations;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
@@ -56,6 +57,8 @@ class FichePosteController extends AbstractActionController {
     /** Service **/
     use ActivitesDescriptionsRetireesServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use AgentPosteServiceAwareTrait;
+
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
     use EtatServiceAwareTrait;
@@ -206,6 +209,7 @@ class FichePosteController extends AbstractActionController {
             'activites' => $activites,
             'parcours' => $parcours,
             'structure' => $structure,
+            'postes' => ($fiche->getAgent())?$this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()):[],
         ]);
     }
 
@@ -236,6 +240,7 @@ class FichePosteController extends AbstractActionController {
             'competences' => $competences,
             'activites' => $activites,
             'parcours' => $parcours,
+            'postes' => ($fiche->getAgent())?$this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()):[],
         ]);
     }
 

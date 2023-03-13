@@ -7,8 +7,10 @@
  * @var Competence[] $competences
  * @var Application[] $applications
  * @var Structure $structure
+ * @var AgentPoste[] $postes
  */
 
+use Application\Entity\Db\AgentPoste;
 use Element\Entity\Db\Application;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheTypeExterne;
@@ -85,7 +87,7 @@ $canExport   = $canAfficher;
     </div>
 
     <?php echo $this->partial('partial/environnement-poste', ['fiche' => $fiche, 'agent' => $agent, 'structure' => $structure, 'mode' => 'affichage']); ?>
-    <?php echo $this->partial('partial/informations-poste', ['fiche' => $fiche, 'mode' => 'affichage']); ?>
+    <?php echo $this->partial('partial/informations-poste', ['postes' => $postes, 'mode' => 'affichage']); ?>
 
     <!-- FICHES TYPES ----------------------------------------------------------------------------------------------------->
 

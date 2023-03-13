@@ -26,6 +26,8 @@ use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentGrade\AgentGradeServiceFactory;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceFactory;
+use Application\Service\AgentPoste\AgentPosteService;
+use Application\Service\AgentPoste\AgentPosteServiceFactory;
 use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentQuotite\AgentQuotiteServiceFactory;
 use Application\Service\AgentStatut\AgentStatutService;
@@ -396,6 +398,7 @@ return [
             AgentAffectationService::class => AgentAffectationServiceFactory::class,
             AgentGradeService::class => AgentGradeServiceFactory::class,
             AgentMissionSpecifiqueService::class => AgentMissionSpecifiqueServiceFactory::class,
+            AgentPosteService::class => AgentPosteServiceFactory::class,
             AgentQuotiteService::class => AgentQuotiteServiceFactory::class,
             AgentStatutService::class => AgentStatutServiceFactory::class,
         ],

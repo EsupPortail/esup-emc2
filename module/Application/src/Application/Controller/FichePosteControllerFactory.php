@@ -9,6 +9,7 @@ use Application\Form\Poste\PosteForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
@@ -39,6 +40,7 @@ class FichePosteControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentPosteService $agentPosteService
          * @var RenduService $renduService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
@@ -53,6 +55,7 @@ class FichePosteControllerFactory {
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
+        $agentPosteService = $container->get(AgentPosteService::class);
         $renduService = $container->get(RenduService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
@@ -90,6 +93,7 @@ class FichePosteControllerFactory {
         $controller = new FichePosteController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentPosteService($agentPosteService);
         $controller->setRenduService($renduService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);

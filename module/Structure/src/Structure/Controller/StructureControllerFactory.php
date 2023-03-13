@@ -62,9 +62,6 @@ class StructureControllerFactory {
         $userService = $container->get(UserService::class);
         $synchronisationService = $container->get(SynchronisationService::class);
 
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $sourceService->setEntityManager($entityManager);
-
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
          * @var SelectionAgentForm $selectionAgentForm
