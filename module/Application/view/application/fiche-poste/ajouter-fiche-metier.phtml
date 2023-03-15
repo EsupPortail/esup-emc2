@@ -23,7 +23,7 @@ use Application\Form\AjouterFicheMetier\AjouterFicheMetierForm;
 
         if (value !== undefined && value !== "")
         {
-            let url = "../../fiche-metier-type/afficher/" + value + '?popup=true';
+            let url = "../../fiche-metier/afficher/" + value + '?popup=true';
             $.ajax({
                 type: "POST",
                 url: url,

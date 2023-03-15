@@ -28,7 +28,6 @@ class AgentAssertion extends AbstractAssertion
         }
 
         /** @var Agent $entity */
-
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();

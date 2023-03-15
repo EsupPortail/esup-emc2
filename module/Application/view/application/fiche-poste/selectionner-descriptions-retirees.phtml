@@ -44,7 +44,7 @@ function isIn(array $retirees, MissionActivite $activite) : bool
                     name="<?php echo $description->getId(); ?>"
                     <?php if (! isIn($retirees, $description)) echo "checked"; ?>
             />
-            <?php echo $description->getDescription(); ?>
+            <?php echo $description->getLibelle(); ?>
         </label>
     </div>
 <?php endforeach; ?>

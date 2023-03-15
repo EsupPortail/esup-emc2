@@ -72,7 +72,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                     </td>
                     <td>
                         <?php if ($canVoir) : ?>
-                            <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                            <a href="<?php echo $this->url('fiche-metier/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
                                 <span class="icon icon-voir" ></span></a>
                         <?php else : ?>
                             <span class="icon icon-voir" style="color:lightgrey;"></span>
@@ -133,7 +133,7 @@ usort($completees, function (ValidationDemande $a, ValidationDemande $b) { retur
                 <td>
                     <?php
                     if ($canVoir) : ?>
-                        <a href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
+                        <a href="<?php echo $this->url('fiche-metier/afficher', ['id' => $demande->getObjectId()], [], true); ?>" class="ajax-modal">
                             <span class="icon icon-voir" ></span></a>
                     <?php else : ?>
                         <span class="icon icon-voir" style="color:lightgrey;"></span>

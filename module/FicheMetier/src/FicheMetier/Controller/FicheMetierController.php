@@ -184,7 +184,7 @@ class FicheMetierController extends AbstractActionController {
             'title' => "Un problème est survenu lors de la duplication de la fiche",
             'text' => "Un problème est survenu lors de la duplication de la fiche : <strong>fiche non trouvée</strong>",
             /** @see \Application\Controller\FicheMetierController::indexAction() */
-            'retour' => $this->url()->fromRoute('fiche-metier-type', [], [], true),
+            'retour' => $this->url()->fromRoute('fiche-metier', [], [], true),
         ]);
         $vm->setTemplate('default/probleme');
         return $vm;

@@ -1,0 +1,49 @@
+/* ================================================== Instadia ==================================================== */
+.instadia-dialog .ui-dialog-titlebar-close {
+    visibility: hidden;
+}
+
+.instadia-messages {
+    overflow: auto;
+}
+
+.instadia-dialog .information {
+    font-size: 8pt;
+}
+
+.instadia-messages .avatar {
+    border-radius: 20px;
+    box-shadow: 0 0px 5px 2px white;
+    margin-top:5px;
+}
+
+.instadia-messages .message {
+    border-radius: 4px;
+    background-repeat: repeat-x;
+    padding: 3px;
+    margin-bottom: .3em;
+    min-height: 3em;
+}
+
+.instadia-messages .message.message-default {
+    background-image: linear-gradient(to bottom,#fcf8e3 0,#f8efc0 100%);
+    border: 1px #f5e79e solid;
+}
+
+.instadia-messages .message.message-mine {
+    background-image: linear-gradient(to bottom,#d9edf7 0,#b9def0 100%);
+    border: 1px #9acfea solid;
+}
+
+.instadia-messages .message pre {
+    margin: 0px;
+    white-space: normal;
+}
+
+.instadia-messages .message.message-gauche {
+    margin-right:50px;
+}
+
+.instadia-messages .message.message-droite {
+    margin-left:50px;
+}

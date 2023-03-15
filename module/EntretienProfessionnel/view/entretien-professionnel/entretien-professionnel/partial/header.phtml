@@ -69,7 +69,7 @@ $canAfficherInformationMetier = (
                                     <?php if ($first) $first=false; else echo '<br/>'; ?>
                                     <a
                                         <?php /** @see \Application\Controller\FicheMetierController::afficherAction() */ ?>
-                                        href="<?php echo $this->url('fiche-metier-type/afficher', ['id' => $fichemetier->getId()], [], true); ?>"
+                                        href="<?php echo $this->url('fiche-metier/afficher', ['id' => $fichemetier->getId()], [], true); ?>"
                                         target="_blank"
                                     >
                                         <?php

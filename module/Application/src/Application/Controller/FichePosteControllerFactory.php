@@ -7,6 +7,7 @@ use Application\Form\AssocierTitre\AssocierTitreForm;
 use Application\Form\Expertise\ExpertiseForm;
 use Application\Form\Rifseep\RifseepForm;
 use Application\Form\SpecificitePoste\SpecificitePosteForm;
+use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentPoste\AgentPosteService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
@@ -17,6 +18,7 @@ use Application\Service\Notification\NotificationService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
+use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -46,6 +48,7 @@ class FichePosteControllerFactory {
          * @var CompetencesRetireesService $competencesRetireesService
          * @var EtatService $etatService
          * @var ExpertiseService $expertiseService
+         * @var MissionPrincipaleService $missionPrincipaleService
          * @var NotificationService $notificationService
          * @var ParcoursDeFormationService $parcoursService
          * @var SpecificitePosteService $specificitePosteService
@@ -59,8 +62,10 @@ class FichePosteControllerFactory {
         $structureService = $container->get(StructureService::class);
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
+        $activitesDescriptionsRetireesService = $container->get(ActivitesDescriptionsRetireesService::class);
         $etatService = $container->get(EtatService::class);
         $expertiseService = $container->get(ExpertiseService::class);
+        $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $parcoursService = $container->get(ParcoursDeFormationService::class);
@@ -86,6 +91,7 @@ class FichePosteControllerFactory {
         /** @var FichePosteController $controller */
         $controller = new FichePosteController();
 
+        $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesService);
         $controller->setAgentService($agentService);
         $controller->setAgentPosteService($agentPosteService);
         $controller->setRenduService($renduService);
@@ -96,6 +102,7 @@ class FichePosteControllerFactory {
         $controller->setCompetencesRetireesService($competencesRetireesService);
         $controller->setEtatService($etatService);
         $controller->setExpertiseService($expertiseService);
+        $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);
         $controller->setSpecificitePosteService($specificitePosteService);
         $controller->setParcoursDeFormationService($parcoursService);

@@ -198,7 +198,7 @@ return [
                         'pages' => [
                             'fiches' => [
                                 'label' => 'Gestion des fiches',
-                                'route' => 'fiche-metier-type',
+                                'route' => 'fiche-metier',
                                 'resource' =>  FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_INDEX) ,
                                 'order'    => 2000,
                                 'dropdown-header' => true,
@@ -521,8 +521,9 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/selectionner-descriptions-retirees/:fiche-poste/:fiche-metier/:activite',
+                            'route'    => '/selectionner-descriptions-retirees/:fiche-poste/:fiche-metier/:mission-principale',
                             'defaults' => [
+                                /** @see FichePosteController::selectionnerDescriptionsRetireesAction() */
                                 'controller' => FichePosteController::class,
                                 'action'     => 'selectionner-descriptions-retirees',
                             ],

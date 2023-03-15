@@ -91,7 +91,7 @@ use UnicaenEtat\Entity\Db\Etat;
     });
 
     $('button#clear').click(function() {
-        window.location.href = 'fiche-metier-type';
+        window.location.href = 'fiche-metier';
     });
 
     $('button#filter').click(function() {
@@ -104,6 +104,6 @@ use UnicaenEtat\Entity\Db\Etat;
         query += "&etat=" + etatId;
         query += "&domaine=" + domaineId;
         query += "&expertise=" + expertise;
-        window.location.href = 'fiche-metier-type?'+ query;
+        window.location.href = 'fiche-metier?'+ query;
     });
 </script>
