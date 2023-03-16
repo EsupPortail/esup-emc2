@@ -20,7 +20,8 @@ class ReferentielForm extends Form {
             'type' => Text::class,
             'name' => 'libelle_court',
             'options' => [
-                'label' => "Libellé court:",
+                'label' => "Libellé court <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle_court',
@@ -31,7 +32,8 @@ class ReferentielForm extends Form {
             'type' => Text::class,
             'name' => 'libelle_long',
             'options' => [
-                'label' => "Libellé long :",
+                'label' => "Libellé long <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle_long',

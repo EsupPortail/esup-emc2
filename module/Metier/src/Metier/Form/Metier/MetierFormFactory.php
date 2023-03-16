@@ -5,10 +5,18 @@ namespace Metier\Form\Metier;
 use Carriere\Service\Categorie\CategorieService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class MetierFormFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return MetierForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container) : MetierForm
     {
         /**
          * @var MetierHydrator $hydrator
@@ -16,7 +24,7 @@ class MetierFormFactory {
         $hydrator = $container->get('HydratorManager')->get(MetierHydrator::class);
 
         /**
-         * @var CategorieService $categorieService
+         * @var CategorieService $categorieService
          * @var DomaineService $domaineService
          */
         $categorieService = $container->get(CategorieService::class);

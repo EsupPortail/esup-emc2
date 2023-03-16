@@ -159,6 +159,7 @@ return [
                 'options' => [
                     'route' => '/metier',
                     'defaults' => [
+                        /** @see MetierController::indexAction() */
                         'controller' => MetierController::class,
                         'action' => 'index',
                     ],
@@ -173,6 +174,7 @@ return [
                         'options' => [
                             'route' => '/ajouter',
                             'defaults' => [
+                                /** @see MetierController::ajouterAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'ajouter',
                             ],
@@ -183,6 +185,7 @@ return [
                         'options' => [
                             'route' => '/modifier/:metier',
                             'defaults' => [
+                                /** @see MetierController::modifierAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'modifier',
                             ],
@@ -193,6 +196,7 @@ return [
                         'options' => [
                             'route' => '/historiser/:metier',
                             'defaults' => [
+                                /** @see MetierController::historiserAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'historiser',
                             ],
@@ -203,6 +207,7 @@ return [
                         'options' => [
                             'route' => '/restaurer/:metier',
                             'defaults' => [
+                                /** @see MetierController::restaurerAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'restaurer',
                             ],
@@ -213,6 +218,7 @@ return [
                         'options' => [
                             'route' => '/supprimer/:metier',
                             'defaults' => [
+                                /** @see MetierController::supprimerAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'supprimer',
                             ],
@@ -223,6 +229,7 @@ return [
                         'options' => [
                             'route' => '/initialiser-niveaux',
                             'defaults' => [
+                                /** @see MetierController::initialiserNiveauxAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'initialiser-niveaux',
                             ],
@@ -233,6 +240,7 @@ return [
                         'options' => [
                             'route' => '/modifier-niveaux/:metier',
                             'defaults' => [
+                                /** @see MetierController::modifierNiveauxAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'modifier-niveaux',
                             ],
@@ -243,6 +251,7 @@ return [
                         'options' => [
                             'route' => '/lister-agents/:metier',
                             'defaults' => [
+                                /** @see MetierController::listerAgentsAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'lister-agents',
                             ],
@@ -256,6 +265,7 @@ return [
                         'options' => [
                             'route' => '/cartographie',
                             'defaults' => [
+                                /** @see MetierController::cartographieAction() */
                                 'controller' => MetierController::class,
                                 'action' => 'cartographie',
                             ],

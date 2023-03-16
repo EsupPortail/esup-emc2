@@ -2,6 +2,7 @@
 
 namespace Metier\Form\Domaine;
 
+use Laminas\InputFilter\Factory;
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
@@ -18,7 +19,8 @@ class DomaineForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -47,7 +49,8 @@ class DomaineForm extends Form {
             'type' => Select::class,
             'name' => 'famille',
             'options' => [
-                'label' => "Famille professionnelle* :",
+                'label' => "Famille professionnelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner une famille ...",
                 'value_options' => $this->getFamilleProfessionnelleService()->getFamillesProfessionnellesAsOptions(),
             ],
@@ -65,14 +68,18 @@ class DomaineForm extends Form {
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
                 'class' => 'btn btn-primary',
             ],
         ]);
+
+        $this->setInputFilter((new Factory())->createInputFilter([
+            'libelle'             => [ 'required' => true,  ],
+            'fonction'            => [ 'required' => false,  ],
+            'famille'             => [ 'required' => true,  ],
+        ]));
     }
 }

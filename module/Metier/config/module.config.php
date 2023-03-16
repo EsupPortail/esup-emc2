@@ -2,7 +2,7 @@
 
 namespace Metier;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use UnicaenPrivilege\Guard\PrivilegeController;
 

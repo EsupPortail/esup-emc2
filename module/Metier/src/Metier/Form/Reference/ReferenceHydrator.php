@@ -32,7 +32,7 @@ class ReferenceHydrator implements HydratorInterface {
      * @param Reference $object
      * @return Reference
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $metier = (isset($data['metier']))?$this->getMetierService()->getMetier($data['metier']):null;
         $referentiel = (isset($data['referentiel']))?$this->getReferentielService()->getReferentiel($data['referentiel']):null;

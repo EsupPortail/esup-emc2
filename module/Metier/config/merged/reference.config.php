@@ -85,6 +85,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter/:metier',
                                     'defaults' => [
+                                        /** @see ReferenceController::ajouterAction() */
                                         'controller' => ReferenceController::class,
                                         'action'     => 'ajouter',
                                     ],
@@ -95,6 +96,7 @@ return [
                                 'options' => [
                                     'route'    => '/modifier/:reference',
                                     'defaults' => [
+                                        /** @see ReferenceController::modifierAction() */
                                         'controller' => ReferenceController::class,
                                         'action'     => 'modifier',
                                     ],
@@ -105,6 +107,7 @@ return [
                                 'options' => [
                                     'route'    => '/historiser/:reference',
                                     'defaults' => [
+                                        /** @see ReferenceController::historiserAction() */
                                         'controller' => ReferenceController::class,
                                         'action'     => 'historiser',
                                     ],
@@ -115,6 +118,7 @@ return [
                                 'options' => [
                                     'route'    => '/restaurer/:reference',
                                     'defaults' => [
+                                        /** @see ReferenceController::restaurerAction() */
                                         'controller' => ReferenceController::class,
                                         'action'     => 'restaurer',
                                     ],
@@ -125,6 +129,7 @@ return [
                                 'options' => [
                                     'route'    => '/supprimer/:reference',
                                     'defaults' => [
+                                        /** @see ReferenceController::supprimerAction() */
                                         'controller' => ReferenceController::class,
                                         'action'     => 'supprimer',
                                     ],

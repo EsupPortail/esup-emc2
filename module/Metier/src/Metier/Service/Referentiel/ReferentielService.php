@@ -15,10 +15,6 @@ class ReferentielService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Referentiel
-     */
     public function create(Referentiel $referentiel) : Referentiel
     {
         try {
@@ -30,10 +26,6 @@ class ReferentielService {
         return $referentiel;
     }
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Referentiel
-     */
     public function update(Referentiel $referentiel) : Referentiel
     {
         try {
@@ -44,10 +36,6 @@ class ReferentielService {
         return $referentiel;
     }
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Referentiel
-     */
     public function historise(Referentiel $referentiel) : Referentiel
     {
         try {
@@ -59,10 +47,6 @@ class ReferentielService {
         return $referentiel;
     }
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Referentiel
-     */
     public function restore(Referentiel $referentiel) : Referentiel
     {
         try {
@@ -74,10 +58,6 @@ class ReferentielService {
         return $referentiel;
     }
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Referentiel
-     */
     public function delete(Referentiel $referentiel) : Referentiel
     {
         try {
@@ -91,9 +71,6 @@ class ReferentielService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Referentiel::class)->createQueryBuilder('referentiel')
@@ -102,11 +79,7 @@ class ReferentielService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Referentiel[]
-     */
+    /** @return Referentiel[] */
     public function getReferentiels(string $champ = 'libelleCourt', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -116,9 +89,6 @@ class ReferentielService {
         return $result;
     }
 
-    /**
-     * @return array
-     */
     public function getReferentielsAsOptions() : array
     {
         $referentiels = $this->getReferentiels();
@@ -131,10 +101,6 @@ class ReferentielService {
         return $array;
     }
 
-    /**
-     * @param int|null $id
-     * @return Referentiel|null
-     */
     public function getReferentiel(?int $id) : ?Referentiel
     {
         $qb = $this->createQueryBuilder()
@@ -150,11 +116,6 @@ class ReferentielService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Referentiel|null
-     */
     public function getRequestedReferentiel(AbstractActionController $controller, string $param = "referentiel") : ?Referentiel
     {
         $id = $controller->params()->fromRoute($param);

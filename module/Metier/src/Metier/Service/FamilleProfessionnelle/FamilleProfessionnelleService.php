@@ -15,10 +15,6 @@ class FamilleProfessionnelleService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return FamilleProfessionnelle
-     */
     public function create(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
         try {
@@ -30,10 +26,6 @@ class FamilleProfessionnelleService {
         return $famille;
     }
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return FamilleProfessionnelle
-     */
     public function update(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
         try {
@@ -44,10 +36,6 @@ class FamilleProfessionnelleService {
         return $famille;
     }
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return FamilleProfessionnelle
-     */
     public function historise(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
         try {
@@ -59,10 +47,6 @@ class FamilleProfessionnelleService {
         return $famille;
     }
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return FamilleProfessionnelle
-     */
     public function restore(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
         try {
@@ -74,10 +58,6 @@ class FamilleProfessionnelleService {
         return $famille;
     }
 
-    /**
-     * @param FamilleProfessionnelle $famille
-     * @return FamilleProfessionnelle
-     */
     public function delete(FamilleProfessionnelle $famille) : FamilleProfessionnelle
     {
         try {
@@ -91,9 +71,6 @@ class FamilleProfessionnelleService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(FamilleProfessionnelle::class)->createQueryBuilder('famille')
@@ -103,9 +80,7 @@ class FamilleProfessionnelleService {
         return $qb;
     }
 
-    /**
-     * @return FamilleProfessionnelle[]
-     */
+    /** @return FamilleProfessionnelle[] */
     public function getFamillesProfessionnelles() : array
     {
         $qb = $this->createQueryBuilder()
@@ -115,10 +90,7 @@ class FamilleProfessionnelleService {
         return $result;
     }
 
-    /**
-     * @param bool $historiser
-     * @return array
-     */
+    /** @return FamilleProfessionnelle[] */
     public function getFamillesProfessionnellesAsOptions(bool $historiser = false) : array
     {
         $familles = $this->getFamillesProfessionnelles();
@@ -130,11 +102,7 @@ class FamilleProfessionnelleService {
         return $options;
     }
 
-    /**
-     * @param integer $id
-     * @return FamilleProfessionnelle|null
-     */
-    public function getFamilleProfessionnelle(int $id) : ?FamilleProfessionnelle
+    public function getFamilleProfessionnelle(?int $id) : ?FamilleProfessionnelle
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('famille.id = :id')
@@ -149,11 +117,6 @@ class FamilleProfessionnelleService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return FamilleProfessionnelle|null
-     */
     public function getRequestedFamilleProfessionnelle(AbstractActionController $controller, string $paramName = 'famille-professionnelle') : ?FamilleProfessionnelle
     {
         $id = $controller->params()->fromRoute($paramName);

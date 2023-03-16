@@ -4,24 +4,15 @@ namespace Metier\Form\Reference;
 
 trait ReferenceFormAwareTrait {
 
-    /** @var ReferenceForm */
-    private $referenceForm;
+    private ReferenceForm $referenceForm;
 
-    /**
-     * @return ReferenceForm
-     */
-    public function getReferenceForm()
+    public function getReferenceForm() : ReferenceForm
     {
         return $this->referenceForm;
     }
 
-    /**
-     * @param ReferenceForm $referenceForm
-     * @return ReferenceForm
-     */
-    public function setReferenceForm(ReferenceForm $referenceForm)
+    public function setReferenceForm(ReferenceForm $referenceForm) : void
     {
         $this->referenceForm = $referenceForm;
-        return $this->referenceForm;
     }
 }

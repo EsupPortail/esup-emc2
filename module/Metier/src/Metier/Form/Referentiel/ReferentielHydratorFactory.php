@@ -10,7 +10,7 @@ class ReferentielHydratorFactory {
      * @param ContainerInterface $container
      * @return ReferentielHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ReferentielHydrator
     {
         /** @var ReferentielHydrator $hydrator */
         $hydrator = new ReferentielHydrator();

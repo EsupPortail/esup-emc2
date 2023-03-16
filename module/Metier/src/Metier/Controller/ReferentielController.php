@@ -45,7 +45,7 @@ class ReferentielController extends AbstractActionController
             'title' => "Ajout d'un référentiel métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -70,7 +70,7 @@ class ReferentielController extends AbstractActionController
             'title' => "Modification d'un référentiel métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -102,7 +102,7 @@ class ReferentielController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($referentiel !== null) {
-            $vm->setTemplate('metier/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du référentiel " . $referentiel->getLibelleCourt(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

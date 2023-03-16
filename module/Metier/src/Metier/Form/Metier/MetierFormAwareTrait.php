@@ -4,26 +4,16 @@ namespace Metier\Form\Metier;
 
 trait MetierFormAwareTrait {
 
-    /** @var MetierForm $metierForm */
-    private $metierForm;
+    private MetierForm $metierForm;
 
-    /**
-     * @return MetierForm
-     */
     public function getMetierForm() : MetierForm
     {
         return $this->metierForm;
     }
 
-    /**
-     * @param MetierForm $metierForm
-     * @return MetierForm
-     */
-    public function setMetierForm(MetierForm $metierForm)  :MetierForm
+    public function setMetierForm(MetierForm $metierForm) : void
     {
         $this->metierForm = $metierForm;
-        return $this->metierForm;
     }
-
 
 }

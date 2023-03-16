@@ -173,6 +173,7 @@ class Metier implements HistoriqueAwareInterface {
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getDomainesAffichage() : string
     {
         $domaines = $this->getDomaines();
@@ -185,6 +186,7 @@ class Metier implements HistoriqueAwareInterface {
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getDomaineAndFamille() : string
     {
         $texte = "";
@@ -206,6 +208,7 @@ class Metier implements HistoriqueAwareInterface {
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function toStringDomaines() : string
     {
         $texte  = "<table style='width: 25rem;'>";

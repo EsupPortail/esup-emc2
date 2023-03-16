@@ -7,7 +7,7 @@
 
 use Metier\Entity\Db\Domaine;
 
-$type = $domaine->getTypeFonction();
+$type = ($domaine->getTypeFonction())??"Aucun";
 ?>
 
 <span class="badge" id="<?php echo $type; ?>">

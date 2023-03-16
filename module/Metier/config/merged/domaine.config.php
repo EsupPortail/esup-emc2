@@ -29,7 +29,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        DomainePrivileges::DOMAINE_AFFICHER,
+                        DomainePrivileges::DOMAINE_INDEX,
                     ],
                 ],
                 [
@@ -64,6 +64,7 @@ return [
                     'controller' => DomaineController::class,
                     'action' => [
                         'effacer',
+                        'supprimer',
                     ],
                     'privileges' => [
                         DomainePrivileges::DOMAINE_SUPPRIMER
@@ -80,6 +81,7 @@ return [
                 'options' => [
                     'route'    => '/domaine',
                     'defaults' => [
+                        /** @see DomaineController::indexAction() */
                         'controller' => DomaineController::class,
                         'action' => 'index',
                     ],
@@ -94,6 +96,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
+                                /** @see DomaineController::ajouterAction() */
                                 'controller' => DomaineController::class,
                                 'action'     => 'ajouter',
                             ],
@@ -104,6 +107,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:domaine',
                             'defaults' => [
+                                /** @see DomaineController::modifierAction() */
                                 'controller' => DomaineController::class,
                                 'action'     => 'modifier',
                             ],
@@ -114,6 +118,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:domaine',
                             'defaults' => [
+                                /** @see DomaineController::historiserAction() */
                                 'controller' => DomaineController::class,
                                 'action'     => 'historiser',
                             ],
@@ -124,18 +129,20 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:domaine',
                             'defaults' => [
+                                /** @see DomaineController::restaurer() */
                                 'controller' => DomaineController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
                     ],
-                    'effacer' => [
+                    'supprimer' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/effacer/:domaine',
+                            /** @see DomaineController::supprimerAction() */
+                            'route'    => '/supprimer/:domaine',
                             'defaults' => [
                                 'controller' => DomaineController::class,
-                                'action'     => 'effacer',
+                                'action'     => 'supprimer',
                             ],
                         ],
                     ],

@@ -16,10 +16,6 @@ class ReferenceService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Reference $referentiel
-     * @return Reference
-     */
     public function create(Reference $referentiel) : Reference
     {
         try {
@@ -31,10 +27,6 @@ class ReferenceService
         return $referentiel;
     }
 
-    /**
-     * @param Reference $referentiel
-     * @return Reference
-     */
     public function update(Reference $referentiel) : Reference
     {
         try {
@@ -45,10 +37,6 @@ class ReferenceService
         return $referentiel;
     }
 
-    /**
-     * @param Reference $referentiel
-     * @return Reference
-     */
     public function historise(Reference $referentiel) : Reference
     {
         try {
@@ -60,10 +48,6 @@ class ReferenceService
         return $referentiel;
     }
 
-    /**
-     * @param Reference $referentiel
-     * @return Reference
-     */
     public function restore(Reference $referentiel) : Reference
     {
         try {
@@ -75,10 +59,6 @@ class ReferenceService
         return $referentiel;
     }
 
-    /**
-     * @param Reference $referentiel
-     * @return Reference
-     */
     public function delete(Reference $referentiel) : Reference
     {
         try {
@@ -92,9 +72,6 @@ class ReferenceService
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Reference::class)->createQueryBuilder('reference')
@@ -105,11 +82,7 @@ class ReferenceService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Reference[]
-     */
+    /** @return Reference[] */
     public function getReferences(string $champ = 'code', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -119,26 +92,7 @@ class ReferenceService
         return $result;
     }
 
-    /**
-     * @return array
-     */
-    public function getReferencesAsOptions() : array
-    {
-        $references = $this->getReferences();
-        $array = [];
-
-        foreach ($references as $reference) {
-            $array[$reference->getId()] = $reference->getReferentiel()->getLibelleCourt() . " - " . $reference->getCode();
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param integer $id
-     * @return Reference
-     */
-    public function getReference(int $id) : Reference
+    public function getReference(?int $id) : ?Reference
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reference.id = :id')
@@ -152,12 +106,7 @@ class ReferenceService
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Reference
-     */
-    public function getRequestedReference(AbstractActionController $controller, string $param = "reference") : Reference
+    public function getRequestedReference(AbstractActionController $controller, string $param = "reference") : ?Reference
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getReference($id);

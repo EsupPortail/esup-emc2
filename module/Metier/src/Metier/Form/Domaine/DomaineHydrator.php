@@ -30,7 +30,7 @@ class DomaineHydrator implements HydratorInterface {
      * @param Domaine $object
      * @return Domaine
      */
-    public function hydrate(array $data, $object) : Domaine
+    public function hydrate(array $data, $object) : object
     {
         $object->clearFamilles();
         foreach ($data['famille'] as $id) {
@@ -38,8 +38,10 @@ class DomaineHydrator implements HydratorInterface {
             if ($famille) $object->addFamille($famille);
         }
 
-        $object->setLibelle($data['libelle']);
-        $object->setTypeFonction($data['fonction']);
+        $libelle = (isset($data['libelle']) AND trim($data['libelle']))?trim($data['libelle']):null;
+        $fonction = (isset($data['fonction']) AND trim($data['fonction']))?trim($data['fonction']):null;
+        $object->setLibelle($libelle);
+        $object->setTypeFonction($fonction);
 
         return $object;
     }

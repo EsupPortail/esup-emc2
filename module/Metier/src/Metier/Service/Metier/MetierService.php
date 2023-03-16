@@ -19,10 +19,6 @@ class MetierService {
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
     public function create(Metier $metier) : Metier
     {
         try {
@@ -34,10 +30,6 @@ class MetierService {
         return $metier;
     }
 
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
     public function update(Metier $metier) : Metier
     {
         try {
@@ -48,10 +40,6 @@ class MetierService {
         return $metier;
     }
 
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
     public function historise(Metier $metier) : Metier
     {
         try {
@@ -63,10 +51,6 @@ class MetierService {
         return $metier;
     }
 
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
     public function restore(Metier $metier) : Metier
     {
         try {
@@ -78,10 +62,6 @@ class MetierService {
         return $metier;
     }
 
-    /**
-     * @param Metier $metier
-     * @return Metier
-     */
     public function delete(Metier $metier) : Metier
     {
         try {
@@ -95,9 +75,6 @@ class MetierService {
 
     /** REQUETAGES ****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     private function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Metier::class)->createQueryBuilder('metier')
@@ -107,13 +84,11 @@ class MetierService {
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('categorie')->leftJoin('metier.categorie', 'categorie')
         ;
-        $qb = NiveauService::decorateWithNiveau($qb, 'metier', 'niveaux');
+        $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
 
-    /**
-     * @return Metier[]
-     */
+    /** @return Metier[] */
     public function getMetiers() : array
     {
         $qb = $this->createQueryBuilder()
@@ -124,11 +99,7 @@ class MetierService {
         return $result;
     }
 
-    /**
-     * @param integer $id
-     * @return Metier|null
-     */
-    public function getMetier(int $id) : ?Metier
+    public function getMetier(?int $id) : ?Metier
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('metier.id = :id')
@@ -143,11 +114,6 @@ class MetierService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Metier|null
-     */
     public function getRequestedMetier(AbstractActionController $controller, string $paramName = 'metier') : ?Metier
     {
         $id = $controller->params()->fromRoute($paramName);
@@ -156,10 +122,6 @@ class MetierService {
         return $metier;
     }
 
-    /**
-     * @param bool $historiser
-     * @return array
-     */
     public function getMetiersTypesAsMultiOptions(bool $historiser = false) : array
     {
         /** @var Metier[] $metiers */
@@ -195,11 +157,23 @@ class MetierService {
         return $multi;
     }
 
-    /** FONCTIONS "METIERS" *******************************************************************************************/
+    public function getMetierByReference(string $referentiel, string $reference) : ?Metier
+    {
+        $qb = $this->createQueryBuilder()
+            ->join('reference.referentiel', 'referentiel')->addSelect('referentiel')
+            ->andWhere('referentiel.libelleCourt = :referentiel')->setParameter('referentiel', $referentiel)
+            ->andWhere('reference.code = :reference')->setParameter('reference', $reference)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [Metier] partagent la même référence [".$referentiel."|".$reference."].");
+        }
+        return $result;
+    }
 
-    /**
-     * @return array
-     */
+    /** FACADE ********************************************************************************************************/
+
     public function generateCartographyArray() : array
     {
         $metiers = $this->getMetiers();
@@ -226,7 +200,7 @@ class MetierService {
                     'références' => implode("<br/>", $references),
                     'domaine' => ($domaine) ? $domaine->__toString() : "---",
                     'fonction' => ($fonction) ?: "---",
-                    'famille' => ($fTexte) ? $fTexte : "---",
+                    'famille' => ($fTexte) ?: "---",
                     'nbFiche' => count($metier->getFichesMetiers()),
                 ];
                 $results[] = $entry;
@@ -241,9 +215,8 @@ class MetierService {
         return $results;
     }
 
-    /** INCLUSIF TEST */
-
     /**
+     * todo deplacer cela ou il y aurai besoin
      * @param string $feminin
      * @param string $masculin
      * @return string|null
@@ -292,6 +265,7 @@ class MetierService {
     }
 
     /**
+     * todo refactorer et deplacer dans querying
      * @param Metier $metier
      * @return array
      */
@@ -325,7 +299,6 @@ and aa.date_debut < current_date and (aa.date_fin IS NULL OR aa.date_fin > curre
 order by a.nom_usage, a.prenom
 EOS;
 
-            $tmp = null;
             try {
                 $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
                 try {
@@ -339,19 +312,5 @@ EOS;
             return $tmp;
     }
 
-    /**
-     * @param string $referentiel
-     * @param string $reference
-     * @return Metier|null
-     */
-    public function getMetierByReference(string $referentiel, string $reference) : ?Metier
-    {
-        $qb = $this->createQueryBuilder()
-            ->join('reference.referentiel', 'referentiel')->addSelect('referentiel')
-            ->andWhere('referentiel.libelleCourt = :referentiel')->setParameter('referentiel', $referentiel)
-            ->andWhere('reference.code = :reference')->setParameter('reference', $reference)
-        ;
-        $result = $qb->getQuery()->getOneOrNullResult();
-        return $result;
-    }
+
 }

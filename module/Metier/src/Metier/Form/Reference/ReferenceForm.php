@@ -22,7 +22,8 @@ class ReferenceForm extends Form {
             'name' => 'metier',
             'type' => Select::class,
             'options' => [
-                'label' => 'Métier associé *: ',
+                'label' => "Métier associé <span class='icon icon-obligatoire' title='Champ obligatoire'></span>: ",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -40,7 +41,8 @@ class ReferenceForm extends Form {
             'name' => 'referentiel',
             'type' => Select::class,
             'options' => [
-                'label' => 'Référentiel associé *: ',
+                'label' => "Référentiel associé <span class='icon icon-obligatoire' title='Champ obligatoire'></span>: ",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -58,7 +60,8 @@ class ReferenceForm extends Form {
             'type' => Text::class,
             'name' => 'code',
             'options' => [
-                'label' => "Code dans le référentiel *:",
+                'label' => "Code dans le référentiel <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'code',

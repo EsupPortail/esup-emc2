@@ -5,14 +5,18 @@ namespace Metier\Form\Reference;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
 use Metier\Service\Referentiel\ReferentielService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ReferenceHydraytorFactory {
 
     /**
      * @param ContainerInterface $container
      * @return ReferenceHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ReferenceHydrator
     {
         /**
          * @var MetierService $metierService

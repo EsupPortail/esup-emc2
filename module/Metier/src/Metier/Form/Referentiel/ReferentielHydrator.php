@@ -27,7 +27,7 @@ class ReferentielHydrator implements HydratorInterface {
      * @param Referentiel $object
      * @return Referentiel
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $object->setLibelleCourt($data['libelle_court']);
         $object->setLibelleLong($data['libelle_long']);

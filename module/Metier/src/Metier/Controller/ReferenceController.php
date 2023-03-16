@@ -39,7 +39,7 @@ class ReferenceController extends AbstractActionController {
             'title' => "Ajout d'une référence",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -65,7 +65,7 @@ class ReferenceController extends AbstractActionController {
             'title' => "Modification d'une référence métier",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -97,7 +97,7 @@ class ReferenceController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($reference !== null) {
-            $vm->setTemplate('metier/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la référence " . $reference->getTitre(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

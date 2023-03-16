@@ -11,92 +11,54 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var Referentiel */
-    private $referentiel;
-    /** @var string */
-    private $code;
-    /** @var string */
-    private $lien;
-    /** @var integer */
-    private $page;
+    private ?int $id = null;
+    private ?Referentiel $referentiel = null;
+    private ?string $code = null;
+    private ?string $lien = null;
+    private ?int $page = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Referentiel
-     */
-    public function getReferentiel()
+    public function getReferentiel() : ?Referentiel
     {
         return $this->referentiel;
     }
 
-    /**
-     * @param Referentiel $referentiel
-     * @return Reference
-     */
-    public function setReferentiel(Referentiel $referentiel)
+    public function setReferentiel(?Referentiel $referentiel) : void
     {
         $this->referentiel = $referentiel;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCode()
+    public function getCode() : ?string
     {
         if ($this->getReferentiel() !== null AND $this->getReferentiel()->getType() === Referentiel::VIDE) return $this->getReferentiel()->getLibelleCourt();
         return $this->code;
     }
 
-    /**
-     * @param string|null $code
-     * @return Reference
-     */
-    public function setCode(?string $code)
+    public function setCode(?string $code) : void
     {
         $this->code = $code;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLien()
+    public function getLien() : ?string
     {
         return $this->lien;
     }
 
-    /**
-     * @param string|null $lien
-     * @return Reference
-     */
-    public function setLien(?string $lien)
+    public function setLien(?string $lien) : void
     {
         $this->lien = $lien;
-        return $this;
     }
 
-    /**
-     * @return  string
-     */
-    public function getTitre()
+    public function getTitre() : string
     {
         return $this->referentiel->getLibelleCourt() . " - " . $this->getCode();
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl() : string
     {
         switch($this->getReferentiel()->getType()) {
             case Referentiel::WEB :
@@ -115,23 +77,13 @@ class Reference implements HistoriqueAwareInterface, HasMetierInterface {
         return "";
     }
 
-    /**
-     * @return int|null
-     */
     public function getPage() : ?int
     {
         return $this->page;
     }
 
-    /**
-     * @param int|null $page
-     * @return Reference
-     */
-    public function setPage(?int $page) : Reference
+    public function setPage(?int $page) : void
     {
         $this->page = $page;
-        return $this;
     }
-
-
 }

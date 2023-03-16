@@ -74,7 +74,13 @@ use Metier\Entity\Db\FamilleProfessionnelle;
         $('form#filter').submit();
     });
 
-    $('select#famille option[value=<?php echo $famille; ?>]').prop('selected', true);
-    $('select#type option[value=<?php echo $type; ?>]').prop('selected', true);
-    $('select#historise option[value=<?php echo $historise; ?>]').prop('selected', true);
+    <?php if ($famille) : ?>
+        $('select#famille option[value=<?php echo $famille; ?>]').prop('selected', true);
+    <?php endif; ?>
+    <?php if ($type) : ?>
+        $('select#type option[value=<?php echo $type; ?>]').prop('selected', true);
+    <?php endif; ?>
+    <?php if ($historise) : ?>
+        $('select#historise option[value=<?php echo $historise; ?>]').prop('selected', true);
+    <?php endif; ?>
 </script>

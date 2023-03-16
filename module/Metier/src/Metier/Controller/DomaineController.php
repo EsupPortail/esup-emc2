@@ -65,7 +65,7 @@ class DomaineController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter un domaine',
             'form' => $form,
@@ -92,7 +92,7 @@ class DomaineController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier un domaine',
             'form' => $form,
@@ -118,7 +118,7 @@ class DomaineController extends AbstractActionController {
         return $this->redirect()->toRoute('domaine', [], [], true);
     }
 
-    public function effacerAction() : ViewModel
+    public function supprimerAction() : ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
 
@@ -132,11 +132,11 @@ class DomaineController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($domaine !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du domaine " . $domaine->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('domaine/effacer', ["domaine" => $domaine->getId()], [], true),
+                'action' => $this->url()->fromRoute('domaine/supprimer', ["domaine" => $domaine->getId()], [], true),
             ]);
         }
         return $vm;

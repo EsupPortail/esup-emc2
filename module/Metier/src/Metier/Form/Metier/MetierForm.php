@@ -21,7 +21,8 @@ class MetierForm extends Form {
             'type' => Select::class,
             'name' => 'domaines',
             'options' => [
-                'label' => "Domaine professionnel* :",
+                'label' => "Domaine professionnel <span class='icon icon-obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner des domaines ...",
                 'value_options' => $this->getDomaineService()->getDomainesAsOptions(),
             ],
@@ -37,7 +38,8 @@ class MetierForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle par défaut *:",
+                'label' => "Libelle par défaut <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',

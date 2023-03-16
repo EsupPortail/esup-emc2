@@ -44,7 +44,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter une nouvelle famille de métiers',
             'form' => $form,
@@ -72,7 +72,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier une famille de métiers',
             'form' => $form,
@@ -102,7 +102,7 @@ class FamilleProfessionnelleController extends AbstractActionController {
         return $this->redirect()->toRoute('famille-professionnelle', [], [], true);
     }
 
-    public function effacerAction() : ViewModel
+    public function supprimerAction() : ViewModel
     {
         $famille = $this->getFamilleProfessionnelleService()->getRequestedFamilleProfessionnelle($this);
 
@@ -117,11 +117,11 @@ class FamilleProfessionnelleController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($famille !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la famille professionnelle" . $famille->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('famille-professionnelle/effacer', ["famille-professionnelle" => $famille->getId()], [], true),
+                'action' => $this->url()->fromRoute('famille-professionnelle/supprimer', ["famille-professionnelle" => $famille->getId()], [], true),
             ]);
         }
         return $vm;

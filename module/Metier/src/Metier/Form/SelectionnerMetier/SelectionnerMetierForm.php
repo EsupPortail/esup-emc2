@@ -21,7 +21,6 @@ class SelectionnerMetierForm extends Form
                 'label' => "Libellé du métier :",
                 'empty_option' => "Sélectionner un metier ...",
                 'value_options' =>
-                //$this->getOptions(),
                     $this->getMetierService()->getMetiersTypesAsMultiOptions(),
             ],
             'attributes' => [

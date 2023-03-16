@@ -12,107 +12,55 @@ class Referentiel implements HistoriqueAwareInterface {
     const PDF="pdf";
     const VIDE="vide";
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelleCourt;
-    /** @var string */
-    private $libelleLong;
-    /** @var string */
-    private $prefix;
-    /** @var string */
-    private $type;
+    private ?int $id = null;
+    private ?string $libelleCourt = null;
+    private ?string $libelleLong = null;
+    private ?string $prefix = null;
+    private ?string $type = null;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return Referentiel
-     */
-    public function setId(int $id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLibelleCourt()
+    public function getLibelleCourt() : ?string
     {
         return $this->libelleCourt;
     }
 
-    /**
-     * @param string $libelleCourt
-     * @return Referentiel
-     */
-    public function setLibelleCourt(string $libelleCourt)
+    public function setLibelleCourt(?string $libelleCourt) : void
     {
         $this->libelleCourt = $libelleCourt;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelleLong()
+    public function getLibelleLong() : ?string
     {
         return $this->libelleLong;
     }
 
-    /**
-     * @param string $libelleLong
-     * @return Referentiel
-     */
-    public function setLibelleLong(string $libelleLong)
+    public function setLibelleLong(?string $libelleLong) : void
     {
         $this->libelleLong = $libelleLong;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPrefix()
+    public function getPrefix() : ?string
     {
         return $this->prefix;
     }
 
-    /**
-     * @param string $prefix
-     * @return Referentiel
-     */
-    public function setPrefix(string $prefix)
+    public function setPrefix(?string $prefix) : void
     {
         $this->prefix = $prefix;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType() : ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return Referentiel
-     */
-    public function setType($type)
+    public function setType(?string $type) : void
     {
         $this->type = $type;
-        return $this;
     }
-
-
 
 }

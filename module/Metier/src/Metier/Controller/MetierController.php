@@ -6,6 +6,7 @@ use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
+use Laminas\Http\Response;
 use Metier\Entity\Db\Metier;
 use Metier\Form\Metier\MetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
@@ -28,7 +29,8 @@ class MetierController extends AbstractActionController {
     use MetierFormAwareTrait;
     use NiveauEnveloppeFormAwareTrait;
 
-    public function indexAction() : ViewModel {
+    public function indexAction() : ViewModel
+    {
         $domaine = $this->params()->fromQuery('domaine');
         $domaine_ = null;
         if ($domaine AND $domaine !== ' ') $domaine_ = $this->getDomaineService()->getDomaine($domaine);
@@ -50,7 +52,7 @@ class MetierController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction()
+    public function ajouterAction() : ViewModel
     {
         $metier = new Metier();
         $form = $this->getMetierForm();
@@ -71,11 +73,11 @@ class MetierController extends AbstractActionController {
             'title' => 'Ajouter un nouveau métier',
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction() : ViewModel
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
         $form = $this->getMetierForm();
@@ -96,11 +98,11 @@ class MetierController extends AbstractActionController {
             'title' => 'Modifier un métier',
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function historiserAction()
+    public function historiserAction() : Response
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
@@ -111,7 +113,7 @@ class MetierController extends AbstractActionController {
         return $this->redirect()->toRoute('metier', [], [], true);
     }
 
-    public function restaurerAction()
+    public function restaurerAction() : Response
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
@@ -122,7 +124,7 @@ class MetierController extends AbstractActionController {
         return $this->redirect()->toRoute('metier', [], [], true);
     }
 
-    public function supprimerAction()
+    public function supprimerAction() : ViewModel
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
@@ -140,7 +142,7 @@ class MetierController extends AbstractActionController {
             $fiches = $metier->getFichesMetiers();
 
             if (count($fiches) === 0) {
-                $vm->setTemplate('metier/default/confirmation');
+                $vm->setTemplate('default/confirmation');
                 $vm->setVariables([
                     'title' => "Suppression du métier " . $metier->getLibelle(),
                     'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
@@ -159,7 +161,8 @@ class MetierController extends AbstractActionController {
 
     /** CARTOGRAPHIE ***************************************************************************************************/
 
-    public function cartographieAction() {
+    public function cartographieAction() : ViewModel
+    {
         $results = $this->getMetierService()->generateCartographyArray();
 
         return new ViewModel([
@@ -170,7 +173,7 @@ class MetierController extends AbstractActionController {
     /** NIVEAUX *******************************************************************************************************/
 
 
-    public function modifierNiveauxAction()
+    public function modifierNiveauxAction() : ViewModel
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
 
@@ -202,15 +205,15 @@ class MetierController extends AbstractActionController {
             'title' => "Modifier les niveaux du métier [".MetierService::computeEcritureInclusive($metier->getLibelleFeminin(), $metier->getLibelleMasculin())."]",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function initialiserNiveauxAction()
+    public function initialiserNiveauxAction() : Response
     {
         $metiers = $this->getMetierService()->getMetiers();
         foreach ($metiers as $metier) {
-            $niveau = $this->getNiveauService()->getNiveau($metier->getNiveau());
+            $niveau = $this->getNiveauService()->getNiveau($metier->getNiveaux());
             if ($metier->getNiveaux() === null AND $niveau !== null) {
                 $niveaux = new NiveauEnveloppe();
                 $niveaux->setBorneInferieure($niveau);
@@ -226,7 +229,7 @@ class MetierController extends AbstractActionController {
         return $this->redirect()->toRoute('metier');
     }
 
-    public function listerAgentsAction()
+    public function listerAgentsAction() : ViewModel
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
         $array = $this->getMetierService()->getInfosAgentsByMetier($metier);

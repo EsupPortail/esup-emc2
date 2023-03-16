@@ -4,24 +4,15 @@ namespace Metier\Service\Domaine;
 
 trait DomaineServiceAwareTrait {
 
-    /** @var DomaineService $domaineService */
-    private $domaineService;
+    private DomaineService $domaineService;
 
-    /**
-     * @return DomaineService
-     */
     public function getDomaineService() : DomaineService
     {
         return $this->domaineService;
     }
 
-    /**
-     * @param DomaineService $domaineService
-     * @return DomaineService
-     */
-    public function setDomaineService(DomaineService $domaineService) : DomaineService
+    public function setDomaineService(DomaineService $domaineService) : void
     {
         $this->domaineService = $domaineService;
-        return $this->domaineService;
     }
 }

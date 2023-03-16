@@ -4,25 +4,16 @@ namespace Metier\Service\Metier;
 
 trait MetierServiceAwareTrait {
 
-    /** @var MetierService */
-    private $metierService;
+    private MetierService $metierService;
 
-    /**
-     * @return MetierService
-     */
     public function getMetierService() : MetierService
     {
         return $this->metierService;
     }
 
-    /**
-     * @param MetierService $metierService
-     * @return MetierService
-     */
-    public function setMetierService(MetierService $metierService) : MetierService
+    public function setMetierService(MetierService $metierService) : void
     {
         $this->metierService = $metierService;
-        return $this->metierService;
     }
 
 

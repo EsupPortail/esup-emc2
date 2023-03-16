@@ -15,10 +15,6 @@ class DomaineService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
     public function create(Domaine $domaine) : Domaine
     {
         try {
@@ -30,10 +26,6 @@ class DomaineService {
         return $domaine;
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
     public function update(Domaine $domaine) : Domaine
     {
         try {
@@ -44,10 +36,6 @@ class DomaineService {
         return $domaine;
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
     public function historise(Domaine $domaine) : Domaine
     {
         try {
@@ -59,10 +47,6 @@ class DomaineService {
         return $domaine;
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
     public function restore(Domaine $domaine) : Domaine
     {
         try {
@@ -74,10 +58,6 @@ class DomaineService {
         return $domaine;
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return Domaine
-     */
     public function delete(Domaine $domaine) : Domaine
     {
         try {
@@ -91,9 +71,6 @@ class DomaineService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Domaine::class)->createQueryBuilder('domaine')
@@ -103,11 +80,7 @@ class DomaineService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Domaine[]
-     */
+    /** @return Domaine[] */
     public function getDomaines(string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -117,10 +90,7 @@ class DomaineService {
         return $result;
     }
 
-    /**
-     * @param bool $historiser
-     * @return array
-     */
+    /** @return Domaine[] */
     public function getDomainesAsOptions(bool $historiser = false) : array
     {
         $domaines = $this->getDomaines();
@@ -132,11 +102,7 @@ class DomaineService {
         return $options;
     }
 
-    /**
-     * @param integer $id
-     * @return Domaine|null
-     */
-    public function getDomaine(int $id) : ?Domaine
+    public function getDomaine(?int $id) : ?Domaine
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('domaine.id = :id')
@@ -150,11 +116,6 @@ class DomaineService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Domaine|null
-     */
     public function getRequestedDomaine(AbstractActionController $controller, string $paramName = 'domaine') : ?Domaine
     {
         $id = $controller->params()->fromRoute($paramName);

@@ -21,7 +21,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER
+                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_INDEX
                     ],
                 ],
                 [
@@ -56,6 +56,7 @@ return [
                     'controller' => FamilleProfessionnelleController::class,
                     'action' => [
                         'effacer',
+                        'supprimer',
                     ],
                     'privileges' => [
                         FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_SUPPRIMER
@@ -83,6 +84,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
+                                /** @see FamilleProfessionnelleController::ajouterAction() */
                                 'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'ajouter',
                             ],
@@ -93,6 +95,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:famille-professionnelle',
                             'defaults' => [
+                                /** @see FamilleProfessionnelleController::modifierAction() */
                                 'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'modifier',
                             ],
@@ -103,6 +106,7 @@ return [
                         'options' => [
                             'route'    => '/historiser-famille/:famille-professionnelle',
                             'defaults' => [
+                                /** @see FamilleProfessionnelleController::historiserAction() */
                                 'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'historiser',
                             ],
@@ -113,18 +117,20 @@ return [
                         'options' => [
                             'route'    => '/restaurer-famille/:famille-professionnelle',
                             'defaults' => [
+                                /** @see FamilleProfessionnelleController::restaurerAction() */
                                 'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'restaurer',
                             ],
                         ],
                     ],
-                    'effacer' => [
+                    'supprimer' => [
                         'type'  => Segment::class,
                         'options' => [
                             'route'    => '/effacer-famille/:famille-professionnelle',
                             'defaults' => [
+                                /** @see FamilleProfessionnelleController::supprimerAction() */
                                 'controller' => FamilleProfessionnelleController::class,
-                                'action'     => 'effacer',
+                                'action'     => 'supprimer',
                             ],
                         ],
                     ],

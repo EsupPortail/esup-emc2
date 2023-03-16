@@ -4,9 +4,17 @@ namespace Metier\Form\Domaine;
 
 use Metier\Service\FamilleProfessionnelle\FamilleProfessionnelleService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class DomaineFormFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return DomaineForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : DomaineForm
     {
         /**

@@ -78,6 +78,7 @@ return [
                         'options' => [
                             'route' => '/referentiel',
                             'defaults' => [
+                                /** @see ReferentielController::indexAction() */
                                 'controller' => ReferentielController::class,
                                 'action'     => 'index',
                             ],
@@ -89,6 +90,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter',
                                     'defaults' => [
+                                        /** @see ReferentielController::ajouterAction() */
                                         'controller' => ReferentielController::class,
                                         'action'     => 'ajouter',
                                     ],
@@ -99,6 +101,7 @@ return [
                                 'options' => [
                                     'route'    => '/modifier/:referentiel',
                                     'defaults' => [
+                                        /** @see ReferentielController::modifierAction() */
                                         'controller' => ReferentielController::class,
                                         'action'     => 'modifier',
                                     ],
@@ -109,6 +112,7 @@ return [
                                 'options' => [
                                     'route'    => '/historiser/:referentiel',
                                     'defaults' => [
+                                        /** @see ReferentielController::historiserAction() */
                                         'controller' => ReferentielController::class,
                                         'action'     => 'historiser',
                                     ],
@@ -119,6 +123,7 @@ return [
                                 'options' => [
                                     'route'    => '/restaurer/:referentiel',
                                     'defaults' => [
+                                        /** @see ReferentielController::restaurerAction() */
                                         'controller' => ReferentielController::class,
                                         'action'     => 'restaurer',
                                     ],
@@ -129,6 +134,7 @@ return [
                                 'options' => [
                                     'route'    => '/supprimer/:referentiel',
                                     'defaults' => [
+                                        /** @see ReferentielController::supprimerAction() */
                                         'controller' => ReferentielController::class,
                                         'action'     => 'supprimer',
                                     ],
