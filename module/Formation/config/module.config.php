@@ -14,7 +14,6 @@ use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEventFactory;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
-use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
@@ -79,20 +78,6 @@ return [
             'apc' => [
                 'namespace' => 'PREECOG__Formation__' . __NAMESPACE__,
             ],
-        ],
-    ],
-
-    'formation' => [
-        'mail' => [
-            /**
-             * Adresses des redirections si do_not_send est à true
-             */
-            'redirect_to' => ['jean-philippe.metivier@unicaen.fr', ],
-            'do_not_send' => false,
-
-            'subject_prefix' => 'Mes formations (test)',
-            'from_name' => 'mes-formations.unicaen.fr | Application de gestion des formations du personnel',
-            'from_email' => 'assistance@unicaen.fr',
         ],
     ],
 

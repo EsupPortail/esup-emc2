@@ -61,7 +61,7 @@ class NotificationService {
         foreach ($superieurs as $superieur) {
             if ($superieur->getEmail()) $emails[] = $superieur->getEmail();
         }
-        $mail = $this->getMailService()->sendMail($emails, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($emails, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -91,7 +91,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_VALIDATION, $vars);
 
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -117,7 +117,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_RESPONSABLE_REFUS, $vars);
 
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -139,7 +139,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_VALIDATION, $vars);
 
-        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -163,7 +163,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_PREVENTION, $vars);
 
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -187,7 +187,7 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_REFUS, $vars);
 
-        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -210,7 +210,7 @@ class NotificationService {
         ];
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_PRINCIPALE, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -232,7 +232,7 @@ class NotificationService {
         ];
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_COMPLEMENTAIRE, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -251,7 +251,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_CONVOCATION, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -270,7 +270,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_DEMANDE_RETOUR, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -289,7 +289,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_ANNULEE, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -307,7 +307,7 @@ class NotificationService {
         $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
         $vars = ['instance' => $instance, 'UrlService' => $urlService];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_EMARGEMENT, $vars);
-        $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -329,7 +329,7 @@ class NotificationService {
         $mails = [];
         foreach ($liste as $inscrit) {
             $agent = $inscrit->getAgent();
-            $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps());
+            $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag(), $agent->generateTag() ]);
             $this->getMailService()->update($mail);
             $mails[] = $mail;
@@ -356,7 +356,7 @@ class NotificationService {
                 'UrlService' => $this->getUrlService(),
             ];
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_NOUVELLES_FORMATIONS, $vars);
-            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()), 'Formation');
             $mail->setMotsClefs(["NOTIFICATION_FORMATION_" . (new DateTime())->format('d/m/Y')]);
             $this->getMailService()->update($mail);
             return $mail;
@@ -378,7 +378,7 @@ class NotificationService {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_OUVERTE, $vars);
 
         $email = $abonnement->getAgent()->getEmail();
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -403,7 +403,7 @@ class NotificationService {
                 'UrlService' => $this->getUrlService(),
             ];
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_CLOTURE_AUTOMATIQUE, $vars);
-            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()), 'Formation');
             $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
             return $mail;
@@ -430,7 +430,7 @@ class NotificationService {
                 'UrlService' => $this->getUrlService(),
             ];
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_CONVOCATION_AUTOMATIQUE, $vars);
-            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()), 'Formation');
             $mail->setMotsClefs([$rendu->getTemplate()->generateTag()]);
             $this->getMailService()->update($mail);
             return $mail;
@@ -456,7 +456,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_AGENT, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
@@ -474,7 +474,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_AGENT, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
@@ -491,7 +491,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_RESP_DRH, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
@@ -515,7 +515,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_DRH, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
@@ -539,7 +539,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_REFUS, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
@@ -557,7 +557,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::DEMANDE_EXTERNE_VALIDATION_COMPLETE, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
+        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$rendu->getTemplate()->generateTag(), $demande->generateTag()]);
         $this->getMailService()->update($mail);
         return $mail;
