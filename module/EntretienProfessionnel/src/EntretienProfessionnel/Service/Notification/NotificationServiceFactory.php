@@ -39,13 +39,6 @@ class NotificationServiceFactory
         $structureService = $container->get(StructureService::class);
         $urlService = $container->get(UrlService::class);
 
-        $config = $container->get('Configuration')['unicaen-mail'];
-        if (isset($config['redirect_to'])) $mailService->setRedirectTo($config['redirect_to']);
-        if (isset($config['do_not_send'])) $mailService->setDoNotSend($config['do_not_send']);
-        if (isset($config['subject_prefix'])) $mailService->setSubjectPrefix($config['subject_prefix']);
-        if (isset($config['from_name'])) $mailService->setFromName($config['from_name']);
-        if (isset($config['from_email'])) $mailService->setFromEmail($config['from_email']);
-
         $service = new NotificationService();
         $service->setAgentService($agentService);
         $service->setCampagneService($campagneService);
