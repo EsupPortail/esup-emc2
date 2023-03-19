@@ -4,18 +4,21 @@ namespace Carriere\Form\NiveauEnveloppe;
 
 use Carriere\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class NiveauEnveloppeFormFactory {
 
     /**
      * @param ContainerInterface $container
      * @return NiveauEnveloppeForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : NiveauEnveloppeForm
     {
         /** @var NiveauService $niveauService */
         $niveauService = $container->get(NiveauService::class);
-
         /** @var NiveauEnveloppeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(NiveauEnveloppeHydrator::class);
 

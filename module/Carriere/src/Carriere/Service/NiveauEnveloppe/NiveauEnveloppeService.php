@@ -13,10 +13,6 @@ class NiveauEnveloppeService {
 
     /** GESTIONS DES ENTITES ******************************************************************************************/
 
-    /**
-     * @param NiveauEnveloppe $metierNiveau
-     * @return NiveauEnveloppe
-     */
     public function create(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
         try {
@@ -28,10 +24,6 @@ class NiveauEnveloppeService {
         return $metierNiveau;
     }
 
-    /**
-     * @param NiveauEnveloppe $metierNiveau
-     * @return NiveauEnveloppe
-     */
     public function update(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
         try {
@@ -42,10 +34,6 @@ class NiveauEnveloppeService {
         return $metierNiveau;
     }
 
-    /**
-     * @param NiveauEnveloppe $metierNiveau
-     * @return NiveauEnveloppe
-     */
     public function historise(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
         try {
@@ -57,10 +45,6 @@ class NiveauEnveloppeService {
         return $metierNiveau;
     }
 
-    /**
-     * @param NiveauEnveloppe $metierNiveau
-     * @return NiveauEnveloppe
-     */
     public function restore(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
         try {
@@ -72,10 +56,6 @@ class NiveauEnveloppeService {
         return $metierNiveau;
     }
 
-    /**
-     * @param NiveauEnveloppe $metierNiveau
-     * @return NiveauEnveloppe
-     */
     public function delete(NiveauEnveloppe $metierNiveau) : NiveauEnveloppe
     {
         try {

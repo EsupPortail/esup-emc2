@@ -18,7 +18,8 @@ class NiveauForm extends Form {
             'type' => Number::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau * :",
+                'label' => "Niveau <span title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'niveau',
@@ -32,7 +33,8 @@ class NiveauForm extends Form {
             'type' => Text::class,
             'name' => 'etiquette',
             'options' => [
-                'label' => "Etiquette * :",
+                'label' => "Etiquette <span title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'etiquette',
@@ -43,7 +45,8 @@ class NiveauForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle * :",
+                'label' => "Libelle <span title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',

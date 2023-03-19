@@ -4,24 +4,15 @@ namespace Carriere\Service\Niveau;
 
 trait NiveauServiceAwareTrait {
 
-    /** @var NiveauService */
-    private $niveauService;
+    private NiveauService $niveauService;
 
-    /**
-     * @return NiveauService
-     */
     public function getNiveauService(): NiveauService
     {
         return $this->niveauService;
     }
 
-    /**
-     * @param NiveauService $niveauService
-     * @return NiveauService
-     */
-    public function setNiveauService(NiveauService $niveauService): NiveauService
+    public function setNiveauService(NiveauService $niveauService): void
     {
         $this->niveauService = $niveauService;
-        return $this->niveauService;
     }
 }

@@ -15,10 +15,6 @@ class NiveauService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Niveau $niveau
-     * @return Niveau
-     */
     public function create(Niveau $niveau) : Niveau
     {
         try {
@@ -30,10 +26,6 @@ class NiveauService {
         return $niveau;
     }
 
-    /**
-     * @param Niveau $niveau
-     * @return Niveau
-     */
     public function update(Niveau $niveau) : Niveau
     {
         try {
@@ -44,10 +36,6 @@ class NiveauService {
         return $niveau;
     }
 
-    /**
-     * @param Niveau $niveau
-     * @return Niveau
-     */
     public function historise(Niveau $niveau) : Niveau
     {
         try {
@@ -59,10 +47,6 @@ class NiveauService {
         return $niveau;
     }
 
-    /**
-     * @param Niveau $niveau
-     * @return Niveau
-     */
     public function restore(Niveau $niveau) : Niveau
     {
         try {
@@ -74,10 +58,6 @@ class NiveauService {
         return $niveau;
     }
 
-    /**
-     * @param Niveau $niveau
-     * @return Niveau
-     */
     public function delete(Niveau $niveau) : Niveau
     {
         try {
@@ -108,12 +88,7 @@ class NiveauService {
         return $qb;
     }
 
-    /**
-     * @param string $champs
-     * @param string $ordre
-     * @param bool $avecHisto
-     * @return Niveau[]
-     */
+    /** @return Niveau[] */
     public function getNiveaux(string $champs = 'niveau', string $ordre = 'ASC', bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
@@ -136,10 +111,6 @@ class NiveauService {
         return $options;
     }
 
-    /**
-     * @param int|null $id
-     * @return Niveau|null
-     */
     public function getNiveau(?int $id) : ?Niveau
     {
         $qb = $this->createQueryBuilder()
@@ -154,11 +125,6 @@ class NiveauService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Niveau|null
-     */
     public function getRequestedNiveau(AbstractActionController $controller, string $param='niveau') : ?Niveau
     {
         $id = $controller->params()->fromRoute($param);

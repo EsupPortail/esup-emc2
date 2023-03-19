@@ -20,10 +20,8 @@ class CorrespondanceService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
-    public function createQueryBuilder() {
+    public function createQueryBuilder() : QueryBuilder
+    {
         $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
             ->leftJoin('correspondance.type','ctype')->addSelect('ctype')
             ->andWhere('correspondance.deleted_on IS NULL')
@@ -31,13 +29,7 @@ class CorrespondanceService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $avecAgent
-     * @param bool $avecHisto
-     * @return Correspondance
-     */
+    /** @return Correspondance[] */
     public function getCorrespondances(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=true, bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
@@ -62,13 +54,7 @@ class CorrespondanceService {
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $avecAgent
-     * @return array
-     */
-    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false)
+    public function getCorrespondancesAsOptions(string $champ = 'categorie', string $ordre = 'ASC', bool $avecAgent=false) : array
     {
         $correspondances = $this->getCorrespondances($champ, $ordre, $avecAgent);
         $options = [];
@@ -78,12 +64,7 @@ class CorrespondanceService {
         return $options;
     }
 
-    /**
-     * @param int $id
-     * @param bool $avecAgent
-     * @return Correspondance
-     */
-    public function getCorrespondance(int $id, bool $avecAgent = true)
+    public function getCorrespondance(int $id, bool $avecAgent = true) : ?Correspondance
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('correspondance.id = :id')
@@ -111,10 +92,7 @@ class CorrespondanceService {
         return $this->getCorrespondance($id);
     }
 
-    /**
-     * @param CorrespondanceType|null $type
-     * @return Correspondance[]
-     */
+    /** @return Correspondance[] */
     public function getCorrespondancesByType(?CorrespondanceType $type) : array
     {
         $qb = $this->createQueryBuilder()

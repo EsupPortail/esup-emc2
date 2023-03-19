@@ -3,14 +3,18 @@
 namespace Carriere\Form\Niveau;
 
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class NiveauFormFactory {
 
     /**
      * @param ContainerInterface $container
      * @return NiveauForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : NiveauForm
     {
         /**
          * @var NiveauHydrator $hydrator

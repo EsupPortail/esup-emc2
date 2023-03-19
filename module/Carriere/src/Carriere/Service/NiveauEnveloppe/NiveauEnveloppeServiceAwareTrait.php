@@ -4,26 +4,16 @@ namespace Carriere\Service\NiveauEnveloppe;
 
 trait NiveauEnveloppeServiceAwareTrait {
 
-    /** @var NiveauEnveloppeService */
-    private $metierNiveauService;
+    private NiveauEnveloppeService $metierNiveauService;
 
-    /**
-     * @return NiveauEnveloppeService
-     */
     public function getNiveauEnveloppeService() : NiveauEnveloppeService
     {
         return $this->metierNiveauService;
     }
 
-    /**
-     * @param NiveauEnveloppeService $metierNiveauService
-     * @return NiveauEnveloppeService
-     */
-    public function setNiveauEnveloppeService(NiveauEnveloppeService $metierNiveauService) : NiveauEnveloppeService
+    public function setNiveauEnveloppeService(NiveauEnveloppeService $metierNiveauService) : void
     {
         $this->metierNiveauService = $metierNiveauService;
-        return $this->metierNiveauService;
     }
-
 
 }

@@ -12,7 +12,7 @@ use Laminas\Validator\Callback;
 class NiveauEnveloppeForm extends Form {
     use NiveauServiceAwareTrait;
 
-    public $niveaux;
+    public array $niveaux = [];
 
     public function init()
     {
@@ -20,7 +20,8 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'borne_inferieure',
             'options' => [
-                'label' => "Niveau le plus bas * :",
+                'label' => "Niveau le plus bas <span title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionner le niveau le plus bas ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],
@@ -34,7 +35,8 @@ class NiveauEnveloppeForm extends Form {
             'type' => Select::class,
             'name' => 'borne_superieure',
             'options' => [
-                'label' => "Niveau le plus haut * :",
+                'label' => "Niveau le plus haut <span title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => 'Sélectionner le niveau le plus élevé ...',
                 'value_options' => $this->getNiveauService()->getNiveauxAsOptions(),
             ],

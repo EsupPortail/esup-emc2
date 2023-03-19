@@ -29,7 +29,7 @@ class NiveauEnveloppeHydrator implements HydratorInterface {
      * @param NiveauEnveloppe $object
      * @return NiveauEnveloppe
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $borneInferieure = isset($data['borne_inferieure'])?$this->getNiveauService()->getNiveau($data['borne_inferieure']):null;
         $borneSuperieure = isset($data['borne_superieure'])?$this->getNiveauService()->getNiveau($data['borne_superieure']):null;

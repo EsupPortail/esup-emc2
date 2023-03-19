@@ -29,9 +29,9 @@ class NiveauHydrator implements HydratorInterface {
      * @param Niveau $object
      * @return Niveau
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
-        $niveau = isset($data['niveau'])?$data['niveau']:null;
+        $niveau = $data['niveau'] ?? null;
         $etiquette = (isset($data['etiquette']) AND trim($data['etiquette']) !== '')?trim($data['etiquette']):null;
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;

@@ -4,10 +4,6 @@ namespace Carriere;
 
 use Carriere\Controller\NiveauController;
 use Carriere\Controller\NiveauControllerFactory;
-use Carriere\Form\ModifierNiveau\ModifierNiveauForm;
-use Carriere\Form\ModifierNiveau\ModifierNiveauFormFactory;
-use Carriere\Form\ModifierNiveau\ModifierNiveauHydrator;
-use Carriere\Form\ModifierNiveau\ModifierNiveauHydratorFactory;
 use Carriere\Form\Niveau\NiveauForm;
 use Carriere\Form\Niveau\NiveauFormFactory;
 use Carriere\Form\Niveau\NiveauHydrator;
@@ -188,14 +184,12 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            ModifierNiveauForm::class => ModifierNiveauFormFactory::class,
             NiveauForm::class => NiveauFormFactory::class,
             NiveauEnveloppeForm::class => NiveauEnveloppeFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            ModifierNiveauHydrator::class => ModifierNiveauHydratorFactory::class,
             NiveauHydrator::class => NiveauHydratorFactory::class,
             NiveauEnveloppeHydrator::class => NiveauEnveloppeHydratorFactory::class,
         ],

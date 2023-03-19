@@ -4,25 +4,16 @@ namespace Carriere\Service\Correspondance;
 
 trait CorrespondanceServiceAwareTrait {
 
-    /** @var CorrespondanceService */
-    private $correspondanceService;
+    private CorrespondanceService $correspondanceService;
 
-    /**
-     * @return CorrespondanceService
-     */
     public function getCorrespondanceService() : CorrespondanceService
     {
         return $this->correspondanceService;
     }
 
-    /**
-     * @param CorrespondanceService $correspondanceService
-     * @return CorrespondanceService
-     */
-    public function setCorrespondanceService(CorrespondanceService $correspondanceService) : CorrespondanceService
+    public function setCorrespondanceService(CorrespondanceService $correspondanceService) : void
     {
         $this->correspondanceService = $correspondanceService;
-        return $this->correspondanceService;
     }
 
 }

@@ -18,9 +18,6 @@ class GradeService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
@@ -29,10 +26,6 @@ class GradeService {
         return $qb;
     }
 
-    /**
-     * @param QueryBuilder $qb
-     * @return QueryBuilder
-     */
     public function decorateWithAgent(QueryBuilder $qb) : QueryBuilder
     {
         $qb = $qb
@@ -44,13 +37,7 @@ class GradeService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $avecAgent
-     * @param bool $avecHisto
-     * @return Grade[]
-     */
+    /** @return Grade[] */
     public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true, bool $avecHisto=false) : array
     {
         $qb = $this->createQueryBuilder()
@@ -68,11 +55,6 @@ class GradeService {
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return array
-     */
     public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre ='ASC') : array
     {
         $grades = $this->getGrades($champ, $ordre);
@@ -84,11 +66,6 @@ class GradeService {
         return $array;
     }
 
-    /**
-     * @param integer $id
-     * @param bool $avecAgent
-     * @return Grade|null
-     */
     public function getGrade(int $id, bool $avecAgent = true) : ?Grade
     {
         $qb = $this->createQueryBuilder()
@@ -105,11 +82,6 @@ class GradeService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Grade|null
-     */
     public function getRequestedGrade(AbstractActionController $controller, string $param = "grade") : ?Grade
     {
         $id = $controller->params()->fromRoute($param);

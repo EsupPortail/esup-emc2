@@ -86,8 +86,7 @@ class Grade  implements HasPeriodeInterface {
 
     public function generateTooltip() : string
     {
-        $text  = "";
-        $text .= "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
+        $text  = "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";
         $text .= "<br/>";
         $text .= "Libelle long : <strong>". $this->getLibelleLong() . "</strong>";
         $text .= "<br/>";
