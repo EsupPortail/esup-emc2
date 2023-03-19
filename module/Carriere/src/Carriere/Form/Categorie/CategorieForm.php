@@ -17,7 +17,8 @@ class CategorieForm extends Form {
             'type' => Text::class,
             'name' => 'code',
             'options' => [
-                'label' => "Code * :",
+                'label' => "Code <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'code',
@@ -29,7 +30,8 @@ class CategorieForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle * :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',

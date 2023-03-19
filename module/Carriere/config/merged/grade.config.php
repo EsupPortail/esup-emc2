@@ -57,6 +57,7 @@ return [
                 'options' => [
                     'route'    => '/grade',
                     'defaults' => [
+                        /** @see GradeController::indexAction() */
                         'controller' => GradeController::class,
                         'action'     => 'index',
                     ],
@@ -68,6 +69,7 @@ return [
                         'options' => [
                             'route'    => '/afficher-agents/:grade',
                             'defaults' => [
+                                /** @see GradeController::afficherAgentsAction() */
                                 'controller' => GradeController::class,
                                 'action'     => 'afficher-agents',
                             ],

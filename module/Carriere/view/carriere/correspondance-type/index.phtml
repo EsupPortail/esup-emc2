@@ -55,11 +55,13 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
             </td>
             <td> <?php echo $type->getLibelleCourt(); ?> </td>
             <td> <?php echo $type->getLibelleLong(); ?> </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/afficher', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal">
-                            <span class="icon icon-voir"></span></a>
+                            <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

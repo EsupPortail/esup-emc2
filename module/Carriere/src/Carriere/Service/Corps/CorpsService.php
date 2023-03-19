@@ -16,10 +16,6 @@ class CorpsService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Corps $corps
-     * @return Corps
-     */
     public function update(Corps $corps) : Corps
     {
         try {
@@ -32,9 +28,6 @@ class CorpsService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
@@ -43,13 +36,7 @@ class CorpsService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @param boolean $avecAgent
-     * @param bool $avecHisto
-     * @return Corps[]
-     */
+    /** @return Corps[] */
     public function getCorps(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true, bool $avecHisto = false) : array
     {
         $qb = $this->createQueryBuilder()
@@ -73,12 +60,7 @@ class CorpsService {
         return $result;
     }
 
-    /**
-     * @param integer $id
-     * @param bool $avecAgent
-     * @return Corps
-     */
-    public function getCorp(int $id, bool $avecAgent=true) : ?Corps
+    public function getCorp(?int $id, bool $avecAgent=true) : ?Corps
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('corps.id = :id')
@@ -100,11 +82,6 @@ class CorpsService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Corps
-     */
     public function getRequestedCorps(AbstractActionController $controller, string $param = 'corps') : ?Corps
     {
         $id = $controller->params()->fromRoute($param);
@@ -112,12 +89,6 @@ class CorpsService {
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $avecAgent
-     * @return array
-     */
     public function getCorpsAsOptions(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent=false) : array
     {
         $corps = $this->getCorps($champ, $ordre, $avecAgent);

@@ -167,7 +167,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'label' => 'Niveaux',
+                                'label' => 'Niveaux de maîtrise',
                                 'route' => 'element/niveau',
                                 'resource' => PrivilegeController::getResourceId(NiveauController::class, 'index') ,
                                 'order' => 280,

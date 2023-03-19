@@ -33,7 +33,7 @@ $this->headTitle("Liste des grades");
 <table class="datatable table table-condensed table-hover">
     <thead>
     <tr>
-        <th style="width:70%;"> Libellé </th>
+        <th > Libellé </th>
         <th> #Agent/Grade </th>
         <th> Action </th>
     </tr>
@@ -50,15 +50,16 @@ $this->headTitle("Liste des grades");
                 </span>
             </td>
             <td> <?php echo count($grade->getAgentGrades()); ?> </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\GradeController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('grade/afficher-agents', ['grade' => $grade->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon users" data-bs-toggle="tooltip" data-bs-html="true"
-                                              title="Afficher les agents ayant ce grade"></span></a>
+                            <span class="icon users"></span>
+                        Lister les agents
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

@@ -84,7 +84,7 @@ class CorpsController extends AbstractActionController {
             'title' => "Modifier les niveaux du corps [".$corps->getLibelleLong()."]",
             'form' => $form,
         ]);
-        $vm->setTemplate('metier/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 }

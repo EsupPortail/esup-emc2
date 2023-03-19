@@ -73,6 +73,7 @@ return [
                 'options' => [
                     'route'    => '/corps',
                     'defaults' => [
+                        /** @see CorpsController::indexAction() */
                         'controller' => CorpsController::class,
                         'action'     => 'index',
                     ],
@@ -84,6 +85,7 @@ return [
                         'options' => [
                             'route'    => '/afficher-agents/:corps',
                             'defaults' => [
+                                /** @see CorpsController::afficherAgentsAction() */
                                 'controller' => CorpsController::class,
                                 'action'     => 'afficher-agents',
                             ],
@@ -95,6 +97,7 @@ return [
                         'options' => [
                             'route'    => '/modifier-niveaux/:corps',
                             'defaults' => [
+                                /** @see CorpsController::modifierNiveauxAction() */
                                 'controller' => CorpsController::class,
                                 'action'     => 'modifier-niveaux',
                             ],

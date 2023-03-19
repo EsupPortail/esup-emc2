@@ -16,10 +16,6 @@ class CategorieService
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
     public function create(Categorie $categorie) : Categorie
     {
         try {
@@ -31,10 +27,6 @@ class CategorieService
         return $categorie;
     }
 
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
     public function update(Categorie $categorie) : Categorie
     {
         try {
@@ -45,10 +37,6 @@ class CategorieService
         return $categorie;
     }
 
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
     public function historise(Categorie $categorie) : Categorie
     {
         try {
@@ -60,10 +48,6 @@ class CategorieService
         return $categorie;
     }
 
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
     public function restore(Categorie $categorie) : Categorie
     {
         try {
@@ -75,10 +59,6 @@ class CategorieService
         return $categorie;
     }
 
-    /**
-     * @param Categorie $categorie
-     * @return Categorie
-     */
     public function delete(Categorie $categorie) : Categorie
     {
         try {
@@ -92,9 +72,6 @@ class CategorieService
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuider() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Categorie::class)->createQueryBuilder('categorie')
@@ -102,11 +79,7 @@ class CategorieService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Categorie[]
-     */
+    /** @return Categorie[] */
     public function getCategories(string $champ='libelle', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuider()
@@ -115,11 +88,6 @@ class CategorieService
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return array
-     */
     public function getCategorieAsOption(string $champ='libelle', string $ordre='ASC') : array
     {
         $categories = $this->getCategories($champ,$ordre);
@@ -130,10 +98,6 @@ class CategorieService
         return $array;
     }
 
-    /**
-     * @param int|null $id
-     * @return Categorie|null
-     */
     public function getCategorie(?int $id) : ?Categorie
     {
         $qb = $this->createQueryBuider()
@@ -149,34 +113,10 @@ class CategorieService
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Categorie|null
-     */
     public function getRequestedCategorie(AbstractActionController $controller, string $param='categorie') : ?Categorie
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCategorie($id);
-        return $result;
-    }
-
-    /**
-     * @param string $code
-     * @return Categorie|null
-     */
-    public function getCategorieByCode(string $code) : ?Categorie
-    {
-        $qb = $this->createQueryBuider()
-            ->andWhere('categorie.code = :code')
-            ->setParameter('code', $code)
-        ;
-
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Categorie partagent le même code [".$code."]",0,$e);
-        }
         return $result;
     }
 }

@@ -4,12 +4,16 @@ namespace Carriere\Service\Corps;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CorpsServiceFactory {
 
     /**
      * @param ContainerInterface $container
      * @return CorpsService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : CorpsService
     {
@@ -18,7 +22,6 @@ class CorpsServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        /** @var CorpsService $service */
         $service = new CorpsService();
         $service->setEntityManager($entityManager);
         return $service;

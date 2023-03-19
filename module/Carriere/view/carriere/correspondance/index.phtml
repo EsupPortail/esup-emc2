@@ -45,10 +45,10 @@ $this->headTitle("Liste des correspondances");
     <thead>
     <tr>
         <th> Code </th>
-        <th style="width:70%;"> Libellé </th>
+        <th > Libellé </th>
         <th> Type </th>
         <th> #Agent/Grade </th>
-        <th> Action </th>
+        <th > Action </th>
     </tr>
     </thead>
     <tbody>
@@ -75,15 +75,16 @@ $this->headTitle("Liste des correspondances");
                 <?php endif; ?>
             </td>
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\CorrespondanceController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('correspondance/afficher-agents', ['correspondance' => $correspondance->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon users" data-bs-toggle="tooltip" data-bs-html="true"
-                                              title="Afficher les agents ayant cette correpondance"></span></a>
+                            <span class="icon users"></span>
+                            Lister les agents
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

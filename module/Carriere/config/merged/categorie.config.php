@@ -81,6 +81,7 @@ return [
                 'options' => [
                     'route'    => '/categorie',
                     'defaults' => [
+                        /** @see CategorieController::indexAction(); */
                         'controller' => CategorieController::class,
                         'action'     => 'index',
                     ],
@@ -92,6 +93,7 @@ return [
                         'options' => [
                             'route'    => '/afficher-metiers/:categorie',
                             'defaults' => [
+                                /** @see CategorieController::afficherMetiersAction(); */
                                 'controller' => CategorieController::class,
                                 'action'     => 'afficher-metiers',
                             ],
@@ -103,6 +105,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
+                                /** @see CategorieController::ajouterAction(); */
                                 'controller' => CategorieController::class,
                                 'action'     => 'ajouter',
                             ],
@@ -114,6 +117,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:categorie',
                             'defaults' => [
+                                /** @see CategorieController::modifierAction() */
                                 'controller' => CategorieController::class,
                                 'action'     => 'modifier',
                             ],
@@ -124,6 +128,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:categorie',
                             'defaults' => [
+                                /** @see CategorieController::historiserAction() */
                                 'controller' => CategorieController::class,
                                 'action'     => 'historiser',
                             ],
@@ -134,6 +139,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:categorie',
                             'defaults' => [
+                                /** @see CategorieController::restaurerAction() */
                                 'controller' => CategorieController::class,
                                 'action'     => 'restaurer',
                             ],
@@ -144,6 +150,7 @@ return [
                         'options' => [
                             'route'    => '/supprimer/:categorie',
                             'defaults' => [
+                                /** @see CategorieController::supprimerAction() */
                                 'controller' => CategorieController::class,
                                 'action'     => 'supprimer',
                             ],

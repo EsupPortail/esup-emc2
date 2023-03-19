@@ -87,7 +87,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             'niveau' => [
-                                'label'    => 'Niveaux',
+                                'label'    => 'Niveaux de carrière',
                                 'route'    => 'niveau',
                                 'resource' => PrivilegeController::getResourceId(NiveauController::class, 'index') ,
                                 'order'    => 840,
@@ -108,6 +108,7 @@ return [
                 'options' => [
                     'route'    => '/niveau',
                     'defaults' => [
+                        /** @see NiveauController::indexAction() */
                         'controller' => NiveauController::class,
                         'action'     => 'index',
                     ],
@@ -119,6 +120,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
+                                /** @see NiveauController::ajouterAction() */
                                 'controller' => NiveauController::class,
                                 'action'     => 'ajouter',
                             ],
@@ -129,6 +131,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:niveau',
                             'defaults' => [
+                                /** @see NiveauController::modifierAction() */
                                 'controller' => NiveauController::class,
                                 'action'     => 'modifier',
                             ],
@@ -139,6 +142,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:niveau',
                             'defaults' => [
+                                /** @see NiveauController::historiserAction() */
                                 'controller' => NiveauController::class,
                                 'action'     => 'historiser',
                             ],
@@ -149,6 +153,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:niveau',
                             'defaults' => [
+                                /** @see NiveauController::restaurerAction() */
                                 'controller' => NiveauController::class,
                                 'action'     => 'restaurer',
                             ],
@@ -159,6 +164,7 @@ return [
                         'options' => [
                             'route'    => '/supprimer/:niveau',
                             'defaults' => [
+                                /** @see NiveauController::supprimerAction() */
                                 'controller' => NiveauController::class,
                                 'action'     => 'supprimer',
                             ],

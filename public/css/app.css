@@ -143,7 +143,6 @@ tr.historise td:not(.action) {
 
 th.action {
     width: 8rem;
-    text-align: right;
 }
 
 td.action {

@@ -25,7 +25,7 @@ class CategorieHydrator implements HydratorInterface {
      * @param Categorie $object
      * @return Categorie
      */
-    public function hydrate(array $data, $object) : Categorie
+    public function hydrate(array $data, $object) : object
     {
         $code = (isset($data['code']) AND trim($data['code']) !== '')?trim($data['code']):null;
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;

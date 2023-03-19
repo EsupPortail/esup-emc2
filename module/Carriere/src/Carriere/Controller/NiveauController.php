@@ -42,7 +42,7 @@ class NiveauController extends AbstractActionController {
             'title' => "Ajout d'un niveau",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -67,7 +67,7 @@ class NiveauController extends AbstractActionController {
             'title' => "Modification d'un niveau",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -106,7 +106,7 @@ class NiveauController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($niveau !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du niveau " . $niveau->getEtiquette(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

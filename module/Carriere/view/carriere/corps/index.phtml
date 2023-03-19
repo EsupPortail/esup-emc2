@@ -34,11 +34,11 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
 <table class="datatable table table-condensed">
     <thead>
     <tr>
-        <th style="width:70%;"> Libellé</th>
+        <th> Libellé</th>
         <th> #Agent/Grade </th>
         <th> Catégorie </th>
         <th> Niveaux </th>
-        <th style="width:3rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
@@ -54,7 +54,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
             </td>
             <td> <?php echo count($corp->getAgentGrades()); ?> </td>
             <td> <?php echo $corp->getCategorie(); ?> </td>
-            <td>
+            <td class="action">
                 <?php echo $this->niveauEnveloppe($corp->getNiveaux()) ?>
                 <?php if ($canModifier) : ?>
                     <?php if ($corp->getNiveaux()) : ?>
@@ -62,25 +62,31 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                         <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon icon-editer"></span></a>
+                            <span class="icon icon-editer"></span>
+                            Modifier
+                        </a>
                     <?php else : ?>
+                        <br/>
                         <?php /**  @see \Metier\Controller\MetierController::modifierNiveauxAction() */ ?>
                         <a href="<?php echo $this->url('corps/modifier-niveaux', ['corps' => $corp->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon icon-ajouter"></span></a>
+                            <span class="icon icon-ajouter"></span>
+                            Ajouter
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\CorpsController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                                        <span class="icon icon-voir" data-bs-toggle="tooltip" data-bs-html="true"
-                                              title="Afficher les agents ayant ce corps"></span></a>
+                        <span class="icon users"></span>
+                        Afficher les agents
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

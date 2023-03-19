@@ -39,6 +39,7 @@ return [
                 'options' => [
                     'route'    => '/carriere',
                     'defaults' => [
+                        /** @see IndexController::indexAction() */
                         'controller' => IndexController::class,
                         'action'     => 'index',
                     ],

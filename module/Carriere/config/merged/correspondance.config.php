@@ -82,6 +82,7 @@ return [
                         'options' => [
                             'route'    => '/correspondance-type',
                             'defaults' => [
+                                /** @see CorrespondanceTypeController::indexAction() */
                                 'controller' => CorrespondanceTypeController::class,
                                 'action'     => 'index',
                             ],
@@ -93,6 +94,7 @@ return [
                                 'options' => [
                                     'route'    => '/afficher/:type',
                                     'defaults' => [
+                                        /** @see CorrespondanceTypeController::afficherAction() */
                                         'controller' => CorrespondanceTypeController::class,
                                         'action'     => 'afficher',
                                     ],
@@ -108,6 +110,7 @@ return [
                 'options' => [
                     'route'    => '/correspondance',
                     'defaults' => [
+                        /** @see CorrespondanceController::indexAction() */
                         'controller' => CorrespondanceController::class,
                         'action'     => 'index',
                     ],
@@ -119,6 +122,7 @@ return [
                         'options' => [
                             'route'    => '/afficher-agents/:correspondance',
                             'defaults' => [
+                                /** @see CorrespondanceController::afficherAgentsAction() */
                                 'controller' => CorrespondanceController::class,
                                 'action'     => 'afficher-agents',
                             ],

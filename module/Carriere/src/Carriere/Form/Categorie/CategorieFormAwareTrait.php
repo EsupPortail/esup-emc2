@@ -4,24 +4,15 @@ namespace Carriere\Form\Categorie;
 
 trait CategorieFormAwareTrait {
 
-    /** @var CategorieForm */
-    private $categorieForm;
+    private CategorieForm $categorieForm;
 
-    /**
-     * @return CategorieForm
-     */
     public function getCategorieForm() : CategorieForm
     {
         return $this->categorieForm;
     }
 
-    /**
-     * @param CategorieForm $categorieForm
-     * @return CategorieForm
-     */
-    public function setCategorieForm(CategorieForm $categorieForm) : CategorieForm
+    public function setCategorieForm(CategorieForm $categorieForm) : void
     {
         $this->categorieForm = $categorieForm;
-        return $this->categorieForm;
     }
 }

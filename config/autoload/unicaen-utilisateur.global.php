@@ -4,6 +4,7 @@ use Application\Provider\IdentityProvider;
 use Application\Provider\IdentityProviderFactory;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListener;
 use UnicaenUtilisateur\ORM\Event\Listeners\HistoriqueListenerFactory;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;

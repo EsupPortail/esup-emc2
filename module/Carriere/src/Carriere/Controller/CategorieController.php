@@ -53,7 +53,7 @@ class CategorieController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajouter une catégorie',
             'form' => $form,
@@ -80,7 +80,7 @@ class CategorieController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modifier une catégorie',
             'form' => $form,
@@ -119,7 +119,7 @@ class CategorieController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($categorie !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression d'une catégorie " . $categorie->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
