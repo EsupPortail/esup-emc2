@@ -292,19 +292,6 @@ class AgentService {
         return $result;
     }
 
-    public function getAgentByHarp(string $st_harp_id)
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('agent.harpId = :harp_id')
-            ->setParameter('harp_id', $st_harp_id);
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs agents partagent le même harp_id [".$st_harp_id."]");
-        }
-        return $result;
-    }
-
     /**
      * @param $st_prenom
      * @param $st_nom
@@ -355,10 +342,12 @@ class AgentService {
         if (!empty($liste)) return $liste;
 
        //checking structure
-       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
+       $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
        if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
-       $structure = $affectationsPrincipales[0]->getStructure();
+       $affectationPrincipale = $affectationsPrincipales[0];
+
+       $structure = $affectationPrincipale->getStructure();
        do {
            $responsablesAll = array_map(function (StructureResponsable $a) {
                return $a->getAgent();
@@ -394,7 +383,7 @@ class AgentService {
         if ($superieurs === null) $superieurs = $this->computeSuperieures($agent, $date);
 
         //checking structure
-        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
+        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
         $structure = null;
         if (count($affectationsPrincipales) === 1) {
             $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();

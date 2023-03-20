@@ -128,11 +128,8 @@ class AgentAssertion extends AbstractAssertion
         $role = $this->getUserService()->getConnectedRole();
 
         /** @var Agent|null $entity */
-        $entity = null;
-//        if (true AND $agent) {
-            $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
-            $entity = $this->getAgentService()->getAgent($agentId);
-//        }
+        $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
+        $entity = $this->getAgentService()->getAgent($agentId);
 
         $structures = [];
         $affectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($entity);

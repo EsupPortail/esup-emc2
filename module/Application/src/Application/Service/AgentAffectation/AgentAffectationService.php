@@ -5,6 +5,7 @@ namespace Application\Service\AgentAffectation;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Doctrine\ORM\QueryBuilder;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -30,10 +31,11 @@ class AgentAffectationService {
      * @param Agent $agent
      * @param bool $actif
      * @param bool $principale
+     * @param bool $hierarchique
      * @param bool $fonctionnelle
      * @return AgentAffectation[]
      */
-    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true, bool $principale = false, bool $fonctionnelle = true) : array
+    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true, bool $principale = false, bool $hierarchique = true, bool $fonctionnelle = false) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentaffectation.agent = :agent')
@@ -42,6 +44,7 @@ class AgentAffectationService {
         ;
 
         if ($principale) $qb = $qb->andWhere("agentaffectation.principale = 'O'");
+        if ($hierarchique) $qb = $qb->andWhere("agentaffectation.hierarchique = 'O'");
         if ($fonctionnelle) $qb = $qb->andWhere("agentaffectation.fonctionnelle = 'O'");
         if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
 
@@ -49,6 +52,15 @@ class AgentAffectationService {
         return $result;
     }
 
+    /** @return AgentAffectation[]|null */
+    public function getAgentAffectationHierarchiquePrincipaleByAgent(Agent $agent) : ?array
+    {
+        $result = $this->getAgentAffectationsByAgent($agent, true, true,true, false);
+        $nb = count($result);
+//        if ( $nb > 1) throw new RuntimeException("Plusieurs affections hiérarchique principale pour l'agent [".$agent->getDenomination()."]");
+        if ($nb === 0 ) return null;
+        return $result;
+    }
 
     /**
      * @param Structure $structure
