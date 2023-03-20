@@ -662,7 +662,7 @@ class FichePosteController extends AbstractActionController {
          * @var FicheposteActiviteDescriptionRetiree[] $retirees
          */
         $activites = $mission->getActivites();
-        $retirees = $this->getActivitesDescriptionsRetireesService()->getActivitesDescriptionsRetirees($ficheposte, $fichemetier, $mission);
+        $retirees = $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission);
 
         /** @var Request $request */
         $request = $this->getRequest();

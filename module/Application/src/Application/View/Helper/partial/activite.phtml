@@ -114,11 +114,26 @@ $nbObject      = $nbCompetence +  $nbApplication;
         $activites = $mission->getActivites();
         usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});
 
+//        var_dump("INIT");
+//        foreach ($activites as $activite) {
+//            var_dump($activite->getId() . " - ".$activite->getLibelle());
+//        }
+
         if ($ficheposte !== null) {
-            $removed = array_map(function (FicheposteActiviteDescriptionRetiree $a) { return $a->getActivite()->getLibelle(); } , $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission));
+            $removed = array_map(function (FicheposteActiviteDescriptionRetiree $a) { return $a->getActivite()->getId(); } , $ficheposte->getDescriptionsRetireesByFicheMetierAndActivite($fichemetier, $mission));
+
+//            var_dump("TO REMOVE :");
+//            foreach ($removed as $retrait) {
+//                var_dump($retrait);
+//            };
+
             $activites = array_filter($activites, function (MissionActivite $d) use ($removed){
-                return (array_search($d, $removed) === false);
+                return (!in_array($d->getId(), $removed));
             });
+
+//            foreach ($activites as $activite) {
+//                var_dump($activite->getId() . " - ".$activite->getLibelle());
+//            }
         }
     ?>
     <ul>
