@@ -170,7 +170,7 @@ return [
                                 'label' => 'Niveaux de maîtrise',
                                 'route' => 'element/niveau',
                                 'resource' => PrivilegeController::getResourceId(NiveauController::class, 'index') ,
-                                'order' => 280,
+                                'order' => 22300,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

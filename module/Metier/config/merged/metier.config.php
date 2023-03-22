@@ -105,7 +105,7 @@ return [
                         'pages' => [
                             [
                                 'order' => 600,
-                                'label' => 'Gestion des métiers',
+                                'label' => 'Ressources liées aux métiers',
                                 'route' => 'metier',
                                 'resource' => PrivilegeController::getResourceId(MetierController::class, 'index'),
                                 'dropdown-header' => true,

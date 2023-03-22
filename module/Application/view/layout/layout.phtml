@@ -84,6 +84,32 @@ $env = getenv('APPLICATION_ENV') ?: 'production';
 </html>
 
 <script>
+    //$(function () {
+    //    let url = '<?php //echo $this->url('zfcuser/authenticate',['type' => 'cas'], ['force_canonical' => true], true) ?>//';
+    //    let autologging = sessionStorage.getItem('autologging');
+    //    if (autologging === null) {
+    //        // alert("pas d'autologging");
+    //        sessionStorage.setItem('autologging', new Date().toISOString());
+    //        $.ajax({
+    //            type: "POST",
+    //            crossDomain: true,
+    //            url: url,
+    //            beforeSend:
+    //                function () {
+    //                    // alert("Calling ["+url+"]");
+    //                },
+    //            success:
+    //                function() {
+    //                    // alert("oki");
+    //                    window.location.reload();
+    //                }
+    //        });
+    //
+    //    } else {
+    //        // alert("autoloagging done at ["+sessionStorage.getItem('autologging')+"]");
+    //    }
+    //});
+
     $(function () {
         $('[data-toggle="popover"]').popover({ html: true});
     });

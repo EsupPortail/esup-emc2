@@ -32,8 +32,8 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 200,
-                                'label' => 'Élements de fiche',
+                                'order' => 20000,
+                                'label' => 'Autres ressources',
                                 'route' => 'element',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index') ,
                                 'dropdown-header' => true,

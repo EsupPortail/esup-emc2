@@ -114,7 +114,7 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'suivis' => [
                         'pages' => [
                             'structure' => [
                                 'label' => 'Structures',

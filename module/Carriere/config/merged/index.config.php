@@ -58,7 +58,7 @@ return [
                         'pages' => [
                             [
                                 'order' => 800,
-                                'label' => 'Gestion de la carrière',
+                                'label' => 'Ressources liées à la carrière',
                                 'route' => 'carriere',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index') ,
                                 'icon' => 'fas fa-angle-right',

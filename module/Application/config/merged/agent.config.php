@@ -359,7 +359,13 @@ return [
         'default' => [
             'home' => [
                 'pages' => [
-                    'ressource' => [
+                    'suivis' => [
+                        'order' => 1,
+                        'label' => 'Suivis',
+                        'title' => "suivis",
+                        'route' => 'agent',
+                        'resource' => PrivilegeController::getResourceId(AgentController::class, 'index') ,
+
                         'pages' => [
                             'agent' => [
                                 'label'    => 'Agents',

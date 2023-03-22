@@ -91,7 +91,7 @@ return [
                                 'label' => 'Applications',
                                 'route' => 'element/application',
                                 'resource' => PrivilegeController::getResourceId(ApplicationController::class, 'index') ,
-                                'order' => 220,
+                                'order' => 20200,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

@@ -178,7 +178,7 @@ return [
                                 'label' => 'Compétences',
                                 'route' => 'element/competence',
                                 'resource' => PrivilegeController::getResourceId(CompetenceController::class, 'index') ,
-                                'order' => 220,
+                                'order' => 20100,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

@@ -343,7 +343,7 @@ class AgentService {
 
        //checking structure
        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
-       if (count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
+       if ($affectationsPrincipales === null OR count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
        $affectationPrincipale = $affectationsPrincipales[0];
 
