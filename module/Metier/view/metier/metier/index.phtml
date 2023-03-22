@@ -78,13 +78,7 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     Aucune
                 <?php else: ?>
                 <?php foreach ($references as $reference) : ?>
-                    <?php if ($reference->getUrl() !== '') : ?>
-                        <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
-                            <?php echo $reference->getCode(); ?>
-                        </a>
-                    <?php else : ?>
-                        <?php echo $reference->getCode(); ?>
-                    <?php endif; ?>
+                    <?php echo $this->reference($reference); ?>
                     <?php if ($canEditer) : ?>
                     <br>
                     <a  <?php /** @see \Metier\Controller\ReferenceController::modifierAction() */ ?>
@@ -159,9 +153,15 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     </a>
                 <?php endif; ?>
                 <?php if ($canAfficher) : ?>
-                <br/>
-                        <span class="icon icon-voir"></span>
-                        Afficher
+                    <br/>
+                    <a
+                        <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
+                            href="<?php echo $this->url('metier/afficher', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                    </a>
                 <?php endif; ?>
 
                 <?php if ($canEditer) : ?>

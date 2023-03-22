@@ -1,0 +1,93 @@
+<?php
+
+use FicheMetier\Entity\Db\FicheMetier;
+use Metier\Entity\Db\Metier;
+
+/**
+ * @see \Metier\Controller\MetierController::afficherAction()
+ * @var Metier $metier
+ * @var FicheMetier[] $fiches
+ */
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4">
+        Libellé
+    </dt>
+    <dd class="col-md-8">
+        <?php echo $metier->getLibelle(); ?>
+    </dd>
+    <dt class="col-md-4">
+            Référence·s
+    </dt>
+    <dd class="col-md-8">
+        <?php $references = $metier->getReferences(); ?>
+        <?php if (empty($references)) : ?>
+            <em> Aucune référence d'associée au métier </em>
+        <?php else : ?>
+            <ul>
+            <?php foreach ($references as $reference) : ?>
+                <li>
+                    <?php echo $this->reference($reference); ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4">
+        Domaine
+    </dt>
+    <dd class="col-md-8">
+        <?php $domaines = $metier->getDomaines(); ?>
+        <?php if (empty($domaines)) : ?>
+            <em> Aucun domaine d'associé au métier </em>
+        <?php else : ?>
+            <ul>
+                <?php foreach ($domaines as $domaine) : ?>
+                    <li>
+                        <?php echo $domaine; ?>
+                        <?php echo $this->typefonction($domaine); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4">
+        Catégorie
+    </dt>
+    <dd class="col-md-8">
+        <?php $categorie = $metier->getCategorie(); ?>
+        <?php if ($categorie === null) : ?>
+            <em> Aucune catégorie d'associée au métier</em>
+        <?php else : ?>
+            <?php echo $categorie->getLibelle(); ?>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4">
+        Niveau
+    </dt>
+    <dd class="col-md-8">
+        <?php $niveaux = $metier->getNiveaux(); ?>
+        <?php if ($niveaux === null) : ?>
+            <em> Enveloppe de niveau non définie </em>
+        <?php else : ?>
+            <?php echo $this->niveauEnveloppe($metier->getNiveaux(), ['verbose' => true]) ?>
+        <?php endif; ?>
+    </dd>
+
+    <dt class="col-md-4">
+        Fiche·s métier·s
+    </dt>
+    <dd class="col-md-8">
+        <?php if (empty($fiches)) : ?>
+            <em> Aucune fiche métier définie pour ce métier</em>
+        <?php else : ?>
+            <ul>
+            <?php foreach ($fiches as $fiche) : ?>
+                <li> #<?php echo $fiche->getId(); ?> - <?php echo $metier->getLibelle(); ?> <?php echo $this->etatbadge($fiche->getEtat()); ?></li>
+            <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </dd>
+</dl>

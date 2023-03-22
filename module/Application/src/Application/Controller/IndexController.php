@@ -111,10 +111,10 @@ class IndexController extends AbstractActionController
             }
         }
         $fiches = [];
-        $fichesRAW = $this->getFichePosteService()->getFichesPostesbyAgents($agents);
-        foreach ($fichesRAW as $fiche) {
+//        $fichesRAW = $this->getFichePosteService()->getFichesPostesbyAgents($agents);
+//        foreach ($fichesRAW as $fiche) {
 //            $fiches[$fiche->getAgent()->getId()][] = $fiche;
-        }
+//        }
 
 
 

@@ -8,15 +8,33 @@
 
 use Carriere\Entity\Db\NiveauEnveloppe;
 
-
+$verbose = (isset($options['verbose']) AND $options['verbose'] === true);
 ?>
 
-<?php if ($niveauEnveloppe === null) : ?>
-    Non&nbsp;précisé
-<?php else: ?>
-    [<?php echo $niveauEnveloppe->getBorneInferieure()->getEtiquette(); ?>:<?php echo $niveauEnveloppe->getBorneSuperieure()->getEtiquette(); ?>]<br/>
-    <?php if ($niveauEnveloppe->getValeurRecommandee()) : ?>
-        Recommandé&nbsp;<?php echo $niveauEnveloppe->getValeurRecommandee()->getEtiquette(); ?>
+<?php if ($verbose) : ?>
+    <?php
+        $minimun = $niveauEnveloppe->getBorneInferieure();
+        $maximum = $niveauEnveloppe->getBorneSuperieure();
+        $recommande = $niveauEnveloppe->getValeurRecommandee();
+    ?>
+    <?php if ($minimun === $maximum) : ?>
+        Niveau : <?php echo $minimun->getLibelle(); ?> (<?php echo $minimun->getEtiquette(); ?>)
+    <?php else : ?>
+        Niveau au plus bas : <?php echo $minimun->getLibelle(); ?> (<?php echo $minimun->getEtiquette(); ?>) <br/>
+        Niveau au plus haut : <?php echo $maximum->getLibelle(); ?> (<?php echo $maximum->getEtiquette(); ?>)
+        <?php if ($recommande !== null) : ?>
+            <br/>
+            Niveau recommandé : <?php echo $recommande->getLibelle(); ?> (<?php echo $recommande->getEtiquette(); ?>)
+        <?php endif; ?>
+    <?php endif; ?>
+<?php else : ?>
+    <?php if ($niveauEnveloppe === null) : ?>
+        Non&nbsp;précisé
+    <?php else: ?>
+        [<?php echo $niveauEnveloppe->getBorneInferieure()->getEtiquette(); ?>:<?php echo $niveauEnveloppe->getBorneSuperieure()->getEtiquette(); ?>]<br/>
+        <?php if ($niveauEnveloppe->getValeurRecommandee()) : ?>
+            Recommandé&nbsp;<?php echo $niveauEnveloppe->getValeurRecommandee()->getEtiquette(); ?>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>
 

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @see \Metier\View\Helper\ReferenceViewHelper
+ * @var Reference $reference
+ * @var array $options
+ */
+
+use Metier\Entity\Db\Reference;
+
+if ($reference->getUrl() !== '') : ?>
+    <a href="<?php echo $reference->getUrl(); ?>" target="_blank" title="<?php echo $reference->getTitre(); ?>">
+        <?php echo $reference->getCode(); ?>
+    </a>
+<?php else : ?>
+    <?php echo $reference->getCode(); ?>
+<?php endif; ?>

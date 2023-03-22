@@ -11,6 +11,7 @@ use Metier\Form\Reference\ReferenceHydraytorFactory;
 use Metier\Provider\Privilege\ReferencemetierPrivileges;
 use Metier\Service\Reference\ReferenceService;
 use Metier\Service\Reference\ReferenceServiceFactory;
+use Metier\View\Helper\ReferenceViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -161,6 +162,11 @@ return [
         'factories' => [
             ReferenceHydrator::class => ReferenceHydraytorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'reference' => ReferenceViewHelper::class,
+        ],
+    ],
 
 ];

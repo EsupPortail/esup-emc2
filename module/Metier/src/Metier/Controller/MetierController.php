@@ -52,6 +52,18 @@ class MetierController extends AbstractActionController {
         ]);
     }
 
+    public function afficherAction() : ViewModel
+    {
+        $metier = $this->getMetierService()->getRequestedMetier($this);
+        $fiches = $metier->getFichesMetiers();
+
+        return new ViewModel([
+            'title' => "Affichage du métier",
+            'metier' => $metier,
+            'fiches' => $fiches,
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         $metier = new Metier();

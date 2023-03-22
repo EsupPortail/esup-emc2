@@ -39,6 +39,15 @@ return [
                 [
                     'controller' => MetierController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        MetierPrivileges::METIER_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => MetierController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -169,6 +178,17 @@ return [
 
                     /** METIER ****************************************************************************************/
 
+                    'afficher' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/afficher/:metier',
+                            'defaults' => [
+                                /** @see MetierController::afficherAction() */
+                                'controller' => MetierController::class,
+                                'action' => 'afficher',
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type' => Literal::class,
                         'options' => [
