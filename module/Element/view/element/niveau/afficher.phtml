@@ -1,0 +1,19 @@
+<?php
+
+use Element\Entity\Db\Niveau;
+
+/**
+ * @see \Element\Controller\NiveauController::afficherAction()
+ * @var Niveau $maitrise
+ */
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4"> Libellé </dt>
+    <dd class="col-md-8"> <?php echo $maitrise->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Type </dt>
+    <dd class="col-md-8"> <?php echo $maitrise->getType(); ?> </dd>
+    <dt class="col-md-4"> Niveau </dt>
+    <dd class="col-md-8"> <?php echo $maitrise->getNiveau(); ?> </dd>
+</dl>

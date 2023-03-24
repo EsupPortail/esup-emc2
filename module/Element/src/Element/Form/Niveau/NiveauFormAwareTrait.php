@@ -4,24 +4,15 @@ namespace Element\Form\Niveau;
 
 trait NiveauFormAwareTrait {
 
-    /** @var NiveauForm */
-    private $niveauForm;
+    private NiveauForm $niveauForm;
 
-    /**
-     * @return NiveauForm
-     */
     public function getNiveauForm(): NiveauForm
     {
         return $this->niveauForm;
     }
 
-    /**
-     * @param NiveauForm $niveauForm
-     * @return NiveauForm
-     */
-    public function setNiveauForm(NiveauForm $niveauForm): NiveauForm
+    public function setNiveauForm(NiveauForm $niveauForm): void
     {
         $this->niveauForm = $niveauForm;
-        return $this->niveauForm;
     }
 }

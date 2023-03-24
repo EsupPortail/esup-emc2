@@ -27,7 +27,6 @@ return [
                     'controller' => NiveauController::class,
                     'action' => [
                         'index',
-                        'afficher',
                     ],
                     'privileges' => [
                         NiveauPrivileges::NIVEAU_INDEX,
@@ -46,12 +45,28 @@ return [
                     'controller' => NiveauController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        NiveauPrivileges::NIVEAU_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        NiveauPrivileges::NIVEAU_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => NiveauController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        NiveauPrivileges::NIVEAU_MODIFIER,
+                        NiveauPrivileges::NIVEAU_HISTORISER,
                     ],
                 ],
                 [
@@ -81,6 +96,7 @@ return [
                         'options' => [
                             'route'    => '/niveau',
                             'defaults' => [
+                                /** @see NiveauController::indexAction() */
                                 'controller' => NiveauController::class,
                                 'action' => 'index',
                             ],
@@ -92,6 +108,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter',
                                     'defaults' => [
+                                        /** @see NiveauController::ajouterAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'ajouter',
                                     ],
@@ -103,6 +120,7 @@ return [
                                 'options' => [
                                     'route'    => '/afficher/:maitrise',
                                     'defaults' => [
+                                        /** @see NiveauController::afficherAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'afficher',
                                     ],
@@ -114,6 +132,7 @@ return [
                                 'options' => [
                                     'route'    => '/modifier/:maitrise',
                                     'defaults' => [
+                                        /** @see NiveauController::modifierAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'modifier',
                                     ],
@@ -125,6 +144,7 @@ return [
                                 'options' => [
                                     'route'    => '/historiser/:maitrise',
                                     'defaults' => [
+                                        /** @see NiveauController::historiserAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'historiser',
                                     ],
@@ -136,6 +156,7 @@ return [
                                 'options' => [
                                     'route'    => '/restaurer/:maitrise',
                                     'defaults' => [
+                                        /** @see NiveauController::restaurerAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'restaurer',
                                     ],
@@ -147,6 +168,7 @@ return [
                                 'options' => [
                                     'route'    => '/supprimer/:maitrise',
                                     'defaults' => [
+                                        /** @see NiveauController::supprimerAction() */
                                         'controller' => NiveauController::class,
                                         'action'     => 'supprimer',
                                     ],

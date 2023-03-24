@@ -15,10 +15,6 @@ class NiveauService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Niveau $maitrise
-     * @return Niveau
-     */
     public function create(Niveau $maitrise) : Niveau
     {
         try {
@@ -30,10 +26,6 @@ class NiveauService {
         return $maitrise;
     }
 
-    /**
-     * @param Niveau $maitrise
-     * @return Niveau
-     */
     public function update(Niveau $maitrise) : Niveau
     {
         try {
@@ -44,10 +36,6 @@ class NiveauService {
         return $maitrise;
     }
 
-    /**
-     * @param Niveau $maitrise
-     * @return Niveau
-     */
     public function historise(Niveau $maitrise) : Niveau
     {
         try {
@@ -59,10 +47,6 @@ class NiveauService {
         return $maitrise;
     }
 
-    /**
-     * @param Niveau $maitrise
-     * @return Niveau
-     */
     public function restore(Niveau $maitrise) : Niveau
     {
         try {
@@ -74,10 +58,6 @@ class NiveauService {
         return $maitrise;
     }
 
-    /**
-     * @param Niveau $maitrise
-     * @return Niveau
-     */
     public function delete(Niveau $maitrise) : Niveau
     {
         try {
@@ -91,22 +71,13 @@ class NiveauService {
 
     /** QUERY *********************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Niveau::class)->createQueryBuilder('maitrise');
         return $qb;
     }
 
-    /**
-     * @param string $type
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $nonHistorise
-     * @return Niveau[]
-     */
+    /** @return Niveau[] */
     public function getMaitrisesNiveaux(string $type = "", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
     {
         $qb = $this->createQueryBuilder()
@@ -122,13 +93,6 @@ class NiveauService {
         return $result;
     }
 
-    /**
-     * @param string $type
-     * @param string $champ
-     * @param string $ordre
-     * @param bool $nonHistorise
-     * @return array
-     */
     public function getMaitrisesNiveauxAsOptions(string $type="", string $champ = 'niveau', string $ordre = 'ASC', bool $nonHistorise = false) : array
     {
         $maitrises = $this->getMaitrisesNiveaux($type, $champ, $ordre, $nonHistorise);
@@ -139,10 +103,6 @@ class NiveauService {
         return $options;
     }
 
-    /**
-     * @param int|null $id
-     * @return Niveau|null
-     */
     public function getMaitriseNiveau(?int $id) : ?Niveau
     {
         if ($id === null) return null;
@@ -158,11 +118,6 @@ class NiveauService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Niveau|null
-     */
     public function getRequestedMaitriseNiveau(AbstractActionController $controller, string $param = 'maitrise') : ?Niveau
     {
         $id = $controller->params()->fromRoute($param);
@@ -170,10 +125,6 @@ class NiveauService {
         return $result;
     }
 
-    /**
-     * @param int $niveau
-     * @return Niveau|null
-     */
     public function getMaitriseNiveauByNiveau(string $type, int $niveau) : ?Niveau
     {
         $qb = $this->createQueryBuilder()

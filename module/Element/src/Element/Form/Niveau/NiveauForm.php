@@ -15,26 +15,17 @@ use Laminas\Validator\Callback;
 class NiveauForm extends Form {
     use NiveauServiceAwareTrait;
 
-    /** @var string type */
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * @return string|null
-     */
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string|null $type
-     * @return NiveauForm
-     */
-    public function setType(?string $type): NiveauForm
-    {
-        $this->type = $type;
-        return $this;
-    }
+//    public function getType(): ?string
+//    {
+//        return $this->type;
+//    }
+//
+//    public function setType(?string $type): void
+//    {
+//        $this->type = $type;
+//    }
 
 
     public function init()
@@ -44,7 +35,8 @@ class NiveauForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle* :",
+                'label' => "Libellé  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -55,7 +47,8 @@ class NiveauForm extends Form {
             'type' => Number::class,
             'name' => 'niveau',
             'options' => [
-                'label' => "Niveau * :",
+                'label' => "Niveau  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'niveau',
@@ -81,7 +74,8 @@ class NiveauForm extends Form {
             'type' => Text::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type * :",
+                'label' => "Type  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'type',

@@ -6,45 +6,27 @@ use Element\Entity\Db\Niveau;
 
 trait HasNiveauTrait {
 
-    /** @var Niveau */
-    private $niveau;
-    /** @var bool */
-    private $clef;
+    private ?Niveau $niveau = null;
+    private bool $clef = false;
 
-    /**
-     * @return Niveau|null
-     */
     public function getNiveauMaitrise(): ?Niveau
     {
         return $this->niveau;
     }
 
-    /**
-     * @param Niveau|null $niveau
-     * @return HasNiveauTrait
-     */
-    public function setNiveauMaitrise(?Niveau $niveau): self
+    public function setNiveauMaitrise(?Niveau $niveau): void
     {
         $this->niveau = $niveau;
-        return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function isClef(): ?bool
     {
         return $this->clef;
     }
 
-    /**
-     * @param bool|null $clef
-     * @return HasNiveauTrait
-     */
-    public function setClef(?bool $clef): self
+    public function setClef(?bool $clef): void
     {
         $this->clef = $clef;
-        return $this;
     }
 
 

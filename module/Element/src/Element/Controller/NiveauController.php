@@ -28,7 +28,6 @@ class NiveauController extends AbstractActionController
             'title' => "Affichage d'un niveau de maîtrise",
             'maitrise' => $maitrise,
         ]);
-        $vm->setTemplate('application/competence/afficher-element-niveau');
         return $vm;
     }
 
