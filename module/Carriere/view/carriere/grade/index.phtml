@@ -7,10 +7,11 @@
 
 use Carriere\Entity\Db\Grade;
 use Carriere\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\GradePrivileges;
 
-$canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
+$canLister = $this->isAllowed(GradePrivileges::getResourceId(GradePrivileges::GRADE_LISTER_AGENTS));
 
-$canAction = ($canAfficher);
+$canAction = ($canLister);
 
 $this->headTitle("Liste des grades");
 ?>

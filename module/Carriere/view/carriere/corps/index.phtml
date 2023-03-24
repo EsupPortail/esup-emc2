@@ -10,10 +10,10 @@ use Carriere\Provider\Privilege\CorpsPrivileges;
 
 $this->headTitle("Liste des corps");
 
-$canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
-$canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+$canLister      = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_LISTER_AGENTS));
+$canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
 
-$canAction = ($canAfficher OR $canModifier);
+$canAction = ($canModifier OR $canLister);
 ?>
 
 <div class="row">
@@ -83,14 +83,14 @@ $canAction = ($canAfficher OR $canModifier);
             </td>
             <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($canAfficher) : ?>
+                <?php if ($canLister) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\CorpsController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('corps/afficher-agents', ['corps' => $corp->getId()], ['fragment' => 'corps'], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
                         <span class="icon users"></span>
-                        Afficher les agents
+                        Lister les agents
                     </a>
                 <?php endif; ?>
             </td>

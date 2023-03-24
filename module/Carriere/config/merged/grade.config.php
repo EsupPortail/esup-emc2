@@ -19,10 +19,18 @@ return [
                     'controller' => GradeController::class,
                     'action' => [
                         'index',
-                        'afficher-agents',
                     ],
                     'privileges' => [
                         GradePrivileges::GRADE_INDEX
+                    ],
+                ],
+                [
+                    'controller' => GradeController::class,
+                    'action' => [
+                        'afficher-agents',
+                    ],
+                    'privileges' => [
+                        GradePrivileges::GRADE_LISTER_AGENTS
                     ],
                 ],
             ],

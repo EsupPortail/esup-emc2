@@ -30,7 +30,7 @@ return [
                         'afficher-agents',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_AFFICHER,
+                        CorpsPrivileges::CORPS_LISTER_AGENTS,
                     ],
                 ],
                 [

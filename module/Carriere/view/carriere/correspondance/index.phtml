@@ -5,16 +5,15 @@
  * @var Correspondance[] $correspondances
  */
 
-use Application\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Correspondance;
-use Carriere\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\CorrespondancePrivileges;
 
 $date = new DateTime();
 $correspondances = array_filter($correspondances, function (Correspondance $a) use ($date) { return $a->getDateFin() === null OR $a->getDateFin() > $date;});
 
-$canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
+$canLister      = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_LISTER_AGENTS));
 
-$canAction = ($canAfficher);
+$canAction = ($canLister);
 
 $this->headTitle("Liste des correspondances");
 ?>
@@ -81,7 +80,7 @@ $this->headTitle("Liste des correspondances");
             <td> <?php echo count($correspondance->getAgentGrades()); ?> </td>
             <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($canAfficher) : ?>
+                <?php if ($canLister) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\CorrespondanceController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('correspondance/afficher-agents', ['correspondance' => $correspondance->getId()], [], true); ?>"

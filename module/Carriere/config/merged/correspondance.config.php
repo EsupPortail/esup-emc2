@@ -24,10 +24,18 @@ return [
                     'controller' => CorrespondanceController::class,
                     'action' => [
                         'index',
-                        'afficher-agents',
                     ],
                     'privileges' => [
                         CorrespondancePrivileges::CORRESPONDANCE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => CorrespondanceController::class,
+                    'action' => [
+                        'afficher-agents',
+                    ],
+                    'privileges' => [
+                        CorrespondancePrivileges::CORRESPONDANCE_LISTER_AGENTS,
                     ],
                 ],
                 [
