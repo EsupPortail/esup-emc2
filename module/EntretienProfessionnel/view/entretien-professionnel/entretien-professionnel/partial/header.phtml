@@ -51,11 +51,14 @@ $canAfficherInformationMetier = (
                         <dt class="col-md-4"> Fiche(s) de poste</dt>
                         <dd class="col-md-8">
                             <?php if ($ficheposte !== null) : ?>
+                                <?php $libelle = $ficheposte->getLibelle()??$ficheposte->getLibelleMetierPrincipal(); ?>
+                                <?php if ($libelle === null) $libelle='Aucun libellé de trouvé';  ?>
                                 <a
                                     <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
                                     href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
                                     target="_blank"
                                 >
+                                    <?php echo $libelle; ?> <br>
                                     Fiche de poste #<?php echo $ficheposte->getId();?>
                                 </a>
                             <?php else : ?>
