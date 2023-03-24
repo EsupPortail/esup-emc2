@@ -149,7 +149,7 @@ class ApplicationController  extends AbstractActionController {
         return $vm;
     }
 
-    public function changerStatusAction()
+    public function changerStatusAction() : Response
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
@@ -239,7 +239,7 @@ class ApplicationController  extends AbstractActionController {
         }
 
         $date = (new DateTime())->format('Ymd-His');
-        $filename="export_utilisateur_".$date.".csv";
+        $filename="cartographie_application_".$date.".csv";
         $CSV = new CsvModel();
         $CSV->setDelimiter(';');
         $CSV->setEnclosure('"');

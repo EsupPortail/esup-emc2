@@ -16,10 +16,6 @@ class ApplicationService {
 
     /** GESTION DE L'ENTITÉ *******************************************************************************************/
 
-    /**
-     * @param Application $application
-     * @return Application
-     */
     public function create(Application $application) : Application
     {
         $application->setActif(true);
@@ -32,10 +28,6 @@ class ApplicationService {
         return $application;
     }
 
-    /**
-     * @param Application $application
-     * @return Application
-     */
     public function update(Application $application) : Application
     {
         try {
@@ -46,10 +38,6 @@ class ApplicationService {
         return $application;
     }
 
-    /**
-     * @param Application $application
-     * @return Application
-     */
     public function historise(Application $application) : Application
     {
         try {
@@ -61,10 +49,6 @@ class ApplicationService {
         return $application;
     }
 
-    /**
-     * @param Application $application
-     * @return Application
-     */
     public function restore(Application $application) : Application
     {
         try {
@@ -76,10 +60,6 @@ class ApplicationService {
         return $application;
     }
 
-    /**
-     * @param Application $application
-     * @return Application
-     */
     public function delete(Application $application) : Application
     {
         try {
@@ -93,9 +73,6 @@ class ApplicationService {
 
     /** REQUETES ******************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Application::class)->createQueryBuilder('application')
@@ -104,11 +81,7 @@ class ApplicationService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Application[]
-     */
+    /** @return Application[] */
     public function getApplications(string $champ = 'libelle', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -119,11 +92,6 @@ class ApplicationService {
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Application[]
-     */
     public function getApplicationsAsOptions(string $champ = 'libelle', string $ordre='ASC') : array
     {
         $result = $this->getApplications($champ, $ordre);
@@ -135,10 +103,7 @@ class ApplicationService {
         return $array;
     }
 
-    /**
-     * @param ApplicationTheme|null $groupe
-     * @return Application[]
-     */
+    /**  @return Application[] */
     public function getApplicationsGyGroupe(?ApplicationTheme $groupe) : array
     {
         $qb = $this->createQueryBuilder()
@@ -157,10 +122,6 @@ class ApplicationService {
         return $result;
     }
 
-    /**
-     * @param int|null $id
-     * @return Application|null
-     */
     public function getApplication(?int $id) : ?Application
     {
         $qb = $this->createQueryBuilder()
@@ -176,11 +137,6 @@ class ApplicationService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string paramName
-     * @return Application
-     */
     public function getRequestedApplication(AbstractActionController $controller, string $paramName = 'application') : ?Application
     {
         $id = $controller->params()->fromRoute($paramName);

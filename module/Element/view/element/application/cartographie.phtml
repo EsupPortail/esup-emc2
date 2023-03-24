@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see \Application\Controller\ApplicationController::cartographieAction()
+ * @see \Element\Controller\ApplicationController::cartographieAction()
  * @var Application[]   $applications
  * @var Domaine[]       $domaines
  * @var Metier[]        $metiers
@@ -26,7 +26,10 @@ $nbApplications = count($applications);
     <div class="col-md-5" >
             <?php /** @see \Element\Controller\ApplicationController::exporterCartographieAction() */?>
             <a href="<?php echo $this->url('element/application/exporter-cartographie', [], [], true); ?>"
-               class="btn btn-primary action" id="cartographie">Exporter la cartographie</a>
+               class="btn btn-secondary action" id="cartographie">
+                <span class="icon icon-csv"></span>
+                Exporter la cartographie
+            </a>
     </div>
 
     <div class="col-md-5 pull-right">

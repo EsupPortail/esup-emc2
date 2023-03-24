@@ -4,7 +4,7 @@
 /**
  * @var ApplicationTheme[] $groupes
  * @var ApplicationTheme $groupe
- * @var bool $activite
+ * @var string $activite
  */
 
 use Element\Entity\Db\ApplicationTheme;
@@ -37,8 +37,8 @@ if ($activite === "0") $actifId=0;
                 <label for="activite">État de l'application : </label>
                 <select id="activite" name="activite" class="selectpicker">
                     <option value=""> Tous les états </option>
-                    <option value="1" <?php if ($actif === true) echo " selected "; ?>> Actif </option>
-                    <option value="0" <?php if ($actif === false) echo " selected "; ?>> Inactif </option>
+                    <option value="1" <?php if ($activite === "1") echo " selected "; ?>> Actif </option>
+                    <option value="0" <?php if ($activite === "0") echo " selected "; ?>> Inactif </option>
                 </select>
             </div>
             <!-- BOUTON -->

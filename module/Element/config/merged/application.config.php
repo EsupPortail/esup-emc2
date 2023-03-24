@@ -40,8 +40,6 @@ return [
                     'controller' => ApplicationController::class,
                     'action' => [
                         'afficher',
-                        'cartographie',
-                        'exporter-cartographie',
                     ],
                     'privileges' => [
                         ApplicationPrivileges::APPLICATION_AFFICHER,
@@ -50,13 +48,11 @@ return [
                 [
                     'controller' => ApplicationController::class,
                     'action' => [
-                        'changer-status',
-                        'editer',
-                        'historiser',
-                        'restaurer',
+                        'cartographie',
+                        'exporter-cartographie',
                     ],
                     'privileges' => [
-                        ApplicationPrivileges::APPLICATION_MODIFIER,
+                        ApplicationPrivileges::APPLICATION_CARTOGRAPHIE,
                     ],
                 ],
                 [
@@ -65,9 +61,30 @@ return [
                         'creer',
                     ],
                     'privileges' => [
+                        ApplicationPrivileges::APPLICATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationController::class,
+                    'action' => [
+                        'changer-status',
+                        'editer',
+                    ],
+                    'privileges' => [
                         ApplicationPrivileges::APPLICATION_MODIFIER,
                     ],
                 ],
+                [
+                    'controller' => ApplicationController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        ApplicationPrivileges::APPLICATION_HISTORISER,
+                    ],
+                ],
+
                 [
                     'controller' => ApplicationController::class,
                     'action' => [
@@ -115,6 +132,7 @@ return [
                         'options' => [
                             'route' => '/application',
                             'defaults' => [
+                                /** @see ApplicationController::indexAction() */
                                 'controller' => ApplicationController::class,
                                 'action' => 'index',
                             ],
@@ -127,6 +145,7 @@ return [
                                 'options' => [
                                     'route' => '/cartographie',
                                     'defaults' => [
+                                        /** @see ApplicationController::cartographieAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'cartographie'
                                     ],
@@ -138,6 +157,7 @@ return [
                                 'options' => [
                                     'route' => '/exporter-cartographie',
                                     'defaults' => [
+                                        /** @see ApplicationController::exporterCartographieAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'exporter-cartographie'
                                     ],
@@ -148,6 +168,7 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::afficherAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'afficher',
                                     ],
@@ -158,6 +179,7 @@ return [
                                 'options' => [
                                     'route' => '/changer-status/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::changerStatusAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'changer-status',
                                     ],
@@ -168,6 +190,7 @@ return [
                                 'options' => [
                                     'route' => '/editer/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::editerAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'editer',
                                     ],
@@ -178,6 +201,7 @@ return [
                                 'options' => [
                                     'route' => '/historiser/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::historiserAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'historiser',
                                     ],
@@ -188,6 +212,7 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::restaurerAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'restaurer',
                                     ],
@@ -198,6 +223,7 @@ return [
                                 'options' => [
                                     'route' => '/effacer/:id',
                                     'defaults' => [
+                                        /** @see ApplicationController::effacerAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'effacer',
                                     ],
@@ -208,6 +234,7 @@ return [
                                 'options' => [
                                     'route' => '/creer',
                                     'defaults' => [
+                                        /** @see ApplicationController::creerAction() */
                                         'controller' => ApplicationController::class,
                                         'action' => 'creer',
                                     ],

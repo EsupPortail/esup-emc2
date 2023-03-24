@@ -13,9 +13,17 @@ use FicheMetier\Service\FicheMetier\FicheMetierService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ApplicationControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return ApplicationController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : ApplicationController
     {
         /**
@@ -43,7 +51,6 @@ class ApplicationControllerFactory {
         $applicationForm = $container->get('FormElementManager')->get(ApplicationForm::class);
         $applicationElementForm = $container->get('FormElementManager')->get(ApplicationElementForm::class);
 
-        /** @var ApplicationController $controller */
         $controller = new ApplicationController();
         $controller->setApplicationService($applicationService);
         $controller->setApplicationThemeService($applicationGroupeService);

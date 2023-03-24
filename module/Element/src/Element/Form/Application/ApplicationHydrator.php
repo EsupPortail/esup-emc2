@@ -31,7 +31,7 @@ class ApplicationHydrator implements HydratorInterface {
      * @param Application $object
      * @return Application
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $groupe = (isset($data['groupe']) AND trim($data['groupe']) !== "")?$this->getApplicationThemeService()->getApplicationTheme($data['groupe']):null;
         $object->setGroupe($groupe);
