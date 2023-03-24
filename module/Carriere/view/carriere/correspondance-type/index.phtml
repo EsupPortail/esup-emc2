@@ -12,6 +12,8 @@ $this->headTitle("Types de correspondance");
 
 
 $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(CorrespondancePrivileges::CORRESPONDANCE_AFFICHER));
+
+$canAction = ($canAfficher)
 ?>
 
 <div class="row">
@@ -41,7 +43,9 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
         <th> Code </th>
         <th> Libellé court </th>
         <th> Libellé long </th>
-        <th> Action </th>
+        <?php if ($canAction) : ?>
+            <th> Action </th>
+        <?php endif ?>
     </tr>
     </thead>
     <tbody>
@@ -55,6 +59,7 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
             </td>
             <td> <?php echo $type->getLibelleCourt(); ?> </td>
             <td> <?php echo $type->getLibelleLong(); ?> </td>
+            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a href="<?php echo $this->url('carriere/correspondance-type/afficher', ['type' => $type->getId()], [], true); ?>"
@@ -64,6 +69,7 @@ $canAfficher = $this->isAllowed(CorrespondancePrivileges::getResourceId(Correspo
                     </a>
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
         <?php endforeach; ?>
     </tbody>

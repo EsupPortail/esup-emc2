@@ -10,6 +10,8 @@ use Carriere\Provider\Privilege\CorpsPrivileges;
 
 $canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
 
+$canAction = ($canAfficher);
+
 $this->headTitle("Liste des grades");
 ?>
 
@@ -35,7 +37,9 @@ $this->headTitle("Liste des grades");
     <tr>
         <th > Libellé </th>
         <th> #Agent/Grade </th>
-        <th> Action </th>
+        <?php if ($canAction) : ?>
+            <th> Action </th>
+        <?php endif; ?>
     </tr>
     </thead>
     <tbody>
@@ -50,8 +54,8 @@ $this->headTitle("Liste des grades");
                 </span>
             </td>
             <td> <?php echo count($grade->getAgentGrades()); ?> </td>
+            <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Carriere\Controller\GradeController::afficherAgentsAction() */ ?>
                         href="<?php echo $this->url('grade/afficher-agents', ['grade' => $grade->getId()], [], true); ?>"
@@ -60,8 +64,8 @@ $this->headTitle("Liste des grades");
                             <span class="icon users"></span>
                         Lister les agents
                     </a>
-                <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -12,6 +12,8 @@ $this->headTitle("Liste des corps");
 
 $canAfficher = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_AFFICHER));
 $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+
+$canAction = ($canAfficher OR $canModifier);
 ?>
 
 <div class="row">
@@ -38,7 +40,9 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
         <th> #Agent/Grade </th>
         <th> Catégorie </th>
         <th> Niveaux </th>
-        <th class="action"> Action </th>
+        <?php if ($canAction) : ?>
+            <th class="action"> Action </th>
+        <?php endif ?>
     </tr>
     </thead>
     <tbody>
@@ -77,6 +81,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
+            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
@@ -89,6 +94,7 @@ $canModifier = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::
                     </a>
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

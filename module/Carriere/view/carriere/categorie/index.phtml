@@ -14,6 +14,8 @@ $canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivilege
 $canHistoriser  = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
 $canDetruire    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
 
+$canAction = ($canAfficher OR $canAjouter OR $canModifier OR $canHistoriser OR $canDetruire);
+
 $this->headTitle("Liste des catégories");
 ?>
 
@@ -38,7 +40,9 @@ $this->headTitle("Liste des catégories");
             <th> Code </th>
             <th> Libelle </th>
             <th> #Métier </th>
-            <th class="action"> Action </th>
+            <?php if ($canAction) : ?>
+                <th class="action"> Action </th>
+            <?php endif; ?>
         </tr>
     </thead>
     <tbody>
@@ -53,7 +57,8 @@ $this->headTitle("Liste des catégories");
             <td>
                 <?php echo count($categorie->getMetiers()); ?>
             </td>
-            <td class="action">
+            <?php if ($canAction) : ?>
+                <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see \Application\Controller\CategorieController::afficherMetiersAction() */ ?>
@@ -114,6 +119,7 @@ $this->headTitle("Liste des catégories");
                     </a>
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

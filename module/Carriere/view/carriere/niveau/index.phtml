@@ -16,6 +16,7 @@ $canModifierNiveau   = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(
 $canHistoriserNiveau = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_HISTORISER));
 $canSupprimerNiveau  = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(NiveaucarrierePrivileges::NIVEAUCARRIERE_SUPPRIMER));
 
+$canAction = ($canAfficherNiveau OR $canAjouterNiveau OR $canModifierNiveau OR $canHistoriserNiveau OR $canSupprimerNiveau);
 ?>
 
 <h1 class="page-header">
@@ -38,7 +39,9 @@ $canSupprimerNiveau  = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(
             <th> Niveau </th>
             <th> Étiquette </th>
             <th> Libelle </th>
-            <th> Action </th>
+            <?php if ($canAction) : ?>
+                <th> Action </th>
+            <?php endif; ?>
         </tr>
     </thead>
     <tbody>
@@ -54,7 +57,8 @@ $canSupprimerNiveau  = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(
                         ></span>
                     <?php endif; ?>
                 </td>
-                <td class="action">
+                <?php if ($canAction) : ?>
+                    <td class="action">
                     <?php if ($canAfficherNiveau) : ?>
                             <span class="icon icon-voir"></span>
                             Afficher
@@ -104,6 +108,7 @@ $canSupprimerNiveau  = $this->isAllowed(NiveaucarrierePrivileges::getResourceId(
                         </a>
                     <?php endif; ?>
                 </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
     </tbody>
