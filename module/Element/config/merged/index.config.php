@@ -4,6 +4,8 @@ namespace Element;
 
 use Element\Controller\IndexController;
 use Element\Controller\IndexControllerFactory;
+use Element\Provider\Privilege\ApplicationPrivileges;
+use Element\Provider\Privilege\CompetencePrivileges;
 use Element\Provider\Privilege\NiveauPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
@@ -19,6 +21,8 @@ return [
                     ],
                     'privileges' => [
                         NiveauPrivileges::NIVEAU_INDEX,
+                        ApplicationPrivileges::APPLICATION_INDEX,
+                        CompetencePrivileges::COMPETENCE_INDEX,
                     ],
                 ],
             ],
