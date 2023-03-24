@@ -4,10 +4,6 @@
  * UnicaenAuthentification Global Configuration
  */
 
-use Application\View\Helper\TestConnectViewHelper;
-use Application\View\Helper\TestConnectViewHelperFactory;
-use Laminas\Authentication\Adapter\Ldap;
-use UnicaenAuthentification\Form\LoginForm;
 
 return [
     'unicaen-auth' =>  [
@@ -25,27 +21,8 @@ return [
 //        'ldap_username' => 'uid',
 //        'ldap_username' => 'supannaliaslogin',
 
-        'auth_types' => [
-            'local', // càd 'ldap' et 'db'
-            'cas',
-            'shib',
-            'test',
-        ],
+    ],
 
-        'test' => [
-            'enabled' => false,
-            //'adapter' => Ldap::class,
-            'form' => LoginForm::class,
-        ],
-    ],
-    'view_helpers' => [
-        'aliases' => [
-            'testConnect' => TestConnectViewHelper::class,
-        ],
-        'factories' => [
-            TestConnectViewHelper::class => TestConnectViewHelperFactory::class,
-        ],
-    ],
 ];
 
 
