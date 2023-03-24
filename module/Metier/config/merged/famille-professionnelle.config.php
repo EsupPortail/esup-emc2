@@ -27,6 +27,15 @@ return [
                 [
                     'controller' => FamilleProfessionnelleController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        FamilleprofessionnellePrivileges::FAMILLE_PROFESSIONNELLE_AFFICHER
+                    ],
+                ],
+                [
+                    'controller' => FamilleProfessionnelleController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -87,6 +96,17 @@ return [
                                 /** @see FamilleProfessionnelleController::ajouterAction() */
                                 'controller' => FamilleProfessionnelleController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:famille-professionnelle',
+                            'defaults' => [
+                                /** @see FamilleProfessionnelleController::afficherAction() */
+                                'controller' => FamilleProfessionnelleController::class,
+                                'action'     => 'afficher',
                             ],
                         ],
                     ],

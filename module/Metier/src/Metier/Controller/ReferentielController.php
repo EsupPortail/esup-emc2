@@ -4,6 +4,7 @@ namespace Metier\Controller;
 
 use Metier\Entity\Db\Referentiel;
 use Metier\Form\Referentiel\ReferentielFormAwareTrait;
+use Metier\Service\Reference\ReferenceServiceAwareTrait;
 use Metier\Service\Referentiel\ReferentielServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -12,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 
 class ReferentielController extends AbstractActionController
 {
+    use ReferenceServiceAwareTrait;
     use ReferentielServiceAwareTrait;
     use ReferentielFormAwareTrait;
 
@@ -21,6 +23,25 @@ class ReferentielController extends AbstractActionController
 
         return new ViewModel([
             'referentiels' => $referentiels,
+        ]);
+    }
+
+
+    public function afficherAction() : ViewModel
+    {
+        $referentiel = $this->getReferentielService()->getRequestedReferentiel($this);
+        $references = $this->getReferenceService()->getReferencesByReferentiel($referentiel);
+        $metiers = [];
+        foreach ($references as $reference) {
+            $metier = $reference->getMetier();
+            $metiers[$reference->getCode()] = $metier;
+        }
+
+        return new ViewModel([
+            'title' => "Affichage du reférentiel",
+            'referentiel' => $referentiel,
+            'references' => $references,
+            'metiers' => $metiers,
         ]);
     }
 

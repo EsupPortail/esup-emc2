@@ -6,6 +6,7 @@ use Doctrine\ORM\ORMException;
 use Metier\Entity\Db\Reference;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Metier\Entity\Db\Referentiel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -91,6 +92,19 @@ class ReferenceService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+
+    /** @return Reference[] */
+    public function getReferencesByReferentiel(?Referentiel $referentiel, string $champ = 'code', string $ordre = 'ASC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('reference.referentiel = :referentiel')->setParameter('referentiel', $referentiel)
+            ->orderBy('reference.' . $champ, $ordre);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
 
     public function getReference(?int $id) : ?Reference
     {

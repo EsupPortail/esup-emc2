@@ -31,6 +31,15 @@ return [
                 [
                     'controller' => ReferentielController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        ReferentielmetierPrivileges::REFERENTIEL_AFFICHER
+                    ],
+                ],
+                [
+                    'controller' => ReferentielController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -85,6 +94,17 @@ return [
                         ],
                         'may_terminate'=> true,
                         'child_routes' => [
+                            'afficher' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/afficher/:referentiel',
+                                    'defaults' => [
+                                        /** @see ReferentielController::afficherAction() */
+                                        'controller' => ReferentielController::class,
+                                        'action'     => 'afficher',
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type'  => Literal::class,
                                 'options' => [

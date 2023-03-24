@@ -20,6 +20,9 @@ $canAjouter     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
 $canEditer      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_MODIFIER));
 $canHistoriser  = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_HISTORISER));
 $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_SUPPRIMER));
+$canLister      = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivileges::METIER_LISTER_AGENTS));
+
+$canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $canEffacer OR $canLister);
 
 ?>
 
@@ -49,7 +52,9 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
         <th> Références </th>
         <th> Catégorie </th>
         <th> Niveaux </th>
-        <th style="min-width: 10rem;"> Action </th>
+        <?php if ($canAction) :?>
+            <th style="min-width: 10rem;"> Action </th>
+        <?php endif; ?>
     </tr>
     </thead>
     <tbody>
@@ -72,7 +77,7 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     <?php endforeach; ?>
                 </ul>
             </td>
-            <td class="action">
+            <td class="action" id="references">
                 <?php $references =  $metier->getReferences(); ?>
                 <?php if (empty($references)) : ?>
                     Aucune
@@ -116,10 +121,10 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                         </a>
                     <?php endif; ?>
             </td>
-            <td>
+            <td id="categorie">
                 <?php echo ($metier->getCategorie())?$metier->getCategorie()->getCode():""; ?>
             </td>
-            <td class="action">
+            <td class="action" id="niveaux">
                 <?php echo $this->niveauEnveloppe($metier->getNiveaux()) ?>
                 <?php if ($canEditer) : ?>
                     <?php if ($metier->getNiveaux()) : ?>
@@ -141,8 +146,20 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     <?php endif; ?>
                 <?php endif; ?>
             </td>
+            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
+                    <a
+                        <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
+                            href="<?php echo $this->url('metier/afficher', ['metier' => $metier->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canLister) : ?>
+                    <br/>
                     <a
                         <?php /** @see \Metier\Controller\MetierController::listerAgentsAction() */ ?>
                             href="<?php echo $this->url('metier/lister-agents', ['metier' => $metier->getId()], [], true); ?>"
@@ -152,18 +169,6 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                         Lister les agents
                     </a>
                 <?php endif; ?>
-                <?php if ($canAfficher) : ?>
-                    <br/>
-                    <a
-                        <?php /** @see \Metier\Controller\MetierController::afficherAction() */ ?>
-                            href="<?php echo $this->url('metier/afficher', ['metier' => $metier->getId()], [], true); ?>"
-                            class="ajax-modal"
-                    >
-                            <span class="icon icon-voir"></span>
-                            Afficher
-                    </a>
-                <?php endif; ?>
-
                 <?php if ($canEditer) : ?>
                     <br>
                     <a
@@ -176,7 +181,6 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                         Modifier
                     </a>
                 <?php endif; ?>
-
                 <?php if ($canHistoriser) : ?>
                     <br>
                     <?php if ($metier->estNonHistorise()) : ?>
@@ -208,6 +212,7 @@ $canEffacer     = $this->isAllowed(MetierPrivileges::getResourceId(MetierPrivile
                     </a>
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -62,8 +62,14 @@ $canEffacer        = $this->isAllowed(FamilleprofessionnellePrivileges::getResou
             </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
-                    <span class="icon icon-voir"></span>
-                    Afficher
+                    <a
+                        <?php /** @see \Metier\Controller\FamilleProfessionnelleController::afficherAction() */?>
+                            href="<?php echo $this->url('famille-professionnelle/afficher', ['famille-professionnelle' => $famille->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <br>

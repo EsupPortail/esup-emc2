@@ -13,4 +13,5 @@ class MetierPrivileges extends Privileges
     const METIER_HISTORISER = 'metier-metier_historiser';
     const METIER_SUPPRIMER = 'metier-metier_supprimer';
     const METIER_CARTOGRAPHIE = 'metier-metier_cartographie';
+    const METIER_LISTER_AGENTS = 'metier-metier_lister_agents';
 }

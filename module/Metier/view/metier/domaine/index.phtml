@@ -22,6 +22,8 @@ $canEditer         = $this->isAllowed(DomainePrivileges::getResourceId(DomainePr
 $canHistoriser     = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_HISTORISER));
 $canEffacer        = $this->isAllowed(DomainePrivileges::getResourceId(DomainePrivileges::DOMAINE_SUPPRIMER));
 
+$canAction = ($canAfficher OR $canAjouter or $canEditer or $canHistoriser or $canEffacer);
+
 $this->headTitle('Liste des domaines')
 ?>
 
@@ -50,7 +52,9 @@ $this->headTitle('Liste des domaines')
         <th> Type </th>
         <th> Famille professionnelle </th>
         <th> #metier </th>
-        <th style="min-width: 10rem;"> Action </th>
+        <?php if ($canAction) : ?>
+            <th style="min-width: 10rem;"> Action </th>
+        <?php endif; ?>
     </tr>
     </thead>
     <tbody>
@@ -72,10 +76,16 @@ $this->headTitle('Liste des domaines')
             <td>
                 <?php echo count($domaine->getMetiers()); ?>
             </td>
+            <?php if ($canAction) : ?>
             <td class="action">
                 <?php if ($canAfficher) : ?>
-                    <span class="icon icon-voir"></span>
-                    Afficher
+                    <a  <?php /** @see \Metier\Controller\DomaineController::afficherAction() */ ?>
+                            href="<?php echo $this->url('domaine/afficher', ['domaine' => $domaine->getId()], [], true); ?>"
+                            class="ajax-modal"
+                    >
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canEditer) : ?>
                     <br/>
@@ -120,6 +130,7 @@ $this->headTitle('Liste des domaines')
 
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

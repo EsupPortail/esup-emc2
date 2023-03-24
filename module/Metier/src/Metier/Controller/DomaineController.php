@@ -45,6 +45,17 @@ class DomaineController extends AbstractActionController {
         ]);
     }
 
+    public function afficherAction() : ViewModel
+    {
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
+
+        return new ViewModel([
+            'title' => "Affichage du domaine",
+            'domaine' => $domaine,
+
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         /** @var Domaine $domaine */

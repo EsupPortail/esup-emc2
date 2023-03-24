@@ -35,6 +35,15 @@ return [
                 [
                     'controller' => DomaineController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        DomainePrivileges::DOMAINE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => DomaineController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -91,6 +100,17 @@ return [
 
                     /** DOMAINE ***************************************************************************************/
 
+                    'afficher' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/afficher/:domaine',
+                            'defaults' => [
+                                /** @see DomaineController::afficherAction() */
+                                'controller' => DomaineController::class,
+                                'action'     => 'afficher',
+                            ],
+                        ],
+                    ],
                     'ajouter' => [
                         'type'  => Literal::class,
                         'options' => [

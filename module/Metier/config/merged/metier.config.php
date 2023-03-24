@@ -99,7 +99,7 @@ return [
                         'lister-agents',
                     ],
                     'privileges' => [
-                        MetierPrivileges::METIER_AFFICHER,
+                        MetierPrivileges::METIER_LISTER_AGENTS,
                     ],
                 ],
             ],
