@@ -17,10 +17,6 @@ class CompetenceService {
 
     /** COMPETENCES : ENTITY ******************************************************************************************/
 
-    /**
-     * @param Competence $competence
-     * @return Competence
-     */
     public function create(Competence $competence) : Competence
     {
         try {
@@ -32,10 +28,6 @@ class CompetenceService {
         return $competence;
     }
 
-    /**
-     * @param Competence $competence
-     * @return Competence
-     */
     public function update(Competence $competence) : Competence
     {
         try {
@@ -46,10 +38,6 @@ class CompetenceService {
         return $competence;
     }
 
-    /**
-     * @param Competence $competence
-     * @return Competence
-     */
     public function historise(Competence $competence) : Competence
     {
         try {
@@ -61,10 +49,6 @@ class CompetenceService {
         return $competence;
     }
 
-    /**
-     * @param Competence $competence
-     * @return Competence
-     */
     public function restore(Competence $competence) : Competence
     {
         try {
@@ -76,10 +60,6 @@ class CompetenceService {
         return $competence;
     }
 
-    /**
-     * @param Competence $competence
-     * @return Competence
-     */
     public function delete(Competence $competence) : Competence
     {
         try {
@@ -93,9 +73,6 @@ class CompetenceService {
 
     /** COMPETENCES : REQUETAGE ***************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
@@ -105,11 +82,7 @@ class CompetenceService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $order
-     * @return Competence[]
-     */
+    /** Competence[] */
     public function getCompetences(string $champ = 'libelle', string $order = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -119,9 +92,6 @@ class CompetenceService {
         return $result;
     }
 
-    /**
-     * @return array
-     */
     public function getCompetencesByTypes() : array
     {
         $competences = $this->getCompetences();
@@ -134,10 +104,6 @@ class CompetenceService {
         return $array;
     }
 
-    /**
-     * @param int|null $id
-     * @return Competence|null
-     */
     public function getCompetence(?int $id) : ?Competence
     {
         $qb = $this->createQueryBuilder()
@@ -152,11 +118,6 @@ class CompetenceService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return Competence|null
-     */
     public function getRequestedCompetence(AbstractActionController $controller, string $paramName = 'competence') : ?Competence
     {
         $id = $controller->params()->fromRoute($paramName);
@@ -164,9 +125,6 @@ class CompetenceService {
         return $competence;
     }
 
-    /**
-     * @return array
-     */
     public function getCompetencesAsGroupOptions() : array
     {
         $competences = $this->getCompetences();
@@ -194,11 +152,6 @@ class CompetenceService {
         return $options;
     }
 
-    /**
-     * @param Competence $competence
-     * @param int $max_length
-     * @return array
-     */
     private function competenceOptionify(Competence $competence, int $max_length=60) : array
     {
         $texte = (strlen($competence->getLibelle())>$max_length)?substr($competence->getLibelle(),0,$max_length)." ...":$competence->getLibelle();
@@ -212,12 +165,7 @@ class CompetenceService {
         return $this_option;
     }
 
-    /**
-     * @param string $source
-     * @param integer $id
-     * @return Competence|null
-     */
-    public function getCompetenceByIdSource(string $source, int $id) : ?Competence
+    public function getCompetenceByIdSource(string $source, string $id) : ?Competence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competence.source = :source')

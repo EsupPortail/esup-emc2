@@ -14,53 +14,41 @@ use FicheMetier\Entity\Db\Mission;
 
 ?>
 
-<dl class="dl-horizontal">
-    <dt> Libellé </dt>
-    <dd> <?php echo $competence->getLibelle(); ?> </dd>
-    <dt> Type </dt>
-    <dd> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
-    <dt> Thème </dt>
-    <dd> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
-    <dt> Description </dt>
-    <dd> <?php echo $competence->getDescription(); ?> </dd>
-    <dt> Source </dt>
-    <dd>
+<dl class="row">
+    <dt class="col-md-4"> Libellé </dt>
+    <dd class="col-md-8"> <?php echo $competence->getLibelle(); ?> </dd>
+    <dt class="col-md-4"> Type </dt>
+    <dd class="col-md-8"> <?php echo ($competence->getType())?$competence->getType()->getLibelle():"Aucun"; ?> </dd>
+    <dt class="col-md-4"> Thème </dt>
+    <dd class="col-md-8"> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
+    <dt class="col-md-4"> Description </dt>
+    <dd class="col-md-8"> <?php echo $competence->getDescription(); ?> </dd>
+    <dt class="col-md-4"> Source </dt>
+    <dd class="col-md-8">
         <?php if ($competence->getSource() !== null) : ?>
             <?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?>
         <?php else : ?>
             Aucune source de renseignée
         <?php endif; ?>
     </dd>
-    <dt> Modificateur </dt>
-    <dd> <?php echo $competence->getHistoModificateur()->getDisplayName() ; ?> le <?php echo $competence->getHistoModification()->format('d/m/Y à H:i:s'); ?> </dd>
-
-    <dt> Fiches metiers </dt>
-    <dd>
+    <dt class="col-md-4"> Fiche·s metier·s </dt>
+    <dd class="col-md-8">
         <!-- Nombre de fiches metiers : -->
-        <?php echo count($fiches); ?>
+        <?php echo count($fiches); ?> fiche·s métier·s
         <ul>
             <?php foreach ($fiches as $fiche) : ?>
                 <li> <?php echo $fiche->getMetier()->getLibelle(); ?> (#<?php echo $fiche->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>
-    <dt> Missions principales </dt>
-    <dd>
+    <dt class="col-md-4"> Mission·s principale·s </dt>
+    <dd class="col-md-8">
         <!-- Nombre de fiches metiers : -->
-        <?php echo count($missions); ?>
+        <?php echo count($missions); ?> mission·s principale·s
         <ul>
             <?php foreach ($missions as $mission) : ?>
                 <li> <?php echo $mission->getLibelle(); ?> (#<?php echo $mission->getId(); ?>)</li>
             <?php endforeach; ?>
         </ul>
     </dd>
-<!--    <dt> Agents </dt>-->
-<!--    <dd>-->
-<!--        <span class="badge"> --><?php //echo count($theme->getCompetences()); ?><!--</span>-->
-<!--        <ul>-->
-<!--            --><?php //foreach ($theme->getCompetences() as $competence) : ?>
-<!--                <li> --><?php //echo $competence->getLibelle(); ?><!-- </li>-->
-<!--            --><?php //endforeach; ?>
-<!--        </ul>-->
-<!--    </dd>-->
 </dl>

@@ -4,14 +4,18 @@ namespace Element\Service\CompetenceElement;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CompetenceElementServiceFactory {
 
     /**
      * @param ContainerInterface $container
      * @return CompetenceElementService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CompetenceElementService
     {
         /**
          * @var EntityManager $entityManager

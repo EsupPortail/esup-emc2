@@ -7,6 +7,7 @@ use Element\Entity\Db\CompetenceTheme;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
+use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class CompetenceImporterController extends AbstractActionController {
@@ -16,7 +17,7 @@ class CompetenceImporterController extends AbstractActionController {
 
     /** IMPORT ET REMPLACEMENT ****************************************************************************************/
 
-    public function importerAction()
+    public function importerAction() : Response
     {
         $file_path = "/var/www/html/data/competence_referens3.csv";
         $content = file_get_contents($file_path);

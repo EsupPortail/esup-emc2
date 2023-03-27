@@ -51,7 +51,7 @@ class NiveauController extends AbstractActionController
             'title' => "Ajout d'un niveau de maîtrise",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -76,7 +76,7 @@ class NiveauController extends AbstractActionController
             'title' => "Modification d'un niveau de maîtrise",
             'form' => $form,
         ]);
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
@@ -115,7 +115,7 @@ class NiveauController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($maitrise !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du niveau de maîtrise " . $maitrise->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

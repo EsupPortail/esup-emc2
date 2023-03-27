@@ -52,12 +52,12 @@ class CompetenceController extends AbstractActionController
     public function afficherAction() : ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
-        $activites = $this->getMissionPrincipaleService()->getMissionsHavingCompetence($competence);
+        $missions = $this->getMissionPrincipaleService()->getMissionsHavingCompetence($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
         return new ViewModel([
             'title' => "Affiche d'une compétence",
             'competence' => $competence,
-            'activites' => $activites,
+            'missions' => $missions,
             'fiches' => $fiches,
         ]);
     }
@@ -82,7 +82,7 @@ class CompetenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'une compétence",
             'form' => $form,
@@ -108,7 +108,7 @@ class CompetenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Modification d'une compétence",
             'form' => $form,
@@ -144,7 +144,7 @@ class CompetenceController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($competence !== null) {
-            $vm->setTemplate('element/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la compétence  " . $competence->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
@@ -178,7 +178,7 @@ class CompetenceController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('element/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
            'title' => "Sélection de la compétence qui remplacera [".$competence->getLibelle()."]",
            'form' => $form,

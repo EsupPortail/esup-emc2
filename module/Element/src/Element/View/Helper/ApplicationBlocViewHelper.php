@@ -11,16 +11,11 @@ class ApplicationBlocViewHelper extends AbstractHelper
 {
     /**
      * @param array $applications
-     * @param array $options
-     * @return string|Partial
-     */
-    /**
-     * @param array $applications
      * @param HasApplicationCollectionInterface|null $objet
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $applications, ?HasApplicationCollectionInterface $objet = null, $options = [])
+    public function __invoke(array $applications, ?HasApplicationCollectionInterface $objet = null, array $options = [])
     {
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));

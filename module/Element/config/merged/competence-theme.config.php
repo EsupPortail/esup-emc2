@@ -41,12 +41,28 @@ return [
                     'controller' => CompetenceThemeController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        CompetencethemePrivileges::COMPETENCETHEME_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceThemeController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        CompetencethemePrivileges::COMPETENCETHEME_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceThemeController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        CompetencethemePrivileges::COMPETENCETHEME_MODIFIER,
+                        CompetencethemePrivileges::COMPETENCETHEME_HISTORISER,
                     ],
                 ],
                 [
@@ -76,6 +92,7 @@ return [
                         'options' => [
                             'route' => '/competence-theme',
                             'defaults' => [
+                                /** @see CompetenceThemeController::indexAction() */
                                 'controller' => CompetenceThemeController::class,
                                 'action' => 'index',
                             ],
@@ -87,6 +104,7 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:competence-theme',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::afficherAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'afficher',
                                     ],
@@ -97,6 +115,7 @@ return [
                                 'options' => [
                                     'route' => '/ajouter',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::ajouterAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'ajouter',
                                     ],
@@ -107,6 +126,7 @@ return [
                                 'options' => [
                                     'route' => '/modifier/:competence-theme',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::modifierAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'modifier',
                                     ],
@@ -117,6 +137,7 @@ return [
                                 'options' => [
                                     'route' => '/historiser/:competence-theme',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::historiserAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'historiser',
                                     ],
@@ -127,6 +148,7 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:competence-theme',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::restaurerAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'restaurer',
                                     ],
@@ -137,6 +159,7 @@ return [
                                 'options' => [
                                     'route' => '/detruire/:competence-theme',
                                     'defaults' => [
+                                        /** @see CompetenceThemeController::detruireAction() */
                                         'controller' => CompetenceThemeController::class,
                                         'action' => 'detruire',
                                     ],

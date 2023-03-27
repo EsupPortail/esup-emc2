@@ -32,7 +32,7 @@ class CompetenceHydrator implements HydratorInterface {
      * @param Competence $object
      * @return Competence
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $object->setLibelle($data['libelle']);
         $object->setDescription($data['description']);

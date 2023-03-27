@@ -123,7 +123,7 @@ class MissionPrincipaleService {
     {
         $qb  = $this->createQueryBuilder()
             ->leftJoin('mission.competences', 'competence')->addSelect('competence')
-            ->andWhere('competence.id = :comptenceId')->setParameter('competenceId', $competence->getId());
+            ->andWhere('competence.id = :competenceId')->setParameter('competenceId', $competence->getId());
         $result = $qb->getQuery()->getResult();
         return $result;
     }

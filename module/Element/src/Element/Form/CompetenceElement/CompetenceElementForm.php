@@ -21,10 +21,9 @@ class CompetenceElementForm extends Form {
             'name' => 'competence',
             'type' => Select::class,
             'options' => [
-                'label' => 'Compétences * : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
+                'label' => "Compétences  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [ 'class' => 'control-label', ],
                 'empty_option' => "Sélectionner une compétence ... ",
                 'value_options' => $this->getCompetenceService()->getCompetencesAsGroupOptions(),
             ],

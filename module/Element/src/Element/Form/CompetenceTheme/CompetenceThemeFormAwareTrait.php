@@ -4,25 +4,16 @@ namespace Element\Form\CompetenceTheme;
 
 trait CompetenceThemeFormAwareTrait {
 
-    /** @var CompetenceThemeForm */
-    private $competenceThemeForm;
+    private CompetenceThemeForm $competenceThemeForm;
 
-    /**
-     * @return CompetenceThemeForm
-     */
     public function getCompetenceThemeForm() : CompetenceThemeForm
     {
         return $this->competenceThemeForm;
     }
 
-    /**
-     * @param CompetenceThemeForm $competenceThemeForm
-     * @return CompetenceThemeForm
-     */
-    public function setCompetenceThemeForm(CompetenceThemeForm $competenceThemeForm) : CompetenceThemeForm
+    public function setCompetenceThemeForm(CompetenceThemeForm $competenceThemeForm) : void
     {
         $this->competenceThemeForm = $competenceThemeForm;
-        return $this->competenceThemeForm;
     }
 
 }

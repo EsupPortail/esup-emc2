@@ -49,12 +49,12 @@ trait HasCompetenceCollectionTrait {
         return false;
     }
 
-    public function addCompetenceElement(CompetenceElement $element)
+    public function addCompetenceElement(CompetenceElement $element) : void
     {
         $this->competences->add($element);
     }
 
-    public function removeCompetenceElement(CompetenceElement $element)
+    public function removeCompetenceElement(CompetenceElement $element) : void
     {
         $this->competences->removeElement($element);
     }

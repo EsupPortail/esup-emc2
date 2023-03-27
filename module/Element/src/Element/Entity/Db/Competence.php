@@ -2,7 +2,6 @@
 
 namespace Element\Entity\Db;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -12,161 +11,76 @@ class Competence implements HistoriqueAwareInterface {
     const SOURCE_REFERENS3 = 'REFERENS 3';
     const SOURCE_EMC2 = 'EMC2';
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $description;
-    /** @var CompetenceType */
-    private $type;
-    /** @var CompetenceTheme */
-    private $theme;
-    /** @var string */
-    private $source;
-    /** @var integer */
-    private $idSource;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private ?string $description = null;
+    private ?CompetenceType $type = null;
+    private ?CompetenceTheme $theme = null;
+    private ?string $source = null;
+    private ?string $idSource = null;
 
-    /** @var ArrayCollection (FicheMetier) */
-    private $fiches;
-    /** @var ArrayCollection (Activite) */
-    private $activites;
-
-    public function __construct()
-    {
-        $this->fiches = new ArrayCollection();
-        $this->activites = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string|null $libelle
-     * @return Competence
-     */
-    public function setLibelle(?string $libelle) : Competence
+    public function setLibelle(?string $libelle) : void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return Competence
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description) : void
     {
         $this->description = $description;
-        return $this;
     }
 
-    /**
-     * @return CompetenceType
-     */
-    public function getType()
+    public function getType() : ?CompetenceType
     {
         return $this->type;
     }
 
-    /**
-     * @param CompetenceType $type
-     * @return Competence
-     */
-    public function setType($type)
+    public function setType(?CompetenceType $type) : void
     {
         $this->type = $type;
-        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTheme()
+    public function getTheme() : ?CompetenceTheme
     {
         return $this->theme;
     }
 
-    /**
-     * @param mixed $theme
-     * @return Competence
-     */
-    public function setTheme($theme)
+    public function setTheme(?CompetenceTheme $theme) : void
     {
         $this->theme = $theme;
-        return $this;
     }
 
-    /**
-     * @return FicheMetier[]
-     */
-    public function getFichesMetiers()
-    {
-        return []; //$this->fiches->toArray();
-    }
-
-    /**
-     * @return Activite[]
-     */
-    public function getActivites()
-    {
-        return []; //$this->activites->toArray();
-    }
-
-    /** SOURCES  ***************************************************************************************/
-
-    /**
-     * @return string|null
-     */
     public function getSource(): ?string
     {
         return $this->source;
     }
 
-    /**
-     * @param string $source
-     * @return Competence
-     */
     public function setSource(string $source): Competence
     {
         $this->source = $source;
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getIdSource(): ?int
+    public function getIdSource(): ?string
     {
         return $this->idSource;
     }
 
-    /**
-     * @param int $idSource
-     * @return Competence
-     */
-    public function setIdSource(int $idSource): Competence
+    public function setIdSource(?string $idSource): Competence
     {
         $this->idSource = $idSource;
         return $this;

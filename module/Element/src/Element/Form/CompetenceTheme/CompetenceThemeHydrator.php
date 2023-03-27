@@ -25,7 +25,7 @@ class CompetenceThemeHydrator implements HydratorInterface {
      * @param CompetenceTheme $object
      * @return CompetenceTheme
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $object->setLibelle($data['libelle']);
         return $object;

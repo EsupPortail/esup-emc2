@@ -14,63 +14,42 @@ class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface,
     use ValidableAwareTrait;
     use HasNiveauTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var Competence */
-    private $competence;
-    /** @var string */
-    private $commentaire;
+    private ?int $id = null;
+    private ?Competence $competence = null;
+    private ?string $commentaire = null;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return Competence|null
-     */
     public function getCompetence(): ?Competence
     {
         return $this->competence;
     }
 
-    /**
-     * @param Competence|null $competence
-     * @return CompetenceElement
-     */
-    public function setCompetence(?Competence $competence): CompetenceElement
+    public function setCompetence(?Competence $competence): void
     {
         $this->competence = $competence;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCommentaire(): ?string
     {
         return $this->commentaire;
     }
 
-    /**
-     * @param string|null $commentaire
-     * @return CompetenceElement
-     */
-    public function setCommentaire(?string $commentaire): CompetenceElement
+    public function setCommentaire(?string $commentaire): void
     {
         $this->commentaire = $commentaire;
-        return $this;
     }
 
-    public function getLibelle()
+    public function getLibelle() : string
     {
         return ($this->competence)?$this->competence->getLibelle():"";
     }
 
-    public function getObjet() {
+    public function getObjet() : ?Competence
+    {
         return $this->getCompetence();
     }
 }

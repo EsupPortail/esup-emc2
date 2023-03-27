@@ -6,14 +6,18 @@ use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceTheme\CompetenceThemeService;
 use Element\Service\CompetenceType\CompetenceTypeService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class CompetenceHydratorFactory {
 
     /**
      * @param ContainerInterface $container
      * @return CompetenceHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : CompetenceHydrator
     {
         /**
          * @var CompetenceService $competenceService
@@ -24,7 +28,6 @@ class CompetenceHydratorFactory {
         $competenceThemeService = $container->get(CompetenceThemeService::class);
         $competenceTypeService = $container->get(CompetenceTypeService::class);
 
-        /** @var CompetenceHydrator $hydrator */
         $hydrator = new CompetenceHydrator();
         $hydrator->setCompetenceService($competenceService);
         $hydrator->setCompetenceThemeService($competenceThemeService);

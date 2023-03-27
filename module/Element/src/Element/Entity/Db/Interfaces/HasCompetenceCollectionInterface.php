@@ -10,7 +10,7 @@ interface HasCompetenceCollectionInterface {
     public function getCompetenceCollection() ;
     public function getCompetenceListe(bool $avecHisto = false) : array;
     public function hasCompetence(Competence $competence) : bool;
-    public function addCompetenceElement(CompetenceElement $competenceElement) ;
-    public function removeCompetenceElement(CompetenceElement $competenceElement) ;
+    public function addCompetenceElement(CompetenceElement $competenceElement) : void;
+    public function removeCompetenceElement(CompetenceElement $competenceElement) : void;
 
 }

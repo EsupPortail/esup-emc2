@@ -9,7 +9,7 @@
         <field name="libelle"           type="string" length="255"      column="libelle"                nullable="false"/>
         <field name="description"       type="string" length="2047"     column="description"            nullable="false"/>
         <field name="source"            type="string" length="256"      column="source"                 nullable="true"/>
-        <field name="idSource"          type="integer"                  column="id_source"              nullable="true"/>
+        <field name="idSource"          type="string" length="256"      column="id_source"              nullable="true"/>
 
         <many-to-one target-entity="Element\Entity\Db\CompetenceType"  field="type">
             <join-column name="type_id" referenced-column-name="id"/>

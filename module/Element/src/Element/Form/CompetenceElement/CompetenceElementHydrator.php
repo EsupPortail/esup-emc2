@@ -30,7 +30,7 @@ class CompetenceElementHydrator implements HydratorInterface {
      * @param CompetenceElement $object
      * @return CompetenceElement
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $competence = isset($data['competence'])?$this->getCompetenceService()->getCompetence($data['competence']):null;
         $niveau = (isset($data['niveau']) AND $data['niveau'] !== '')?$this->getNiveauService()->getMaitriseNiveau($data['niveau']):null;

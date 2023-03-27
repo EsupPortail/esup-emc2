@@ -49,7 +49,6 @@ class CompetenceControllerFactory
         $competenceForm = $container->get('FormElementManager')->get(CompetenceForm::class);
         $selectionCompetenceForm = $container->get('FormElementManager')->get(SelectionCompetenceForm::class);
 
-        /** @var CompetenceController $controller */
         $controller = new CompetenceController();
         $controller->setCompetenceService($competenceService);
         $controller->setNiveauService($maitriseNiveauService);

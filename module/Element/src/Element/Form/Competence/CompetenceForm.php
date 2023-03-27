@@ -24,7 +24,8 @@ class CompetenceForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle* :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -47,7 +48,8 @@ class CompetenceForm extends Form {
             'type' => Select::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type de la compétence * :",
+                'label' => "Type de la compétence <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'empty_option' => "Sélectionner le type de la compétence ...",
                 'value_options' => $this->getCompetenceTypeService()->getCompetencesTypesAsOptions(),
             ],

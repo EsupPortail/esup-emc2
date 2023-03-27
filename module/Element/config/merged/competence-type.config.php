@@ -41,12 +41,28 @@ return [
                     'controller' => CompetenceTypeController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        CompetencetypePrivileges::COMPETENCETYPE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceTypeController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        CompetencetypePrivileges::COMPETENCETYPE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CompetenceTypeController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        CompetencetypePrivileges::COMPETENCETYPE_MODIFIER,
+                        CompetencetypePrivileges::COMPETENCETYPE_HISTORISER,
                     ],
                 ],
                 [
@@ -76,6 +92,7 @@ return [
                         'options' => [
                             'route' => '/competence-type',
                             'defaults' => [
+                                /** @see CompetenceTypeController::indexAction() */
                                 'controller' => CompetenceTypeController::class,
                                 'action' => 'index',
                             ],
@@ -87,6 +104,7 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:competence-type',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::afficherAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'afficher',
                                     ],
@@ -97,6 +115,7 @@ return [
                                 'options' => [
                                     'route' => '/ajouter',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::ajouterAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'ajouter',
                                     ],
@@ -107,6 +126,7 @@ return [
                                 'options' => [
                                     'route' => '/modifier/:competence-type',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::modifierAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'modifier',
                                     ],
@@ -117,6 +137,7 @@ return [
                                 'options' => [
                                     'route' => '/historiser/:competence-type',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::historiserAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'historiser',
                                     ],
@@ -127,6 +148,7 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:competence-type',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::restaurerAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'restaurer',
                                     ],
@@ -137,6 +159,7 @@ return [
                                 'options' => [
                                     'route' => '/detruire/:competence-type',
                                     'defaults' => [
+                                        /** @see CompetenceTypeController::detruireAction() */
                                         'controller' => CompetenceTypeController::class,
                                         'action' => 'detruire',
                                     ],

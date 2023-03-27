@@ -16,10 +16,6 @@ class CompetenceElementService {
     
     /** Gestion des entites ***************************************************************************************/
 
-    /**
-     * @param CompetenceElement $element
-     * @return CompetenceElement
-     */
     public function create(CompetenceElement $element) : CompetenceElement
     {
         try {
@@ -31,10 +27,6 @@ class CompetenceElementService {
         return $element;
     }
 
-    /**
-     * @param CompetenceElement $element
-     * @return CompetenceElement
-     */
     public function update(CompetenceElement $element) : CompetenceElement
     {
         try {
@@ -45,10 +37,6 @@ class CompetenceElementService {
         return $element;
     }
 
-    /**
-     * @param CompetenceElement $element
-     * @return CompetenceElement
-     */
     public function historise(CompetenceElement $element) : CompetenceElement
     {
         try {
@@ -60,10 +48,6 @@ class CompetenceElementService {
         return $element;
     }
 
-    /**
-     * @param CompetenceElement $element
-     * @return CompetenceElement
-     */
     public function restore(CompetenceElement $element) : CompetenceElement
     {
         try {
@@ -75,10 +59,6 @@ class CompetenceElementService {
         return $element;
     }
 
-    /**
-     * @param CompetenceElement $element
-     * @return CompetenceElement
-     */
     public function delete(CompetenceElement $element) : CompetenceElement
     {
         try {
@@ -92,9 +72,6 @@ class CompetenceElementService {
 
     /** REQUETAGE  ****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(CompetenceElement::class)->createQueryBuilder('competenceelement')
@@ -104,11 +81,7 @@ class CompetenceElementService {
         return $qb;
     }
 
-    /**
-     * @param int $id
-     * @return CompetenceElement
-     */
-    public function getCompetenceElement(int $id) : CompetenceElement
+    public function getCompetenceElement(int $id) : ?CompetenceElement
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('competenceelement.id = :id')
@@ -122,21 +95,13 @@ class CompetenceElementService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return CompetenceElement|null
-     */
     public function getRequestedCompetenceElement(AbstractActionController $controller, string $param = "competence-element") : ?CompetenceElement
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getCompetenceElement($id);
     }
 
-    /**
-     * @param Competence $competence
-     * @return CompetenceElement[]
-     */
+    /** @return CompetenceElement[] */
     public function getElementsByCompetence(Competence $competence) : array
     {
         $qb = $this->createQueryBuilder()

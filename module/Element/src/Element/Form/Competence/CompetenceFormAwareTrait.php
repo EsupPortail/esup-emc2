@@ -4,25 +4,16 @@ namespace Element\Form\Competence;
 
 trait CompetenceFormAwareTrait {
 
-    /** @var CompetenceForm $competenceForm */
-    private $competenceForm;
+    private CompetenceForm $competenceForm;
 
-    /**
-     * @return CompetenceForm
-     */
     public function getCompetenceForm() : CompetenceForm
     {
         return $this->competenceForm;
     }
 
-    /**
-     * @param CompetenceForm $competenceForm
-     * @return CompetenceForm
-     */
-    public function setCompetenceForm(CompetenceForm $competenceForm) : CompetenceForm
+    public function setCompetenceForm(CompetenceForm $competenceForm) : void
     {
         $this->competenceForm = $competenceForm;
-        return $this->competenceForm;
     }
 
 

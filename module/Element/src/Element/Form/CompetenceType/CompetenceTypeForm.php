@@ -18,7 +18,8 @@ class CompetenceTypeForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle :",
+                'label' => "Libelle   <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -54,7 +55,7 @@ class CompetenceTypeForm extends Form {
         //filter
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'               => [ 'required' => true,  ],
-            'ordre'                 => [ 'required' => true,  ],
+            'ordre'                 => [ 'required' => false,  ],
         ]));
     }
 }

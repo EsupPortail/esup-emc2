@@ -3,6 +3,7 @@
 namespace Element\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -13,16 +14,10 @@ class CompetenceType implements HistoriqueAwareInterface {
     const CODE_OPERATIONNELLE  = 2;
     const CODE_COMPORTEMENTALE = 1;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var ArrayCollection (Competence) */
-    private $competences;
-    /** @var integer */
-    private $ordre;
-    /** @var string */
-    private $couleur;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private Collection $competences;
+    private ?int $ordre = null;
 
     public function __construct()
     {

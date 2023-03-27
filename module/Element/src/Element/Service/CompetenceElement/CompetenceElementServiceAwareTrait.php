@@ -4,26 +4,16 @@ namespace Element\Service\CompetenceElement;
 
 trait CompetenceElementServiceAwareTrait {
 
-    /** @var CompetenceElementService */
-    private $competenceElementService;
+    private CompetenceElementService $competenceElementService;
 
-    /**
-     * @return CompetenceElementService
-     */
     public function getCompetenceElementService(): CompetenceElementService
     {
         return $this->competenceElementService;
     }
 
-    /**
-     * @param CompetenceElementService $competenceElementService
-     * @return CompetenceElementService
-     */
-    public function setCompetenceElementService(CompetenceElementService $competenceElementService): CompetenceElementService
+    public function setCompetenceElementService(CompetenceElementService $competenceElementService): void
     {
         $this->competenceElementService = $competenceElementService;
-        return $this->competenceElementService;
     }
-
 
 }
