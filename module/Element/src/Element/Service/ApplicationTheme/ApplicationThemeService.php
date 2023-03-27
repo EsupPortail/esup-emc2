@@ -2,7 +2,6 @@
 
 namespace Element\Service\ApplicationTheme;
 
-use Application\Service\RendererAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -13,14 +12,9 @@ use Laminas\Mvc\Controller\AbstractActionController;
 
 class ApplicationThemeService {
     use EntityManagerAwareTrait;
-    use RendererAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return ApplicationTheme
-     */
     public function create(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
@@ -32,10 +26,6 @@ class ApplicationThemeService {
         return $groupe;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return ApplicationTheme
-     */
     public function update(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
@@ -46,10 +36,6 @@ class ApplicationThemeService {
         return $groupe;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return ApplicationTheme
-     */
     public function historise(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
@@ -61,10 +47,6 @@ class ApplicationThemeService {
         return $groupe;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return ApplicationTheme
-     */
     public function restore(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
@@ -76,10 +58,6 @@ class ApplicationThemeService {
         return $groupe;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return ApplicationTheme
-     */
     public function delete(ApplicationTheme $groupe) : ApplicationTheme
     {
         try {
@@ -93,10 +71,7 @@ class ApplicationThemeService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
-    public function createQueryBuilder()
+    public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(ApplicationTheme::class)->createQueryBuilder('groupe')
              ->addSelect('application')->leftJoin('groupe.applications', 'application')
@@ -104,12 +79,8 @@ class ApplicationThemeService {
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return ApplicationTheme[]
-     */
-    public function getApplicationsGroupes($champ = 'ordre', $ordre='ASC')
+    /** @return ApplicationTheme[] */
+    public function getApplicationsGroupes(string $champ = 'ordre', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.' . $champ, $ordre);
@@ -118,11 +89,8 @@ class ApplicationThemeService {
         return $result;
     }
 
-    /**
-     * @param ApplicationTheme $groupe
-     * @return array
-     */
-    public function optionify(ApplicationTheme $groupe) {
+    public function optionify(ApplicationTheme $groupe) : array
+    {
         $this_option = [
             'value' =>  $groupe->getId(),
             'label' => $groupe->getLibelle(),
@@ -130,10 +98,7 @@ class ApplicationThemeService {
         return $this_option;
     }
 
-    /**
-     * @return array
-     */
-    public function getApplicationsGroupesAsOption()
+    public function getApplicationsGroupesAsOption() : array
     {
         $groupes = $this->getApplicationsGroupes();
         $array = [];
@@ -144,11 +109,7 @@ class ApplicationThemeService {
         return $array;
     }
 
-    /**
-     * @param integer $id
-     * @return ApplicationTheme
-     */
-    public function getApplicationTheme(int $id)
+    public function getApplicationTheme(?int $id) : ?ApplicationTheme
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('groupe.id = :id')
@@ -162,12 +123,7 @@ class ApplicationThemeService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return ApplicationTheme
-     */
-    public function getRequestedApplicationTheme(AbstractActionController $controller, $param = 'application-groupe')
+    public function getRequestedApplicationTheme(AbstractActionController $controller, string $param = 'application-groupe') : ?ApplicationTheme
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getApplicationTheme($id);

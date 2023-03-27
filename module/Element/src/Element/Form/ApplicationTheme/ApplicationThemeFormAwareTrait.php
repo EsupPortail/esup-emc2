@@ -4,25 +4,16 @@ namespace Element\Form\ApplicationTheme;
 
 trait ApplicationThemeFormAwareTrait {
 
-    /** @var ApplicationThemeForm */
-    private $applicationGroupeForm;
+    private ApplicationThemeForm $applicationGroupeForm;
 
-    /**
-     * @return ApplicationThemeForm
-     */
-    public function getApplicationThemeForm()
+    public function getApplicationThemeForm() : ApplicationThemeForm
     {
         return $this->applicationGroupeForm;
     }
 
-    /**
-     * @param ApplicationThemeForm $applicationGroupeForm
-     * @return ApplicationThemeForm
-     */
-    public function setApplicationThemeForm($applicationGroupeForm)
+    public function setApplicationThemeForm(ApplicationThemeForm $applicationGroupeForm) : void
     {
         $this->applicationGroupeForm = $applicationGroupeForm;
-        return $this->applicationGroupeForm;
     }
 
 

@@ -18,7 +18,6 @@ use Element\Service\Application\ApplicationServiceFactory;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceFactory;
 use Element\View\Helper\ApplicationBlocViewHelper;
-use Element\View\Helper\ApplicationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -273,7 +272,6 @@ return [
     ],
     'view_helpers' => [
         'invokables' => [
-            'application' => ApplicationViewHelper::class,
             'applicationBloc' => ApplicationBlocViewHelper::class,
         ],
     ],

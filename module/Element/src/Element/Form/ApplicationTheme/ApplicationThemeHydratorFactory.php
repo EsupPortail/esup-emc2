@@ -10,7 +10,7 @@ class ApplicationThemeHydratorFactory {
      * @param ContainerInterface $container
      * @return ApplicationThemeHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container) : ApplicationThemeHydrator
     {
         /** @var ApplicationThemeHydrator $hydrator */
         $hydrator = new ApplicationThemeHydrator();

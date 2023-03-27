@@ -3,7 +3,6 @@
 namespace Element\Form\ApplicationTheme;
 
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\Color;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -18,7 +17,8 @@ class ApplicationThemeForm extends Form {
             'type' => Text::class,
             'name' => 'libelle',
             'options' => [
-                'label' => "Libelle* :",
+                'label' => "Libelle <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -35,26 +35,13 @@ class ApplicationThemeForm extends Form {
                 'id' => 'ordre',
             ],
         ]);
-        //couleur
-//        $this->add([
-//            'type' => Color::class,
-//            'name' => 'couleur',
-//            'options' => [
-//                'label' => "Couleur :",
-//            ],
-//            'attributes' => [
-//                'id' => 'couleur',
-//            ],
-//        ]);
         //bouton
         $this->add([
             'type' => Button::class,
             'name' => 'bouton',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -65,7 +52,6 @@ class ApplicationThemeForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle'   => [ 'required' => true, ],
             'ordre'     => [ 'required' => false, ],
-//            'couleur'   => [ 'required' => false, ],
         ]));
     }
 }

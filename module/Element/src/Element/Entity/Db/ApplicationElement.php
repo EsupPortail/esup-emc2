@@ -14,63 +14,42 @@ class ApplicationElement implements HistoriqueAwareInterface, ValidableInterface
     use ValidableAwareTrait;
     use HasNiveauTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var Application */
-    private $application;
-    /** @var string */
-    private $commentaire;
+    private ?int $id = null;
+    private ?Application $application = null;
+    private ?string $commentaire = null;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Application|null
-     */
     public function getApplication(): ?Application
     {
         return $this->application;
     }
 
-    /**
-     * @param Application|null $application
-     * @return ApplicationElement
-     */
-    public function setApplication(?Application $application): ApplicationElement
+    public function setApplication(?Application $application): void
     {
         $this->application = $application;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCommentaire(): ?string
     {
         return $this->commentaire;
     }
 
-    /**
-     * @param string|null $commentaire
-     * @return ApplicationElement
-     */
-    public function setCommentaire(?string $commentaire): ApplicationElement
+    public function setCommentaire(?string $commentaire): void
     {
         $this->commentaire = $commentaire;
-        return $this;
     }
 
-    public function getLibelle()
+    public function getLibelle() : ?string
     {
         return ($this->application)?$this->application->getLibelle():"";
     }
 
-    public function getObjet() {
+    public function getObjet() : ?Application
+    {
         return $this->getApplication();
     }
 }

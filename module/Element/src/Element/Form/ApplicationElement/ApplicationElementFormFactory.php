@@ -5,12 +5,16 @@ namespace Element\Form\ApplicationElement;
 use Element\Service\Application\ApplicationService;
 use Element\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ApplicationElementFormFactory {
 
     /**
      * @param ContainerInterface $container
      * @return ApplicationElementForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : ApplicationElementForm
     {
@@ -24,7 +28,6 @@ class ApplicationElementFormFactory {
         /** @var ApplicationElementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ApplicationElementHydrator::class);
 
-        /** @var ApplicationElementForm $form */
         $form = new ApplicationElementForm();
         $form->setApplicationService($applicationService);
         $form->setNiveauService($MaitriseNiveauService);

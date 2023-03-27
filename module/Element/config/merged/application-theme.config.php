@@ -41,12 +41,28 @@ return [
                     'controller' => ApplicationThemeController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        ApplicationthemePrivileges::APPLICATIONTHEME_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationThemeController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        ApplicationthemePrivileges::APPLICATIONTHEME_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => ApplicationThemeController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        ApplicationthemePrivileges::APPLICATIONTHEME_MODIFIER,
+                        ApplicationthemePrivileges::APPLICATIONTHEME_HISTORISER,
                     ],
                 ],
                 [
@@ -77,6 +93,7 @@ return [
                         'options' => [
                             'route' => '/application-theme',
                             'defaults' => [
+                                /** @see ApplicationThemeController::indexAction() */
                                 'controller' => ApplicationThemeController::class,
                                 'action' => 'index',
                             ],
@@ -87,6 +104,7 @@ return [
                                 'options' => [
                                     'route' => '/afficher/:application-groupe',
                                     'defaults' => [
+                                        /** @see ApplicationThemeController::afficherAction() */
                                         'controller' => ApplicationThemeController::class,
                                         'action' => 'afficher',
                                     ],
@@ -97,6 +115,7 @@ return [
                                 'options' => [
                                     'route' => '/ajouter',
                                     'defaults' => [
+                                        /** @see ApplicationThemeController::ajouterAction() */
                                         'controller' => ApplicationThemeController::class,
                                         'action' => 'ajouter',
                                     ],
@@ -107,6 +126,7 @@ return [
                                 'options' => [
                                     'route' => '/modifier/:application-groupe',
                                     'defaults' => [
+                                        /** @see ApplicationThemeController::modifierAction() */
                                         'controller' => ApplicationThemeController::class,
                                         'action' => 'modifier',
                                     ],
@@ -115,6 +135,7 @@ return [
                             'historiser' => [
                                 'type' => Segment::class,
                                 'options' => [
+                                    /** @see ApplicationThemeController::historiserAction() */
                                     'route' => '/historiser/:application-groupe',
                                     'defaults' => [
                                         'controller' => ApplicationThemeController::class,
@@ -127,6 +148,7 @@ return [
                                 'options' => [
                                     'route' => '/restaurer/:application-groupe',
                                     'defaults' => [
+                                        /** @see ApplicationThemeController::restaurerAction() */
                                         'controller' => ApplicationThemeController::class,
                                         'action' => 'restaurer',
                                     ],
@@ -137,6 +159,7 @@ return [
                                 'options' => [
                                     'route' => '/detruire/:application-groupe',
                                     'defaults' => [
+                                        /** @see ApplicationThemeController::detruireAction() */
                                         'controller' => ApplicationThemeController::class,
                                         'action' => 'detruire',
                                     ],

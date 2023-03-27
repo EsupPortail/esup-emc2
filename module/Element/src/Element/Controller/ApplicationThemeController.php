@@ -52,7 +52,7 @@ class ApplicationThemeController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('element/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'un thème d'application",
             'form' => $form,
@@ -79,7 +79,7 @@ class ApplicationThemeController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Modification d'un thème d'application",
             'form' => $form,
@@ -115,7 +115,7 @@ class ApplicationThemeController extends AbstractActionController {
 
         $vm = new ViewModel();
         if ($groupe !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du groupe d'application [" . $groupe->getLibelle(). "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

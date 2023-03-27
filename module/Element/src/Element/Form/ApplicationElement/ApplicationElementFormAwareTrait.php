@@ -4,25 +4,16 @@ namespace Element\Form\ApplicationElement;
 
 trait ApplicationElementFormAwareTrait {
 
-    /** @var ApplicationElementForm */
-    private $applicationElementForm;
+    private ApplicationElementForm $applicationElementForm;
 
-    /**
-     * @return ApplicationElementForm
-     */
     public function getApplicationElementForm() :ApplicationElementForm
     {
         return $this->applicationElementForm;
     }
 
-    /**
-     * @param ApplicationElementForm $applicationElementForm
-     * @return ApplicationElementForm
-     */
-    public function setApplicationElementForm(ApplicationElementForm $applicationElementForm) : ApplicationElementForm
+    public function setApplicationElementForm(ApplicationElementForm $applicationElementForm) : void
     {
         $this->applicationElementForm = $applicationElementForm;
-        return $this->applicationElementForm;
     }
 
 }

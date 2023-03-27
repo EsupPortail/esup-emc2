@@ -16,12 +16,15 @@ use Element\Provider\Privilege\ApplicationthemePrivileges;
 $this->headTitle("Liste des applications");
 
 $canAfficher = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AFFICHER));
-$canAjouter = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_MODIFIER));
-$canModifier = $canAjouter;
-$canHistoriser = $canAjouter;
+$canAjouter = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_AJOUTER));
+$canModifier =  $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_MODIFIER));
+$canHistoriser =  $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_HISTORISER));
 $canSupprimer = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_EFFACER));
 
 $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getResourceId(ApplicationthemePrivileges::APPLICATIONTHEME_INDEX));
+$canCartographie = $this->isAllowed(ApplicationPrivileges::getResourceId(ApplicationPrivileges::APPLICATION_CARTOGRAPHIE));
+
+$canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canSupprimer);
 
 ?>
 
@@ -30,7 +33,7 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
 </h1>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <?php if ($canAjouter) : ?>
             <a  <?php /** @see \Element\Controller\ApplicationController::creerAction() */?>
                     href="<?php echo $this->url('element/application/creer', [], [], true);?>"
@@ -41,46 +44,41 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                 Ajouter une application
             </a>
         <?php endif; ?>
-        <?php if ($canAfficher) : ?>
-            <a href="<?php echo $this->url('element/application/cartographie'); ?>"
-               class="btn btn-primary"
-            >
-                <span class="icon icon-voir"> Cartographie </span>
-            </a>
-        <?php endif; ?>
+
     </div>
-    <div class="pull-right">
+    <div class="col-md-6">
         <?php if ($canApplicationThemeIndex) : ?>
             <a href="<?php echo $this->url('element/application-theme'); ?>"
-               class="btn btn-primary"
+               class="btn btn-secondary"
             >
                 <span class="icon acceder"></span>
                 Accéder aux thèmes
             </a>
         <?php endif; ?>
+        <?php if ($canCartographie) : ?>
+            <a href="<?php echo $this->url('element/application/cartographie'); ?>"
+               class="btn btn-secondary"
+            >
+                <span class="icon icon-voir"> Cartographie </span>
+            </a>
+        <?php endif; ?>
     </div>
 </div>
 
-<?php
-//echo $this->partial('partial/filtre', ['groupes' => $groupes, 'groupe' => $groupeSelected, 'activite' => $activite], [], true);
-?>
-<!--<br/>-->
-<!--<br/>-->
-
-<table id="applications" class="datatable" style="width:100%;">
+<table id="applications" class="table table-condensed table-hover">
     <thead>
     <tr>
         <th> Libelle</th>
         <th> Thème </th>
         <th> Liens </th>
         <th style="width: 4rem;"> Actif </th>
-        <th style="width: 10rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach($applications as $application): ?>
         <tr class="<?php if ($application->estHistorise()) echo " historise "; ?>">
-            <td> <?php echo $this->application($application); ?> </td>
+            <td> <?php echo $application->getLibelle(); ?> </td>
             <td>
                 <?php if ($application->getGroupe()) : ?>
                     <?php echo $application->getGroupe()->getLibelle(); ?>
@@ -88,7 +86,13 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                     Sans groupe
                 <?php endif; ?>
             </td>
-            <td> <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a> </td>
+            <td>
+                <?php if ($application->getUrl() === null) : ?>
+                    <em> Aucun lien fourni </em>
+                <?php else : ?>
+                    <a href="<?php echo $application->getUrl(); ?>"><?php echo $application->getUrl(); ?></a>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php if ($canModifier) : ?>
                 <a
@@ -106,42 +110,54 @@ $canApplicationThemeIndex = $this->isAllowed(ApplicationthemePrivileges::getReso
                 </a>
             <?php endif; ?>
             </td>
-            <td>
+            <?php if ($canAction) : ?>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
-                    <a
-                        <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
-                            href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>" class="ajax-modal">
-                        <span class="icon icon-voir"        title="Voir l'application"></span></a>
+                    <?php /** @see \Element\Controller\ApplicationController::afficherAction() */?>
+                    <a href="<?php echo $this->url('element/application/afficher', ['id' => $application->getId()], [], true); ?>"
+                       class="ajax-modal">
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
-                    <a
-                        <?php /** @see \Element\Controller\ApplicationController::editerAction() */?>
-                            href="<?php echo $this->url('element/application/editer', ['id' => $application->getId()], [], true); ?>"  class="ajax-modal" data-event="modification">
-                        <span class="icon icon-editer" title="Modifier l'application"></span></a>
+                    <br/>
+                    <?php /** @see \Element\Controller\ApplicationController::editerAction() */?>
+                    <a href="<?php echo $this->url('element/application/editer', ['id' => $application->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
+                    <br>
                     <?php if ($application->estNonHistorise()) : ?>
-                        <a
-                            <?php /** @see \Element\Controller\ApplicationController::historiserAction() */?>
-                                href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>">
-                            <span class="icon icon-historiser" title="Historiser l'application"></span></a>
+                        <?php /** @see \Element\Controller\ApplicationController::historiserAction() */?>
+                        <a href="<?php echo $this->url('element/application/historiser', ['id' => $application->getId()], [], true); ?>">
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
                     <?php else : ?>
-                        <a
-                            <?php /** @see \Element\Controller\ApplicationController::restaurerAction() */?>
-                                href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>">
-                            <span class="icon icon-restaurer" title="Restaurer l'application"></span></a>
+                        <?php /** @see \Element\Controller\ApplicationController::restaurerAction() */?>
+                        <a href="<?php echo $this->url('element/application/restaurer', ['id' => $application->getId()], [], true); ?>">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
-
                 <?php if ($canSupprimer) : ?>
-                    <a
-                        <?php /** @see \Element\Controller\ApplicationController::effacerAction() */?>
-                            href="<?php echo $this->url('element/application/effacer', ['id' => $application->getId()], [], true); ?>"
-                            class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon icon-retirer"  title="Supprimer l'application"></span></a>
+                    <br>
+                    <?php /** @see \Element\Controller\ApplicationController::effacerAction() */?>
+                    <a href="<?php echo $this->url('element/application/effacer', ['id' => $application->getId()], [], true); ?>"
+                            class="ajax-modal" data-event="modification">
+                        <span class="text-danger">
+                            <span class="icon icon-retirer"></span>
+                            Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
+            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>

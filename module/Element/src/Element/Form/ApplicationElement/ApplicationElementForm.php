@@ -21,10 +21,9 @@ class ApplicationElementForm extends Form {
             'name' => 'application',
             'type' => Select::class,
             'options' => [
-                'label' => 'Application * : ',
-                'label_attributes' => [
-                    'class' => 'control-label',
-                ],
+                'label' => "Application <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [  'class' => 'control-label', ],
                 'empty_option' => "Sélectionner une application ... ",
                 'value_options' => $this->getApplicationService()->getApplicationsAsOptions(),
             ],

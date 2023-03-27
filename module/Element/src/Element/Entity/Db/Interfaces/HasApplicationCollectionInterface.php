@@ -10,7 +10,7 @@ interface HasApplicationCollectionInterface {
     public function getApplicationCollection() ;
     public function getApplicationListe(bool $avecHisto = false) : array;
     public function hasApplication(Application $application) : ?ApplicationElement;
-    public function addApplicationElement(ApplicationElement $application) ;
-    public function removeApplicationElement(ApplicationElement $application) ;
+    public function addApplicationElement(ApplicationElement $application) : void ;
+    public function removeApplicationElement(ApplicationElement $application) : void;
 
 }

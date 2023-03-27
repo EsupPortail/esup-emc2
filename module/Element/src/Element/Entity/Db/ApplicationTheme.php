@@ -3,120 +3,51 @@
 namespace Element\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
 class ApplicationTheme implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var string */
-    private $couleur;
-    /** @var string */
-    private $ordre;
-    /** @var ArrayCollection (Application) */
-    private $applications;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private ?int $ordre = null;
+    private Collection $applications;
 
-    /**
-     * @return int
-     */
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getLibelle() : ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string $libelle
-     * @return ApplicationTheme
-     */
-    public function setLibelle($libelle)
+    public function setLibelle(?string $libelle) : void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCouleur()
-    {
-        return $this->couleur;
-    }
-
-    /**
-     * @param string $couleur
-     * @return ApplicationTheme
-     */
-    public function setCouleur($couleur)
-    {
-        $this->couleur = $couleur;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrdre()
+    public function getOrdre() : ?int
     {
         return $this->ordre;
     }
 
-    /**
-     * @param string $ordre
-     * @return ApplicationTheme
-     */
-    public function setOrdre($ordre)
+    public function setOrdre(?int $ordre) : void
     {
         $this->ordre = $ordre;
-        return $this;
     }
 
-    /**
-     * @return Application[]
-     */
-    public function getApplications()
+    /** @return Application[] */
+    public function getApplications() : array
     {
         return $this->applications->toArray();
     }
-
-    /**
-     * @param Application $application
-     * @return ApplicationTheme
-     */
-    public function addFormation($application)
-    {
-        $this->applications->add($application);
-        return $this;
-    }
-    /**
-     * @param Application $application
-     * @return ApplicationTheme
-     */
-    public function removeFormation($application)
-    {
-        $this->applications->removeElement($application);
-        return $this;
-    }
-
-    /**
-     * @param Application $application
-     * @return boolean
-     */
-    public function hasFormation($application)
-    {
-        return $this->applications->contains($application);
-    }
-
-
 }
