@@ -61,7 +61,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 810,
+                                'order' => 2100,
                                 'label' => 'Catégories',
                                 'route' => 'categorie',
                                 'resource' => PrivilegeController::getResourceId(CategorieController::class, 'index') ,

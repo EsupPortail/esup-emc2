@@ -45,7 +45,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 830,
+                                'order' => 2400,
                                 'label' => 'Grades',
                                 'route' => 'grade',
                                 'resource' => PrivilegeController::getResourceId(GradeController::class, 'index') ,

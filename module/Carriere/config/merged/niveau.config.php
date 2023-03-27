@@ -86,7 +86,7 @@ return [
                                 'label'    => 'Niveaux de carrière',
                                 'route'    => 'niveau',
                                 'resource' => PrivilegeController::getResourceId(NiveauController::class, 'index') ,
-                                'order'    => 840,
+                                'order'    => 2500,
                                 'pages' => [],
                                 'icon' => 'fas fa-angle-right',
                             ],

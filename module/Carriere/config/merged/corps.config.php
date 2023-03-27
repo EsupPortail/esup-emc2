@@ -53,7 +53,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 820,
+                                'order' => 2200,
                                 'label' => 'Corps',
                                 'route' => 'corps',
                                 'resource' => PrivilegeController::getResourceId(CorpsController::class, 'index') ,

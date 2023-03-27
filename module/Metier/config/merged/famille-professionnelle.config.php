@@ -159,6 +159,26 @@ return [
         ],
     ],
 
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            [
+                                'order' => 1200,
+                                'label' => 'Familles professionnelles',
+                                'route' => 'famille-professionnelle',
+                                'resource' => PrivilegeController::getResourceId(FamilleProfessionnelleController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'service_manager' => [
         'factories' => [
             FamilleProfessionnelleService::class => FamilleProfessionnelleServiceFactory::class,

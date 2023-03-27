@@ -210,7 +210,7 @@ return [
                                 'label' => 'Compétences',
                                 'route' => 'element/competence',
                                 'resource' => PrivilegeController::getResourceId(CompetenceController::class, 'index') ,
-                                'order' => 20100,
+                                'order' => 3200,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

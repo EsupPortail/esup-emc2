@@ -36,7 +36,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 20000,
+                                'order' => 3000,
                                 'label' => 'Autres ressources',
                                 'route' => 'element',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index') ,

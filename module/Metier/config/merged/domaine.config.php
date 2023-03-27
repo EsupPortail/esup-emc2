@@ -4,6 +4,7 @@ namespace Metier;
 
 use Metier\Controller\DomaineController;
 use Metier\Controller\DomaineControllerFactory;
+use Metier\Controller\MetierController;
 use Metier\Form\Domaine\DomaineForm;
 use Metier\Form\Domaine\DomaineFormFactory;
 use Metier\Form\Domaine\DomaineHydrator;
@@ -163,6 +164,26 @@ return [
                             'defaults' => [
                                 'controller' => DomaineController::class,
                                 'action'     => 'supprimer',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'ressource' => [
+                        'pages' => [
+                            [
+                                'order' => 1100,
+                                'label' => 'Domaines',
+                                'route' => 'domaine',
+                                'resource' => PrivilegeController::getResourceId(DomaineController::class, 'index'),
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

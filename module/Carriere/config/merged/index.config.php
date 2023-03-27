@@ -8,6 +8,7 @@ use Carriere\Provider\Privilege\CategoriePrivileges;
 use Carriere\Provider\Privilege\CorpsPrivileges;
 use Carriere\Provider\Privilege\CorrespondancePrivileges;
 use Carriere\Provider\Privilege\GradePrivileges;
+use Carriere\Provider\Privilege\NiveaucarrierePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -26,6 +27,7 @@ return [
                         CorpsPrivileges::CORPS_INDEX,
                         CorrespondancePrivileges::CORRESPONDANCE_INDEX,
                         GradePrivileges::GRADE_INDEX,
+                        NiveaucarrierePrivileges::NIVEAUCARRIERE_INDEX,
                     ],
                 ],
             ],
@@ -57,7 +59,7 @@ return [
                     'ressource' => [
                         'pages' => [
                             [
-                                'order' => 800,
+                                'order' => 2000,
                                 'label' => 'Ressources liées à la carrière',
                                 'route' => 'carriere',
                                 'resource' => PrivilegeController::getResourceId(IndexController::class, 'index') ,
