@@ -285,10 +285,13 @@ foreach ($encours as $epro) {
     </thead>
     <tbody>
     <?php foreach ($facultatifs as $denomination => $agent): ?>
+        <?php
+            $affectionPrincipale = $agent->getAffectationPrincipale();
+            $structurePrincipale = ($affectionPrincipale)?$affectionPrincipale->getStructure():null; ?>
         <tr>
             <td> <?php echo $denomination; ?> </td>
             <td>
-                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+                <?php foreach ($agent->getAffectationsActifs() as $grade) : ?>
                     <?php $structure = $grade->getStructure(); ?>
                     <?php if ($structure === null) : ?>
                         <span class="text-danger">
@@ -313,7 +316,7 @@ foreach ($encours as $epro) {
                 <?php endforeach; ?>
             </td>
             <?php if ($enCours === true) : ?>
-                <td>
+                <td class="action">
                     <?php if ($canVoirAgent) : ?>
                         <a
                             <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
@@ -322,18 +325,23 @@ foreach ($encours as $epro) {
                                 title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
                                 data-bs-toggle="tooltip" data-bs-html="true"
                         >
-                            <span class="icon personnel"></span></a>
+                            <span class="icon personnel"></span>
+                            Afficher
+                        </a>
                     <?php endif; ?>
                     <?php if ($canAjouterEntretien) : ?>
                         <?php if ($campagne !== null AND $agent !== null) : ?>
+                            <br>
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => ($structure)?$structure->getId():null, 'agent' => ($agent)?$agent->getId():null]], [], true); ?>"
+                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => ($structurePrincipale)?$structurePrincipale->getId():null, 'agent' => ($agent)?$agent->getId():null]], [], true); ?>"
                                     title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
                                     class="ajax-modal" data-event="entretien"
                                     data-bs-toggle="tooltip" data-bs-html="true"
                             >
-                                <span class="icon icon-ajouter"></span></a>
+                                <span class="icon icon-ajouter"></span>
+                                Convoquer
+                            </a>
                         <?php else : ?>
                             <?php if ($campagne === null) : ?>
                                 <span class="text-danger">
