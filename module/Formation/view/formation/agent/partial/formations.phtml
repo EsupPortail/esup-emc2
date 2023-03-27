@@ -40,10 +40,10 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <br/>
             </div>
             <div class="col-md-5">
-                <?php if ($inscription->getSource()->getCode() !== HasSourceInterface::SOURCE_EMC2) : ?>
+                <?php if ($inscription->getSource() !== HasSourceInterface::SOURCE_EMC2) : ?>
                     <div class="alert alert-info">
                         <span class="icon icon-information"></span>
-                        Formation gérée par <?php echo $inscription->getSource()->getLibelle(); ?>
+                        Formation gérée par <?php echo $inscription->getSource(); ?>
                     </div>
                 <?php else : ?>
                     <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
