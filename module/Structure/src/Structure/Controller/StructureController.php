@@ -8,6 +8,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Provider\Etat\FichePosteEtats;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
@@ -28,6 +29,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -37,6 +39,7 @@ class StructureController extends AbstractActionController {
     use EtatServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -122,6 +125,7 @@ class StructureController extends AbstractActionController {
 
         $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
+
         return new ViewModel([
             'selecteur' => $selecteur,
 
@@ -147,6 +151,8 @@ class StructureController extends AbstractActionController {
             'campagnes' => $campagnes,
             'entretiensArray' => $entretiensArray,
             'delegues' => $delegues,
+
+            'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
 
             // - Fiches de recrutement - //
 //            'fichesRecrutements' => $fichesRecrutements,

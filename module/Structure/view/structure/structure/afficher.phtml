@@ -29,6 +29,8 @@
  * @var EntretienProfessionnel[] $entretiensArray
  * @var Delegue[] $delegues
  *
+ * @var string $emailAssistance
+ *
  */
 
 use Application\Entity\Db\Agent;
@@ -144,13 +146,19 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
 
                 <!-- Informations ------------------------------------------------------------------------------------->
                 <div id="agents" class="tab-pane">
-
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <h2>
                                 Agents
                                 <span class="badge"><?php echo count($agents); ?></span>
                             </h2>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="alert alert-info">
+                                <span class="icon icon-information"></span>
+                                En cas d'incohérence sur la chaîne hiérarchique d'un agent, veuillez remonter l'information à l'adresse
+                                <a href="mailto:<?php echo $emailAssistance; ?>"><?php echo $emailAssistance; ?></a>
+                            </div>
                         </div>
                     </div>
 

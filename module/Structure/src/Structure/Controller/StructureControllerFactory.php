@@ -21,6 +21,7 @@ use Referentiel\Service\Synchronisation\SynchronisationService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
@@ -42,6 +43,7 @@ class StructureControllerFactory {
          * @var DelegueService $delegueService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
+         * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
@@ -55,6 +57,7 @@ class StructureControllerFactory {
         $etatService = $container->get(EtatService::class);
         $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
+        $parametreService = $container->get(ParametreService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
@@ -82,6 +85,7 @@ class StructureControllerFactory {
         $controller->setDelegueService($delegueService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
+        $controller->setParametreService($parametreService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);

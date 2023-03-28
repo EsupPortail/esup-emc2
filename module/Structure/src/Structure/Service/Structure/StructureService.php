@@ -510,8 +510,8 @@ EOS;
         $qb = $this->getEntityManager()->getRepository(StructureResponsable::class)->createQueryBuilder('responsable')
 //            ->join('responsable.source', 'source')->addSelect('source')
             ->join('responsable.agent', 'agent')->addSelect('agent')
-            ->andWhere('responsable.structure = :structure')
-            ->setParameter('structure', $structure)
+            ->andWhere('responsable.structure = :structure')->setParameter('structure', $structure)
+            ->andWhere('responsable.deleted_on IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom')
         ;
         if ($date !== null) $qb = StructureResponsable::decorateWithActif($qb, 'responsable', $date);

@@ -220,7 +220,7 @@ foreach ($encours as $epro) {
             <tr>
                 <td> <?php echo $denomination; ?> </td>
                 <td>
-                    <?php foreach ($agent->getGradesActifs() as $grade) : ?>
+                    <?php foreach ($agent->getAffectationsActifs($campagne->getDateDebut()) as $grade) : ?>
                         <?php if ($grade->getStructure()) : ?>
                             <?php echo $grade->getStructure()->getLibelleLong(); ?>
                         <?php else : ?>

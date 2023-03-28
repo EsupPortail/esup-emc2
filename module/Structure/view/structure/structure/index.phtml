@@ -34,7 +34,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                 <th> Libellé </th>
                 <th> Code </th>
                 <th> Type </th>
-                <th> Resp./Gest. </th>
+<!--                <th> Resp./Gest. </th>-->
+                <th> Resp. </th>
                 <th> Action </th>
             </tr>
         </thead>
@@ -70,23 +71,22 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <?php echo count($responsables); ?> <span class="icon icon-user"></span>
                         </span>
 
-                        /
-
+<!--                        /-->
                         <!-- gestionnaires -->
-                        <?php
-                            $gestionnaires = $structure->getGestionnaires();
-                            $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
-                            foreach ($gestionnaires as $gestionnaire) {
-                                if ($gestionnaire->getAgent()) {
-                                    $listing .= $gestionnaire->getAgent()->getDenomination() . "<br/>";
-                                } else {
-                                    $listing .=  "Problème avec le gestionnaire [".$gestionnaire->getId()."]". "<br/>";
-                                }
-                            }
-                        ?>
-                        <span title="<?php echo $listing; ?>" data-bs-toggle="tooltip" data-bs-html="true"  >
-                        <?php echo count($gestionnaires); ?> <span class="icon icon-user"></span>
-                        </span>
+<!--                        --><?php
+//                            $gestionnaires = $structure->getGestionnaires();
+//                            $listing = "<u><b>Gestionnaires(s) : </b></u><br/>";
+//                            foreach ($gestionnaires as $gestionnaire) {
+//                                if ($gestionnaire->getAgent()) {
+//                                    $listing .= $gestionnaire->getAgent()->getDenomination() . "<br/>";
+//                                } else {
+//                                    $listing .=  "Problème avec le gestionnaire [".$gestionnaire->getId()."]". "<br/>";
+//                                }
+//                            }
+//                        ?>
+<!--                        <span title="--><?php //echo $listing; ?><!--" data-bs-toggle="tooltip" data-bs-html="true"  >-->
+<!--                        --><?php //echo count($gestionnaires); ?><!-- <span class="icon icon-user"></span>-->
+<!--                        </span>-->
                     </td>
                     <td>
                         <?php if ($canAfficher) : ?>

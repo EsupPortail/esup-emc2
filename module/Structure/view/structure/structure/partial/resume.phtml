@@ -7,7 +7,6 @@
  * @var StructureGestionnaire[] $gestionnaires
  */
 
-use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
@@ -100,20 +99,20 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             <?php endforeach; ?>
         </ul>
 
-        <h3>
-            Gestionnaires
-            <span class="badge"><?php echo count($gestionnaires); ?></span>
-            <span class="icon icon-synchroniser" title="Synchronisés depuis le référentiel"></span>
-        </h3>
-        <ul>
-            <?php foreach ($gestionnaires as $gestionnaire) : ?>
-                <li>
-                    <span title="Responsabilité valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
-                        <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
-                    </span>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+<!--        <h3>-->
+<!--            Gestionnaires-->
+<!--            <span class="badge">--><?php //echo count($gestionnaires); ?><!--</span>-->
+<!--            <span class="icon icon-synchroniser" title="Synchronisés depuis le référentiel"></span>-->
+<!--        </h3>-->
+<!--        <ul>-->
+<!--            --><?php //foreach ($gestionnaires as $gestionnaire) : ?>
+<!--                <li>-->
+<!--                    <span title="Responsabilité valide sur la période du --><?php //echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?><!-- au  --><?php //echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?><!--">-->
+<!--                        --><?php //echo $gestionnaire->getAgent()->getDenomination(); ?>
+<!--                    </span>-->
+<!--                </li>-->
+<!--            --><?php //endforeach; ?>
+<!--        </ul>-->
         <h2 style="border-bottom:1px solid black;">
             Structures
             <span class="icon icon-information" style="color:var(--content-background)"></span>
