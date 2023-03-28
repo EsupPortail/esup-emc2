@@ -12,5 +12,5 @@ class AgentaffichagePrivileges extends Privileges
     const AGENTAFFICHAGE_CARRIERECOMPLETE = 'agentaffichage-agentaffichage_carrierecomplete';
     const AGENTAFFICHAGE_COMPTE = 'agentaffichage-agentaffichage_compte';
     const AGENTAFFICHAGE_TEMOIN_AFFECTATION = 'agentaffichage-agentaffichage_temoin_affectation';
-    const AGENTAFFICHAGE_TEMOIN_STATUT = 'agentaffichage-agentaffichage_temoin_status';
+    const AGENTAFFICHAGE_TEMOIN_STATUT = 'agentaffichage-agentaffichage_temoin_statut';
 }
