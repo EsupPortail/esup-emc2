@@ -74,6 +74,8 @@ return [
                             AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE,
                             AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE,
                             AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION,
+                            AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT,
                         ],
                         'resources' => ['Agent'],
                         'assertion' => AgentAffichageAssertion::class

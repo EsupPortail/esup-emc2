@@ -45,7 +45,7 @@ if (isset($options["retour"])) $query["retour"] = $options["retour"];
     <div class="col-md-3">
         <h3> Affectations actives</h3>
         <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => false, 'temoin' => true]); ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => false, 'temoin' => false]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">

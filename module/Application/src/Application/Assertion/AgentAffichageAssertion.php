@@ -56,6 +56,8 @@ class AgentAffichageAssertion extends AbstractAssertion
             case AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR :
             case AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE :
             case AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME :
+            case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION :
+            case AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT :
                 switch ($role->getRoleId()) {
                     case AppRoleProvider::ADMIN_FONC:
                     case AppRoleProvider::ADMIN_TECH:

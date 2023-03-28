@@ -24,6 +24,8 @@ $canAfficherSuperieure = $this->isAllowed($agent, AgentaffichagePrivileges::AGEN
 $canAfficherCarriereComplete = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE);
 $canAfficherCarriereDate = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME);
 $canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE);
+$canAfficherTemoinAffectation = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION);
+$canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT);
 
 ?>
 <h2> Informations générales sur l'agent </h2>
@@ -156,13 +158,13 @@ $canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGEN
     <div class="col-md-3">
         <h3>Affectation</h3>
         <?php foreach ($affectations as $affectation) : ?>
-            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinAffectation]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-3">
         <h3>Statut</h3>
         <?php foreach ($statuts as $statut) : ?>
-            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => true]); ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => $canAfficherCarriereDate, 'temoin' => $canAfficherTemoinStatut]); ?>
         <?php endforeach; ?>
     </div>
     <div class="col-md-6">
