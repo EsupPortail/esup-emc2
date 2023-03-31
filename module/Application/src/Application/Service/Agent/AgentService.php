@@ -384,6 +384,7 @@ class AgentService {
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
+        if ($affectationsPrincipales === null) return [];
         $structure = null;
         if (count($affectationsPrincipales) === 1) {
             $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
