@@ -17,6 +17,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\ORMException;
 use Element\Entity\Db\ApplicationElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -130,7 +131,8 @@ class AgentController extends AbstractActionController
 
         //Récupération des status
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
-        $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, true, false, false, false);
+        $agentAffectations = $this->getAgentAffectationService()->getAgentsAffectationsByAgentAndDate($agent, new DateTime());
+        foreach ($agentAffectations as $af) var_dump($af->getDateFin());
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
 
         //Récupération des supérieures et autorités

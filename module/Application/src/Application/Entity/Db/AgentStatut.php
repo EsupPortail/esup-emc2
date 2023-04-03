@@ -28,8 +28,7 @@ class AgentStatut implements HasPeriodeInterface {
     /** @var Structure */
     private $structure;
 
-    /** @var boolean */
-    private $titulaire;
+    private string $titulaire = 'N';
     /** @var boolean */
     private $cdi;
     /** @var boolean */
@@ -162,7 +161,7 @@ class AgentStatut implements HasPeriodeInterface {
     /**
      * @return bool
      */
-    public function isTitulaire()
+    public function isTitulaire() : bool
     {
         return $this->titulaire === 'O';
     }

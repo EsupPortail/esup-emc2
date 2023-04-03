@@ -41,10 +41,6 @@ class EntretienProfessionnelService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @return EntretienProfessionnel
-     * @var EntretienProfessionnel $entretien
-     */
     public function create(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         try {
@@ -57,10 +53,6 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @return EntretienProfessionnel
-     * @var EntretienProfessionnel $entretien
-     */
     public function update(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         try {
@@ -71,10 +63,6 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @return EntretienProfessionnel
-     * @var EntretienProfessionnel $entretien
-     */
     public function historise(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         try {
@@ -86,10 +74,6 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @return EntretienProfessionnel
-     * @var EntretienProfessionnel $entretien
-     */
     public function restore(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         try {
@@ -101,10 +85,6 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @return EntretienProfessionnel
-     * @var EntretienProfessionnel $entretien
-     */
     public function delete(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
         try {

@@ -7,6 +7,7 @@ use Application\Form\HasDescription\HasDescriptionForm;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
@@ -36,6 +37,7 @@ class StructureControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAffectationService $agentAffectationService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
@@ -51,6 +53,7 @@ class StructureControllerFactory {
          * @var SynchronisationService $synchronisationService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -78,6 +81,7 @@ class StructureControllerFactory {
         $controller = new StructureController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setCampagneService($campagneService);

@@ -201,13 +201,12 @@ class CampagneService {
             ->setParameter('date', $date)
         ;
         $result = $qb->getQuery()->getResult();
-
         $last = null;
         /** @var Campagne $item */
         foreach ($result as $item) {
             if ($last === null OR $item->getAnnee() > $last->getAnnee()) $last = $item;
         }
-        return $item;
+        return $last;
     }
 
     public function getAgentsSansEntretien(Campagne $campagne, Structure $structure)
@@ -401,5 +400,32 @@ class CampagneService {
             $scolaire = ($annee) . "/" . ($annee + 1);
         }
         return $scolaire;
+    }
+
+    /**
+     * Cette fonction retourne la liste des agents adminstratifs associés à des structures aux débuts de la campagne
+     * @param array $structures
+     * @param Campagne $campagne
+     * @return Agent[]
+     */
+    public function computeAgentByStructures(array $structures, Campagne $campagne) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.affectations', 'affectation')
+            ->join('agent.statuts', 'statut')
+            ->join('agent.grades', 'grade')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateDebut <= :date')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $campagne->getDateDebut())
+            // Affecté·e à une des structures
+            ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
+            // En contrat ...
+            ->andWhere('statut.titulaire = :on OR statut.cdd = :on OR statut.cdi = :on')->setParameter('on', 'O')
+            ->andWhere('statut.retraite = :off')->setParameter('off', 'N')
+            // Est Administratif
+            ->andWhere('statut.administratif = :on')
+            ->orderBy('agent.nomUsuel, agent.prenom','ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 }

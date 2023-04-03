@@ -10,11 +10,13 @@ use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -35,6 +37,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentAffectationServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -105,26 +108,38 @@ class StructureController extends AbstractActionController {
 
         /** Campagne */
         $last =  $this->getCampagneService()->getLastCampagne();
-
-        /** Récupération des agents et postes liés aux structures */
-        $agentsLast = ($last !== null)?$this->getAgentService()->getAgentsByStructures($structures, $last->getDateDebut()):[];
-        $agentsForcesLast = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
-        $allAgentsLast = array_merge($agentsLast, $agentsForcesLast);
-        $entretiensLast = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($last, $allAgentsLast);
-
-
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $entretiensArray = [];
-        foreach ($campagnes as $campagne) {
-            $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $allAgents);
-            $entretiensArray[$campagne->getId()] = $entretiens;
-        }
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
 //        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
 
         $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
+
+
+        var_dump(new DateTime());
+        $entretiensArray = [];
+        $agentsEligibles = [];
+        foreach ($campagnes as $campagne) {
+            $agentsCampagne = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
+//            $eligibles = $this->getCampagneService()->computeAgentsEligibleByStructures($structures, $campagne);
+//            foreach ($eligibles as $eligible) {
+//                $afs = $this->getAgentAffectationService()->getAgentsAffectationsByAgentAndDate($eligible, $campagne->getDateDebut());
+//                foreach ($afs as $af) {
+//                    var_dump($af->getId());
+//                    var_dump($af->getAgent()->getDenomination());
+//                    var_dump($af->getStructure()->getLibelleCourt());
+//                    var_dump(($af->getDateFin())?$af->getDateDebut()->format('d/m/Y'):null);
+//                    var_dump(($af->getDateFin())?$af->getDateFin()->format('d/m/Y'):null);
+//                    var_dump($af->isPrincipale());
+//                }
+//            }
+            $agentsEligibles[$campagne->getId()] = $agentsCampagne;
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsCampagne);
+            $entretiensArray[$campagne->getId()] = $entretiens;
+        }
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -145,10 +160,12 @@ class StructureController extends AbstractActionController {
             'superieurs' => $superieurs,
             'autorites' => $autorites,
 
-            'last' => $last,
-            'agentsLast' => $allAgentsLast,
-            'entretiensLast' => $entretiensLast,
+            // Partie -- Entretiens Professionnels --
             'campagnes' => $campagnes,
+            'agentsEligibles' => $agentsEligibles,
+
+
+            'last' => $last,
             'entretiensArray' => $entretiensArray,
             'delegues' => $delegues,
 

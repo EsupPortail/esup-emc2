@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @see StructureController::afficherAction()
+ * @see \Structure\Controller\StructureController::afficherAction()
  * @var Structure[] $selecteur
  * @var Structure $structure
  * @var StructureResponsable[] $responsables
@@ -25,12 +25,24 @@
  * @var Campagne $last
  * @var Agent[] $agentsLast
  * @var EntretienProfessionnel[] $entretiensLast
- * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiensArray
  * @var Delegue[] $delegues
  *
  * @var string $emailAssistance
  *
+ * // Partie -- Entretien professionnel -- //
+ * @var Campagne[] $campagnes
+ *  Dernière campagne + courrantes
+ * @var array $agentsEligibles
+ *  $agentsEligibles = [
+ *      (int) $campagneId => (array) Agent[]
+ *  ]
+ * @var array $entretiens
+ *  $entretiens = [
+ *      (int) $campagneId => (array) entretiensCampagne [
+ *          $agentId => (?EntretienProfessionnel) $entretien
+ *      ]
+ *  ]
  */
 
 use Application\Entity\Db\Agent;
@@ -109,15 +121,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 </a>
             </li>
 
-            <?php if ($last !== null) : ?>
-                <li class="nav-item">
-                    <a href="#campagne_<?php echo $last->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $last->getId(); ?>">
-                        Entretien professionnel  <br/>
-                        <strong><?php echo $last->getAnnee(); ?></strong>
-                    </a>
-                </li>
-            <?php endif; ?>
-
             <?php foreach ($campagnes as $campagne) : ?>
                 <li class="nav-item">
                     <a href="#campagne_<?php echo $campagne->getId(); ?>" class="nav-link" aria-controls="campagne_<?php echo $campagne->getId(); ?>">
@@ -195,16 +198,9 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 </div>
 
                 <!-- Campagne ------------------------------------------------------------------------------------->
-                <?php $allAgents = array_merge($agents, $agentsForces); ?>
-
-                <?php if ($last !== null) : ?>
-                    <div id="campagne_<?php echo $last->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/precedente', ['campagne' => $last, 'structure' => $structure, 'agents' => $allAgents, 'entretiens' => $entretiensLast]); ?>
-                    </div>
-                <?php endif; ?>
                 <?php foreach ($campagnes as $campagne) : ?>
                     <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $allAgents, 'delegues' => $delegues, 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $agentsEligibles[$campagne->getId()], 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
                     </div>
                 <?php endforeach; ?>
 

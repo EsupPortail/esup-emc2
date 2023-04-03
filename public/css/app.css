@@ -28,6 +28,10 @@ h1 {
     color: black;
 }
 
+span.text-warning {
+    color: saddlebrown !important;
+}
+
 /** MODAL *************************************************************************************************************/
 
 table.xdebug-error.xe-warning {

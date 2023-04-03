@@ -10,6 +10,8 @@ use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
  * @var array $options
  */
 
+$isEnCours = (!empty($entretiens) && current($entretiens)->getCampagne()->estEnCours());
+
 $dropdowns = false;
 
 // recuperation des données à afficher
@@ -45,7 +47,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['exporter'])) {
 }
 $canModifier  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['modifier'])) {
-    $canModifier = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
+    $canModifier = $isEnCours AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER));
 } else {
     $canModifier = $options['droits']['modifier'];
 }
@@ -63,13 +65,13 @@ if (!isset($options['droits']) OR !isset($options['droits']['renseigner'])) {
 }
 $canHistoriser  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['historiser'])) {
-    $canHistoriser = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
+    $canHistoriser = $isEnCours AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_HISTORISER));
 } else {
     $canHistoriser = $options['droits']['historiser'];
 }
 $canSupprimer  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
-    $canSupprimer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
+    $canSupprimer = $isEnCours AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_DETRUIRE));
 } else {
     $canSupprimer = $options['droits']['supprimer'];
 }

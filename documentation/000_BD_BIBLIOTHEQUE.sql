@@ -890,8 +890,7 @@ create table unicaen_aide_faq_question
     ordre      integer
 );
 
-create unique index unicaen_faq_question_id_uindex
-    on unicaen_aide_faq_question (id);
+create unique index unicaen_faq_question_id_uindex on unicaen_aide_faq_question (id);
 
 create table unicaen_aide_documentation_lien
 (
@@ -907,9 +906,7 @@ create table unicaen_aide_documentation_lien
     role_ids    varchar(4096)
 );
 
-
-create unique index unicaen_aide_documentation_lien_id_uindex
-    on unicaen_aide_documentation_lien (id);
+create unique index unicaen_aide_documentation_lien_id_uindex on unicaen_aide_documentation_lien (id);
 
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)

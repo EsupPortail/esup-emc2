@@ -4,8 +4,8 @@ namespace Application\Service\AgentAffectation;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
-use RuntimeException;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -25,6 +25,34 @@ class AgentAffectationService {
             ->andWhere('agentaffectation.deleted_on IS NULL')
         ;
         return $qb;
+    }
+
+    /** @return AgentAffectation[] */
+    public function getAgentsAffectationsByAgentAndDate(Agent $agent, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+        $qb= $this->createQueryBuilder()
+            ->andWhere('agentaffectation.agent = :agent')
+            ->setParameter('agent', $agent)
+        ;
+
+//        $entityName = 'agentaffectation';
+//        $qb = $qb
+//            ->andWhere("(" .$entityName . '.dateDebut IS NULL OR ' . $entityName . '.dateDebut <= :date'.")")
+////            ->andWhere("agentaffectation.dateFin >= :date")
+//            ->setParameter('date', $date)
+//        ;
+
+        var_dump($date);
+        $result = $qb->getQuery()->getResult();
+        $result = array_filter($result, function (AgentAffectation $a) use ($date) {
+//            var_dump($a->getDateDebut()->format('H/m/Y'));
+            if ($a->getDateDebut() !== null AND $a->getDateDebut() >= $date) return false;
+//            var_dump($a->getDateFin()->format('H/m/Y'));
+            if ($a->getDateFin() !== null AND $a->getDateFin() <= $date) return false;
+            return true;
+        });
+        return $result;
     }
 
     /**

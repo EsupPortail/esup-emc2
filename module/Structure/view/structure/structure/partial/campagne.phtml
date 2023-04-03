@@ -3,20 +3,17 @@
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 use Structure\Entity\Db\Structure;
-use Structure\Provider\Privilege\StructurePrivileges;
 
 /**
  * @var Campagne $campagne
  * @var Structure $structure
  * @var Agent[] $agents
- * @var Delegue[] $delegues
- * @var EntretienProfessionnel[] $entretiens
+ * @var array{agentId:int, entretien:EntretienProfessionnel} $entretiens
  */
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -29,10 +26,6 @@ $canDetruireEntretien = $this->isAllowed(EntretienproPrivileges::getResourceId(E
 $canSursisAjouter = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_AJOUTER));
 $canSursisModifier = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
 $canSursisSupprimer = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_SUPPRIMER));
-
-$canGererDelegue = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
-
-$deleguesCampagne = array_filter($delegues, function (Delegue $a) use ($campagne) { return $a->getCampagne() === $campagne;});
 
 $complete = [];
 $encours = [];
@@ -97,41 +90,8 @@ foreach ($encours as $epro) {
             <dd  class="col-md-6"> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
 
         </dl>
-
-        <h3>Délégué&middot;e&middot;s pour la campagne
-            <span class="badge"><?php echo count($deleguesCampagne); ?></span>
-            <?php if ($canGererDelegue AND $enCours) : ?>
-                <?php /** @see \EntretienProfessionnel\Controller\DelegueController::ajouterAction() */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/ajouter-delegue', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], [], true); ?>"
-                   data-bs-toggle="tooltip" data-bs-html="true" class="ajax-modal" data-event="modification"
-                >
-                    <span class="icon icon-ajouter"></span>
-                </a>
-            <?php endif; ?>
-        </h3>
-
-        <?php if(empty($deleguesCampagne)) : ?>
-            <i>Aucun délégué pour la campagne</i>
-        <?php else : ?>
-            <ul>
-                <?php foreach ($deleguesCampagne as $delegue) : ?>
-                    <li>
-                        <span title="<?php echo $delegue->getDescription(); ?>" data-bs-toggle="tooltip" data-bs-html="true">
-                            <?php echo $delegue->getAgent()->getDenomination(); ?>
-                        </span>
-                        <?php if ($canGererDelegue AND $enCours) : ?>
-                            <?php /** @see \EntretienProfessionnel\Controller\DelegueController::retirerAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/retirer-delegue', ['delegue' => $delegue->getId()], [], true); ?>">
-                                <span class="icon icon-retirer"></span>
-                            </a>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-
-
     </div>
+
     <div class="col-md-6">
         <h3> Progression de la campagne</h3>
 
@@ -204,66 +164,7 @@ foreach ($encours as $epro) {
     </span>
 </h2>
 
-<table class="table table-condensed">
-    <thead>
-        <tr>
-           <th> Dénomination</th>
-           <th> Structure </th>
-           <th> Grade </th>
-           <?php if ($enCours === true) : ?>
-                <th style="width:13rem;"> Action </th>
-            <?php endif; ?>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($sans as $denomination => $agent): ?>
-            <tr>
-                <td> <?php echo $denomination; ?> </td>
-                <td>
-                    <?php foreach ($agent->getAffectationsActifs($campagne->getDateDebut()) as $grade) : ?>
-                        <?php if ($grade->getStructure()) : ?>
-                            <?php echo $grade->getStructure()->getLibelleLong(); ?>
-                        <?php else : ?>
-                            <span class="text-danger">
-                                Aucune structure
-                            </span>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </td>
-                <td>
-                    <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                        <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleLong():"N.C."; ?>
-                    <?php endforeach; ?>
-                </td>
-                <?php if ($enCours === true) : ?>
-                    <td>
-                        <?php if ($canVoirAgent) : ?>
-                            <a
-                                <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                                target="_blank"
-                                title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-bs-toggle="tooltip" data-bs-html="true"
-                            >
-                                <span class="icon personnel"></span></a>
-                        <?php endif; ?>
-                        <?php if ($canAjouterEntretien) : ?>
-                            <a
-                                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                                href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => $structure->getId(), 'agent' => $agent->getId()]], [], true); ?>"
-                                title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
-                                class="ajax-modal" data-event="entretien"
-                                data-bs-toggle="tooltip" data-bs-html="true"
-                            >
-                                <span class="icon icon-ajouter"></span></a>
-                        <?php endif; ?>
-                    </td>
-                <?php endif; ?>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
+<?php echo $this->convocationArray($sans, $campagne); ?>
 
 <h2>
     Agents sans obligation d'entretien professionnel
@@ -272,97 +173,7 @@ foreach ($encours as $epro) {
     </span>
 </h2>
 
-<table class="table table-condensed">
-    <thead>
-    <tr>
-        <th> Dénomination</th>
-        <th> Structure </th>
-        <th> Grade </th>
-        <?php if ($enCours === true) : ?>
-            <th style="width:13rem;"> Action </th>
-        <?php endif; ?>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($facultatifs as $denomination => $agent): ?>
-        <?php
-            $affectionPrincipale = $agent->getAffectationPrincipale();
-            $structurePrincipale = ($affectionPrincipale)?$affectionPrincipale->getStructure():null; ?>
-        <tr>
-            <td> <?php echo $denomination; ?> </td>
-            <td>
-                <?php foreach ($agent->getAffectationsActifs() as $grade) : ?>
-                    <?php $structure = $grade->getStructure(); ?>
-                    <?php if ($structure === null) : ?>
-                        <span class="text-danger">
-                            <span class="icon icon-unchecked"></span>
-                            Aucune structure
-                        </span>
-                    <?php else : ?>
-                        <?php if ($structure->getLibelleLong() === null) : ?>
-                            <span class="text-warning">
-                                <span class="icon icon-attention"></span>
-                                    Aucun libellé long pour la structure <?php echo $structure->getId(); ?>
-                            </span>
-                        <?php else : ?>
-                            <?php echo $grade->getStructure()->getLibelleLong(); ?>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </td>
-            <td>
-                <?php foreach ($agent->getGradesActifs() as $grade) : ?>
-                    <?php echo ($grade->getGrade())?$grade->getGrade()->getLibelleLong():"N.C."; ?>
-                <?php endforeach; ?>
-            </td>
-            <?php if ($enCours === true) : ?>
-                <td class="action">
-                    <?php if ($canVoirAgent) : ?>
-                        <a
-                            <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                                href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
-                                target="_blank"
-                                title="Affiche la fiche <span class='highlight agent'><?php echo $denomination; ?>"
-                                data-bs-toggle="tooltip" data-bs-html="true"
-                        >
-                            <span class="icon personnel"></span>
-                            Afficher
-                        </a>
-                    <?php endif; ?>
-                    <?php if ($canAjouterEntretien) : ?>
-                        <?php if ($campagne !== null AND $agent !== null) : ?>
-                            <br>
-                            <a
-                                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                                    href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['structure' => ($structurePrincipale)?$structurePrincipale->getId():null, 'agent' => ($agent)?$agent->getId():null]], [], true); ?>"
-                                    title="Créer un entretien professionnel pour <span class='highlight agent'><?php echo $denomination; ?>"
-                                    class="ajax-modal" data-event="entretien"
-                                    data-bs-toggle="tooltip" data-bs-html="true"
-                            >
-                                <span class="icon icon-ajouter"></span>
-                                Convoquer
-                            </a>
-                        <?php else : ?>
-                            <?php if ($campagne === null) : ?>
-                                <span class="text-danger">
-                                    <span class="icon icon-unchecked"></span>
-                                    Pas de campagne !
-                                </span>
-                            <?php endif; ?>
-                            <?php if ($agent === null) : ?>
-                                <span class="text-danger">
-                                    <span class="icon icon-unchecked"></span>
-                                    Pas d'agent !
-                                </span>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </td>
-            <?php endif; ?>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+<?php echo $this->convocationArray($facultatifs, $campagne); ?>
 
 <style>
     span.texte-sursis {
@@ -387,21 +198,6 @@ foreach ($encours as $epro) {
 <script>
     $(function() {
         $("body").on("entretien", function (event) {
-            //let content = event.div.html();
-            //let match_regex = content.match(/#[0-9]*/g)[0];
-            //let id = match_regex.split('#')[1];
-            //event.div.modal('hide');
-            //let win = window.open('../../entretien-professionnel/acceder/' + id + '?structure=' + <?php //echo ($structure)?$structure->getId():0; ?>//, '_blank');
-            //if (win) {
-            //    //Browser has allowed it to be opened
-            //    win.focus();
-            //} else {
-            //    //Browser has blocked it
-            //    alert('Please allow popups for this website');
-            //}
-            //console.log("entretien pro: " + id);
-            //window.location.reload();
-            // alert("L'entretien vien d'être créer");
             event.div.modal('hide');
             window.location.reload();
         });

@@ -4,6 +4,8 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\Delegue\DelegueService;
@@ -17,8 +19,10 @@ class EntretienProfessionnelServiceFactory
     /**
      * @param ContainerInterface $container
      * @return EntretienProfessionnelService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : EntretienProfessionnelService
+    public function __invoke(ContainerInterface $container): EntretienProfessionnelService
     {
         /**
          * @var EntityManager $entityManager

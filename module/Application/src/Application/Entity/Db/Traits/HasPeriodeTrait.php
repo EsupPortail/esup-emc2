@@ -83,10 +83,11 @@ trait HasPeriodeTrait {
     {
         if ($date === null) $date = new DateTime();
         $qb = $qb
-            ->andWhere($entityName . '.dateDebut IS NULL OR ' . $entityName . '.dateDebut <= :date')
-            ->andWhere($entityName . '.dateFin IS NULL OR ' . $entityName . '.dateFin >= :date')
+            ->andWhere("(" .$entityName . '.dateDebut IS NULL OR ' . $entityName . '.dateDebut <= :date'.")")
+            ->andWhere("(" .$entityName . '.dateFin IS NULL OR ' . $entityName . '.dateFin >= :date'. ")")
             ->andWhere($entityName . '.id IS NOT NULL')
-            ->setParameter('date', $date);
+            ->setParameter('date', $date)
+        ;
         return $qb;
     }
 }

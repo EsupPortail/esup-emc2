@@ -1,0 +1,91 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+
+/**
+ * @see \EntretienProfessionnel\View\Helper\ConvocationArrayViewHelper
+ * @var Agent[] $agents
+ * @var Campagne $campagne
+ * @var array $options[]
+ */
+
+$canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));;
+$canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AJOUTER)));
+$canAction = ($canAfficher OR $canConvoquer);
+
+?>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th> Dénomination </th>
+            <th> Affectation·s </th>
+            <th> Grade·s </th>
+            <?php if ($canAction) : ?>
+            <th class="action">
+                Actions
+            </th>
+            <?php endif; ?>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($agents as $agent) : ?>
+        <tr>
+            <td> <?php echo $agent->getDenomination(); ?> </td>
+            <td>
+                <?php $affectations = $agent->getAffectationsActifs($campagne->getDateDebut()); ?>
+                <?php if (empty($affectations)) : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucune affectation à la date du <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+                    </span>
+                <?php else : ?>
+                    <?php foreach ($affectations as $affectation) : ?>
+                         <?php echo $affectation->getStructure()->getLibelleLong(); ?> <br/>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php $grades = $agent->getGradesActifs($campagne->getDateDebut()); ?>
+                <?php if (empty($grades)) : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun grade à la date du <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+                    </span>
+                <?php else : ?>
+                    <?php foreach ($grades as $grade) : ?>
+                        <?php echo $grade->getGrade()->getLibelleLong(); ?> <br/>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </td>
+            <?php if ($canAction) : ?>
+            <td class="action">
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
+                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                       target="_blank"
+                    >
+                        <span class="icon personnel"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+                <?php if ($canConvoquer) : ?>
+                    <br>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
+                    <a
+                        href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['agent' => $agent->getId()]], [], true); ?>"
+                        class="ajax-modal" data-event="entretien"
+                    >
+                        <span class="icon icon-ajouter"></span>
+                        Convoquer
+                    </a>
+                <?php endif; ?>
+            </td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

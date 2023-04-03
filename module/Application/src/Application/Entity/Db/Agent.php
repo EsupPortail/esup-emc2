@@ -314,11 +314,17 @@ class Agent implements
     /**
      * @return AgentAffectation
      */
-    public function getAffectationPrincipale() : ?AgentAffectation
+    public function getAffectationPrincipale(?DateTime $date = null) : ?AgentAffectation
     {
+        if ($date === null) {
+            $date = new DateTime();
+        }
         /** @var AgentAffectation $affectation */
         foreach ($this->getAffectations() as $affectation) {
-            if ($affectation->isPrincipale() and $affectation->estEnCours()) {
+            if ($affectation->isPrincipale()
+                and ($affectation->getDateDebut() === null OR $affectation->getDateDebut() <= $date)
+                and ($affectation->getDateFin() === null OR $affectation->getDateFin() >= $date)
+            ) {
                 return $affectation;
             }
         }
@@ -380,15 +386,16 @@ class Agent implements
     }
 
     /**
+     * @var ?DateTime $date
      * @return AgentStatut[]
      */
-    public function getStatutsActifs() : array
+    public function getStatutsActifs(?DateTime $date = null) : array
     {
-        $now = (new DateTime());
+        if ($date === null) $date = (new DateTime());
         $statuts = [];
         /** @var AgentStatut $statut */
         foreach ($this->getStatuts() as $statut) {
-            if ($statut->estEnCours($now)) $statuts[] = $statut;
+            if ($statut->estEnCours($date)) $statuts[] = $statut;
         }
         return $statuts;
     }
@@ -407,14 +414,16 @@ class Agent implements
     }
 
     /**
+     * @var ?DateTime $date
      * @return AgentGrade[]
      */
-    public function getGradesActifs() : array
+    public function getGradesActifs(?DateTime $date = null) : array
     {
+        if ($date === null) $date = (new DateTime());
         $grades = [];
         /** @var AgentGrade $grade */
         foreach ($this->getGrades() as $grade) {
-            if ($grade->estEnCours()) $grades[] = $grade;
+            if ($grade->estEnCours($date)) $grades[] = $grade;
         }
         return $grades;
     }

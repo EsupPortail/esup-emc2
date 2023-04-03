@@ -5,6 +5,9 @@ namespace EntretienProfessionnel\Entity\Db;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
+/**
+ * Cette entité est utilisée pour alimenter le formulaire d'entretien pro
+ */
 class CritereContribution implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
