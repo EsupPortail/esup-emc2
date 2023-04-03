@@ -117,9 +117,6 @@ class StructureController extends AbstractActionController {
 
         $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
-
-
-        var_dump(new DateTime());
         $entretiensArray = [];
         $agentsEligibles = [];
         foreach ($campagnes as $campagne) {
