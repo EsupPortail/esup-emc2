@@ -27,7 +27,9 @@ $canSursisAjouter = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivi
 $canSursisModifier = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
 $canSursisSupprimer = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_SUPPRIMER));
 
-$complete = [];
+$validerSuperieur = [];
+$validerAutorite = [];
+$validerAgent = [];
 $encours = [];
 $sans = [];
 $facultatifs = [];
@@ -45,10 +47,19 @@ foreach ($agents as $agent) {
             $facultatifs[$agent->getDenomination()] = $agent;
         }
     } else {
-        if ($entretien->isComplete()) {
-            $complete[$agent->getDenomination()] = $entretien;
-        } else {
-            $encours[$agent->getDenomination()] = $entretien;
+        switch($entretien->getEtat()->getCode()) {
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+                $validerSuperieur[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
+                $validerAutorite[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
+                $validerAgent[] = $entretien;
+                break;
+            default :
+                $encours[] = $entretien;
+                break;
         }
     }
 }
@@ -56,16 +67,16 @@ foreach ($agents as $agent) {
 $enCours = $campagne->estEnCours();
 
 
-$planifie = [];
-$fait = [];
-foreach ($encours as $epro) {
-    if ($epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
-        $epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) {
-        $planifie[] = $epro;
-    } else {
-        $fait[] = $epro;
-    }
-}
+//$planifie = [];
+//$fait = [];
+//foreach ($encours as $epro) {
+//    if ($epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
+//        $epro->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) {
+//        $planifie[] = $epro;
+//    } else {
+//        $fait[] = $epro;
+//    }
+//}
 ?>
 
 <h2> Informations sur la campagne </h2>
@@ -96,35 +107,48 @@ foreach ($encours as $epro) {
         <h3> Progression de la campagne</h3>
 
         <?php
-            $nbComplete = count($complete);
+            $nbValiderAgent = count($validerAgent);
+            $nbValiderAutorite = count($validerAutorite);
+            $nbValiderSuperieur = count($validerSuperieur);
             $nbEncours = count($encours);
             $nbSans = count($sans);
-            $nbTotal =  $nbComplete + $nbEncours + $nbSans;
+            $nbTotal =  $nbValiderAgent + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
         ?>
 
         <?php if ($nbTotal !== 0) : ?>
 
             <?php
-                $ratioComplete =  $nbComplete / $nbTotal * 100;
-                $ratioPlanifie = count($planifie) / $nbTotal * 100;
-                $ratioFait = count($fait) / $nbTotal * 100;
-                $ratioSans = 100 - ($ratioComplete + $ratioPlanifie + $ratioFait);
+                $ratioAgent =  $nbValiderAgent / $nbTotal * 100;
+                $ratioAutorite =  $nbValiderAutorite / $nbTotal * 100;
+                $ratioSuperieur =  $nbValiderSuperieur / $nbTotal * 100;
+                $ratioPlanifie = count($encours) / $nbTotal * 100;
+                $ratioSans = 100 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie);
             ?>
 
             <div class="progress">
-                <div class="progress-bar complete" role="progressbar" style="width: <?php echo $ratioComplete; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                     title="Entretiens complétés <?php echo $nbComplete; ?>/<?php echo $nbTotal; ?>">
-                    <?php echo round($ratioComplete); ?>%</div>
-                <div class="progress-bar fait" role="progressbar" style="width: <?php echo $ratioFait; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                     title="Entretiens effectués <?php echo count($fait); ?>/<?php echo $nbTotal; ?>">
-                <?php echo round($ratioFait); ?>%</div>
-                <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                     title="Entretiens en cours <?php echo count($planifie); ?>/<?php echo $nbTotal; ?>">
+                <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                     title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
+                    <?php echo round($ratioAgent); ?>%</div>
+                <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                     title="Entretiens en attente de validation de l'agent <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
+                    <?php echo round($ratioAutorite); ?>%</div>
+                <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                     title="Entretiens en attente de validation de l'autorité hiérarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
+                    <?php echo round($ratioSuperieur); ?>%</div>
+                <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                     title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
                     <?php echo round($ratioPlanifie); ?>%</div>
                 <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
                      title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioSans); ?>%</div>
             </div>
+
+            <br/>
+            <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien complétés <br/>
+            <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'agent <br/>
+            <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'autorité hiérarchique <br/>
+            <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien planifié <br/>
+            <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien non planifié <br/>
         <?php endif; ?>
         
     </div>
@@ -134,25 +158,29 @@ foreach ($encours as $epro) {
 <h2>
     Entretiens professionnels complétés
     <span class="badge">
-        <?php echo count($complete); ?>
+        <?php echo $nbValiderAgent; ?>
     </span>
 </h2>
 
-<?php echo $this->entretienProfessionnelArray($complete,[
+<?php echo $this->entretienProfessionnelArray($validerAgent,[
         'affichages' => ['annee' => false, 'structure' => false, 'lieu' => false],
         'droits' => ['renseigner' => false, 'modifier' => false, 'sursis' => false],
 ]); ?>
 
 
 <!-- Enrtetiens professtionnels en cours ------------------------------------------------------------------------------>
+
+<?php //todo regroupe encours
+ $lefts = array_merge($encours, $validerSuperieur, $validerAutorite);
+?>
 <h2>
     Entretiens professionnels en cours
     <span class="badge">
-        <?php echo count($encours); ?>
+        <?php echo count($lefts); ?>
     </span>
 </h2>
 
-<?php echo $this->entretienProfessionnelArray($encours,[
+<?php echo $this->entretienProfessionnelArray($lefts,[
     'affichages' => ['annee' => false, 'structure' => false, 'lieu' => false],
     'droits' => [],
 ]); ?>
@@ -181,17 +209,27 @@ foreach ($encours as $epro) {
         font-style: italic;
     }
 
-    div.complete {
-        background-color: #009600;
-    }
-    div.sans {
+    .sans {
         background-color: #960000;
     }
-    div.planifie {
+    .planifie {
         background-color: #ff6c0a;
     }
-    div.fait {
+    .entretien-superieur {
+        background-color: #ffcc01;
+    }
+    .entretien-autorite {
         background-color: #9dc500;
+    }
+    .entretien-agent {
+        background-color: #009600;
+    }
+
+    span.legende {
+        border:1px solid black;
+        border-radius: 0.25rem;
+        min-width: 3rem;
+        margin-right: 2rem;
     }
 </style>
 

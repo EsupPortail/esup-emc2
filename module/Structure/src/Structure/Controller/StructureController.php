@@ -18,7 +18,6 @@ use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
-use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -50,7 +49,6 @@ class StructureController extends AbstractActionController {
     use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
-    use DelegueServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
 
 
@@ -103,39 +101,20 @@ class StructureController extends AbstractActionController {
             $autorites[$agent->getId()] = $aut;
         }
 
-//        $fichesRecrutements = $this->getStructureService()->getFichesPostesRecrutementsByStructures($structures);
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
-        /** Campagne */
+        $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
+
+        /** Campagne d'entretien professionnel ************************************************************************/
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
-        $delegues = $this->getDelegueService()->getDeleguesByStructure($structure);
-//        $profils = $this->getFicheProfilService()->getFichesPostesByStructure($structure);
-
-        $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
-
-        $entretiensArray = [];
-        $agentsEligibles = [];
+        $entretiensArray = []; $agentsArray = [];
         foreach ($campagnes as $campagne) {
-            $agentsCampagne = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
-//            $eligibles = $this->getCampagneService()->computeAgentsEligibleByStructures($structures, $campagne);
-//            foreach ($eligibles as $eligible) {
-//                $afs = $this->getAgentAffectationService()->getAgentsAffectationsByAgentAndDate($eligible, $campagne->getDateDebut());
-//                foreach ($afs as $af) {
-//                    var_dump($af->getId());
-//                    var_dump($af->getAgent()->getDenomination());
-//                    var_dump($af->getStructure()->getLibelleCourt());
-//                    var_dump(($af->getDateFin())?$af->getDateDebut()->format('d/m/Y'):null);
-//                    var_dump(($af->getDateFin())?$af->getDateFin()->format('d/m/Y'):null);
-//                    var_dump($af->isPrincipale());
-//                }
-//            }
-            $agentsEligibles[$campagne->getId()] = $agentsCampagne;
-            $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsCampagne);
-            $entretiensArray[$campagne->getId()] = $entretiens;
+            $agentsArray[$campagne->getId()] = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
+            $entretiensArray[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsArray[$campagne->getId()]);
         }
 
         return new ViewModel([
@@ -159,12 +138,9 @@ class StructureController extends AbstractActionController {
 
             // Partie -- Entretiens Professionnels --
             'campagnes' => $campagnes,
-            'agentsEligibles' => $agentsEligibles,
-
-
-            'last' => $last,
+            'agentsArray' => $agentsArray,
             'entretiensArray' => $entretiensArray,
-            'delegues' => $delegues,
+
 
             'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
 

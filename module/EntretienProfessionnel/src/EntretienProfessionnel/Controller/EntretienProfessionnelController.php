@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Template\PdfTemplates;
 use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -74,18 +75,6 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function indexDelegueAction() : ViewModel
-    {
-        $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
-
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByDelegue($agent);
-
-        return new ViewModel([
-            'entretiens' => $entretiens,
-        ]);
-    }
-
     public function indexAgentAction() : ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
@@ -113,7 +102,6 @@ class EntretienProfessionnelController extends AbstractActionController
     public function findResponsablePourEntretienAction() : JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
         $agentId = $this->params()->fromQuery('agent');
         $agent = $this->getAgentService()->getAgent($agentId);
@@ -123,9 +111,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
         if ($term !== null and trim($term) !== "") {
             $agentsResponsables = ($structure)?$this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term):[];
-            $agentsDelegues = ($campagne AND $structure)?$this->getEntretienProfessionnelService()->findDeleguePourEntretien($structure, $campagne, $term):[];
             $agentsSuperieures = ($agent)?$this->getEntretienProfessionnelService()->findSuperieurPourEntretien($agent, $term):[];
-            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsDelegues, $agentsSuperieures));
+            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsSuperieures));
             return new JsonModel($result);
         }
 
@@ -448,7 +435,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'agent' => $entretien->getAgent(),
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREP, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREP, $vars);
 
         try {
             $exporter = new PdfExporter();
@@ -472,7 +459,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'formations' => $formations,
             'campagne' => $entretien->getCampagne(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TemplateProvider::CREF, $vars);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREF, $vars);
 
         try {
             $exporter = new PdfExporter();

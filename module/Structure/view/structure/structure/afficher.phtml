@@ -22,34 +22,26 @@
  * @var Agent[] $autorites;
  * @var Agent[] $superieurs;
  *
- * @var Campagne $last
- * @var Agent[] $agentsLast
- * @var EntretienProfessionnel[] $entretiensLast
- * @var EntretienProfessionnel[] $entretiensArray
- * @var Delegue[] $delegues
- *
- * @var string $emailAssistance
- *
- * // Partie -- Entretien professionnel -- //
+ * ------- ENTRETIENS PROFESSIONNELS -------
  * @var Campagne[] $campagnes
- *  Dernière campagne + courrantes
- * @var array $agentsEligibles
- *  $agentsEligibles = [
+ * @var Agent[] $agentsArray
+ * @var EntretienProfessionnel[] $entretiensArray
+ *  $agentsArray = [
  *      (int) $campagneId => (array) Agent[]
  *  ]
- * @var array $entretiens
- *  $entretiens = [
+ *  $entretiensArray = [
  *      (int) $campagneId => (array) entretiensCampagne [
  *          $agentId => (?EntretienProfessionnel) $entretien
  *      ]
  *  ]
+ *
+ * @var string $emailAssistance
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureGestionnaire;
@@ -80,7 +72,6 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                     <option value="<?php echo $s->getId(); ?>" <?php if ($structure->getId() == $s->getId()) echo "selected"; ?>><?php echo $s->getLibelleCourt(); ?></option>
                 <?php endforeach; ?>
             </select>
-
         <?php endif; ?>
     </div>
 </div>
@@ -200,7 +191,7 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Campagne ------------------------------------------------------------------------------------->
                 <?php foreach ($campagnes as $campagne) : ?>
                     <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $agentsEligibles[$campagne->getId()], 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $agentsArray[$campagne->getId()], 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
                     </div>
                 <?php endforeach; ?>
 

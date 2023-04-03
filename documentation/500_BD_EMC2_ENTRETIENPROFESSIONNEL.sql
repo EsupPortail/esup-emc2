@@ -73,22 +73,6 @@ create table entretienprofessionnel_sursis
 );
 create unique index entretienprofessionnel_sursis_id_uindex on entretienprofessionnel_sursis (id);
 
-create table entretienprofessionnel_delegue
-(
-    id serial not null constraint entretienprofessionnel_delegue_pk primary key,
-    campagne_id integer not null constraint entretienprofessionnel_delegue_entretienprofessionnel_campagne_ references entretienprofessionnel_campagne on delete cascade,
-    agent_id varchar(40) not null constraint entretienprofessionnel_delegue_agent_c_individu_fk references agent on delete cascade,
-    structure_id bigint not null constraint entretienprofessionnel_delegue_structure_id_fk references structure on delete cascade,
-    description text,
-    histo_creation timestamp not null,
-    histo_createur_id integer not null constraint entretienprofessionnel_delegue_unicaen_utilisateur_user_id_fk references unicaen_utilisateur_user,
-    histo_modification timestamp,
-    histo_modificateur_id integer constraint entretienprofessionnel_delegue_unicaen_utilisateur_user_id_fk_2 references unicaen_utilisateur_user,
-    histo_destruction timestamp,
-    histo_destructeur_id integer constraint entretienprofessionnel_delegue_unicaen_utilisateur_user_id_fk_3 references unicaen_utilisateur_user
-);
-create unique index entretienprofessionnel_delegue_id_uindex on entretienprofessionnel_delegue (id);
-
 create table entretienprofessionnel_validation
 (
     entretien_id integer not null constraint entretienprofessionnel_validation_entretien_professionnel_id_fk references entretienprofessionnel on delete cascade,
@@ -612,7 +596,6 @@ INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, 
 -- role ----------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Supérieur·e hiérarchique direct·e', 'Supérieur·e hiérarchique direct·e', false, null, null, true, null);
-INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Délégué·e pour entretien professionnel', 'Délégué·e pour entretien professionnel', false, null, null, true, null);
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur) VALUES ('Autorité hiérarchique', 'Autorité hiérarchique', false, null, null, true, null);
 
 

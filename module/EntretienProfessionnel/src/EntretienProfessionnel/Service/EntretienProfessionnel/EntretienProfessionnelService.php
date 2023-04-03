@@ -13,9 +13,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Service\Delegue\DelegueServiceAwareTrait;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use Structure\Entity\Db\Structure;
@@ -33,7 +31,6 @@ class EntretienProfessionnelService {
     use AgentServiceAwareTrait;
     use EntityManagerAwareTrait;
     use ConfigurationServiceAwareTrait;
-    use DelegueServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -279,23 +276,6 @@ class EntretienProfessionnelService {
     }
 
     /**
-     * @param Agent $delegue
-     * @return array
-     */
-    public function getEntretiensProfessionnelsByDelegue(Agent $delegue)  : array
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
-            ->andWhere('entretien.responsable = :delegue')
-            ->setParameter('delegue', $delegue);
-
-        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
      * @param string token
      * @return EntretienProfessionnel|null
      */
@@ -429,21 +409,6 @@ class EntretienProfessionnelService {
             $result_resp = array_merge($result_resp, $parent);
         }
         return $result_resp;
-    }
-
-    public function findDeleguePourEntretien(?Structure $structure, Campagne $campagne, $term) : array
-    {
-        $result_dele = array_map(
-            function (Delegue $a) { return $a->getAgent(); },
-            $this->getDelegueService()->getDeleguesByStructureAndCampagne($structure, $campagne)
-        );
-        $result_dele = array_filter($result_dele,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
-
-        if ($structure->getParent() AND $structure->getParent() !== $structure) {
-            $parent = $this->findDeleguePourEntretien($structure->getParent(), $campagne, $term);
-            $result_dele = array_merge($result_dele, $parent);
-        }
-        return $result_dele;
     }
 
     /**

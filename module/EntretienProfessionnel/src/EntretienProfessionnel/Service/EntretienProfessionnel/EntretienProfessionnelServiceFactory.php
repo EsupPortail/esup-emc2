@@ -8,7 +8,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Doctrine\ORM\EntityManager;
-use EntretienProfessionnel\Service\Delegue\DelegueService;
 use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
@@ -28,7 +27,6 @@ class EntretienProfessionnelServiceFactory
          * @var EntityManager $entityManager
          * @var AgentService $agentService
          * @var ConfigurationService $configurationService
-         * @var DelegueService $delegueService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
          * @var ValidationInstanceService $validationInstanceService
@@ -37,7 +35,6 @@ class EntretienProfessionnelServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
         $configurationService = $container->get(ConfigurationService::class);
-        $delegueService = $container->get(DelegueService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -47,7 +44,6 @@ class EntretienProfessionnelServiceFactory
         $service->setEntityManager($entityManager);
         $service->setAgentService($agentService);
         $service->setConfigurationService($configurationService);
-        $service->setDelegueService($delegueService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);
         $service->setValidationInstanceService($validationInstanceService);

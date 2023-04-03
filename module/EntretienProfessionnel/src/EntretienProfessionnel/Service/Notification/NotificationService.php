@@ -9,7 +9,6 @@ use Structure\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Entity\Db\Delegue;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
@@ -122,23 +121,6 @@ class NotificationService {
         $this->getMailService()->update($mailBiats);
 
         return $mailBiats;
-    }
-
-    /** Notification liées aux délégue-e-s ****************************************************************************/
-
-    public function triggerCampagneDelegue(Delegue $delegue) : Mail
-    {
-        $agent = $delegue->getAgent();
-        $campagne = $delegue->getCampagne();
-        $structure = $delegue->getStructure();
-        $vars = ['campagne' => $campagne, 'agent' => $agent, 'structure' => $structure, 'UrlService' => $this->getUrlService()];
-
-        $email = $agent->getEmail();
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_DELEGUE, $vars);
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$campagne->generateTag(), $agent->generateTag(), $structure->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-        return $mail;
     }
 
     /** Notifications liées à la convation à un entretien *************************************************************/

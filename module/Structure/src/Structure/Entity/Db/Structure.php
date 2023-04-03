@@ -335,22 +335,4 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $texte .= "</ul>";
         return $texte;
     }
-
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
-    public function toStringGestionnaires() : string
-    {
-        $date = new DateTime();
-        $gestionnaires = $this->getGestionnaires();
-        $gestionnaires = array_filter($gestionnaires, function (StructureGestionnaire $a) use ($date) {
-            $encours = $a->estEnCours($date);
-            $effacer = $a->isDeleted($date);
-            return ($encours AND !$effacer);
-        });
-
-        if (empty($gestionnaires)) return "aucun·e gestionnaire";
-        $texte  = "<ul>";
-        foreach ($gestionnaires as $gestionnaire) $texte .= "<li>".$gestionnaire->getAgent()->getDenomination()."</li>";
-        $texte .= "</ul>";
-        return $texte;
-    }
 }

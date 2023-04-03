@@ -13,7 +13,6 @@ use Application\Service\FichePoste\FichePosteService;
 use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
-use EntretienProfessionnel\Service\Delegue\DelegueService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -42,7 +41,6 @@ class StructureControllerFactory {
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
          * @var EtatService $etatService
-         * @var DelegueService $delegueService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var ParametreService $parametreService
@@ -58,7 +56,6 @@ class StructureControllerFactory {
         $entretienService = $container->get(EntretienProfessionnelService::class);
         $campagneService = $container->get(CampagneService::class);
         $etatService = $container->get(EtatService::class);
-        $delegueService = $container->get(DelegueService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $parametreService = $container->get(ParametreService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
@@ -86,7 +83,6 @@ class StructureControllerFactory {
         $controller->setEntretienProfessionnelService($entretienService);
         $controller->setCampagneService($campagneService);
         $controller->setEtatService($etatService);
-        $controller->setDelegueService($delegueService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setParametreService($parametreService);

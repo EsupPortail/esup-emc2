@@ -66,8 +66,6 @@ class IndexController extends AbstractActionController
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
                     break;
-                case EntretienProfessionnelRoles::ROLE_DELEGUE :
-                    return $this->redirect()->toRoute('entretien-professionnel/index-delegue', [], [], true);
                 case Agent::ROLE_SUPERIEURE :
                     /** @see IndexController::indexSuperieurAction() */
                     return $this->redirect()->toRoute('index-superieur', [], [], true);
