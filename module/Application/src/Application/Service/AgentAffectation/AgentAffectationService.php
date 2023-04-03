@@ -43,7 +43,6 @@ class AgentAffectationService {
 //            ->setParameter('date', $date)
 //        ;
 
-        var_dump($date);
         $result = $qb->getQuery()->getResult();
         $result = array_filter($result, function (AgentAffectation $a) use ($date) {
 //            var_dump($a->getDateDebut()->format('H/m/Y'));

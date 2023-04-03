@@ -12,6 +12,7 @@ use Structure\Entity\Db\Structure;
 /**
  * @var Campagne $campagne
  * @var Structure $structure
+ * @var Agent[] $agentsArray
  * @var Agent[] $agents
  * @var array{agentId:int, entretien:EntretienProfessionnel} $entretiens
  */
@@ -34,14 +35,33 @@ $encours = [];
 $sans = [];
 $facultatifs = [];
 
-foreach ($agents as $agent) {
+foreach ($agentsArray as $agent) {
     $entretien = $entretiens[$agent->getId()]??null;
 
     if ($entretien === null) {
         $date = $campagne->getDateFin();
         $date = DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y'));
         $date = $date->sub(new DateInterval('P12M'));
-        if ($agent->isContratLong() AND !empty($agent->getAffectationsActifs($date))) {
+
+//        if ($agent->getId() === 319815) {
+//            var_dump($date->format('d/m/Y'));
+//            foreach ($agent->getAffectations() as $affectation) {
+//                var_dump($affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):"none");
+//                var_dump($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"none");
+//            }
+//            var_dump($agent->getAffectationsActifs($date));
+//
+//            foreach($allAgentsAffectations[$agent->getId()] as $affectation) {
+//                var_dump($affectation->getDateDebut()?$affectation->getDateDebut()->format('d/m/Y'):"none");
+//                var_dump($affectation->getDateFin()?$affectation->getDateFin()->format('d/m/Y'):"none");
+//            }
+//        }
+
+        $valide = null;
+        foreach ($allAgentsAffectations[$agent->getId()] as $affectation) {
+            if ($affectation->estEnCours($date)) { $valide = $affectation; break; }
+        }
+        if ($agent->isContratLong() AND $valide !== null ) {
             $sans[$agent->getDenomination()] = $agent;
         } else {
             $facultatifs[$agent->getDenomination()] = $agent;

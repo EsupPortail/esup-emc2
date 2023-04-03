@@ -111,10 +111,17 @@ class StructureController extends AbstractActionController {
         $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
+        $allAgents = [];
         $entretiensArray = []; $agentsArray = [];
         foreach ($campagnes as $campagne) {
-            $agentsArray[$campagne->getId()] = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
+            $agentsCampagne = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
+            $agentsArray[$campagne->getId()] = $agentsCampagne;
+            foreach ($agentsCampagne as $agent) { $allAgents[$agent->getId()] = $agent;}
             $entretiensArray[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsArray[$campagne->getId()]);
+        }
+        $allAgentsAffectations = [];
+        foreach ($allAgents as $id => $agent) {
+            $allAgentsAffectations[$id] = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, false, true);
         }
 
         return new ViewModel([
@@ -133,6 +140,7 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
+            'allAgentsAffectations' => $allAgentsAffectations,
             'superieurs' => $superieurs,
             'autorites' => $autorites,
 

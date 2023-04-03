@@ -191,7 +191,13 @@ $canAfficherStructure   = $this->isAllowed($structure, StructurePrivileges::STRU
                 <!-- Campagne ------------------------------------------------------------------------------------->
                 <?php foreach ($campagnes as $campagne) : ?>
                     <div id="campagne_<?php echo $campagne->getId(); ?>" class="tab-pane">
-                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'agents' => $agentsArray[$campagne->getId()], 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
+                        <?php
+                            /**
+                             * <!>  $agentsArray preserve que les affectations et grades au moment de la campagne hors l'affecctation est checké aussi à -12 mois
+                             * <?> passer le tableau des agent qui préserve cela ?
+                             */
+                        ?>
+                        <?php echo $this->partial('partial/campagne', ['campagne' => $campagne, 'structure' => $structure, 'allAgentsAffectations' => $allAgentsAffectations, 'agentsArray' => $agentsArray[$campagne->getId()], 'entretiens' => $entretiensArray[$campagne->getId()]]); ?>
                     </div>
                 <?php endforeach; ?>
 

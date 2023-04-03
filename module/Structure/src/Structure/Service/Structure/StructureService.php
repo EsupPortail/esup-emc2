@@ -11,6 +11,7 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
@@ -18,7 +19,6 @@ use Structure\Entity\Db\StructureResponsable;
 use Structure\Provider\Role\RoleProvider;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -447,7 +447,7 @@ EOS;
     /**
      * @return Structure[]
      */
-    public function getStructuresByCurrentRole(User $user, Role $role) : array
+    public function getStructuresByCurrentRole(User $user, RoleInterface $role) : array
     {
         $selecteur = [];
         if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
