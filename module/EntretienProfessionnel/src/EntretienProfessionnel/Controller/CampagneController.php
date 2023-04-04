@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Controller;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
+use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
@@ -163,7 +164,7 @@ class CampagneController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut());
 
-        /** Filtrage des agents (seul les agents ayants le statut adminstratif lors de la camapgne sont éligibles) */
+        /** Filtrage des agents (seul les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
         $agents = [];
         /** @var Agent $agent */
         foreach ($agentsAll as $agent) {
@@ -177,9 +178,10 @@ class CampagneController extends AbstractActionController {
             if ($isAdministratif) $agents[] = $agent;
         }
 
+        /** Les agents avec obligation d'entretien sont ceux qui était en poste 12 mois avant la fin de campagne */
         $obligatoires = [];
         $facultatifs = [];
-        $dateMinEnPoste = $campagne->getDateFin()->sub(new DateInterval('P12M'));
+        $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
         foreach ($agents as $agent) {
             if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
         }
@@ -204,8 +206,6 @@ class CampagneController extends AbstractActionController {
             'entretiens' => $entretiens,
             'encours' => $encours,
             'finalises' => $finalises,
-
-
 
             'dateMinEnPoste' => $dateMinEnPoste,
             'obligatoires' => $obligatoires,
