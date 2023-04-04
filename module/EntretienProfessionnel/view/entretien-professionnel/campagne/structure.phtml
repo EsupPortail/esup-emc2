@@ -22,10 +22,13 @@ use Structure\Entity\Db\Structure;
  * @var EntretienProfessionnel[] $finalises
  */
 
+$this->headTitle("Campagne d'entretien professionnel" . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
 ?>
 
 <h1 class="page-header">
     Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+    <br>
+    <?php echo $structure->getLibelleLong(); ?>
 </h1>
 
 <div class="row">
