@@ -148,9 +148,10 @@ class StructureService
 
     /**
      * @param Structure $structure
+     * @param bool $withRoot (ajoute $structrure au résultat)
      * @return Structure[]
      */
-    public function getStructuresFilles(Structure $structure) : array
+    public function getStructuresFilles(Structure $structure, bool $withRoot = false) : array
     {
         $filles = [];
         $dejaTraitees = [];
@@ -170,6 +171,7 @@ class StructureService
             }
         }
 
+        if ($withRoot) $filles[] = $structure;
         return $filles;
     }
 

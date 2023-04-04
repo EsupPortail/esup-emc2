@@ -725,4 +725,41 @@ class AgentService {
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+
+    /** ATTENTION PEUT-ÊTRE REDONDANT !!! */
+
+    /**
+     * @param array $structures
+     * @param DateTime|null $dateTime
+     * @return array
+     */
+    public function getAgentsByStructuresAndDate(array $structures, ?DateTime $date = null) : array
+    {
+        if ($date === null) $date = new DateTime();
+
+        //extractions de la liste des agents ...
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.affectations', 'affectation')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateDebut <= :date')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $date)
+            ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
+        ;
+        $liste = $qb->getQuery()->getResult();
+
+        $ids = [];
+        foreach ($liste as $item) {
+            $ids[] = $item->getId();
+        }
+
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.affectations', 'affectation')->addSelect('affectation')
+            ->join('agent.grades', 'grade')->addSelect('grade')
+            ->join('agent.statuts', 'statut')->addSelect('statut')
+            ->andWhere('agent.id in (:ids)')->setParameter('ids',$ids)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $agents = $qb->getQuery()->getResult();
+        return $agents;
+    }
 }

@@ -1,0 +1,28 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @see \EntretienProfessionnel\View\Helper\CampagneInformationArrayViewHelper
+ * @var Campagne $campagne
+ * @var array $options
+ */
+
+?>
+
+<dl class="row">
+    <dt class="col-md-4"> Année </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getAnnee(); ?> </dd>
+    <dt class="col-md-4"> En cours </dt>
+    <dd class="col-md-8">
+        <?php if ($campagne->estEnCours()) : ?>
+            <span style="color:darkgreen;"><span class="icon icon-checked"></span>Oui</span>
+        <?php else : ?>
+            <span style="color:darkred;"><span class="icon icon-retirer"></span>Non</span>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Début de la campagne </dt>
+    <dd class="col-md-8"> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
+    <dt class="col-md-4"> Fin de la campagne </dt>
+    <dd  class="col-md-8"> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
+</dl>

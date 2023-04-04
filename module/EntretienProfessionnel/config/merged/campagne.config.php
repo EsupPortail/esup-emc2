@@ -11,6 +11,8 @@ use EntretienProfessionnel\Form\Campagne\CampagneHydratorFactory;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
+use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
+use EntretienProfessionnel\View\Helper\CampagneInformationViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -24,6 +26,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'structure', //todo vrai privilege et assertion ...
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -107,6 +110,17 @@ return [
                                     ],
                                 ],
                             ],
+                            'structure' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/structure/:campagne/:structure',
+                                    'defaults' => [
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'structure',
+                                    ],
+                                ],
+                            ],
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
@@ -177,6 +191,12 @@ return [
         'factories' => [
             CampagneHydrator::class => CampagneHydratorFactory::class,
         ],
-    ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'campagneInformation' => CampagneInformationViewHelper::class,
+            'campagneAvancement' => CampagneAvancementViewHelper::class,
+        ],
+    ],
 
 ];

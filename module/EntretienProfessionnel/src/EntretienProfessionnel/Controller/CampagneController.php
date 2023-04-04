@@ -2,10 +2,15 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Entity\Db\Agent;
+use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Request;
@@ -13,13 +18,17 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
 class CampagneController extends AbstractActionController {
+    use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use RappelCampagneAvancementServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use CampagneFormAwareTrait;
 
     public function indexAction() : ViewModel
@@ -140,5 +149,67 @@ class CampagneController extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    /**
+     * Action affichant une campagne d'entretien professionnel pour une structure
+     * <!> les agents doivent être complétement hydrater sinon les calculs d'affectations, de grades et d'obligation seront erronés
+     */
+    public function structureAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+        $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut());
+
+        /** Filtrage des agents (seul les agents ayants le statut adminstratif lors de la camapgne sont éligibles) */
+        $agents = [];
+        /** @var Agent $agent */
+        foreach ($agentsAll as $agent) {
+            $isAdministratif = false;
+            $statuts = $agent->getStatutsActifs($campagne->getDateDebut());
+            foreach ($statuts as $statut) {
+                if ($statut->isAdministratif()) {
+                    $isAdministratif = true; break;
+                }
+            }
+            if ($isAdministratif) $agents[] = $agent;
+        }
+
+        $obligatoires = [];
+        $facultatifs = [];
+        $dateMinEnPoste = $campagne->getDateFin()->sub(new DateInterval('P12M'));
+        foreach ($agents as $agent) {
+            if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+        }
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $finalises = [];
+        $encours = [];
+        foreach ($entretiens as $entretien) {
+            if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT) {
+                $finalises[] = $entretien;
+            } else {
+                $encours[] = $entretien;
+            }
+        }
+
+        return new ViewModel([
+            'campagne' => $campagne,
+            'structure' => $structure,
+            'structures' => $structures,
+            'agents' => $agents,
+
+            'entretiens' => $entretiens,
+            'encours' => $encours,
+            'finalises' => $finalises,
+
+
+
+            'dateMinEnPoste' => $dateMinEnPoste,
+            'obligatoires' => $obligatoires,
+            'facultatifs' => $facultatifs,
+        ]);
     }
 }

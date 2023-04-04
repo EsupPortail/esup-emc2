@@ -1,0 +1,90 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use Structure\Entity\Db\Structure;
+
+/**
+ * @see \EntretienProfessionnel\Controller\CampagneController::structureAction()
+ * @var Campagne $campagne
+ * @var DateTime $dateMinEnPoste
+ *
+ * @var Structure $structure
+ * @var Structure[] $structures
+ *
+ * @var Agent[] $agents
+ * @var Agent[] $obligatoires
+ * @var Agent[] $facultatifs
+ *
+ * @var EntretienProfessionnel[] $entretiens
+ * @var EntretienProfessionnel[] $encours
+ * @var EntretienProfessionnel[] $finalises
+ */
+
+?>
+
+<h1 class="page-header">
+    Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3> Information sur la campagne</h3>
+        <?php echo $this->campagneInformation($campagne); ?>
+    </div>
+    <div class="col-md-6">
+        <h3> Complétion de la campagne</h3>
+        <?php echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+    </div>
+</div>
+
+<?php if (!empty($finalises)) : ?>
+    <h2>
+        Entretiens professionnels finalisés
+        <span class="badge"> <?php echo count($finalises); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($finalises); ?>
+<?php endif; ?>
+
+
+<?php if (!empty($encours)) : ?>
+    <h2>
+        Entretiens professionnels en cours d'évaluation
+        <span class="badge"> <?php echo count($encours); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($encours); ?>
+<?php endif; ?>
+
+<?php if (!empty($obligatoires)) : ?>
+    <h2>
+        Agents sans entretien professionnel pour la campagne
+        <span class="badge"> <?php echo count($obligatoires); ?> </span>
+    </h2>
+    <?php echo $this->convocationArray($obligatoires, $campagne); ?>
+<?php endif; ?>
+
+<?php if (!empty($facultatifs)) : ?>
+    <h2>
+        Agents sans obligation d'entretien professionnel
+        <span class="badge"> <?php echo count($facultatifs); ?> </span>
+    </h2>
+
+    <div class="alert alert-info">
+        <div class="row">
+            <div class="col-md-1"><span class="icon icon-info"></span></div>
+            <div class="col-md-10">
+                Les agents n'étant pas en poste à la date du <?php echo $dateMinEnPoste->format('d/m/Y'); ?> non pas d'obligation d'entretien professionnel.
+                <br/>
+                Vous pouvez cependant planifier un entretien professionnel si vous le souhaitez.
+            </div>
+        </div>
+
+
+    </div>
+    <?php echo $this->convocationArray($facultatifs, $campagne); ?>
+<?php endif; ?>
+
+

@@ -164,13 +164,18 @@ $enCours = $campagne->estEnCours();
             </div>
 
             <br/>
-            <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien complétés <br/>
-            <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'agent <br/>
-            <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'autorité hiérarchique <br/>
-            <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien planifié <br/>
-            <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien non planifié <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien complétés <br/>
+                    <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'agent <br/>
+                    <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'autorité hiérarchique <br/>
+                </div>
+                <div class="col-md-6">
+                    <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien planifié <br/>
+                    <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien non planifié <br/>
+                </div>
+            </div>
         <?php endif; ?>
-        
     </div>
 </div>
 
