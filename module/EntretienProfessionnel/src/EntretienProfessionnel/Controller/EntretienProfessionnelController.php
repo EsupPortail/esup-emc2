@@ -101,7 +101,8 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function findResponsablePourEntretienAction() : JsonModel
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $agent = $this->getAgentService()->getRequestedAgent($this);
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
         $agentId = $this->params()->fromQuery('agent');
         $agent = $this->getAgentService()->getAgent($agentId);
@@ -152,8 +153,6 @@ class EntretienProfessionnelController extends AbstractActionController
         // From Query
         $agentId = $this->params()->fromQuery('agent');
         $agent = ($agentId) ? $this->getAgentService()->getAgent($agentId) : null;
-        $structureId = $this->params()->fromQuery('structure');
-        $structure = ($structureId) ? $this->getStructureService()->getStructure($structureId) : null;
 
         // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
         $entretien = null;
@@ -163,25 +162,17 @@ class EntretienProfessionnelController extends AbstractActionController
             return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
+        $superieurs = $this->getAgentService()->computeSuperieures($agent);
         $entretien = new EntretienProfessionnel();
         $entretien->setCampagne($campagne);
         if ($agent !== null) $entretien->setAgent($agent);
+        if (count($superieurs) === 1) $entretien->setResponsable(current($superieurs));
 
         $form = $this->getEntretienProfessionnelForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/creer', ["campagne" => $campagne->getId()], ["query" => ["agent" => $agentId, "structure" => $structureId]], true));
+        $form->setSuperieurs($superieurs);
+        $form->init();
         $form->bind($entretien);
-
-        if ($structure !== null) {
-            /** @var SearchAndSelect $element */
-            $element = $form->get('responsable');
-            /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['agent' => $agent->getId(), 'structure' => $structure->getId(), 'campagne' => $campagne->getId()], ['query' => ['agent' => $agentId]], true));
-        } else {
-            /** @var SearchAndSelect $element */
-            $element = $form->get('responsable');
-            /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', [], ['query' => ['agent' => $agentId]], true));
-        }
 
         /** @var Request $request */
         $request = $this->getRequest();

@@ -8,9 +8,17 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use Interop\Container\ContainerInterface;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class EntretienProfessionnelFormFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return EntretienProfessionnelForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : EntretienProfessionnelForm
     {
         /**
@@ -30,7 +38,7 @@ class EntretienProfessionnelFormFactory {
         /** @see AgentController::rechercherAction() */
         $urlAgent       =  $urlManager->__invoke('agent/rechercher', [], [], true);
         /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-        $urlReponsable  =  $urlManager->__invoke('entretien-professionnel/find-responsable-pour-entretien',[], [], true);
+//        $urlReponsable  =  $urlManager->__invoke('entretien-professionnel/find-responsable-pour-entretien',[], [], true);
 
         /**
          * @var EntretienProfessionnelForm $form
@@ -38,7 +46,7 @@ class EntretienProfessionnelFormFactory {
         $form = new EntretienProfessionnelForm();
         $form->setCampagneService($campagneService);
         $form->setUrlAgent($urlAgent);
-        $form->setUrlResponsable($urlReponsable);
+//        $form->setUrlResponsable($urlReponsable);
         $form->setHydrator($hydrator);
         $form->init();
 

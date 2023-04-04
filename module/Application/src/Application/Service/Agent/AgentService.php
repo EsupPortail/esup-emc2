@@ -730,8 +730,8 @@ class AgentService {
     /** ATTENTION PEUT-ÊTRE REDONDANT !!! */
 
     /**
-     * @param array $structures
-     * @param DateTime|null $dateTime
+     * @param Structure[] $structures
+     * @param DateTime|null $date
      * @return array
      */
     public function getAgentsByStructuresAndDate(array $structures, ?DateTime $date = null) : array
@@ -754,6 +754,7 @@ class AgentService {
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->join('agent.affectations', 'affectation')->addSelect('affectation')
+            ->join('affectation.structure', 'affstructure')->addSelect('affstructure')
             ->join('agent.grades', 'grade')->addSelect('grade')
             ->join('agent.statuts', 'statut')->addSelect('statut')
             ->andWhere('agent.id in (:ids)')->setParameter('ids',$ids)

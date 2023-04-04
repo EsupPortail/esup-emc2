@@ -21,6 +21,16 @@ class EntretienProfessionnelForm extends Form {
     private $urlAgent;
     private $urlResponsable;
 
+    private array $superieurs = [];
+    public function setSuperieurs(array $superieurs) { $this->superieurs = $superieurs; }
+    public function superieursAsOptions() : array
+    {
+        $options = [];
+        foreach ($this->superieurs as $superieur) $options[$superieur->getId()] = $superieur->getDenomination();
+        return $options;
+    }
+
+
     /**
      * @param mixed $urlAgent
      * @return EntretienProfessionnelForm
@@ -44,16 +54,33 @@ class EntretienProfessionnelForm extends Form {
     public function init()
     {
         //Responsable
-        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon icon-information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
-        $responsable
-            ->setAutocompleteSource($this->urlResponsable)
-            ->setSelectionRequired(true)
-            ->setLabelOption('disable_html_escape',true)
-            ->setAttributes([
+//        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon icon-information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+//        $responsable
+//            ->setAutocompleteSource($this->urlResponsable)
+//            ->setSelectionRequired(true)
+//            ->setLabelOption('disable_html_escape',true)
+//            ->setAttributes([
+//                'id' => 'responsable',
+//                'placeholder' => "Nom du responsable de l'entretien professionnel ...",
+//            ]);
+//        $this->add($responsable);
+
+        $this->add([
+            'type' => Select::class,
+            'name' => 'responsable',
+            'options' => [
+                'label' => "Responsable de l'entretien <span class='icon icon-obligatoire' title='Champ obligatoire' ></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'empty_option' => "Sélectionner un·e responsable pour l'entretien",
+                'value_options' => $this->superieursAsOptions(),
+            ],
+            'attributes' => [
                 'id' => 'responsable',
-                'placeholder' => "Nom du responsable de l'entretien professionnel ...",
-            ]);
-        $this->add($responsable);
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+
         //Agent
         $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent

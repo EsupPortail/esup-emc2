@@ -11,6 +11,8 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
@@ -21,6 +23,12 @@ use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class EntretienProfessionnelControllerFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return EntretienProfessionnelController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : EntretienProfessionnelController
     {
         /**
