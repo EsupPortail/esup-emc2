@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
 
 /**
  * @see \Structure\Controller\StructureController::descriptionAction()
@@ -16,6 +17,10 @@ use Structure\Entity\Db\Structure;
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
+$canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+$date = new DateTime();
+$filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
+
 ?>
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure]); ?>
@@ -26,9 +31,40 @@ $this->headTitle($structure->getLibelleLong() . " - Description");
 
         <h3> Rattachement </h3>
 
-        Structure rattachée à <?php echo $niveau2->getLibelleLong(); ?>
+        <?php if ($structure->getNiv2() === null) : ?>
+            <span class="text-warning">
+                <span class="icon icon-attention"></span>
+                Pas de structure de rattachement
+            </span>
+        <?php else : ?>
+            Structure rattachée à <?php echo $niveau2->getLibelleLong(); ?>
+        <?php endif; ?>
 
         <h3> Présentation de la structure</h3>
+
+        <?php if ($canEditerDescription) : ?>
+            <a
+                <?php /** @see \Structure\Controller\StructureController::editerDescriptionAction() */ ?>
+                href="<?php echo $this->url('structure/editer-description', ['structure' => $structure->getId()], [], true); ?>"
+                class="ajax-modal"
+                data-event="modification"
+            >
+                    <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true"
+                          title="Modifier la description de la structure <span class='highlight structure'><?php echo $structure->getLibelleLong(); ?></span>"></span></a>
+            <a
+                <?php /** @see \Structure\Controller\StructureController::toggleResumeMereAction() */ ?>
+                href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
+            >
+            <?php if ($structure->getRepriseResumeMere()) : ?>
+                <span class="icon icon-retirer" data-bs-toggle="tooltip" data-bs-html="true"
+                      title="Ne plus réutiliser le résumé de la structure mère"></span>
+            <?php else : ?>
+                <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"
+                      title="Réutiliser le résumé de la structure mère"></span>
+            <?php endif; ?>
+            </a>
+
+        <?php endif; ?>
 
         <?php if ($structure->getRepriseResumeMere()) : ?>
             <div class="alert alert-info">
@@ -85,16 +121,61 @@ $this->headTitle($structure->getLibelleLong() . " - Description");
         <h2> Positionnement de la structure </h2>
 
         <h3>Structure mère <code>n+1</code></h3>
-        <?php echo $parent->getLibelleLong(); ?>
+        <?php if ($structure->getParent() === null) : ?>
+            <span class="text-warning">
+                <span class="icon icon-attention"></span>
+                Pas de structure parente
+            </span>
+        <?php else : ?>
+            <ul>
+            <?php $canAfficher = $this->isAllowed($structure->getParent(), StructurePrivileges::STRUCTURE_AFFICHER); ?>
+            <li>
+            <?php if ($canAfficher) : ?>
+                <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()], [], true); ?>">
+                    <?php echo $parent->getLibelleLong(); ?>
+                </a>
+            <?php else: ?>
+                <?php echo $parent->getLibelleLong(); ?>
+            <?php endif; ?>
+            </li>
+        <?php endif; ?>
+        </ul>
 
         <h3>Structure courante <code>n</code></h3>
         <?php echo $structure->getLibelleLong(); ?>
 
         <h3>Structure·s enfant·s <code>n-1</code></h3>
-        <?php foreach ($filles as $enfant) : ?>
-            <?php echo $enfant->getLibelleLong()?>
-            <br/>
-        <?php endforeach; ?>
+
+        <?php if (empty($filles)) : ?>
+            <em> Aucune structure fille </em>
+        <?php else : ?>
+            <ul>
+            <?php foreach ($filles as $enfant) : ?>
+                <li>
+                <?php $canAfficher = $this->isAllowed($enfant, StructurePrivileges::STRUCTURE_AFFICHER); ?>
+                <?php if ($canAfficher) : ?>
+                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                    <a href="<?php echo $this->url('structure/description', ['structure' => $enfant->getId()], [], true); ?>">
+                        <?php echo $enfant->getLibelleLong()?>
+                    </a>
+                <?php else: ?>
+                    <?php echo $enfant->getLibelleLong()?>
+                <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </ul>
 
     </div>
 </div>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
