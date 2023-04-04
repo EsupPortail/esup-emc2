@@ -78,6 +78,7 @@ return [
                     'controller' => StructureController::class,
                     'action' => [
                         'afficher',
+                        'description',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                     'assertion'  => StructureAssertion::class,
@@ -162,6 +163,19 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'afficher',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [],
+                    ],
+                    'description' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/description/:structure',
+                            'defaults' => [
+                                /** @see StructureController::descriptionAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'description',
                             ],
                         ],
                         'may_terminate' => true,

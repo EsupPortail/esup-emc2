@@ -158,6 +158,25 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
+    public function descriptionAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
+
+        $niveau2 = $structure->getNiv2();
+        $parent = $structure->getParent();
+        $filles = $structure->getEnfants();
+
+        return new ViewModel([
+            'structure' => $structure,
+            'responsables' => $responsables,
+
+            'niveau2' => $niveau2,
+            'parent' => $parent,
+            'filles' => $filles,
+        ]);
+    }
+
     /** RESUME ********************************************************************************************************/
 
     public function editerDescriptionAction() : ViewModel
