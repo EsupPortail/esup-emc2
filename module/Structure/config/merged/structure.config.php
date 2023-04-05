@@ -79,6 +79,10 @@ return [
                     'action' => [
                         'afficher',
                         'description',
+                        'agents',
+                        'missions-specifiques',
+                        'fiches-de-poste',
+                        'extractions',
                     ],
                     'privileges' => StructurePrivileges::STRUCTURE_AFFICHER,
                     'assertion'  => StructureAssertion::class,
@@ -178,8 +182,50 @@ return [
                                 'action'     => 'description',
                             ],
                         ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
+                    ],
+                    'agents' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/agents/:structure',
+                            'defaults' => [
+                                /** @see StructureController::agentsAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'agents',
+                            ],
+                        ],
+                    ],
+                    'missions-specifiques' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/missions-specifiques/:structure',
+                            'defaults' => [
+                                /** @see StructureController::missionsSpecifiquesAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'missions-specifiques',
+                            ],
+                        ],
+                    ],
+                    'fiches-de-poste' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/fiches-de-poste/:structure',
+                            'defaults' => [
+                                /** @see StructureController::fichesDePosteAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'fiches-de-poste',
+                            ],
+                        ],
+                    ],
+                    'extractions' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/extractions/:structure',
+                            'defaults' => [
+                                /** @see StructureController::extractionsAction() */
+                                'controller' => StructureController::class,
+                                'action'     => 'extractions',
+                            ],
+                        ],
                     ],
                     'organigramme' => [
                         'type'  => Segment::class,

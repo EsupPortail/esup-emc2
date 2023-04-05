@@ -90,8 +90,8 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                     </td>
                     <td>
                         <?php if ($canAfficher) : ?>
-                            <a
-                                    href="<?php echo $this->url('structure/afficher', ['structure' => $structure->getId()], [], true); ?>"
+                            <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                            <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()], [], true); ?>"
                             >
                                 <span class="icon icon-voir"   title="Afficher la structure"></span></a>
                         <?php endif; ?>

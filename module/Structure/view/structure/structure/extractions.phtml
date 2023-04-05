@@ -1,0 +1,60 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use Structure\Entity\Db\Structure;
+
+/**
+ * @see \Structure\Controller\StructureController::extractionsAction()
+ * @var Structure $structure
+ * @var Campagne[] $campagnes
+ */
+
+?>
+
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'extractions']); ?>
+
+<h2>Listing des fiches de postes</h2>
+
+<a
+        <?php /** @see \Application\Controller\StructureController::extractionListingFichePosteAction() */ ?>
+        href="<?php echo $this->url('structure/extraction/listing-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
+   class="btn btn-primary action"
+>
+    <span class="icon icon-csv"></span> Extraire au format CSV
+</a>
+
+<h2>Listing des missions spécifiques</h2>
+
+<a
+    <?php /** @see \Application\Controller\StructureController::extractionListingMissionSpecifiqueAction() */ ?>
+        href="<?php echo $this->url('structure/extraction/listing-mission-specifique', ['structure' => $structure->getId()], [], true); ?>"
+        class="btn btn-primary action"
+>
+    <span class="icon icon-csv"></span> Extraire au format CSV
+</a>
+
+<h2> Organigrammes </h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3> Organigramme structurel </h3>
+    </div>
+    <div class="col-md-4">
+        <a
+            <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
+                href="<?php echo $this->url('structure/organigramme', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary action"
+        >
+            <span class="icon icon-csv"></span> Version WEB
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a
+            <?php /** @see \Structure\Controller\StructureController::organigrammeAction() */ ?>
+                href="<?php echo $this->url('structure/organigramme-pdf', ['structure' => $structure->getId()], [], true); ?>"
+                class="btn btn-primary action" target="_blank"
+        >
+            <span class="icon icon-pdf"></span> Version PDF
+        </a>
+    </div>
+</div>

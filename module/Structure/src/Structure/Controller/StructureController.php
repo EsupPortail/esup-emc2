@@ -167,6 +167,11 @@ class StructureController extends AbstractActionController {
         $parent = $structure->getParent();
         $filles = $structure->getEnfants();
 
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
         return new ViewModel([
             'structure' => $structure,
             'responsables' => $responsables,
@@ -174,6 +179,106 @@ class StructureController extends AbstractActionController {
             'niveau2' => $niveau2,
             'parent' => $parent,
             'filles' => $filles,
+
+            'campagnes' => $campagnes,
+        ]);
+    }
+
+    public function agentsAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $allAgents = array_merge($agents, $agentsForces);
+
+        $superieurs = []; $autorites = [];
+        foreach ($allAgents as $agent) {
+            $sup = $this->getAgentService()->computeSuperieures($agent);
+            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
+            $superieurs[$agent->getId()] = $sup;
+            $autorites[$agent->getId()] = $aut;
+        }
+
+
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        return new ViewModel([
+            'structure' => $structure,
+            'agents' => $agents,
+            'agentsForces' => $agentsForces,
+            'superieurs' => $superieurs,
+            'autorites' => $autorites,
+
+            'campagnes' => $campagnes,
+            'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
+        ]);
+    }
+
+    public function missionsSpecifiquesAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
+
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        return new ViewModel([
+            'structure' => $structure,
+            'missionsSpecifiques' => $missionsSpecifiques,
+            'campagnes' => $campagnes,
+        ]);
+    }
+
+    public function fichesDePosteAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+        $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+
+        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+        $allAgents = array_merge($agents, $agentsForces);
+
+//        $fichesDePoste = $this->getFichePosteService()->getFichesPostesbyAgents($allAgents);
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
+
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        return new ViewModel([
+            'structure' => $structure,
+            'campagnes' => $campagnes,
+
+            'agents' => $allAgents,
+//            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf,
+            'etats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
+
+        ]);
+    }
+
+    public function extractionsAction() : ViewModel
+    {
+        $structure = $this->getStructureService()->getRequestedStructure($this);
+
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        return new ViewModel([
+            'structure' => $structure,
+            'campagnes' => $campagnes,
         ]);
     }
 
