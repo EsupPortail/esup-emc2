@@ -4,9 +4,9 @@ namespace Application\Controller;
 
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
+use Application\Provider\Template\TexteTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use EntretienProfessionnel\Provider\Role\EntretienProfessionnelRoles;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -14,6 +14,7 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAw
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
@@ -25,6 +26,7 @@ class IndexController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -75,9 +77,13 @@ class IndexController extends AbstractActionController
             }
         }
 
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
+        $texte = $rendu->getCorps();
+
         return new ViewModel([
             'user' => $connectedUser,
             'role' => $connectedRole,
+            'texte' => $texte,
         ]);
     }
 

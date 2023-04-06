@@ -4,6 +4,7 @@
  * @see \Application\Controller\IndexController::indexAction()
  * @var User $user
  * @var Role $role
+ * @var string $texte
  */
 
 use UnicaenUtilisateur\Entity\Db\Role;
@@ -15,27 +16,21 @@ use UnicaenUtilisateur\Entity\Db\User;
 
 <div class="jumbotron" id="preecog">
     <div class="row">
-        <div class="jumbo-title">
+        <div class="col-md-3">
+            <span style="font-size: 22pt;">
                 <strong style="color:#19bd81;">E</strong>mploi <br/>
                 &nbsp; <strong style="color:#19bd81;">M</strong>obilité <br/>
                 &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>arrière <br/>
                 &nbsp; &nbsp; &nbsp; <strong style="color:#19bd81;">C</strong>ompétences
+                </span>
         </div>
-        <div class="jumbo-logo">
-            <img src="img/PrEECoG.svg" style="width:200px;"/>
-            <br/>
+        <div class="col-md-8">
+                <?php echo $texte; ?>
         </div>
     </div>
 
     <br/>
 
-    <p>
-        <span class="jumbo-subtitle">
-            EMC2 est un outil permettant la rédaction et la gestion des fiches métiers, fiches de postes, entretiens professionnels, ...
-        </span>
-    </p>
-
-    <br/>
 
 
     <?php if ($user): ?>
