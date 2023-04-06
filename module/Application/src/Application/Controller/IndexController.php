@@ -39,9 +39,12 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
+        $texte = $rendu->getCorps();
+
         /** @var User $connectedUser */
         $connectedUser = $this->getUserService()->getConnectedUser();
-        if ($connectedUser === null) return new ViewModel(['user' => null]);
+        if ($connectedUser === null) return new ViewModel(['user' => null, 'texte' => $texte]);
 
         $agent = $this->getAgentService()->getAgentByUser($connectedUser);
         if ($agent !== null && $agent->getUtilisateur() === null) {
@@ -77,8 +80,6 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
-        $texte = $rendu->getCorps();
 
         return new ViewModel([
             'user' => $connectedUser,
