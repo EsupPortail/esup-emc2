@@ -193,6 +193,11 @@ class StructureController extends AbstractActionController {
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
         $allAgents = array_merge($agents, $agentsForces);
 
+        usort($agents, function (Agent $a, Agent $b) {
+           $aaa = $a->getNomUsuel()." ".$a->getPrenom();
+           $bbb = $b->getNomUsuel()." ".$b->getPrenom();
+           return $aaa > $bbb;
+        });
         $superieurs = []; $autorites = [];
         foreach ($allAgents as $agent) {
             $sup = $this->getAgentService()->computeSuperieures($agent);

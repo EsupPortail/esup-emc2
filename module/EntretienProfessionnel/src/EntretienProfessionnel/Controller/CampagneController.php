@@ -177,6 +177,11 @@ class CampagneController extends AbstractActionController {
             }
             if ($isAdministratif) $agents[] = $agent;
         }
+        usort($agents, function (Agent $a, Agent $b) {
+            $aaa = $a->getNomUsuel()." ".$a->getPrenom();
+            $bbb = $b->getNomUsuel()." ".$b->getPrenom();
+            return $aaa > $bbb;
+        });
 
         /** Les agents avec obligation d'entretien sont ceux qui était en poste 12 mois avant la fin de campagne */
         $obligatoires = [];
