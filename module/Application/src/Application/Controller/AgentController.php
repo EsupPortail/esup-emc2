@@ -371,7 +371,7 @@ class AgentController extends AbstractActionController
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $file = current($request->getFiles());
+            $file = $request->getFiles()['fichier'];
 
             if ($file['name'] != '') {
                 $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
