@@ -45,7 +45,7 @@ $date = new DateTime();
     </thead>
     <tbody>
     <?php foreach ($agents as $agent) : ?>
-        <?php if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+        <?php if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent(); ?>
         <tr>
             <td>
                 <strong><?php echo $agent->getDenomination(); ?></strong> <br/>
