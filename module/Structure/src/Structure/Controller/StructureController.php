@@ -200,6 +200,7 @@ class StructureController extends AbstractActionController {
         });
         $superieurs = []; $autorites = [];
         foreach ($allAgents as $agent) {
+            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
             $sup = $this->getAgentService()->computeSuperieures($agent);
             $aut = $this->getAgentService()->computeAutorites($agent, $sup);
             $superieurs[$agent->getId()] = $sup;
