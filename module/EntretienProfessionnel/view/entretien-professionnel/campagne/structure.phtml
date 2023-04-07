@@ -23,6 +23,11 @@ use Structure\Entity\Db\Structure;
  * @var EntretienProfessionnel[] $finalises
  */
 
+$sans = [];
+foreach ($obligatoires as $obligatoire) {
+    if (!isset($entretiens[$obligatoire->getId()])) $sans[] = $obligatoire;
+}
+
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
 ?>
 
@@ -67,9 +72,9 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 <?php if (!empty($obligatoires)) : ?>
     <h2>
         Agents sans entretien professionnel pour la campagne
-        <span class="badge"> <?php echo count($obligatoires); ?> </span>
+        <span class="badge"> <?php echo count($sans); ?> </span>
     </h2>
-    <?php echo $this->convocationArray($obligatoires, $campagne); ?>
+    <?php echo $this->convocationArray($sans, $campagne); ?>
 <?php endif; ?>
 
 <?php if (!empty($facultatifs)) : ?>
