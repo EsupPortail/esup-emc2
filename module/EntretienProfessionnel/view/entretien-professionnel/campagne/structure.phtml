@@ -23,9 +23,12 @@ use Structure\Entity\Db\Structure;
  * @var EntretienProfessionnel[] $finalises
  */
 
-$sans = [];
+$sansObligatoires = []; $sansFacultatifs = [];
 foreach ($obligatoires as $obligatoire) {
-    if (!isset($entretiens[$obligatoire->getId()])) $sans[] = $obligatoire;
+    if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
+}
+foreach ($facultatifs as $facultatif) {
+    if (!isset($entretiens[$facultatif->getId()])) $sansObligatoires[] = $facultatif;
 }
 
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
@@ -72,15 +75,15 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 <?php if (!empty($obligatoires)) : ?>
     <h2>
         Agents sans entretien professionnel pour la campagne
-        <span class="badge"> <?php echo count($sans); ?> </span>
+        <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
-    <?php echo $this->convocationArray($sans, $campagne); ?>
+    <?php echo $this->convocationArray($sansObligatoires, $campagne); ?>
 <?php endif; ?>
 
 <?php if (!empty($facultatifs)) : ?>
     <h2>
         Agents sans obligation d'entretien professionnel
-        <span class="badge"> <?php echo count($facultatifs); ?> </span>
+        <span class="badge"> <?php echo count($sansFacultatifs); ?> </span>
     </h2>
 
     <div class="alert alert-info">
@@ -93,7 +96,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
             </div>
         </div>
     </div>
-    <?php echo $this->convocationArray($facultatifs, $campagne); ?>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne); ?>
 <?php endif; ?>
 
 
