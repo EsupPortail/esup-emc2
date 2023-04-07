@@ -135,7 +135,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             <li>
             <?php if ($canAfficher) : ?>
                 <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-                <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()], [], true); ?>">
+                <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getParent()->getId()], [], true); ?>">
                     <?php echo $parent->getLibelleLong(); ?>
                 </a>
             <?php else: ?>
