@@ -13,6 +13,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Complement;
 use Application\Provider\Privilege\AgentPrivileges;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Privilege\StructurePrivileges;
 
 $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
@@ -40,6 +41,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     <tbody>
     <?php foreach ($agents as $agent) :?>
         <?php
+            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
             $structureAgent =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
             $niveau2   =  ($structureAgent AND $structureAgent->getNiv2())?$structureAgent->getNiv2():null;
         ?>
