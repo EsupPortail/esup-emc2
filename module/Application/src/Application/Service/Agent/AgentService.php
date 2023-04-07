@@ -16,6 +16,7 @@ use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\FormationElement;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Entity\Db\StructureGestionnaire;
 use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -656,7 +657,10 @@ class AgentService {
      */
     public function getFichesPostesPdfByAgents(array $agents) : array
     {
-        $ids = array_map(function (Agent $a) {return $a->getId(); }, $agents);
+
+        $ids = array_map(function ($a) {
+            if ($a instanceof StructureAgentForce) $a = $a->getAgent();
+            return $a->getId(); }, $agents);
 
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->leftJoin('agent.fichiers', 'fichier')->addSelect('fichier')
