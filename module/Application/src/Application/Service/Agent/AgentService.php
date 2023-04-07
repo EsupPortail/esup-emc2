@@ -239,8 +239,7 @@ class AgentService {
 //            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
 //            ->andWhere('statut.dateDebut <= :today')
             ->andWhere('statut.dispo = :false')
-//            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.etudiant = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
-            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
+//            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
             //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
@@ -268,8 +267,8 @@ class AgentService {
         }
 
         $result = $qb->getQuery()->getResult();
-
         return $result;
+
     }
 
     /**
@@ -761,6 +760,24 @@ class AgentService {
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
         $agents = $qb->getQuery()->getResult();
+
+        $agents = array_filter($agents, function (Agent $a) use ($date) { return !$this->filtrerByStatutInvalide($a, $date);});
         return $agents;
+    }
+
+
+    /** Filtrer les agent·es ayant seulement un statuts de Administratif/Vacataire ou de détaché_out */
+    public function filtrerByStatutInvalide(Agent $agent, ?DateTime $date = null) : bool
+    {
+//      var_dump($agent->getDenomination());
+        $statuts = $agent->getStatutsActifs($date);
+        if (empty($statuts)) return false;
+        foreach ($statuts as $statut) {
+//          var_dump($agent->getDenomination(). " - Administritif:".(($statut->isAdministratif())?"Oui":"Non") . " --- ". " Vacataire:".(($statut->isVacataire())?"Oui":"Non"));
+            if (!($statut->isAdministratif() AND $statut->isVacataire()) AND !($statut->isDetacheOut())) {
+                return false;
+            }
+        }
+        return true;
     }
 }
