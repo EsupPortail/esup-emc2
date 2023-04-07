@@ -16,6 +16,7 @@ use Application\Provider\Privilege\FichePostePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Fichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
+use Structure\Entity\Db\StructureAgentForce;
 use UnicaenEtat\Entity\Db\EtatType;
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
@@ -44,6 +45,7 @@ $date = new DateTime();
     </thead>
     <tbody>
     <?php foreach ($agents as $agent) : ?>
+        <?php if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
         <tr>
             <td>
                 <strong><?php echo $agent->getDenomination(); ?></strong> <br/>
