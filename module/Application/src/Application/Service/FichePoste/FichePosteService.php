@@ -215,13 +215,12 @@ class FichePosteService {
      */
     public function getFichesPostesByAgent(Agent $agent) : array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
             ->andWhere('fiche.agent = :agent')
             ->setParameter('agent', $agent)
             ->orderBy('fiche.id', 'ASC');
         /** @var FichePoste[] $result */
         $result = $qb->getQuery()->getResult();
-
        return $result;
     }
 

@@ -253,7 +253,12 @@ class StructureController extends AbstractActionController {
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
         $allAgents = array_merge($agents, $agentsForces);
 
-//        $fichesDePoste = $this->getFichePosteService()->getFichesPostesbyAgents($allAgents);
+        $fichesDePoste = [];
+        foreach ($allAgents as $agent) {
+            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+            $fichesDePoste[$agent->getId()] = $fiches;
+        }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
 
         $last =  $this->getCampagneService()->getLastCampagne();
@@ -266,10 +271,9 @@ class StructureController extends AbstractActionController {
             'campagnes' => $campagnes,
 
             'agents' => $allAgents,
-//            'fichesDePoste' => $fichesDePoste,
+            'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
             'etats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
-
         ]);
     }
 

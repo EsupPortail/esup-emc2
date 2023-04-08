@@ -649,7 +649,7 @@ class AgentService {
         return $result;
     }
 
-    /** FICHE DE POSTE PDF */
+    /** FICHE DE POSTE PDF ********************************************************************************************/
 
     /**
      * @param Agent[]$agents
@@ -671,7 +671,10 @@ class AgentService {
         $result = $qb->getQuery()->getResult();
 
         $fiches = [];
-        foreach ($result as $item) $fiches[$item->getId()] = $item->getFichiersByCode("FICHE_POSTE");
+        /** @var Agent $item */
+        foreach ($result as $item) {
+            $fiches[$item->getId()] = $item->getFichiersByCode("FICHE_POSTE");
+        }
         return $fiches;
     }
 

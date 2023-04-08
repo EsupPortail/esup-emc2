@@ -5,11 +5,13 @@
  * @var Agent[] $agents
  * @var Structure $structure
  * @var Campagne[] $campagnes
+ * @var array $fichesDePoste
  * @var array $fichesDePostePdf
  * @var EtatType[] $etats
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
@@ -32,10 +34,6 @@ $date = new DateTime();
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'fiches-de-poste']); ?>
 
-<span class="alert alert-danger">
-    Fonctionne différemment ...
-</span>
-
 <table class="table table-condensed">
     <thead>
     <tr>
@@ -56,10 +54,10 @@ $date = new DateTime();
                 ?>
             </td>
             <td>
-                <?php if (empty($fichespostes[$agent->getId()])) : ?>
-                    Aucune fiche de poste
+                <?php if (empty($fichesDePoste[$agent->getId()])) : ?>
+                    Aucune fiche de poste au format EMC2
                 <?php else : ?>
-                    <?php echo count($fichespostes[$agent->getId()]); ?> fiches
+                    <?php echo count($fichesDePoste[$agent->getId()]); ?> fiches
                 <?php endif; ?>
 
                 <?php if ($canAjouterFichePoste) : ?>
@@ -90,14 +88,14 @@ $date = new DateTime();
                     <span class="icon icon-pdf nope"></span><span class="lettrine nope">+</span>
                 <?php endif; ?>
 
-                <?php if (!empty($fichespostes_pdf[$agent->getId()]) ) : ?>
+                <?php if (!empty($fichesDePostePdf[$agent->getId()]) ) : ?>
                     <?php
                     $canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
                     $canDetruireFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
                     ?>
                     <table class="fichespostes">
                         <?php /** @var Fichier $fichier */ ?>
-                        <?php foreach ($fichespostes_pdf[$agent->getId()] as $fichier) : ?>
+                        <?php foreach ($fichesDePostePdf[$agent->getId()] as $fichier) : ?>
                             <tr class="
                         <?php if ($fichier->estHistorise()) echo " historise " ?>
                     ">
@@ -133,34 +131,28 @@ $date = new DateTime();
                     </table>
                 <?php endif; ?>
 
-                <?php if (!empty($fichespostes[$agent->getId()]) ) : ?>
+                <?php if (!empty($fichesDePoste[$agent->getId()]) ) : ?>
                     <table class="fichespostes">
-                        <?php foreach ($fichespostes[$agent->getId()] as $ficheposte) : ?>
-                            <tr class="
-                        <?php if ($ficheposte['histo_destruction']) echo " historise " ?>
-                    ">
-                                <?php //var_dump($ficheposte); ?>
-                                <!--                    <td class="structure">--><?php //echo $ficheposte['structure']; ?><!-- </td>-->
-                                <td >
-                                    [<?php echo $ficheposte['structure']; ?>]
-                                    <?php echo ($ficheposte['fiche_principale'])?:"<span style='color:darkred;'>Aucun métier principal</span>"; ?>
-                                    <?php if ($ficheposte['fiche_libelle']) : ?>
-                                        <br/><i><?php echo $ficheposte['fiche_libelle']; ?></i>
-                                    <?php endif; ?>
+                        <?php /** @var FichePoste $ficheposte */ ?>
+                        <?php foreach ($fichesDePoste[$agent->getId()] as $ficheposte) : ?>
+                            <?php $etat = $ficheposte->getEtat(); ?>
+                            <tr class="<?php if ($ficheposte->estHistorise()) echo " historise " ?>">
+                                <td>
+                                    <?php echo $ficheposte->getLibelleMetierPrincipal(); ?>
                                 </td>
                                 <td class="encours">
-                                    <?php $fin = ($ficheposte["en_cours"] !== null)?DateTime::createFromFormat('Y-m-d H:i:s', $ficheposte["en_cours"]):null; ?>
-                                    <?php if (($fin === null OR $fin >= $date) AND $ficheposte['etat_code'] === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
-                                    <?php if ($fin !== null AND $fin < $date AND $ficheposte['etat_code'] === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
-                                    <?php if ($fin === null AND $ficheposte['etat_code'] !== FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
+                                    <?php $fin = ($ficheposte->getFinValidite()); ?>
+                                    <?php if (($fin === null OR $fin >= $date) AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
+                                    <?php if ($fin !== null AND $fin < $date   AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
+                                    <?php if ($fin === null                    AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
                                 </td>
                                 <td class="etat">
-                                    <?php echo $this->etatbadge($etats[$ficheposte['etat_code']]); ?>
+                                    <?php echo $this->etatbadge($etat); ?>
                                 </td>
                                 <td class="action">
                                     <?php if ($canVoirFichePoste) : ?>
                                         <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
-                                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte['id']], [], true); ?>"
+                                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
                                            target="_blank">
                                             <span class="icon icon-voir" data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de poste"></span></a>
                                     <?php else :?>
@@ -168,28 +160,28 @@ $date = new DateTime();
                                     <?php endif; ?>
                                     <?php if ($canExporterFichePoste) : ?>
                                         <?php /** @see \Application\Controller\FichePosteController::exporterAction() */ ?>
-                                        <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte['id']], [], true); ?>"
+                                        <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
                                            target="_blank">
                                             <span class="icon icon-pdf" data-bs-toggle="tooltip" data-bs-html="true" title="Exporter la fiche de poste"></span></a>
                                     <?php else :?>
                                         <span class="icon icon-pdf nope" ></span>
                                     <?php endif; ?>
-                                    <?php if ($canModifierFichePoste AND $ficheposte['etat_code'] !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                                    <?php if ($canModifierFichePoste AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
                                         <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
-                                        <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>"
+                                        <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
                                            target="_blank">
                                             <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true" title="Modifier la fiche de poste"></span></a>
                                     <?php else :?>
                                         <span class="icon icon-editer nope"></span>
                                     <?php endif; ?>
-                                    <?php if ($canHistoriserFichePoste AND $ficheposte['etat_code'] !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
-                                        <?php if ($ficheposte['histo_destruction']) : ?>
+                                    <?php if ($canHistoriserFichePoste AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                                        <?php if ($ficheposte->estHistorise()) : ?>
                                             <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
-                                            <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
+                                            <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
                                                 <span class="icon icon-restaurer" data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer la fiche de poste"></span></a>
                                         <?php else : ?>
                                             <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
-                                            <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte['id']], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
+                                            <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], ['fragment' => 'informations'], true)]], true); ?>" >
                                                 <span class="icon icon-historiser" data-bs-toggle="tooltip" data-bs-html="true" title="Historiser la fiche de poste"></span></a>
                                         <?php endif; ?>
                                     <?php else : ?>
@@ -197,7 +189,7 @@ $date = new DateTime();
                                     <?php endif; ?>
                                     <?php if ($canDetruireFichePoste) : ?>
                                         <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
-                                        <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $ficheposte['id']], [], true); ?>"
+                                        <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
                                            class="ajax-modal" data-event="modification">
                                             <span class="icon icon-retirer"></span></a>
                                     <?php else : ?>
@@ -213,19 +205,6 @@ $date = new DateTime();
     <?php endforeach; ?>
     </tbody>
 </table>
-
-    <!--                    --><?php //if ($canAjouterFichePoste) : ?>
-    <!--                        <a-->
-    <!--                            --><?php ///** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
-    <!--                            href="--><?php //echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?><!--"-->
-    <!--                            class="ajax-modal" data-event="duplication"-->
-    <!--                        ><span class="icon cloner"-->
-    <!--                               data-bs-toggle="tooltip" data-bs-html="true"-->
-    <!--                               title="Dupliquer une fiche existante"></span></a>-->
-    <!--                    --><?php //endif; ?>
-    <!--                --><?php //else  :?>
-
-
 
 <style>
     table.fichespostes {
