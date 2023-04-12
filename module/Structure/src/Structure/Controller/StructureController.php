@@ -195,7 +195,7 @@ class StructureController extends AbstractActionController {
 
         usort($agents, function (Agent $a, Agent $b) {
            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
-           $bbb = ($b->getNomUsuel()??$a->getNomFamille())." ".$b->getPrenom();
+           $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
            return $aaa > $bbb;
         });
         $superieurs = []; $autorites = [];
