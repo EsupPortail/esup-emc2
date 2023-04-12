@@ -4,6 +4,7 @@ namespace Application\Entity\Db;
 
 use Application\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Comparable;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
@@ -98,6 +99,9 @@ class Agent implements
     /** @var ArrayCollection (StructureAgentForce) */
     private $structuresForcees;
 
+    private Collection $autorites;
+    private Collection $superieurs;
+
     public function __construct()
     {
         $this->fiches = new ArrayCollection();
@@ -107,6 +111,9 @@ class Agent implements
         $this->echelons = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
+
+        $this->autorites = new ArrayCollection();
+        $this->superieurs = new ArrayCollection();
     }
 
     /**
@@ -670,6 +677,32 @@ class Agent implements
         return null;
     }
 
+
+
+    /** AUTORITES ET SUPERIEURS *****************************************************************************/
+
+    /** @return AgentAutorite[] */
+    public function getAutorites(bool $histo = false): array
+    {
+        /** @var AgentAutorite[] $result */
+        $result = $this->autorites->toArray();
+        if ($histo === false) {
+            $result = array_filter($result, function (AgentAutorite $a) { return $a->estNonHistorise();});
+        }
+        return $result;
+    }
+
+    /** @return AgentSuperieur[] */
+    public function getSuperieurs(bool $histo = false): array
+    {
+        /** @var AgentSuperieur[] $result */
+        $result = $this->superieurs->toArray();
+        if ($histo === false) {
+            $result = array_filter($result, function (AgentSuperieur $a) { return $a->estNonHistorise();});
+        }
+        return $result;
+    }
+
     /** STRUCTURE AGENT FORCE *****************************************************************************************/
 
     /**
@@ -813,5 +846,12 @@ class Agent implements
         if ($isCDD) $result .= "C.D.D. ";
 
         return $result;
+    }
+
+    public function isAdministratif(?DateTime $date = null)
+    {
+        $statuts =  $this->getStatutsActifs($date);
+        foreach ($statuts as $statut) if ($statut->isAdministratif()) return true;
+        return false;
     }
 }

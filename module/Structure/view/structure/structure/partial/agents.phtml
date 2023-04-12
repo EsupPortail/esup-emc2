@@ -28,6 +28,13 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
 
 ?>
 
+<span class="btn btn-secondary" id="administatif_masquer">
+    Masquer non administratif
+</span>
+<span class="btn btn-secondary" id="administatif_afficher" style="display: none;">
+    Afficher non administratif
+</span>
+
 <table class="datatable table table-condensed" style="font-size: 14px;">
     <thead>
         <tr>
@@ -45,7 +52,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
             $structureAgent =  ($agent->getAffectationPrincipale())?$agent->getAffectationPrincipale()->getStructure():null;
             $niveau2   =  ($structureAgent AND $structureAgent->getNiv2())?$structureAgent->getNiv2():null;
         ?>
-        <tr>
+        <tr class="<?php if ($agent->isAdministratif()) echo " administratif "; ?>">
             <td>
                 <?php if ($canVoirAgent) : ?>
                     <a
@@ -160,3 +167,16 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     </tbody>
 
 </table>
+
+<script>
+    $('span#administatif_masquer').on('click', function() {
+        $("tbody tr:not(.administratif)").hide();
+        $("span#administatif_masquer").hide();
+        $("span#administatif_afficher").show();
+    });
+    $('span#administatif_afficher').on('click', function() {
+        $("tbody tr:not(.administratif)").show();
+        $("span#administatif_masquer").show();
+        $("span#administatif_afficher").hide();
+    });
+</script>
