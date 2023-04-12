@@ -783,7 +783,7 @@ class AgentService {
     public function filtrerByStatutInvalide(Agent $agent, ?DateTime $date = null) : bool
     {
         try {
-            $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_CHAPEAU);
+            $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_UNIV);
         } catch (Exception $e) {
             $code = null;
         }
