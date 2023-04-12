@@ -4,14 +4,17 @@ namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\Complement;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\Complement\ComplementServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\FormationElement;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -22,6 +25,7 @@ use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -32,6 +36,8 @@ class AgentService {
     use ComplementServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
+
+    use ParametreServiceAwareTrait;
 
     /** AGENT *********************************************************************************************************/
 
@@ -776,12 +782,23 @@ class AgentService {
     /** Filtrer les agent·es ayant seulement un statuts de Administratif/Vacataire ou de détaché_out */
     public function filtrerByStatutInvalide(Agent $agent, ?DateTime $date = null) : bool
     {
-//      var_dump($agent->getDenomination());
+        try {
+            $code = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::CODE_CHAPEAU);
+        } catch (Exception $e) {
+            $code = null;
+        }
+
         $statuts = $agent->getStatutsActifs($date);
+        if ($code !== null) {
+            $statuts = array_filter($statuts, function (AgentStatut $a) use ($code) { return $a->getStructure()->getCode() === $code;});
+        }
         if (empty($statuts)) return false;
         foreach ($statuts as $statut) {
-//          var_dump($agent->getDenomination(). " - Administritif:".(($statut->isAdministratif())?"Oui":"Non") . " --- ". " Vacataire:".(($statut->isVacataire())?"Oui":"Non"));
-            if (!($statut->isAdministratif() AND $statut->isVacataire()) AND !($statut->isDetacheOut())) {
+            if (!($statut->isAdministratif() AND $statut->isVacataire())
+                AND !($statut->isDetacheOut())
+                AND !($statut->isDispo())
+                AND !($statut->isRetraite())
+            ) {
                 return false;
             }
         }

@@ -9,6 +9,7 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class AgentServiceFactory {
@@ -25,12 +26,14 @@ class AgentServiceFactory {
          * @var EntityManager $entityManager
          * @var AgentAffectationService $agentAffectationService
          * @var ComplementService $complementService
+         * @var ParametreService $parametreService
          * @var StructureService $structureService
          * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $complementService = $container->get(ComplementService::class);
+        $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
 
@@ -39,6 +42,7 @@ class AgentServiceFactory {
         $service->setEntityManager($entityManager);
         $service->setAgentAffectationService($agentAffectationService);
         $service->setComplementService($complementService);
+        $service->setParametreService($parametreService);
         $service->setStructureService($structureService);
         $service->setUserService($userService);
 
