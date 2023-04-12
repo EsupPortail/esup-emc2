@@ -194,8 +194,8 @@ class StructureController extends AbstractActionController {
         $allAgents = array_merge($agents, $agentsForces);
 
         usort($agents, function (Agent $a, Agent $b) {
-           $aaa = $a->getNomUsuel()." ".$a->getPrenom();
-           $bbb = $b->getNomUsuel()." ".$b->getPrenom();
+           $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
+           $bbb = ($b->getNomUsuel()??$a->getNomFamille())." ".$b->getPrenom();
            return $aaa > $bbb;
         });
         $superieurs = []; $autorites = [];
