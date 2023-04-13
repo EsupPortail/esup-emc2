@@ -1,0 +1,15 @@
+<?php
+
+use Application\Entity\Db\AgentAutorite;
+
+/**
+ * @see \Application\View\Helper\AgentAutoriteViewHelper
+ * @var AgentAutorite $autorite
+ * @var array $options
+ */
+
+?>
+
+<span class="<?php if ($autorite->estHistorise()) echo " historise "; ?>">
+    <?php echo $autorite->getAutorite()->getDenomination(); ?>
+</span>

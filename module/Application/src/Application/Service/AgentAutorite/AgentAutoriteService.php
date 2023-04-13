@@ -149,21 +149,17 @@ class AgentAutoriteService
         return $agentAutorite;
     }
 
-    /**
-     * @param array $declaration
-     * @return array
-     */
-    public function createAgentAutoriteWithArray(array $declaration) : array
+    public function createAgentAutoriteWithArray(?Agent $agent, array $autoriteIdArray, array $agents) : array
     {
-        $result = [];
-        [$agentId, $autoriteIdArray] = $declaration;
-        $agent = $this->getAgentService()->getAgent($agentId);
-        if ($agent === null) throw new RuntimeException("Aucun agent de connu avec l'identifiant [".$agentId."]");
+        $result = []; $warning = [];
+        if ($agent === null) throw new RuntimeException("Aucun agent de fourni");
         $autorites = [];
         foreach ($autoriteIdArray as $item) {
-            $autorite = $this->getAgentService()->getAgent($item);
-            if ($autorite === null) throw new RuntimeException("Aucun agent de connu avec l'identifiant [".$autorite."]");
-            $autorites[] = $autorite;
+            if ($item !== '') {
+                $autorite = $agents[$item];
+                if ($autorite === null) $warning[] = "Aucun agent de connu avec l'identifiant [" . $item . "] (Agent = ".$agent->getId()."| Autorité)";
+                else $autorites[] = $autorite;
+            }
         }
 
         foreach ($agent->getAutorites() as $current) $this->historise($current);
@@ -171,6 +167,18 @@ class AgentAutoriteService
             $agentautorite = $this->createAgentAutorite($agent,$autorite);
             $result[] = $agentautorite;
         }
-        return $result;
+        return [
+            'result' => $result,
+            'warning' => $warning
+        ];
     }
+
+    public function historiseAll(?Agent $agent) : void
+    {
+        if ($agent !== null) {
+            $autorites = $this->getAgentsAutoritesByAgent($agent);
+            foreach ($autorites as $autorite) $this->historise($autorite);
+        }
+    }
+
 }

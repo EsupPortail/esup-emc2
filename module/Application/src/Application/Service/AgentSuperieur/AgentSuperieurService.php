@@ -150,20 +150,19 @@ class AgentSuperieurService
     }
 
     /**
-     * @param array $declaration
      * @return array
      */
-    public function createAgentSuperieurWithArray(array $declaration) : array
+    public function createAgentSuperieurWithArray(?Agent $agent, array $superieurIdArray, array $agents) : array
     {
-        $result = [];
-        [$agentId, $superieurIdArray] = $declaration;
-        $agent = $this->getAgentService()->getAgent($agentId);
-        if ($agent === null) throw new RuntimeException("Aucun agent de connu avec l'identifiant [".$agentId."]");
+        $result = []; $warning = [];
+        if ($agent === null) throw new RuntimeException("Aucun agent de fourni");
         $superieurs = [];
         foreach ($superieurIdArray as $item) {
-            $superieur = $this->getAgentService()->getAgent($item);
-            if ($superieur === null) throw new RuntimeException("Aucun agent de connu avec l'identifiant [".$superieur."]");
-            $superieurs[] = $superieur;
+            if ($item !== '') {
+                $superieur = $agents[$item];
+                if ($superieur === null) $warning[] = "Aucun agent de connu avec l'identifiant [" . $item . "] (Agent = ".$agent->getId()."| Supérieur)";
+                else $superieurs[] = $superieur;
+            }
         }
 
         foreach ($agent->getSuperieurs() as $current) $this->historise($current);
@@ -171,6 +170,17 @@ class AgentSuperieurService
             $agentsuperieur = $this->createAgentSuperieur($agent,$superieur);
             $result[] = $agentsuperieur;
         }
-        return $result;
+        return [
+            'result' => $result,
+            'warning' => $warning
+        ];
+    }
+
+    public function historiseAll(?Agent $agent) : void
+    {
+        if ($agent !== null) {
+            $superieurs = $this->getAgentsSuperieursByAgent($agent);
+            foreach ($superieurs as $superieur) $this->historise($superieur);
+        }
     }
 }

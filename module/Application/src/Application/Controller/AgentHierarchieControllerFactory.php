@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\AgentAutorite;
+use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
@@ -30,10 +31,16 @@ class AgentHierarchieControllerFactory
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
 
+        /**
+         * @var AgentHierarchieImportationForm $importationForm
+         */
+        $importationForm = $container->get('FormElementManager')->get(AgentHierarchieImportationForm::class);
+
         $controller = new AgentHierarchieController();
         $controller->setAgentService($agentService);
         $controller->setAgentAutoriteService($agentAutoriteService);
         $controller->setAgentSuperieurService($agentSuperieurService);
+        $controller->setAgentHierarchieImportationForm($importationForm);
         return $controller;
     }
 

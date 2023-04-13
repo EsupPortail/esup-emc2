@@ -4,11 +4,17 @@ namespace Application;
 
 use Application\Controller\AgentHierarchieController;
 use Application\Controller\AgentHierarchieControllerFactory;
+use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
+use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormFactory;
+use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydrator;
+use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentAutorite\AgentAutoriteServiceFactory;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceFactory;
+use Application\View\Helper\AgentAutoriteViewHelper;
+use Application\View\Helper\AgentSuperieurViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -22,6 +28,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'importer',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
@@ -35,11 +42,12 @@ return [
         'routes' => [
             'agent' => [
                 'child_routes' => [
-                    'hierachie' => [
+                    'hierarchie' => [
                         'type'  => Literal::class,
                         'options' => [
                             'route'    => '/hierarchie',
                             'defaults' => [
+                                /** @see AgentHierarchieController::indexAction() */
                                 'controller' => AgentHierarchieController::class,
                                 'action'     => 'index',
                             ],
@@ -51,8 +59,21 @@ return [
                                 'options' => [
                                     'route'    => '/afficher/:agent',
                                     'defaults' => [
+                                        /** @see AgentHierarchieController::afficherAction(): */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'afficher',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'importer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/importer',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::importerAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'importer',
                                     ],
                                 ],
                                 'may_terminate' => true,
@@ -76,10 +97,20 @@ return [
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            AgentHierarchieImportationForm::class => AgentHierarchieImportationFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            AgentHierarchieImportationHydrator::class => AgentHierarchieImportationHydratorFactory::class,
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'agentAutorite' => AgentAutoriteViewHelper::class,
+            'agentSuperieur' => AgentSuperieurViewHelper::class,
+        ],
     ]
 
 ];
