@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class AgentSuperieurService
 {
@@ -130,7 +131,7 @@ class AgentSuperieurService
     public function getAgentsSuperieursBySuperieur(Agent $superieur, bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('autorite', $superieur)
+            ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 
@@ -182,5 +183,25 @@ class AgentSuperieurService
             $superieurs = $this->getAgentsSuperieursByAgent($agent);
             foreach ($superieurs as $superieur) $this->historise($superieur);
         }
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsersInSuperieurs() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('asuperieur')
+            ->join('asuperieur.superieur', 'agent')
+            ->join('agent.utilisateur', 'utilisateur')
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $users = [];
+        /** @var AgentSuperieur $item */
+        foreach ($result as $item) {
+            $users[$item->getSuperieur()->getId()] = $item->getSuperieur()->getUtilisateur();
+        }
+        return $users;
     }
 }

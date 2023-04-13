@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class AgentAutoriteService
 {
@@ -181,4 +182,23 @@ class AgentAutoriteService
         }
     }
 
+    /**
+     * @return User[]
+     */
+    public function getUsersInAutorites() : array
+    {
+        $qb = $this->getEntityManager()->getRepository(AgentAutorite::class)->createQueryBuilder('aautorite')
+            ->join('aautorite.autorite', 'agent')
+            ->join('agent.utilisateur', 'utilisateur')
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $users = [];
+        /** @var AgentAutorite $item */
+        foreach ($result as $item) {
+            $users[$item->getAutorite()->getId()] = $item->getAutorite()->getUtilisateur();
+        }
+        return $users;
+    }
 }
