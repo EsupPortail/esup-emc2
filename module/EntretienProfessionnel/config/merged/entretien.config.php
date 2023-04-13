@@ -107,7 +107,6 @@ return [
                     'action' => [
                         'creer',
                         'modifier',
-                        'find-responsable-pour-entretien',
                     ],
                     'privileges' => EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
                     'assertion' => EntretienProfessionnelAssertion::class,
@@ -186,18 +185,6 @@ return [
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'index-agent',
-                            ],
-                        ],
-                    ],
-                    'find-responsable-pour-entretien' => [
-                        'type'  => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/find-responsable-pour-entretien/:campagne/:agent',
-                            'defaults' => [
-                                /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-                                'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'find-responsable-pour-entretien',
                             ],
                         ],
                     ],

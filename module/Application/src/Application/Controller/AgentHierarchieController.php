@@ -10,7 +10,6 @@ use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use RuntimeException;
 
 class AgentHierarchieController extends AbstractActionController
 {

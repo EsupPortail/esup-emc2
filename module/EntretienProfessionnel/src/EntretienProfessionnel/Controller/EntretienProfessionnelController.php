@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use DateInterval;
@@ -11,7 +12,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Template\PdfTemplates;
-use EntretienProfessionnel\Provider\TemplateProvider;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -22,7 +22,6 @@ use Exception;
 use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -99,27 +98,6 @@ class EntretienProfessionnelController extends AbstractActionController
         exit;
     }
 
-    public function findResponsablePourEntretienAction() : JsonModel
-    {
-        $agent = $this->getAgentService()->getRequestedAgent($this);
-        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-
-        $agentId = $this->params()->fromQuery('agent');
-        $agent = $this->getAgentService()->getAgent($agentId);
-
-
-        $term = $this->params()->fromQuery('term');
-
-        if ($term !== null and trim($term) !== "") {
-            $agentsResponsables = ($structure)?$this->getEntretienProfessionnelService()->findResponsablePourEntretien($structure, $term):[];
-            $agentsSuperieures = ($agent)?$this->getEntretienProfessionnelService()->findSuperieurPourEntretien($agent, $term):[];
-            $result = $this->getAgentService()->formatAgentJSON(array_merge($agentsResponsables, $agentsSuperieures));
-            return new JsonModel($result);
-        }
-
-        exit;
-    }
-
     public function rechercherAgentAction() : JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
@@ -145,6 +123,7 @@ class EntretienProfessionnelController extends AbstractActionController
     public function creerAction()
     {
         // From route
+        $structureId = $this->params()->fromQuery('structure');
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         if ($campagne === null) {
             throw new RuntimeException("Aucune campagne d'entretien professionnel de selectionnée", null, null);
@@ -154,7 +133,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $agentId = $this->params()->fromQuery('agent');
         $agent = ($agentId) ? $this->getAgentService()->getAgent($agentId) : null;
 
-        // ne pas dupliquer les entretiens (si il existe alors on l'affiche)
+        // ne pas dupliquer les entretiens (s'il existe, alors on l'affiche).
         $entretien = null;
         if ($agent !== null) $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent, $campagne);
         if ($entretien !== null) {
@@ -162,10 +141,10 @@ class EntretienProfessionnelController extends AbstractActionController
             return $this->redirect()->toRoute('entretien-professionnel/acceder', ["entretien-professionnel" => $entretien->getId()], [], true);
         }
 
-        $superieurs = $this->getAgentService()->computeSuperieures($agent);
+        $superieurs = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); }, $agent->getSuperieurs());
         $entretien = new EntretienProfessionnel();
         $entretien->setCampagne($campagne);
-        if ($agent !== null) $entretien->setAgent($agent);
+        $entretien->setAgent($agent);
         if (count($superieurs) === 1) $entretien->setResponsable(current($superieurs));
 
         $form = $this->getEntretienProfessionnelForm();
@@ -202,23 +181,17 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function modifierAction() : ViewModel
     {
-        $structure = $this->getStructureService()->getRequestedStructure($this);
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $campagne = $entretien->getCampagne();
 
         $agent = $entretien->getAgent();
-        if ($structure === null) $structure = $agent->getAffectationPrincipale()->getStructure();
+        $superieurs = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); }, $agent->getSuperieurs());
 
         $form = $this->getEntretienProfessionnelForm();
         $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true));
+        $form->setSuperieurs($superieurs);
+        $form->init();
         $form->bind($entretien);
-        /** @var SearchAndSelect $element */
-        $element = $form->get('responsable');
-        if ($structure !== null) {
-            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], ["query" => ["agent" => $agent->getId()]], true));
-        } else {
-            $element->setAutocompleteSource($this->url()->fromRoute('entretien-professionnel/find-responsable-pour-entretien', [], ['query' => ['agent' => $agent->getId()]], true));
-        }
+
         $element = $form->get('agent');
         $element->setAttribute('readonly', true);
 
@@ -253,7 +226,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function accederAction() : ViewModel
     {
-        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien-professionnel');
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         $agent = $entretien->getAgent();
         $ficheposte = $agent->getFichePosteBest();
         $fichesmetiers = [];
@@ -414,7 +387,7 @@ class EntretienProfessionnelController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
-        /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */
+        /** @see EntretienProfessionnelController::accederAction */
         return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entity->getId()], ['fragment' => 'validation'], true);
     }
 

@@ -4,7 +4,9 @@ namespace Application\Service\Agent;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentStatut;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\Complement;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Provider\Parametre\GlobalParametres;
@@ -267,6 +269,9 @@ class AgentService {
 
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
+
+        $qb = AgentSuperieur::decorateWithAgentSuperieur($qb);
+        $qb = AgentAutorite::decorateWithAgentAutorite($qb);
 
         if (!empty($structures)) {
             $qb = $qb->andWhere('affectation.structure IN (:structures)')
