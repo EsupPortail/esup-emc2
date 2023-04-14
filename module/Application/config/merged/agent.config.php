@@ -102,8 +102,7 @@ return [
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,
                     ],
-//                    'assertion'  => AgentAssertion::class,
-
+                    'assertion'  => AgentAssertion::class,
                 ],
                 [
                     'controller' => AgentController::class,

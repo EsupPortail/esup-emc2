@@ -8,6 +8,8 @@ use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
@@ -16,6 +18,9 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FichePosteAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
+
     use FichePosteServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -28,18 +33,16 @@ class FichePosteAssertion extends AbstractAssertion {
 
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
+        $connectedAgent = $this->getAgentService()->getAgentByUser($user);
+        $referencedAgent = $entity->getAgent();
 
-//        $agentFiche = $entity->getAgent();
-//        $agentConnecte = $this->getAgentService()->getAgentByUser($user);
-
-        $isGestionnaire = false;
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
-            $isGestionnaire = $this->getFichePosteService()->isGererPar($entity, $user);
-        }
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isResponsable = $this->getFichePosteService()->isGererPar($entity, $user);
         }
+        $isSuperieur = false; $isAutorite = false;
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($referencedAgent,$connectedAgent);
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($referencedAgent,$connectedAgent);
 
         switch($privilege) {
 
@@ -50,19 +53,11 @@ class FichePosteAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR:
                     case AppRoleProvider::DRH:
                         return true;
-                    case RoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case Agent::ROLE_SUPERIEURE:
-                        $agent = $entity->getAgent();
-                        $superieur = $this->getAgentService()->getAgentByUser($user);
-                        $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
-                        $agent = $entity->getAgent();
-                        $autorite = $this->getAgentService()->getAgentByUser($user);
-                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
                         return $isAutorite;
                     case AppRoleProvider::AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
@@ -81,18 +76,10 @@ class FichePosteAssertion extends AbstractAssertion {
                     case AppRoleProvider::DRH:
                         return true;
                     case RoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
-                    case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case Agent::ROLE_SUPERIEURE:
-                        $agent = $entity->getAgent();
-                        $superieur = $this->getAgentService()->getAgentByUser($user);
-                        $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
-                        $agent = $entity->getAgent();
-                        $autorite = $this->getAgentService()->getAgentByUser($user);
-                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
                         return $isAutorite;
                     default:
                         return false;
@@ -120,14 +107,8 @@ class FichePosteAssertion extends AbstractAssertion {
                     case AppRoleProvider::ADMIN_TECH:
                         return true;
                     case Agent::ROLE_AUTORITE:
-                        $agent = $entity->getAgent();
-                        $autorite = $this->getAgentService()->getAgentByUser($user);
-                        $isAutorite = $agent->hasAutoriteHierarchique($autorite);
                         return $isAutorite;
                     case Agent::ROLE_SUPERIEURE:
-                        $agent = $entity->getAgent();
-                        $superieur = $this->getAgentService()->getAgentByUser($user);
-                        $isSuperieur = $agent->hasSuperieurHierarchique($superieur);
                         return $isSuperieur;
                     case RoleProvider::RESPONSABLE:
                         return $isResponsable;
