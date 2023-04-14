@@ -5,12 +5,14 @@ namespace Application\Controller;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Application\Service\AgentAffectation\AgentAffectationService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
 use Application\Service\AgentStatut\AgentStatutService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\AgentTutorat\AgentTutoratService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
@@ -74,6 +76,8 @@ class AgentControllerFactory {
 
         /**
          * @var AgentService $agentService
+         * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var AgentAffectationService $agentAffectationService
          * @var AgentGradeService $agentGradeService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
@@ -84,6 +88,8 @@ class AgentControllerFactory {
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentGradeService = $container->get(AgentGradeService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
@@ -125,6 +131,9 @@ class AgentControllerFactory {
         /** @var AgentController $controller */
         $controller = new AgentController();
 
+        $controller->setAgentService($agentService);
+        $controller->setAgentAutoriteService($agentAutoriteService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentService($agentService);
         $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentGradeService($agentGradeService);
