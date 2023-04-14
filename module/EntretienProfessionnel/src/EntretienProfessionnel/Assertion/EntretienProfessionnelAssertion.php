@@ -5,24 +5,26 @@ namespace EntretienProfessionnel\Assertion;
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\Complement\ComplementServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class EntretienProfessionnelAssertion extends AbstractAssertion {
 
     use AgentServiceAwareTrait;
-    use ComplementServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -58,8 +60,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             'isGestionnaireStructure'   => ($role->getRoleId() === RoleProvider::GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
             'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
-            'isSuperieureHierarchique'  => $this->getComplementService()->isSuperieur($connectedAgent, $entretienProfessionnel->getAgent()),
-            'isAutoriteHierarchique'    => $this->getComplementService()->isAutorite($connectedAgent, $entretienProfessionnel->getAgent()),
+            'isSuperieureHierarchique'  => $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent),
+            'isAutoriteHierarchique'    => $this->getAgentAutoriteService()->isAutorite($entretienProfessionnel->getAgent(), $connectedAgent),
         ];
 //        var_dump("Fin du calcul : ".(new \DateTime())->format('H:i:s:u '));
         return $this->predicats;
