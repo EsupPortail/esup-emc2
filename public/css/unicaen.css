@@ -11,13 +11,13 @@
     --header-color: var(--color-light);
 
     --body-background: var(--color-light);
-    --body-color: var(--color-dark);
+    --body-color: black;
 
     --content-background: var(--color-light-bis);
-    --content-color: var(--color-dark);
+    --content-color: black;
 
     --footer-background : var(--color-light-bis);
-    --footer-color: var(--color-dark);
+    --footer-color: black;
     --footer-border-color: var(--color-medium);
 
     --font-principal : Ubuntu, sans-serif;
