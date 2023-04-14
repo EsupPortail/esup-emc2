@@ -3,6 +3,7 @@
 use Application\Entity\Db\Agent;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 /**
@@ -63,7 +64,7 @@ $canAction = ($canAfficher OR $canConvoquer);
             </td>
             <?php if ($canAction) : ?>
             <td class="action">
-                <?php if ($canAfficher) : ?>
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
                     <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
                     <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                        target="_blank"
@@ -72,7 +73,9 @@ $canAction = ($canAfficher OR $canConvoquer);
                         Afficher
                     </a>
                 <?php endif; ?>
-                <?php if ($canConvoquer) : ?>
+                <?php
+                    $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
+                    if ($campagne->estEnCours() AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AJOUTER)) : ?>
                     <br>
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                     <a
