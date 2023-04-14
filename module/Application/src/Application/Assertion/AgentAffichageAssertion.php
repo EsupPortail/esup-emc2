@@ -7,6 +7,8 @@ use Application\Provider\Privilege\AgentaffichagePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
@@ -18,6 +20,8 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class AgentAffichageAssertion extends AbstractAssertion
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -42,13 +46,11 @@ class AgentAffichageAssertion extends AbstractAssertion
         }
 
         $isResponsable = false;
-        $isGestionnaire = false;
         $isSuperieur = false;
         $isAutorite = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === StructureRoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $entity->hasSuperieurHierarchique($agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $entity->hasAutoriteHierarchique($agent);
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
 
         switch ($privilege) {
             case AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE :
@@ -66,7 +68,6 @@ class AgentAffichageAssertion extends AbstractAssertion
                     case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case StructureRoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case Agent::ROLE_SUPERIEURE:
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:

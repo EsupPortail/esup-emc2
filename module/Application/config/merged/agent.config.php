@@ -97,13 +97,22 @@ return [
                 [
                     'controller' => AgentController::class,
                     'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        AgentPrivileges::AGENT_AFFICHER,
+                    ],
+//                    'assertion'  => AgentAssertion::class,
+
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
                         'rechercher',
                         'rechercher-large',
                         'rechercher-with-structure-mere',
                         'rechercher-responsable',
                         'rechercher-gestionnaire',
-
-                        'afficher',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_AFFICHER,

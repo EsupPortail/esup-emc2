@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
 
 /**
  * @var Agent[] $agents
@@ -46,10 +47,12 @@ Voue êtes responsable de <?php echo count($agents); ?> agent·es.
                 <?php endforeach; ?>
             </td>
             <td class="action">
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
                 <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
                     <span class="icon icon-user"></span>
                     Afficher
                 </a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
