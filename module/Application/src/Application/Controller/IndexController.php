@@ -2,11 +2,15 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Provider\Template\TexteTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -25,6 +29,8 @@ use Laminas\View\Model\ViewModel;
 class IndexController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -106,32 +112,27 @@ class IndexController extends AbstractActionController
     public function indexSuperieurAction() : ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $complements = $this->getAgentService()->getSuperieurByUser($user);
+        $agent = $this->getAgentService()->getAgentByUser($user);
+        $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); },$this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
-        $agents = [];
-        if ($complements) {
-            foreach ($complements as $complement) {
-                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
-                if ($agent !== null) $agents[$agent->getId()] = $agent;
-            }
+        /** Campagne d'entretien professionnel ************************************************************************/
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        /** récuperation des eps **************************************************************************************/
+        $entretiens = [];
+        foreach ($campagnes as $campagne) {
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
-        $fiches = [];
-//        $fichesRAW = $this->getFichePosteService()->getFichesPostesbyAgents($agents);
-//        foreach ($fichesRAW as $fiche) {
-//            $fiches[$fiche->getAgent()->getId()][] = $fiche;
-//        }
-
-
 
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
-            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
-            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
-
-            'fiches' => $fiches,
-            'demandesInternes' => $this->getFormationInstanceInscritService()->getInscrpitionsByAgentsAndAnnee($agents),
-            'demandesExternes' => $this->getDemandeExterneService()->getDemandesExternesByAgentsAndAnnee($agents),
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
         ]);
     }
 

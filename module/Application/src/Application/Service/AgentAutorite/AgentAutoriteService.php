@@ -201,4 +201,16 @@ class AgentAutoriteService
         }
         return $users;
     }
+
+
+    public function isAutorite(Agent $agent, Agent $autorite) : bool
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent',$agent)
+            ->andWhere('agentsuperieur.autorite = :autorite')->setParameter('autorite', $autorite)
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return !empty($result);
+    }
 }

@@ -7,6 +7,8 @@ use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
@@ -17,6 +19,8 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class AgentAssertion extends AbstractAssertion
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -42,13 +46,11 @@ class AgentAssertion extends AbstractAssertion
         }
 
         $isResponsable = false;
-        $isGestionnaire = false;
         $isSuperieur = false;
         $isAutorite = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === StructureRoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $entity->hasSuperieurHierarchique($agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $entity->hasAutoriteHierarchique($agent);
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
 
         switch ($privilege) {
             case AgentPrivileges::AGENT_AFFICHER :
@@ -59,8 +61,6 @@ class AgentAssertion extends AbstractAssertion
                         return true;
                     case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
-                    case StructureRoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case Agent::ROLE_SUPERIEURE:
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
@@ -81,8 +81,6 @@ class AgentAssertion extends AbstractAssertion
                         return true;
 //                    case RoleConstant::PERSONNEL:
 //                        return ($entity->getUtilisateur() === $user) AND $entity->hasEntretienEnCours();
-                    case StructureRoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
                     case Agent::ROLE_SUPERIEURE;
@@ -104,8 +102,6 @@ class AgentAssertion extends AbstractAssertion
                     case AppRoleProvider::ADMIN_FONC:
                     case AppRoleProvider::ADMIN_TECH:
                         return true;
-                    case StructureRoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
                 }
@@ -141,11 +137,9 @@ class AgentAssertion extends AbstractAssertion
         }
 
         $isResponsable = false;
-        $isGestionnaire = false;
         $isSuperieur = false;
         $isAutorite = false;
         if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === StructureRoleProvider::GESTIONNAIRE) $isGestionnaire = $this->getStructureService()->isGestionnaireS($structures, $agent);
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $entity->hasSuperieurHierarchique($agent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $entity->hasAutoriteHierarchique($agent);
 
@@ -159,8 +153,6 @@ class AgentAssertion extends AbstractAssertion
                     return true;
                 case StructureRoleProvider::RESPONSABLE:
                     return $isResponsable;
-                case StructureRoleProvider::GESTIONNAIRE:
-                    return $isGestionnaire;
                 case Agent::ROLE_SUPERIEURE:
                     return $isSuperieur;
                 case Agent::ROLE_AUTORITE:

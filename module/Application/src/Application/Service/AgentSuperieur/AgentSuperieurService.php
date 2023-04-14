@@ -204,4 +204,15 @@ class AgentSuperieurService
         }
         return $users;
     }
+
+    public function isSuperieur(Agent $agent, Agent $superieur) : bool
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent',$agent)
+            ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+            ->andWhere('agentsuperieur.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return !empty($result);
+    }
 }
