@@ -4,6 +4,7 @@
  * @see \Structure\Controller\StructureController::fichesDePosteAction()
  * @var Agent[] $agents
  * @var Structure $structure
+ * @var Structure[] $selecteur
  * @var Campagne[] $campagnes
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
@@ -32,7 +33,7 @@ $date = new DateTime();
 ?>
 
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'fiches-de-poste']); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
 
 <table class="table table-condensed">
     <thead>

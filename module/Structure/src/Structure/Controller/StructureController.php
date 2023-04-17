@@ -150,6 +150,10 @@ class StructureController extends AbstractActionController {
 
     public function descriptionAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
 
@@ -163,6 +167,7 @@ class StructureController extends AbstractActionController {
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         return new ViewModel([
+            'selecteur' => $selecteur,
             'structure' => $structure,
             'responsables' => $responsables,
 
@@ -176,6 +181,10 @@ class StructureController extends AbstractActionController {
 
     public function agentsAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -205,6 +214,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'superieurs' => $superieurs,
@@ -217,6 +227,10 @@ class StructureController extends AbstractActionController {
 
     public function missionsSpecifiquesAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -229,6 +243,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'missionsSpecifiques' => $missionsSpecifiques,
             'campagnes' => $campagnes,
         ]);
@@ -236,6 +251,10 @@ class StructureController extends AbstractActionController {
 
     public function fichesDePosteAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -258,6 +277,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'campagnes' => $campagnes,
 
             'agents' => $allAgents,
@@ -270,6 +290,9 @@ class StructureController extends AbstractActionController {
     public function extractionsAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
@@ -278,6 +301,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'campagnes' => $campagnes,
         ]);
     }

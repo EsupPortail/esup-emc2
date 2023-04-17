@@ -8,6 +8,7 @@ use Structure\Entity\Db\Structure;
 /**
  * @see \Structure\Controller\StructureController::missionsSpecifiquesAction()
  * @var Structure $structure
+ * @var Structure[] $selecteur
  * @var AgentMissionSpecifique[] $missionsSpecifiques
  *
  * @var Campagne[] $campagnes
@@ -23,7 +24,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
 
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'missions-specifiques']); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'missions-specifiques', 'selecteur' => $selecteur]); ?>
 
 <?php if ($canAjouterAffectation) : ?>
     <a

@@ -16,6 +16,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Structure\Controller\StructureController;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -71,12 +72,14 @@ class IndexController extends AbstractActionController
 //                case RoleConstant::VALIDATEUR :
 //                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                 case RoleProvider::GESTIONNAIRE :
+                    /** @see StructureController::descriptionAction() */
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
-                    if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
+                    if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
                     break;
                 case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
-                    if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
+                    /** @see StructureController::descriptionAction() */
+                    if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
                     break;
                 case Agent::ROLE_SUPERIEURE :
                     /** @see IndexController::indexSuperieurAction() */
