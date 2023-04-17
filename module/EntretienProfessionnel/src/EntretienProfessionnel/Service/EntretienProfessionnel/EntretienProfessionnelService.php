@@ -257,16 +257,14 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @param Agent $agent
-     * @return array
-     */
-    public function getEntretiensProfessionnelsByAgent(Agent $agent)  : array
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false)  : array
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
             ->andWhere('entretien.agent = :agent')
             ->setParameter('agent', $agent);
+        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
 
@@ -491,7 +489,7 @@ class EntretienProfessionnelService {
      * @param array $agents
      * @return EntretienProfessionnel[] @desc [agentId => entretien]
      */
-    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents) : array
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false) : array
     {
         if ($campagne === null) return [];
 
@@ -499,6 +497,8 @@ class EntretienProfessionnelService {
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)
         ;
+        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
+
         $result = $qb->getQuery()->getResult();
 
         $dictionnaire = [];
