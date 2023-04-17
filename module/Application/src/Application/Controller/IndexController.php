@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
@@ -130,7 +131,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
+            'connectedAgent' => $agent,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
         ]);
@@ -139,29 +140,28 @@ class IndexController extends AbstractActionController
     public function indexAutoriteAction() : ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $complements = $this->getAgentService()->getAutoriteByUser($user);
+        $agent = $this->getAgentService()->getAgentByUser($user);
+        $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },$this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
-        $agents = [];
-        if ($complements) {
-            foreach ($complements as $complement) {
-                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
-                if ($agent !== null) $agents[$agent->getId()] = $agent;
-            }
+        /** Campagne d'entretien professionnel ************************************************************************/
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        /** récuperation des eps **************************************************************************************/
+        $entretiens = [];
+        foreach ($campagnes as $campagne) {
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
-        usort($agents, function (Agent $a, Agent $b) {
-            $aaa = $a->getNomUsuel() . " "  . $a->getPrenom();
-            $bbb = $b->getNomUsuel() . " "  . $b->getPrenom();
-            return $aaa > $bbb;
-        });
 
-        $vm =  new ViewModel();
-        $vm->setVariables([
+        return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
-            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
-            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
+            'connectedAgent' => $agent,
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
         ]);
-        return $vm;
     }
 
     public function infosAction() : ViewModel
