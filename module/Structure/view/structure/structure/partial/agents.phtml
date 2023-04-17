@@ -21,10 +21,6 @@ $canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges:
 $canAjouterAgentForce       = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AGENT_FORCE);
 $canRetirerAgentForce       = $canAjouterAgentForce;
 
-$canComplement              =
-    $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT))
-    AND $this->isAllowed($structure,StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT);
-
 $isForce = (isset($options['force']) AND $options['force'] === true);
 
 ?>
@@ -92,12 +88,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                         echo $asString;
                     ?>
                 <?php endif; ?>
-<!--                --><?php //if ($canComplement) : ?>
-<!--                    --><?php ///** @see \Application\Controller\ComplementController::ajouterAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_RESPONSABLE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?><!--" class="ajax-modal" data-event="modification">-->
-<!--                        <span class="icon icon-ajouter"></span> Ajouter un&middot;e supérieur&middot;e-->
-<!--                    </a>-->
-<!--                --><?php //endif; ?>
             </td>
             <td> <!-- AUTORITE HIERARCHIQUE --------------------------------------------------------------------------->
                 <?php $autorites = $agent->getAutorites(); ?>
@@ -115,12 +105,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                         echo $asString;
                     ?>
                 <?php endif; ?>
-<!--                --><?php //if ($canComplement) : ?>
-<!--                    --><?php ///** @see \Application\Controller\ComplementController::ajouterAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_AUTORITE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?><!--" class="ajax-modal" data-event="modification">-->
-<!--                        <span class="icon icon-ajouter"></span> Ajouter un&middot;e supérieur&middot;e-->
-<!--                    </a>-->
-<!--                --><?php //endif; ?>
             </td>
             <td>
                 <?php if ($canVoirAgent) : ?>
