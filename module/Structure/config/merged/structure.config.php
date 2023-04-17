@@ -77,7 +77,6 @@ return [
                 [
                     'controller' => StructureController::class,
                     'action' => [
-                        'afficher',
                         'description',
                         'agents',
                         'missions-specifiques',
@@ -155,18 +154,6 @@ return [
                             'defaults' => [
                                 'controller' => StructureController::class,
                                 'action'     => 'synchroniser',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [],
-                    ],
-                    'afficher' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/afficher/:structure',
-                            'defaults' => [
-                                'controller' => StructureController::class,
-                                'action'     => 'afficher',
                             ],
                         ],
                         'may_terminate' => true,
