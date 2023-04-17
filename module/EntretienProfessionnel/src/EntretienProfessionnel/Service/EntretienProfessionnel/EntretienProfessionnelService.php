@@ -4,7 +4,6 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
-use Application\Entity\Db\Complement;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
@@ -411,28 +410,6 @@ class EntretienProfessionnelService {
         return $result_resp;
     }
 
-    /**
-     * @param Agent $agent
-     * @param string $term
-     * @return Agent[]|null[]
-     */
-    public function findSuperieurPourEntretien(Agent $agent, string $term) : array
-    {
-        $superieurs = [];
-
-        /** @var Complement[] $complements */
-        $complements = $agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE);
-        foreach ($complements as $complement) {
-            $superieur = $this->getAgentService()->getAgent($complement->getComplementId());
-            if ($superieur !== null) {
-                $superieurs[$superieur->getId()] = $superieur;
-            }
-        }
-
-
-        $result = array_filter($superieurs,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
-        return $result;
-    }
 
     /**
      * @param EntretienProfessionnel $entretien

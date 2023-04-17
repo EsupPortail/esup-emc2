@@ -3,10 +3,9 @@
 namespace Application\Service\Agent;
 
 use Application\Service\AgentAffectation\AgentAffectationService;
-use Application\Service\Complement\ComplementService;
 use Doctrine\ORM\EntityManager;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;

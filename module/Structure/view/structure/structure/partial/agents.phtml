@@ -12,7 +12,6 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Entity\Db\Complement;
 use Application\Provider\Privilege\AgentPrivileges;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
@@ -76,20 +75,6 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     Pas de structure fines<br/>
                 <?php endif ?>
-<!--                --><?php //foreach ($agent->getComplementsByType(Complement::COMPLEMENT_TYPE_STRUCTURE) as $complement) : ?>
-<!--                    <span class="icon formation" title="Manuellement indiqué"></span>-->
-<!--                    --><?php //echo $this->complement($complement); ?>
-<!--                    --><?php //if ($canComplement) : ?>
-<!--                        <a href="--><?php //echo $this->url('complement/modifier', ['complement' => $complement->getId()], [], true); ?><!--" class="ajax-modal" data-event="modification"><span class="icon icon-editer"></span></a>-->
-<!--                        <a href="--><?php //echo $this->url('complement/supprimer', ['complement' => $complement->getId()], [], true); ?><!--" class="ajax-modal" data-event="modification"><span class="icon icon-retirer"></span></a>-->
-<!--                    --><?php //endif; ?>
-<!--                    <br/>-->
-<!--                --><?php //endforeach; ?>
-<!--                --><?php //if ($canComplement) : ?>
-<!--                    <a href="--><?php //echo $this->url('complement/ajouter', ['type' => Complement::COMPLEMENT_TYPE_STRUCTURE, 'attachmenttype' => Agent::class, 'attachmentid' => $agent->getId()], [], true); ?><!--" class="ajax-modal" data-event="modification">-->
-<!--                        <span class="icon icon-ajouter"></span> Ajouter une structure-->
-<!--                    </a>-->
-<!--                --><?php //endif; ?>
             </td>
             <td> <!-- RESPONSABLE HIERARCHIQUE ------------------------------------------------------------------------>
                 <?php $superieurs = $agent->getSuperieurs(); ?>

@@ -8,12 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Comparable;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\Entity\Db\Interfaces\HasComplementsInterface;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Application\Entity\Db\Traits\HasComplementsTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -32,13 +30,11 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 class Agent implements
     ResourceInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
-    HasComplementsInterface,
     Comparable
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
-    use HasComplementsTrait;
     use AgentMacroTrait;
 
     const ROLE_AGENT         = 'Agent';

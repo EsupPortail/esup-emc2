@@ -7,11 +7,9 @@ use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Entity\Db\Complement;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
-use Application\Service\Complement\ComplementServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -28,14 +26,12 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentService {
     use EntityManagerAwareTrait;
     use AgentAffectationServiceAwareTrait;
-    use ComplementServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -327,19 +323,6 @@ class AgentService {
 
     /** Recuperation des supérieures et autorités  *********************************************************************/
 
-    public function computeComplements(Agent $agent, string $type) : array
-    {
-        $complements = $this->getComplementService()->getCompelementsByAttachement(Agent::class, $agent->getId(), $type);
-        $liste = [];
-        if (!empty($complements)) {
-            foreach ($complements as $complement) {
-                $superieure = $this->getAgent($complement->getComplementId());
-                if ($superieure !== null) $liste["complement_" . $complement->getId()] = $superieure;
-            }
-        }
-        return $liste;
-    }
-
     /**
      * @param Agent $agent
      * @param DateTime|null $date
@@ -349,8 +332,6 @@ class AgentService {
     {
         if ($date === null) $date = new DateTime();
 
-        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_RESPONSABLE);
-        if (!empty($liste)) return $liste;
 
        //checking structure
        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
@@ -386,9 +367,6 @@ class AgentService {
     public function computeAutorites(Agent $agent, ?array $superieurs = null, ?DateTime $date = null) : array
     {
         if ($date === null) $date = new DateTime();
-
-        $liste = $this->computeComplements($agent, Complement::COMPLEMENT_TYPE_AUTORITE);
-        if (!empty($liste)) return $liste;
 
         // fetching superieurs if not given
         if ($superieurs === null) $superieurs = $this->computeSuperieures($agent, $date);
@@ -523,97 +501,6 @@ class AgentService {
         return $users;
     }
 
-    /** FONCTION POUR LES RÔLES AUTOMATIQUES **************************************************************************/
-
-    /**
-     * @param Complement[] $complements
-     * @return User[]
-     */
-    public function getUsersInComplements(array $complements) : array
-    {
-        $ids = [];
-        foreach ($complements as $item) $ids[$item->getComplementId()] = $item->getComplementId();
-
-        $users = [];
-        foreach ($ids as $id) {
-            if ($this->getAgent($id) !== null) { $users[] = $this->getAgent($id)->getUtilisateur(); }
-        }
-
-        return $users;
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getUsersInSuperieurs() : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder("complement")
-            ->andWhere('complement.histoDestruction IS NULL')
-            ->andWhere('complement.type = :SUPERIEUR')
-            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $this->getUsersInComplements($result);
-    }
-
-    /**
-     * @param User|null $user
-     * @return Complement[]|null
-     */
-    public function getSuperieurByUser(?User $user) : ?array
-    {
-        if ($user === null) return null;
-
-        $agent = $this->getAgentByUser($user);
-        if ($agent === null) return null;
-
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
-            ->andWhere('complement.type = :SUPERIEUR')
-            ->setParameter('SUPERIEUR', Complement::COMPLEMENT_TYPE_RESPONSABLE)
-            ->andWhere('complement.complementId = :agentId')
-            ->setParameter('agentId', $agent->getId())
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @return User[]
-     */
-    public function getUsersInAutorites() : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder("complement")
-            ->andWhere('complement.histoDestruction IS NULL')
-            ->andWhere('complement.type = :AUTORITE')
-            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $this->getUsersInComplements($result);
-    }
-
-    /**
-     * @param User|null $user
-     * @return Complement[]|null
-     */
-    public function getAutoriteByUser(?User $user) : ?array
-    {
-        if ($user === null) return null;
-
-        $agent = $this->getAgentByUser($user);
-        if ($agent === null) return null;
-
-        $qb = $this->getEntityManager()->getRepository(Complement::class)->createQueryBuilder('complement')
-            ->andWhere('complement.type = :AUTORITE')
-            ->setParameter('AUTORITE', Complement::COMPLEMENT_TYPE_AUTORITE)
-            ->andWhere('complement.complementId = :agentId')
-            ->setParameter('agentId', $agent->getId())
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
     public function computesStructures(?Agent $agent, ?DateTime $date = null) : array
     {
         if ($date === null) $date = new DateTime();
@@ -698,48 +585,6 @@ class AgentService {
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs Agent partagent le même login [".$login."]",0, $e);
         }
-        return $result;
-    }
-
-    /**
-     * @return Agent[]
-     */
-    public function getAgentsByResponsabilite(?User $user, ?Role $role) : array
-    {
-        $agent = $this->getAgentByUser($user);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
-            $qb = $this->getComplementService()->createQueryBuilder()
-                ->select('complement.attachmentId')
-                ->andWhere('complement.type = :type')->setParameter('type', 'RESPONSABLE_HIERARCHIQUE')
-                ->andWhere('complement.complementId = :agentId')->setParameter('agentId', $agent->getId())
-            ;
-            $resultId = $qb->getQuery()->getResult();
-
-            $result = $this->getAgentsByIds($resultId);
-            return $result;
-        }
-
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
-            $qb = $this->getComplementService()->createQueryBuilder()
-                ->select('complement.attachmentId')
-                ->andWhere('complement.type = :type')->setParameter('type', 'AUTORITE_HIERARCHIQUE')
-                ->andWhere('complement.complementId = :agentId')->setParameter('agentId', $agent->getId())
-            ;
-            $resultId = $qb->getQuery()->getResult();
-
-            $result = $this->getAgentsByIds($resultId);
-            return $result;
-        }
-
-        return [];
-
-    }
-
-    private function getAgentsByIds(array $ids)
-    {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('agent.id in (:ids)')->setParameter('ids', $ids);
-        $result = $qb->getQuery()->getResult();
         return $result;
     }
 
