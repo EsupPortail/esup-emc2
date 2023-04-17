@@ -3,6 +3,8 @@
 namespace EntretienProfessionnel\Service\Notification;
 
 use Application\Entity\Db\Agent;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
 use Structure\Entity\Db\StructureAgentForce;
@@ -21,6 +23,8 @@ use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class NotificationService {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -68,13 +72,12 @@ class NotificationService {
     public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $superieurs =  $this->getAgentService()->computeSuperieures($agent);
+        $superieurs =  $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
 
         $emails = [];
         foreach ($superieurs as $superieur) {
-            $emails[] = $superieur->getEmail();
+            $emails[] = $superieur->getSuperieur()->getEmail();
         }
-        sort($emails);
         return $emails;
     }
 
@@ -86,11 +89,11 @@ class NotificationService {
     public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $autorites = $this->getAgentService()->computeAutorites($agent);
+        $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent);
 
         $emails = [];
         foreach ($autorites as $autorite) {
-            $emails[] = $autorite->getEmail();
+            $emails[] = $autorite->getAutorite()->getEmail();
         }
         return $emails;
     }
@@ -242,7 +245,7 @@ class NotificationService {
         $date = $date->sub(new DateInterval('P12M'));
 
         $allAgents = array_filter($allAgents,
-            function (Agent $a) use ($date) { return $a->getTControatLong() === 'O' AND !empty($a->getAffectationsActifs($date));}
+            function (Agent $a) use ($date) { return $a->isContratLong() AND !empty($a->getAffectationsActifs($date));}
         );
 
         $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);

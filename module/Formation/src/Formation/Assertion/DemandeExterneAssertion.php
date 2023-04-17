@@ -3,8 +3,12 @@
 namespace Formation\Assertion;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
@@ -19,6 +23,8 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class DemandeExterneAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -74,11 +80,11 @@ class DemandeExterneAssertion extends AbstractAssertion {
                 return $agent->getUtilisateur() === $user;
             case Agent::ROLE_AUTORITE :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
-                $autorites = $this->getAgentService()->computeAutorites($agent);
+                $autorites = array_map(function (AgentAutorite $a) { return $a->getAutorite(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
                 return DemandeExterneAssertion::userInAgents($user, $autorites);
             case Agent::ROLE_SUPERIEURE :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
-                $superieurs = $this->getAgentService()->computeSuperieures($agent);
+                $superieurs = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
                 return DemandeExterneAssertion::userInAgents($user, $superieurs);
             case RoleProvider::RESPONSABLE :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;

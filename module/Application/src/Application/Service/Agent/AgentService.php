@@ -324,14 +324,12 @@ class AgentService {
     /** Recuperation des supérieures et autorités  *********************************************************************/
 
     /**
-     * @param Agent $agent
-     * @param DateTime|null $date
-     * @return array
+     * TODO :: a conserver pour init des superieurs depuis les structures
+     * Agent[]
      */
     public function computeSuperieures(Agent $agent, ?DateTime $date = null) : array
     {
         if ($date === null) $date = new DateTime();
-
 
        //checking structure
        $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
@@ -359,17 +357,12 @@ class AgentService {
     }
 
     /**
-     * @param Agent $agent
-     * @param array|null $superieurs
-     * @param DateTime|null $date
-     * @return array
+     * TODO :: a conserver pour init des autorites depuis les structures
+     * Agent[]
      */
-    public function computeAutorites(Agent $agent, ?array $superieurs = null, ?DateTime $date = null) : array
+    public function computeAutorites(Agent $agent, array $superieurs = [], ?DateTime $date = null) : array
     {
         if ($date === null) $date = new DateTime();
-
-        // fetching superieurs if not given
-        if ($superieurs === null) $superieurs = $this->computeSuperieures($agent, $date);
 
         //checking structure
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);

@@ -160,7 +160,7 @@ class AgentController extends AbstractActionController
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
-            'echelon' => $agent->getEchelonActif(),
+            'echelons' => $agent->getEchelonsActifs(),
             'fichespostes' => $fichespostes,
 
             'superieures' => $superieures,

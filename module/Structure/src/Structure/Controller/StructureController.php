@@ -93,14 +93,6 @@ class StructureController extends AbstractActionController {
         $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
-        $superieurs = []; $autorites = [];
-        foreach ($allAgents as $agent) {
-            $sup = $this->getAgentService()->computeSuperieures($agent);
-            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
-            $superieurs[$agent->getId()] = $sup;
-            $autorites[$agent->getId()] = $aut;
-        }
-
         usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
 
         $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
@@ -141,8 +133,6 @@ class StructureController extends AbstractActionController {
             'agentsForces' => $agentsForces,
             'agentsAll' => $allAgents,
             'allAgentsAffectations' => $allAgentsAffectations,
-            'superieurs' => $superieurs,
-            'autorites' => $autorites,
 
             // Partie -- Entretiens Professionnels --
             'campagnes' => $campagnes,

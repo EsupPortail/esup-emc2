@@ -3,7 +3,9 @@
 namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentQuotite;
 
 /**
  * Trait AgentMacroTrait
@@ -153,7 +155,7 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $texte = ($agent->getQuotiteCourante())?$agent->getQuotiteCourante()->getQuotite()."%":"100%";
+        $texte = implode("<br>",array_map($agent->getQuotitesActives(), function (AgentQuotite $a) { return ($a->getQuotite())?$a->getQuotite()."%":"100%"; }));
         return $texte;
     }
     /**
@@ -315,36 +317,27 @@ trait AgentMacroTrait
 
     public function toStringQuotite() : string
     {
-        /** @var Agent $agent */
-        $agent = $this;
-        $quotite = $agent->getQuotiteCourante();
-
-        if ($quotite === null) return "100 %";
-        return $quotite->getQuotite() . " %";
+        $this->toStringQuotiteTravaillee();
     }
 
     public function toStringEchelon() : string
     {
         /** @var Agent $agent */
         $agent = $this;
-        $echelon = $agent->getEchelonActif();
+        $echelons = $agent->getEchelonsActifs();
 
-        if ($echelon) {
-            return "".$echelon->getEchelon();
-        }
-        return "";
+        $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getEchelon();}, $echelons));
+        return $texte;
     }
 
     public function toStringEchelonPassage() : string
     {
         /** @var Agent $agent */
         $agent = $this;
-        $echelon = $agent->getEchelonActif();
+        $echelons = $agent->getEchelonsActifs();
 
-        if ($echelon) {
-            return $echelon->getDateDebut()->format('d/m/Y');
-        }
-        return "";
+        $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getDateDebut();}, $echelons));
+        return $texte;
     }
 
     public function toStringMissionsSpecifiques() : string

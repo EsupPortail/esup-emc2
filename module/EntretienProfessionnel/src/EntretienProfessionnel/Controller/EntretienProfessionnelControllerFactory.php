@@ -3,6 +3,8 @@
 namespace EntretienProfessionnel\Controller;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
@@ -10,8 +12,8 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Service\Etat\EtatService;
@@ -33,6 +35,8 @@ class EntretienProfessionnelControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
          * @var RenduService $renduService
          * @var UserService $userService
@@ -48,6 +52,8 @@ class EntretienProfessionnelControllerFactory {
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
         $etatService = $container->get(EtatService::class);
@@ -73,6 +79,8 @@ class EntretienProfessionnelControllerFactory {
         $controller = new EntretienProfessionnelController();
 
         $controller->setAgentService($agentService);
+        $controller->setAgentAutoriteService($agentAutoriteService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setRenduService($renduService);
         $controller->setUserService($userService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);

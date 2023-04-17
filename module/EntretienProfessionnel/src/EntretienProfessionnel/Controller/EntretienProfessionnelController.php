@@ -2,8 +2,11 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -41,6 +44,8 @@ use Laminas\View\Model\ViewModel;
 class EntretienProfessionnelController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use RenduServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
@@ -237,8 +242,8 @@ class EntretienProfessionnelController extends AbstractActionController
             $fichesmetiers[] = $fiche->getFicheType();
         }
 
-        $superieures = $this->getAgentService()->computeSuperieures($agent);
-        $autorites = $this->getAgentService()->computeAutorites($agent);
+        $superieures    = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
+        $autorites      = array_map(function (AgentAutorite $a)  { return $a->getAutorite(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         return new ViewModel([
             'entretien' => $entretien,

@@ -12,8 +12,10 @@ use Application\Entity\Db\AgentGrade;
 
 $debug = false;
 
-/** @var AgentEchelon $echelon */
-$echelon = ($options['echelon']) ?? null;
+/** @var AgentEchelon[] $echelons */
+$echelons = ($options['echelons']) ?? [];
+$echelons = array_filter($echelons, function (AgentEchelon $a) { return $a->getEchelon() !== 0 ;});
+
 $displayStructure = (isset($options['structure']) and $options['structure'] !== false);
 $displayPeriode = (isset($options['periode']) and $options['periode'] !== false);
 $displayIdentifiant = (isset($options['identifiant']) and $options['identifiant'] !== false);
@@ -100,10 +102,13 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
                     Non renseignée
                 <?php endif; ?>
             </dd>
-            <?php if ($echelon and $echelon->getEchelon() !== 0) : ?>
+
+            <?php if (!empty($echelons)) : ?>
                 <dt class="col-md-3"> Échelon</dt>
-                <dd class="col-md-9"> <?php echo $echelon->getEchelon(); ?> (date de passage
-                    : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>)
+                <dd class="col-md-9">
+                    <?php foreach ($echelons as $echelon) : ?>
+                        <?php echo $echelon->getEchelon(); ?> (date de passage : <?php echo $echelon->getDateDebut()->format('d/m/Y'); ?>)
+                    <?php endforeach; ?>
                 </dd>
             <?php endif; ?>
         </dl>

@@ -3,10 +3,12 @@
 namespace EntretienProfessionnel\Service\Notification;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentAutorite\AgentAutoriteService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Url\UrlService;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenMail\Service\Mail\MailService;
@@ -24,6 +26,8 @@ class NotificationServiceFactory
     {
         /**
          * @var AgentService $agentService ;
+         * @var AgentAutoriteService $agentAutoriteService ;
+         * @var AgentSuperieurService $agentSuperieurService ;
          * @var CampagneService $campagneService ;
          * @var MailService $mailService ;
          * @var ParametreService $parametreService ;
@@ -32,6 +36,8 @@ class NotificationServiceFactory
          * @var UrlService $urlService
          */
         $agentService = $container->get(AgentService::class);
+        $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -41,6 +47,8 @@ class NotificationServiceFactory
 
         $service = new NotificationService();
         $service->setAgentService($agentService);
+        $service->setAgentAutoriteService($agentAutoriteService);
+        $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);
