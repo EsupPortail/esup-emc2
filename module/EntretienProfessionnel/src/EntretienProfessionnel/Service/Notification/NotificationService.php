@@ -7,6 +7,8 @@ use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
 use Structure\Entity\Db\StructureAgentForce;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
@@ -26,6 +28,7 @@ class NotificationService {
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use EntretienProfessionnelServiceAwareTrait;
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -248,13 +251,19 @@ class NotificationService {
             function (Agent $a) use ($date) { return $a->isContratLong() AND !empty($a->getAffectationsActifs($date));}
         );
 
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+        $vh = new CampagneAvancementViewHelper();
+        $vh->entretiens = $entretiens;
+        $vh->agents = $allAgents;
+        $texte = $vh->__toString();
+
         $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);
         $entretiensFaits  = $this->getCampagneService()->getAgentsAvecEntretiensFaits($campagne, $allAgents);
         $entretiensFinalises  = $this->getCampagneService()->getAgentsAvecEntretiensFinalises($campagne, $allAgents);
         $entretiensAucuns     = count($allAgents) - count($entretiensFinalises) - count($entretiensPlanifies) - count($entretiensFaits);
         $total = count($allAgents);
 
-        $texte = "";
+//        $texte = "";
         if ($total !== 0) {
             $texte .= "<table style='width:80%; border: 1px solid black;border-collapse: collapse;font-weight:bold;' id='avancement'>";
             $texte .= "<caption> Avancement de la campagne ".$campagne->getAnnee()."</caption>";
@@ -270,8 +279,8 @@ class NotificationService {
             $texte .= "<table><tr><td style='background: #ffff9e; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens faits </td></tr></table>";
             $texte .= "<table><tr><td style='background: #ffb939; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens planifiés </td></tr></table>";
             $texte .= "<table><tr><td style='background: salmon; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens manquants </td></tr></table>";
-
         }
+
 
         $emails = [];
         foreach ($structure->getResponsables() as $responsable) {

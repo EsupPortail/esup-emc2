@@ -3,9 +3,7 @@
 namespace Referentiel\Controller;
 
 use Laminas\Mvc\Console\Controller\AbstractConsoleController;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
-use UnicaenDbImport\Controller\ConsoleController;
 
 class SynchronisationConsoleController extends AbstractConsoleController {
     use SynchronisationServiceAwareTrait;

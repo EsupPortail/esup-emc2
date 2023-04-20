@@ -4,6 +4,10 @@ namespace Application;
 
 use Application\Controller\AgentHierarchieController;
 use Application\Controller\AgentHierarchieControllerFactory;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormFactory;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculHydrator;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculHydratorFactory;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormFactory;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydrator;
@@ -29,6 +33,7 @@ return [
                         'index',
                         'afficher',
                         'importer',
+                        'calculer',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
@@ -78,6 +83,18 @@ return [
                                 ],
                                 'may_terminate' => true,
                             ],
+                            'calculer' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/calculer',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::calculerAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'calculer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                         ],
                     ],
                 ],
@@ -98,11 +115,13 @@ return [
     ],
     'form_elements' => [
         'factories' => [
+            AgentHierarchieCalculForm::class => AgentHierarchieCalculFormFactory::class,
             AgentHierarchieImportationForm::class => AgentHierarchieImportationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
+            AgentHierarchieCalculHydrator::class => AgentHierarchieCalculHydratorFactory::class,
             AgentHierarchieImportationHydrator::class => AgentHierarchieImportationHydratorFactory::class,
         ],
     ],

@@ -11,3 +11,10 @@
 >
     Importer depuis csv
 </a>
+
+<?php /** @see \Application\Controller\AgentHierarchieController::calculerAction() */ ?>
+<a href="<?php echo $this->url('agent/hierarchie/calculer', [], [], true); ?>"
+   class="btn btn-primary ajax-modal" data-event="modification"
+>
+    Calculer depuis structure
+</a>

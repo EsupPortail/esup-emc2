@@ -6,6 +6,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Url\UrlService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -29,6 +30,7 @@ class NotificationServiceFactory
          * @var AgentAutoriteService $agentAutoriteService ;
          * @var AgentSuperieurService $agentSuperieurService ;
          * @var CampagneService $campagneService ;
+         * @var EntretienProfessionnelService $entretienProfessionnelService ;
          * @var MailService $mailService ;
          * @var ParametreService $parametreService ;
          * @var RenduService $renduService
@@ -39,6 +41,7 @@ class NotificationServiceFactory
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
+        $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
@@ -50,6 +53,7 @@ class NotificationServiceFactory
         $service->setAgentAutoriteService($agentAutoriteService);
         $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
+        $service->setEntretienProfessionnelService($entretienProfessionnelService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);
         $service->setRenduService($renduService);

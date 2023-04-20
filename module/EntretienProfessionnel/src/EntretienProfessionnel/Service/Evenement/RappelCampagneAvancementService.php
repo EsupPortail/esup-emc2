@@ -56,14 +56,17 @@ class RappelCampagneAvancementService extends EvenementService {
 
         try {
             foreach ($structures as $structure) {
-                $structures = $this->getStructureService()->getStructuresFilles($structure); $structures[] = $structure;
-                $agents = $this->getAgentService()->getAgentsByStructures($structures);
-                if (!empty($agents)) {
-                    if (!empty($structure->getResponsables())) {
-                        $this->getNotificationService()->triggerRappelCampagne($campagne, $structure);
-                        $message .= "Notification faites vers " . $structure->getLibelleLong() . "<br/>\n";
-                    } else {
-                        $message .= "<span style='color:darkred;'>Pas de responsable pour le structure " . $structure->getLibelleLong() . "</span><br/>\n";
+                if ($structure->getId() === '96') {
+                    $structures = $this->getStructureService()->getStructuresFilles($structure);
+                    $structures[] = $structure;
+                    $agents = $this->getAgentService()->getAgentsByStructures($structures);
+                    if (!empty($agents)) {
+                        if (!empty($structure->getResponsables())) {
+                            $this->getNotificationService()->triggerRappelCampagne($campagne, $structure);
+                            $message .= "Notification faites vers " . $structure->getLibelleLong() . "<br/>\n";
+                        } else {
+                            $message .= "<span style='color:darkred;'>Pas de responsable pour le structure " . $structure->getLibelleLong() . "</span><br/>\n";
+                        }
                     }
                 }
             }

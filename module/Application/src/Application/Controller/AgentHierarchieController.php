@@ -4,18 +4,22 @@ namespace Application\Controller;
 
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class AgentHierarchieController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
+    use StructureServiceAwareTrait;
+    use AgentHierarchieCalculFormAwareTrait;
     use AgentHierarchieImportationFormAwareTrait;
 
     public function indexAction() : ViewModel
@@ -122,6 +126,77 @@ class AgentHierarchieController extends AbstractActionController
             'form' => $form,
         ]);
         return $vm;
+    }
+
+    public function calculerAction() : ViewModel
+    {
+        $form = $this->getAgentHierarchieCalculForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/calculer', ['mode' => 'preview', 'structure' => null], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $error = [];
+            $data = $request->getPost();
+
+            $mode = $data['mode'];
+            $structureId = $data['structure'];
+
+            $structure = $this->getStructureService()->getStructure($structureId);
+            $structures = $this->getStructureService()->getStructuresFilles($structure, true);
+            $agents = $this->getAgentService()->getAgentsByStructures($structures);
+
+            $superieurs = [];
+            $autorites = [];
+            foreach ($agents as $agent) {
+                $superieurs[$agent->getId()] = $this->getAgentService()->computeSuperieures($agent);
+                $autorites[$agent->getId()] = $this->getAgentService()->computeAutorites($agent, $superieurs[$agent->getId()]);
+            }
+
+            if ($mode === 'compute' AND empty($error)) {
+                $warning = [];
+                foreach ($agents as $agent) {
+                    $this->getAgentAutoriteService()->historiseAll($agent);
+                    if (empty($autorites[$agent->getId()])) {
+                        $warning[] = "Aucune autorité n'a pu être déterminée pour ".$agent->getDenomination();
+                    } else {
+                        foreach ($autorites[$agent->getId()] as $autorite) {
+                            $this->getAgentAutoriteService()->createAgentAutorite($agent, $autorite);
+                        }
+                    }
+                    $this->getAgentSuperieurService()->historiseAll($agent);
+                    if (empty($superieurs[$agent->getId()])) {
+                        $warning[] = "Aucun supérieur n'a pu être déterminée pour ".$agent->getDenomination();
+                    } else {
+                        foreach ($superieurs[$agent->getId()] as $superieur) {
+                            $this->getAgentSuperieurService()->createAgentSuperieur($agent, $superieur);
+                        }
+                    }
+                }
+            }
+
+
+            if ($mode !== 'compute') {
+                $title = "Calcul de chaînes hiérarchiques (Prévisualisation)";
+            }
+            if ($mode === 'compute') {
+                $title = "Calcul de chaînes hiérarchiques (Importation)";
+            }
+            return new ViewModel([
+                'title' => $title,
+                'form' => $form,
+                'structure' => $structure,
+                'agents' => $agents,
+                'superieurs' => $superieurs,
+                'autorites' => $autorites,
+                'error' => $error,
+                'warning' => $warning,
+            ]);
+        }
+
+        return new ViewModel([
+            'title' => "Calcul de chaînes hiérarchiques",
+            'form' => $form,
+        ]);
     }
 
 }
