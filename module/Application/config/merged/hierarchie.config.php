@@ -43,6 +43,34 @@ return [
         ],
     ],
 
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'autre' => [
+                                'label' => 'Autres gestions',
+                                'route' => 'agent/hierarchie',
+                                'resource' =>  PrivilegeController::getResourceId(AgentHierarchieController::class, 'index'),
+                                'order'    => 9900,
+                                'dropdown-header' => true,
+                            ],
+                            'hierarchie' => [
+                                'label' => 'Gestion des chaînes hiérarchiques',
+                                'route' => 'agent/hierarchie',
+                                'resource' =>  PrivilegeController::getResourceId(AgentHierarchieController::class, 'index'),
+                                'order'    => 9999,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+
     'router'          => [
         'routes' => [
             'agent' => [
