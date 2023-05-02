@@ -2,8 +2,26 @@
 
 /** @see \Application\Controller\AgentHierarchieController::indexAction() */
 
+$this->headTitle("Gestion des chaînes hiérarchiques");
 ?>
 
+<h1 class="page-header">
+    Gestion des chaînes hiérarchiques
+</h1>
+
+<p class="lead">
+    Deux moyens sont mises à disposition pour la gestion des chaînes hiérarchiques : un import depuis un csv ou un calcul exploitant les responsabilité de structure.
+</p>
+
+<h2> Importation des chaînes </h2>
+
+Le format du CSV exploité est le suivant :
+<code>agent_id ; superieur1_id ; superieur2_id ; superieur3_id ; autorite1_id ; autorite2_id ; autorite3_id</code>. <br/>
+Un identifiant peut être laissé vide si la colonne ne fait pas sens (par exemple : un agent n'ayant pas d'autorité 3).
+
+<div class="alert alert-warning">
+    Tous les agent·es listé·es dans le fichier CSV verront leur chaîne hiérarchique historisée.
+</div>
 
 <?php /** @see \Application\Controller\AgentHierarchieController::importerAction() */ ?>
 <a href="<?php echo $this->url('agent/hierarchie/importer', [], [], true); ?>"
@@ -12,9 +30,26 @@
     Importer depuis csv
 </a>
 
+<h2> Calcul des chaînes </h2>
+
+Le calcul se fait à partir d'une structure et détermine pour chaque agent·e affecté·e ses supérieur·es et autorités hiérarchiques.
+Les réglès exploitées sont les suivantes :
+<ul>
+    <li>Les supérieur·es sont les responsables de la structure la plus proche de l'agent·e.</li>
+    <li> Les autorités sont les responsables de la structure de niveau 2 de l'agent
+        (ou de niveau 1 si les supérieur·es sont les responsables de la structure de niveau 2). </li>
+</ul>
+<div class="alert alert-warning">
+    Tous les agent·es de la structure verront leur chaîne hiérarchique historisée.
+</div>
+
 <?php /** @see \Application\Controller\AgentHierarchieController::calculerAction() */ ?>
 <a href="<?php echo $this->url('agent/hierarchie/calculer', [], [], true); ?>"
    class="btn btn-primary ajax-modal" data-event="modification"
 >
     Calculer depuis structure
+</a>
+
+<a href="" class="btn btn-warning disabled">
+    Remise à zéro pour une structure
 </a>
