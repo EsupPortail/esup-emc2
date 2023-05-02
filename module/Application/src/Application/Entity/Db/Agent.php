@@ -4,15 +4,13 @@ namespace Application\Entity\Db;
 
 use Application\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
-use Doctrine\Common\Comparable;
+use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
-use Application\Entity\Db\Interfaces\HasComplementsInterface;
 use Application\Entity\Db\MacroContent\AgentMacroTrait;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Application\Entity\Db\Traits\HasComplementsTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -25,19 +23,16 @@ use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class Agent implements
     ResourceInterface,
-    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface,
-    HasComplementsInterface,
-    Comparable
+    HasApplicationCollectionInterface, HasCompetenceCollectionInterface, HasFormationCollectionInterface
 {
     use DbImportableAwareTrait;
     use AgentServiceAwareTrait;
     use HasApplicationCollectionTrait;  use HasCompetenceCollectionTrait;  use HasFormationCollectionTrait;
-    use HasComplementsTrait;
     use AgentMacroTrait;
 
     const ROLE_AGENT         = 'Agent';
@@ -49,54 +44,33 @@ class Agent implements
         return 'Agent';
     }
 
-    /** @var string */
-    private $id;
-    /** @var string */
-    private $prenom;
-    /** @var string */
-    private $nomUsuel;
-    /** @var string */
-    private $nomFamille;
-    /** @var string */
-    private $sexe;
-    /** @var DateTime */
-    private $dateNaissance;
-    /** @var User */
-    private $utilisateur;
-    /** @var int */
-    private $harpId;
-    /** @var string */
-    private $login;
-    /** @var string */
-    private $email;
-    /** @var DateTime */
-    private $delete;
-    /** @var string */
-    private $tContratLong;
+    private ?string $id = null;
+    private ?string $prenom = null;
+    private ?string $nomUsuel = null;
+    private ?string $nomFamille = null;
+    private ?string $sexe = null;
+    private ?DateTime $dateNaissance = null;
+    private ?string $login = null;
+    private ?string $harpId = null;
+    private ?string $email = null;
+    private ?string $tContratLong = null;
 
-    /** @var ArrayCollection (AgentQuotite) */
-    private $quotites;
-    /** @var ArrayCollection (AgentAffectation) */
-    private $affectations;
-    /** @var ArrayCollection (AgentGrade) */
-    private $grades;
-    /** @var ArrayCollection (AgentEchelon) */
-    private $echelons;
-    /** @var ArrayCollection (AgentStatut) */
-    private $statuts;
+    private Collection $affectations;   /** AgentAffectation[] */
+    private Collection $echelons;       /** AgentEchelon[] */
+    private Collection $grades;         /** AgentGrade[] */
+    private Collection $quotites;       /** AgentQuotite[] */
+    private Collection $statuts;        /** AgentStatut[] */
 
-    /** @var ArrayCollection (FichePoste) */
-    private $fiches;
-    /** @var ArrayCollection (EntretienProfessionnel) */
-    private $entretiens;
+    private ?AbstractUser $utilisateur = null;
 
-    /** @var ArrayCollection (AgentMissionSpecifique) */
-    private $missionsSpecifiques;
-    /** @var ArrayCollection (Fichier) */
-    private $fichiers;
+    private Collection $fiches;         /** FichePoste[] */
+    private Collection $entretiens;     /** EntretienProfessionnel[] */
+    private Collection $fichiers;       /** Fichier[] */
+    private Collection $missionsSpecifiques; /** AgentMissionSpecifique[] */
+    private Collection $structuresForcees;  /** StructureAgentForce  */
 
-    /** @var ArrayCollection (StructureAgentForce) */
-    private $structuresForcees;
+    private Collection $autorites;      /** AgentAutorite[] */
+    private Collection $superieurs;     /** AgentSuperieur[] */
 
     public function __construct()
     {
@@ -107,6 +81,9 @@ class Agent implements
         $this->echelons = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
+
+        $this->autorites = new ArrayCollection();
+        $this->superieurs = new ArrayCollection();
     }
 
     /**
@@ -117,203 +94,80 @@ class Agent implements
         return 'Agent_' . $this->getId();
     }
 
-    /** Éléments importés (octopus) : pas besoins de setters **********************************************************/
+    /** Accesseur en lecteur de l'identification (importer de la base source) ********************/
 
-    /**
-     * @return int
-     */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getPrenom() : ?string
     {
         return $this->prenom;
     }
 
-    /**
-     * @return string
-     */
     public function getNomUsuel() : ?string
     {
         return $this->nomUsuel;
     }
 
-    /**
-     * @return string
-     */
     public function getNomFamille() : ?string
     {
         return $this->nomFamille;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSexe() : ?string
     {
         return $this->sexe;
     }
 
-    /**
-     * @param string|null $sexe
-     * @return Agent
-     */
-    public function setSexe(?string $sexe) : Agent
-    {
-        $this->sexe = $sexe;
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
     public function getDateNaissance(): ?DateTime
     {
         return $this->dateNaissance;
     }
 
-    /**
-     * @param DateTime $dateNaissance
-     * @return Agent
-     */
-    public function setDateNaissance(DateTime $dateNaissance): Agent
-    {
-        $this->dateNaissance = $dateNaissance;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isHomme() : bool
-    {
-        return $this->sexe === 'M';
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFemme() : bool
-    {
-        return $this->sexe === 'F';
-    }
-
-    /**
-     * @return string
-     */
-    public function getDenomination() : ?string
-    {
-        $prenom = $this->getPrenom();
-        $prenom = str_replace("É", "é", $prenom);
-        $prenom = str_replace("È", "è", $prenom);
-        return ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>');
-
-    }
-
-    public function toString() : string
-    {
-        return $this->getDenomination();
-    }
-
-    public function compareTo($other) : int
-    {
-        $aaa = $this->getNomUsuel(). '#' . $this->getPrenom() . "#" . $this->id;
-        $bbb = $other->getNomUsuel(). '#' . $other->getPrenom() . "#" . $other->id;
-
-        if ($aaa > $bbb) return 1;
-        if ($aaa < $bbb) return -1;
-        return 0;
-    }
-    /**
-     * @return string|null
-     */
     public function getLogin(): ?string
     {
         return $this->login;
     }
 
-    /**
-     * @param string|null $login
-     * @return Agent
-     */
-    public function setLogin(?string $login): Agent
-    {
-        $this->login = $login;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string|null $email
-     * @return Agent
-     */
-    public function setEmail(?string $email): Agent
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getHarpId() : ?int
     {
         return $this->harpId;
     }
 
-    /**
-     * @return string
-     */
-    public function getTControatLong() : ?string
-    {
-        return $this->tContratLong;
-    }
 
-    /**
-     * @return bool
-     */
     public function isContratLong() : bool
     {
-        return $this->getTControatLong() === 'O';
+        return $this->tContratLong === 'O';
     }
 
-    /** AFFECTATIONS **************************************************************************************************/
+    /** Collections importées *****************************************************************************************/
 
-    /**
-     * @param DateTime|null $date
-     * @return AgentAffectation[]
-     */
-    public function getAffectations(?DateTime $date = null) : array
+    /** @return AgentAffectation[] */
+    public function getAffectations(?DateTime $date = null, bool $histo = false) : array
     {
         $affectations = $this->affectations->toArray();
-        $affectations = array_filter($affectations, function (AgentAffectation $aa) { return !$aa->isDeleted();});
-        if ($date !== null) {
-            $affectations = array_filter($affectations, function (AgentAffectation $aa) use ($date) {
-                return ($aa->estEnCours($date));
-            });
-        }
+        if ($histo === false) $affectations = array_filter($affectations, function (AgentAffectation $ae) { return !$ae->isDeleted();});
+        if ($date  !== null)  $affectations = array_filter($affectations, function (AgentAffectation $ae) use ($date) { return ($ae->estEnCours($date));});
 
-        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) {
-            return $a->getDateDebut() < $b->getDateDebut();
-        });
+        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() > $b->getDateDebut(); });
         return $affectations;
     }
 
-    /**
-     * @return AgentAffectation
-     */
+    /** @return AgentAffectation[] */
+    public function getAffectationsActifs(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        return $this->getAffectations($date);
+    }
+
+    /** @return AgentAffectation */ //TODO A reecrire car peut être multiple ...
     public function getAffectationPrincipale(?DateTime $date = null) : ?AgentAffectation
     {
         if ($date === null) {
@@ -331,21 +185,105 @@ class Agent implements
         return null;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return AgentAffectation[]
-     */
-    public function getAffectationsActifs(?DateTime $date = null) : array
+    /** @return AgentEchelon[] */
+    public function getEchelons(?DateTime $date = null, bool $histo = false) : array
+    {
+        $echelons = $this->echelons->toArray();
+        if ($histo === false) $echelons = array_filter($echelons, function (AgentEchelon $ae) { return !$ae->isDeleted();});
+        if ($date  !== null)  $echelons = array_filter($echelons, function (AgentEchelon $ae) use ($date) { return ($ae->estEnCours($date));});
+
+        usort($echelons, function (AgentEchelon $a, AgentEchelon $b) { return $a->getDateDebut() > $b->getDateDebut(); });
+        return $echelons;
+    }
+
+    /** @return AgentEchelon[] */
+    public function getEchelonsActifs(?DateTime $date = null) : array
     {
         if ($date === null) $date = (new DateTime());
-
-        $affectations = [];
-        /** @var AgentAffectation $affectation */
-        foreach ($this->getAffectations() as $affectation) {
-            if ($affectation->estEnCours($date)) $affectations[] = $affectation;
-        }
-        return $affectations;
+        return $this->getEchelons($date);
     }
+
+    /** @return AgentGrade[] */
+    public function getGrades(?DateTime $date = null, bool $histo = false) : array
+    {
+        $grades = $this->grades->toArray();
+        if ($histo === false) $grades = array_filter($grades, function (AgentGrade $ag) { return !$ag->isDeleted();});
+        if ($date  !== null)  $grades = array_filter($grades, function (AgentGrade $ag) use ($date) { return ($ag->estEnCours($date));});
+
+        usort($grades, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut(); });
+        return $grades;
+    }
+
+    /** @return AgentGrade[] */
+    public function getGradesActifs(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        return $this->getGrades($date);
+    }
+
+    /** @return AgentQuotite[] */
+    public function getQuotites(?DateTime $date = null, bool $histo = false) : array
+    {
+        $quotites = $this->quotites->toArray();
+        if ($histo === false) $quotites = array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
+        if ($date  !== null)  $quotites = array_filter($quotites, function (AgentQuotite $q) use ($date) { return ($q->estEnCours($date));});
+
+        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDateDebut() < $b->getDateDebut();});
+        return $quotites;
+    }
+
+    /** @return AgentQuotite[] */
+    public function getQuotitesActives(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        return $this->getQuotites($date);
+    }
+
+    /** @return AgentStatut[] */
+    public function getStatuts(?DateTime $date = null, bool $histo = false) : array
+    {
+        $statuts = $this->statuts->toArray();
+        if ($histo === false) $statuts = array_filter($statuts, function (AgentStatut $as) { return (!$as->isDeleted());});
+        if ($date  !== null)  $statuts = array_filter($statuts, function (AgentStatut $as) use ($date) { return ($as->estEnCours($date));});
+
+        usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDateDebut() < $b->getDateDebut(); });
+        return $statuts;
+    }
+
+    /** @return AgentStatut[] */
+    public function getStatutsActifs(?DateTime $date = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        return $this->getStatuts($date);
+    }
+
+    /** Autres accesseurs *********************************************************************************************/
+
+    public function getUtilisateur() : ?AbstractUser
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?AbstractUser $utilisateur) : void
+    {
+        $this->utilisateur = $utilisateur;
+    }
+
+
+    public function getDenomination() : ?string
+    {
+        $prenom = $this->getPrenom();
+        $prenom = str_replace("É", "é", $prenom);
+        $prenom = str_replace("È", "è", $prenom);
+        return ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>');
+
+    }
+
+    public function toString() : string
+    {
+        return $this->getDenomination();
+    }
+
 
     /** STRUCTURE *****************************************************************************************************/
 
@@ -365,93 +303,6 @@ class Agent implements
             $structures[$structuresForcee->getStructure()->getId()] = $structuresForcee->getStructure();
         }
         return $structures;
-    }
-
-    /** STATUTS *******************************************************************************************************/
-
-    /**
-     * @return AgentStatut[]
-     */
-    public function getStatuts(?DateTime $date = null) : array
-    {
-        $statuts = $this->statuts->toArray();
-        $statuts = array_filter($statuts, function (AgentStatut $as) { return (!$as->isDeleted());});
-        if ($date) {
-            $statuts = array_filter($statuts, function (AgentStatut $as) use ($date) { return ($as->estEnCours($date));});
-        }
-        usort($statuts, function (AgentStatut $a, AgentStatut $b) {
-            return $a->getDateDebut() < $b->getDateDebut();
-        });
-        return $statuts;
-    }
-
-    /**
-     * @var ?DateTime $date
-     * @return AgentStatut[]
-     */
-    public function getStatutsActifs(?DateTime $date = null) : array
-    {
-        if ($date === null) $date = (new DateTime());
-        $statuts = [];
-        /** @var AgentStatut $statut */
-        foreach ($this->getStatuts() as $statut) {
-            if ($statut->estEnCours($date)) $statuts[] = $statut;
-        }
-        return $statuts;
-    }
-
-    /** GRADES ********************************************************************************************************/
-
-    /** @return AgentGrade[] */
-    public function getGrades() : array
-    {
-        $grades = $this->grades->toArray();
-        $grades = array_filter($grades, function (AgentGrade $ag) { return !$ag->isDeleted();});
-        usort($grades, function (AgentGrade $a, AgentGrade $b) {
-            return $a->getDateDebut() < $b->getDateDebut();
-        });
-        return $grades;
-    }
-
-    /**
-     * @var ?DateTime $date
-     * @return AgentGrade[]
-     */
-    public function getGradesActifs(?DateTime $date = null) : array
-    {
-        if ($date === null) $date = (new DateTime());
-        $grades = [];
-        /** @var AgentGrade $grade */
-        foreach ($this->getGrades() as $grade) {
-            if ($grade->estEnCours($date)) $grades[] = $grade;
-        }
-        return $grades;
-    }
-
-    /** ECHELONS ********************************************************************************************************/
-
-    /** @return AgentEchelon[] */
-    public function getEchelons() : array
-    {
-        $echelons = $this->echelons->toArray();
-        $grades = array_filter($echelons, function (AgentEchelon $ag) { return !$ag->isDeleted();});
-        usort($grades, function (AgentEchelon $a, AgentEchelon $b) {
-            return $a->getDateDebut() > $b->getDateDebut();
-        });
-        return $grades;
-    }
-
-    public function getEchelonActif(?DateTime $date = null) : ?AgentEchelon
-    {
-        if ($date === null) $date = new DateTime();
-        $echelons = $this->getEchelons();
-        $echelons = array_filter($echelons, function (AgentEchelon $a) use ($date) {return $a->estEnCours($date);});
-
-        $echelon = null;
-        foreach ($echelons as $echelon_) {
-            if ($echelon === null OR $echelon_->getDateDebut() > $echelon->getDateDebut()) $echelon = $echelon_;
-        }
-        return $echelon;
     }
 
     /** FICHES POSTES *************************************************************************************************/
@@ -476,25 +327,6 @@ class Agent implements
         return $ficheposte;
     }
 
-    /** Éléments non importés *****************************************************************************************/
-
-    /**
-     * @return User|null
-     */
-    public function getUtilisateur() : ?User
-    {
-        return $this->utilisateur;
-    }
-
-    /**
-     * @param User|null $utilisateur
-     * @return Agent
-     */
-    public function setUtilisateur(?User $utilisateur) : Agent
-    {
-        $this->utilisateur = $utilisateur;
-        return $this;
-    }
 
     /**
      * @return FichePoste[]
@@ -644,30 +476,31 @@ class Agent implements
         return $enveloppe;
     }
 
-    /** QUOTITES *****************************************************************************************/
 
-    /**
-     * @return AgentQuotite[]
-     */
-    public function getQuotites() : array
+
+
+    /** AUTORITES ET SUPERIEURS *****************************************************************************/
+
+    /** @return AgentAutorite[] */
+    public function getAutorites(bool $histo = false): array
     {
-        $quotites = $this->quotites->toArray();
-        array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
-        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDateDebut() > $b->getDateDebut();});
-        return $quotites;
+        /** @var AgentAutorite[] $result */
+        $result = $this->autorites->toArray();
+        if ($histo === false) {
+            $result = array_filter($result, function (AgentAutorite $a) { return $a->estNonHistorise();});
+        }
+        return $result;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return AgentQuotite|null
-     */
-    public function getQuotiteCourante(?DateTime $date = null) : ?AgentQuotite
+    /** @return AgentSuperieur[] */
+    public function getSuperieurs(bool $histo = false): array
     {
-        /** @var AgentQuotite $quotite */
-        foreach ($this->quotites as $quotite) {
-            if (!$quotite->isDeleted() AND $quotite->estEnCours($date)) return $quotite;
+        /** @var AgentSuperieur[] $result */
+        $result = $this->superieurs->toArray();
+        if ($histo === false) {
+            $result = array_filter($result, function (AgentSuperieur $a) { return $a->estNonHistorise();});
         }
-        return null;
+        return $result;
     }
 
     /** STRUCTURE AGENT FORCE *****************************************************************************************/
@@ -732,30 +565,6 @@ class Agent implements
     }
 
     /**
-     * @param Agent $superieur
-     * @return bool
-     */
-    public function hasSuperieurHierarchique(Agent $superieur) : bool
-    {
-        foreach ($this->getComplements() as $complement) {
-            if ($complement->getType() === Complement::COMPLEMENT_TYPE_RESPONSABLE AND $complement->getComplementId() == $superieur->getId()) return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param Agent $autorite
-     * @return bool
-     */
-    public function hasAutoriteHierarchique(Agent $autorite) : bool
-    {
-        foreach ($this->getComplements() as $complement) {
-            if ($complement->getType() === Complement::COMPLEMENT_TYPE_AUTORITE AND $complement->getComplementId() == $autorite->getId()) return true;
-        }
-        return false;
-    }
-
-    /**
      * @return FichePoste|null
      */
     public function getFichePosteBest() : ?FichePoste
@@ -813,5 +622,12 @@ class Agent implements
         if ($isCDD) $result .= "C.D.D. ";
 
         return $result;
+    }
+
+    public function isAdministratif(?DateTime $date = null) : bool
+    {
+        $statuts =  $this->getStatutsActifs($date);
+        foreach ($statuts as $statut) if ($statut->isAdministratif()) return true;
+        return false;
     }
 }

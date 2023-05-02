@@ -8,11 +8,12 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
-use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class CampagneControllerFactory extends AbstractActionController
 {
@@ -31,6 +32,7 @@ class CampagneControllerFactory extends AbstractActionController
          * @var NotificationService $notificationService
          * @var RappelCampagneAvancementService $rappelCampagneAvancementService
          * @var StructureService $structureService
+         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -38,6 +40,7 @@ class CampagneControllerFactory extends AbstractActionController
         $notificationService = $container->get(NotificationService::class);
         $rappelCampagneAvancementService = $container->get(RappelCampagneAvancementService::class);
         $structureService = $container->get(StructureService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var CampagneForm $campagneForm
@@ -51,6 +54,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setNotificationService($notificationService);
         $controller->setRappelCampagneAvancementService($rappelCampagneAvancementService);
         $controller->setStructureService($structureService);
+        $controller->setUserService($userService);
         $controller->setCampagneForm($campagneForm);
         return $controller;
     }

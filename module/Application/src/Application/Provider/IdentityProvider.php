@@ -5,6 +5,8 @@ namespace Application\Provider;
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Provider\Identity\AbstractIdentityProvider;
@@ -14,6 +16,8 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class IdentityProvider extends AbstractIdentityProvider
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
 
@@ -28,10 +32,10 @@ class IdentityProvider extends AbstractIdentityProvider
                 $user = $this->getAgentService()->getUsersInAgent();
                 return $user;
             case Agent::ROLE_SUPERIEURE :
-                $user = $this->getAgentService()->getUsersInSuperieurs();
+                $user = $this->getAgentSuperieurService()->getUsersInSuperieurs();
                 return $user;
             case Agent::ROLE_AUTORITE :
-                $user = $this->getAgentService()->getUsersInAutorites();
+                $user = $this->getAgentAutoriteService()->getUsersInAutorites();
                 return $user;
         }
         return null;
@@ -54,14 +58,14 @@ class IdentityProvider extends AbstractIdentityProvider
             $roleAgent = $this->getRoleService()->findByRoleId(Agent::ROLE_AGENT);
             $roles[] = $roleAgent;
 
-            $superieurs = $this->getAgentService()->getSuperieurByUser($user);
-            if ($superieurs !== null AND $superieurs !== []) {
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent);
+            if (!empty($superieurs)) {
                 $roleSuperieur = $this->getRoleService()->findByRoleId(Agent::ROLE_SUPERIEURE);
                 $roles[] = $roleSuperieur;
             }
 
-            $autorites = $this->getAgentService()->getAutoriteByUser($user);
-            if ($autorites !== null AND $autorites !== []) {
+            $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent);
+            if (!empty($autorites)) {
                 $roleAutorite = $this->getRoleService()->findByRoleId(Agent::ROLE_AUTORITE);
                 $roles[] = $roleAutorite;
             }

@@ -10,6 +10,7 @@ use Application\Form\SpecificitePoste\SpecificitePosteForm;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesService;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentPoste\AgentPosteService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
@@ -19,8 +20,8 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
-use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
@@ -40,6 +41,7 @@ class FichePosteControllerFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var AgentPosteService $agentPosteService
          * @var RenduService $renduService
          * @var FicheMetierService $ficheMetierService
@@ -55,6 +57,7 @@ class FichePosteControllerFactory {
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $agentPosteService = $container->get(AgentPosteService::class);
         $renduService = $container->get(RenduService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
@@ -93,6 +96,7 @@ class FichePosteControllerFactory {
 
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesService);
         $controller->setAgentService($agentService);
+        $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentPosteService($agentPosteService);
         $controller->setRenduService($renduService);
         $controller->setFicheMetierService($ficheMetierService);

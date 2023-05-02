@@ -1,136 +1,103 @@
 <?php
 
 use Application\Entity\Db\Agent;
-use Application\Provider\Privilege\AgentPrivileges;
-use Application\Provider\Privilege\FichePostePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 
 /**
+ * @var Campagne $campagne
+ * @var EntretienProfessionnel[] $entretiens
  * @var Agent[] $agents
- * @var Campagne $campagnePrevious
- * @var Campagne $campagnesCurrents
  */
 
-$canVoirAgent = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
+$obligatoires = [];
+$facultatifs = [];
+$dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
+foreach ($agents as $agent) {
+    if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+}
+
+$finalises = [];
+$encours = [];
+foreach ($entretiens as $entretien) {
+    if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT) {
+        $finalises[] = $entretien;
+    } else {
+        $encours[] = $entretien;
+    }
+}
+
+$sansObligatoires = []; $sansFacultatifs = [];
+foreach ($obligatoires as $obligatoire) {
+    if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
+}
+foreach ($facultatifs as $facultatif) {
+    if (!isset($entretiens[$facultatif->getId()])) $sansObligatoires[] = $facultatif;
+}
+
+$this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
 ?>
 
+<h1 class="page-header">
+    Campagne d'entretien professionnel <?php echo $campagne->getAnnee(); ?>
+</h1>
 
-<table class="table table-condensed table-hover">
-    <thead>
-    <tr>
-        <th> Agent & Affectation </th>
-        <th> Fiche de poste </th>
-        <th> Entretien professionnel </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($agents as $agent) : ?>
-        <tr>
-            <td>
-                <?php echo $agent->getDenomination(); ?>
-                <?php if ($canVoirAgent) : ?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
-                        <span class="icon icon-voir" title="Afficher les informations de l'agent"></span>
-                    </a>
-                <?php endif; ?>
-                <br/>
-                <?php $affectation = $agent->getAffectationPrincipale(); ?>
-                <?php if ($affectation) : ?>
-                    <?php $niveau2 = $affectation->getStructure()->getNiv2(); ?>
-                    <?php if ($niveau2 !== null) : ?>
-                        [<?php echo $niveau2->getLibelleCourt(); ?>]
-                    <?php endif; ?>
-                    <?php echo $affectation->getStructure()->getLibelleLong(); ?>
-                <?php else : ?>
-                    Aucune affectation principale
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php $fichePoste = $agent->getFichePosteBest(); ?>
-                <?php $canVoirFichePoste = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_AFFICHER); ?>
-                <?php if ($fichePoste) : ?>
-                    <?php echo $this->etatbadge($fichePoste->getEtat()); ?>
-                    <?php echo $fichePoste->getLibelleMetierPrincipal(); ?>
-                    <?php if ($fichePoste->getLibelle()) : ?>
-                        <br/>
-                        <?php echo $fichePoste->getLibelle; ?>
-                    <?php endif; ?>
-                <?php else : ?>
-                    Aucune fiche de poste
-                <?php endif; ?>
-                <br/>
-                <?php if ($canVoirAgent) : ?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], ['fragment' => 'fiches'], true); ?>">
-                        <span class="icon gerer" title="Accéder à la gestion des fiches postes"></span>
-                        <span class="small-lettrine">FP</span></a>
-                <?php endif; ?>
-                <?php if ($fichePoste AND $canVoirFichePoste) : ?>
-                    <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
-                        <span class="icon icon-voir" title="Afficher la fiche de poste"></span>
-                        <span class="small-lettrine">FP</span></a>
-                    <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $fichePoste->getId()],[], true); ?>">
-                        <span class="icon icon-pdf" title="Exporter la fiche de poste"></span>
-                        <span class="small-lettrine">FP</span></a>
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php if ($campagnePrevious === null) : ?>
-                    Aucune campagne précédente
-                <?php else : ?>
-                    Précédent (<?php echo $campagnePrevious->getAnnee(); ?>):
-                    <?php $entretien = $agent->getEntretienProfessionnelByCampagne($campagnePrevious); ?>
-                    <?php if ($entretien !== null) : ?>
-                        Entretien du <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
-                           target="_blank">
-                            <span class="icon icon-voir"></span></a>
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */ ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
-                           target="_blank">
-                            <span class="icon icon-pdf"></span><span class="small-lettrine">CREP</span></a>
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrefAction() */ ?>
-                        <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
-                           target="_blank">
-                            <span class="icon icon-pdf"></span><span class="small-lettrine">CREF</span></a>
-                    <?php else : ?>
-                        Aucun entretien
-                    <?php endif; ?>
-                <?php endif; ?>
-                <br/>
+<div class="row">
+    <div class="col-md-6">
+        <h3> Information sur la campagne</h3>
+        <?php echo $this->campagneInformation($campagne); ?>
+    </div>
+    <div class="col-md-6">
+        <h3> Complétion de la campagne</h3>
+        <?php echo $this->campagneAvancement($entretiens, $obligatoires); ?>
+    </div>
+</div>
 
-                <?php if ($campagnesCurrents !== null or $campagnesCurrents !== []) : ?>
-                    <?php /** @var Campagne $campagneCurrent */ ?>
-                    <?php foreach ($campagnesCurrents as $campagneCurrent) : ?>
-                        Courant (<?php echo $campagneCurrent->getAnnee(); ?>):
-                        <?php $entretien = $agent->getEntretienProfessionnelByCampagne($campagneCurrent); ?>
-                        <?php if ($entretien !== null) : ?>
-                            Entretien du <?php echo $entretien->getDateEntretien()->format('d/m/Y'); ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/modifier', ['entretien' => $entretien->getId()], [], true); ?>"
-                               class="ajax-modal" data-event="modification">
-                                <span class="icon gerer"></span></a>
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
-                               target="_blank">
-                                <span class="icon icon-editer"></span></a>
-                            <a href="<?php echo $this->url('entretien-professionnel/exporter-crep', ['entretien' => $entretien->getId()], [], true); ?>"
-                               target="_blank">
-                                <span class="icon icon-pdf"></span><span class="small-lettrine">CREP</span></a>
-                            <a href="<?php echo $this->url('entretien-professionnel/exporter-cref', ['entretien' => $entretien->getId()], [], true); ?>"
-                               target="_blank">
-                                <span class="icon icon-pdf"></span><span class="small-lettrine">CREF</span></a>
-                        <?php else : ?>
-                            Aucun entretien
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
-                            <a href="<?php echo $this->url('entretien-professionnel/creer', ["campagne" => $campagneCurrent->getId()], ["query" => ["agent" => $agent->getId(), 'structure' => ($affectation AND $affectation->getStructure())?$affectation->getStructure()->getId():null]], true); ?>"
-                               class="ajax-modal" data-event="modification">
-                                <span class="icon icon-ajouter"></span></a>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+<?php if (!empty($finalises)) : ?>
+    <h2>
+        Entretiens professionnels finalisés
+        <span class="badge"> <?php echo count($finalises); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($finalises); ?>
+<?php endif; ?>
+
+
+<?php if (!empty($encours)) : ?>
+    <h2>
+        Entretiens professionnels en cours d'évaluation
+        <span class="badge"> <?php echo count($encours); ?> </span>
+    </h2>
+
+    <?php echo $this->entretienProfessionnelArray($encours); ?>
+<?php endif; ?>
+
+<?php if (!empty($obligatoires)) : ?>
+    <h2>
+        Agents sans entretien professionnel pour la campagne
+        <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
+    </h2>
+    <?php echo $this->convocationArray($sansObligatoires, $campagne); ?>
+<?php endif; ?>
+
+<?php if (!empty($facultatifs)) : ?>
+    <h2>
+        Agents sans obligation d'entretien professionnel
+        <span class="badge"> <?php echo count($sansFacultatifs); ?> </span>
+    </h2>
+
+    <div class="alert alert-info">
+        <div class="row">
+            <div class="col-md-1"><span class="icon icon-info"></span></div>
+            <div class="col-md-10">
+                Les agents n'étant pas en poste à la date du <?php echo $dateMinEnPoste->format('d/m/Y'); ?> n'ont pas d'obligation d'entretien professionnel.
                 <br/>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+                Vous pouvez cependant planifier un entretien professionnel si vous le souhaitez.
+            </div>
+        </div>
+    </div>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne); ?>
+<?php endif; ?>
+
+

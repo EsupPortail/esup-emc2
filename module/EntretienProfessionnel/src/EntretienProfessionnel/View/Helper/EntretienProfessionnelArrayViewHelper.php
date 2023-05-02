@@ -16,17 +16,27 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class EntretienProfessionnelArrayViewHelper extends AbstractHelper
 {
-    /**
-     * @param EntretienProfessionnel[] $entretiens
-     * @param array $options
-     * @return string|Partial
-     */
+    protected array $entretiens;
+    protected array $options;
+
     public function __invoke(array $entretiens, array $options = [])
+    {
+        $this->entretiens = $entretiens;
+        $this->options = $options;
+
+        /** @var PhpRenderer $view */
+        $view = $this->getView();
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
+
+        return $view->partial('entretien-professionnel-array', ['entretiens' => $this->entretiens, 'options' => $this->options]);
+    }
+
+    public function __toString()
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('entretien-professionnel-array', ['entretiens' => $entretiens, 'options' => $options]);
+        return $view->partial('entretien-professionnel-array', ['entretiens' => $this->entretiens, 'options' => $this->options]);
     }
 }

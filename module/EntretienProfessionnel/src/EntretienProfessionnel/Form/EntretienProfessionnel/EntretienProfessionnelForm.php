@@ -19,7 +19,6 @@ class EntretienProfessionnelForm extends Form {
     use CampagneServiceAwareTrait;
 
     private $urlAgent;
-    private $urlResponsable;
 
     private array $superieurs = [];
     public function setSuperieurs(array $superieurs) { $this->superieurs = $superieurs; }
@@ -41,31 +40,9 @@ class EntretienProfessionnelForm extends Form {
         return $this;
     }
 
-    /**
-     * @param mixed $urlResponsable
-     * @return EntretienProfessionnelForm
-     */
-    public function setUrlResponsable($urlResponsable) : EntretienProfessionnelForm
-    {
-        $this->urlResponsable = $urlResponsable;
-        return $this;
-    }
-
     public function init()
     {
-        //Responsable
-//        $responsable = new SearchAndSelect('responsable', ['label' => "Responsable de l'entretien professionnel <span class='icon icon-information text-info' title='Saisissez quelques lettres pour peupler la liste.'></span> <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
-//        $responsable
-//            ->setAutocompleteSource($this->urlResponsable)
-//            ->setSelectionRequired(true)
-//            ->setLabelOption('disable_html_escape',true)
-//            ->setAttributes([
-//                'id' => 'responsable',
-//                'placeholder' => "Nom du responsable de l'entretien professionnel ...",
-//            ]);
-//        $this->add($responsable);
-
-        $this->add([
+         $this->add([
             'type' => Select::class,
             'name' => 'responsable',
             'options' => [
@@ -172,20 +149,20 @@ class EntretienProfessionnelForm extends Form {
         $this->setInputFilter((new Factory())->createInputFilter([
             'responsable'       => [
                 'required' => true,
-                'validators' => [
-                    [
-                        'name' => Callback::class,
-                        'options' => [
-                            'messages' => [
-                                Callback::INVALID_VALUE => "Veuillez sélectionner un responsable dans la liste déroulante.",
-                            ],
-                            'callback' => function ($value, $context = []) {
-                                $hasResponsable = (isset($context['responsable']) AND isset($context['responsable']['id']) AND trim($context['responsable']['id']) !== '');
-                                return $hasResponsable;
-                            },
-                        ],
-                    ],
-                ],
+//                'validators' => [
+//                    [
+//                        'name' => Callback::class,
+//                        'options' => [
+//                            'messages' => [
+//                                Callback::INVALID_VALUE => "Veuillez sélectionner un responsable dans la liste déroulante.",
+//                            ],
+//                            'callback' => function ($value, $context = []) {
+//                                $hasResponsable = (isset($context['responsable']) AND isset($context['responsable']['id']) AND trim($context['responsable']['id']) !== '');
+//                                return $hasResponsable;
+//                            },
+//                        ],
+//                    ],
+//                ],
             ],
             'agent'             => [
                 'required' => true,

@@ -2,9 +2,11 @@
 
 namespace Application\Service\Notification;
 
+use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
 use Application\Provider\Template\MailTemplates;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -15,6 +17,8 @@ use UnicaenValidation\Entity\Db\ValidationInstance;
 class NotificationService
 {
     use AgentServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
+
     use MailServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -44,15 +48,12 @@ class NotificationService
      */
     public function getEmailResponsable(?FichePoste $ficheposte): array
     {
-        $emails = [];
-        if ($ficheposte !== null) {
-            $agent = $ficheposte->getAgent();
-            $responsables = $this->getAgentService()->computeSuperieures($agent);
-            foreach ($responsables as $key => $agent) {
-                if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
-            }
-        }
-        return $emails;
+        $responsables = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($ficheposte->getAgent());
+        $email = array_map(
+            function (AgentSuperieur $a) { return $a->getSuperieur()->getEmail();},
+            $responsables
+        );
+        return $email;
     }
 
     /** Notifications liées aux validations de la fiche de poste ******************************************************/

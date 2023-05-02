@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
@@ -21,6 +22,7 @@ use Application\Provider\Validation\FichePosteValidations;
 use Application\Service\ActivitesDescriptionsRetirees\ActivitesDescriptionsRetireesServiceAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentPoste\AgentPosteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTrait;
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
@@ -54,6 +56,7 @@ class FichePosteController extends AbstractActionController {
     /** Service **/
     use ActivitesDescriptionsRetireesServiceAwareTrait;
     use AgentServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use AgentPosteServiceAwareTrait;
 
     use ApplicationsRetireesServiceAwareTrait;
@@ -940,10 +943,10 @@ class FichePosteController extends AbstractActionController {
                 $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (".$ficheposte->getAgent()->getDenomination().") afin qu'il puisse valider à son tour celle-ci.<br/>";
                 break;
             case FichePosteValidations::VALIDATION_AGENT :
-                $responsables = $this->getAgentService()->computeSuperieures($agent);
-                usort($responsables, function (Agent $a, Agent $b) {
-                    $aaa = $a->getNomUsuel() . " " . $a->getPrenom();
-                    $bbb = $b->getNomUsuel() . " " . $b->getPrenom();
+                $responsables = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
+                usort($responsables, function (AgentSuperieur $a, AgentSuperieur $b) {
+                    $aaa = $a->getSuperieur()->getNomUsuel() . " " . $a->getSuperieur()->getPrenom();
+                    $bbb = $b->getSuperieur()->getNomUsuel() . " " . $b->getSuperieur()->getPrenom();
                     return $aaa > $bbb;
                 });
                 $responsables = array_map(function (Agent $a) { return $a->getDenomination();} , $responsables);

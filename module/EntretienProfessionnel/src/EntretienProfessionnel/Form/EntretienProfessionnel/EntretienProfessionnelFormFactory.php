@@ -37,8 +37,6 @@ class EntretienProfessionnelFormFactory {
         $urlManager = $pluginManager->get('Url');
         /** @see AgentController::rechercherAction() */
         $urlAgent       =  $urlManager->__invoke('agent/rechercher', [], [], true);
-        /** @see EntretienProfessionnelController::findResponsablePourEntretienAction() */
-//        $urlReponsable  =  $urlManager->__invoke('entretien-professionnel/find-responsable-pour-entretien',[], [], true);
 
         /**
          * @var EntretienProfessionnelForm $form

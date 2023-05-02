@@ -11,11 +11,26 @@ use Structure\Entity\Db\Structure;
 
 ?>
 
-<h1 class="page-header">
-    <strong><?php echo $structure->getLibelleLong(); ?></strong>
-    <br>
-    <?php echo $structure->getType()->getLibelle(); ?>
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            <strong><?php echo $structure->getLibelleLong(); ?></strong>
+            <br>
+            <?php echo $structure->getType()->getLibelle(); ?>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if (! empty($selecteur)) : ?>
+            <label for="structure-selecteur">Structure à afficher : <br/></label>
+            <select id="structure-selecteur" name="structure-selecteur" class="bootstrap-select">
+                <option value="">Aucune sélection</option>
+                <?php foreach ($selecteur as $s) : ?>
+                    <option value="<?php echo $s->getId(); ?>" <?php if ($structure->getId() == $s->getId()) echo "selected"; ?>><?php echo $s->getLibelleCourt(); ?></option>
+                <?php endforeach; ?>
+            </select>
+        <?php endif; ?>
+    </div>
+</div>
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
@@ -71,4 +86,13 @@ use Structure\Entity\Db\Structure;
             window.location.reload();
         });
     });
+    $(function() {
+        $('select#structure-selecteur').change(function() {
+            let id = $('select#structure-selecteur option:selected').val();
+            if (id !== "" && id !== "<?php echo $structure->getId(); ?>") {
+                window.location.href = './' + id;
+            }
+        });
+    });
+
 </script>

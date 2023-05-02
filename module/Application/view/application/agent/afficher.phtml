@@ -29,7 +29,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var AgentStatut[] $statuts
  * @var AgentGrade[] $grades
  * @var AgentQuotite|null $quotite
- * @var AgentEchelon|null $echelon
+ * @var AgentEchelon[] $echelons
  *
  * @var array $applications
  * @var string $intranet
@@ -141,7 +141,7 @@ if ($agent !== null) {
                     ['agent' => $agent,
                         'affectations' => $affectations,
                         'superieures' => $superieures, 'autorites' => $autorites,
-                        'statuts' => $statuts, 'echelon' => $echelon, 'grades' => $grades, 'quotite' => $quotite,
+                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite,
                         'canAffichageDate' => $canAffichageDate]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">

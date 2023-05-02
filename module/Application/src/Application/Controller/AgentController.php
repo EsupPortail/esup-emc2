@@ -2,16 +2,20 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
 use Application\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
@@ -56,6 +60,9 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class AgentController extends AbstractActionController
 {
+    use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use AgentServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
@@ -135,8 +142,12 @@ class AgentController extends AbstractActionController
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
 
         //Récupération des supérieures et autorités
-        $superieures = $this->getAgentService()->computeSuperieures($agent);
-        $autorites = $this->getAgentService()->computeAutorites($agent, $superieures);
+        $superieures = array_map(
+            function (AgentSuperieur $a) { return $a->getSuperieur(); },
+            $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
+        $autorites = array_map(
+                function (AgentAutorite $a) { return $a->getAutorite(); },
+                $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
 
@@ -149,7 +160,7 @@ class AgentController extends AbstractActionController
             'affectations' => $agentAffectations,
             'statuts' => $agentStatuts,
             'grades' => $agentGrades,
-            'echelon' => $agent->getEchelonActif(),
+            'echelons' => $agent->getEchelonsActifs(),
             'fichespostes' => $fichespostes,
 
             'superieures' => $superieures,

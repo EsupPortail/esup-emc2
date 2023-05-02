@@ -1,0 +1,15 @@
+<?php
+
+use Application\Entity\Db\AgentSuperieur;
+
+/**
+ * @see \Application\View\Helper\AgentSuperieurViewHelper
+ * @var AgentSuperieur $superieur
+ * @var array $options
+ */
+
+?>
+
+<span class="<?php if ($superieur->estHistorise()) echo " historise "; ?>">
+    <?php echo $superieur->getSuperieur()->getDenomination(); ?>
+</span>

@@ -8,6 +8,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
 /**
  * @see \Structure\Controller\StructureController::descriptionAction()
  * @var Structure $structure
+ * @var Structure[] $selecteur
  *
  * @var Agent[] $responsables
  *
@@ -26,7 +27,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
 
 ?>
 
-<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'description']); ?>
+<?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'description', 'selecteur' => $selecteur]); ?>
 
 <div class="row">
     <div class="col-md-6">

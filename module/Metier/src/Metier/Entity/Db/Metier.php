@@ -231,8 +231,8 @@ class Metier implements HistoriqueAwareInterface {
     public function getLibelleGenre(?Agent $agent) : string
     {
         if ($agent === null) return $this->getLibelle();
-        if ($agent->isHomme() AND $this->libelleMasculin !== null) return $this->getLibelleMasculin();
-        if ($agent->isFemme() AND $this->libelleFeminin !== null) return $this->getLibelleFeminin();
+        if ($agent->getSexe() === 'M' AND $this->libelleMasculin !== null) return $this->getLibelleMasculin();
+        if ($agent->getSexe() === 'F' AND $this->libelleFeminin !== null) return $this->getLibelleFeminin();
         return $this->getLibelle();
     }
 

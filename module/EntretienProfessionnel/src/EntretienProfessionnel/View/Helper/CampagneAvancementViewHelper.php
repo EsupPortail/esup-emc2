@@ -12,6 +12,10 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class CampagneAvancementViewHelper extends AbstractHelper
 {
+    public $entretiens;
+    public $agents;
+    public $options;
+
     /**
      * @param EntretienProfessionnel[] $entretiens
      * @param Agent[] $agents
@@ -20,10 +24,22 @@ class CampagneAvancementViewHelper extends AbstractHelper
      */
     public function __invoke(array $entretiens, array $agents,array $options = [])
     {
+        $this->entretiens = $entretiens;
+        $this->agents = $agents;
+        $this->options = $options;
+
         /** @var PhpRenderer $view */
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
         return $view->partial('campagne-avancement', ['entretiens' => $entretiens, 'agents' => $agents, 'options' => $options]);
+    }
+
+    public function __toString() {
+        /** @var PhpRenderer $view */
+        $view = $this->getView();
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
+
+        return $view->partial('campagne-avancement', ['entretiens' => $this->entretiens, 'agents' => $this->agents, 'options' => $this->options]);
     }
 }

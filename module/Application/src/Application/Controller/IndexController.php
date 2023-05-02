@@ -2,15 +2,21 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Provider\Template\TexteTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Structure\Controller\StructureController;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -25,6 +31,8 @@ use Laminas\View\Model\ViewModel;
 class IndexController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
@@ -64,12 +72,14 @@ class IndexController extends AbstractActionController
 //                case RoleConstant::VALIDATEUR :
 //                    return $this->redirect()->toRoute('index-validateur', [], [], true);
                 case RoleProvider::GESTIONNAIRE :
+                    /** @see StructureController::descriptionAction() */
                     $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
-                    if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
+                    if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
                     break;
                 case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
-                    if (!empty($structures)) return $this->redirect()->toRoute('structure/afficher', ['structure' => $structures[0]->getId()], [], true);
+                    /** @see StructureController::descriptionAction() */
+                    if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
                     break;
                 case Agent::ROLE_SUPERIEURE :
                     /** @see IndexController::indexSuperieurAction() */
@@ -106,61 +116,55 @@ class IndexController extends AbstractActionController
     public function indexSuperieurAction() : ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $complements = $this->getAgentService()->getSuperieurByUser($user);
+        $agent = $this->getAgentService()->getAgentByUser($user);
+        $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); },$this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
-        $agents = [];
-        if ($complements) {
-            foreach ($complements as $complement) {
-                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
-                if ($agent !== null) $agents[$agent->getId()] = $agent;
-            }
+        /** Campagne d'entretien professionnel ************************************************************************/
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        /** récuperation des eps **************************************************************************************/
+        $entretiens = [];
+        foreach ($campagnes as $campagne) {
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
-        $fiches = [];
-//        $fichesRAW = $this->getFichePosteService()->getFichesPostesbyAgents($agents);
-//        foreach ($fichesRAW as $fiche) {
-//            $fiches[$fiche->getAgent()->getId()][] = $fiche;
-//        }
-
-
 
         return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
-            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
-            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
-
-            'fiches' => $fiches,
-            'demandesInternes' => $this->getFormationInstanceInscritService()->getInscrpitionsByAgentsAndAnnee($agents),
-            'demandesExternes' => $this->getDemandeExterneService()->getDemandesExternesByAgentsAndAnnee($agents),
+            'connectedAgent' => $agent,
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
         ]);
     }
 
     public function indexAutoriteAction() : ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
-        $complements = $this->getAgentService()->getAutoriteByUser($user);
+        $agent = $this->getAgentService()->getAgentByUser($user);
+        $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },$this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
-        $agents = [];
-        if ($complements) {
-            foreach ($complements as $complement) {
-                $agent = $this->getAgentService()->getAgent($complement->getAttachmentId());
-                if ($agent !== null) $agents[$agent->getId()] = $agent;
-            }
+        /** Campagne d'entretien professionnel ************************************************************************/
+        $last =  $this->getCampagneService()->getLastCampagne();
+        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $campagnes[] = $last;
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+
+        /** récuperation des eps **************************************************************************************/
+        $entretiens = [];
+        foreach ($campagnes as $campagne) {
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
-        usort($agents, function (Agent $a, Agent $b) {
-            $aaa = $a->getNomUsuel() . " "  . $a->getPrenom();
-            $bbb = $b->getNomUsuel() . " "  . $b->getPrenom();
-            return $aaa > $bbb;
-        });
 
-        $vm =  new ViewModel();
-        $vm->setVariables([
+        return new ViewModel([
             'agents' => $agents,
-            'connectedAgent' => $this->getAgentService()->getAgentByUser($user),
-            'campagnePrevious' => $this->getCampagneService()->getLastCampagne(),
-            'campagnesCurrents' => $this->getCampagneService()->getCampagnesActives(),
+            'connectedAgent' => $agent,
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
         ]);
-        return $vm;
     }
 
     public function infosAction() : ViewModel

@@ -4,6 +4,8 @@ namespace Structure\Service\Structure;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\FichePoste;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -573,6 +575,10 @@ EOS;
 //            ->andWhere('niv2_responsable.dateFin IS NULL or niv2_responsable.dateFin >= :date')
             ->setParameter('date', $date)
         ;
+
+        $qb = AgentSuperieur::decorateWithAgentSuperieur($qb, 'af_agent');
+        $qb = AgentAutorite::decorateWithAgentAutorite($qb, 'af_agent');
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }

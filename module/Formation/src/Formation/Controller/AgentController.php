@@ -3,10 +3,14 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Provider\Etat\DemandeExterneEtats;
@@ -18,9 +22,11 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class AgentController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentGradeServiceAwareTrait;
     use AgentStatutServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -46,8 +52,8 @@ class AgentController extends AbstractActionController {
         $agentAffectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent);
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent);
         $agentStatuts = $this->getAgentStatutService()->getAgentStatutsByAgent($agent);
-        $superieures = $this->getAgentService()->computeSuperieures($agent);
-        $autorites = $this->getAgentService()->computeAutorites($agent);
+        $superieures = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); },$this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
+        $autorites = array_map(function (AgentAutorite $a) { return $a->getAutorite(); },$this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
@@ -75,8 +81,11 @@ class AgentController extends AbstractActionController {
     {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
+        $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $agents = $this->getAgentService()->getAgentsByResponsabilite($user, $role);
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
         $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($agents, null);
         $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($agents, null);
@@ -100,8 +109,12 @@ class AgentController extends AbstractActionController {
     {
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
+        $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $agents = $this->getAgentService()->getAgentsByResponsabilite($user, $role);
+        $agents = [];
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = $a->getNomUsuel()." ".$a->getPrenom()." ".$a->getId();
             $bbb = $b->getNomUsuel()." ".$b->getPrenom()." ".$b->getId();

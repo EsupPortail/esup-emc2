@@ -3,6 +3,7 @@
 namespace Formation\Service\Notification;
 
 use Application\Service\Agent\AgentService;
+use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\Url\UrlService;
 use Psr\Container\Containerinterface;
@@ -26,6 +27,7 @@ class NotificationServiceFactory {
     {
         /**
          * @var AgentService $agentService
+         * @var AgentSuperieurService $agentSuperieurService
          * @var MailService $mailService
          * @var ParametreService $parametreService
          * @var RenduService $renduService
@@ -35,6 +37,7 @@ class NotificationServiceFactory {
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $mailService = $container->get(MailService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
@@ -45,6 +48,7 @@ class NotificationServiceFactory {
 
         $service = new NotificationService();
         $service->setAgentService($agentService);
+        $service->setAgentSuperieurService($agentSuperieurService);
         $service->setMailService($mailService);
         $service->setParametreService($parametreService);
         $service->setRenduService($renduService);

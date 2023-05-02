@@ -4,7 +4,6 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
-use Application\Entity\Db\Complement;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
@@ -258,16 +257,14 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    /**
-     * @param Agent $agent
-     * @return array
-     */
-    public function getEntretiensProfessionnelsByAgent(Agent $agent)  : array
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false)  : array
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
             ->andWhere('entretien.agent = :agent')
             ->setParameter('agent', $agent);
+        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
 
@@ -411,28 +408,6 @@ class EntretienProfessionnelService {
         return $result_resp;
     }
 
-    /**
-     * @param Agent $agent
-     * @param string $term
-     * @return Agent[]|null[]
-     */
-    public function findSuperieurPourEntretien(Agent $agent, string $term) : array
-    {
-        $superieurs = [];
-
-        /** @var Complement[] $complements */
-        $complements = $agent->getComplementsByType(Complement::COMPLEMENT_TYPE_RESPONSABLE);
-        foreach ($complements as $complement) {
-            $superieur = $this->getAgentService()->getAgent($complement->getComplementId());
-            if ($superieur !== null) {
-                $superieurs[$superieur->getId()] = $superieur;
-            }
-        }
-
-
-        $result = array_filter($superieurs,function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
-        return $result;
-    }
 
     /**
      * @param EntretienProfessionnel $entretien
@@ -514,7 +489,7 @@ class EntretienProfessionnelService {
      * @param array $agents
      * @return EntretienProfessionnel[] @desc [agentId => entretien]
      */
-    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents) : array
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false) : array
     {
         if ($campagne === null) return [];
 
@@ -522,6 +497,8 @@ class EntretienProfessionnelService {
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)
         ;
+        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
+
         $result = $qb->getQuery()->getResult();
 
         $dictionnaire = [];

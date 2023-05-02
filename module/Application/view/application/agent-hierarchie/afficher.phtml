@@ -1,0 +1,71 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
+
+/**
+ * @see \Application\Controller\AgentHierarchieController::afficherAction()
+ * @var Agent $agent
+ * @var AgentSuperieur[] $superieurs
+ * @var AgentAutorite[] $autorites
+ */
+
+$denomination = $agent->getDenomination();
+$this->headTitle("Chaîne hierarchique de ".$denomination);
+
+?>
+
+<h1 class="page-header">
+    Chaîne hiérarchique de <?php echo $agent->getDenomination(); ?>
+</h1>
+
+<h2> Agent </h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Affectation·s</h3>
+
+        <?php foreach ($agent->getAffectationsActifs() as $affectation) : ?>
+            <?php echo $this->agentAffectation($affectation, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-6">
+        <h3>Statut·s</h3>
+
+        <?php foreach ($agent->getStatutsActifs() as $statut) : ?>
+            <?php echo $this->agentStatut($statut, ['structure' => true, 'periode' => true, 'temoin' => true]); ?>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<h2> Superieur·es hierarchique·s direct·es </h2>
+
+<?php if (empty($superieurs)) : ?>
+    <div class="alert alert-warning">
+        <span class="icon icon-attention"></span>
+        Aucun supérieur hiérarchique de déclaré !
+    </div>
+<?php else : ?>
+    <ul>
+        <?php foreach ($superieurs as $superieur) : ?>
+            <li> <?php echo $this->agentSuperieur($superieur); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<h2> Autorité·s hiérarchique·s </h2>
+
+
+<?php if (empty($autorites)) : ?>
+    <div class="alert alert-warning">
+        <span class="icon icon-attention"></span>
+        Aucune autorité hiérarchique de déclaré !
+    </div>
+<?php else : ?>
+    <ul>
+        <?php foreach ($autorites as $autorite) : ?>
+            <li> <?php echo $this->agentAutorite($autorite, []); ?> </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

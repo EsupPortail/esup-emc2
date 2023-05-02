@@ -1,0 +1,60 @@
+<?php
+
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
+
+/**
+ * @var Agent[] $agents
+ */
+
+?>
+
+Voue êtes responsable de <?php echo count($agents); ?> agent·es.
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th> Dénomination </th>
+        <th> Affectations </th>
+        <th> Grades </th>
+        <th class="action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($agents as $agent) : ?>
+        <tr>
+            <td>
+                <?php echo $agent->getDenomination(); ?>
+            </td>
+            <td>
+                <?php $affectations = $agent->getAffectationsActifs(); ?>
+                <?php foreach ($affectations as $affectation) : ?>
+                    <?php echo $affectation->getStructure()->getNiv2()->getLibelleCourt(); ?>
+                >
+                    <?php echo $affectation->getStructure()->getLibelleLong(); ?>
+                <?php if ($affectation->isPrincipale()) : ?>
+                    <span class="badge" title="Affectation principale" style="background: seagreen">P</span>
+                <?php endif; ?>
+                <br/>
+                <?php endforeach; ?>
+            </td>
+            <td>
+                <?php $grades = $agent->getGradesActifs(); ?>
+                <?php foreach ($grades as $grade) : ?>
+                    <?php echo $grade->getGrade()->getLibelleLong(); ?>
+                    <br/>
+                    <?php echo $this->correspondance($grade->getBap()); ?>
+                <?php endforeach; ?>
+            </td>
+            <td class="action">
+                <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                <a href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>">
+                    <span class="icon icon-user"></span>
+                    Afficher
+                </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

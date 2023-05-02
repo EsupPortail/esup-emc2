@@ -5,13 +5,12 @@ namespace Application\Service\Evenement;
 use Application\Provider\EvenementProvider;
 use DateTime;
 use Exception;
-use UnicaenDbImport\Service\Traits\SynchroServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class SynchroOctopusService extends EvenementService {
-    use SynchroServiceAwareTrait;
+//    use SynchroServiceAwareTrait;
 
     /**
      * @param DateTime|null $dateTraitement
@@ -34,12 +33,12 @@ class SynchroOctopusService extends EvenementService {
     {
         try {
             $log = "";
-            $synchros = $this->getSynchroService()->getSynchros();
-            foreach ($synchros as $synchro) {
-                $log .= "### " . $synchro->getName() . " ###<br/>\n";
-                $log .= $this->getSynchroService()->runSynchro($synchro);
-                $log .= "<br/>\n";
-            }
+//            $synchros = $this->getSynchroService()->getSynchros();
+//            foreach ($synchros as $synchro) {
+//                $log .= "### " . $synchro->getName() . " ###<br/>\n";
+//                $log .= $this->getSynchroService()->runSynchro($synchro);
+//                $log .= "<br/>\n";
+//            }
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;

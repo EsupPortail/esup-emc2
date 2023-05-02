@@ -73,93 +73,12 @@ class StructureController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function descriptionAction() : ViewModel
     {
         $role = $this->getUserService()->getConnectedRole();
         $utilisateur = $this->getUserService()->getConnectedUser();
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
-        /** Récupération des structures */
-        $structure = $this->getStructureService()->getRequestedStructure($this);
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] =  $structure;
-
-        /** Récupération des missions spécifiques liées aux structures */
-        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByStructures($structures, false);
-
-        /** Récupération des agents et postes liés aux structures */
-        $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
-        $allAgents = array_merge($agents, $agentsForces);
-
-        $superieurs = []; $autorites = [];
-        foreach ($allAgents as $agent) {
-            $sup = $this->getAgentService()->computeSuperieures($agent);
-            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
-            $superieurs[$agent->getId()] = $sup;
-            $autorites[$agent->getId()] = $aut;
-        }
-
-        usort($allAgents, function (Agent $a, Agent $b) { $aaa = $a->getNomUsuel() . " ". $a->getPrenom(); $bbb = $b->getNomUsuel() . " ". $b->getPrenom(); return $aaa > $bbb;});
-
-        $fichespostes_pdf = $this->getAgentService()->getFichesPostesPdfByAgents($allAgents);
-
-        /** Campagne d'entretien professionnel ************************************************************************/
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
-
-        $allAgents = [];
-        $entretiensArray = []; $agentsArray = [];
-        foreach ($campagnes as $campagne) {
-            $agentsCampagne = $this->getCampagneService()->computeAgentByStructures($structures, $campagne);
-            $agentsArray[$campagne->getId()] = $agentsCampagne;
-            foreach ($agentsCampagne as $agent) { $allAgents[$agent->getId()] = $agent;}
-            $entretiensArray[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsArray[$campagne->getId()]);
-        }
-        $allAgentsAffectations = [];
-        foreach ($allAgents as $id => $agent) {
-            $allAgentsAffectations[$id] = $this->getAgentAffectationService()->getAgentAffectationsByAgent($agent, false, true);
-        }
-
-        return new ViewModel([
-            'selecteur' => $selecteur,
-
-            'structure' => $structure,
-            'responsables' => $this->getStructureService()->getResponsables($structure, new DateTime()),
-            'gestionnaires' => $this->getStructureService()->getGestionnaires($structure, new DateTime()),
-            'filles' =>   $structure->getEnfants(),
-
-            'missions' => $missionsSpecifiques,
-            'fichespostes' => $this->getFichePosteService()->getFichesPostesbyAgents($allAgents),
-            'fichespostes_pdf' => $fichespostes_pdf,
-            'fichePosteEtats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
-
-            'agents' => $agents,
-            'agentsForces' => $agentsForces,
-            'agentsAll' => $allAgents,
-            'allAgentsAffectations' => $allAgentsAffectations,
-            'superieurs' => $superieurs,
-            'autorites' => $autorites,
-
-            // Partie -- Entretiens Professionnels --
-            'campagnes' => $campagnes,
-            'agentsArray' => $agentsArray,
-            'entretiensArray' => $entretiensArray,
-
-
-            'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
-
-            // - Fiches de recrutement - //
-//            'fichesRecrutements' => $fichesRecrutements,
-//            'profils' => $profils,
-        ]);
-    }
-
-    public function descriptionAction() : ViewModel
-    {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
 
@@ -173,6 +92,7 @@ class StructureController extends AbstractActionController {
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         return new ViewModel([
+            'selecteur' => $selecteur,
             'structure' => $structure,
             'responsables' => $responsables,
 
@@ -186,6 +106,10 @@ class StructureController extends AbstractActionController {
 
     public function agentsAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -199,13 +123,13 @@ class StructureController extends AbstractActionController {
            return $aaa > $bbb;
         });
         $superieurs = []; $autorites = [];
-        foreach ($allAgents as $agent) {
-            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
-            $sup = $this->getAgentService()->computeSuperieures($agent);
-            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
-            $superieurs[$agent->getId()] = $sup;
-            $autorites[$agent->getId()] = $aut;
-        }
+//        foreach ($allAgents as $agent) {
+//            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+//            $sup = $this->getAgentService()->computeSuperieures($agent);
+//            $aut = $this->getAgentService()->computeAutorites($agent, $sup);
+//            $superieurs[$agent->getId()] = $sup;
+//            $autorites[$agent->getId()] = $aut;
+//        }
 
 
         $last =  $this->getCampagneService()->getLastCampagne();
@@ -215,6 +139,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'agents' => $agents,
             'agentsForces' => $agentsForces,
             'superieurs' => $superieurs,
@@ -227,6 +152,10 @@ class StructureController extends AbstractActionController {
 
     public function missionsSpecifiquesAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -239,6 +168,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'missionsSpecifiques' => $missionsSpecifiques,
             'campagnes' => $campagnes,
         ]);
@@ -246,6 +176,10 @@ class StructureController extends AbstractActionController {
 
     public function fichesDePosteAction() : ViewModel
     {
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
@@ -268,6 +202,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'campagnes' => $campagnes,
 
             'agents' => $allAgents,
@@ -280,6 +215,9 @@ class StructureController extends AbstractActionController {
     public function extractionsAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
@@ -288,6 +226,7 @@ class StructureController extends AbstractActionController {
 
         return new ViewModel([
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'campagnes' => $campagnes,
         ]);
     }

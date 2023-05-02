@@ -20,6 +20,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -31,6 +32,7 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementServiceAwareTrait;
     use StructureServiceAwareTrait;
     use CampagneFormAwareTrait;
+    use UserServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -160,6 +162,9 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        $role = $this->getUserService()->getConnectedRole();
+        $utilisateur = $this->getUserService()->getConnectedUser();
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut());
@@ -211,6 +216,7 @@ class CampagneController extends AbstractActionController {
             'campagne' => $campagne,
             'campagnes' => $campagnes,
             'structure' => $structure,
+            'selecteur' => $selecteur,
             'structures' => $structures,
             'agents' => $agents,
 

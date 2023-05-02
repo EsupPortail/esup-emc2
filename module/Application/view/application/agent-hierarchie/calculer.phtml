@@ -1,0 +1,89 @@
+<?php
+
+/** @see \Application\Controller\AgentHierarchieController::calculerAction()
+ * @var AgentHierarchieCalculForm $form
+ * @var Structure $structure
+ * @var Agent[] $agents
+ * @var array $superieurs
+ * @var array $autorites
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculForm;
+use Structure\Entity\Db\Structure;
+
+$this->headTitle("Chaînes hiérarchiques calculées");
+
+?>
+
+<h1 class="page-header">
+    Chaînes hiérarchiques calculées
+</h1>
+
+<?php echo $this->form($form); ?>
+
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <span class="icon icon-attention"></span>
+        <?php echo implode('<br>', $error); ?>
+    </div>
+<?php else : ?>
+    <?php if (!empty($warning)) : ?>
+        <div class="alert alert-warning">
+            <ul>
+                <?php foreach ($warning as $item) : ?>
+                    <li> <?php echo $item; ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($structure) : ?>
+    <h2> Calcul des chaînes hiérarchiques pour
+        <?php if ($structure->getNiv2() !== null) : ?>
+            <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
+        <?php endif; ?>
+        <?php echo $structure->getLibelleLong(); ?></h2>
+    <table class="table table-condensed">
+    <thead>
+    <tr>
+        <th>Agent</th>
+        <th>Superieurs</th>
+        <th>Autorités</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($agents as $agent): ?>
+    <tr>
+        <td> <?php echo $agent->getDenomination(); ?> </td>
+        <td>
+            <?php if (empty($superieurs[$agent->getId()] )) : ?>
+                <span class="text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucun supérieur calculable
+                </span>
+            <?php else : ?>
+                <?php foreach ($superieurs[$agent->getId()] as $superieur) : ?>
+                    <?php echo $superieur->getDenomination(); ?> <br>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php if (empty($autorites[$agent->getId()] )) : ?>
+                <span class="text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucune autorité calculable
+                </span>
+            <?php else : ?>
+                <?php foreach ($autorites[$agent->getId()] as $autorite) : ?>
+                    <?php echo $autorite->getDenomination(); ?> <br>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
