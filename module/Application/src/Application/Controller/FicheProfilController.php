@@ -53,7 +53,7 @@ class FicheProfilController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheProfilService()->create($ficheprofil);
-                return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'profil'], true);
+                return $this->redirect()->toRoute('structure/description', ['structure' => $structure->getId()], ['fragment' => 'profil'], true);
             }
         }
 
@@ -95,7 +95,7 @@ class FicheProfilController extends AbstractActionController {
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getFicheProfilService()->update($ficheprofil);
-                return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], ['fragment' => 'profil'], true);
+                return $this->redirect()->toRoute('structure/description', ['structure' => $structure->getId()], ['fragment' => 'profil'], true);
             }
         }
 
@@ -133,14 +133,14 @@ class FicheProfilController extends AbstractActionController {
     {
         $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
         $this->getFicheProfilService()->historise($ficheprofil);
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
+        return $this->redirect()->toRoute('structure/description', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
     }
 
     public function restaurerAction()
     {
         $ficheprofil = $this->getFicheProfilService()->getRequestedFicheProfil($this);
         $this->getFicheProfilService()->restore($ficheprofil);
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
+        return $this->redirect()->toRoute('structure/description', ['structure' => $ficheprofil->getStructure()->getId()], ['fragment' => 'profil'], true);
     }
 
     public function supprimerAction()

@@ -103,7 +103,7 @@ $canAfficherInformationMetier = (
 
                             <?php
                                 $structureLibelle = "[" .$structure->getLibelleCourt(). "] ". $structure->getLibelleLong();
-                                $structureUrl = $this->url("structure/afficher", ['structure' => $structure->getId()], [], true);
+                                $structureUrl = $this->url("structure/description", ['structure' => $structure->getId()], [], true);
                                 $canAfficherStructure = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER);
                             ?>
                                 <?php if ($canAfficherStructure) : ?>

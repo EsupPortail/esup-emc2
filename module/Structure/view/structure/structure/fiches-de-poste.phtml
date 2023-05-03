@@ -119,7 +119,7 @@ $date = new DateTime();
                                     <?php if ($canDetruireFichier) : ?>
                                         <a
                                             <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
-                                                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/afficher', ['structure' => $structure->getId()], true)]], true); ?>"
+                                                href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], true)]], true); ?>"
                                         >
                                             <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
                                     <?php else : ?>

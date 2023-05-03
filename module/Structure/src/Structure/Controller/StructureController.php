@@ -268,7 +268,7 @@ class StructureController extends AbstractActionController {
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('structure/afficher', ['structure' => $structure->getId()], [], true);
+        return $this->redirect()->toRoute('structure/description', ['structure' => $structure->getId()], [], true);
     }
 
     /** Fonctions de recherche ****************************************************************************************/
