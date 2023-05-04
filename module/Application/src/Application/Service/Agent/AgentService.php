@@ -614,6 +614,11 @@ class AgentService {
             ->join('agent.statuts', 'statut')->addSelect('statut')
             ->andWhere('agent.id in (:ids)')->setParameter('ids',$ids)
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+
+//            ->join('agent.autorites', 'autorite')->addSelect('autorite')
+//            ->join('autorite.autorite', 'aautorite')->addSelect('aautorite')
+//            ->join('agent.superieurs', 'superieur')->addSelect('superieur')
+//            ->join('autorite.autorite', 'aautorite')->addSelect('aautorite')
         ;
         $agents = $qb->getQuery()->getResult();
 

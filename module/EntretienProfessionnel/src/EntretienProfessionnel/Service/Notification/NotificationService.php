@@ -162,7 +162,7 @@ class NotificationService {
         return $mail;
     }
 
-    /** Notification liées aux validations de l'entretien professionnel d'un agent ************************************/
+    /** Notifications liées aux validations de l'entretien professionnel d'un agent ************************************/
 
     public function triggerValidationResponsableEntretien(EntretienProfessionnel $entretien) : Mail
     {

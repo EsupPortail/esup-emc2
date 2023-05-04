@@ -10,6 +10,7 @@
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
@@ -32,6 +33,9 @@ $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
 $depasse = ($date === null or $date < $now);
 
+$agent = $entretien->getAgent();
+$responsable = $entretien->getResponsable();
+$autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -214,6 +218,14 @@ $depasse = ($date === null or $date < $now);
             <ul>
                 <li> notifie l'agent (<?php echo $entretien->getAgent()->getDenomination(); ?>) de la validation.</li>
             </ul>
+
+            Liste des personnes pouvant valider en tant qu'autorité hiérarchique :
+            <ul>
+                <?php foreach ($autorites as $autorite) {
+                    echo "<li>".$autorite->getAutorite()->getDenomination()."</li>";
+                }
+                ?>
+            </ul>
         </div>
     <?php endif; ?>
 
@@ -334,7 +346,7 @@ $depasse = ($date === null or $date < $now);
             </div>
         </div>
     <?php else : ?>
-        <?php if ($validationHierarchie !== null) : ?>
+        <?php if ($canValiderAgent AND $validationHierarchie !== null) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_AGENT], [], true); ?>"
