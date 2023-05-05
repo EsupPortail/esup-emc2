@@ -39,18 +39,13 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return 'EntretienProfessionnel';
     }
 
-    /** @var integer */
-    private $id;
-    /** @var Agent */
-    private $agent;
-    /** @var Agent */
-    private $responsable;
-    /** @var Campagne */
-    private $campagne;
-    /** @var DateTime */
-    private $dateEntretien;
-    /** @var string */
-    private $lieu;
+    private ?int $id = null;
+    private ?Agent $agent = null;
+    private ?Agent $responsable = null;
+    private ?Campagne $campagne = null;
+    private ?DateTime $dateEntretien = null;
+    private ?string $lieu = null;
+
     /** @var FormulaireInstance */
     private $formulaireInstance;
     /** @var FormulaireInstance */
@@ -69,112 +64,65 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @var DateTime */
     private $acceptation;
 
-    /**
-     * @return int
-     */
     public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Agent|null
-     */
     public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @return EntretienProfessionnel
-     */
-    public function setAgent(?Agent $agent) : EntretienProfessionnel
+    public function setAgent(?Agent $agent) : void
     {
         $this->agent = $agent;
-        return $this;
     }
 
-    /**
-     * @return Agent
-     */
     public function getResponsable() : ?Agent
     {
         return $this->responsable;
     }
 
-    /**
-     * @param Agent|null $responsable
-     * @return EntretienProfessionnel
-     */
-    public function setResponsable(?Agent $responsable) : EntretienProfessionnel
+    public function setResponsable(?Agent $responsable) : void
     {
         $this->responsable = $responsable;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAnnee() : ?string
-    {
-        if ($this->campagne === null) return "Aucune campagne";
-        return $this->campagne->getAnnee();
-    }
-
-    /**
-     * @return Campagne
-     */
     public function getCampagne()  : ?Campagne
     {
         return $this->campagne;
     }
 
-    /**
-     * @param Campagne|null $campagne
-     * @return EntretienProfessionnel
-     */
-    public function setCampagne(?Campagne $campagne) : EntretienProfessionnel
+    public function setCampagne(?Campagne $campagne) : void
     {
         $this->campagne = $campagne;
-        return $this;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getDateEntretien() : ?DateTime
     {
         return $this->dateEntretien;
     }
 
-    /**
-     * @param DateTime|null $dateEntretien
-     * @return EntretienProfessionnel
-     */
-    public function setDateEntretien(?DateTime $dateEntretien) : EntretienProfessionnel
+    public function setDateEntretien(?DateTime $dateEntretien) : void
     {
         $this->dateEntretien = $dateEntretien;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLieu() : ?string
     {
         return $this->lieu;
     }
 
-    /**
-     * @param string|null $lieu
-     * @return EntretienProfessionnel
-     */
-    public function setLieu(?string $lieu) : EntretienProfessionnel
+    public function setLieu(?string $lieu) : void
     {
         $this->lieu = $lieu;
-        return $this;
     }
+
+
+
+
+
 
     /**
      * @return bool

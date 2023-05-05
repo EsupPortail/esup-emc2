@@ -5,7 +5,6 @@ namespace EntretienProfessionnel\Entity\Db;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -83,10 +82,7 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
                 if ($statut->isTitulaire()) return true;
                 if ($statut->isCdi()) return true;
                 if ($statut->isCdd()) {
-//                    $date = DateTime::createFromFormat('d/m/Y', $this->getDateFin()->format('d/m/Y'));
-//                    $date = $date->sub(new DateInterval('P12M'));
                     return $agent->isContratLong() ;
-//                    AND !empty($agent->getAffectationsActifs($date));
                 }
             }
         }
@@ -95,21 +91,25 @@ class Campagne implements HasPeriodeInterface, HistoriqueAwareInterface {
 
     /** Fonctions pour les macros *************************************************************************************/
 
+    /** @noinspection  PhpUnused */
     public function generateTag() : string
     {
         return 'Campagne_' . $this->getId();
     }
 
+    /** @noinspection  PhpUnused */
     public function getDateDebutToString() : string
     {
         return ($this->dateDebut)?$this->dateDebut->format('d/m/Y'):"N.C.";
     }
 
+    /** @noinspection  PhpUnused */
     public function getDateFinToString() : string
     {
         return ($this->dateFin)?$this->dateFin->format('d/m/Y'):"N.C.";
     }
 
+    /** @noinspection  PhpUnused */
     public function getDateCirculaireToString() : string
     {
         return ($this->dateCirculaire)?$this->dateCirculaire->format('d/m/Y'):"N.C.";

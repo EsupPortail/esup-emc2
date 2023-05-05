@@ -22,7 +22,6 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
-use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
@@ -411,23 +410,13 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREP, $vars);
-
-        try {
-            $exporter = new PdfExporter();
-            $exporter->getMpdf()->SetTitle($rendu->getSujet());
-            $exporter->setHeaderScript('');
-            $exporter->setFooterScript('');
-            $exporter->addBodyHtml($rendu->getCorps());
-            return $exporter->export($rendu->getSujet());
-        } catch(MpdfException $e) {
-            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
-        }
+        return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 
     public function exporterCrefAction() : string
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getAnnee());
+        $formations = $this->getAgentService()->getFormationsSuiviesByAnnee($entretien->getAgent(), $entretien->getCampagne()->getAnnee());
         $vars= [
             'entretien' => $entretien,
             'agent' => $entretien->getAgent(),
@@ -435,18 +424,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'campagne' => $entretien->getCampagne(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::CREF, $vars);
-
-        try {
-            $exporter = new PdfExporter();
-            $exporter->getMpdf()->SetTitle($rendu->getSujet());
-            $exporter->setHeaderScript('');
-            $exporter->setFooterScript('');
-            $exporter->addBodyHtml($rendu->getCorps());
-            return $exporter->export($rendu->getSujet());
-        } catch(MpdfException $e) {
-            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
-        }
-        
+        return PdfExporter::generatePdf($rendu->getSujet(), $rendu->getSujet(), $rendu->getCorps());
     }
 
     public function accepterEntretienAction() : ViewModel

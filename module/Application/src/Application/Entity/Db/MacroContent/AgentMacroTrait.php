@@ -155,7 +155,11 @@ trait AgentMacroTrait
     {
         /** @var Agent $agent */
         $agent = $this;
-        $texte = implode("<br>",array_map($agent->getQuotitesActives(), function (AgentQuotite $a) { return ($a->getQuotite())?$a->getQuotite()."%":"100%"; }));
+        $quotites = $agent->getQuotitesActives();
+        if ($quotites === null or empty($quotites)) return 'Aucune quotité de remontée du SIRH';
+
+        $texte = "";
+        $texte = implode("<br>",array_map(function (AgentQuotite $a) { return ($a->getQuotite())?$a->getQuotite()."%":"100%"; }, $quotites));
         return $texte;
     }
     /**
@@ -317,7 +321,7 @@ trait AgentMacroTrait
 
     public function toStringQuotite() : string
     {
-        $this->toStringQuotiteTravaillee();
+        return $this->toStringQuotiteTravaillee();
     }
 
     public function toStringEchelon() : string

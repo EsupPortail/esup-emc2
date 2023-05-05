@@ -11,7 +11,7 @@ class ObservationHydrator implements HydratorInterface {
      * @param Observation $object
      * @return array
      */
-    public function extract($object): array
+    public function extract(object $object): array
     {
         $data = [
             'obs-entretien' => $object->getObservationAgentEntretien(),
@@ -25,7 +25,7 @@ class ObservationHydrator implements HydratorInterface {
      * @param Observation $object
      * @return Observation
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $entretien = (isset($data['obs-entretien']) AND trim($data['obs-entretien']) !== '')?trim($data['obs-entretien']):null;
         $perspective = (isset($data['obs-perspective']) AND trim($data['obs-perspective']) !== '')?trim($data['obs-perspective']):null;

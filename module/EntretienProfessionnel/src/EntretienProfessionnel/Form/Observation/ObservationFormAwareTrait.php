@@ -4,25 +4,16 @@ namespace EntretienProfessionnel\Form\Observation;
 
 trait ObservationFormAwareTrait {
 
-    /** @var ObservationForm */
-    private $observationForm;
+    private ObservationForm $observationForm;
 
-    /**
-     * @return ObservationForm
-     */
     public function getObservationForm() : ObservationForm
     {
         return $this->observationForm;
     }
 
-    /**
-     * @param ObservationForm $observationForm
-     * @return ObservationForm
-     */
-    public function setObservationForm(ObservationForm $observationForm) : ObservationForm
+    public function setObservationForm(ObservationForm $observationForm) : void
     {
         $this->observationForm = $observationForm;
-        return $this->observationForm;
     }
 
 }
