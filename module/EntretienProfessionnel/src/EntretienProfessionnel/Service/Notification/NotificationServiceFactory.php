@@ -8,6 +8,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Url\UrlService;
+use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -59,6 +60,9 @@ class NotificationServiceFactory
         $service->setRenduService($renduService);
         $service->setStructureService($structureService);
         $service->setUrlService($urlService);
+
+        $service->renderer = $container->get('ViewRenderer');
+
         return $service;
     }
 }

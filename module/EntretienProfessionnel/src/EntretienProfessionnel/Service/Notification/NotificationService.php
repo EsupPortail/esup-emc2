@@ -3,6 +3,8 @@
 namespace EntretienProfessionnel\Service\Notification;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
@@ -34,6 +36,8 @@ class NotificationService {
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UrlServiceAwareTrait;
+
+    public $renderer;
 
     /** Méthodes de récupération des adresses électroniques ***********************************************************/
 
@@ -235,66 +239,50 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerRappelCampagne(Campagne $campagne, Structure $structure) : Mail
+    public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur) : Mail
     {
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] =  $structure;
-        /** Récupération des agents et postes liés aux structures */
-        $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $structure->getAgentsForces());
-        $allAgents = array_merge($agents, $agentsForces);
-
-        $date = DateTime::createFromFormat('d/m/Y',$campagne->getDateFin()->format('d/m/Y'));
-        $date = $date->sub(new DateInterval('P12M'));
-
-        $allAgents = array_filter($allAgents,
-            function (Agent $a) use ($date) { return $a->isContratLong() AND !empty($a->getAffectationsActifs($date));}
-        );
-
+        $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+
         $vh = new CampagneAvancementViewHelper();
+        $vh->renderer = $this->renderer;
         $vh->entretiens = $entretiens;
-        $vh->agents = $allAgents;
-        $texte = $vh->__toString();
+        $vh->agents = $agents;
+        $texte = $vh->render('table');
 
-        $entretiensPlanifies = $this->getCampagneService()->getAgentsAvecEntretiensPlanifies($campagne, $allAgents);
-        $entretiensFaits  = $this->getCampagneService()->getAgentsAvecEntretiensFaits($campagne, $allAgents);
-        $entretiensFinalises  = $this->getCampagneService()->getAgentsAvecEntretiensFinalises($campagne, $allAgents);
-        $entretiensAucuns     = count($allAgents) - count($entretiensFinalises) - count($entretiensPlanifies) - count($entretiensFaits);
-        $total = count($allAgents);
-
-//        $texte = "";
-        if ($total !== 0) {
-            $texte .= "<table style='width:80%; border: 1px solid black;border-collapse: collapse;font-weight:bold;' id='avancement'>";
-            $texte .= "<caption> Avancement de la campagne ".$campagne->getAnnee()."</caption>";
-            $texte .= "<tr>";
-            $texte .= "<td style='background: lightgreen; width:" . (count($entretiensFinalises) / $total * 100)  . "%;'>" . count($entretiensFinalises) . "/" . $total . "</td>";
-            $texte .= "<td style='background: #ffff9e; width:" .    (count($entretiensFaits) / $total * 100) . "%;'>" . count($entretiensFaits) . "/" . $total . "</td>";
-            $texte .= "<td style='background: #ffb939; width:" .    (count($entretiensPlanifies) / $total * 100) . "%;'>" . count($entretiensPlanifies) . "/" . $total . "</td>";
-            $texte .= "<td style='background: salmon; width:" .     ($entretiensAucuns / $total * 100)     . "%;'>" . $entretiensAucuns . "/" . $total . "</td>";
-            $texte .= "</tr>";
-            $texte .= "</table>";
-            $texte .= "<br/>";
-            $texte .= "<table><tr><td style='background: lightgreen; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens finalisés </td></tr></table>";
-            $texte .= "<table><tr><td style='background: #ffff9e; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens faits </td></tr></table>";
-            $texte .= "<table><tr><td style='background: #ffb939; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens planifiés </td></tr></table>";
-            $texte .= "<table><tr><td style='background: salmon; border: 1px black solid;'>&nbsp;&nbsp;&nbsp;</td><td> Entretiens manquants </td></tr></table>";
-        }
-
-
-        $emails = [];
-        foreach ($structure->getResponsables() as $responsable) {
-            $emails[] = $responsable->getAgent()->getEmail();
-        }
         $vars = [
             'campagne' => $campagne,
-            'structure' => $structure,
+            'agent' => $superieur,
             'UrlService' => $this->getUrlService(),
         ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT, $vars);
-        $mail = $this->getMailService()->sendMail(implode(',', $emails), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR, $vars);
+        $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
         $mail->setMotsClefs(["CAMPAGNE_" .$campagne->getId(), "CAMPAGNE_AVANCEMENT" , "DATE_". (new DateTime())->format('d/m/Y')]);
         $this->getMailService()->update($mail);
         return $mail;
     }
+
+    public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite) : Mail
+    {
+        $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+
+        $vh = new CampagneAvancementViewHelper();
+        $vh->renderer = $this->renderer;
+        $vh->entretiens = $entretiens;
+        $vh->agents = $agents;
+        $texte = $vh->render('table');
+
+        $vars = [
+            'campagne' => $campagne,
+            'agent' => $autorite,
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE, $vars);
+        $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
+        $mail->setMotsClefs(["CAMPAGNE_" .$campagne->getId(), "CAMPAGNE_AVANCEMENT" , "DATE_". (new DateTime())->format('d/m/Y')]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
+
 }

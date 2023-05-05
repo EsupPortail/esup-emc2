@@ -12,6 +12,7 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class CampagneAvancementViewHelper extends AbstractHelper
 {
+    public $renderer;
     public $entretiens;
     public $agents;
     public $options;
@@ -41,5 +42,12 @@ class CampagneAvancementViewHelper extends AbstractHelper
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
         return $view->partial('campagne-avancement', ['entretiens' => $this->entretiens, 'agents' => $this->agents, 'options' => $this->options]);
+    }
+
+    public function render(string $mode = 'div') {
+        $view = $this->renderer;
+        $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
+
+        return $view->partial('campagne-avancement', ['entretiens' => $this->entretiens, 'agents' => $this->agents, 'options' => ['mode' => $mode]]);
     }
 }

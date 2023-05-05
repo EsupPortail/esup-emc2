@@ -61,7 +61,6 @@ class EntretienProfessionnelController extends AbstractActionController
 
     use EntretienProfessionnelFormAwareTrait;
 
-
     public function indexAction() : ViewModel
     {
         $params  = $this->params()->fromQuery();

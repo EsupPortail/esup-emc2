@@ -2,7 +2,8 @@
 
 namespace EntretienProfessionnel\Service\Evenement;
 
-use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -16,7 +17,8 @@ use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class RappelCampagneAvancementService extends EvenementService {
-    use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -50,30 +52,35 @@ class RappelCampagneAvancementService extends EvenementService {
     {
         $parametres = json_decode($evenement->getParametres(), true);
         $campagne = $this->getCampagneService()->getCampagne($parametres['campagne']);
-        $structures = $this->getStructureService()->getStructures();
 
         $message = "";
 
+        // AUTORITES
+        $message .= "<strong>Expédition vers les autorités hiérarchiques</strong><br>";
         try {
-            foreach ($structures as $structure) {
-                if ($structure->getId() === '96') {
-                    $structures = $this->getStructureService()->getStructuresFilles($structure);
-                    $structures[] = $structure;
-                    $agents = $this->getAgentService()->getAgentsByStructures($structures);
-                    if (!empty($agents)) {
-                        if (!empty($structure->getResponsables())) {
-                            $this->getNotificationService()->triggerRappelCampagne($campagne, $structure);
-                            $message .= "Notification faites vers " . $structure->getLibelleLong() . "<br/>\n";
-                        } else {
-                            $message .= "<span style='color:darkred;'>Pas de responsable pour le structure " . $structure->getLibelleLong() . "</span><br/>\n";
-                        }
-                    }
-                }
+            $autorites = $this->getAgentAutoriteService()->getAgentsAutorites(false, $campagne->getDateDebut());
+            foreach ($autorites as $autorite) {
+                $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
+                $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
             }
         } catch(Exception $e) {
             $evenement->setLog($message . $e->getMessage());
             return Etat::ECHEC;
         }
+
+        // SUPERIEURS
+        $message .= "<strong>Expédition vers les supérieurs hiérarchiques</strong><br>";
+        try {
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs(false, $campagne->getDateDebut());
+            foreach ($superieurs as $superieur) {
+                $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
+                $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
+            }
+        } catch(Exception $e) {
+            $evenement->setLog($message . $e->getMessage());
+            return Etat::ECHEC;
+        }
+
         $evenement->setLog($message);
         $this->update($evenement);
         return Etat::SUCCES;
