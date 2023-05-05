@@ -6,7 +6,8 @@
  * @var Agent[] $agents
  * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
- *
+ * @var array $fichesDePoste
+ * @var array $fichesDePostePdf
  */
 
 use Application\Entity\Db\Agent;
@@ -28,6 +29,11 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
         Liste des <br/> Agent·es
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#ficheposte" aria-controls="ficheposte" role="tab"   data-toggle="tabz">
+            Fiches de  <br/> poste
+        </a>
+    </li>
     <?php foreach ($campagnes as $campagne) : ?>
         <li class="nav-item" >
             <a class="nav-link" href="#entretien_<?php echo $campagne->getId(); ?>" aria-controls="entretien_<?php echo $campagne->getId(); ?>" role="tab"   data-toggle="tabz">
@@ -41,6 +47,9 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 <div class="tab-content">
     <div id="agent" class="tab-pane " role="tabpanel">
         <?php echo $this->partial('partial/agents', ['agents' => $agents], [], true); ?>
+    </div>
+    <div id="ficheposte" class="tab-pane " role="tabpanel">
+        <?php echo $this->partial('partial/ficheposte', ['agents' => $agents, 'fichesDePoste' => $fichesDePoste, 'fichesDePostePdf' => $fichesDePostePdf], [], true); ?>
     </div>
     <?php foreach ($campagnes as $campagne) : ?>
         <div id="entretien_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">

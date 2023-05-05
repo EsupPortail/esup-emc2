@@ -1,9 +1,25 @@
 <?php
 /**
  * @var Agent[] $agents
+ * @var array $fichesDePoste
+ * @var array $fichesDePostePdf
  */
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
+use Application\Provider\Privilege\AgentPrivileges;
+use Application\Provider\Privilege\FichePostePrivileges;
+use Fichier\Entity\Db\Fichier;
+
+$canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
+$canExporterFichePoste      = $canVoirFichePoste;
+$canAjouterFichePoste       = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
+$canModifierFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_MODIFIER));
+$canHistoriserFichePoste    = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_HISTORISER));
+$canDetruireFichePoste      = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_DETRUIRE));
+
+$date = new DateTime();
 
 ?>
 
@@ -36,8 +52,211 @@ use Application\Entity\Db\Agent;
                     <?php endforeach; ?>
                 </ul>
             </td>
+            <td>
+                <?php if (empty($fichesDePoste[$agent->getId()])) : ?>
+                    Aucune fiche de poste au format EMC2
+                <?php else : ?>
+                    <?php echo count($fichesDePoste[$agent->getId()]); ?> fiches
+                <?php endif; ?>
+
+                <?php if ($canAjouterFichePoste) : ?>
+                    <?php /** @see \Application\Controller\FichePosteController::ajouterAction() */ ?>
+                    <a href="<?php echo $this->url('fiche-poste/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+                       target="_blank">
+                        <span class="icon icon-ajouter" data-bs-toggle="tooltip" data-bs-html="true" title="Ajouter la fiche de poste"></span></a>
+                <?php else : ?>
+                    <span class="icon icon-ajouter nope"></span>
+                <?php endif; ?>
+
+<!--                --><?php //if ($structure AND $canAjouterFichePoste) : ?>
+<!--                    --><?php ///** @see \Application\Controller\FichePosteController::dupliquerAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('fiche-poste/dupliquer', ['structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?><!--"-->
+<!--                       class="ajax-modal" data-event="duplication" >-->
+<!--                        <span class="icon icon-cloner" data-bs-toggle="tooltip" data-bs-html="true" title="Dupliquer une fiche existante"></span></a>-->
+<!--                --><?php //else : ?>
+<!--                    <span class="icon icon-cloner nope"></span>-->
+<!--                --><?php //endif; ?>
+
+                <?php if ($canAjouterFichePoste) : ?>
+                    <a href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                       title="Ajouter une fiche PDF <br/> <strong><span class='text-danger'><span class='icon icon-attention'></span>Il est préférable de modéliser la fiche de poste dans EMC2</span></strong>"
+                       data-bs-toggle="tooltip" data-bs-html="true">
+                        <span class="icon icon-pdf"></span><span class="lettrine">+</span></a>
+                <?php else : ?>
+                    <span class="icon icon-pdf nope"></span><span class="lettrine nope">+</span>
+                <?php endif; ?>
+
+                <?php if (!empty($fichesDePostePdf[$agent->getId()]) ) : ?>
+                    <?php
+                    $canVoirFichier         = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
+                    $canDetruireFichier      = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
+                    ?>
+                    <table class="fichespostes">
+                        <?php /** @var Fichier $fichier */ ?>
+                        <?php foreach ($fichesDePostePdf[$agent->getId()] as $fichier) : ?>
+                            <tr class="
+                        <?php if ($fichier->estHistorise()) echo " historise " ?>
+                    ">
+                                <td class="libelle"> <?php echo $fichier->getNomOriginal(); ?> </td>
+                                <td class="encours"></td>
+                                <td class="etat"><span class="text-danger">PDF</span></td>
+                                <td class="action">
+                                    <span class="icon icon-voir nope"></span>
+                                    <?php if ($canVoirFichier) : ?>
+                                        <a
+                                            <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
+                                            href="<?php echo $this->url('download-fichier', ['fichier' => $fichier->getId()], [], true); ?>">
+                                            <span class="icon icon-pdf" title="voir le fichier"></span>
+                                        </a>
+                                    <?php else : ?>
+                                        <span class="icon icon-pdf nope"></span>
+                                    <?php endif; ?>
+                                    <span class="icon icon-editer nope"></span>
+                                    <span class="icon icon-historiser nope"></span>
+                                    <?php if ($canDetruireFichier) : ?>
+                                        <a
+                                            <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
+                                            href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url(null, [], ['force_canonical' => true], true)]]); ?>"
+                                        >
+                                            <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
+                                    <?php else : ?>
+                                        ..
+                                    <?php endif; ?>
+                                </td>
+                                <td></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
+
+                <?php if (!empty($fichesDePoste[$agent->getId()]) ) : ?>
+                    <table class="fichespostes">
+                        <?php /** @var FichePoste $ficheposte */ ?>
+                        <?php foreach ($fichesDePoste[$agent->getId()] as $ficheposte) : ?>
+                            <?php $etat = $ficheposte->getEtat(); ?>
+                            <tr class="<?php if ($ficheposte->estHistorise()) echo " historise " ?>">
+                                <td>
+                                    <?php echo $ficheposte->getLibelleMetierPrincipal(); ?>
+                                </td>
+                                <td class="encours">
+                                    <?php $fin = ($ficheposte->getFinValidite()); ?>
+                                    <?php if (($fin === null OR $fin >= $date) AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
+                                    <?php if ($fin !== null AND $fin < $date   AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
+                                    <?php if ($fin === null                    AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
+                                </td>
+                                <td class="etat">
+                                    <?php echo $this->etatbadge($etat); ?>
+                                </td>
+                                <td class="action">
+                                    <?php if ($canVoirFichePoste) : ?>
+                                        <?php /** @see \Application\Controller\FichePosteController::afficherAction() */ ?>
+                                        <a href="<?php echo $this->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                                           target="_blank">
+                                            <span class="icon icon-voir" data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de poste"></span></a>
+                                    <?php else :?>
+                                        <span class="icon icon-voir nope" ></span>
+                                    <?php endif; ?>
+                                    <?php if ($canExporterFichePoste) : ?>
+                                        <?php /** @see \Application\Controller\FichePosteController::exporterAction() */ ?>
+                                        <a href="<?php echo $this->url('fiche-poste/exporter', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
+                                           target="_blank">
+                                            <span class="icon icon-pdf" data-bs-toggle="tooltip" data-bs-html="true" title="Exporter la fiche de poste"></span></a>
+                                    <?php else :?>
+                                        <span class="icon icon-pdf nope" ></span>
+                                    <?php endif; ?>
+                                    <?php if ($canModifierFichePoste AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                                        <?php /** @see \Application\Controller\FichePosteController::editerAction() */ ?>
+                                        <a href="<?php echo $this->url('fiche-poste/editer', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
+                                           target="_blank">
+                                            <span class="icon icon-editer" data-bs-toggle="tooltip" data-bs-html="true" title="Modifier la fiche de poste"></span></a>
+                                    <?php else :?>
+                                        <span class="icon icon-editer nope"></span>
+                                    <?php endif; ?>
+                                    <?php if ($canHistoriserFichePoste AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                                        <?php if ($ficheposte->estHistorise()) : ?>
+                                            <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
+                                            <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $ficheposte->getId()], ['query' => ['retour' => $this->url(null, [], ['force_canonical' => true], true)]], true); ?>" >
+                                                <span class="icon icon-restaurer" data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer la fiche de poste"></span></a>
+                                        <?php else : ?>
+                                            <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
+                                            <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $ficheposte->getId()], ['query' => ['retour' => $this->url(null, [], ['force_canonical' => true], true)]], true); ?>" >
+                                                <span class="icon icon-historiser" data-bs-toggle="tooltip" data-bs-html="true" title="Historiser la fiche de poste"></span></a>
+                                        <?php endif; ?>
+                                    <?php else : ?>
+                                        <span class="icon icon-historiser nope"></span>
+                                    <?php endif; ?>
+                                    <?php if ($canDetruireFichePoste) : ?>
+                                        <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
+                                        <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
+                                           class="ajax-modal" data-event="modification">
+                                            <span class="icon icon-retirer"></span></a>
+                                    <?php else : ?>
+                                        <span class="icon icon-retirer nope"></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
+            </td>
         </tr>
 
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+
+<style>
+    table.fichespostes {
+        width : 100%;
+        collapse: collapse;
+        border: 1px solid gray;
+        padding: 0.5rem;
+        margin: 0.5rem;
+    }
+
+    table.fichespostes tr {
+        border: 1px solid gray;
+    }
+
+    table.fichespostes td {
+    }
+
+    /*table.fichespostes td.structure {*/
+    /*    min-width: 15rem;*/
+    /*    width: 15rem;*/
+    /*    background: lightcyan;*/
+    /*}*/
+
+    table.fichespostes td.libelle {
+        padding-left: 0.5rem;
+        /*background: lightpink;*/
+    }
+
+    table.fichespostes td.etat {
+        min-width:6rem;
+        width:6rem;
+        text-align: center;
+        /*background: lightsalmon;*/
+    }
+
+    table.fichespostes td.encours {
+        min-width:2rem;
+        width:2rem;
+        text-align: center;
+        /*background: lightsalmon;*/
+    }
+
+    table.fichespostes td.action {
+        min-width:11rem;
+        width:11rem;
+        text-align: right;
+        /*background: lightblue;*/
+    }
+
+    .nope {
+        color: lightgrey;
+    }
+</style>

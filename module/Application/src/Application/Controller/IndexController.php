@@ -17,6 +17,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Controller\StructureController;
+use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
@@ -126,17 +127,30 @@ class IndexController extends AbstractActionController
         $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
-        /** récuperation des eps **************************************************************************************/
+        /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
         foreach ($campagnes as $campagne) {
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
 
+        /** Récupération des fiches de postes *************************************************************************/
+        $fichesDePoste = [];
+        foreach ($agents as $agent) {
+            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+            $fichesDePoste[$agent->getId()] = $fiches;
+        }
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
+
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $agent,
+
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
+
+            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf,
         ]);
     }
 
@@ -153,17 +167,29 @@ class IndexController extends AbstractActionController
         $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
-        /** récuperation des eps **************************************************************************************/
+        /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
         foreach ($campagnes as $campagne) {
             $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         }
+
+        /** Récupération des fiches de postes *************************************************************************/
+        $fichesDePoste = [];
+        foreach ($agents as $agent) {
+            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent);
+            $fichesDePoste[$agent->getId()] = $fiches;
+        }
+        $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $agent,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
+
+            'fichesDePoste' => $fichesDePoste,
+            'fichesDePostePdf' => $fichesDePostePdf,
         ]);
     }
 
