@@ -340,7 +340,7 @@ trait AgentMacroTrait
         $agent = $this;
         $echelons = $agent->getEchelonsActifs();
 
-        $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getDateDebut();}, $echelons));
+        $texte = implode("<br>", array_map(function (AgentEchelon $a) { return $a->getDateDebutToString();}, $echelons));
         return $texte;
     }
 
