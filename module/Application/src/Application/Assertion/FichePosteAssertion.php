@@ -75,8 +75,6 @@ class FichePosteAssertion extends AbstractAssertion {
                     case AppRoleProvider::ADMIN_TECH:
                     case AppRoleProvider::DRH:
                         return true;
-                    case RoleProvider::GESTIONNAIRE:
-                        return $isResponsable;
                     case Agent::ROLE_SUPERIEURE:
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:

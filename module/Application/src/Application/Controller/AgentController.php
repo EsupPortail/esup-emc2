@@ -19,7 +19,6 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
-use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\ORMException;
@@ -113,15 +112,6 @@ class AgentController extends AbstractActionController
         if ($params !== null AND !empty($params)) {
             $agents = $this->getAgentService()->getAgentsWithFiltre($params);
         }
-
-//        $jp = $this->getAgentService()->getAgent('8486');
-//        $jl = $this->getAgentService()->getAgent('13209');
-//        $tv = $this->getAgentService()->getAgent('16089');
-//
-//        $a = ($jp < $jl);
-//        $b = ($jp < $tv);
-//        $array = [$jp, $tv, $jl];
-//        sort($array);
 
         return new ViewModel([
             'agents' => $agents,

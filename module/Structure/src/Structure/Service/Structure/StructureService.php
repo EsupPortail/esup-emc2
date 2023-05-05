@@ -454,11 +454,6 @@ EOS;
     public function getStructuresByCurrentRole(User $user, RoleInterface $role) : array
     {
         $selecteur = [];
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
-            $structures = $this->getStructuresByGestionnaire($user);
-            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
-            $selecteur = $structures;
-        }
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = $this->getStructuresByResponsable($user);
             usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});

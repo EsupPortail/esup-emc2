@@ -49,7 +49,6 @@ class DemandeExterneAssertion extends AbstractAssertion {
         $agents = [];
         foreach ($structures as $structure) {
             $liste = [];
-            if ($roleId === RoleProvider::GESTIONNAIRE) $liste = $structure->getGestionnaires();
             if ($roleId === RoleProvider::RESPONSABLE) $liste = $structure->getResponsables();
             foreach ($liste as $agent) $agents[$agent->getId()] = $agent;
         }
@@ -91,11 +90,6 @@ class DemandeExterneAssertion extends AbstractAssertion {
                 $structures = $this->getAgentService()->computesStructures($agent);
                 $responsables = DemandeExterneAssertion::agentInStructures(RoleProvider::RESPONSABLE, $structures);
                 return DemandeExterneAssertion::userInAgents($user, $responsables);
-            case RoleProvider::GESTIONNAIRE :
-                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
-                $structures = $this->getAgentService()->computesStructures($agent);
-                $gestionnaires = DemandeExterneAssertion::agentInStructures(RoleProvider::GESTIONNAIRE, $structures);
-                return DemandeExterneAssertion::userInAgents($user, $gestionnaires);
         }
 
         return true;

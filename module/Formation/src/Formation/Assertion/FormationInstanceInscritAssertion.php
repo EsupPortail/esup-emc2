@@ -30,17 +30,6 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
-        $isGestionnaire = false;
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
-            $structures = [];
-            foreach ($entity->getGrades() as $grade) {
-                $structures[] = $grade->getStructure();
-            }
-            foreach ($structures as $structure) {
-                $isGestionnaire = $this->getStructureService()->isGestionnaire($structure, $entity);
-                if ($isGestionnaire) break;
-            }
-        }
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = [];

@@ -70,13 +70,6 @@ class IndexController extends AbstractActionController
                 case AppRoleProvider::AGENT :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
                     return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
-//                case RoleConstant::VALIDATEUR :
-//                    return $this->redirect()->toRoute('index-validateur', [], [], true);
-                case RoleProvider::GESTIONNAIRE :
-                    /** @see StructureController::descriptionAction() */
-                    $structures = $this->getStructureService()->getStructuresByGestionnaire($connectedUser);
-                    if (!empty($structures)) return $this->redirect()->toRoute('structure/description', ['structure' => $structures[0]->getId()], [], true);
-                    break;
                 case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
                     /** @see StructureController::descriptionAction() */

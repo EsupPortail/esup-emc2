@@ -67,7 +67,6 @@ class AgentAffichageAssertion extends AbstractAssertion
                         return true;
                     case StructureRoleProvider::RESPONSABLE:
                         return $isResponsable;
-                    case StructureRoleProvider::GESTIONNAIRE:
                     case Agent::ROLE_SUPERIEURE:
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:

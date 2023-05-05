@@ -25,10 +25,6 @@ class StructureAssertion extends AbstractAssertion {
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
 
-        $isGestionnaire = false;
-        if ($role->getRoleId() === RoleProvider::GESTIONNAIRE) {
-            $isGestionnaire = $this->getStructureService()->isGestionnaire($entity, $agent);
-        }
         $isResponsable = false;
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
@@ -42,8 +38,6 @@ class StructureAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR:
                     case AppRoleProvider::DRH:
                         return true;
-                    case RoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:
@@ -58,8 +52,6 @@ class StructureAssertion extends AbstractAssertion {
                     case AppRoleProvider::ADMIN_TECH:
                     case AppRoleProvider::DRH:
                         return true;
-                    case RoleProvider::GESTIONNAIRE:
-                        return $isGestionnaire;
                     case RoleProvider::RESPONSABLE:
                         return $isResponsable;
                     default:

@@ -29,9 +29,6 @@ class IdentityProvider extends AbstractIdentityProvider
             case RoleProvider::RESPONSABLE :
                 $user = $this->getStructureService()->getUsersInResponsables();
                 return $user;
-            case RoleProvider::GESTIONNAIRE :
-                $user = $this->getStructureService()->getUsersInGestionnaires();
-                return $user;
         }
         return null;
     }
@@ -54,12 +51,6 @@ class IdentityProvider extends AbstractIdentityProvider
             if ($responsabilites !== null and $responsabilites !== []) {
                 $roleResponsable = $this->getRoleService()->findByRoleId(RoleProvider::RESPONSABLE);
                 $roles[] = $roleResponsable;
-            }
-
-            $gestions = $this->getAgentService()->getGestionnaireStructure($agent);
-            if ($gestions !== null and $gestions !== []) {
-                $roleGestionnaire = $this->getRoleService()->findByRoleId(RoleProvider::GESTIONNAIRE);
-                $roles[] = $roleGestionnaire;
             }
         }
         return $roles;

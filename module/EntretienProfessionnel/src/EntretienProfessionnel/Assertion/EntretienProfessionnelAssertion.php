@@ -57,7 +57,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $this->predicats = [
             'isAgentEntretien'          => $entretienProfessionnel->isAgent($connectedAgent),
             'isResponsableEntretien'    => $entretienProfessionnel->isReponsable($connectedAgent),
-            'isGestionnaireStructure'   => ($role->getRoleId() === RoleProvider::GESTIONNAIRE) && $this->getStructureService()->isGestionnaireS($structures, $connectedAgent),
             'isResponsableStructure'    => ($role->getRoleId() === RoleProvider::RESPONSABLE) && $this->getStructureService()->isResponsableS($structures, $connectedAgent),
             'isAutoriteStructure'       => $this->getStructureService()->isAutoriteS($structures, $connectedAgent),
             'isSuperieureHierarchique'  => $this->getAgentSuperieurService()->isSuperieur($entretienProfessionnel->getAgent(), $connectedAgent),
@@ -101,8 +100,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
                         if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
                         return $predicats['isAgentEntretien'];
-                    case RoleProvider::GESTIONNAIRE:
-                        return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
                     case Agent::ROLE_SUPERIEURE:
@@ -125,8 +122,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
                         if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
                         return $predicats['isAgentEntretien'];
-                    case RoleProvider::GESTIONNAIRE:
-                        return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
                     case Agent::ROLE_SUPERIEURE:
@@ -226,7 +221,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
                         if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
                         return $predicats['isAgentEntretien'];
-                    case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
                     case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
@@ -240,8 +234,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case Agent::ROLE_SUPERIEURE :
                     case Agent::ROLE_AUTORITE :
                         return true;
-                    case RoleProvider::GESTIONNAIRE :
-                        return true;
                 }
                 return false;
             case 'modifier' :
@@ -252,7 +244,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::ADMIN_FONC :
                         return true;
                     case RoleProvider::RESPONSABLE :  return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
-                    case RoleProvider::GESTIONNAIRE : return $predicats['isGestionnaireStructure'];
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
                     case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
                 }
