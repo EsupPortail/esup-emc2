@@ -13,6 +13,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
 use EntretienProfessionnel\View\Helper\CampagneInformationViewHelper;
+use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -26,10 +27,19 @@ return [
                     'action' => [
                         'index',
                         'afficher',
-                        'structure', //todo vrai privilege et assertion ...
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CampagneController::class,
+                    'action' => [
+                        'structure',
+                    ],
+                    'privileges' => [
+//                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
+                        StructurePrivileges::STRUCTURE_AFFICHER,
                     ],
                 ],
                 [
@@ -83,6 +93,7 @@ return [
                         'options' => [
                             'route'    => '/campagne',
                             'defaults' => [
+                                /** @see CampagneController::indexAction() */
                                 'controller' => CampagneController::class,
                                 'action'     => 'index',
                             ],
@@ -94,6 +105,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter',
                                     'defaults' => [
+                                        /** @see CampagneController::ajouterAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'ajouter',
                                     ],
@@ -105,6 +117,7 @@ return [
                                 'options' => [
                                     'route'    => '/afficher/:campagne',
                                     'defaults' => [
+                                        /** @see CampagneController::afficherAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'afficher',
                                     ],
@@ -116,6 +129,7 @@ return [
                                 'options' => [
                                     'route'    => '/structure/:campagne/:structure',
                                     'defaults' => [
+                                        /** @see CampagneController::structureAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'structure',
                                     ],
@@ -127,6 +141,7 @@ return [
                                 'options' => [
                                     'route'    => '/modifier/:campagne',
                                     'defaults' => [
+                                        /** @see CampagneController::modifierAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'modifier',
                                     ],
@@ -138,6 +153,7 @@ return [
                                 'options' => [
                                     'route'    => '/historiser/:campagne',
                                     'defaults' => [
+                                        /** @see CampagneController::historiserAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'historiser',
                                     ],
@@ -149,6 +165,7 @@ return [
                                 'options' => [
                                     'route'    => '/restaurer/:campagne',
                                     'defaults' => [
+                                        /** @see CampagneController::restaurerAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'restaurer',
                                     ],
@@ -160,6 +177,7 @@ return [
                                 'options' => [
                                     'route'    => '/detruire/:campagne',
                                     'defaults' => [
+                                        /** @see CampagneController::detruireAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'detruire',
                                     ],

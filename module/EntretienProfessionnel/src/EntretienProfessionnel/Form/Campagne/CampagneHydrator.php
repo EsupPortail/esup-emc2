@@ -31,7 +31,7 @@ class  CampagneHydrator implements HydratorInterface {
      * @param Campagne $object
      * @return Campagne
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object) : object
     {
         $annee = (isset($data['annee']))?$data['annee']:null;
         $date_debut = (isset($data['date_debut']))? DateTime::createFromFormat('Y-m-d H:i:s',$data['date_debut'].' 08:00:00'):null;

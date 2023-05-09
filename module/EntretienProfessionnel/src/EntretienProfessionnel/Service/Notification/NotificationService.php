@@ -5,20 +5,18 @@ namespace EntretienProfessionnel\Service\Notification;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
-use DateInterval;
-use EntretienProfessionnel\Provider\Template\MailTemplates;
-use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
-use Structure\Entity\Db\StructureAgentForce;
-use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Template\MailTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
-use Structure\Entity\Db\Structure;
+use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
+use Laminas\View\Renderer\PhpRenderer;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -37,7 +35,7 @@ class NotificationService {
     use StructureServiceAwareTrait;
     use UrlServiceAwareTrait;
 
-    public $renderer;
+    public ?PhpRenderer $renderer = null;
 
     /** Méthodes de récupération des adresses électroniques ***********************************************************/
 

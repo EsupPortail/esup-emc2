@@ -4,26 +4,16 @@ namespace EntretienProfessionnel\Service\Campagne;
 
 trait CampagneServiceAwareTrait {
 
-    /** @var CampagneService */
-    private $campagneService;
+    private CampagneService $campagneService;
 
-    /**
-     * @return CampagneService
-     */
     public function getCampagneService() : CampagneService
     {
         return $this->campagneService;
     }
 
-    /**
-     * @param CampagneService $campagneService
-     * @return CampagneService
-     */
-    public function setCampagneService(CampagneService $campagneService) : CampagneService
+    public function setCampagneService(CampagneService $campagneService) : void
     {
         $this->campagneService = $campagneService;
-        return $this->campagneService;
     }
-
 
 }

@@ -17,8 +17,6 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
     use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
-    $sursis = $entretien->getSursisActif();
-
 $canAfficherInformationMetier = (
         $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE))
         OR
@@ -156,10 +154,6 @@ $canAfficherInformationMetier = (
                     <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
                     <dt class="col-md-4"> Date </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
-                    <?php if ($sursis !== null) : ?>
-                        <dt class="col-md-4"> Sursis </dt>
-                        <dd class="col-md-8"> Jusqu'au <?php echo $sursis->getSursis()->format('d/m/Y'); ?> </dd>
-                    <?php endif; ?>
                     <dt class="col-md-4"> Lieu </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
                     <dt class="col-md-4"> État </dt>

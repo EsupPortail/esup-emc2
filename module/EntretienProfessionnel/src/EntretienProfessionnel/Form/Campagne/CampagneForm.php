@@ -27,7 +27,8 @@ class CampagneForm extends Form
             'name' => 'annee',
             'type' => Select::class,
             'options' => [
-                'label' => 'Année de la campagne * : ',
+                'label' => "Année de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -45,7 +46,8 @@ class CampagneForm extends Form
             'name' => 'date_debut',
             'type' => Date::class,
             'options' => [
-                'label' => 'Date de début de la campagne * : ',
+                'label' => "Date de début de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -60,7 +62,8 @@ class CampagneForm extends Form
             'name' => 'date_fin',
             'type' => Date::class,
             'options' => [
-                'label' => 'Date de fin de la campagne * : ',
+                'label' => "Date de fin de la campagne <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => [ 'disable_html_escape' => true, ],
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],
@@ -75,7 +78,7 @@ class CampagneForm extends Form
             'name' => 'date_circulaire',
             'type' => Date::class,
             'options' => [
-                'label' => 'Date de la circulaire : ',
+                'label' => "Date de la circulaire : ",
                 'label_attributes' => [
                     'class' => 'control-label',
                 ],

@@ -2,7 +2,6 @@
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
-use EntretienProfessionnel\Provider\Privilege\SursisPrivileges;
 
 /**
  * @see \Formation\View\Helper\EntretienProfessionnelArrayViewHelper
@@ -50,12 +49,6 @@ if (!isset($options['droits']) OR !isset($options['droits']['modifier'])) {
     $canModifier = ($isEnCours AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_MODIFIER)));
 } else {
     $canModifier = $options['droits']['modifier'];
-}
-$canSursis  = false;
-if (!isset($options['droits']) OR !isset($options['droits']['sursis'])) {
-    $canSursis = $this->isAllowed(SursisPrivileges::getResourceId(SursisPrivileges::SURSIS_MODIFIER));
-} else {
-    $canSursis = $options['droits']['sursis'];
 }
 $canRenseigner  = false;
 if (!isset($options['droits']) OR !isset($options['droits']['renseigner'])) {
@@ -142,11 +135,7 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
         <?php endif; ?>
         <?php if ($displayDate) : ?>
             <td>
-                <?php if ($sursis = $entretien->getSursisActif()) : ?>
-                    <i><?php echo $entretien->getSursisActif()->getSursis()->format('d/m/Y H:i'); ?></i>
-                <?php else : ?>
-                    <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
-                <?php endif; ?>
+                <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
             </td>
         <?php endif; ?>
         <?php if ($displayLieu) : ?>
@@ -196,18 +185,6 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
                     <span class="icon gerer" title="Modifier l'entretien professionnel (convocation)"></span>
                     Gérer entretien
                 </a>
-                <?php if ($canSursis and !$dropdowns) : ?>
-                    <a      <?php /** @see \EntretienProfessionnel\Controller\SursisController::modifierAction() */ ?>
-                            href="<?php
-                                if ($entretien->getSursisActif())
-                                    echo $this->url('entretien-professionnel/sursis/modifier', ['sursis' => $entretien->getSursisActif()->getId()], [], true);
-                                else
-                                    echo $this->url('entretien-professionnel/sursis/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true);
-                            ?>"
-                            class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon sursis"></span></a>
-                <?php endif; ?>
             <?php endif; ?>
             <?php if ($canHistoriser  and !$dropdowns) : ?>
                 <br>

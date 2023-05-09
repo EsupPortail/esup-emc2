@@ -80,11 +80,6 @@ span.icon.validation-undo:before {
     content: "\f057 ";
 }
 
-span.icon.sursis:before {
-    content:"\f017";
-}
-
-
 span.icon.inscription-ouverture:before {
     content:"\f044";
 }

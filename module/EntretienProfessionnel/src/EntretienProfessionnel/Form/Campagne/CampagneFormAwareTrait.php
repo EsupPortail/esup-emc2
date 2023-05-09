@@ -4,26 +4,16 @@ namespace EntretienProfessionnel\Form\Campagne;
 
 trait CampagneFormAwareTrait {
 
-    /** @var CampagneForm */
-    private $campagneForm;
+    private CampagneForm $campagneForm;
 
-    /**
-     * @return CampagneForm
-     */
     public function getCampagneForm() : CampagneForm
     {
         return $this->campagneForm;
     }
 
-    /**
-     * @param CampagneForm $campagneForm
-     * @return CampagneForm
-     */
-    public function setCampagneForm(CampagneForm $campagneForm) : CampagneForm
+    public function setCampagneForm(CampagneForm $campagneForm) : void
     {
         $this->campagneForm = $campagneForm;
-        return $this->campagneForm;
     }
-
 
 }

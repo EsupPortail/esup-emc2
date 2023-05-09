@@ -42,12 +42,13 @@ $modules = [
     'UnicaenIndicateur',
     'Referentiel',
 
+    'Structure',
     'EntretienProfessionnel',
     'Carriere',
     'Metier',
     'FicheMetier',
     'FichePoste',
-    'Structure',
+
     'Formation',
     'Fichier',
     'Element',

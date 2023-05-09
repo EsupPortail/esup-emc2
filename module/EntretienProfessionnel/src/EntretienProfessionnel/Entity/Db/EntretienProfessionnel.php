@@ -234,37 +234,12 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $observation;
     }
 
-    /** SURSIS ********************************************************************************************************/
-
-    /**
-     * @return Sursis|null
-     */
-    public function getSursisActif() : ?Sursis
-    {
-        $sursis = null;
-        /** @var Sursis $item */
-        foreach ($this->sursis as $item) {
-            if ($item->estNonHistorise()) {
-                if ($sursis !== null) throw new RuntimeException("Plusieurs sursis actifs pour l'entretien #".$this->id, 0, null);
-                $sursis = $item;
-            }
-        }
-        return $sursis;
-    }
-
-    // Date d'entretien ou Date de sursis si il existe
-
     /**
      * @return DateTime
      */
     public function getMaxSaisiEntretien() : ?DateTime
     {
-        $sursis = $this->getSursisActif();
-        if ($sursis === null) {
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
-        } else {
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $sursis->getSursis()->format('d/m/Y 23:59:59'));
-        }
+        $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
         return $date;
 
     }

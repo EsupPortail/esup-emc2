@@ -109,7 +109,6 @@ class CampagneService {
         $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
             ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
             ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien')
-            ->addSelect('sursis')->leftJoin('entretien.sursis', 'sursis')
             ->addSelect('etat')->leftJoin('entretien.etat', 'etat')
             ->addSelect('etattype')->leftJoin('etat.type', 'etattype')
         ;
@@ -207,6 +206,28 @@ class CampagneService {
             if ($last === null OR $item->getAnnee() > $last->getAnnee()) $last = $item;
         }
         return $last;
+    }
+
+    /**
+     * @param Campagne $campagne
+     * @param Etat[] $etats
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
+            ->andWhere('entretien.etat in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('entretien.histoDestruction IS NULL')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $entretiens = [];
+        /** @var EntretienProfessionnel $entretien */
+        foreach ($result as $entretien) {
+            $entretiens[$entretien->getAgent()->getId()][] = $entretien;
+        }
+        return $entretiens;
     }
 
     public function getAgentsSansEntretien(Campagne $campagne, Structure $structure)
@@ -313,27 +334,6 @@ class CampagneService {
         return $entretiens;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @param Etat[] $etats
-     * @return EntretienProfessionnel[]
-     */
-    public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
-            ->andWhere('entretien.etat in (:etats)')->setParameter('etats', $etats)
-            ->andWhere('entretien.histoDestruction IS NULL')
-        ;
-        $result = $qb->getQuery()->getResult();
-
-        $entretiens = [];
-        /** @var EntretienProfessionnel $entretien */
-        foreach ($result as $entretien) {
-            $entretiens[$entretien->getAgent()->getId()][] = $entretien;
-        }
-        return $entretiens;
-    }
 
     /**
      * @param Campagne $campagne

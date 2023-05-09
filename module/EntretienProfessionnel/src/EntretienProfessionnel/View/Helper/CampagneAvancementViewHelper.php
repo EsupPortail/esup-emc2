@@ -9,13 +9,12 @@ use Laminas\View\Helper\Partial;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
-
 class CampagneAvancementViewHelper extends AbstractHelper
 {
-    public $renderer;
-    public $entretiens;
-    public $agents;
-    public $options;
+    public ?PhpRenderer $renderer = null;
+    public array $entretiens = [];
+    public array $agents = [];
+    public array $options = [];
 
     /**
      * @param EntretienProfessionnel[] $entretiens

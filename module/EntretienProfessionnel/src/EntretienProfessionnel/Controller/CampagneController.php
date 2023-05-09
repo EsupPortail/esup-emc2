@@ -189,8 +189,7 @@ class CampagneController extends AbstractActionController {
         });
 
         /** Les agents avec obligation d'entretien sont ceux qui était en poste 12 mois avant la fin de campagne */
-        $obligatoires = [];
-        $facultatifs = [];
+        $obligatoires = [];  $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
         foreach ($agents as $agent) {
             if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
