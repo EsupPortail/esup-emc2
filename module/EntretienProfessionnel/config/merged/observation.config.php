@@ -22,16 +22,6 @@ return [
                 [
                     'controller' => ObservationController::class,
                     'action' => [
-//                        'index',
-//                        'afficher',
-                    ],
-                    'privileges' => [
-                        ObservationPrivileges::OBSERVATION_AFFICHER,
-                    ],
-                ],
-                [
-                    'controller' => ObservationController::class,
-                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -87,6 +77,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter/:entretien-professionnel',
                                     'defaults' => [
+                                        /** @see ObservationController::ajouterAction() */
                                         'controller' => ObservationController::class,
                                         'action'     => 'ajouter',
                                     ],
@@ -98,6 +89,7 @@ return [
                                 'options' => [
                                     'route'    => '/modifier/:observation',
                                     'defaults' => [
+                                        /** @see ObservationController::modifierAction() */
                                         'controller' => ObservationController::class,
                                         'action'     => 'modifier',
                                     ],
@@ -109,6 +101,7 @@ return [
                                 'options' => [
                                     'route'    => '/historiser/:observation',
                                     'defaults' => [
+                                        /** @see ObservationController::historiserAction() */
                                         'controller' => ObservationController::class,
                                         'action'     => 'historiser',
                                     ],
@@ -120,6 +113,7 @@ return [
                                 'options' => [
                                     'route'    => '/restaurer/:observation',
                                     'defaults' => [
+                                        /** @see ObservationController::restaurerAction() */
                                         'controller' => ObservationController::class,
                                         'action'     => 'restaurer',
                                     ],
@@ -131,6 +125,7 @@ return [
                                 'options' => [
                                     'route'    => '/supprimer/:observation',
                                     'defaults' => [
+                                        /** @see ObservationController::supprimerAction() */
                                         'controller' => ObservationController::class,
                                         'action'     => 'supprimer',
                                     ],

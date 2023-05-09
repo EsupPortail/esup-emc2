@@ -495,3 +495,7 @@ div.card-header h2 {
 .card-body {
     padding: 0.25rem;
 }
+
+.form-control {
+    height:auto;
+}

@@ -6,6 +6,7 @@ use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentHierarchieCalcul\AgentHierarchieCalculFormAwareTrait;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormAwareTrait;
+use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -21,6 +22,7 @@ class AgentHierarchieController extends AbstractActionController
     use StructureServiceAwareTrait;
     use AgentHierarchieCalculFormAwareTrait;
     use AgentHierarchieImportationFormAwareTrait;
+    use AgentHierarchieSaisieFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -61,11 +63,12 @@ class AgentHierarchieController extends AbstractActionController
             $mode = $data['mode'];
 
             //reading
+            $array = [];
             if ($fichier_path === null OR $fichier_path === '') {
                 $error[] = "Aucun fichier !";
             } else {
                 $handle = fopen($fichier_path, "r");
-                $array = [];
+
                 while ($content = fgetcsv($handle, 0, ";")) {
                     $array[] = $content;
                 }
@@ -152,8 +155,8 @@ class AgentHierarchieController extends AbstractActionController
                 $autorites[$agent->getId()] = $this->getAgentService()->computeAutorites($agent, $superieurs[$agent->getId()]);
             }
 
+            $warning = [];
             if ($mode === 'compute' AND empty($error)) {
-                $warning = [];
                 foreach ($agents as $agent) {
                     $this->getAgentAutoriteService()->historiseAll($agent);
                     if (empty($autorites[$agent->getId()])) {
@@ -197,6 +200,43 @@ class AgentHierarchieController extends AbstractActionController
             'title' => "Calcul de chaînes hiérarchiques",
             'form' => $form,
         ]);
+    }
+
+    public function saisirAction() : ViewModel
+    {
+        $form = $this->getAgentHierarchieSaisieForm();
+        $form->setAttribute('action', $this->url()->fromRoute('agent/hierarchie/saisir', [], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+
+            $agent = $this->getAgentService()->getAgent($data['agent']['id']);
+            $sup1 = (isset($data['superieur1']['id']))?$this->getAgentService()->getAgent($data['superieur1']['id']):null;
+            $sup2 = (isset($data['superieur2']['id']))?$this->getAgentService()->getAgent($data['superieur2']['id']):null;
+            $sup3 = (isset($data['superieur3']['id']))?$this->getAgentService()->getAgent($data['superieur3']['id']):null;
+            $aut1 = (isset($data['superieur1']['id']))?$this->getAgentService()->getAgent($data['autorite1']['id']):null;
+            $aut2 = (isset($data['superieur2']['id']))?$this->getAgentService()->getAgent($data['autorite2']['id']):null;
+            $aut3 = (isset($data['superieur3']['id']))?$this->getAgentService()->getAgent($data['autorite3']['id']):null;
+
+            $this->getAgentSuperieurService()->historiseAll($agent);
+            if ($sup1 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent,$sup1);
+            if ($sup2 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent,$sup2);
+            if ($sup3 !== null) $this->getAgentSuperieurService()->createAgentSuperieur($agent,$sup3);
+            $this->getAgentAutoriteService()->historiseAll($agent);
+            if ($aut1 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent,$aut1);
+            if ($aut2 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent,$aut2);
+            if ($aut3 !== null) $this->getAgentAutoriteService()->createAgentAutorite($agent,$aut3);
+
+            exit();
+        }
+
+        $vm = new ViewModel([
+            'title' => "Saisie de la chaîne hiérarchique d'un agent",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
     }
 
 }

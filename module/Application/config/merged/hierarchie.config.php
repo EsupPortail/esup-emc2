@@ -12,6 +12,10 @@ use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationForm;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationFormFactory;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydrator;
 use Application\Form\AgentHierarchieImportation\AgentHierarchieImportationHydratorFactory;
+use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieForm;
+use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieFormFactory;
+use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieHydrator;
+use Application\Form\AgentHierarchieSaisie\AgentHierarchieSaisieHydratorFactory;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentAutorite\AgentAutoriteServiceFactory;
@@ -34,6 +38,7 @@ return [
                         'afficher',
                         'importer',
                         'calculer',
+                        'saisir',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
@@ -87,6 +92,18 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'saisir' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/saisir',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::saisirAction(): */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'saisir',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
@@ -145,12 +162,14 @@ return [
         'factories' => [
             AgentHierarchieCalculForm::class => AgentHierarchieCalculFormFactory::class,
             AgentHierarchieImportationForm::class => AgentHierarchieImportationFormFactory::class,
+            AgentHierarchieSaisieForm::class => AgentHierarchieSaisieFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             AgentHierarchieCalculHydrator::class => AgentHierarchieCalculHydratorFactory::class,
             AgentHierarchieImportationHydrator::class => AgentHierarchieImportationHydratorFactory::class,
+            AgentHierarchieSaisieHydrator::class => AgentHierarchieSaisieHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

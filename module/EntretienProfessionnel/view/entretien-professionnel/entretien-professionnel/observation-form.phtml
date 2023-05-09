@@ -26,7 +26,6 @@ use EntretienProfessionnel\Form\Observation\ObservationForm;
             body_id: 'obs-entretien',
             setup: function (editor) {
                 editor.on("focusout", function () {
-                //     console.log(tinymce.get('obs-entretien').getContent());
                     $('textarea#obs-entretien').val(tinymce.get('obs-entretien').getContent());
                 });
             }
@@ -44,16 +43,9 @@ use EntretienProfessionnel\Form\Observation\ObservationForm;
             body_id: 'obs-perspective',
             setup: function (editor) {
                 editor.on("focusout", function () {
-                     // console.log("rzerzrzerze");
                     $('textarea#obs-perspective').val(tinymce.get('obs-perspective').getContent());
                 });
             }
         });
     });
 </script>
-
-<style>
-    .form-control {
-        height:auto;
-    }
-</style>
