@@ -126,6 +126,7 @@ class AgentAssertion extends AbstractAssertion
         /** @var Agent|null $entity */
         $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
         $entity = $this->getAgentService()->getAgent($agentId);
+        if ($entity === null) $entity = $agent;
         if ($entity === null) return false;
 
         $structures = [];
