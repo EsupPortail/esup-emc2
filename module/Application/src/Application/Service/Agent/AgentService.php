@@ -589,7 +589,7 @@ class AgentService {
      * @param DateTime|null $date
      * @return array
      */
-    public function getAgentsByStructuresAndDate(array $structures, ?DateTime $date = null) : array
+    public function getAgentsByStructuresAndDate(array $structures, ?DateTime $date = null, array $temoins = []) : array
     {
         if ($date === null) $date = new DateTime();
 
@@ -600,6 +600,10 @@ class AgentService {
             ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $date)
             ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
         ;
+        if (in_array('hierarchique', $temoins)) $qb = $qb->andWhere("affectation.hierarchique = 'O'");
+        if (in_array('fonctionnelle', $temoins)) $qb = $qb->andWhere("affectation.fonctionnel = 'O'");
+
+
         $liste = $qb->getQuery()->getResult();
 
         $ids = [];

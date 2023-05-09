@@ -13,6 +13,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class CampagneControllerFactory extends AbstractActionController
@@ -30,6 +31,7 @@ class CampagneControllerFactory extends AbstractActionController
          * @var CampagneService $campagneService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
          * @var RappelCampagneAvancementService $rappelCampagneAvancementService
          * @var StructureService $structureService
          * @var UserService $userService
@@ -38,6 +40,7 @@ class CampagneControllerFactory extends AbstractActionController
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $notificationService = $container->get(NotificationService::class);
+        $parametreService = $container->get(ParametreService::class);
         $rappelCampagneAvancementService = $container->get(RappelCampagneAvancementService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
@@ -52,6 +55,7 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setCampagneService($campagneService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setNotificationService($notificationService);
+        $controller->setParametreService($parametreService);
         $controller->setRappelCampagneAvancementService($rappelCampagneAvancementService);
         $controller->setStructureService($structureService);
         $controller->setUserService($userService);

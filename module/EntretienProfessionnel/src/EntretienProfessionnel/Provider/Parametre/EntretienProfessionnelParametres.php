@@ -10,4 +10,5 @@ class EntretienProfessionnelParametres {
     const INTRANET_DOCUMENT = 'INTRANET_DOCUMENT';
     const MAIL_LISTE_BIATS = 'MAIL_LISTE_BIATS';
     const MAIL_LISTE_DAC = 'MAIL_LISTE_DAC';
+    const TEMOIN_AFFECTATION = 'TEMOIN_AFFECTATION';
 }

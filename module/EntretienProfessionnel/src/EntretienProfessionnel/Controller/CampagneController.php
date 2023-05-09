@@ -9,6 +9,7 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -20,6 +21,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -29,6 +31,7 @@ class CampagneController extends AbstractActionController {
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RappelCampagneAvancementServiceAwareTrait;
     use StructureServiceAwareTrait;
     use CampagneFormAwareTrait;
@@ -167,9 +170,13 @@ class CampagneController extends AbstractActionController {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-        $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut());
+        $temoins = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION);
+        if ($temoins !== null) {
+            $temoins = explode(";",$temoins);
+        } else $temoins = [];
+        $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut(), $temoins);
 
-        /** Filtrage des agents (seul les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
+        /** Filtrage des agents (seuls les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
         $agents = [];
         /** @var Agent $agent */
         foreach ($agentsAll as $agent) {
