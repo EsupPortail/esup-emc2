@@ -42,7 +42,7 @@ return [
                         'privilege',
                     ],
                     'privileges' => [
-                        PrivilegePrivileges::PRIVILEGE_ATTRIBUER,
+                        PrivilegePrivileges::PRIVILEGE_AFFECTER,
                     ],
                 ],
                 [
@@ -99,7 +99,7 @@ return [
                                 'order' => 1100,
                                 'label' => 'Privilèges',
                                 'route' => 'formation/administration/privilege',
-                                'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_ATTRIBUER),
+                                'resource' => PrivilegePrivileges::getResourceId(PrivilegePrivileges::PRIVILEGE_AFFECTER),
                                 'icon' => 'fas fa-angle-right',
                             ],
                             'template' => [
