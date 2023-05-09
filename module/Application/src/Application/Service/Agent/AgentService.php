@@ -627,7 +627,7 @@ class AgentService {
     }
 
 
-    /** Filtrer les agent·es ayant seulement un statuts de Administratif/Vacataire ou de détaché_out */
+    /** Filtrer les agent·es ayant seulement un statut d'Administratif/Vacataire ou de détaché_out */
     public function filtrerByStatutInvalide(Agent $agent, ?DateTime $date = null) : bool
     {
         try {

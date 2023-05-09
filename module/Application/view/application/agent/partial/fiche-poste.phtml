@@ -63,7 +63,8 @@ $structure = ($affectation)?$affectation->getStructure():null;
 
     <?php if ($canAjouterFichier) : ?>
         <div class="alert alert-warning">
-            <span class="icon icon-attention"></span> Il ne faut déposer une fiche de poste PDF que si l'agent n'a pas de fiche de poste de renseignée dans EMC2.
+            <span class="icon icon-attention"></span> Il ne faut déposer une fiche de poste PDF que si l'agent n'a pas de fiche de poste de renseignée dans EMC2. <br>
+            <span class="icon icon-attention"></span> La taille de la fiche de poste ne doit pas dépasser 2 Mo.
         </div>
     <?php endif; ?>
 
@@ -107,6 +108,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
     <?php endif; ?>
 
     <?php if ($canAjouterFichier) : ?>
+        <?php /** @see \Application\Controller\AgentController::uploadFichePostePdfAction() */ ?>
         <a class="btn btn-primary ajax-modal" data-event="modification"
            href="<?php echo $this->url('agent/upload-fiche-poste-pdf', ['agent' => $agent->getId()], [], true); ?>"
         >

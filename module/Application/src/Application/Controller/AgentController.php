@@ -383,10 +383,11 @@ class AgentController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Téléverserment d\'un fichier',
             'form' => $form,
+            'warning' => "<span class='icon icon-attention'></span> Attention la taille de la fiche de poste ne doit pas dépaser 2 Mo."
         ]);
         return $vm;
     }
