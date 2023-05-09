@@ -80,7 +80,7 @@ $canAction = ($canAfficher OR $canConvoquer);
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                     <a
                         href="<?php echo $this->url('entretien-professionnel/creer', ['campagne' => $campagne->getId()], ["query" => ['agent' => $agent->getId()]], [], true); ?>"
-                        class="ajax-modal" data-event="entretien"
+                        class="ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-ajouter"></span>
                         Convoquer
