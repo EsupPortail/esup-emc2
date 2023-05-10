@@ -15,11 +15,13 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
+use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -92,6 +94,10 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
+    /**
+     * Fonction permettant de re-expédier les notifications d'ouverture de campagne.
+     * Attention : il n'y a pas de bouton pour invoquer cette fonction, il faut utiliser la route directement.
+     */
     public function notifierOuvertureAction() : ViewModel {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
@@ -167,7 +173,7 @@ class CampagneController extends AbstractActionController {
 
     /**
      * Action affichant une campagne d'entretien professionnel pour une structure
-     * <!> les agents doivent être complétement hydrater sinon les calculs d'affectations, de grades et d'obligation seront erronés
+     * <!> les agents doivent être complétement hydratés sinon les calculs d'affectations, de grades et d'obligation seront erronés
      */
     public function structureAction() : ViewModel
     {
@@ -178,7 +184,11 @@ class CampagneController extends AbstractActionController {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-        $temoins = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION);
+        try {
+            $temoins = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION);
+        } catch (Exception $e) {
+            throw new RuntimeException("Erreur de récupération pour un paramètre.",0,$e);
+        }
         if ($temoins !== null) {
             $temoins = explode(";",$temoins);
         } else $temoins = [];
