@@ -4,26 +4,16 @@ namespace Structure\Service\Structure;
 
 trait StructureServiceAwareTrait {
 
-    /** @var StructureService */
-    private $structureService;
+    private StructureService $structureService;
 
-    /**
-     * @return StructureService
-     */
-    public function getStructureService()
+    public function getStructureService() : StructureService
     {
         return $this->structureService;
     }
 
-    /**
-     * @param StructureService $structureService
-     * @return StructureService
-     */
-    public function setStructureService($structureService)
+    public function setStructureService(StructureService $structureService) : void
     {
         $this->structureService = $structureService;
-        return $this->structureService;
     }
-
 
 }

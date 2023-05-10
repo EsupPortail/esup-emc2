@@ -24,7 +24,6 @@ use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -37,7 +36,6 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementServiceAwareTrait;
     use StructureServiceAwareTrait;
     use CampagneFormAwareTrait;
-    use UserServiceAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -173,15 +171,13 @@ class CampagneController extends AbstractActionController {
 
     /**
      * Action affichant une campagne d'entretien professionnel pour une structure
-     * <!> les agents doivent être complétement hydratés sinon les calculs d'affectations, de grades et d'obligation seront erronés
+     * Attention : les agents doivent être complétement hydratés sinon les calculs d'affectations, de grades et d'obligation seront erronés
      */
     public function structureAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
         try {
@@ -213,12 +209,8 @@ class CampagneController extends AbstractActionController {
             return $aaa > $bbb;
         });
 
-        /** Les agents avec obligation d'entretien sont ceux qui était en poste 12 mois avant la fin de campagne */
-        $obligatoires = [];  $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
-        foreach ($agents as $agent) {
-            if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
-        }
+        [$obligatoires, $facultatifs] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         $finalises = [];

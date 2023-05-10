@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Service\Campagne;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -427,5 +428,15 @@ class CampagneService {
         ;
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    public function trierAgents(Campagne $campagne, array $agents) : array
+    {
+        $obligatoires = [];  $facultatifs = [];
+        $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
+        foreach ($agents as $agent) {
+            if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+        }
+        return [$obligatoires, $facultatifs];
     }
 }

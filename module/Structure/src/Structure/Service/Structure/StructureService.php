@@ -451,8 +451,11 @@ EOS;
     /**
      * @return Structure[]
      */
-    public function getStructuresByCurrentRole(User $user, RoleInterface $role) : array
+    public function getStructuresByCurrentRole(?User $user = null, ?RoleInterface $role = null) : array
     {
+        if ($user === null) $user = $this->getUserService()->getConnectedUser();
+        if ($role === null) $role = $this->getUserService()->getConnectedRole();
+
         $selecteur = [];
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = $this->getStructuresByResponsable($user);

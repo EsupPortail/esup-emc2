@@ -14,7 +14,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class CampagneControllerFactory extends AbstractActionController
 {
@@ -34,7 +33,6 @@ class CampagneControllerFactory extends AbstractActionController
          * @var ParametreService $parametreService
          * @var RappelCampagneAvancementService $rappelCampagneAvancementService
          * @var StructureService $structureService
-         * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $campagneService = $container->get(CampagneService::class);
@@ -43,7 +41,6 @@ class CampagneControllerFactory extends AbstractActionController
         $parametreService = $container->get(ParametreService::class);
         $rappelCampagneAvancementService = $container->get(RappelCampagneAvancementService::class);
         $structureService = $container->get(StructureService::class);
-        $userService = $container->get(UserService::class);
 
         /**
          * @var CampagneForm $campagneForm
@@ -58,7 +55,6 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setParametreService($parametreService);
         $controller->setRappelCampagneAvancementService($rappelCampagneAvancementService);
         $controller->setStructureService($structureService);
-        $controller->setUserService($userService);
         $controller->setCampagneForm($campagneForm);
         return $controller;
     }
