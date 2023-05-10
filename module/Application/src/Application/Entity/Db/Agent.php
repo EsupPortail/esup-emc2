@@ -275,7 +275,7 @@ class Agent implements
         $prenom = $this->getPrenom();
         $prenom = str_replace("É", "é", $prenom);
         $prenom = str_replace("È", "è", $prenom);
-        return ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>');
+        return  (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') . ' ' . ucwords(strtolower($prenom), "- ");
 
     }
 

@@ -60,7 +60,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
         <span class="badge"> <?php echo count($finalises); ?> </span>
     </h2>
 
-    <?php echo $this->entretienProfessionnelArray($finalises); ?>
+    <?php echo $this->entretienProfessionnelArray($finalises, ['id' => 'complet']); ?>
 <?php endif; ?>
 
 
@@ -70,7 +70,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
         <span class="badge"> <?php echo count($encours); ?> </span>
     </h2>
 
-    <?php echo $this->entretienProfessionnelArray($encours); ?>
+    <?php echo $this->entretienProfessionnelArray($encours, ['id' => 'encours']); ?>
 <?php endif; ?>
 
 <?php if (!empty($obligatoires)) : ?>
@@ -78,7 +78,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
         Agents sans entretien professionnel pour la campagne
         <span class="badge"> <?php echo count($sansObligatoires); ?> </span>
     </h2>
-    <?php echo $this->convocationArray($sansObligatoires, $campagne); ?>
+    <?php echo $this->convocationArray($sansObligatoires, $campagne, ['id' => 'sansentretien']); ?>
 <?php endif; ?>
 
 <?php if (!empty($facultatifs)) : ?>
@@ -97,7 +97,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
             </div>
         </div>
     </div>
-    <?php echo $this->convocationArray($sansFacultatifs, $campagne); ?>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation']); ?>
 <?php endif; ?>
 
 

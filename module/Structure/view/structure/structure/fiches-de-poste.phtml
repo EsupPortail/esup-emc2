@@ -35,7 +35,7 @@ $date = new DateTime();
 
 <?php echo $this->partial('partial/entete', ['structure' => $structure, 'campagnes' => $campagnes, 'current' => 'fiches-de-poste', 'selecteur' => $selecteur]); ?>
 
-<table class="table table-condensed">
+<table class="table table-condensed datatable">
     <thead>
     <tr>
         <th> Agent & Affectation </th>
@@ -260,3 +260,11 @@ $date = new DateTime();
         color: lightgrey;
     }
 </style>
+
+<script>
+$(document).ready(function () {
+    $("table.datatable").DataTable({
+        'paging': false,
+    });
+});
+</script>

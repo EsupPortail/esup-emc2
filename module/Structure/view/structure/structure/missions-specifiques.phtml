@@ -117,3 +117,12 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
     <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<script>
+    $(document).ready(function () {
+        $("table.datatable").DataTable({
+            'paging': false,
+        });
+    });
+</script>

@@ -19,7 +19,7 @@ $canAction = ($canAfficher OR $canConvoquer);
 
 ?>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
     <thead>
         <tr>
             <th> Dénomination </th>
@@ -92,3 +92,11 @@ $canAction = ($canAfficher OR $canConvoquer);
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function() {
+        $("table#<?php echo $options['id']; ?>").DataTable( {
+            'paging' : false,
+        });
+    });
+</script>

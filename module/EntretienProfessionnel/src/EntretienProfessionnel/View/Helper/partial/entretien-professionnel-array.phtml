@@ -4,7 +4,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 
 /**
- * @see \Formation\View\Helper\EntretienProfessionnelArrayViewHelper
+ * @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper
  * @var EntretienProfessionnel[] $entretiens
  * @var array $options
  */
@@ -74,7 +74,7 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
 
 ?>
 
-<table class="table table-condensed table-hover" style="margin:1rem 0;">
+<table class="table table-condensed table-hover datatable" id="<?php echo $options['id']; ?>" style="margin:1rem 0;">
     <thead>
     <tr>
         <?php if ($displayAnnee) : ?>
@@ -253,6 +253,12 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
 </style>
 
 <script>
+    $(document).ready(function() {
+        $("table#<?php echo $options['id']; ?>").DataTable( {
+            'paging' : false,
+        });
+    });
+
     function setActions(id) {
         let url = '../../entretien-professionnel/action/' + id;
         // console.log(url);

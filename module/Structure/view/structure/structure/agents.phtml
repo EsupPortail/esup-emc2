@@ -36,7 +36,7 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
     <span class="badge"><?php echo count($agents); ?></span>
 </h2>
 
-<?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites]); ?>
+<?php echo $this->partial('partial/agents', ['options' => ['id' => 'agent'], 'structure' => $structure, 'agents' => $agents, 'superieurs' => $superieurs, 'autorites' => $autorites]); ?>
 
 <h2>
     Agents manuellement ajoutés
@@ -52,4 +52,4 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
     </a>
 <?php endif; ?>
 
-<?php echo $this->partial('partial/agents', ['structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true]]); ?>
+<?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true, 'id' => 'force']]); ?>

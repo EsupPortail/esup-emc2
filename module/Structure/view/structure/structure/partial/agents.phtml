@@ -32,7 +32,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
     Afficher non administratif
 </span>
 
-<table class="datatable table table-condensed" style="font-size: 14px;">
+<table class="datatable table table-condensed" id="<?php echo $options['id']; ?>" style="font-size: 14px;">
     <thead>
         <tr>
             <th> Dénomination</th>
@@ -141,5 +141,11 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
         $("tbody tr:not(.administratif)").show();
         $("span#administatif_masquer").show();
         $("span#administatif_afficher").hide();
+    });
+
+    $(document).ready(function() {
+        $("table#<?php echo $options['id']; ?>").DataTable( {
+            'paging' : false,
+        });
     });
 </script>
