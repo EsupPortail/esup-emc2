@@ -92,6 +92,14 @@ class CampagneController extends AbstractActionController {
         return $vm;
     }
 
+    public function notifierOuvertureAction() : ViewModel {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
+        $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
+
+        return new ViewModel(['title' => "Notification de l'ouverture de la campagne"]);
+    }
+
     public function modifierAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);

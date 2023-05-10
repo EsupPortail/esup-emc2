@@ -46,6 +46,7 @@ return [
                     'controller' => CampagneController::class,
                     'action' => [
                         'ajouter',
+                        'notifier-ouverture',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AJOUTER,
@@ -108,6 +109,18 @@ return [
                                         /** @see CampagneController::ajouterAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'notifier-ouverture' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/notifier-ouverture/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::notifierOuvertureAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'notifier-ouverture',
                                     ],
                                 ],
                             ],
