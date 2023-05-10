@@ -20,6 +20,7 @@ class AgentHierarchieSaisieFormFactory {
         /** @var AgentHierarchieSaisieHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AgentHierarchieSaisieHydrator::class);
 
+        /** @see \Application\Controller\AgentController::rechercherLargeAction() */
         $pluginManager = $container->get('ViewHelperManager');
         $urlManager = $pluginManager->get('Url');
         $urlAgent =  $urlManager->__invoke('agent/rechercher-large', [], [], true);

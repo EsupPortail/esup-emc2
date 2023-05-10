@@ -221,6 +221,7 @@ return [
                         'options' => [
                             'route'    => '/rechercher-large',
                             'defaults' => [
+                                /** @see AgentController::rechercherLargeAction() */
                                 'controller' => AgentController::class,
                                 'action'     => 'rechercher-large',
                             ],

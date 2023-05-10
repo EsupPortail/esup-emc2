@@ -2,6 +2,7 @@
 
 namespace Structure\Controller;
 
+use Application\Controller\AgentController;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
@@ -308,6 +309,7 @@ class StructureController extends AbstractActionController {
         $structureAgentForce->setStructure($structure);
 
         $form = $this->getSelectionAgentForm();
+        /** @see AgentController::rechercherLargeAction() */
         $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
         $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
         $form->bind($structureAgentForce);

@@ -12,6 +12,8 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
@@ -26,7 +28,10 @@ class AgentAffichageAssertion extends AbstractAssertion
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
+    use PrivilegeCategorieServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
+
+    public function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
         if (!$entity instanceof Agent) {
             return false;
@@ -36,6 +41,14 @@ class AgentAffichageAssertion extends AbstractAssertion
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
         $role = $this->getUserService()->getConnectedRole();
+
+        //todo QUESTION : pourquoi devoir faire cela c'est pas normal !!!
+        [$catCode, $priCode] = explode('-', $privilege);
+        $categorie = $this->getPrivilegeCategorieService()->findByCode($catCode);
+        $pprivilege = $this->getPrivilegeService()->findByCode($priCode, $categorie->getId());
+        $listings = $pprivilege->getRoles()->toArray();
+        if (!in_array($role, $listings)) return false;
+        //todo FIN BIZARERIE ...
 
         $structures = [];
         foreach ($entity->getAffectations() as $affectation) {

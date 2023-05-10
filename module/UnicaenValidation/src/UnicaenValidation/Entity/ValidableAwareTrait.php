@@ -6,22 +6,15 @@ use UnicaenValidation\Entity\Db\ValidationInstance;
 
 trait ValidableAwareTrait{
 
-    /** @var ValidationInstance */
-    private $validation;
+    private ?ValidationInstance $validation = null;
 
-    /**
-     * @return ValidationInstance
-     */
-    public function getValidation() {
+    public function getValidation() : ?ValidationInstance
+    {
         return $this->validation;
     }
 
-    /**
-     * @param ValidationInstance $instance
-     * @return self
-     */
-    public function setValidation($instance) {
+    public function setValidation(?ValidationInstance $instance) : void
+    {
         $this->validation = $instance;
-        return $this;
     }
 }

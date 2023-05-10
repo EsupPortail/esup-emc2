@@ -25,7 +25,7 @@ $canDetruireFichier     = $droits['detruire'];
         <br/>
         <?php if ($canAjouterFichier) : ?>
             <a
-                <?php /** @see  \Fichier\Controller\FichierController::uploadAction()*/ ?>
+                <?php /** @see  \Application\Controller\AgentController::uploadFichierAction() */ ?>
                 href="<?php echo $this->url('agent/upload-fichier', ['agent' => $agent->getId()], [], true); ?>"
                 class="btn btn-primary ajax-modal" data-event="modification"
             >

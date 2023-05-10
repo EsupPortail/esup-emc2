@@ -19,6 +19,7 @@ use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStatut;
 use Application\Provider\Privilege\AgentaffichagePrivileges;
 
+// TODO fix that >>>  on rentre dans la mauvaise assertion ... AgentAssertion et non AgentAffichageAssertion
 $canAfficherAutorite = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE);
 $canAfficherSuperieure = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR);
 $canAfficherCarriereComplete = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE);
@@ -27,13 +28,6 @@ $canAfficherInfoSource = $this->isAllowed($agent, AgentaffichagePrivileges::AGEN
 $canAfficherTemoinAffectation = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION);
 $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT);
 
-$canAfficherAutorite = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_AUTORITE));
-$canAfficherSuperieure = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_SUPERIEUR));
-$canAfficherCarriereComplete = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_CARRIERECOMPLETE));
-$canAfficherCarriereDate = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_DATERESUME));
-$canAfficherInfoSource = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_COMPTE));
-$canAfficherTemoinAffectation = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_AFFECTATION));
-$canAfficherTemoinStatut = $this->isAllowed(AgentaffichagePrivileges::getResourceId(AgentaffichagePrivileges::AGENTAFFICHAGE_TEMOIN_STATUT));
 
 ?>
 <h2> Informations générales sur l'agent </h2>

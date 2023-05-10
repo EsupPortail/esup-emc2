@@ -301,11 +301,8 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    //TODO fix that ...
     public function revoquerElementAction() : Response
     {
-        $retour = $this->params()->fromQuery('retour');
-
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
 
@@ -318,8 +315,9 @@ class AgentController extends AbstractActionController
             throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
         }
 
+        $retour = $this->params()->fromQuery('retour');
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $entity->getAgent()->getId()], [], true);
+        return $this->redirect()->toRoute('home', [],[], true);
     }
 
     /** Fichier associé à l'agent *************************************************************************************/
