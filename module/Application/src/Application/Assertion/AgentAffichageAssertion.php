@@ -46,6 +46,7 @@ class AgentAffichageAssertion extends AbstractAssertion
         [$catCode, $priCode] = explode('-', $privilege);
         $categorie = $this->getPrivilegeCategorieService()->findByCode($catCode);
         $pprivilege = $this->getPrivilegeService()->findByCode($priCode, $categorie->getId());
+        if ($pprivilege === null) return false;
         $listings = $pprivilege->getRoles()->toArray();
         if (!in_array($role, $listings)) return false;
         //todo FIN BIZARERIE ...

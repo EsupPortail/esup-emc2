@@ -47,7 +47,6 @@ class StructureControllerFactory {
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
-         * @var UserService $userService
          * @var SynchronisationService $synchronisationService
          */
         $agentService = $container->get(AgentService::class);
@@ -62,7 +61,6 @@ class StructureControllerFactory {
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
-        $userService = $container->get(UserService::class);
         $synchronisationService = $container->get(SynchronisationService::class);
 
         /**
@@ -89,7 +87,6 @@ class StructureControllerFactory {
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
-        $controller->setUserService($userService);
         $controller->setSynchronisationService($synchronisationService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);

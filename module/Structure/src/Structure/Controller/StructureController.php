@@ -46,7 +46,6 @@ class StructureController extends AbstractActionController {
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
-    use UserServiceAwareTrait;
     use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
@@ -76,9 +75,7 @@ class StructureController extends AbstractActionController {
 
     public function descriptionAction() : ViewModel
     {
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
@@ -107,9 +104,7 @@ class StructureController extends AbstractActionController {
 
     public function agentsAction() : ViewModel
     {
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
@@ -153,9 +148,7 @@ class StructureController extends AbstractActionController {
 
     public function missionsSpecifiquesAction() : ViewModel
     {
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
@@ -177,9 +170,7 @@ class StructureController extends AbstractActionController {
 
     public function fichesDePosteAction() : ViewModel
     {
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
@@ -216,9 +207,7 @@ class StructureController extends AbstractActionController {
     public function extractionsAction() : ViewModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
-        $role = $this->getUserService()->getConnectedRole();
-        $utilisateur = $this->getUserService()->getConnectedUser();
-        $selecteur = $this->getStructureService()->getStructuresByCurrentRole($utilisateur, $role);
+        $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
