@@ -256,6 +256,8 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
     $(document).ready(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
             'paging' : false,
+            'searching' : false,
+            'info' : false,
         });
     });
 

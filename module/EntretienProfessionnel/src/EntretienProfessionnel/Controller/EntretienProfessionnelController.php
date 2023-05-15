@@ -156,6 +156,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $form->init();
         $form->bind($entretien);
 
+        if ($agent !== null) {
+            $element = $form->get('agent');
+            $element->setAttribute('readonly', true);
+        }
+
         /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -174,7 +179,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Ajout d\'un nouvel entretien professionnel ',
             'form' => $form,
@@ -219,7 +224,7 @@ class EntretienProfessionnelController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => 'Modification d\'un entretien professionnel professionnel',
             'form' => $form,

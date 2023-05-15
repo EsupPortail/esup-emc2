@@ -97,6 +97,8 @@ $canAction = ($canAfficher OR $canConvoquer);
     $(document).ready(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
             'paging' : false,
+            'searching' : false,
+            'info' : false,
         });
     });
 </script>
