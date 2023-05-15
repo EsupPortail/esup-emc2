@@ -21,7 +21,7 @@
     "unicaen/ldap": "^4",
     "unicaen/evenement": "^5.0",
     "unicaen/autoform": "^5.0",
-    "unicaen/aide": "dev-master",
+    "unicaen/aide": "^0.2.0",
     "ext-json": "*",
     "unicaen/indicateur": "^0.0",
     "unicaen/instadia": "^0.0"
