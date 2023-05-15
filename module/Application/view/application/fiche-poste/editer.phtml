@@ -141,10 +141,31 @@ $this->headTitle("Modification de la fiche de poste #".$ficheId);
                 <h2>Fiche de poste composée de <?php echo count($fiche->getFichesMetiers()); ?> fiche(s) métier(s).</h2>
                 <ul>
                     <?php if ($principal) : ?>
-                        <li> <strong> <?php echo $principal->getFicheType()->getMetier()->getLibelleGenre($agent) ?> à <?php echo $principal->getQuotite(); ?>%</strong></li>
+                        <li>
+                            <strong> <?php echo $principal->getFicheType()->getMetier()->getLibelleGenre($agent) ?> à <?php echo $principal->getQuotite(); ?>%</strong>
+                            (principale)
+                            <?php if ($canEditer) : ?>
+                                <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon icon-editer"></span></a>
+                                <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $principal->getId()], [], true); ?>">
+                                    <span class="icon icon-retirer text-danger"></span></a>
+                            <?php endif; ?>
+                        </li>
                     <?php endif; ?>
                     <?php foreach ($fichesMetiers as $ficheType) : ?>
-                        <li> <?php echo $ficheType->getFicheType()->getMetier()->getLibelleGenre($agent); ?> à <?php echo $ficheType->getQuotite(); ?>% </li>
+                        <li>
+                            <?php echo $ficheType->getFicheType()->getMetier()->getLibelleGenre($agent); ?> à <?php echo $ficheType->getQuotite(); ?>%
+                            <?php if ($canEditer) : ?>
+                                <a href="<?php echo $this->url('fiche-poste/modifier-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon icon-editer"></span></a>
+                                <a href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getId(), 'fiche-type-externe' => $ficheType->getId()], [], true); ?>">
+                                    <span class="icon icon-retirer text-danger"></span></a>
+                            <?php endif; ?>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
                 </div>
