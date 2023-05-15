@@ -29,7 +29,7 @@ foreach ($obligatoires as $obligatoire) {
     if (!isset($entretiens[$obligatoire->getId()])) $sansObligatoires[] = $obligatoire;
 }
 foreach ($facultatifs as $facultatif) {
-    if (!isset($entretiens[$facultatif->getId()])) $sansObligatoires[] = $facultatif;
+    if (!isset($entretiens[$facultatif->getId()])) $sansFacultatifs[] = $facultatif;
 }
 
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() . " - " . $structure->getLibelleLong())
