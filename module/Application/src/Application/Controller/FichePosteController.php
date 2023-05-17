@@ -949,7 +949,7 @@ class FichePosteController extends AbstractActionController {
                     $bbb = $b->getSuperieur()->getNomUsuel() . " " . $b->getSuperieur()->getPrenom();
                     return $aaa > $bbb;
                 });
-                $responsables = array_map(function (Agent $a) { return $a->getDenomination();} , $responsables);
+                $responsables = array_map(function (AgentSuperieur $a) { return $a->getAgent()->getDenomination();} , $responsables);
                 $responsables = implode(', ', $responsables);
                 $titre  = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
                 $texte  = "Cette validation finalise la fiche de poste de l'agent.<br/>";
