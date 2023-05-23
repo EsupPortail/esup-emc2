@@ -34,8 +34,8 @@ return [
         'app_infos' => [
             'nom'     => "EMC2",
             'desc'    => "Emploi Mobilité Carrière Compétences",
-            'version' => "3.2.1",
-            'date'    => "10/05/2023",
+            'version' => "3.2.2",
+            'date'    => "23/05/2023",
 
 //            'liens' => [
 //                'COMUE' => [
