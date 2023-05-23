@@ -356,6 +356,7 @@ return [
                         'options' => [
                             'route'    => '/upload-fiche-poste-pdf/:agent',
                             'defaults' => [
+                                /** @see AgentController::uploadFichePostePdfAction() */
                                 'controller' => AgentController::class,
                                 'action'     => 'upload-fiche-poste-pdf',
                             ],
