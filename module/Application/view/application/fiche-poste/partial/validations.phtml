@@ -101,3 +101,12 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
