@@ -79,6 +79,8 @@ class FichePosteAssertion extends AbstractAssertion {
                         return $isSuperieur;
                     case Agent::ROLE_AUTORITE:
                         return $isAutorite;
+                    case RoleProvider::RESPONSABLE :
+                        return $isResponsable;
                     default:
                         return false;
                 }
