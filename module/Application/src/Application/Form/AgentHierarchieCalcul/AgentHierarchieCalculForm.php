@@ -24,7 +24,7 @@ class AgentHierarchieCalculForm extends Form {
             ],
             'attributes' => [
                 'id' => 'structure',
-                'class'             => 'bootstrap-selectpicker',
+                'class' => 'bootstrap-selectpicker',
                 'data-live-search' => 'true'
             ],
         ]);
