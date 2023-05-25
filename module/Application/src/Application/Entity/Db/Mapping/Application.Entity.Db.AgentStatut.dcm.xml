@@ -33,5 +33,6 @@
         <field name="created_on"               column="created_on"       type="datetime"/>
         <field name="updated_on"               column="updated_on"       type="datetime"/>
         <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"        type="string" length="128"/>
     </entity>
 </doctrine-mapping>

@@ -52,7 +52,7 @@ $displayTemoin = (isset($options['temoin']) and $options['temoin'] !== false);
         <?php if ($displayIdentifiant) : ?>
             <strong> Identifiant </strong> <br/>
             <span class="badge">
-                    <?php echo $statut->getIdOrigine(); ?>
+                    <?php echo $statut->getId(); ?>
                 </span>
         <?php endif; ?>
 
@@ -96,6 +96,5 @@ $displayTemoin = (isset($options['temoin']) and $options['temoin'] !== false);
         border: solid lightblue 1px;
         margin: 1rem;
         padding: 1rem;
-        /*border-radius: 5px;*/
     }
 </style>

@@ -6,14 +6,15 @@ use DateTime;
 
 trait DbImportableAwareTrait {
 
-    /** @var DateTime */
-    private $created_on;
-    /** @var DateTime */
-    private $updated_on;
-    /** @var DateTime */
-    private $deleted_on;
+    private ?DateTime $created_on;
+    private ?DateTime $updated_on;
+    private ?DateTime $deleted_on;
+    private ?string $sourceId = null;
 
-    public function getDeleted() { return $this->deleted_on; }
+    public function getDeleted() : DateTime
+    {
+        return $this->deleted_on;
+    }
 
     public function isDeleted(DateTime $date = null) : bool
     {
@@ -42,6 +43,11 @@ trait DbImportableAwareTrait {
         }
         $this->updated_on = $now;
         $this->deleted_on = null;
+    }
+
+    public function getSourceId() : ?string
+    {
+        return $this->sourceId;
     }
 
 }
