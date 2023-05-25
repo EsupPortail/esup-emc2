@@ -22,7 +22,25 @@ use EntretienProfessionnel\Entity\Db\Campagne;
         <?php endif; ?>
     </dd>
     <dt class="col-md-4"> Début de la campagne </dt>
-    <dd class="col-md-8"> <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?></dd>
+    <dd class="col-md-8">
+        <?php if ($campagne->getDateDebut() === null || $campagne->getDateDebut() === false) : ?>
+            <span class="text-danger">
+                <span class="icon icon-attention"></span>
+                Aucune date de début de campagne
+            </span>
+        <?php else : ?>
+            <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>
+        <?php endif; ?>
+    </dd>
     <dt class="col-md-4"> Fin de la campagne </dt>
-    <dd  class="col-md-8"> <?php echo $campagne->getDateFin()->format('d/m/Y'); ?></dd>
+    <dd  class="col-md-8">
+        <?php if ($campagne->getDateFin() === null || $campagne->getDateFin() === false) : ?>
+            <span class="text-danger">
+                <span class="icon icon-attention"></span>
+                Aucune date de fin de campagne
+            </span>
+        <?php else : ?>
+            <?php echo $campagne->getDateFin()->format('d/m/Y'); ?>
+        <?php endif; ?>
+    </dd>
 </dl>
