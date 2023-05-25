@@ -15,6 +15,7 @@ Résolution possible :
     <li> vérifiez que vous incarnez un rôle permettant d'accéder à cette page. </li>
 </ul>
 
-Si le problème persiste, merci de contacter l'assistance d'EMC2 : <a href="mailto:assistance-emc2@unicaen.fr" target="_blank">assistance-emc2@unicaen.fr</a>
+<?php $this->appInfos()->contact->mail; ?>
+Si le problème persiste, merci de contacter l'assistance d'EMC2 : <a href="mailto:<?php echo $this->appInfos()->contact->mail; ?>" target="_blank"><?php echo $this->appInfos()->contact->mail; ?></a>
 </div>
 </div>
