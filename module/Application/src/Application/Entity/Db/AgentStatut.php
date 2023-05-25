@@ -164,7 +164,7 @@ class AgentStatut implements HasPeriodeInterface {
 
     const TEMOINS = [
         'cdi', 'cdd', 'titulaire', 'vacataire',
-        'enseignant', 'administratif', 'chercheur',
+        'enseignant', 'administratif', 'chercheur', 'doctorant',
         'detacheIn', 'detacheOut','dispo'
     ];
 
@@ -178,6 +178,7 @@ class AgentStatut implements HasPeriodeInterface {
             case 'enseignant' : return $this->isEnseignant();
             case 'administratif' : return $this->isAdministratif();
             case 'chercheur' : return $this->isChercheur();
+            case 'doctorant' : return $this->isDoctorant();
             case 'detacheIn' : return $this->isDetacheIn();
             case 'detacheOut' : return $this->isDetacheOut();
             case 'dispo' : return $this->isDispo();
