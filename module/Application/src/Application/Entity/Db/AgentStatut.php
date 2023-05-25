@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 
 /**
@@ -14,6 +15,7 @@ use Structure\Entity\Db\Structure;
 class AgentStatut implements HasPeriodeInterface {
     use HasPeriodeTrait;
     use DbImportableAwareTrait;
+
 
     /** @var string */
     private $id;
@@ -158,6 +160,32 @@ class AgentStatut implements HasPeriodeInterface {
         return $this;
     }
 
+    /** Gestion des témoins ***************************************************************************************/
+
+    const TEMOINS = [
+        'cdi', 'cdd', 'titulaire', 'vacataire',
+        'enseignant', 'administratif', 'chercheur',
+        'detacheIn', 'detacheOut','dispo'
+    ];
+
+    public function getTemoin(string $temoin) : bool
+    {
+        switch ($temoin) {
+            case 'cdi' : return $this->isCdi();
+            case 'cdd' : return $this->isCdd();
+            case 'titulaire' : return $this->isTitulaire();
+            case 'vacataire' : return $this->isVacataire();
+            case 'enseignant' : return $this->isEnseignant();
+            case 'administratif' : return $this->isAdministratif();
+            case 'chercheur' : return $this->isChercheur();
+            case 'detacheIn' : return $this->isDetacheIn();
+            case 'detacheOut' : return $this->isDetacheOut();
+            case 'dispo' : return $this->isDispo();
+            default :
+                throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0);
+        }
+    }
+    
     /**
      * @return bool
      */

@@ -25,6 +25,7 @@ use Structure\Entity\Db\StructureResponsable;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -237,13 +238,9 @@ class AgentService {
             ->addSelect('astructure')->join('affectation.structure', 'astructure')
             ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
             ->andWhere('affectation.dateDebut <= :today')
-            ->andWhere('affectation.principale = :true')
             ->andWhere('affectation.deleted_on IS NULL')
             //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-//            ->andWhere('statut.dateFin >= :today OR statut.dateFin IS NULL')
-//            ->andWhere('statut.dateDebut <= :today')
-            ->andWhere('statut.dispo = :false')
 //            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
             //GRADE
@@ -259,8 +256,6 @@ class AgentService {
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
 
             ->setParameter('today', $date)
-            ->setParameter('true', 'O')
-            ->setParameter('false', 'N')
             ->andWhere('agent.deleted_on IS NULL')
 
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
@@ -655,5 +650,99 @@ class AgentService {
             }
         }
         return true;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Parametre|null $parametre
+     * @param DateTime|null $date
+     * @param Structure|null $structure
+     * @return Agent[]
+     */
+    public function filtrerWithStatutTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?Structure $structure = null) : array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $count = [];
+            $statuts = $agent->getStatutsActifs($date, $structure);
+            foreach ($statuts as $statut) {
+                foreach (AgentStatut::TEMOINS as $temoin) {
+                    if ($statut->getTemoin($temoin)) {
+                        $count[$temoin] = true;
+                    }
+                }
+            }
+
+            $keep = true;
+            foreach($on as $temoin) {
+                if (!isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            foreach($off as $temoin) {
+                if (isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            if ($keep) $result[] = $agent;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Parametre|null $parametre
+     * @param DateTime|null $date
+     * @param Structure|null $structure
+     * @return Agent[]
+     */
+    public function filtrerWithAffectationTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null) : array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $count = [];
+            $statuts = $agent->getAffectationsActifs($date, $structures);
+            foreach ($statuts as $statut) {
+                foreach (AgentAffectation::TEMOINS as $temoin) {
+                    if ($statut->getTemoin($temoin)) {
+                        $count[$temoin] = true;
+                    }
+                }
+            }
+
+            $keep = true;
+            foreach($on as $temoin) {
+                if (!isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            foreach($off as $temoin) {
+                if (isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            if ($keep) $result[] = $agent;
+        }
+
+        return $result;
     }
 }

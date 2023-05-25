@@ -27,13 +27,13 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
 use Structure\Entity\Db\StructureAgentForce;
+use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
@@ -110,8 +110,9 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $allAgents = array_merge($agents, $agentsForces);
 
         usort($agents, function (Agent $a, Agent $b) {
            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();

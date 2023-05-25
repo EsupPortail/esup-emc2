@@ -64,9 +64,11 @@ use Structure\Entity\Db\Structure;
         </li>
         <?php foreach ($campagnes as $campagne) : ?>
         <li class="nav-item">
-            <a href="<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>" class="nav-link" aria-controls="Description" role="tab">
-                Entretiens professionnels <br/> <?php echo $campagne->getAnnee(); ?>
-            </a>
+            <?php if ($campagne !== null) : ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>" class="nav-link" aria-controls="Description" role="tab">
+                    Entretiens professionnels <br/> <?php echo $campagne->getAnnee(); ?>
+                </a>
+            <?php endif; ?>
         </li>
         <?php endforeach; ?>
         <li class="nav-item">

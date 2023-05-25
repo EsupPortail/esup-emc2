@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 
 /**
@@ -42,6 +43,23 @@ class AgentAffectation implements HasPeriodeInterface {
     public function getIdOrig() : ?string
     {
         return $this->idOrig;
+    }
+
+    /** Gestion des témoins ***************************************************************************************/
+
+    const TEMOINS = [
+        'principale', 'hierarchique', 'fonctionnelle'
+    ];
+
+    public function getTemoin(string $temoin) : bool
+    {
+        switch ($temoin) {
+            case 'principale' : return $this->isPrincipale();
+            case 'hierarchique' : return $this->isHierarchique();
+            case 'fonctionnelle' : return $this->isFonctionnelle();
+            default :
+                throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0);
+        }
     }
 
     public function isPrincipale() : bool

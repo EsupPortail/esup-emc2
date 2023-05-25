@@ -161,10 +161,12 @@ class Agent implements
     }
 
     /** @return AgentAffectation[] */
-    public function getAffectationsActifs(?DateTime $date = null) : array
+    public function getAffectationsActifs(?DateTime $date = null, ?array $structures = null) : array
     {
         if ($date === null) $date = (new DateTime());
-        return $this->getAffectations($date);
+        $affectations =  $this->getAffectations($date);
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentAffectation $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        return $affectations;
     }
 
     /** @return AgentAffectation */ //TODO A reecrire car peut être multiple ...
@@ -251,10 +253,12 @@ class Agent implements
     }
 
     /** @return AgentStatut[] */
-    public function getStatutsActifs(?DateTime $date = null) : array
+    public function getStatutsActifs(?DateTime $date = null, ?Structure $structure = null) : array
     {
         if ($date === null) $date = (new DateTime());
-        return $this->getStatuts($date);
+        $statuts = $this->getStatuts($date);
+        if ($structure) $statuts = array_filter($statuts, function (AgentStatut $a) use ($structure) { return $a->getStructure() === $structure;});
+        return $statuts;
     }
 
     /** Autres accesseurs *********************************************************************************************/
