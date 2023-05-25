@@ -14,7 +14,6 @@
         </many-to-one>
         <field name="dateDebut"               column="date_debut"       type="datetime"/>
         <field name="dateFin"                 column="date_fin"         type="datetime"/>
-        <field name="idOrig"                  column="id_orig"          type="string" length="255"/>
         <field name="principale"              column="t_principale"     type="string" length="1"/>
         <field name="hierarchique"            column="t_hierarchique"   type="string" length="1"/>
         <field name="fonctionnelle"           column="t_fonctionnelle"  type="string" length="1"/>
@@ -24,5 +23,6 @@
         <field name="created_on"               column="created_on"       type="datetime"/>
         <field name="updated_on"               column="updated_on"       type="datetime"/>
         <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+        <field name="sourceId"                 column="source_id"        type="string" length="128"/>
     </entity>
 </doctrine-mapping>

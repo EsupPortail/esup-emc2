@@ -65,7 +65,7 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
     <?php endif; ?>
 
     <?php if ($displayCorrespondance) : ?>
-        <?php echo $this->correspondance($grade->getBap()); ?>
+        <?php echo $this->correspondance($grade->getCorrespondance()); ?>
     <?php endif; ?>
 
     <?php if ($displayTemoin) : ?>
@@ -96,8 +96,8 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
             </dd>
             <dt class="col-md-3"> Correspondance</dt>
             <dd class="col-md-9">
-                <?php if ($grade->getBap()) : ?>
-                    <?php echo $this->correspondance($grade->getBap()); ?>
+                <?php if ($grade->getCorrespondance()) : ?>
+                    <?php echo $this->correspondance($grade->getCorrespondance()); ?>
                 <?php else : ?>
                     Non renseignée
                 <?php endif; ?>

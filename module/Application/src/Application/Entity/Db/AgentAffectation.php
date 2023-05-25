@@ -19,7 +19,6 @@ class AgentAffectation implements HasPeriodeInterface {
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?Structure $structure = null;
-    private ?string $idOrig = null;
     private ?string $principale = null;
     private ?string $hierarchique = null;
     private ?string $fonctionnelle = null;
@@ -38,11 +37,6 @@ class AgentAffectation implements HasPeriodeInterface {
     public function getStructure() : ?Structure
     {
         return $this->structure;
-    }
-
-    public function getIdOrig() : ?string
-    {
-        return $this->idOrig;
     }
 
     /** Gestion des témoins ***************************************************************************************/

@@ -82,7 +82,7 @@ $statuts = AgentStatut::generateStatutsArray($agentStatuts);
                     <?php foreach ($agentGrades as $agentGrade) : ?>
                         <?php $grade = $agentGrade->getGrade(); ?>
                         <?php $corps = $agentGrade->getCorps(); ?>
-                        <?php $correspondance = $agentGrade->getBap(); ?>
+                        <?php $correspondance = $agentGrade->getCorrespondance(); ?>
                         <li>
                             <?php echo ($grade)?$grade->getLibelleLong():"Grade non renseigné"; ?> <br/>
                             <?php echo ($corps)?$corps->getLibelleLong():"Corps non renseigné"; ?> <br/>

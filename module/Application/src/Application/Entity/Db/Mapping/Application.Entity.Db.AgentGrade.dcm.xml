@@ -20,7 +20,7 @@
             <join-column name="grade_id" referenced-column-name="id"/>
         </many-to-one>
 
-        <many-to-one target-entity="Carriere\Entity\Db\Correspondance"  field="bap">
+        <many-to-one target-entity="Carriere\Entity\Db\Correspondance"  field="correspondance">
             <join-column name="bap_id" referenced-column-name="id"/>
         </many-to-one>
 
