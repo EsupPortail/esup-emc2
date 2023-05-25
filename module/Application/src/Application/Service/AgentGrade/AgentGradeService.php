@@ -26,7 +26,7 @@ class AgentGradeService {
             ->join('agentgrade.structure', 'structure')->addSelect('structure')
             ->leftjoin('agentgrade.grade', 'grade')->addSelect('grade')
             ->leftjoin('agentgrade.corps', 'corps')->addSelect('corps')
-            ->leftjoin('agentgrade.bap', 'correspondance')->addSelect('correspondance')
+            ->leftjoin('agentgrade.correspondance', 'correspondance')->addSelect('correspondance')
             ->andWhere('agentgrade.deleted_on IS NULL')
         ;
         return $qb;
@@ -115,7 +115,7 @@ class AgentGradeService {
     public function getAgentGradesByCorrespondance(Correspondance $correspondance, bool $actif = true) : array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('agentgrade.bap = :correspondance')
+            ->andWhere('agentgrade.correspondance = :correspondance')
             ->setParameter('correspondance', $correspondance)
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
         ;
