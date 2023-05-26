@@ -177,8 +177,17 @@ class StructureController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+
         $allAgents = array_merge($agents, $agentsForces);
+
+        usort($allAgents, function (Agent $a, Agent $b) {
+            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
+            $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
+            return $aaa > $bbb;
+        });
 
         $fichesDePoste = [];
         foreach ($allAgents as $agent) {
