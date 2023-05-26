@@ -11,7 +11,7 @@ trait DbImportableAwareTrait {
     private ?DateTime $deleted_on;
     private ?string $sourceId = null;
 
-    public function getDeleted() : DateTime
+    public function getDeleted() : ?DateTime
     {
         return $this->deleted_on;
     }
