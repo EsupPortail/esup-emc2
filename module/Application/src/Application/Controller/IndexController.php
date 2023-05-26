@@ -117,7 +117,7 @@ class IndexController extends AbstractActionController
         /** Campagne d'entretien professionnel ************************************************************************/
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $campagnes[] = $last;
+        if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         /** Récuperation des eps **************************************************************************************/
@@ -157,7 +157,7 @@ class IndexController extends AbstractActionController
         /** Campagne d'entretien professionnel ************************************************************************/
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
-        $campagnes[] = $last;
+        if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
         /** Récuperation des eps **************************************************************************************/
