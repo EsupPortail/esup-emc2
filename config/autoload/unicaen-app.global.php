@@ -34,8 +34,8 @@ return [
         'app_infos' => [
             'nom'     => "EMC2",
             'desc'    => "Emploi Mobilité Carrière Compétences",
-            'version' => "3.2.2",
-            'date'    => "23/05/2023",
+            'version' => "3.2.3",
+            'date'    => "26/05/2023",
 
 //            'liens' => [
 //                'COMUE' => [
@@ -44,8 +44,6 @@ return [
 //                ],
 //            ],
         ],
-
-
 
         /**
          * Période d'exécution de la requête de rafraîchissement de la session utilisateur, en millisecondes.

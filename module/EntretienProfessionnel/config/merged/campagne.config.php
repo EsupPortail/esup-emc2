@@ -64,6 +64,17 @@ return [
                 [
                     'controller' => CampagneController::class,
                     'action' => [
+                        'demander-validation-agent',
+                        'demander-validation-superieur',
+                        'demander-validation-autorite',
+                    ],
+                    'privileges' => [
+                        CampagnePrivileges::CAMPAGNE_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => CampagneController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
                     ],
@@ -157,6 +168,42 @@ return [
                                         /** @see CampagneController::modifierAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'demander-validation-agent' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/demander-validation-agent/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::demanderValidationAgentAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'demander-validation-agent',
+                                    ],
+                                ],
+                            ],
+                            'demander-validation-superieur' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/demander-validation-superieur/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::demanderValidationSuperieurAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'demander-validation-superieur',
+                                    ],
+                                ],
+                            ],
+                            'demander-validation-autorite' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/demander-validation-autorite/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::demanderValidationAutoriteAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'demander-validation-autorite',
                                     ],
                                 ],
                             ],

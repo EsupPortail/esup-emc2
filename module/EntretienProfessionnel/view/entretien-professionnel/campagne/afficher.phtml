@@ -146,7 +146,7 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                    title="Seules les responsables ayant des entretiens non validées seront notifiés"
                 >
                     <span class="icon icon-notifier"></span>
-                    Notifier les responsables
+                    Notifier les responsables d'entretien
                 </a>
                 <a href=""
                    class="btn btn-primary disabled"
@@ -155,12 +155,12 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     <span class="icon icon-notifier"></span>
                     Notifier les autorités
                 </a>
-                <a href=""
-                   class="btn btn-primary disabled"
-                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-agent', ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+                   title="Rappel de la demande de validation aux agents pour lesquel·les l'entretien est en attente de leur validation"
                 >
                     <span class="icon icon-notifier"></span>
-                    Notifier les responsables
+                    Notifier les agents
                 </a>
             </div>
         </div>

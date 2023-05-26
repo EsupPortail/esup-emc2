@@ -3,6 +3,7 @@
 namespace EntretienProfessionnel\Controller;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAutorite;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -169,6 +170,83 @@ class CampagneController extends AbstractActionController {
         }
         return $vm;
     }
+
+    /** Action de la page d'affichage d'une campagne ******************************************************************/
+
+    public function demanderValidationAutoriteAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
+
+        $entretiens = []; $problemes = []; $listes = [];
+        foreach ($enAttente as $entretien) {
+            $agent = $entretien->getAgent();
+            $autorites = array_map(function (AgentAutorite $aa) { return $aa->getAutorite(); }, $agent->getAutorites());
+            $autorites = array_diff($autorites, [$entretien->getResponsable()]);
+
+            if (!empty($autorites)) {
+                foreach ($autorites as $autorite) {
+                    $listes[$autorite->getId()] = $autorite;
+                    $entretiens[$autorite->getId()][] = $entretien;
+                }
+            } else {
+                $problemes[] = $entretien;
+            }
+        }
+
+        $count = 0;
+        $texte  = "Liste des notifications :";
+        $texte .= "<ul>";
+        foreach ($listes as $autorite) {
+            $agent = $entretien->getAgent();
+            $mail = $this->getNotificationService()->triggerRappelValidationAutorite($autorite, $entretiens[$autorite->getId()]);
+            $texte .= "<li> Notification faite vers ".$agent->getDenomination(). " (".$agent->getEmail().") mail#".$mail->getId(). "</li>";
+            $count++;
+        }
+        $texte .= "</ul>";
+        $texte .= $count . " notification·s <br/>";
+
+        $texte .= "Liste des problèmes : ";
+        $texte .= "<ul>";
+        foreach ($problemes as $probleme) {
+
+        }
+        $texte .= "</ul>";
+
+        $vm = new ViewModel([
+            'title' => "Rapport de notification",
+            'reponse' => $texte,
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+    public function demanderValidationAgentAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne);
+
+        $count = 0;
+        $texte  = "Liste des notifications :";
+        $texte .= "<ul>";
+        foreach ($enAttente as $entretien) {
+            $agent = $entretien->getAgent();
+            $mail = $this->getNotificationService()->triggerRappelValidationAgent($entretien);
+            $texte .= "<li> Notification faite vers ".$agent->getDenomination(). " (".$agent->getEmail().") mail#".$mail->getId(). "</li>";
+            $count++;
+        }
+        $texte .= "</ul>";
+        $texte .= $count . " notification·s";
+
+        $vm = new ViewModel([
+            'title' => "Rapport de notification",
+            'reponse' => $texte,
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+    /** Page associée à la campagne dans l'écran des structures *******************************************************/
 
     /**
      * Action affichant une campagne d'entretien professionnel pour une structure
