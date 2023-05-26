@@ -46,7 +46,10 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <abbr title="<?php echo $structure->getLibelleLong(); ?>">
                             <?php echo $structure->getLibelleCourt(); ?>
                         </abbr>
+                        <br/>
+                        <?php echo $structure->getLibelleLong(); ?>
                         <?php if ($structure->getFermeture() !== null) : ?>
+                            <br/>
                             <span class="ferme" title="<?php echo $structure->getFermeture()->format('d/m/Y'); ?>">
                                 Fermée
                             </span>
