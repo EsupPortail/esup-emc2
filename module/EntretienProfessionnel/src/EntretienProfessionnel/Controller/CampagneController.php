@@ -8,6 +8,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
@@ -173,24 +174,66 @@ class CampagneController extends AbstractActionController {
 
     /** Action de la page d'affichage d'une campagne ******************************************************************/
 
+    public function demanderValidationSuperieurAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
+
+        $entretiens = []; $listes = [];
+        foreach ($enAttente as $entretienListe) {
+            /** @var EntretienProfessionnel $entretien */
+            foreach ($entretienListe as $entretien) {
+                $superieur = $entretien->getResponsable();
+                $listes[$superieur->getId()] = $superieur;
+                $entretiens[$superieur->getId()][] = $entretien;
+            }
+        }
+
+        $count = 0;
+        $texte  = "Liste des notifications :";
+        $texte .= "<ul>";
+        foreach ($listes as $superieur) {
+            $mail = $this->getNotificationService()->triggerRappelValidationSuperieur($superieur, $campagne, $entretiens[$superieur->getId()]);
+            $texte .= "<li> Notification faite vers ".$superieur->getDenomination(). " (".$superieur->getEmail().") mail#".$mail->getId(). "</li>";
+            $count++;
+        }
+        $texte .= "</ul>";
+        $texte .= $count . " notification·s <br/>";
+
+        $vm = new ViewModel([
+            'title' => "Rapport de notification",
+            'reponse' => $texte,
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
     public function demanderValidationAutoriteAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
         $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
 
         $entretiens = []; $problemes = []; $listes = [];
-        foreach ($enAttente as $entretien) {
-            $agent = $entretien->getAgent();
-            $autorites = array_map(function (AgentAutorite $aa) { return $aa->getAutorite(); }, $agent->getAutorites());
-            $autorites = array_diff($autorites, [$entretien->getResponsable()]);
-
-            if (!empty($autorites)) {
-                foreach ($autorites as $autorite) {
-                    $listes[$autorite->getId()] = $autorite;
-                    $entretiens[$autorite->getId()][] = $entretien;
+        foreach ($enAttente as $entretienListe) {
+            /** @var EntretienProfessionnel $entretien */
+            foreach ($entretienListe as $entretien) {
+                $agent = $entretien->getAgent();
+                $autorites_tmp = array_map(function (AgentAutorite $aa) {
+                    return $aa->getAutorite();
+                }, $agent->getAutorites());
+                $autorites = [];
+                foreach ($autorites_tmp as $autorite) {
+                    if ($autorite !== $entretien->getResponsable()) $autorites[] = $autorite;
                 }
-            } else {
-                $problemes[] = $entretien;
+
+                if (!empty($autorites)) {
+                    foreach ($autorites as $autorite) {
+                        $listes[$autorite->getId()] = $autorite;
+                        $entretiens[$autorite->getId()][] = $entretien;
+                    }
+                } else {
+                    $problemes[] = $entretien;
+                }
             }
         }
 
@@ -198,9 +241,8 @@ class CampagneController extends AbstractActionController {
         $texte  = "Liste des notifications :";
         $texte .= "<ul>";
         foreach ($listes as $autorite) {
-            $agent = $entretien->getAgent();
-            $mail = $this->getNotificationService()->triggerRappelValidationAutorite($autorite, $entretiens[$autorite->getId()]);
-            $texte .= "<li> Notification faite vers ".$agent->getDenomination(). " (".$agent->getEmail().") mail#".$mail->getId(). "</li>";
+            $mail = $this->getNotificationService()->triggerRappelValidationAutorite($autorite, $campagne, $entretiens[$autorite->getId()]);
+            $texte .= "<li> Notification faite vers ".$autorite->getDenomination(). " (".$autorite->getEmail().") mail#".$mail->getId(). "</li>";
             $count++;
         }
         $texte .= "</ul>";
@@ -209,7 +251,7 @@ class CampagneController extends AbstractActionController {
         $texte .= "Liste des problèmes : ";
         $texte .= "<ul>";
         foreach ($problemes as $probleme) {
-
+            $texte .= "<li> Entretien de ".$probleme->getAgent()->getDenomination() . "</li>";
         }
         $texte .= "</ul>";
 

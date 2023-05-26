@@ -285,23 +285,35 @@ class NotificationService {
 
     /** Notifications associées à la demande de validation (en retard) d'entretiens profesionnels *****/
 
-    public function triggerRappelValidationSuperieur(?EntretienProfessionnel $entretien) : Mail
+    public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens) : Mail
     {
-        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
+        $vars = ['campagne' => $campagne, 'agent' => $superieur, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_SUPERIEUR, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+
+        $texte  = "<ul>";
+        foreach ($entretiens as $entretien) $texte .= "<li>".$entretien->getAgent()->getDenomination()."</li>";
+        $texte .= "</ul>";
+
+        $corps = $rendu->getCorps(); $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
+        $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), $corps);
+        $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
     }
 
-    public function triggerRappelValidationAutorite(?EntretienProfessionnel $entretien) : Mail
+    public function triggerRappelValidationAutorite(Agent $autorite, Campagne $campagne, array $entretiens) : Mail
     {
-        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
+        $vars = ['campagne' => $campagne, 'agent' => $autorite, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AUTORITE, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+
+        $texte  = "<ul>";
+        foreach ($entretiens as $entretien) $texte .= "<li>".$entretien->getAgent()->getDenomination()."</li>";
+        $texte .= "</ul>";
+
+        $corps = $rendu->getCorps(); $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
+        $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), $corps);
+        $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
@@ -312,7 +324,7 @@ class NotificationService {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AGENT, $vars);
         $mail = $this->getMailService()->sendMail($this->getEmailAgent($entretien), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;

@@ -103,19 +103,19 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                 </dl>
             </div>
             <div class="col-md-4">
-                <a href=""
-                   class="btn btn-primary disabled"
-               >
-                    <span class="icon icon-csv"></span>
-                    Extraire la liste des agents
-                </a>
-                <a href=""
-                   class="btn btn-primary disabled"
-                   title="Seules les structures dont des entretiens sont manquants seront notifiées"
-                >
-                    <span class="icon icon-notifier"></span>
-                    Notifier responsable de structure
-                </a>
+<!--                <a href=""-->
+<!--                   class="btn btn-primary disabled"-->
+<!--               >-->
+<!--                    <span class="icon icon-csv"></span>-->
+<!--                    Extraire la liste des agents-->
+<!--                </a>-->
+<!--                <a href=""-->
+<!--                   class="btn btn-primary disabled"-->
+<!--                   title="Seules les structures dont des entretiens sont manquants seront notifiées"-->
+<!--                >-->
+<!--                    <span class="icon icon-notifier"></span>-->
+<!--                    Notifier responsable de structure-->
+<!--                </a>-->
             </div>
         </div>
 
@@ -135,26 +135,31 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                 </dl>
             </div>
             <div class="col-md-4">
-                <a href=""
-                   class="btn btn-primary disabled"
-                >
-                    <span class="icon icon-csv"></span>
-                    Extraire les entretiens en attente
-                </a>
-                <a href=""
-                   class="btn btn-primary disabled"
-                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+<!--                <a href=""-->
+<!--                   class="btn btn-primary disabled"-->
+<!--                >-->
+<!--                    <span class="icon icon-csv"></span>-->
+<!--                    Extraire les entretiens en attente-->
+<!--                </a>-->
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+                   title="Rappel de la demande de validation aux responsables d'entretien pour lesquel·les l'entretien est en attente de leur validation"
                 >
                     <span class="icon icon-notifier"></span>
-                    Notifier les responsables d'entretien
+                    Notifier les responsables
                 </a>
-                <a href=""
-                   class="btn btn-primary disabled"
-                   title="Seules les responsables ayant des entretiens non validées seront notifiés"
+                <br/>
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAutoriteAction();  */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
+                   title="Rappel de la demande de validation aux autorités hiérarchiques pour lesquel·les l'entretien est en attente de leur validation"
                 >
                     <span class="icon icon-notifier"></span>
                     Notifier les autorités
                 </a>
+                <br/>
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAgentAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-agent', ['campagne' => $campagne->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
                    title="Rappel de la demande de validation aux agents pour lesquel·les l'entretien est en attente de leur validation"
