@@ -10,7 +10,8 @@ class EntretienproPrivileges extends Privileges
     const ENTRETIENPRO_MESENTRETIENS = 'entretienpro-entretienpro_mesentretiens';
     const ENTRETIENPRO_AFFICHER     = 'entretienpro-entretienpro_afficher';
     const ENTRETIENPRO_EXPORTER     = 'entretienpro-entretienpro_exporter';
-    const ENTRETIENPRO_AJOUTER      = 'entretienpro-entretienpro_ajouter';
+
+    const ENTRETIENPRO_CONVOQUER    = 'entretienpro-entretienpro_convoquer';
     const ENTRETIENPRO_MODIFIER     = 'entretienpro-entretienpro_modifier';
     const ENTRETIENPRO_HISTORISER   = 'entretienpro-entretienpro_historiser';
     const ENTRETIENPRO_DETRUIRE     = 'entretienpro-entretienpro_detruire';

@@ -16,6 +16,8 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
+use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
+use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -28,6 +30,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use EntretienProfessionnelServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use PrivilegeServiceAwareTrait;
+    use PrivilegeCategorieServiceAwareTrait;
 
     private ?Agent $lastAgent = null;
     private ?EntretienProfessionnel $lastEntretien = null;
@@ -80,6 +84,15 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
+        //todo QUESTION : pourquoi devoir faire cela c'est pas normal !!!
+        [$catCode, $priCode] = explode('-', $privilege);
+        $categorie = $this->getPrivilegeCategorieService()->findByCode($catCode);
+        $pprivilege = $this->getPrivilegeService()->findByCode($priCode, $categorie->getId());
+        if ($pprivilege === null) return false;
+        $listings = $pprivilege->getRoles()->toArray();
+        if (!in_array($role, $listings)) return false;
+        //todo FIN BIZARERIE ...
+
 
         $isAgent = ($agent === $entity->getAgent());
 
@@ -110,7 +123,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return false;
                 }
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
-            case EntretienproPrivileges::ENTRETIENPRO_AJOUTER :
+            case EntretienproPrivileges::ENTRETIENPRO_CONVOQUER :
             case EntretienproPrivileges::ENTRETIENPRO_MODIFIER :
                 switch ($role->getRoleId()) {
                     case AppRoleProvider::ADMIN_FONC:

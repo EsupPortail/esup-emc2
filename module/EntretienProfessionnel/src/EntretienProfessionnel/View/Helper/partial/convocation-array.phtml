@@ -14,7 +14,7 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
  */
 
 $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));;
-$canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AJOUTER)));
+$canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
 $canAction = ($canAfficher OR $canConvoquer);
 
 ?>
@@ -75,7 +75,12 @@ $canAction = ($canAfficher OR $canConvoquer);
                 <?php endif; ?>
                 <?php
                     $entretien = new EntretienProfessionnel(); $entretien->setAgent($agent);
-                    if ($campagne->estEnCours() AND $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AJOUTER)) : ?>
+                    //todo l'assertion merde
+//                    $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
+                    $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
+                ?>
+                <?php
+                    if ($campagne->estEnCours() AND $canConvoquer) : ?>
                     <br>
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::creerAction() */?>
                     <a

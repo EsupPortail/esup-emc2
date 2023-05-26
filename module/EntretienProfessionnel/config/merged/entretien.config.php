@@ -34,7 +34,7 @@ return [
                         'privileges' => [
                             EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                             EntretienproPrivileges::ENTRETIENPRO_EXPORTER,
-                            EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
+                            EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
                             EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
@@ -108,7 +108,7 @@ return [
                         'creer',
                         'modifier',
                     ],
-                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_AJOUTER,
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
                     'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [

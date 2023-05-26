@@ -11,6 +11,8 @@ use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class EntretienProfessionnelAssertionFactory {
@@ -30,6 +32,8 @@ class EntretienProfessionnelAssertionFactory {
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var StructureService $structureService
          * @var UserService $userService
+         * @var PrivilegeService $privilegeService
+         * @var PrivilegeCategorieService $categorieService
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
@@ -37,6 +41,9 @@ class EntretienProfessionnelAssertionFactory {
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
+
+        $privilegeService = $container->get(PrivilegeService::class);
+        $categorieService = $container->get(PrivilegeCategorieService::class);
 
         /** @var EntretienProfessionnelAssertion $assertion */
         $assertion = new EntretienProfessionnelAssertion();
@@ -46,6 +53,9 @@ class EntretienProfessionnelAssertionFactory {
         $assertion->setEntretienProfessionnelService($entretienProfessionnelService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
+
+        $assertion->setPrivilegeService($privilegeService);
+        $assertion->setPrivilegeCategorieService($categorieService);
 
         /* @var $application Application */
         $application = $container->get('Application');

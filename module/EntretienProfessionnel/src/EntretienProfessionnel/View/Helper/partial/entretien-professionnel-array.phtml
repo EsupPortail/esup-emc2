@@ -109,6 +109,11 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
     </thead>
     <tbody>
     <?php foreach ($entretiens as $entretien) : ?>
+        <?php
+        //todo l'assertion merde
+//        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
+        $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
+        ?>
     <tr>
         <?php if ($displayAnnee) : ?>
             <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>
@@ -175,7 +180,7 @@ if ($options['affichages'] AND $options['affichages']['width']) $width = $option
                         Exporter CREF
                 </a>
             <?php endif; ?>
-            <?php if ($canModifier  and !$dropdowns) : ?>
+            <?php if ($canConvoquer  and !$dropdowns) : ?>
                 <br>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::modifierAction() */?>
