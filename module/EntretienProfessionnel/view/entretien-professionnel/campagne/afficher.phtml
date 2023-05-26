@@ -14,6 +14,7 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
  * @var EntretienProfessionnel[] $entretiensResponsable
  * @var EntretienProfessionnel[] $entretiensAutorite
  * @var EntretienProfessionnel[] $entretiensAgent
+ * @var EntretienProfessionnel[] $entretiensCompletes
  */
 
 
@@ -129,6 +130,8 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     <dd class="col-md-7"> <?php echo count($entretiensAutorite); ?></dd>
                     <dt class="col-md-5"> Attente validation agent : </dt>
                     <dd class="col-md-7"> <?php echo count($entretiensAgent); ?></dd>
+                    <dt class="col-md-5"> Entretiens complets : </dt>
+                    <dd class="col-md-7"> <?php echo count($entretiensCompletes); ?></dd>
                 </dl>
             </div>
             <div class="col-md-4">

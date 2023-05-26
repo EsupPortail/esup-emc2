@@ -380,6 +380,20 @@ class CampagneService {
         return $entretiens;
     }
 
+    /**
+     * @param Campagne $campagne
+     * @return EntretienProfessionnel[]
+     */
+    public function getEntretiensCompletes(Campagne $campagne) : array
+    {
+        $etats = [
+            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
+        ];
+
+        $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
+        return $entretiens;
+    }
+
     public function getAgentsEligibles(Campagne $campagne) : array
     {
         $agents = $this->getAgentService()->getAgents();

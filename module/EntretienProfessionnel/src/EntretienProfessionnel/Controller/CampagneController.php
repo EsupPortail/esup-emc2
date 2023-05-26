@@ -57,6 +57,7 @@ class CampagneController extends AbstractActionController {
             'entretiensResponsable' => $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne),
             'entretiensAutorite' => $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne),
             'entretiensAgent' => $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne),
+            'entretiensCompletes' => $this->getCampagneService()->getEntretiensCompletes($campagne),
         ]);
     }
 
