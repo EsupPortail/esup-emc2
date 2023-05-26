@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Structure;
 
@@ -8,6 +9,8 @@ use Structure\Entity\Db\Structure;
  * @var string $current <i> onglet actif pour mise en forme
  * @var Campagne[] $campagnes
  */
+
+$canMissionSpecifiqueOnglet = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_ONGLET));
 
 ?>
 
@@ -55,6 +58,7 @@ use Structure\Entity\Db\Structure;
                 Fiches de <br/>poste
             </a>
         </li>
+        <?php if ($canMissionSpecifiqueOnglet) : ?>
         <li class="nav-item">
             <?php /** @see \Structure\Controller\StructureController::missionsSpecifiquesAction() */ ?>
             <a href="<?php echo $this->url('structure/missions-specifiques', ['structure' => $structure->getId()],[], true); ?>"
@@ -62,6 +66,7 @@ use Structure\Entity\Db\Structure;
                 Missions <br/> spécifiques
             </a>
         </li>
+        <?php endif; ?>
         <?php foreach ($campagnes as $campagne) : ?>
         <li class="nav-item">
             <?php if ($campagne !== null) : ?>
