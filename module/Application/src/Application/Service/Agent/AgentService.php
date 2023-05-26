@@ -247,7 +247,7 @@ class AgentService {
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
             ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
             ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
-            ->addSelect('gcorrespondance')->leftjoin('grade.bap', 'gcorrespondance')
+            ->addSelect('gcorrespondance')->leftjoin('grade.correspondance', 'gcorrespondance')
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
 //            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
 //            ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
