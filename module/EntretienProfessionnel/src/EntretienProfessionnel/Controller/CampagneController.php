@@ -177,15 +177,17 @@ class CampagneController extends AbstractActionController {
     public function demanderValidationSuperieurAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne);
+        $enAttente =  $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne);
 
         $entretiens = []; $listes = [];
         foreach ($enAttente as $entretienListe) {
             /** @var EntretienProfessionnel $entretien */
             foreach ($entretienListe as $entretien) {
-                $superieur = $entretien->getResponsable();
-                $listes[$superieur->getId()] = $superieur;
-                $entretiens[$superieur->getId()][] = $entretien;
+                if ($entretien->estNonHistorise()) {
+                    $superieur = $entretien->getResponsable();
+                    $listes[$superieur->getId()] = $superieur;
+                    $entretiens[$superieur->getId()][] = $entretien;
+                }
             }
         }
 
@@ -217,22 +219,24 @@ class CampagneController extends AbstractActionController {
         foreach ($enAttente as $entretienListe) {
             /** @var EntretienProfessionnel $entretien */
             foreach ($entretienListe as $entretien) {
-                $agent = $entretien->getAgent();
-                $autorites_tmp = array_map(function (AgentAutorite $aa) {
-                    return $aa->getAutorite();
-                }, $agent->getAutorites());
-                $autorites = [];
-                foreach ($autorites_tmp as $autorite) {
-                    if ($autorite !== $entretien->getResponsable()) $autorites[] = $autorite;
-                }
-
-                if (!empty($autorites)) {
-                    foreach ($autorites as $autorite) {
-                        $listes[$autorite->getId()] = $autorite;
-                        $entretiens[$autorite->getId()][] = $entretien;
+                if ($entretien->estNonHistorise()) {
+                    $agent = $entretien->getAgent();
+                    $autorites_tmp = array_map(function (AgentAutorite $aa) {
+                        return $aa->getAutorite();
+                    }, $agent->getAutorites());
+                    $autorites = [];
+                    foreach ($autorites_tmp as $autorite) {
+                        if ($autorite !== $entretien->getResponsable()) $autorites[] = $autorite;
                     }
-                } else {
-                    $problemes[] = $entretien;
+
+                    if (!empty($autorites)) {
+                        foreach ($autorites as $autorite) {
+                            $listes[$autorite->getId()] = $autorite;
+                            $entretiens[$autorite->getId()][] = $entretien;
+                        }
+                    } else {
+                        $problemes[] = $entretien;
+                    }
                 }
             }
         }
@@ -271,11 +275,16 @@ class CampagneController extends AbstractActionController {
         $count = 0;
         $texte  = "Liste des notifications :";
         $texte .= "<ul>";
-        foreach ($enAttente as $entretien) {
-            $agent = $entretien->getAgent();
-            $mail = $this->getNotificationService()->triggerRappelValidationAgent($entretien);
-            $texte .= "<li> Notification faite vers ".$agent->getDenomination(). " (".$agent->getEmail().") mail#".$mail->getId(). "</li>";
-            $count++;
+        foreach ($enAttente as $entretienListe) {
+            /** @var EntretienProfessionnel $entretien */
+            foreach ($entretienListe as $entretien) {
+                if ($entretien->estNonHistorise()) {
+                    $agent = $entretien->getAgent();
+                    $mail = $this->getNotificationService()->triggerRappelValidationAgent($entretien);
+                    $texte .= "<li> Notification faite vers " . $agent->getDenomination() . " (" . $agent->getEmail() . ") mail#" . $mail->getId() . "</li>";
+                    $count++;
+                }
+            }
         }
         $texte .= "</ul>";
         $texte .= $count . " notification·s";
