@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction();
+ * @var EmploiType $emploiType
+ * @var AgentGrade[] $agentGrades
+ * @var Agent[] $agents
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentGrade;
+use Carriere\Entity\Db\Corps;
+use Carriere\Entity\Db\EmploiType;
+
+$now = new DateTime();
+
+/** @var  AgentGrade[] $agents */
+$agents = $emploiType->getAgentGrades();
+$agents = array_filter($agents, function (AgentGrade $a) { return !$a->isDeleted();});
+usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-5"> Emploi Type </dt>
+            <dd class="col-md-7">[#<?php echo $emploiType->getId(); ?>] <?php echo $emploiType->getLibelleLong(); ?></dd>
+<!--            <dt class="col-md-5"> #Agent </dt>-->
+<!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
+            <dt class="col-md-5"> #AgentGrade </dt>
+            <dd class="col-md-7"> <?php echo count($agentGrades); ?></dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-md-5"> Date ouverture </dt>
+            <dd class="col-md-7"> <?php echo ($emploiType->getDateDebut())?$emploiType->getDateDebut()->format('d/m/Y'):"---"; ?>  </dd>
+            <dt class="col-md-5"> Date fermeture </dt>
+            <dd class="col-md-7"> <?php echo ($emploiType->getDateFin())?$emploiType->getDateFin()->format('d/m/Y'):"---"; ?></dd>
+        </dl>
+    </div>
+</div>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th> Id </th>
+            <th> Agent </th>
+            <th> Début </th>
+            <th> Fin </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($agentGrades as $agent) : ?>
+        <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
+            <td> <?php echo $agent->getId(); ?> </td>
+            <td> <?php echo $agent->getAgent()->getDenomination(); ?> </td>
+            <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
+            <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+

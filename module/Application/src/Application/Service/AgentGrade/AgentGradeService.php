@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
 use Doctrine\ORM\QueryBuilder;
 use Structure\Entity\Db\Structure;
@@ -126,4 +127,22 @@ class AgentGradeService {
         return $result;
     }
 
+    /**
+     * @param EmploiType $emploiType
+     * @param bool $actif
+     * @return array
+     */
+    public function getAgentGradesByEmploiType(EmploiType $emploiType, bool $actif = true) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentgrade.emploiType = :emploitype')
+            ->setParameter('emploitype', $emploiType)
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')
+        ;
+
+        if ($actif === true) $qb = AgentGrade::decorateWithActif($qb, 'agentgrade');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

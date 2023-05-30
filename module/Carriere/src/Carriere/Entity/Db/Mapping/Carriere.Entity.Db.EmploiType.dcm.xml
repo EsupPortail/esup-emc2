@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Carriere\Entity\Db\EmploiType" table="carriere_emploitype">
+
+        <id name="id"               column="id"             type="integer">
+        </id>
+
+        <field name="libelleCourt"  column="libelle_court"      type="string"       length="20"  />
+        <field name="libelleLong"   column="libelle_long"       type="string"       length="200" />
+        <field name="code"          column="code"           type="string"       length="10"  />
+        <field name="dateDebut"     column="date_debut"    type="datetime"  />
+        <field name="dateFin"       column="date_fin"    type="datetime"  />
+
+        <one-to-many field="agentGrades" target-entity="Application\Entity\Db\AgentGrade" mapped-by="emploiType"/>
+
+        <!-- DB IMPORT #############################  -->
+        <field name="created_on"               column="created_on"       type="datetime"/>
+        <field name="updated_on"               column="updated_on"       type="datetime"/>
+        <field name="deleted_on"               column="deleted_on"       type="datetime"/>
+    </entity>
+</doctrine-mapping>

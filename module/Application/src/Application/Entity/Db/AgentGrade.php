@@ -7,6 +7,7 @@ use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
+use Carriere\Entity\Db\EmploiType;
 use Carriere\Entity\Db\Grade;
 use Structure\Entity\Db\Structure;
 
@@ -24,6 +25,7 @@ class AgentGrade implements HasPeriodeInterface {
     private ?Corps $corps = null;
     private ?Grade $grade = null;
     private ?Correspondance $correspondance = null;
+    private ?EmploiType $emploiType = null;
 
     public function getId() : string
     {
@@ -53,5 +55,10 @@ class AgentGrade implements HasPeriodeInterface {
     public function getCorrespondance() : ?Correspondance
     {
         return $this->correspondance;
+    }
+
+    public function getEmploiType() : ?EmploiType
+    {
+        return $this->emploiType;
     }
 }

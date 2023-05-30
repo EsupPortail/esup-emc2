@@ -111,6 +111,15 @@ $displayCorrespondance = (isset($options['correspondance']) and $options['corres
                     <?php endforeach; ?>
                 </dd>
             <?php endif; ?>
+
+            <dt class="col-md-3"> Emploi Type</dt>
+            <dd class="col-md-9">
+                <?php if ($grade->getEmploiType()) : ?>
+                    <?php echo $this->emploitype($grade->getEmploiType()); ?>
+                <?php else : ?>
+                    Non renseigné
+                <?php endif; ?>
+            </dd>
         </dl>
     <?php endif; ?>
 </div>

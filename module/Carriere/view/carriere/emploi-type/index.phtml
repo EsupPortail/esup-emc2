@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @see \Carriere\Controller\EmploiTypeController::indexAction()
+ * @var EmploiType[] $emploisTypes
+ */
+
+use Carriere\Entity\Db\EmploiType;
+use Carriere\Provider\Privilege\CorpsPrivileges;
+
+$this->headTitle("Liste des emplois types");
+
+$canLister      = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_LISTER_AGENTS));
+$canModifier    = $this->isAllowed(CorpsPrivileges::getResourceId(CorpsPrivileges::CORPS_MODIFIER));
+
+$canAction = ($canModifier OR $canLister);
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Liste des emplois types
+            <span class="badge">
+                <?php echo count($emploisTypes); ?>
+            </span>
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-info">
+            <span class="icon icon-synchroniser"></span>
+            Données synchronisées
+        </div>
+    </div>
+</div>
+
+<table class="datatable table table-condensed">
+    <thead>
+    <tr>
+        <th> Libellé</th>
+        <th> Code</th>
+        <th> #Agent/Grade </th>
+        <?php if ($canAction) : ?>
+            <th class="action"> Action </th>
+        <?php endif; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($emploisTypes as $emploiType): ?>
+        <tr>
+            <td>
+                <span
+                    title="<?php echo $emploiType->generateTooltip(); ?>"
+                    data-bs-toggle="tooltip" data-bs-html="true"
+                >
+                <?php echo $emploiType->getLibelleLong(); ?>
+                </span>
+            </td>
+            <td> <?php echo $emploiType->getCode(); ?> </td>
+            <td> <?php echo count($emploiType->getAgentGrades()); ?> </td>
+            <?php if ($canAction) : ?>
+            <td class="action">
+                <?php if ($canLister) : ?>
+                    <a
+                        <?php /** @see \Carriere\Controller\EmploiTypeController::afficherAgentsAction() */ ?>
+                        href="<?php echo $this->url('emploi-type/afficher-agents', ['emploi-type' => $emploiType->getId()], ['fragment' => 'emploi-type'], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon users"></span>
+                        Lister les agents
+                    </a>
+                <?php endif; ?>
+            </td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
+        $('.datatable').DataTable({
+            paging: false,
+        });
+    });
+</script>

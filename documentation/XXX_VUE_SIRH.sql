@@ -174,6 +174,7 @@ create table individu_grade
     structure_id      bigint,
     corps_id          integer,
     grade_id          integer,
+    emploitype_id     integer,
     correspondance_id integer,
     d_debut           date,
     d_fin             date

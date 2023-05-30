@@ -102,6 +102,19 @@ create table carriere_grade
     histo_destructeur_id  bigint
 );
 
+create table carriere_emploitype
+(
+    id            bigint not null unique constraint emploitype_pk primary key,
+    code          varchar(64)             not null,
+    libelle_court varchar(256)            not null,
+    libelle_long  varchar(1024)           not null,
+    date_debut    timestamp default now() not null,
+    date_fin      timestamp,
+    created_on    timestamp default now() not null,
+    updated_on    timestamp,
+    deleted_on    timestamp,
+    source_id     varchar(128)
+);
 
 -------------------------------------------------------------------------------------------------------------
 -- DATA -----------------------------------------------------------------------------------------------------

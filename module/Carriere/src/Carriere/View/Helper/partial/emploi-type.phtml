@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @see \Carriere\View\Helper\EmploiTypeViewHelper
+ * @var EmploiType|null $emploiType
+ * @var array $options
+ */
+
+use Carriere\Entity\Db\EmploiType;
+
+?>
+
+<?php if ($emploiType === null) : ?>
+    <span class="text-warning">
+        Aucun emploi type
+    </span>
+<?php else: ?>
+    <span title="<?php echo $emploiType->getCode(); ?>">
+        <?php echo $emploiType->getCode(); ?>
+    </span>
+    -
+    <span title="<?php echo $emploiType->getLibelleLong(); ?>">
+        <?php echo $emploiType->getLibelleCourt(); ?>
+    </span>
+<?php endif; ?>
+
