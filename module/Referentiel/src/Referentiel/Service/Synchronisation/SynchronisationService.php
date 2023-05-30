@@ -14,7 +14,7 @@ class SynchronisationService {
         $this->entityManagers = $entityManagers;
     }
 
-    private array $configs = [];
+    public array $configs = [];
     public function setConfigs(array $configs): void
     {
         $this->configs = $configs;
@@ -47,9 +47,14 @@ class SynchronisationService {
 
     public function synchronise(string $name) : string
     {
-        echo "Synchronisation [".$name."]\n"; flush();
+        $log = "";
+        $line =  "Synchronisation [".$name."]\n";
+        echo $line; flush(); $log .= "<strong>" . $line ."</strong><br>";
+
         $debut = new DateTime();
-        echo "Debut: ".$debut->format('d/m/y H:i:s:u')."\n"; flush();
+
+        $line = "Debut: ".$debut->format('d/m/y H:i:s:u')."\n"; flush();
+        echo $line; flush(); $log .= $line ."<br>";
 
         $correspondance = $this->getFromConfig($name, 'correspondance');
         $orm_source = $this->entityManagers[$this->getFromConfig($name, 'orm_source')];
@@ -61,75 +66,78 @@ class SynchronisationService {
         $id_destination = $correspondance[$id_source];
 
         $data_source        = $this->getSqlHelperService()->fetch($orm_source, $table_source, $correspondance, 'source', $id_source);
-        echo count($data_source). " entrées dans les données sources.\n"; flush();
+
+        $line =  count($data_source). " entrées dans les données sources.\n";
+        echo $line; flush(); $log .= $line ."<br>";
+
         $data_destination   = $this->getSqlHelperService()->fetch($orm_destination, $table_destination, $correspondance, 'destination', $id_destination);
         $data_destination_on = []; $data_destination_off = [];
         foreach ($data_destination as $item) {
             if ($item['deleted_on'] !== null) $data_destination_off[] = $item; else $data_destination_on[] = $item;
         }
-        echo count($data_destination_on) . "(~". count($data_destination_off).")". " entrées dans les données cibles actives.\n"; flush();
+
+        $line =  count($data_destination_on) . "(~". count($data_destination_off).")". " entrées dans les données cibles actives.\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         $read = new DateTime();
-        echo "Lecture: ".$read->format('d/m/y H:i:s:u'). "(" . ($read->diff($debut))->format('%H:%m:%s:%F').")\n"; flush();
+
+        $line = "Lecture: ".$read->format('d/m/y H:i:s:u'). "(" . ($read->diff($debut))->format('%H:%m:%s:%F').")\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         //check for removal
         $nbRetrait = 0;
-//        $texte_retrait = "";
         foreach ($data_destination as $id => $item) {
             if ($item['deleted_on'] === null AND !isset($data_source[$id])) {
                 $nbRetrait++;
-//                $texte_retrait .= "Retrait de ".$id." des données destination.\n";
                 $this->getSqlHelperService()->delete($orm_destination, $table_destination, $id);
             }
         }
 
-        echo "#Retrait: ".$nbRetrait."\n"; flush();
-//        $log .= $texte_retrait;
+        $line = "#Retrait: ".$nbRetrait."\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         //check for adding
         $nbAjout = 0;
-//        $texte_ajout = "";
         foreach ($data_source as $id => $item) {
             if (!isset($data_destination[$id])) {
                 $nbAjout++;
-//                $texte_ajout .= "Ajout de ".$id." des données sources.\n";
                 $this->getSqlHelperService()->insert($orm_destination, $table_destination, $item, $correspondance, $source);
             }
         }
-        echo "#Ajout: ".$nbAjout."\n"; flush();
-//        $log .= $texte_ajout;
+
+        $line = "#Ajout: ".$nbAjout."\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         //check for restauration
         $nbRestauration = 0;
-//        $texte_restauration = "";
         foreach ($data_source as $id => $item) {
             if (isset($data_destination[$id]) AND $data_destination[$id]["deleted_on"] !== null) {
                 $nbRestauration++;
-//                $texte_restauration .= "Restauration de ".$id." des données destinations.\n";
                 $this->getSqlHelperService()->restore($orm_destination, $table_destination, $id);
             }
         }
-        echo "#Restauration: ".$nbRestauration."\n"; flush();
-//        $log .= $texte_restauration;
+        $line = "#Restauration: ".$nbRestauration."\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         //check for modification
         $nbModification = 0;
-//        $texte_modication = "";
         foreach ($data_source as $id => $item) {
             if (isset($data_destination[$id]) AND $this->checkDifferences($item, $data_destination[$id], $correspondance, $source)) {
                 $nbModification++;
-//                $texte_modication .= "Modif de ".$id." des données sources.\n";
                 $this->getSqlHelperService()->update($orm_destination, $table_destination, $item, $correspondance, $id, $source);
             }
         }
-        echo  "#Modification: ".$nbModification."\n"; flush();
-//        $log .= $texte_modication;
+        $line .= "#Modification: ".$nbModification."\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
         $fin = new DateTime();
-        echo "Fin: ".$fin->format('d/m/y H:i:s:u')."\n";
 
-        echo  "Durée de la synchronisation: " . ($fin->diff($debut))->format('%H:%m:%s:%F') . "\n";
+        $line = "Fin: ".$fin->format('d/m/y H:i:s:u')."\n";
+        echo $line; flush(); $log .= $line ."<br>";
 
-        return "";
+        $line =  "Durée de la synchronisation: " . ($fin->diff($debut))->format('%H:%m:%s:%F') . "\n";
+        echo $line; flush(); $log .= $line ."<br>";
+
+        return $log;
     }
 }
