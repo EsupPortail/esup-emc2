@@ -4,13 +4,13 @@ namespace Carriere;
 
 use Carriere\Controller\EmploiTypeController;
 use Carriere\Controller\EmploiTypeControllerFactory;
-use Carriere\Provider\Privilege\CorpsPrivileges;
+use Carriere\Provider\Privilege\EmploiTypePrivileges;
 use Carriere\Service\EmploiType\EmploiTypeService;
 use Carriere\Service\EmploiType\EmploiTypeServiceFactory;
 use Carriere\View\Helper\EmploiTypeViewHelper;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -22,7 +22,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_INDEX,
+                        EmploiTypePrivileges::EMPLOITYPE_INDEX,
                     ],
                 ],
                 [
@@ -31,7 +31,7 @@ return [
                         'afficher-agents',
                     ],
                     'privileges' => [
-                        CorpsPrivileges::CORPS_LISTER_AGENTS,
+                        EmploiTypePrivileges::EMPLOITYPE_AFFICHER,
                     ],
                 ],
             ],

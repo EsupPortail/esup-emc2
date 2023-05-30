@@ -163,7 +163,8 @@ INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'corps_index', 'Accéder à l''index des corps', 10 UNION
     SELECT 'corps_afficher', 'Afficher les corps', 20 UNION
-    SELECT 'corps_modifier', 'Modifier un corps', 30
+    SELECT 'corps_modifier', 'Modifier un corps', 30 UNION
+    SELECT 'corps_lister_agents', 'Lister les agents', 40
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
@@ -175,7 +176,8 @@ INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'grade_index', 'Accéder à l''index des grades', 10 UNION
     SELECT 'grade_afficher', 'Afficher un grade', 20 UNION
-    SELECT 'grade_modifier', 'Modifier un grade', 30
+    SELECT 'grade_modifier', 'Modifier un grade', 30 UNION
+    SELECT 'grade_lister_agents', 'Lister les agents', 40
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
@@ -187,11 +189,25 @@ INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'correspondance_index', 'Accéder à l''index des correspondances', 10 UNION
     SELECT 'correspondance_afficher', 'Afficher une correspondance', 20 UNION
-    SELECT 'correspondance_modifier', 'Modifier une correspondance', 30
+    SELECT 'correspondance_modifier', 'Modifier une correspondance', 30 UNION
+    SELECT 'correspondance_lister_agents', 'Lister les agents', 40
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'correspondance';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('emploitype', 'Gestion des emplois types', 620, 'Carriere\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'emploitype_index', 'Accéder à l''index des grades', 10 UNION
+    SELECT 'emploitype_afficher', 'Afficher un grade', 20 UNION
+    SELECT 'emploitype_modifier', 'Modifier un grade', 30 UNION
+    SELECT 'emploitype_lister_agents', 'Lister les agents', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'emploitype';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('niveaucarriere', 'Gestion des niveaux de carrière ', 1000, 'Carriere\Provider\Privilege');
