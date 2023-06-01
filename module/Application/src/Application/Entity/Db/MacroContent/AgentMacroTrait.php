@@ -162,6 +162,32 @@ trait AgentMacroTrait
         $texte = implode("<br>",array_map(function (AgentQuotite $a) { return ($a->getQuotite())?$a->getQuotite()."%":"100%"; }, $quotites));
         return $texte;
     }
+
+    public function toStringQuotiteAffectation() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $affectations = $agent->getAffectationsActifs();
+        if (empty($affectations)) return "Aucune quotité  d'affectation de remontée du SIRH";
+
+        $texte = "<ul>";
+        foreach ($affectations as $affectation) {
+            $texte .= "<li>";
+            $texte .= $affectation->getStructure()->getLibelleLong() . " ";
+            if ($affectation->isHierarchique()) $texte .= " Hiérarchique ";
+            if ($affectation->isFonctionnelle()) $texte .= " Fonctionnelle ";
+            if ($affectation->getQuotite()) {
+                $texte .= $affectation->getQuotite() . "%";
+            } else {
+                $texte .= "<i>quotité non précisée</i>";
+            }
+
+            $texte .= "</li>";
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
     /**
      * TODO a remplacer lorsque l'on aura les macros de macro
      * @return string

@@ -596,14 +596,6 @@ class Agent implements
         return $result;
     }
 
-    public function getQuotiteAffectation(?DateTime $date = null) : string
-    {
-        $ficheposte = $this->getFichePosteBest();
-        if ($ficheposte === null) return 'Aucun fiche de poste au format EMC2';
-
-        return $ficheposte->toStringCompositionFichesMetiers();
-    }
-
     public function getStatutToString(?DateTime $date = null) : string
     {
         $result = "";

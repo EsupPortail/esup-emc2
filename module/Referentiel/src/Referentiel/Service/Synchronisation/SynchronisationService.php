@@ -87,9 +87,14 @@ class SynchronisationService {
         //check for removal
         $nbRetrait = 0;
         foreach ($data_destination as $id => $item) {
-            if ($item['deleted_on'] === null AND !isset($data_source[$id])) {
+            if ($item['deleted_on'] === null && !isset($data_source[$id])) {
+//                var_dump($id);
+//                var_dump($item['deleted_on'] . " >>> " . !isset($data_source[$id]));
+//                var_dump($item['deleted_on']);
+//                var_dump($item['deleted_on'] === null);
                 $nbRetrait++;
                 $this->getSqlHelperService()->delete($orm_destination, $table_destination, $id);
+//                die();
             }
         }
 
