@@ -23,7 +23,7 @@ class SqlHelperService {
                 throw new RuntimeException("Un problème est survenu [DRV_Exception]", 0, $e);
             }
         } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenu [DBA_Exception]", 0, $e);
+            throw new RuntimeException("Un problème est survenu [DBA_Exception] : " . $e->getMessage(), 0, $e);
         }
         return $tmp;
     }
