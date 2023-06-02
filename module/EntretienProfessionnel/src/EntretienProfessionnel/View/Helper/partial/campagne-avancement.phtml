@@ -18,6 +18,8 @@ $validerSuperieur = []; $validerAutorite = []; $validerAgent = []; $encours = []
 foreach ($entretiens as $entretien) {
     switch ($entretien->getEtat()->getCode()) {
         case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
+
             $validerSuperieur[] = $entretien;
             break;
         case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
