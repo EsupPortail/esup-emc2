@@ -352,6 +352,8 @@ class EntretienProfessionnelController extends AbstractActionController
                     case EntretienProfessionnelValidations::VALIDATION_AGENT :
                         $entretien->setEtat($this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT));
                         $this->getEntretienProfessionnelService()->update($entretien);
+
+                        $this->getNotificationService()->triggerValidationAgent($entretien);
                         break;
                 }
             }
