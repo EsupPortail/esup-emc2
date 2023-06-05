@@ -77,17 +77,17 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 <table class="table table-condensed table-hover datatable" id="<?php echo $options['id']; ?>" style="margin:1rem 0;">
     <thead>
     <tr>
-        <?php if ($displayAnnee) : ?>
-            <th style="min-width:9rem;"> Année </th>
-        <?php endif; ?>
-        <?php if ($displayStructure) : ?>
-            <th> Structure </th>
-        <?php endif; ?>
         <?php if ($displayAgent) : ?>
             <th> Agent </th>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
             <th> Responsable </th>
+        <?php endif; ?>
+        <?php if ($displayAnnee) : ?>
+            <th style="min-width:9rem;"> Année </th>
+        <?php endif; ?>
+        <?php if ($displayStructure) : ?>
+            <th> Structure </th>
         <?php endif; ?>
         <?php if ($displayDate) : ?>
             <th style="width:15rem;"> Date</th>
@@ -115,6 +115,12 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
         ?>
     <tr>
+        <?php if ($displayAgent) : ?>
+            <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
+        <?php endif; ?>
+        <?php if ($displayResponsable) : ?>
+            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
+        <?php endif; ?>
         <?php if ($displayAnnee) : ?>
             <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>
         <?php endif; ?>
@@ -131,12 +137,6 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                     Aucune structure
                 <?php endif; ?>
             </td>
-        <?php endif; ?>
-        <?php if ($displayAgent) : ?>
-            <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
-        <?php endif; ?>
-        <?php if ($displayResponsable) : ?>
-            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
         <?php endif; ?>
         <?php if ($displayDate) : ?>
             <td>
