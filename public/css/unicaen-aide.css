@@ -1,3 +1,11 @@
 div.faq dd {
     border-bottom: 1px solid lightgrey;
 }
+
+div.glossaire {
+    width: 95%;
+    margin: auto;
+}
+div.glossaire dd {
+    border-bottom: 1px solid lightgrey;
+}
