@@ -147,7 +147,7 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_
     </div>
 
     <div id="formations" class="tab-pane">
-        <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours??null,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
 <!--            --><?php //if ($displayParcours === true) : ?>
