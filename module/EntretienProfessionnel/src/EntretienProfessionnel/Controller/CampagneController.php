@@ -24,6 +24,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use RuntimeException;
+use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -319,6 +320,9 @@ class CampagneController extends AbstractActionController {
             $temoins = explode(";",$temoins);
         } else $temoins = [];
         $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut(), $temoins);
+        $agentsAll = $this->getAgentService()->filtrerWithStatutTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agentsAll = $this->getAgentService()->filtrerWithAffectationTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
+
 
         /** Filtrage des agents (seuls les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
         $agents = [];
