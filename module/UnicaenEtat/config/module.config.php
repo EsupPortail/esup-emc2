@@ -46,6 +46,7 @@ return [
         ],
         'stylesheets' => [
             '10000_etat' => 'css/unicaen-etat.css',
+            '10000_aide' => 'css/unicaen-aide.css',
         ],
     ],
 ];
