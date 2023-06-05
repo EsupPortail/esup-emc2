@@ -70,7 +70,7 @@ if (!isset($options['droits']) OR !isset($options['droits']['supprimer'])) {
 }
 
 $width = '22rem';
-if ($options['affichages'] AND $options['affichages']['width']) $width = $options['affichages']['width'];
+if (isset($options['affichages']) AND isset($options['affichages']['width'])) $width = $options['affichages']['width'];
 
 ?>
 
