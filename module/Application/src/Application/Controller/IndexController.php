@@ -18,9 +18,11 @@ use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Structure\Controller\StructureController;
 use Structure\Entity\Db\StructureAgentForce;
+use Structure\Provider\Parametre\StructureParametres;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Service\Traits\UserContextServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -35,6 +37,7 @@ class IndexController extends AbstractActionController
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -111,7 +114,10 @@ class IndexController extends AbstractActionController
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+
         $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); },$this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
         usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
         /** Campagne d'entretien professionnel ************************************************************************/
@@ -151,7 +157,11 @@ class IndexController extends AbstractActionController
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+
         $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },$this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
+
         usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
 
         /** Campagne d'entretien professionnel ************************************************************************/

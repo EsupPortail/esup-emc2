@@ -15,6 +15,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenAuthentification\Service\UserContext;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;
@@ -35,6 +36,7 @@ class IndexControllerFactory {
          * @var AgentSuperieurService $agentSuperieurService
          * @var AgentService $agentService
          * @var CampagneService $campagneService
+         * @var ParametreService $parametreService
          * @var RenduService $renduService
          * @var RoleService $roleService
          * @var StructureService $structureService
@@ -51,6 +53,7 @@ class IndexControllerFactory {
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
+        $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
         $roleService = $container->get(RoleService::class);
         $userService = $container->get(UserService::class);
@@ -69,6 +72,7 @@ class IndexControllerFactory {
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentService($agentService);
         $controller->setCampagneService($campagneService);
+        $controller->setParametreService($parametreService);
         $controller->setRenduService($renduService);
         $controller->setRoleService($roleService);
         $controller->setServiceUserContext($userContext);
