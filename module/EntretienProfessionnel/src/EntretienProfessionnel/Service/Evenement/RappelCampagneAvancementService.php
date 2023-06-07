@@ -59,7 +59,9 @@ class RappelCampagneAvancementService extends EvenementService {
         $message .= "<strong>Expédition vers les autorités hiérarchiques</strong><br>";
         try {
             $autorites = $this->getAgentAutoriteService()->getAgentsAutorites(false, 'id','ASC');
-            foreach ($autorites as $autorite) {
+            $dictionnaire  = [];
+            foreach ($autorites as $autorite) $dictionnaire[$autorite->getAutorite()->getId()] = $autorite;
+            foreach ($dictionnaire as $autorite) {
                 $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
                 $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
             }
@@ -71,8 +73,10 @@ class RappelCampagneAvancementService extends EvenementService {
         // SUPERIEURS
         $message .= "<strong>Expédition vers les supérieurs hiérarchiques</strong><br>";
         try {
-            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs(false);
-            foreach ($superieurs as $superieur) {
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs(false, 'id', 'ASC');
+            $dictionnaire  = [];
+            foreach ($superieurs as $superieur) $dictionnaire[$superieur->getSuperieur()->getId()] = $superieur;
+            foreach ($dictionnaire as $superieur) {
                 $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
                 $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
             }
