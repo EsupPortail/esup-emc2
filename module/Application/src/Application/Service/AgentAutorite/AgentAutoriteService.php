@@ -112,7 +112,7 @@ class AgentAutoriteService
     }
 
     /** @return AgentAutorite[] */
-    public function getAgentsAutorites(bool $histo = false, string $champ = 'id', $ordre = 'ASC') : array
+    public function getAgentsAutorites(bool $histo = false, string $champ = 'id', string $ordre = 'ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('agentautorite.' . $champ, $ordre);
