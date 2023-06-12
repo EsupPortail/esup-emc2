@@ -6,7 +6,8 @@ use Application\Service\Agent\AgentService;
 use EntretienProfessionnel\Form\Campagne\CampagneForm;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
-use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,7 +32,8 @@ class CampagneControllerFactory extends AbstractActionController
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
-         * @var RappelCampagneAvancementService $rappelCampagneAvancementService
+         * @var RappelCampagneAvancementAutoriteService $rappelCampagneAvancementAutoriteService
+         * @var RappelCampagneAvancementSuperieurService $rappelCampagneAvancementSuperieurService
          * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);
@@ -39,7 +41,8 @@ class CampagneControllerFactory extends AbstractActionController
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
-        $rappelCampagneAvancementService = $container->get(RappelCampagneAvancementService::class);
+        $rappelCampagneAvancementAutoriteService = $container->get(RappelCampagneAvancementAutoriteService::class);
+        $rappelCampagneAvancementSuperieurService = $container->get(RappelCampagneAvancementSuperieurService::class);
         $structureService = $container->get(StructureService::class);
 
         /**
@@ -53,7 +56,8 @@ class CampagneControllerFactory extends AbstractActionController
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
-        $controller->setRappelCampagneAvancementService($rappelCampagneAvancementService);
+        $controller->setRappelCampagneAvancementAutoriteService($rappelCampagneAvancementAutoriteService);
+        $controller->setRappelCampagneAvancementSuperieurService($rappelCampagneAvancementSuperieurService);
         $controller->setStructureService($structureService);
         $controller->setCampagneForm($campagneForm);
         return $controller;

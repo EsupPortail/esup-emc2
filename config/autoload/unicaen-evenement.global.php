@@ -5,7 +5,8 @@ use Application\Provider\EvenementProvider;
 use Application\Provider\EvenementProvider as ApplicationEvenementProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use EntretienProfessionnel\Provider\Event\EvenementProvider as EntretienProfessionnelEvenementProvider;
-use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use Formation\Event\Convocation\ConvocationEvent;
@@ -26,26 +27,27 @@ return [
             // Évènements de base
             Type::COLLECTION => EvenementCollectionService::class,
 
-            ApplicationEvenementProvider::SYNCHRO_OCTOPUS                                               => SynchroOctopusService::class,
-            EvenementProvider::RGPD_UNICAEN_RENDERER                                                    => RgpdRendererEvenement::class,
+            ApplicationEvenementProvider::SYNCHRO_OCTOPUS => SynchroOctopusService::class,
+            EvenementProvider::RGPD_UNICAEN_RENDERER => RgpdRendererEvenement::class,
 
-            FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE                                  => NotificationFormationsOuvertesService::class,
-            FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT                                    => RappelAgentAvantFormationService::class,
-            FormationEvenementProvider::INSCRIPTION_CLOTURE                                             => InscriptionClotureEvent::class,
-            FormationEvenementProvider::CONVOCATION                                                     => ConvocationEvent::class,
-            FormationEvenementProvider::DEMANDE_RETOUR                                                  => DemandeRetourEvent::class,
-            FormationEvenementProvider::SESSION_CLOTURE                                                 => SessionClotureEvent::class,
+            FormationEvenementProvider::NOTIFICATION_FORMATION_OUVERTE => NotificationFormationsOuvertesService::class,
+            FormationEvenementProvider::RAPPEL_FORMATION_AGENT_AVANT => RappelAgentAvantFormationService::class,
+            FormationEvenementProvider::INSCRIPTION_CLOTURE => InscriptionClotureEvent::class,
+            FormationEvenementProvider::CONVOCATION => ConvocationEvent::class,
+            FormationEvenementProvider::DEMANDE_RETOUR => DemandeRetourEvent::class,
+            FormationEvenementProvider::SESSION_CLOTURE => SessionClotureEvent::class,
 
-            EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT                         => RappelCampagneAvancementService::class,
-            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL                     => RappelEntretienProfessionnelService::class,
-            EntretienProfessionnelEvenementProvider::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL     => RappelPasObservationService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE => RappelCampagneAvancementAutoriteService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR => RappelCampagneAvancementSuperieurService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL => RappelEntretienProfessionnelService::class,
+            EntretienProfessionnelEvenementProvider::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL => RappelPasObservationService::class,
 
-            StructureEvenementProvider::INFO_STRUCTURE                                                  => InfoStructureEvent::class,
+            StructureEvenementProvider::INFO_STRUCTURE => InfoStructureEvent::class,
 
         ],
 
         'icone' => [
-            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL    => 'icon rappel',
+            EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL => 'icon rappel',
         ],
     ],
 ];

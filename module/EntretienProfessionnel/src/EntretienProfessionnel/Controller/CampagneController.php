@@ -15,7 +15,8 @@ use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceAwareTrait;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceAwareTrait;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
 use Laminas\Http\Request;
@@ -36,7 +37,8 @@ class CampagneController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use RappelCampagneAvancementServiceAwareTrait;
+    use RappelCampagneAvancementAutoriteServiceAwareTrait;
+    use RappelCampagneAvancementSuperieurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use CampagneFormAwareTrait;
 
@@ -81,7 +83,8 @@ class CampagneController extends AbstractActionController {
                 $this->getCampagneService()->create($campagne);
                 $this->flashMessenger()->addSuccessMessage("La campagne d'entretien professionnel [".$campagne->getAnnee()."] vient d'être créée.");
 
-               $this->getRappelCampagneAvancementService()->creer($campagne);
+               $this->getRappelCampagneAvancementAutoriteService()->creer($campagne);
+               $this->getRappelCampagneAvancementSuperieurService()->creer($campagne);
                $this->getNotificationService()->triggerCampagneOuverturePersonnels($campagne);
                $this->getNotificationService()->triggerCampagneOuvertureDirections($campagne);
             }

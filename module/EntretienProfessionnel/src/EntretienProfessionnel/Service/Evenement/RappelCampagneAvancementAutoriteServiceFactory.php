@@ -3,7 +3,6 @@
 namespace EntretienProfessionnel\Service\Evenement;
 
 use Application\Service\AgentAutorite\AgentAutoriteService;
-use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
@@ -14,19 +13,18 @@ use Structure\Service\Structure\StructureService;
 use UnicaenEvenement\Service\Etat\EtatService;
 use UnicaenEvenement\Service\Type\TypeService;
 
-class RappelCampagneAvancementServiceFactory {
+class RappelCampagneAvancementAutoriteServiceFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return RappelCampagneAvancementService
+     * @return RappelCampagneAvancementAutoriteService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : RappelCampagneAvancementService
+    public function __invoke(ContainerInterface $container) : RappelCampagneAvancementAutoriteService
     {
         /**
          * @var AgentAutoriteService $agentAutoriteService
-         * @var AgentSuperieurService $agentSuperieurService
          * @var CampagneService $campagneService
          * @var EtatService $etatService
          * @var NotificationService $notificationService
@@ -34,22 +32,20 @@ class RappelCampagneAvancementServiceFactory {
          * @var TypeService $typeService
          */
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
-        $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $etatService = $container->get(EtatService::class);
         $notificationService = $container->get(NotificationService::class);
         $structureService = $container->get(StructureService::class);
         $typeService = $container->get(TypeService::class);
 
-        $service = new RappelCampagneAvancementService();
+        $service = new RappelCampagneAvancementAutoriteService();
         $service->setAgentAutoriteService($agentAutoriteService);
-        $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
         $service->setEtatEvenementService($etatService);
         $service->setNotificationService($notificationService);
         $service->setStructureService($structureService);
 
-        $service->setType($typeService->findByCode(EvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT));
+        $service->setType($typeService->findByCode(EvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE));
         return $service;
     }
 }

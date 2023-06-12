@@ -2,10 +2,12 @@
 
 namespace EntretienProfessionnel;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementService;
-use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementServiceFactory;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceFactory;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
+use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurServiceFactory;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceFactory;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
@@ -52,7 +54,8 @@ return [
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 
-            RappelCampagneAvancementService::class => RappelCampagneAvancementServiceFactory::class,
+            RappelCampagneAvancementAutoriteService::class => RappelCampagneAvancementAutoriteServiceFactory::class,
+            RappelCampagneAvancementSuperieurService::class => RappelCampagneAvancementSuperieurServiceFactory::class,
             RappelEntretienProfessionnelService::class => RappelEntretienProfessionnelServiceFactory::class,
             RappelPasObservationService::class => RappelPasObservationServiceFactory::class,
         ],

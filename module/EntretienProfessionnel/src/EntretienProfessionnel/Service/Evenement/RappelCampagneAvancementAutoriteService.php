@@ -16,9 +16,8 @@ use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
-class RappelCampagneAvancementService extends EvenementService {
+class RappelCampagneAvancementAutoriteService extends EvenementService {
     use AgentAutoriteServiceAwareTrait;
-    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -38,7 +37,7 @@ class RappelCampagneAvancementService extends EvenementService {
             throw new RuntimeException("Problème de calcul de la date de traitement de l'événement",0 ,$e);
         }
 
-        $description = "Rappel de l'avancement de la campagne " . $campagne->getAnnee();
+        $description = "Rappel de l'avancement de la campagne " . $campagne->getAnnee() . " [Autorité hiérarchique] ";
         $evenement = $this->createEvent($description, $description, $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE), $this->getType(), $parametres, $dateTraitement);
         $this->ajouter($evenement);
         return $evenement;
@@ -64,21 +63,6 @@ class RappelCampagneAvancementService extends EvenementService {
             foreach ($dictionnaire as $autorite) {
                 $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
                 $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
-            }
-        } catch(Exception $e) {
-            $evenement->setLog($message . $e->getMessage());
-            return Etat::ECHEC;
-        }
-
-        // SUPERIEURS
-        $message .= "<strong>Expédition vers les supérieurs hiérarchiques</strong><br>";
-        try {
-            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieurs(false, 'id', 'ASC');
-            $dictionnaire  = [];
-            foreach ($superieurs as $superieur) $dictionnaire[$superieur->getSuperieur()->getId()] = $superieur;
-            foreach ($dictionnaire as $superieur) {
-                $this->getNotificationService()->triggerRappelCampagneSuperieur($campagne, $superieur->getSuperieur());
-                $message .= "Notification faites vers " . $superieur->getSuperieur()->getDenomination() . "<br/>\n";
             }
         } catch(Exception $e) {
             $evenement->setLog($message . $e->getMessage());
