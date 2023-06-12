@@ -3,7 +3,9 @@
 namespace EntretienProfessionnel\Controller;
 
 use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
+use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
@@ -12,6 +14,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\Campagne\CampagneFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -27,6 +30,7 @@ use Laminas\View\Model\ViewModel;
 use RuntimeException;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -299,6 +303,53 @@ class CampagneController extends AbstractActionController {
         ]);
         $vm->setTemplate('default/reponse');
         return $vm;
+    }
+
+    public function extraireAction() : CsvModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+
+        /** @var Agent[] $agents */
+        $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
+        $entretiens = $campagne->getEntretiensProfessionnels();
+
+        $headers = ['Prénom', 'Nom', 'Affectations', 'Supérieur·es', 'Autorités', 'Responsable d\'entretien', 'Validation du responsable', 'Validation de l\'autorité', 'Validation de l\'agent'];
+        $resume = [];
+        foreach ($agents as $agent) {
+            $resume[$agent->getId()] = [
+                'Prénom' => $agent->getPrenom(),
+                'Nom' => $agent->getNomUsuel()??$agent->getNomFamille(),
+                'Affectations' => implode("\n",array_map(function (AgentAffectation $a) { return $a->getStructure()->getLibelleLong(); },$agent->getAffectationsActifs($campagne->getDateDebut()))),
+                'Supérieur·es' => implode("\n",array_map(function (AgentSuperieur $a) { return $a->getSuperieur()->getDenomination(); },$agent->getSuperieurs())),
+                'Autorités' => implode("\n",array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination(); },$agent->getAutorites())),
+                'Responsable d\'entretien' => '',
+                'Validation du responsable' => '',
+                'Validation de l\'autorité' => '',
+                'Validation de l\'agent' => '',
+            ];
+        }
+
+        foreach ($entretiens as $entretien) {
+            if ($entretien->estNonHistorise()) {
+                $resume[$entretien->getAgent()->getId()]['Responsable d\'entretien'] = $entretien->getResponsable()->getDenomination();
+                $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+                if ($validationResponsable) $resume[$entretien->getAgent()->getId()]['Validation du responsable'] = $validationResponsable->getHistoCreation()->format('d/m/Y à H:i');
+                $validationAutorite = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+                if ($validationAutorite) $resume[$entretien->getAgent()->getId()]['Validation de l\'autorité'] = $validationAutorite->getHistoCreation()->format('d/m/Y à H:i');
+                $validationAgent = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
+                if ($validationAgent) $resume[$entretien->getAgent()->getId()]['Validation de l\'agent'] = $validationAgent->getHistoCreation()->format('d/m/Y à H:i');
+            }
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename=$date. "_export_campagne_".str_replace('/','-',$campagne->getAnnee()).".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($resume);
+        $CSV->setFilename($filename);
+        return $CSV;
     }
 
     /** Page associée à la campagne dans l'écran des structures *******************************************************/

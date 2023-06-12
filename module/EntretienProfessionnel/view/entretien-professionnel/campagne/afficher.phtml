@@ -135,12 +135,13 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                 </dl>
             </div>
             <div class="col-md-4">
-<!--                <a href=""-->
-<!--                   class="btn btn-primary disabled"-->
-<!--                >-->
-<!--                    <span class="icon icon-csv"></span>-->
-<!--                    Extraire les entretiens en attente-->
-<!--                </a>-->
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-secondary"
+                >
+                    <span class="icon icon-csv"></span>
+                    Extraction de la campagne
+                </a>
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"

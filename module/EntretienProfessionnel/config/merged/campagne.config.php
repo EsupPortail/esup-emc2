@@ -27,6 +27,7 @@ return [
                     'action' => [
                         'index',
                         'afficher',
+                        'extraire',
                     ],
                     'privileges' => [
                         CampagnePrivileges::CAMPAGNE_AFFICHER,
@@ -144,6 +145,18 @@ return [
                                         /** @see CampagneController::afficherAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'extraire' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/extraire/:campagne',
+                                    'defaults' => [
+                                        /** @see CampagneController::extraireAction() */
+                                        'controller' => CampagneController::class,
+                                        'action'     => 'extraire',
                                     ],
                                 ],
                             ],
