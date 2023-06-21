@@ -15,7 +15,7 @@
     "unicaen/privilege": "^5.0",
     "unicaen/renderer": "^5.0",
     "unicaen/pdf": "^5",
-    "unicaen/mail": "^5.0.3",
+    "unicaen/mail": "5.0.7",
     "unicaen/parametre": "^5.0",
     "unicaen/bjy-authorize": "^4",
     "unicaen/ldap": "^4",
