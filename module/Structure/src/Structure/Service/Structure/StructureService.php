@@ -380,8 +380,9 @@ EOS;
      * @param Agent|null $agent
      * @return boolean
      */
-    public function isResponsable(Structure $structure, ?Agent $agent)  : bool
+    public function isResponsable(?Structure $structure, ?Agent $agent)  : bool
     {
+        if ($structure === null) return false;
         if ($agent === null) return false;
         $date = (new DateTime());
 
