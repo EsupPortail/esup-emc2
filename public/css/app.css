@@ -211,6 +211,15 @@ span.small-lettrine {
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
+span.small-lettrine-xxx {
+    position:relative;
+    left:-0.75rem;
+    top:0.5rem;
+    font-weight:bolder;
+    font-size:7pt;
+    text-decoration: none;
+}
+
 span.probleme {
     color: darkred;
 }

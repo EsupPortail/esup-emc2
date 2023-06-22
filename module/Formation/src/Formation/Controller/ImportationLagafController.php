@@ -601,7 +601,7 @@ class ImportationLagafController extends AbstractActionController {
                         $presence = new Presence();
                         $presence->setJournee($journee);
                         $presence->setInscrit($inscrit);
-                        $presence->setPresent($data[$position_presence] === "1");
+                        $presence->setStatut($data[$position_presence] === Presence::PRESENCE_PRESENCE);
                         $presence->setSource($this->sourceLagaf);
                         $presence->setIdSource($st_journee . "-" . $st_inscrit);
                         $presence->setPresenceType("LAGAF");

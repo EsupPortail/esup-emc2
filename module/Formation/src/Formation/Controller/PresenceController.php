@@ -47,18 +47,18 @@ class PresenceController extends AbstractActionController
             $presence = new Presence();
             $presence->setJournee($journee);
             $presence->setInscrit($inscrit);
-            $presence->setPresent(true);
+            $presence->setStatut(Presence::PRESENCE_PRESENCE);
             $presence->setPresenceType("???");
             $this->getPresenceService()->create($presence);
         } else {
-            $presence->setPresent(!$presence->isPresent());
+            $presence->tooglePresence();
             $this->getPresenceService()->update($presence);
         }
 
         $vm = new ViewModel();
         $vm->setTemplate('application/default/reponse');
         $vm->setVariables([
-            'reponse' => $presence->isPresent(),
+            'reponse' => $presence->getStatut(),
         ]);
         return $vm;
     }
@@ -79,11 +79,11 @@ class PresenceController extends AbstractActionController
                 $presence = new Presence();
                 $presence->setJournee($journee);
                 $presence->setInscrit($inscrit);
-                $presence->setPresent($mode === 'on');
+                $presence->setStatut($mode);
                 $presence->setPresenceType("???");
                 $this->getPresenceService()->create($presence);
             } else {
-                $presence->setPresent($mode === 'on');
+                $presence->setStatut($mode);
                 $this->getPresenceService()->update($presence);
             }
         }
@@ -91,7 +91,39 @@ class PresenceController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/reponse');
         $vm->setVariables([
-            'reponse' => ($mode === 'on'),
+            'reponse' => $mode,
+        ]);
+        return $vm;
+    }
+
+    public function toggleToutesPresencesAction() : ViewModel
+    {
+        $mode = $this->params()->fromRoute('mode');
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+
+        foreach ($instance->getInscrits() as $inscrit) {
+            $journees = $instance->getJournees();
+            /** @var  Presence $presence */
+            foreach ($journees as $journee) {
+                $presence = $this->getPresenceService()->getPresenceByJourneeAndInscrit($journee, $inscrit);
+                if ($presence === null) {
+                    $presence = new Presence();
+                    $presence->setJournee($journee);
+                    $presence->setInscrit($inscrit);
+                    $presence->setStatut($mode);
+                    $presence->setPresenceType("???");
+                    $this->getPresenceService()->create($presence);
+                } else {
+                    $presence->setStatut($mode);
+                    $this->getPresenceService()->update($presence);
+                }
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('application/default/reponse');
+        $vm->setVariables([
+            'reponse' => $mode,
         ]);
         return $vm;
     }

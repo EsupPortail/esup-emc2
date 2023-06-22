@@ -28,6 +28,7 @@ return [
                     'action' => [
                         'toggle-presence',
                         'toggle-presences',
+                        'toggle-toutes-presences',
                     ],
                     'privileges' => [
                         FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER,
@@ -56,6 +57,7 @@ return [
                         'options' => [
                             'route'    => '/toggle-presence/:journee/:inscrit',
                             'defaults' => [
+                                /** @see PresenceController::togglePresenceAction() */
                                 'controller' => PresenceController::class,
                                 'action'     => 'toggle-presence',
                             ],
@@ -66,8 +68,20 @@ return [
                         'options' => [
                             'route'    => '/toggle-presences/:mode/:inscrit',
                             'defaults' => [
+                                /** @see PresenceController::togglePresencesAction() */
                                 'controller' => PresenceController::class,
                                 'action'     => 'toggle-presences',
+                            ],
+                        ],
+                    ],
+                    'toggle-toutes-presences' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-toutes-presences/:mode/:formation-instance',
+                            'defaults' => [
+                                /** @see PresenceController::toggleToutesPresencesAction() */
+                                'controller' => PresenceController::class,
+                                'action'     => 'toggle-toutes-presences',
                             ],
                         ],
                     ],
