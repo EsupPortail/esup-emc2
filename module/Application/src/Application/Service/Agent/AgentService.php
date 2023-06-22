@@ -214,6 +214,7 @@ class AgentService {
         //en utilisant l'username si echec
         $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->andWhere('agent.login = :username')
+            ->andWhere('agent.deleted_on IS NULL')
             ->setParameter('username', $user->getUsername())
         ;
         try {
