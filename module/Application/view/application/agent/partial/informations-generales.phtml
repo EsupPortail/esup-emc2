@@ -78,9 +78,8 @@ $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AG
             <?php if ($canAfficherAutorite) : ?>
                 <dt> Autorité hiérarchique </dt>
                 <dd>
-                    <?php if ($niveau2) : ?>
-                        <?php if ($autorites AND !empty($autorites)) : ?>
-                            <ul>
+                    <?php if ($autorites AND !empty($autorites)) : ?>
+                        <ul>
                             <?php foreach ($autorites as $key => $autorite) : ?>
                                 <li>
                                     <?php echo $autorite->getDenomination(); ?>
@@ -89,13 +88,7 @@ $canAfficherTemoinStatut = $this->isAllowed($agent, AgentaffichagePrivileges::AG
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
-                            </ul>
-                        <?php else : ?>
-                            <span class="probleme">
-                                <span class="icon icon-attention"></span>
-                                Aucune responsable pour la structure de niveau 2 <?php echo $affectation->getStructure()->getNiv2()->getLibelleLong(); ?>
-                            </span>
-                        <?php endif; ?>
+                        </ul>
                     <?php else : ?>
                         <span class="probleme">
                             <span class="icon icon-attention"></span>
