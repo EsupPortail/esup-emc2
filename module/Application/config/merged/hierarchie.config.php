@@ -120,7 +120,7 @@ return [
                             'chaine-hierarchique-json' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/chaine-hierarchique-json/:agent',
+                                    'route'    => '/chaine-hierarchique-json[/:agent]',
                                     'defaults' => [
                                         /** @see AgentHierarchieController::chaineHierarchiqueJsonAction() */
                                         'controller' => AgentHierarchieController::class,

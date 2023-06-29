@@ -54,7 +54,8 @@ use Laminas\Form\Form;
 
     $('input#agent[id]').on('change', function() {
         let agentId = $('input#agent[id]').val();
-        let url = "hierarchie/chaine-hierarchique-json/" + agentId;
+        //let url = "hierarchie/chaine-hierarchique-json/" + agentId;
+        let url = "<?php echo $this->url('agent/hierarchie/chaine-hierarchique-json', [], ['force_canonical' => true], true); ?>/" + agentId;
 
         $.ajax({
             type: "POST",
