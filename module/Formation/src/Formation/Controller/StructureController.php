@@ -10,6 +10,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -97,7 +98,7 @@ class StructureController extends AbstractActionController
         ]);
     }
 
-    public function extractionFormationsAction() : CsvModel
+    public function extractionFormationsAction() : JsonModel
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);

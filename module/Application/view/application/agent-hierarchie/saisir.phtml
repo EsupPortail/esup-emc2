@@ -1,0 +1,135 @@
+<?php
+
+/**
+ * @var Form $form
+ * @var string|null $info
+ * @var string|null $warning
+ */
+
+use Laminas\Form\Form;
+
+?>
+
+<?php if ($info) : ?>
+    <div class="alert alert-info">
+        <?php echo $info; ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($warning) : ?>
+    <div class="alert alert-warning">
+        <?php echo $warning; ?>
+    </div>
+<?php endif; ?>
+
+<?php echo $this->form($form); ?>
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.type2',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+
+
+
+    $('input#agent[id]').hide()
+
+
+    $('input#agent[id]').on('change', function() {
+        let agentId = $('input#agent[id]').val();
+        let url = "chaine-hierarchique-json/" + agentId;
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            // beforeSend:
+                // function () {
+                //     document.getElementById('preview-fiche-metier').innerHTML = "Récupération de la fiche métier ...";
+                // },
+            success:
+                function (retour) {
+                    if (retour['Superieur1Id']) {
+                        console.log('Superieur 1 : ' + retour['Superieur1Id'] + ' ' + retour['Superieur1Libelle']);
+                        $('input#superieur1[id]').val(retour['Superieur1Id']);
+                        $('input#superieur1-autocomplete').val(retour['Superieur1Libelle']);
+                    } else {
+                        $('input#superieur1[id]').val(null); $('input#superieur1-autocomplete').val(null);
+                    }
+                    if (retour['Superieur2Id']) {
+                        console.log('Superieur 2 : ' + retour['Superieur2Id'] + ' ' + retour['Superieur2Libelle']);
+                        $('input#superieur2[id]').val(retour['Superieur2Id']);
+                        $('input#superieur2-autocomplete').val(retour['Superieur2Libelle']);
+                    } else {
+                        $('input#superieur2[id]').val(null); $('input#superieur2-autocomplete').val(null);
+                    }
+
+                    if (retour['Superieur3Id']) {
+                        console.log('Superieur 3 : ' + retour['Superieur3Id'] + ' ' + retour['Superieur3Libelle']);
+                        $('input#superieur3[id]').val(retour['Superieur3Id']);
+                        $('input#superieur3-autocomplete').val(retour['Superieur3Libelle']);
+                    } else {
+                        $('input#superieur3[id]').val(null); $('input#superieur3-autocomplete').val(null);
+                    }
+                    if (retour['Autorite1Id']) {
+                        console.log('Autorité 1 : ' + retour['Autorite1Id'] + ' ' + retour['Autorite1Libelle']);
+                        $('input#autorite1[id]').val(retour['Autorite1Id']);
+                        $('input#autorite1-autocomplete').val(retour['Autorite1Libelle']);
+                    } else {
+                        $('input#autorite1[id]').val(null); $('input#autorite1-autocomplete').val(null);
+                    }
+                    if (retour['Autorite2Id']) {
+                        console.log('Autorité 2 : ' + retour['Autorite2Id'] + ' ' + retour['Autorite2Libelle']);
+                        $('input#autorite2[id]').val(retour['Autorite2Id']);
+                        $('input#autorite2-autocomplete').val(retour['Autorite2Libelle']);
+                    } else {
+                        $('input#autorite2[id]').val(null); $('input#autorite2-autocomplete').val(null);
+                    }
+                    if (retour['Autorite3Id']) {
+                        console.log('Autorité 3 : ' + retour['Autorite3Id'] + ' ' + retour['Autorite3Libelle']);
+                        $('input#autorite3[id]').val(retour['Autorite3Id']);
+                        $('input#autorite3-autocomplete').val(retour['Autorite3Libelle']);
+                    } else {
+                        $('input#autorite3[id]').val(null); $('input#autorite3-autocomplete').val(null);
+                    }
+                    // var texte = "";
+                    // if (retour["value"] == 1) texte = "<span class='glyphicon glyphicon-ok text-success'></span>";
+                    // else var texte = "<span class='glyphicon glyphicon-remove text-danger'></span>";
+                    // document.getElementById('preview-fiche-metier').innerHTML = retour;
+                }
+        });
+    });
+
+    $('select').selectpicker();
+</script>
+
+<style>
+    .ui-datepicker{
+        position: absolute;
+        z-index:1050 !important;
+    }
+   /*div.ui-datepicker {*/
+   /*    position: absolute;*/
+   /*     z-index:1050;*/
+   /* }*/
+   /* select.ui-datepicker-year option{*/
+   /* position: absolute;*/
+   /*     z-index:3151 !important;*/
+   /* }*/
+</style>

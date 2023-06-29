@@ -39,6 +39,7 @@ return [
                         'importer',
                         'calculer',
                         'saisir',
+                        'chaine-hierarchique-json'
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
@@ -112,6 +113,18 @@ return [
                                         /** @see AgentHierarchieController::afficherAction(): */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'afficher',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'chaine-hierarchique-json' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/chaine-hierarchique-json/:agent',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::chaineHierarchiqueJsonAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'chaine-hierarchique-json',
                                     ],
                                 ],
                                 'may_terminate' => true,
