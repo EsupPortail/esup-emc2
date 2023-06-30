@@ -375,11 +375,6 @@ EOS;
         return false;
     }
 
-    /**
-     * @param Structure $structure
-     * @param Agent|null $agent
-     * @return boolean
-     */
     public function isResponsable(?Structure $structure, ?Agent $agent)  : bool
     {
         if ($structure === null) return false;
@@ -413,13 +408,9 @@ EOS;
         return false;
     }
 
-    /**
-     * @param Structure $structure
-     * @param Agent|null $agent
-     * @return bool
-     */
-    public function isAutorite(Structure $structure, ?Agent $agent) : bool
+    public function isAutorite(?Structure $structure, ?Agent $agent) : bool
     {
+        if ($structure === null) return false;
         if ($agent === null) return false;
         $date = (new DateTime());
         $structure = $structure->getNiv2();
