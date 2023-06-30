@@ -405,6 +405,7 @@ EOS;
      */
     public function isResponsableS(array $structures, ?Agent $agent)  : bool
     {
+        $structures = array_filter($structures, function ($s) { return $s !== null;});
         foreach ($structures as $structure) {
             $result = $this->isResponsable($structure, $agent);
             if ($result) return true;
@@ -443,6 +444,7 @@ EOS;
      */
     public function isAutoriteS(array $structures, ?Agent $agent)  : bool
     {
+        $structures = array_filter($structures, function ($s) { return $s !== null;});
         foreach ($structures as $structure) {
             $result = $this->isAutorite($structure, $agent);
             if ($result) return true;
