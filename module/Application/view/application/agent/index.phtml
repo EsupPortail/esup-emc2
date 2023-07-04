@@ -37,6 +37,10 @@ $nbAgent = count($agents);
 
     <?php echo $this->partial('partial/filtre', ['params' => $params], [], true); ?>
 
+    <div class="alert alert-warning">
+        <span class="icon icon-attention"></span>
+        La recherche non accentuée n'est pas pleine fonctionnelle ici.
+    </div>
 
     <?php if ($params === null or $params === []) : ?>
         <div class="alert alert-info">
