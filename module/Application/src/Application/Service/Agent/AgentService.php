@@ -11,6 +11,8 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use DateTime;
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -159,15 +161,44 @@ class AgentService {
         return $result;
     }
 
+    /** @return Agent[] */
     public function getAgentsLargeByTerm(?string $term) : array
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($term).'%')
-        ;
+        $params = ["term" => $term];
+        $sql = <<<EOS
+select a.id
+from agent a
+where unaccent(LOWER(CONCAT(a.prenom, ' ', a.nom_usage))) like unaccent('%' || :term || '%') OR unaccent(LOWER(CONCAT(a.nom_usage, ' ', a.prenom))) like unaccent('%' || :term || '%')
+EOS;
 
-        $result =  $qb->getQuery()->getResult();
-        return $result;
+        // where LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like UNACCENT(:search)
+        try {
+            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+            try {
+                $ids = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+        }
+
+
+        $agents = [];
+        foreach ($ids as $id) {
+            $agent = $this->getAgent("".$id['id'], true);
+            if ($agent !== null) $agents[] = $agent;
+        }
+        return $agents;
+
+
+//        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+//            ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
+//            ->setParameter('search', '%'.strtolower($term).'%')
+//        ;
+//
+//        $result =  $qb->getQuery()->getResult();
+//        return $result;
     }
 
     /**
