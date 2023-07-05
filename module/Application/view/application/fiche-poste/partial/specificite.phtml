@@ -33,6 +33,14 @@ $date = new DateTime();
                             Renseigner les spécificités
                         </a>
                     <?php endif; ?>
+                    <?php if($canEditerSpecificte AND  $mode === 'edition') : ?>
+                        <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
+                        <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fiche->getId(), 'specificite-poste' => ($fiche->getSpecificite())?$fiche->getSpecificite()->getId():null], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
+                            <span class="icon icon-ajouter"></span>
+                            Ajouter une mission additionnelle
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -54,15 +62,6 @@ $date = new DateTime();
                     <h3> Autres missions additionnelles au poste </h3>
                 </div>
             </div>
-
-            <?php if ($mode === 'edition' AND $canAjouterActivite) : ?>
-                <?php /** @see \Application\Controller\SpecificiteController::ajouterActiviteAction() */ ?>
-                <a href="<?php echo $this->url('specificite/ajouter-activite', ['fiche-poste' => $fiche->getId(), 'specificite-poste' => ($fiche->getSpecificite())?$fiche->getSpecificite()->getId():null], [], true); ?>"
-                   class="btn btn-primary action ajax-modal" data-event="modification">
-                    <span class="icon icon-ajouter"></span>
-                    Ajouter une mission additionnelle
-                </a>
-            <?php endif; ?>
 
             <?php foreach ($missionsAdditionnelles as $missionAdditionnelle) : ?>
                 <?php echo $this->specificiteActivite($missionAdditionnelle, ['fiche' => $fiche, 'mode' => $mode]); ?>

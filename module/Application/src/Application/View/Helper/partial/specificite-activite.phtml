@@ -30,10 +30,10 @@ $agent = $missionAdditionnelle->getFicheposte()->getAgent();
 $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent):null;
 ?>
 
-<div class="specificite-activite">
-    <div class="activite-titre delta_<?php echo $delta; ?>">
+<div class="card">
+    <div class="card-header delta_<?php echo $delta; ?>">
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <h3><?php echo $mission->getLibelle(); ?>
                     <?php if ($delta AND $delta !== 0) : ?>
                         <span class="icon icon-attention" title="Il existe un écart de <?php echo $delta; ?> niveau(x) entre l'agent et l'activité"></span>
@@ -41,18 +41,27 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
                 </h3>
             </div>
             <?php if($mode === 'edition') : ?>
-                <div class="pull-right activite-action">
+                <div class="col-md-3 action">
                     <?php if ($canGererActivite) : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::gererActiviteAction() */ ?>
                         <a href="<?php echo $this->url('specificite/gerer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon icon-listing"></span></a>
+                            <span class="icon icon-listing"></span>
+                            Sélectionner des activités
+                        </a>
                     <?php endif; ?>
+                    <br>
                     <?php if ($canRetirerActivite) : ?>
                         <?php /** @see \Application\Controller\SpecificiteController::retirerActiviteAction() */ ?>
-                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>">
-                            <span class="icon icon-retirer"></span></a>
+                        <a href="<?php echo $this->url('specificite/retirer-activite', ['specificite-activite' => $missionAdditionnelle->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="text-danger">
+                            <span class="icon icon-retirer"></span>
+                            Retirer
+                            </span>
+                        </a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
@@ -69,8 +78,8 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
         <br/>
         <?php endif; ?>
     </div>
-
-    <div class="row">
+    <div class="card-body">
+        <div class="row">
         <div class="col-md-8">
             <div class="activite-description">
                 Description de l'activité :
@@ -116,18 +125,5 @@ $delta = ($mission->getNiveau())?$mission->getNiveau()->getDeltaWithAgent($agent
             </div>
         </div>
     </div>
-
-
+    </div>
 </div>
-
-<style>
-    div.specificite-activite div.activite-titre {
-        border: 1px solid black;
-        padding-left: 2rem;
-    }
-
-    div.specificite-activite div.activite-action {
-        padding-top: 2rem;
-        padding-right: 1rem;
-    }
-</style>

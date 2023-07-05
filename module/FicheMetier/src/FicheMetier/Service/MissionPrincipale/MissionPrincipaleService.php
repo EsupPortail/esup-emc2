@@ -135,7 +135,6 @@ class MissionPrincipaleService {
     public function findMissionsPrincipalesByExtendedTerm(string $texte) : array
     {
         $qb = $this->createQueryBuilder()
-            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
             ->andWhere("LOWER(mission.libelle) like :search or LOWER(activite.libelle) like :search")
             ->andWhere('mission.histoDestruction IS NULL')
             ->andWhere('activite.histoDestruction IS NULL')

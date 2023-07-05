@@ -65,7 +65,7 @@ class SpecificitePosteService {
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(SpecificitePoste::class)->createQueryBuilder('specificite')
-            ->leftJoin('specificite.activites', 'activite')->addSelect('specificite')
+//            ->leftJoin('specificite.activites', 'activite')->addSelect('specificite')
         ;
         return $qb;
     }

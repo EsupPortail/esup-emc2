@@ -154,6 +154,16 @@ td.action a {
     text-decoration: none;
 }
 
+div.action {
+    font-size: small;
+}
+
+
+div.action a {
+    text-decoration: none;
+}
+
+
 dt.historise {
     text-decoration: line-through gray;
 }
