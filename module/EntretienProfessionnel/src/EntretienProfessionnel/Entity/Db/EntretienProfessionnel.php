@@ -564,4 +564,146 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampsReponseByMotsClefs($mots);
     }
+
+    public function toStringCompetencesTechniques() : string {
+        $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.1']);
+        $items = explode(";",$reponses);
+        $texte = "<ul>";
+        foreach ($items as $item) {
+            switch ((int) $item) {
+            case 1 :
+                $texte .= "<li>maîtrise technique ou expertise scientifique du domaine d’activité</li>";
+                break;
+            case 2 :
+                $texte .= "<li>connaissance de l’environnement professionnel et capacité à s’y situer</li>";
+                break;
+            case 3 :
+                $texte .= "<li>capacité à appréhender les enjeux des dossiers et des affaires traités</li>";
+                break;
+            case 4 :
+                $texte .= "<li>capacité d’anticipation et d’innovation</li>";
+                break;
+            case 5 :
+                $texte .= "<li>implication dans l’actualisation de ses connaissances professionnelles, volonté de s’informer et de se former</li>";
+                break;
+            case 6 :
+                $texte .= "<li>capacité d’analyse, de synthèse et de résolution des problèmes</li>";
+                break;
+            case 7 :
+                $texte .= "<li>qualités d’expression écrite</li>";
+                break;
+            case 8 :
+                $texte .= "<li>qualités d’expression orale</li>";
+                break;
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function toStringActiviteService() : string {
+        $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.2']);
+        $items = explode(";",$reponses);
+        $texte = "<ul>";
+        foreach ($items as $item) {
+            switch ((int) $item) {
+                case 1:
+                    $texte .= "<li>sens du service et conscience professionnelle</li>";
+                    break;
+                case 2:
+                    $texte .= "<li>capacité à respecter l’organisation collective du travail</li>";
+                    break;
+                case 3:
+                    $texte .= "<li>rigueur et efficacité (fiabilité et qualité du travail effectué, respect des délais, des normes et des procédures, sens de l’organisation, sens de la méthode, attention portée à la qualité du service rendu)</li>";
+                    break;
+                case 4:
+                    $texte .= "<li>aptitude à exercer des responsabilités particulières ou à faire face à des sujétions spécifiques au poste occupé</li>";
+                    break;
+                case 5:
+                    $texte .= "<li>capacité à partager l’information, à transférer les connaissances et à rendre compte</li>";
+                    break;
+                case 6:
+                    $texte .= "<li>dynamisme et capacité à réagir</li>";
+                    break;
+                case 7:
+                    $texte .= "<li>sens des responsabilités</li>";
+                    break;
+                case 8:
+                    $texte .= "<li>capacité de travail</li>";
+                    break;
+                case 9:
+                    $texte .= "<li>capacité à s’investir dans des projets</li>";
+                    break;
+                case 10:
+                    $texte .= "<li>contribution au respect des règles d’hygiène et de sécurité</li>";
+                    break;
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function toStringCompetencesPersonnelles() : string {
+        $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.3']);
+        $items = explode(";",$reponses);
+        $texte = "<ul>";
+        foreach ($items as $item) {
+            switch ((int) $item) {
+            case 1 :
+                $texte .= "<li>autonomie, discernement et sens des initiatives dans l’exercice de ses attributions</li>";
+                break;
+            case 2 :
+                $texte .="<li>capacité d’adaptation</li>";
+                break;
+            case 3 :
+                $texte .="<li>capacité à travailler en équipe</li>";
+                break;
+            case 4 :
+                $texte .="<li>aptitudes relationnelles (avec le et dans l’environnement professionnel), notamment maîtrise de soi</li>";
+                break;
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
+
+    public function toStringEncadrementConduite() : string {
+        $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.4']);
+        $items = explode(";",$reponses);
+        $texte = "<ul>";
+        foreach ($items as $item) {
+            switch ((int) $item) {
+                case 1 :
+                    $texte .= "<li>capacité à animer une équipe ou un réseau</li>";
+                    break;
+                case 2 :
+                    $texte .= "<li>capacité à identifier, mobiliser et valoriser les compétences individuelles et collectives</li>";
+                    break;
+                case 3 :
+                    $texte .= "<li>capacité d’organisation et de pilotage</li>";
+                    break;
+                case 4 :
+                    $texte .= "<li>aptitude à la conduite de projets</li>";
+                    break;
+                case 5 :
+                    $texte .= "<li>capacité à déléguer</li>";
+                    break;
+                case 6 :
+                    $texte .= "<li>capacité à former</li>";
+                    break;
+                case 7 :
+                    $texte .= "<li>aptitude au dialogue, à la communication et à la négociation</li>";
+                    break;
+                case 8 :
+                    $texte .= "<li>aptitude à prévenir, arbitrer et gérer les conflits</li>";
+                    break;
+                case 9 :
+                    $texte .= "<li>aptitude à faire des propositions, à prendre des décisions et à les faire appliquer</li>";
+                    break;
+
+            }
+        }
+        $texte .= "</ul>";
+        return $texte;
+    }
 }
