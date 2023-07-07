@@ -40,7 +40,7 @@ if ($mode === 'edition-fiche-metier') {
                         <?php /** @see \FicheMetier\Controller\FicheMetierController::gererApplicationsAction() */ ?>
                         <a href="<?php echo $this->url('fiche-metier/gerer-applications', ['fiche-metier' => $fichemetier->getId()], [], true); ?>"
                            class="btn btn-primary ajax-modal" data-event="modification">
-                            <span class="icon icon-gerer"></span>
+                            <span class="icon icon-lister"></span>
                             Gérer les applications
                         </a>
                     <?php endif; ?>

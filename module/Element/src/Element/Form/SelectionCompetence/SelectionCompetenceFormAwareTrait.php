@@ -4,25 +4,16 @@ namespace Element\Form\SelectionCompetence;
 
 trait SelectionCompetenceFormAwareTrait {
 
-    /** @var SelectionCompetenceForm */
-    private $selectionCompetenceForm;
+    private SelectionCompetenceForm $selectionCompetenceForm;
 
-    /**
-     * @return SelectionCompetenceForm
-     */
-    public function getSelectionCompetenceForm()
+    public function getSelectionCompetenceForm() : SelectionCompetenceForm
     {
         return $this->selectionCompetenceForm;
     }
 
-    /**
-     * @param SelectionCompetenceForm $selectionCompetenceForm
-     * @return SelectionCompetenceForm
-     */
-    public function setSelectionCompetenceForm($selectionCompetenceForm)
+    public function setSelectionCompetenceForm(SelectionCompetenceForm $selectionCompetenceForm): void
     {
         $this->selectionCompetenceForm = $selectionCompetenceForm;
-        return $this->selectionCompetenceForm;
     }
 
 }
