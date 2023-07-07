@@ -7,6 +7,7 @@ use Element\Service\Niveau\NiveauServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Hidden;
 use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
@@ -71,11 +72,16 @@ class NiveauForm extends Form {
         ]);
         //type
         $this->add([
-            'type' => Text::class,
+            'type' => Select::class,
             'name' => 'type',
             'options' => [
-                'label' => "Type  <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label' => "Association à un type d'élément <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
+                'value_options' => [
+                    'Application' => 'Niveau associé aux applications',
+                    'Competence' => 'Niveau associé aux compétences',
+                ],
+                'empty_option' => "Choisissez un type d'élément ...",
             ],
             'attributes' => [
                 'id' => 'type',
