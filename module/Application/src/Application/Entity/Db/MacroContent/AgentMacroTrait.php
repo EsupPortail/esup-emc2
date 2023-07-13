@@ -98,13 +98,13 @@ trait AgentMacroTrait
             if (!empty($temoins)) {
 //                $texte .= "<li>";
                 $texte .= implode(", ",$temoins);
-                $texte .= " (";
-                if($statut->getDateFin()) {
-                    $texte .= "du " . $statut->getDateDebut()->format('d/m/Y') . " au " . $statut->getDateFin()->format('d/m/Y');
-                } else {
-                    $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
-                }
-                $texte .= " - " . $statut->getStructure()->getLibelleCourt() .")";
+//                $texte .= " (";
+//                if($statut->getDateFin()) {
+//                    $texte .= "du " . $statut->getDateDebut()->format('d/m/Y') . " au " . $statut->getDateFin()->format('d/m/Y');
+//                } else {
+//                    $texte .= "depuis le " . $statut->getDateDebut()->format('d/m/Y');
+//                }
+//                $texte .= " - " . $statut->getStructure()->getLibelleCourt() .")";
                 //$texte .= "</span>";
                 $texte .= "<br/>";
             }
@@ -140,7 +140,7 @@ trait AgentMacroTrait
 //                $texte .= "depuis le " . (($grade->getDateDebut() !== null)?$grade->getDateDebut()->format('d/m/Y'):"---");
 //            }
 //            $texte .= " - ";
-            $texte .= $grade->getStructure()->getLibelleCourt() .")";
+//            $texte .= $grade->getStructure()->getLibelleCourt() .")";
 //            $texte .= "</span>";
 //            $texte .= "</li>";
             $texte .= "<BR>";
