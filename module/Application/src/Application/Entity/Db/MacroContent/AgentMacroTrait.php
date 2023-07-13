@@ -139,7 +139,8 @@ trait AgentMacroTrait
 //            } else {
 //                $texte .= "depuis le " . (($grade->getDateDebut() !== null)?$grade->getDateDebut()->format('d/m/Y'):"---");
 //            }
-            $texte .= " - " . $grade->getStructure()->getLibelleCourt() .")";
+//            $texte .= " - ";
+            $texte .= $grade->getStructure()->getLibelleCourt() .")";
 //            $texte .= "</span>";
 //            $texte .= "</li>";
             $texte .= "<BR>";
