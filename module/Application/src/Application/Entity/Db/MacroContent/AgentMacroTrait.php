@@ -133,7 +133,7 @@ trait AgentMacroTrait
                 $grade_bap = "";
             }
             $texte .= $grade_libelle . " ". $grade_bap;
-            $texte .= " (";
+//            $texte .= " (";
 //            if($grade->estFini()) {
 //                $texte .= "du " . $grade->getDateDebut()->format('d/m/Y') . " au " . $grade->getDateFin()->format('d/m/Y');
 //            } else {
