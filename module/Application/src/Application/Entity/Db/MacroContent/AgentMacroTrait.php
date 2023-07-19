@@ -180,7 +180,7 @@ trait AgentMacroTrait
             if ($affectation->getQuotite()) {
                 $texte .= $affectation->getQuotite() . "%";
             } else {
-                $texte .= "<i>quotité non précisée</i>";
+                $texte .= "100%";
             }
 
             $texte .= "</li>";
