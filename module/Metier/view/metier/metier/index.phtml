@@ -62,7 +62,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
         <tr <?php if ($metier->estHistorise()) echo ' class="historise" '; ?>>
             <td>
                 <span title='<?php echo $metier->generateTooltip(); ?>'
-                      data-toggle='tooltip' data-html='true'
+                      data-bs-toggle='tooltip' data-bs-html='true'
                 >
                     <?php echo $metier->getLibelle(); ?>
                 </span>

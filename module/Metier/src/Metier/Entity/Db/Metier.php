@@ -138,19 +138,28 @@ class Metier implements HistoriqueAwareInterface {
     public function generateTooltip() : string
     {
         $html  = '';
-        /** ligne sur le metier **/
-        $html .= '<span class="highlight metier">'.htmlentities($this->getLibelle(),ENT_QUOTES).'</span><br/>';
-        /** lignes sur les domaines du metier **/
+        /** Ligne sur le metier **/
+        $html .= '<span class="highlight metier">';
+        $html .= htmlentities($this->getLibelle(), ENT_QUOTES);
+        $html .= '</span><br/>';
+
+        /** Lignes sur les domaines du metier **/
         $html .= '<strong>Domaines</strong> :';
         $html .= '<ul>';
         foreach ($this->getDomaines() as $domaine) {
-            $html .= '<li>'.$domaine->getLibelle().'</li>';
+            $html .= '<li>';
+            $html .= htmlentities($domaine->getLibelle(), ENT_QUOTES);
+            $html .= '</li>';
         }
         $html .= '</ul>';
-        /** ligne sur les refs */
+        /** Ligne sur les refs */
         $html .= '<strong>Références</strong> :';
         foreach ($this->getReferences() as $reference) {
-            $html .= '<span class="badge" style="margin:0.25rem;">'.$reference->getReferentiel()->getLibelleCourt().' - '.$reference->getCode().'</span><br/>';
+            $html .= '<span class="badge" style="margin:0.25rem;">';
+            $html .= htmlentities($reference->getReferentiel()->getLibelleCourt(), ENT_QUOTES);
+            $html .= ' - ';
+            $html .= htmlentities($reference->getCode(), ENT_QUOTES);
+            $html .= '</span><br/>';
         }
         return '<span style="text-align:left;">'.$html.'</span>';
     }

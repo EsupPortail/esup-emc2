@@ -69,7 +69,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                         href="<?php echo $this->url('mission-specifique-affectation/afficher', ['agent-mission-specifique' => $mission->getId()], [], true); ?>"
                         class="ajax-modal"
                     >
-                        <span class="icon icon-voir" data-toggle='tooltip'  data-html='true' title="Afficher l'affectation"></span></a>
+                        <span class="icon icon-voir" data-bs-toggle='tooltip'  data-bs-html='true' title="Afficher l'affectation"></span></a>
                 <?php endif; ?>
                 <?php if ($canVoirAffectation) : ?>
                     <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
@@ -86,7 +86,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon icon-editer" data-toggle='tooltip'  data-html='true' title="Modifier l'affectation"></span></a>
+                        <span class="icon icon-editer" data-bs-toggle='tooltip'  data-bs-html='true' title="Modifier l'affectation"></span></a>
                 <?php endif; ?>
                 <?php if ($canHistoriserAffectation) : ?>
                     <?php if ($mission->estNonHistorise()) : ?>
@@ -94,13 +94,13 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                             <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::historiserAction() */?>
                             href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $this->url('structure/missions-specifiques', ['structure' => $structure->getId()], [], true)]], true); ?>"
                         >
-                            <span class="icon icon-historiser" data-toggle='tooltip'  data-html='true' title="Historiser l'affectation"></span></a>
+                            <span class="icon icon-historiser" data-bs-toggle='tooltip'  data-bs-html='true' title="Historiser l'affectation"></span></a>
                     <?php else : ?>
                         <a
                             <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::restaurerAction() */?>
                             href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $mission->getId()], ["query" => ["retour" => $this->url('structure/missions-specifiques', ['structure' => $structure->getId()], [], true)]], true); ?>"
                         >
-                            <span class="icon icon-restaurer" data-toggle='tooltip'  data-html='true' title="Restaurer l'affectation"></span></a>
+                            <span class="icon icon-restaurer" data-bs-toggle='tooltip'  data-bs-html='true' title="Restaurer l'affectation"></span></a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruireAffectation) : ?>
@@ -110,7 +110,7 @@ $canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getR
                         class="ajax-modal"
                         data-event="modification"
                     >
-                        <span class="icon icon-retirer" data-toggle='tooltip'  data-html='true' title="Supprimer l'affectation"></span></a>
+                        <span class="icon icon-retirer" data-bs-toggle='tooltip'  data-bs-html='true' title="Supprimer l'affectation"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

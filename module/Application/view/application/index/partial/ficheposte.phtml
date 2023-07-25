@@ -147,7 +147,7 @@ $date = new DateTime();
                                 <td class="encours">
                                     <?php $fin = ($ficheposte->getFinValidite()); ?>
                                     <?php if (($fin === null OR $fin >= $date) AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon icon-checked' style='color:darkgreen;' title='Fiche de poste en cours de validité'></span>"; ?>
-                                    <?php if ($fin !== null AND $fin < $date   AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
+                                    <?php if ($fin !== null AND $fin < $date   AND $etat->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span style='color:darkred;' title='Fiche de poste historisée | Fin de validité : ". $fin->format('d/m/Y')."' data-toogle='tooltip' data-bs-html='true'>".$fin->format('d/m/Y')."</span>"; ?>
                                     <?php if ($fin === null                    AND $etat->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)  echo "<span class='icon sursis' style='color:cadetblue;' title='Fiche en cours de redaction ou fiche ayant pas été validée'></span>"; ?>
                                 </td>
                                 <td class="etat">

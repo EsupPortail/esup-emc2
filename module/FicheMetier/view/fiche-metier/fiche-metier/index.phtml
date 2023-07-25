@@ -68,7 +68,7 @@ $this->headTitle('Index des fiches métiers');
             <tr <?php if ($fiche->estHistorise()) echo "class='historise'"; ?> >
                 <td>
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
-                      data-toggle='tooltip' data-html='true'
+                      data-bs-toggle='tooltip' data-bs-html='true'
                 >
                     <?php echo $fiche->getMetier()->getLibelle(true); ?>
                 </span>
