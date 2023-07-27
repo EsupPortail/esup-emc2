@@ -28,7 +28,7 @@ $date = new DateTime();
     La modélisation des fiches de poste va être repensée.
 </div>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed table-hover datatable" id="fiches">
     <thead>
         <tr>
             <th> Agent </th>
@@ -265,3 +265,14 @@ $date = new DateTime();
         color: lightgrey;
     }
 </style>
+
+
+<script>
+    $(document).ready(function() {
+        $("table#fiches").DataTable( {
+            'paging' : false,
+            'searching' : true,
+            'info' : false,
+        });
+    });
+</script>

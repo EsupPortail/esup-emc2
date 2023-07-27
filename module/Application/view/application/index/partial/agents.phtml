@@ -11,7 +11,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 
 Voue êtes responsable de <?php echo count($agents); ?> agent·es.
 
-<table class="table table-condensed">
+<table class="table table-condensed datatable" id="agents">
     <thead>
     <tr>
         <th> Dénomination </th>
@@ -60,3 +60,13 @@ Voue êtes responsable de <?php echo count($agents); ?> agent·es.
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function() {
+        $("table#agents").DataTable( {
+            'paging' : false,
+            'searching' : true,
+            'info' : false,
+        });
+    });
+</script>
