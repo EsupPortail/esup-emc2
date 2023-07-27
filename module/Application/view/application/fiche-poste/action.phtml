@@ -52,7 +52,7 @@ $canDetruire = $this->isAllowed($ficheposte, FichePostePrivileges::FICHEPOSTE_MO
     <li id="test" class="bg-danger"><a class="dropdown-item"
            href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' => $ficheposte->getId()], [], true); ?>"
         >
-            <span class="icon icon-retirer"></span>
+            <span class="icon icon-unchecked"></span>
             Détruire
         </a></li>
 <?php endif; ?>

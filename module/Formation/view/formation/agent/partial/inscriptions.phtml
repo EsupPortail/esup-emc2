@@ -45,7 +45,7 @@ foreach ($inscriptions as $inscription) {
 <!--                    href="--><?php //echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?><!--"-->
 <!--                    class="btn btn-danger action ajax-modal" data-event="modification"-->
 <!--            >-->
-<!--                <span class="icon icon-retirer"> J'annule mon inscription </span>-->
+<!--                <span class="icon icon-unchecked"> J'annule mon inscription </span>-->
 <!--            </a>-->
 <!--            --><?php //if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
 <!--                <br/>-->
@@ -84,7 +84,7 @@ foreach ($inscriptions as $inscription) {
 <!--                        href="--><?php //echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?><!--"-->
 <!--                        class="btn btn-danger action ajax-modal" data-event="modification"-->
 <!--                >-->
-<!--                    <span class="icon icon-retirer"> J'annule mon inscription </span>-->
+<!--                    <span class="icon icon-unchecked"> J'annule mon inscription </span>-->
 <!--                </a>-->
 <!--                --><?php //if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
 <!--                    <br/>-->

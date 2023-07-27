@@ -105,7 +105,7 @@ $canDetruire    = $this->isAllowed(EntretienproPrivileges::getResourceId(Entreti
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::detruireAction() */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/detruire', ['entretien' => $entretien->getId()], [], true); ?>"
                    class="ajax-modal" data-event="modification">
-                    <span class="icon icon-retirer text-danger"></span></a>
+                    <span class="icon icon-unchecked text-danger"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

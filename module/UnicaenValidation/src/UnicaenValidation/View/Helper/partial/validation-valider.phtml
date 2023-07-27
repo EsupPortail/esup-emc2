@@ -43,7 +43,7 @@ $retour         = isset($options["retour"])?$options["retour"]:$this->url(null,[
                 href="<?php echo $this->url('validation/instance/refuser', ['type' => $type->getId(), 'entityclass' => $entityclass, 'entityid' => $entityid], ["query" => ["retour" => $retour]]); ?>"
                 class="btn btn-danger action"
             >
-                <span class="icon icon-retirer"></span> Refuser
+                <span class="icon icon-unchecked"></span> Refuser
             </a>
         <?php endif; ?>
 </div>

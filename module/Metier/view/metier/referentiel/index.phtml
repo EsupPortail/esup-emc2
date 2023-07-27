@@ -55,7 +55,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                 <?php if ($referentiel->getPrefix()) : ?>
                     <span class="icon icon-checked" style="color:darkgreen" title="<?php echo $referentiel->getPrefix(); ?>"></span>
                 <?php else: ?>
-                    <span class="icon icon-retirer" style="color:darkred"></span>
+                    <span class="icon icon-unchecked" style="color:darkred"></span>
                 <?php endif; ?>
             </td>
             <td>
@@ -110,7 +110,7 @@ $canAction = ($canAfficher OR $canAjouter OR $canEditer OR $canHistoriser OR $ca
                         class="ajax-modal" data-event="modification"
                     >
                         <span class="text-danger">
-                            <span class="icon icon-retirer"></span>
+                            <span class="icon icon-unchecked"></span>
                             Supprimer
                         </span>
                     </a>

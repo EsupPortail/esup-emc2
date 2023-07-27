@@ -62,7 +62,7 @@ $nb = count($abonnements);
                 <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], ["query" => ['retour' => $retour]] , true); ?>"
                    data-bs-dismiss="modal"
                 >
-                    <span class="icon icon-retirer text-danger" title="Annulation de l'abonnement"></span>
+                    <span class="icon icon-unchecked text-danger" title="Annulation de l'abonnement"></span>
                 </a>
             </td>
         </tr>

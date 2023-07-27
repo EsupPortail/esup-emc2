@@ -91,7 +91,7 @@ $this->headTitle("Actions de formation");
                         href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer text-danger" title="Supprimer la formation"></span></a>
+                        <span class="icon icon-unchecked text-danger" title="Supprimer la formation"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

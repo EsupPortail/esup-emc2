@@ -183,7 +183,7 @@ if ($retour)    $query['retour'] = $retour;
                                 <?php if ($fiche instanceof FichePoste) : ?>
                                     <span style="color:darkred;"><?php echo $fiche->getFinValidite()->format('d/m/Y'); ?></span>
                                 <?php else : ?>
-                                    <span class="icon icon-retirer" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
+                                    <span class="icon icon-unchecked" style="color: darkred;" title="Fiche plus valide (remplacée)"></span>
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
@@ -272,11 +272,11 @@ if ($retour)    $query['retour'] = $retour;
                             <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
                             <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $id], [], true); ?>"
                                class="ajax-modal" data-event="modification"
-                        ><span class="icon icon-retirer"
+                        ><span class="icon icon-unchecked"
                                data-bs-toggle="tooltip" data-bs-html="true"
                                title="Supprimer la fiche de poste"></span></a>
                         <?php else : ?>
-                            <span class="icon icon-retirer nope"></span>
+                            <span class="icon icon-unchecked nope"></span>
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>

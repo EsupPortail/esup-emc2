@@ -57,7 +57,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                     <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
                        class="btn btn-danger action">
-                        <span class="icon icon-retirer"></span>
+                        <span class="icon icon-unchecked"></span>
                         Révoquer la validation (responsable)
                     </a>
                 <?php endif; ?>
@@ -74,7 +74,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                     <?php  /** @see \Application\Controller\FichePosteController::revoquerAction() */ ?>
                     <a href="<?php echo $this->url('fiche-poste/revoquer', ['fiche-poste' => $fiche->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
                        class="btn btn-danger action">
-                        <span class="icon icon-retirer"></span>
+                        <span class="icon icon-unchecked"></span>
                         Révoquer la validation (agent)
                     </a>
                 <?php endif; ?>

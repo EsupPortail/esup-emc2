@@ -169,7 +169,7 @@ usort($formationArray,
                             <?php /** @see \Application\Controller\ParcoursDeFormationController::retirerFormationAction() */ ?>
                             <a href="<?php echo $this->url('parcours-de-formation/retirer-formation', ['parcours-de-formation' => $parcours->getId(), 'formation' => $formationP->getId()], [], true); ?>"
                             >
-                                <span class="icon icon-retirer" data-toogle="tooltip" data-bs-html="true" title="Retirer la formation"></span>
+                                <span class="icon icon-unchecked" data-toogle="tooltip" data-bs-html="true" title="Retirer la formation"></span>
                             </a>
 
                         <?php endif; ?>

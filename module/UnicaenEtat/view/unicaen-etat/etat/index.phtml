@@ -71,7 +71,7 @@ use UnicaenEtat\Entity\Db\Etat;
                     <?php /** @see \UnicaenEtat\Controller\EtatController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('unicaen-etat/etat/supprimer', ['etat' => $etat->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 </td>
             </tr>
         <?php endforeach; ?>

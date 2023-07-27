@@ -87,7 +87,7 @@ $nbObject      = $nbCompetence +  $nbApplication;
             <?php /** @see FicheMetierController::supprimerMissionAction() */ ?>
             <a href="<?php echo $this->url('fiche-metier/supprimer-mission', ['fiche-metier' => $fichemetier->getId(), 'mission-principale' => $mission->getId()], [], true); ?>"
                class="btn btn-primary">
-                <span class="icon icon-retirer"></span>
+                <span class="icon icon-unchecked"></span>
                 Supprimer
             </a>
 

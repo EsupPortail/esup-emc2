@@ -50,9 +50,9 @@ use Application\Entity\Db\ConfigurationFicheMetier;
                     <?php /**  @see \Application\Controller\ConfigurationController::detruireConfigurationFicheMetierAction() */ ?>
                     <a href="<?php echo $this->url('configuration/detruire-configuration-fiche-metier', ['configuration' => $element->getId()], [] , true); ?>"
                        title="retirer cet élément de la configuration">
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 <?php else : ?>
-                        <span class="icon icon-retirer" style="color:lightgrey;"></span>
+                        <span class="icon icon-unchecked" style="color:lightgrey;"></span>
                 <?php endif; ?>
             </td>
         </tr>

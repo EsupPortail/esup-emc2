@@ -44,7 +44,7 @@ $action = $options['action'] ?? true;
                 <?php if ($canModifierDemande) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::retirerDevisAction() */ ?>
                     <a href="<?php echo $this->url('formation/demande-externe/retirer-devis', ['devis' => $devis->getId()], [], true); ?>">
-                        <span class="icon icon-retirer text-danger"></span></a>
+                        <span class="icon icon-unchecked text-danger"></span></a>
                 <?php endif; ?>
                 <br/>
             <?php endforeach; ?>
@@ -85,7 +85,7 @@ $action = $options['action'] ?? true;
         <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */?>
         <a  href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $retour]], true); ?>"
             class="btn btn-danger <?php if (!$canHistoriserDemande) echo " disabled "; ?> ">
-            <span class="icon icon-retirer"></span>
+            <span class="icon icon-unchecked"></span>
             J'annule mon inscription
         </a>
         </div>

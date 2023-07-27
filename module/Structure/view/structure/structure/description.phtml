@@ -60,7 +60,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                 href="<?php echo $this->url('structure/toggle-resume-mere', ['structure' => $structure->getId()], ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>"
             >
             <?php if ($structure->getRepriseResumeMere()) : ?>
-                <span class="icon icon-retirer" data-bs-toggle="tooltip" data-bs-html="true"
+                <span class="icon icon-unchecked" data-bs-toggle="tooltip" data-bs-html="true"
                       title="Ne plus réutiliser le résumé de la structure mère"></span>
             <?php else : ?>
                 <span class="icon icon-checked" data-bs-toggle="tooltip" data-bs-html="true"

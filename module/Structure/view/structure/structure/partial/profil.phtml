@@ -96,7 +96,7 @@ ksort($fichesRecrutements)
                     <?php if ($profil->isVacanceEmploi()) : ?>
                         <span class="icon icon-checked" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                     <?php else : ?>
-                        <span class="icon icon-retirer" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                        <span class="icon icon-unchecked" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                     <?php endif; ?>
                 </td>
                 <td>
@@ -133,7 +133,7 @@ ksort($fichesRecrutements)
                         <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
-                            <span class="icon icon-retirer"></span></a>
+                            <span class="icon icon-unchecked"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -166,7 +166,7 @@ ksort($fichesRecrutements)
                 <?php if ($profil->isVacanceEmploi()) : ?>
                     <span class="icon icon-checked" style="color:darkgreen;" title="Il s'agit d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php else : ?>
-                    <span class="icon icon-retirer" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
+                    <span class="icon icon-unchecked" style="color:darkred;" title="Il ne s'agit pas d'une vacance d'emploi" data-bs-toggle="tooltip" data-bs-html="true"></span>
                 <?php endif; ?>
             </td>
             <td> <?php echo $profil->getDateDossier()->format('d/m/Y'); ?> </td>
@@ -195,7 +195,7 @@ ksort($fichesRecrutements)
                     <a href="<?php echo $this->url('fiche-profil/supprimer', ['fiche-profil' => $profil->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

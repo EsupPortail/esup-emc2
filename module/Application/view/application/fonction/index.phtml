@@ -67,7 +67,7 @@ $canModifier = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivil
                             <span class="icon icon-editer"></span></a>
                         <a href="<?php echo $this->url('fonction/destination/supprimer', ['destination' => $destination->getId()], [], true); ?>"
                            data-bs-toggle="tooltip" data-bs-html="true" title="Supprimer la destination">
-                            <span class="icon icon-retirer"></span></a>
+                            <span class="icon icon-unchecked"></span></a>
                     <?php endif; ?>
                 </td>
                 <td style='width:50%;'>
@@ -91,7 +91,7 @@ $canModifier = $this->isAllowed(FonctionPrivileges::getResourceId(FonctionPrivil
                                     <span class="icon icon-editer"></span></a>
                                 <a href="<?php echo $this->url('fonction/activite/supprimer', ['activite' => $activite->getId()], [], true); ?>"
                                    data-bs-toggle="tooltip" data-bs-html="true" title="Supprimer l'activité">
-                                    <span class="icon icon-retirer"></span></a>
+                                    <span class="icon icon-unchecked"></span></a>
                                 <?php endif; ?>
                             </td>
                             <td>

@@ -4,6 +4,7 @@ namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleFormAwareTrait;
 use Application\Provider\Etat\FicheMetierEtats;
+use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
@@ -28,6 +29,7 @@ class FicheMetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use EtatServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
+    use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
 
@@ -148,6 +150,7 @@ class FicheMetierController extends AbstractActionController {
     public function supprimerAction() : ViewModel
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
+        $fiches = $this->getFichePosteService()->getFichesPostesByFicheMetier($fichemetier);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -163,6 +166,7 @@ class FicheMetierController extends AbstractActionController {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la fiche métier " . (($fichemetier and $fichemetier->getMetier()) ? $fichemetier->getMetier()->getLibelle() : "[Aucun métier]"),
+                'warning' => !empty($fiches)?"Attention : ".count($fiches). " fiche·s de poste dépende·nt de cette fiche métier":null,
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-metier/supprimer', ["fiche-metier" => $fichemetier->getId()], [], true),
             ]);

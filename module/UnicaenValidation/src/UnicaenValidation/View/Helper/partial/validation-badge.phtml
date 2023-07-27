@@ -19,7 +19,7 @@ $texte = (isset($options['texte']) AND $options['texte'] === true);
             <?php echo ($texte)?"Validée":""; ?>
         </span>
     <?php else : ?>
-        <span class="icon icon-retirer" style="color: darkred;"
+        <span class="icon icon-unchecked" style="color: darkred;"
               data-bs-toggle="tooltip" data-bs-html="true"
               title="Validé le <span class='highlight date'> <?php echo $validation->getHistoCreation()->format('d/m/Y'); ?> </span> par <span class='highlight agent'> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?>">
             <?php echo ($texte)?"Refusée":""; ?>

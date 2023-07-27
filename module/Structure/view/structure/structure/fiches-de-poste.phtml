@@ -122,7 +122,7 @@ $date = new DateTime();
                                             <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
                                                 href="<?php echo $this->url('delete-fichier', ['fichier' => $fichier->getId()], ['query' => ['retour' => $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()], true)]], true); ?>"
                                         >
-                                            <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
+                                            <span class="icon icon-unchecked" title="supprimer le fichier"></span></a>
                                     <?php else : ?>
                                         ..
                                     <?php endif; ?>
@@ -193,9 +193,9 @@ $date = new DateTime();
                                         <?php /** @see \Application\Controller\FichePosteController::detruireAction() */ ?>
                                         <a href="<?php echo $this->url('fiche-poste/detruire', ['fiche-poste' =>  $ficheposte->getId()], [], true); ?>"
                                            class="ajax-modal" data-event="modification">
-                                            <span class="icon icon-retirer"></span></a>
+                                            <span class="icon icon-unchecked"></span></a>
                                     <?php else : ?>
-                                        <span class="icon icon-retirer nope"></span>
+                                        <span class="icon icon-unchecked nope"></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

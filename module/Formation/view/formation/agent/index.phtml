@@ -66,7 +66,7 @@ $canAfficher = $this->isAllowed(FormationagentPrivileges::getResourceId(Formatio
                             <span class="icon icon-checked" style="color:darkgreen;" title="<?php echo $agent->getUtilisateur()->getDisplayName(); ?>"></span>
                             <?php echo $agent->getUtilisateur()->getUsername(); ?>
                         <?php else: ?>
-                            <span class="icon icon-retirer" style="color:darkred;"></span>
+                            <span class="icon icon-unchecked" style="color:darkred;"></span>
                         <?php endif; ?>
                     </td>
                     <td class="action">

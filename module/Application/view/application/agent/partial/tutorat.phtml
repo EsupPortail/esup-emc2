@@ -68,7 +68,7 @@ $canDetruirePPP     = $canAjouterPPP;
                         <?php if ($accompagnement->getFormation() === true) : ?>
                             <span style="color:darkgreen;"><span class="icon icon-checked" ></span> Formé&middot;e</span>
                         <?php else: ?>
-                            <span style="color:darkred;"><span class="icon icon-retirer" ></span> Non formé&middot;e</span>
+                            <span style="color:darkred;"><span class="icon icon-unchecked" ></span> Non formé&middot;e</span>
                         <?php endif; ?>
                 <?php else : ?>
                     Non renseigné
@@ -101,7 +101,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/tutorat/detruire', ['tutorat' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -167,7 +167,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <?php if ($accompagnement->getResultat() === true) : ?>
                         <span style="color:darkgreen;"><span class="icon icon-checked" ></span> Réussi</span>
                     <?php else: ?>
-                        <span style="color:darkred;"><span class="icon icon-retirer" ></span> Échoué</span>
+                        <span style="color:darkred;"><span class="icon icon-unchecked" ></span> Échoué</span>
                     <?php endif; ?>
                 <?php else : ?>
                     Non renseigné
@@ -200,7 +200,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <a href="<?php echo $this->url('agent/accompagnement/detruire', ['accompagnement' => $accompagnement->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

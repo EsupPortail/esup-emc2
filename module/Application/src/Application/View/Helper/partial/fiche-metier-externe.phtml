@@ -70,7 +70,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
                             <?php /** @see \Application\Controller\FichePosteController::retirerFicheMetierAction() */ ?>
                                 href="<?php echo $this->url('fiche-poste/retirer-fiche-metier', ['fiche-poste' => $fiche->getFichePoste()->getId(), 'fiche-type-externe' => $fiche->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-retirer" title="Retirer la fiche métier"></span></a>
+                            <span class="icon icon-unchecked" title="Retirer la fiche métier"></span></a>
                     <?php endif; ?>
                     <ul>
                         <li>

@@ -101,7 +101,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                     <a   href="<?php echo $this->url('formation-instance/supprimer', ['formation-instance' => $instance->getId()], [], true); ?>"
                          class="ajax-modal" data-event="modification"
                          data-toogle="tooltip" data-bs-html="true" title="Supprimer définitivement la session de formation">
-                        <span class="icon icon-retirer text-danger"></span></a>
+                        <span class="icon icon-unchecked text-danger"></span></a>
                 <?php endif; ?>
             </td>
         </tr>

@@ -97,7 +97,7 @@ $structure = ($affectation)?$affectation->getStructure():null;
                             <?php /** @see \Fichier\Controller\FichierController::deleteAction() */?>
                                 href="<?php echo $this->url('delete-fichier', ['fichier' => $fiche->getId()], ['query' => ['retour' => $this->url('agent/afficher', ['agent' => $agent->getId()], true)]], true); ?>"
                         >
-                            <span class="icon icon-retirer" title="supprimer le fichier"></span></a>
+                            <span class="icon icon-unchecked" title="supprimer le fichier"></span></a>
                     <?php endif; ?>
                 </td>
             </tr>

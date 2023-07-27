@@ -61,7 +61,7 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                         <span class="text-success"><span class="icon icon-checked"></span> Campagne en cours </span>
                     <?php else : ?>
                         <?php if ($campagne->estFini()) : ?>
-                            <span class="text-danger"><span class="icon icon-retirer"></span> Campagne est terminée </span>
+                            <span class="text-danger"><span class="icon icon-unchecked"></span> Campagne est terminée </span>
                         <?php else : ?>
                             <span class="text-info"><span class="icon icon-attente"></span> Campagne n'est pas encore commencée </span>
                         <?php endif; ?>

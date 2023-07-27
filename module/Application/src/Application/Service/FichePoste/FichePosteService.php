@@ -991,4 +991,12 @@ EOS;
         return $result;
 
     }
+
+    public function getFichesPostesByFicheMetier(?FicheMetier $fichemetier)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('fichemetier.id = :id')->setParameter('id', $fichemetier->getId());
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }

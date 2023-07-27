@@ -53,7 +53,7 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                         <?php if ($type->isRefusable()) : ?>
                             <span class="icon icon-checked" style="color:darkgreen;"></span>
                         <?php else : ?>
-                            <span class="icon icon-retirer" style="color:darkred;"></span>
+                            <span class="icon icon-unchecked" style="color:darkred;"></span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -89,7 +89,7 @@ $canDetruire = $this->isAllowed(ValidationtypePrivileges::getResourceId(Validati
                                 href="<?php echo $this->url('validation/type/detruire', ['type' => $type->getId()], [], true); ?>"
                                 class="ajax-modal" data-event="modification"
                             >
-                                <span class="icon icon-retirer" title="Supprimer définitivement le type de validation"></a>
+                                <span class="icon icon-unchecked" title="Supprimer définitivement le type de validation"></a>
                         <?php endif; ?>
                     </td>
                 </tr>

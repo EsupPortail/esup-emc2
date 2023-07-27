@@ -76,7 +76,7 @@ $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelVa
                             href="<?php echo $this->url('entretien-professionnel/observation/supprimer', ['observation' => $observation->getId()], [], true); ?>"
                             class="btn btn-primary ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-retirer"> </span> Détruire les observations
+                        <span class="icon icon-unchecked"> </span> Détruire les observations
                     </a>
                 <?php endif; ?>
             <?php endif; ?>

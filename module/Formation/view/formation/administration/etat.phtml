@@ -64,7 +64,7 @@ foreach ($etatTypes as $type) {
                     <?php /** @see \UnicaenEtat\Controller\EtatTypeController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('unicaen-etat/etat-type/supprimer', ['etat-type' => $etatType->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -118,7 +118,7 @@ foreach ($etatTypes as $type) {
                     <?php /** @see \UnicaenEtat\Controller\EtatController::supprimerAction() */ ?>
                     <a href="<?php echo $this->url('unicaen-etat/etat/supprimer', ['etat' => $etat->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-retirer"></span></a>
+                        <span class="icon icon-unchecked"></span></a>
                 </td>
             </tr>
         <?php endforeach; ?>

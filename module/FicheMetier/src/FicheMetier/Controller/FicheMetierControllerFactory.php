@@ -3,6 +3,7 @@
 namespace FicheMetier\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
+use Application\Service\FichePoste\FichePosteService;
 use Element\Form\SelectionApplication\SelectionApplicationForm;
 use Element\Form\SelectionCompetence\SelectionCompetenceForm;
 use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
@@ -32,12 +33,14 @@ class FicheMetierControllerFactory {
          * @var DomaineService $domaineService
          * @var EtatService $etatService
          * @var FicheMetierService $ficheMetierService
+         * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          */
         $domaineService = $container->get(DomaineService::class);
         $etatService = $container->get(EtatService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
+        $fichePosteService = $container->get(FichePosteService::class);
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
 
@@ -62,6 +65,7 @@ class FicheMetierControllerFactory {
         $controller->setDomaineService($domaineService);
         $controller->setEtatService($etatService);
         $controller->setFicheMetierService($ficheMetierService);
+        $controller->setFichePosteService($fichePosteService);
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setFicheMetierImportationForm($importationForm);
