@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Validation\FichePosteValidations;
 
@@ -84,7 +85,11 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
         <?php if ($fiche->getAgent() !== null) : ?>
             <h2>État de la fiche de poste</h2>
             <?php echo $this->etatbadge($fiche->getEtat()); ?>
-             Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
+            <?php if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
+            <?php else : ?>
+                La fiche de poste n'est pas encore visée par l'agent·e.
+            <?php endif; ?>
 
             <br/>
             <?php if ($canFichePosteModifierEtat) : ?>
