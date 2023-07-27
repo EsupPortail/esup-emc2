@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
+use Doctrine\Common\Collections\Collection;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
@@ -56,8 +57,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** @var ArrayCollection (Sursis) */
     private $sursis;
 
-    /** @var ArrayCollection (ValidationInstance) */
-    private $validations;
+    private Collection $validations;
 
     /** @var string */
     private $token;

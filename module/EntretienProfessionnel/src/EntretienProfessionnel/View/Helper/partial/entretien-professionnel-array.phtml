@@ -2,6 +2,7 @@
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
 /**
  * @see \EntretienProfessionnel\View\Helper\EntretienProfessionnelArrayViewHelper
@@ -112,7 +113,9 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         <?php
         //todo l'assertion merde
 //        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
-        $canConvoquer = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER));
+        $canConvoquer = (
+                ($entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
+             && $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
         ?>
     <tr>
         <?php if ($displayAgent) : ?>
