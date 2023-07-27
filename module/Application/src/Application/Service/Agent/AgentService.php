@@ -777,4 +777,17 @@ EOS;
 
         return $result;
     }
+
+    /**
+     * @return Agent[]
+     */
+    public function getAgentsByIds(array $agentIds): array
+    {
+        $agents = [];
+        foreach ($agentIds as $agentId) {
+            $agent = $this->getAgent($agentId);
+            if ($agent) $agents[$agentId] = $agent;
+        }
+        return $agents;
+    }
 }

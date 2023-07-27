@@ -3,9 +3,12 @@
 /**
  * @see \Metier\Controller\MetierController::listerAgentsAction()
  * @var Metier $metier
+ * @var Agent[] $agents
  * @var array $array
  */
 
+use Application\Entity\Db\Agent;
+use Application\Provider\Privilege\AgentPrivileges;
 use Metier\Entity\Db\Metier;
 
 ?>
@@ -26,13 +29,14 @@ use Metier\Entity\Db\Metier;
     <?php foreach ($array as $item) : ?>
     <tr>
         <td>
-            <strong>
-            <?php echo $item['prenom']; ?>
-            <?php echo $item['nom_usage']; ?>
-            </strong>
-            <small>
-            <?php echo $item['c_individu']; ?>
-            </small>
+            <?php $agent = $agents[$item['c_individu']]; ?>
+            <?php if ($this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER)) : ?>
+                <a class="linkexterne" id="<?php echo $agent->getId(); ?>" href="">
+                    <?php echo $agent->getDenomination(); ?>
+                </a>
+            <?php else : ?>
+                <?php echo $agent->getDenomination(); ?>
+            <?php endif; ?>
         </td>
         <td>
             <strong>
@@ -72,3 +76,11 @@ use Metier\Entity\Db\Metier;
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $('a.linkexterne').on('click',function(e) {
+        e.preventDefault();
+        $('.modal').modal("hide");
+        window.location = 'agent/afficher/' + $(this).attr('id');
+    });
+</script>

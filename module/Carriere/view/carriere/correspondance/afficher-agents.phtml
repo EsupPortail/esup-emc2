@@ -9,6 +9,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentGrade;
+use Application\Provider\Privilege\AgentPrivileges;
 use Carriere\Entity\Db\Correspondance;
 
 $now = new DateTime();
@@ -54,7 +55,15 @@ $now = new DateTime();
         <?php foreach ($agentGrades  as $agent) : ?>
         <tr <?php if ($agent->estFini($now)) echo 'class="historise"'; ?> >
             <td> <?php echo $agent->getId(); ?> </td>
-            <td> <?php echo $agent->getAgent()->getDenomination(); ?> </td>
+            <td>
+                <?php if ($this->isAllowed($agent->getAgent(), AgentPrivileges::AGENT_AFFICHER)) : ?>
+                    <a class="linkexterne" id="<?php echo $agent->getAgent()->getId(); ?>" href="">
+                        <?php echo $agent->getAgent()->getDenomination(); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $agent->getAgent()->getDenomination(); ?>
+                <?php endif; ?>
+            </td>
             <td> <?php echo ($agent->getDateDebut()) ? $agent->getDateDebut()->format('d/m/Y') : "---"; ?> </td>
             <td> <?php echo ($agent->getDateFin()) ? $agent->getDateFin()->format('d/m/Y') : "---"; ?> </td>
         </tr>
@@ -62,5 +71,14 @@ $now = new DateTime();
     </tbody>
 </table>
 
+
+
+<script>
+    $('a.linkexterne').on('click',function(e) {
+        e.preventDefault();
+        $('.modal').modal("hide");
+        window.location = 'agent/afficher/' + $(this).attr('id');
+    });
+</script>
 
 

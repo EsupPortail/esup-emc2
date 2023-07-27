@@ -2,6 +2,7 @@
 
 namespace Metier\Controller;
 
+use Application\Service\Agent\AgentService;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeForm;
 use Carriere\Service\Niveau\NiveauService;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeService;
@@ -25,6 +26,7 @@ class MetierControllerFactory {
     public function __invoke(ContainerInterface $container) : MetierController
     {
         /**
+         * @var AgentService $agentService
          * @var DomaineService $domaineService
          * @var FamilleProfessionnelleService $familleService
          * @var MetierService $metierService
@@ -32,6 +34,7 @@ class MetierControllerFactory {
          * @var NiveauEnveloppeService $niveauEnveloppeService
          * @var ReferentielService $referentielService
          */
+        $agentService = $container->get(AgentService::class);
         $domaineService = $container->get(DomaineService::class);
         $familleService = $container->get(FamilleProfessionnelleService::class);
         $metierService = $container->get(MetierService::class);
@@ -48,6 +51,7 @@ class MetierControllerFactory {
 
         /** @var MetierController $controller */
         $controller = new MetierController();
+        $controller->setAgentService($agentService);
         $controller->setDomaineService($domaineService);
         $controller->setFamilleProfessionnelleService($familleService);
         $controller->setMetierService($metierService);

@@ -2,6 +2,7 @@
 
 namespace Metier\Controller;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Carriere\Form\NiveauEnveloppe\NiveauEnveloppeFormAwareTrait;
 use Carriere\Service\Niveau\NiveauServiceAwareTrait;
@@ -19,6 +20,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
 class MetierController extends AbstractActionController {
+    use AgentServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FamilleProfessionnelleServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -245,10 +247,16 @@ class MetierController extends AbstractActionController {
     {
         $metier = $this->getMetierService()->getRequestedMetier($this);
         $array = $this->getMetierService()->getInfosAgentsByMetier($metier);
+        $agentIds = [];
+        foreach ($array as $item) {
+            $agentIds[$item['c_individu']] = $item['c_individu'];
+        }
+        $agents = $this->getAgentService()->getAgentsByIds($agentIds);
 
         $vm =  new ViewModel([
             'title' => 'Liste des agents ayants une fiche de poste avec un lien au métiers ['.$metier->getLibelle().']',
             'metier' => $metier,
+            'agents' => $agents,
             'array' => $array,
         ]);
         return $vm;
