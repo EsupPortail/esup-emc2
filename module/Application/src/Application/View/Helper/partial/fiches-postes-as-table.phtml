@@ -71,6 +71,7 @@ if ($retour)    $query['retour'] = $retour;
             $fichePrincipale = ($fiche->toStringFicheMetierPrincipal() !== '')?$fiche->toStringFicheMetierPrincipal():null;
             $ficheLibelle = ($fiche->getLibelle() !== '')?$fiche->getLibelle():null;
             $isEnCours = $fiche->isEnCours();
+            $finValidite = $fiche->getFinValidite();
 
             $canAfficher    = $this->isAllowed($fiche,FichePostePrivileges::FICHEPOSTE_AFFICHER);
             $canExporter    = $canAfficher;
@@ -83,12 +84,13 @@ if ($retour)    $query['retour'] = $retour;
             $etat = $fiche['etat_code'];
             $destruction = $fiche['histo_destruction'];
             $agentId = $fiche['agent_id'];
-            $agent = $fiche['prenom'] . " " . $fiche['nom_usage'];
+            $agent = strtoupper($fiche['nom_usage']) . ' ' .ucwords(strtolower($fiche['prenom']), ' -') ;
             $structureId = $fiche['structure_id'];
             $structure = $fiche['structure'];
             $fichePrincipale = $fiche['fiche_principale'];
             $ficheLibelle = $fiche['fiche_libelle'];
             $isEnCours = ($fiche['en_cours'] === true) ? true : false;
+            $finValidite = $fiche['fin_validite'];
 
             $canAfficher   = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
             $canExporter   = $canAfficher;
@@ -170,6 +172,14 @@ if ($retour)    $query['retour'] = $retour;
                             <?php if ($isEnCours) : ?>
                                 <span class="icon icon-checked" style="color:darkgreen;" title="Fiche en cours de validité"></span>
                             <?php else : ?>
+                                <span style="color:darkred;">
+                                    <?php if ($finValidite) : ?>
+                                        <?php if (is_string($finValidite)) $finValidite = DateTime::createFromFormat('Y-m-d H:i:s', $finValidite); ?>
+                                        <?php if ($finValidite instanceof DateTime): ?>
+                                            <?php echo $finValidite->format('d/m/Y'); ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </span>
                                 <?php if ($fiche instanceof FichePoste) : ?>
                                     <span style="color:darkred;"><?php echo $fiche->getFinValidite()->format('d/m/Y'); ?></span>
                                 <?php else : ?>

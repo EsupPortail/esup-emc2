@@ -313,7 +313,8 @@ select
     m.libelle_default as fiche_principale,
     e.id as etat,
     e.code as etat_code,
-   (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours
+   (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours,
+   f.fin_validite as fin_validite
 from ficheposte f
 left join agent a on f.agent = a.c_individu
 left join agent_carriere_affectation aa on a.c_individu = aa.agent_id
