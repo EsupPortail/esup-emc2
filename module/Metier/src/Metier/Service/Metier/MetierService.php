@@ -274,7 +274,7 @@ class MetierService {
         $params = ["metier" => $metier->getId()];
         $sql = <<<EOS
 select m.id, m.libelle_default,
-       f.id, fp.id, fte.principale, fte.quotite,
+       f.id, fp.id, fte.principale, fte.quotite, e.code,
        a.c_individu, a.prenom, a.nom_usage, 
        g.id as g_id, g.lib_court, ag.d_debut as g_debut, ag.d_fin as g_fin,
        cp.categorie as categorie,
@@ -285,6 +285,7 @@ left join metier_domaine d on md.domaine_id = d.id
 left join fichemetier f on m.id = f.metier_id
 left join ficheposte_fichemetier fte on f.id = fte.fiche_type
 left join ficheposte fp on fte.fiche_poste = fp.id
+left join unicaen_etat_etat e on fp.etat_id = e.id
 left join agent a on fp.agent = a.c_individu
 left join agent_carriere_grade ag on a.c_individu=ag.agent_id
 left join carriere_grade g on ag.grade_id = g.id
@@ -296,6 +297,10 @@ and ag.deleted_on IS NULL
 and ag.d_debut < current_date and (ag.d_fin IS NULL OR ag.d_fin > current_date)
 and aa.deleted_on IS NULL
 and aa.date_debut < current_date and (aa.date_fin IS NULL OR aa.date_fin > current_date)
+and aa.t_principale = 'O'
+and (fp.fin_validite IS NULL OR fp.fin_validite >= now())
+and fp.histo_destruction IS NULL 
+and e.code not in ('FICHE_POSTE_REDACTION')
 order by a.nom_usage, a.prenom
 EOS;
 
