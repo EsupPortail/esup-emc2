@@ -40,7 +40,7 @@ class AjouterFicheMetierForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //Fiche Métier
         $this->add([

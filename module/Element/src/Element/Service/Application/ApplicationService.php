@@ -4,7 +4,7 @@ namespace Element\Service\Application;
 
 use Element\Entity\Db\Application;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\ApplicationTheme;
 use UnicaenApp\Exception\RuntimeException;

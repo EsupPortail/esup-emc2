@@ -5,7 +5,7 @@ namespace Application\Service\SpecificiteActivite;
 use Application\Entity\Db\SpecificiteActivite;
 use Application\Entity\Db\SpecificitePoste;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

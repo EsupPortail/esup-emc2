@@ -11,7 +11,7 @@ use Laminas\InputFilter\Factory;
 class SessionParametreForm extends Form {
 
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Radio::class,

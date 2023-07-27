@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\Mission;
 use Metier\Entity\Db\Domaine;
@@ -207,7 +207,7 @@ class FichePosteService {
 
     }
 
-    /** Recupération des fiche de postes par agent ********************************************************************/
+    /** Recupération des fiches de postes par agent ********************************************************************/
 
     /**
      * @var Agent $agent
@@ -580,7 +580,7 @@ EOS;
                 //provenant des activités
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
                 foreach ($fichemetier->getMissions() as $mission) {
-                    if (array_search($mission->getId(), $keptActivites) !== false) {
+                    if (in_array($mission->getId(), $keptActivites)) {
                         foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
                             $application = $applicationElement->getApplication();
                             if (!isset($applications[$application->getId()])) {
@@ -698,7 +698,7 @@ EOS;
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
                 $dictionnaire[$id]["object"] = $metierTypeActivite;
-                $dictionnaire[$id]["conserve"] = (array_search($id, $activitesId) !== false);
+                $dictionnaire[$id]["conserve"] = (in_array($id, $activitesId));
             }
         }
 
@@ -728,7 +728,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }
@@ -766,7 +766,7 @@ EOS;
      * @param DateTime $date
      * @return array
      */
-    public function getFormationsDictionnaires(FichePoste $fiche)
+    public function getFormationsDictionnaires(FichePoste $fiche): array
     {
         $dictionnaire = [];
 
@@ -784,7 +784,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }
@@ -798,7 +798,7 @@ EOS;
      * @param DateTime $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FichePoste $fiche)
+    public function getCompetencesDictionnaires(FichePoste $fiche): array
     {
         $dictionnaire = [];
 
@@ -816,7 +816,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }

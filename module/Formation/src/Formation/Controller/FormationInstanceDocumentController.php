@@ -13,6 +13,7 @@ use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use JetBrains\PhpStorm\NoReturn;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
@@ -57,7 +58,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         exit;
     }
 
-    public function exportTousEmargementsAction()
+    #[NoReturn] public function exportTousEmargementsAction(): void
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $journees = $instance->getJournees();

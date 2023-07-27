@@ -35,12 +35,12 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Metier\Provider\Privilege\MetierPrivileges;
 use Structure\Provider\Privilege\StructurePrivileges;
-use UnicaenAutoform\Provider\Privilege\IndexPrivileges;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use UnicaenPrivilege\Provider\Privilege\PrivilegePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\RolePrivileges;
 use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 use UnicaenValidation\Provider\Privilege\ValidationtypePrivileges;
+use UnicaenAutoform\Provider\Privilege\AutoformindexPrivileges;
 use Laminas\Router\Http\Literal;
 
 return [
@@ -53,7 +53,7 @@ return [
                         'index-administration',
                     ],
                     'privileges' => [
-                        IndexPrivileges::AFFICHER_INDEX,
+                        AutoformindexPrivileges::INDEX,
                         SynchroPrivileges::SYNCHRO_AFFICHER,
                         UtilisateurPrivileges::UTILISATEUR_AFFICHER,
                         RolePrivileges::ROLE_AFFICHER,

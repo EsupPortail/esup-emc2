@@ -6,7 +6,7 @@ use Application\Entity\Db\Fonction;
 use Application\Entity\Db\FonctionActivite;
 use Application\Entity\Db\FonctionDestination;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

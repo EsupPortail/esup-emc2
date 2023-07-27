@@ -195,8 +195,7 @@ trait AgentMacroTrait
      */
     public function toStringAgentBloc() : string
     {
-        $texte  = "";
-        $texte .= "<table class='agent-bloc'>";
+        $texte  = "<table class='agent-bloc'>";
         $texte .= "<tr>";
         $texte .= "<th>Dénomination</th>";
         $texte .= "<td>".$this->toStringDenomination()."</td>";

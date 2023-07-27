@@ -17,7 +17,7 @@ class AgentStageObservationForm extends Form {
     use MetierServiceAwareTrait;
     use EtatServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //--agent déduiu de l'action
         $this->add([

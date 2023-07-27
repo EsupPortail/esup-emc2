@@ -12,7 +12,7 @@ class AjouterFormationForm extends Form
 {
     use FormationServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         /** SELECT :: FORMATION */
         $this->add([

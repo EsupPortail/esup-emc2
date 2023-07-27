@@ -2,11 +2,8 @@
 
 namespace Formation\Form\DemandeExterne;
 
-use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Email;
-use Laminas\Form\Element\File;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
@@ -14,9 +11,10 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use UnicaenApp\Form\Element\Date;
 
-class DemandeExterneForm extends Form {
+class DemandeExterneForm extends Form
+{
 
-    public function init()
+    public function init(): void
     {
         //-- Stage demandé -----------------------------
 
@@ -26,7 +24,7 @@ class DemandeExterneForm extends Form {
             'name' => 'libelle',
             'options' => [
                 'label' => "Intitulé du stage <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'libelle',
@@ -39,7 +37,7 @@ class DemandeExterneForm extends Form {
             'name' => 'organisme',
             'options' => [
                 'label' => "Organisme de formation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'organisme',
@@ -52,7 +50,7 @@ class DemandeExterneForm extends Form {
             'name' => 'contact',
             'options' => [
                 'label' => "Adresse électronique de contact de l'organisme <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'contact',
@@ -89,7 +87,7 @@ class DemandeExterneForm extends Form {
             'name' => 'lieu',
             'options' => [
                 'label' => "Lieu (ville) <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'lieu',
@@ -103,7 +101,7 @@ class DemandeExterneForm extends Form {
             'name' => 'debut',
             'options' => [
                 'label' => "Date de début <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
 //                'format' => HasPeriodeFieldset::format,
             ],
             'attributes' => [
@@ -117,7 +115,7 @@ class DemandeExterneForm extends Form {
             'name' => 'fin',
             'options' => [
                 'label' => "Date de fin <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
 //                'format' => 'd/m/Y'
             ],
             'attributes' => [
@@ -131,7 +129,7 @@ class DemandeExterneForm extends Form {
             'name' => 'modalite',
             'options' => [
                 'label' => "Modalité de la session de formation  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     "présentiel" => "Je suivrai la formation en présentiel",
                     "distanciel" => "Je suivrai la formation en distanciel",
@@ -148,7 +146,7 @@ class DemandeExterneForm extends Form {
             'name' => 'motivation',
             'options' => [
                 'label' => "Motivation <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'motivation',
@@ -164,7 +162,7 @@ class DemandeExterneForm extends Form {
             'name' => 'prise-en-charge',
             'options' => [
                 'label' => "Votre composante accepte-t-elle de prendre en charge les frais de mission de l’agent ?  <span class='icon obligatoire' title='Champ obligatoire'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'value_options' => [
                     true => "Oui",
                     false => "Non",
@@ -181,7 +179,7 @@ class DemandeExterneForm extends Form {
             'name' => 'cofinanceur',
             'options' => [
                 'label' => "Nom, prénom du directeur du service, de la composante ou du laboratoire <span class='icon icon-information' title='Champ obligatoire si cofinancenement'></span> :",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'cofinanceur',
@@ -195,7 +193,7 @@ class DemandeExterneForm extends Form {
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -206,20 +204,20 @@ class DemandeExterneForm extends Form {
         //-- Input filter ------------------------------
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'            => [ 'required' => true,  ],
-            'organisme'          => [ 'required' => true,  ],
-            'contact'            => [ 'required' => true,  ],
-            'pourquoi'           => [ 'required' => false,  ],
-            'montant'            => [ 'required' => false,  ],
-            'lieu'               => [ 'required' => true,  ],
-            'debut'              => [ 'required' => true,  ],
-            'fin'                => [ 'required' => true,  ],
-            'modalite'           => [ 'required' => true,  ],
+            'libelle' => ['required' => true,],
+            'organisme' => ['required' => true,],
+            'contact' => ['required' => true,],
+            'pourquoi' => ['required' => false,],
+            'montant' => ['required' => false,],
+            'lieu' => ['required' => true,],
+            'debut' => ['required' => true,],
+            'fin' => ['required' => true,],
+            'modalite' => ['required' => true,],
 
-            'motivation'         => [ 'required' => true,  ],
+            'motivation' => ['required' => true,],
 
-            'prise-en-charge'    => [ 'required' => true,  ],
-            'cofinanceur'        => [ 'required' => false,  ],
+            'prise-en-charge' => ['required' => true,],
+            'cofinanceur' => ['required' => false,],
         ]));
     }
 }

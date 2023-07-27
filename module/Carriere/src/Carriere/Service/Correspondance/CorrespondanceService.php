@@ -5,6 +5,7 @@ namespace Carriere\Service\Correspondance;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
@@ -22,10 +23,13 @@ class CorrespondanceService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
-            ->leftJoin('correspondance.type','ctype')->addSelect('ctype')
-            ->andWhere('correspondance.deleted_on IS NULL')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Correspondance::class)->createQueryBuilder('correspondance')
+                ->leftJoin('correspondance.type', 'ctype')->addSelect('ctype')
+                ->andWhere('correspondance.deleted_on IS NULL');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [".Correspondance::class."]",0,$e);
+        }
         return $qb;
     }
 

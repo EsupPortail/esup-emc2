@@ -4,14 +4,18 @@ namespace Element\Form\SelectionNiveau;
 
 use Element\Service\Niveau\NiveauService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SelectionNiveauFormFactory {
 
     /**
      * @param ContainerInterface $container
      * @return SelectionNiveauForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): SelectionNiveauForm
     {
         /**
          * @var NiveauService $niveauService

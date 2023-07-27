@@ -11,7 +11,7 @@ use Laminas\Validator\Regex;
 class FormationInstanceFraisForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         //repas
         $this->add([

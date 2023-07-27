@@ -11,15 +11,15 @@ create table unicaen_etat_etat_type
     histo_creation timestamp not null,
     histo_createur_id integer not null
         constraint unicaen_content_content_user_id_fk
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_modification timestamp not null,
     histo_modificateur_id integer not null
         constraint unicaen_content_content_user_id_fk_2
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer
         constraint unicaen_content_content_user_id_fk_3
-        references "user"
+        references emc2_demo.public.unicaen_utilisateur_user
 );
 
 alter table unicaen_etat_etat_type owner to ad_jp_test;
@@ -39,15 +39,15 @@ create table unicaen_etat_etat
     histo_creation timestamp not null,
     histo_createur_id integer not null
         constraint unicaen_content_content_user_id_fk
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_modification timestamp not null,
     histo_modificateur_id integer not null
         constraint unicaen_content_content_user_id_fk_2
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer
         constraint unicaen_content_content_user_id_fk_3
-        references "user"
+        references emc2_demo.public.unicaen_utilisateur_user
 );
 
 alter table unicaen_etat_etat owner to ad_jp_test;
@@ -67,15 +67,15 @@ create table unicaen_etat_action_type
     histo_creation timestamp not null,
     histo_createur_id integer not null
         constraint unicaen_content_content_user_id_fk
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_modification timestamp not null,
     histo_modificateur_id integer not null
         constraint unicaen_content_content_user_id_fk_2
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer
         constraint unicaen_content_content_user_id_fk_3
-        references "user"
+        references emc2_demo.public.unicaen_utilisateur_user
 );
 
 alter table unicaen_etat_action_type owner to ad_jp_test;
@@ -103,15 +103,15 @@ create table unicaen_etat_action
     histo_creation timestamp not null,
     histo_createur_id integer not null
         constraint unicaen_content_content_user_id_fk
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_modification timestamp not null,
     histo_modificateur_id integer not null
         constraint unicaen_content_content_user_id_fk_2
-        references "user",
+        references emc2_demo.public.unicaen_utilisateur_user,
     histo_destruction timestamp,
     histo_destructeur_id integer
         constraint unicaen_content_content_user_id_fk_3
-        references "user"
+        references emc2_demo.public.unicaen_utilisateur_user
 );
 
 alter table unicaen_etat_action owner to ad_jp_test;

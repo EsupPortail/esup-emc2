@@ -11,4 +11,4 @@ class CarriereParametres {
     const GRADE_AVEC_AGENT          = 'GradeAvecAgent';
     const ACTIF_ONLY                = 'ACTIF_ONLY';
 
-};
+}

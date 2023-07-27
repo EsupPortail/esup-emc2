@@ -2,7 +2,7 @@
 
 namespace EntretienProfessionnel\Service\Observation;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use EntretienProfessionnel\Entity\Db\Observation;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

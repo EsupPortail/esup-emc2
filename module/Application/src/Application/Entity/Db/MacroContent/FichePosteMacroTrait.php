@@ -311,7 +311,7 @@ trait FichePosteMacroTrait {
 
                         $texte .= "<ul>";
                         foreach ($mission->getActivites() as $activite) {
-                            if (array_search($activite->getId(), $descriptionsRetirees) === false) {
+                            if (!in_array($activite->getId(), $descriptionsRetirees)) {
                                 $texte .= "<li>" . $activite->getLibelle() . "</li>";
                             }
                         }
@@ -590,7 +590,7 @@ trait FichePosteMacroTrait {
             $texte .= "<span class='activite'>".$activite->getActivite()->getCurrentActiviteLibelle()->getLibelle()."</span>";
             $texte .= "<ul>";
             foreach ($activite->getActivite()->getDescriptions() as $description) {
-                if (array_search($description->getId(), $retrait) === false) $texte .= "<li>". $description->getLibelle()."</li>";
+                if (!in_array($description->getId(), $retrait)) $texte .= "<li>". $description->getLibelle()."</li>";
             }
             $texte .= "</ul>";
             $texte .= "</div>";

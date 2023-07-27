@@ -15,7 +15,7 @@ class EnqueteReponseForm extends Form
 {
     use EntityManagerAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
         $questions = array_filter($questions, function (EnqueteQuestion $a) { return $a->estNonHistorise();});

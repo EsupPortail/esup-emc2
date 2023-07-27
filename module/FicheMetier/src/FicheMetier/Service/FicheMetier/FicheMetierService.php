@@ -7,7 +7,7 @@ use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;

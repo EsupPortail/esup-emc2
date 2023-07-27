@@ -2,7 +2,7 @@
 
 namespace Formation\Service\FormationInstanceFrais;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Formation\Entity\Db\FormationInstanceFrais;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

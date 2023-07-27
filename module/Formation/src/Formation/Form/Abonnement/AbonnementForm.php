@@ -15,7 +15,7 @@ class AbonnementForm extends Form {
     private ?string $urlAgent = null;
     public function setUrlAgent(string $url) { $this->urlAgent = $url; }
 
-    public function init()
+    public function init(): void
     {
         //Agent
         $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);

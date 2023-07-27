@@ -12,7 +12,7 @@ use Laminas\Form\Form;
 class DomaineForm extends Form {
     use FamilleProfessionnelleServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle
         $this->add([

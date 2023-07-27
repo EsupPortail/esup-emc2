@@ -4,7 +4,7 @@ namespace UnicaenValidation\Service\ValidationInstance;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenApp\Exception\RuntimeException;

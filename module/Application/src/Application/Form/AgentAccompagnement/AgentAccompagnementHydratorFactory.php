@@ -6,6 +6,8 @@ use Application\Service\Agent\AgentService;
 use Carriere\Service\Corps\CorpsService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\Etat\EtatService;
 
 class AgentAccompagnementHydratorFactory {
@@ -13,6 +15,8 @@ class AgentAccompagnementHydratorFactory {
     /**
      * @param ContainerInterface $container
      * @return AgentAccompagnementHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : AgentAccompagnementHydrator
     {

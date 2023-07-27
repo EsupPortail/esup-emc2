@@ -4,7 +4,7 @@ namespace Application\Service\SpecificitePoste;
 
 use Application\Entity\Db\SpecificitePoste;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -55,6 +55,7 @@ class SpecificitePosteService {
         } catch (ORMException $e) {
             throw new RuntimeException("Une erreur s'est produite lors de l'effacement de la spécificité du poste.", $e);
         }
+        return $specificite;
     }
 
     /** REQUETAGE ***************************************************************************************************/

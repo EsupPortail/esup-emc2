@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 
 class ValidationTypeForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         //code
         $this->add([

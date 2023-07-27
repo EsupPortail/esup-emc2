@@ -3,7 +3,7 @@
 namespace Element\Service\CompetenceTheme;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Element\Entity\Db\CompetenceTheme;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

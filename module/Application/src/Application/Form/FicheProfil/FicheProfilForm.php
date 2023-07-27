@@ -27,7 +27,7 @@ class FicheProfilForm extends Form {
         $this->structure = $structure;
     }
 
-    public function init()
+    public function init(): void
     {
         $structures = null;
         if ($this->structure) {

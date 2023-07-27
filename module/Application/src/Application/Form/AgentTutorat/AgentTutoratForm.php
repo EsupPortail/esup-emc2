@@ -21,7 +21,7 @@ class AgentTutoratForm extends Form
 
     public $urlAgent;
 
-    public function init()
+    public function init(): void
     {
         //--agent déduiu de l'action
         //Cible

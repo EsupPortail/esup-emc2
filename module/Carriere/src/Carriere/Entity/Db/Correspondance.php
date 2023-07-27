@@ -10,7 +10,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-//todo utiliser interface HasPeriodeInterface
 class Correspondance  implements HasPeriodeInterface {
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
@@ -49,19 +48,9 @@ class Correspondance  implements HasPeriodeInterface {
         return $this->libelleCourt;
     }
 
-    public function setLibelleCourt(?string $libelleCourt) : void
-    {
-        $this->libelleCourt = $libelleCourt;
-    }
-
     public function getLibelleLong() : ?string
     {
         return $this->libelleLong;
-    }
-
-    public function setLibelleLong(?string $libelleLong) : void
-    {
-        $this->libelleLong = $libelleLong;
     }
 
     public function getType(): ?CorrespondanceType

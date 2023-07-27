@@ -12,7 +12,7 @@ class SelectionFormationForm extends Form
 {
     use FormationServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
 
         //select multiple avec groupe

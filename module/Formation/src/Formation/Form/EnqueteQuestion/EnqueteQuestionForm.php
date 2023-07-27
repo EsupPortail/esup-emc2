@@ -13,7 +13,7 @@ use Laminas\InputFilter\Factory;
 class EnqueteQuestionForm extends Form {
     use EnqueteCategorieServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([

@@ -17,7 +17,7 @@ class CompetenceForm extends Form {
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([

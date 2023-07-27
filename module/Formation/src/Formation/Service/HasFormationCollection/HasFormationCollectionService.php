@@ -7,7 +7,7 @@ use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -47,7 +47,7 @@ class HasFormationCollectionService
      * @param array $data
      * @return HasFormationCollectionInterface
      */
-    public function updateFormations(HasFormationCollectionInterface $object, $data)
+    public function updateFormations(HasFormationCollectionInterface $object, $data): HasFormationCollectionInterface
     {
         $formationIds = [];
         if (isset($data['formations'])) $formationIds = $data['formations'];
@@ -55,7 +55,7 @@ class HasFormationCollectionService
         //Suppression des formations plus présentes
         /** @var FormationElement $formationElement */
         foreach ($object->getFormationCollection() as $formationElement) {
-            if (array_search($formationElement->getFormation()->getId(), $formationIds) === false) {
+            if (!in_array($formationElement->getFormation()->getId(), $formationIds)) {
                 $this->getFormationElementService()->historise($formationElement);
             }
         }

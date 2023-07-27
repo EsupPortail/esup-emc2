@@ -33,7 +33,7 @@ class EtatForm extends Form
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //code
         $this->add([

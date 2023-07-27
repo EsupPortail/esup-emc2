@@ -9,15 +9,15 @@ create table unicaen_validation_type
 	histo_creation timestamp not null,
 	histo_createur_id integer not null
 		constraint unicaen_validation_type_createur_fk
-			references "user",
+			references emc2_demo.public.unicaen_utilisateur_user,
 	histo_modification timestamp not null,
 	histo_modificateur_id integer not null
 		constraint unicaen_validation_type_modificateur_fk
-			references "user",
+			references emc2_demo.public.unicaen_utilisateur_user,
 	histo_destruction timestamp,
 	histo_destructeur_id integer
 		constraint unicaen_validation_type_destructeur_fk
-			references "user"
+			references emc2_demo.public.unicaen_utilisateur_user
 );
 
 create unique index unicaen_validation_type_id_uindex
@@ -38,15 +38,15 @@ create table unicaen_validation_instance
 	histo_creation timestamp not null,
 	histo_createur_id integer not null
 		constraint unicaen_validation_instance_createur_fk
-			references "user",
+			references emc2_demo.public.unicaen_utilisateur_user,
 	histo_modification timestamp not null,
 	histo_modificateur_id integer not null
 		constraint unicaen_validation_instance_modificateur_fk
-			references "user",
+			references emc2_demo.public.unicaen_utilisateur_user,
 	histo_destruction timestamp,
 	histo_destructeur_id integer
 		constraint unicaen_validation_instance_destructeur_fk
-			references "user"
+			references emc2_demo.public.unicaen_utilisateur_user
 );
 
 create unique index unicaen_validation_instance_id_uindex

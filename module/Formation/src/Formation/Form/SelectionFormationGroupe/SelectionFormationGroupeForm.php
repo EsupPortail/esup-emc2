@@ -12,7 +12,7 @@ class SelectionFormationGroupeForm extends Form
 {
     use FormationGroupeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //select multiple avec groupe
         $this->add([

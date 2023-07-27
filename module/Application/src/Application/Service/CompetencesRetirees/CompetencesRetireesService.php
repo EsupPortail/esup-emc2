@@ -5,7 +5,7 @@ namespace Application\Service\CompetencesRetirees;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteCompetenceRetiree;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Element\Entity\Db\Competence;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;

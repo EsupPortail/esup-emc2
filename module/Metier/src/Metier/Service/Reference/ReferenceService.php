@@ -2,7 +2,7 @@
 
 namespace Metier\Service\Reference;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Metier\Entity\Db\Reference;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

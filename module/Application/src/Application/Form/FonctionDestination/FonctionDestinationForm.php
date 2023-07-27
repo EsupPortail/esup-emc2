@@ -9,7 +9,7 @@ use Laminas\InputFilter\Factory;
 
 class FonctionDestinationForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         /** CODE */
         //libelle

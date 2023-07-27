@@ -59,7 +59,7 @@ $formation = $session->getFormation();
 
         <h3> Description de la formation demandée </h3>
         <dl class="row">
-            <dt class="col-md-4"> Thème de l'action de  formation : </dt>
+            <dt class="col-md-4"> Thème de l'action de formation : </dt>
             <dd class="col-md-8"> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Aucun groupe"; ?> </dd>
             <dt class="col-md-4"> Libellé de l'action de formation: </dt>
             <dd class="col-md-8"> <?php echo $formation->getLibelle(); ?> </dd>

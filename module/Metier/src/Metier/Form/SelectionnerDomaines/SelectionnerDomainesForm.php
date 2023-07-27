@@ -12,7 +12,7 @@ class SelectionnerDomainesForm extends Form
 {
     use DomaineServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //multiselect
         $this->add([

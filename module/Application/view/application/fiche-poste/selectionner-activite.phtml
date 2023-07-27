@@ -21,7 +21,7 @@ $idActivites = explode(";",$ficheTypeExterne->getActivites());
                     <input type="checkbox"
                            id="<?php echo $mission->getMission()->getId(); ?>"
                            name="<?php echo $mission->getMission()->getId(); ?>"
-                           <?php if (array_search($mission->getMission()->getId(), $idActivites) !== false) echo " checked "; ?>
+                           <?php if (in_array($mission->getMission()->getId(), $idActivites)) echo " checked "; ?>
                     >
                     <?php echo $mission->getMission()->getLibelle(); ?>
                 </label>

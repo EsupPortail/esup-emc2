@@ -2,7 +2,7 @@
 
 namespace Metier\Service\FamilleProfessionnelle;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

@@ -36,19 +36,9 @@ class Grade  implements HasPeriodeInterface {
         return $this->libelleCourt;
     }
 
-    public function setLibelleCourt(?string $libelleCourt) : void
-    {
-        $this->libelleCourt = $libelleCourt;
-    }
-
     public function getLibelleLong() : ?string
     {
         return $this->libelleLong;
-    }
-
-    public function setLibelleLong(?string $libelleLong) : void
-    {
-        $this->libelleLong = $libelleLong;
     }
 
     public function getCode() : ?string

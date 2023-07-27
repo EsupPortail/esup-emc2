@@ -12,7 +12,8 @@ use Laminas\InputFilter\Factory;
 class ValidationInstanceForm extends Form {
     use ValidationTypeServiceAwareTrait;
 
-    public function init() {
+    public function init(): void
+    {
 
         //type
         $this->add([

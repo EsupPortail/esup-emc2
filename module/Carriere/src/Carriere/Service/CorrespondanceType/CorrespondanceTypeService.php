@@ -3,6 +3,7 @@
 namespace Carriere\Service\CorrespondanceType;
 
 use Carriere\Entity\Db\CorrespondanceType;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -20,7 +21,11 @@ class CorrespondanceTypeService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(CorrespondanceType::class)->createQueryBuilder('ctype');
+        try {
+            $qb = $this->getEntityManager()->getRepository(CorrespondanceType::class)->createQueryBuilder('ctype');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [".CorrespondanceType::class."]",0,$e);
+        }
         return $qb;
     }
 

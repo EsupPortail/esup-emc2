@@ -19,7 +19,7 @@ class EtatTypeForm extends Form {
         $this->get('old-code')->setValue($value);
     }
 
-    public function init()
+    public function init(): void
     {
         //code
         $this->add([

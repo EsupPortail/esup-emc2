@@ -11,7 +11,7 @@ use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Domaine;

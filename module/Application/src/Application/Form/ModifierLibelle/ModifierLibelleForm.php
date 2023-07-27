@@ -9,7 +9,7 @@ use Laminas\InputFilter\Factory;
 
 class ModifierLibelleForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([

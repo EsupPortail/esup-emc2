@@ -22,7 +22,7 @@ use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
 use Formation\Service\Url\UrlServiceFactory;
-use Laminas\Console\Console;
+use Unicaen\Console\Console;
 use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
 

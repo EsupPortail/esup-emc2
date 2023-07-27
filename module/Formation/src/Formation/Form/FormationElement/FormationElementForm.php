@@ -13,7 +13,7 @@ use Laminas\InputFilter\Factory;
 class FormationElementForm extends Form {
     use FormationServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //formation
         $this->add([

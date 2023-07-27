@@ -443,6 +443,8 @@ class NotificationService {
             $this->getMailService()->update($mail);
             return $mail;
         }
+
+        return null;
     }
 
     // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////

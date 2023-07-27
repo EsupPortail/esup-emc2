@@ -11,7 +11,7 @@ class EtatFieldset extends Fieldset
 {
     use EtatServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

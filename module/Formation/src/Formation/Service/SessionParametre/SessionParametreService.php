@@ -2,8 +2,9 @@
 
 namespace Formation\Service\SessionParametre;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\SessionParametre;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -73,7 +74,11 @@ class SessionParametreService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(SessionParametre::class)->createQueryBuilder('parametre');
+        try {
+            $qb = $this->getEntityManager()->getRepository(SessionParametre::class)->createQueryBuilder('parametre');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".SessionParametre::class."]",0,$e);
+        }
         return $qb;
     }
 

@@ -10,6 +10,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
+/** Elements synchronisés ********************************/
+
 class Corps implements HasPeriodeInterface
 {
     use DbImportableAwareTrait;
@@ -46,19 +48,9 @@ class Corps implements HasPeriodeInterface
         return $this->code;
     }
 
-    public function setCode(?string $code) : void
-    {
-        $this->code = $code;
-    }
-
     public function getLibelleCourt() : ?string
     {
         return $this->libelleCourt;
-    }
-
-    public function setLibelleCourt(?string $libelleCourt) : void
-    {
-        $this->libelleCourt = $libelleCourt;
     }
 
     public function getLibelleLong(): ?string
@@ -66,19 +58,9 @@ class Corps implements HasPeriodeInterface
         return $this->libelleLong;
     }
 
-    public function setLibelleLong(?string $libelleLong) : void
-    {
-        $this->libelleLong = $libelleLong;
-    }
-
     public function getCategorie() : ?string
     {
         return $this->categorie;
-    }
-
-    public function setCategorie(?string $categorie) : void
-    {
-        $this->categorie = $categorie;
     }
 
     public function getNiveau() : ?Niveau

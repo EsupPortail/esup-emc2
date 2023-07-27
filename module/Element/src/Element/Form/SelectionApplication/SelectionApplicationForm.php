@@ -11,7 +11,8 @@ use Laminas\InputFilter\Factory;
 class SelectionApplicationForm extends Form {
     use ApplicationServiceAwareTrait;
 
-    public function init() {
+    public function init(): void
+    {
 
         //select multiple avec groupe
         $this->add([

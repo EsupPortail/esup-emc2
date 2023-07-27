@@ -14,7 +14,7 @@ use Laminas\Validator\Callback;
 class FormateurForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         // type
         $this->add([

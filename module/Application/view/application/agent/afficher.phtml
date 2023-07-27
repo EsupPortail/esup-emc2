@@ -39,7 +39,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var AgentTutorat[] $tutorats
  * @var AgentAccompagnement[] $accompagnements
  *
- * @var bool $canAffichageDate
  */
 
 $displayParcours = false;
@@ -141,8 +140,7 @@ if ($agent !== null) {
                     ['agent' => $agent,
                         'affectations' => $affectations,
                         'superieures' => $superieures, 'autorites' => $autorites,
-                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite,
-                        'canAffichageDate' => $canAffichageDate]); ?>
+                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',

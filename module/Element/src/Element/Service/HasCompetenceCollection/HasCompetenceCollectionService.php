@@ -3,7 +3,7 @@
 namespace Element\Service\HasCompetenceCollection;
 
 use DateTime;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Element\Entity\Db\Competence;
 use Element\Entity\Db\CompetenceElement;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
@@ -48,7 +48,7 @@ class HasCompetenceCollectionService
      * @param array $data
      * @return HasCompetenceCollectionInterface
      */
-    public function updateCompetences(HasCompetenceCollectionInterface $object, $data)
+    public function updateCompetences(HasCompetenceCollectionInterface $object, $data): HasCompetenceCollectionInterface
     {
         $competenceIds = [];
         if (isset($data['competences'])) $competenceIds = $data['competences'];
@@ -56,7 +56,7 @@ class HasCompetenceCollectionService
         //Suppression des applications plus présentes
         /** @var CompetenceElement $competenceElement */
         foreach ($object->getCompetenceCollection() as $competenceElement) {
-            if (array_search($competenceElement->getCompetence()->getId(), $competenceIds) === false) {
+            if (!in_array($competenceElement->getCompetence()->getId(), $competenceIds)) {
                 $this->getCompetenceElementService()->historise($competenceElement);
             }
         }
@@ -71,7 +71,7 @@ class HasCompetenceCollectionService
             if ($competence !== null and !$object->hasCompetence($competence)) {
                 $competenceElement = new CompetenceElement();
                 $competenceElement->setCompetence($competence);
-                //TODO ajouter les autres elements : commentaires / validations tout çà
+                //TODO ajouter les autres elements : commentaires / validations tout ça
                 $this->getCompetenceElementService()->create($competenceElement);
                 $object->getCompetenceCollection()->add($competenceElement);
                 $this->updateObject($object);

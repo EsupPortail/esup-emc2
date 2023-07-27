@@ -21,7 +21,7 @@ use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Element\Entity\Db\ApplicationElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Element\Form\CompetenceElement\CompetenceElementFormAwareTrait;

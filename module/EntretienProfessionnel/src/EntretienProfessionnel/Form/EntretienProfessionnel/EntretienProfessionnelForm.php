@@ -40,7 +40,7 @@ class EntretienProfessionnelForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
          $this->add([
             'type' => Select::class,
@@ -89,7 +89,7 @@ class EntretienProfessionnelForm extends Form {
             ]
         ]);
 
-        //Date        (initialisée à la date du jour)
+        //Date (initialisée à la date du jour)
         $this->add([
             'type' => Date::class,
             'name' => 'date_entretien',
@@ -103,7 +103,7 @@ class EntretienProfessionnelForm extends Form {
             ],
         ]);
 
-        //Heure        (initialisée à la date du jour)
+        //Heure (initialisée à la date du jour)
         $this->add([
             'type' => Time::class,
             'name' => 'heure_entretien',

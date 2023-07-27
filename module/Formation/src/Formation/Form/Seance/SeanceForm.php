@@ -16,7 +16,7 @@ use UnicaenApp\Form\Element\Date;
 class SeanceForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         //type
         $this->add([

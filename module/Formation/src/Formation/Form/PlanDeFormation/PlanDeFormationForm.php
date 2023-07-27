@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 class PlanDeFormationForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Text::class,

@@ -62,9 +62,6 @@ class EmploiType implements HasPeriodeInterface
         return $this->getLibelleCourt();
     }
 
-    /**
-     * @return string
-     */
     public function generateTooltip() : string
     {
         $text  = "Libelle court : <strong>". $this->getLibelleCourt() . "</strong>";

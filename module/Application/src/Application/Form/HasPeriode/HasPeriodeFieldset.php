@@ -3,15 +3,15 @@
 namespace Application\Form\HasPeriode;
 
 use Laminas\Form\Element\Date;
-use Laminas\Form\Element\DateTime;
 use Laminas\Form\Fieldset;
 
-class HasPeriodeFieldset extends Fieldset {
+class HasPeriodeFieldset extends Fieldset
+{
 
     //const format = 'd/m/Y';
     const format = 'Y-m-d';
 
-    public function init()
+    public function init(): void
     {
         //DEBUT (DATE)
         $this->add([
@@ -25,7 +25,7 @@ class HasPeriodeFieldset extends Fieldset {
                 'format' => HasPeriodeFieldset::format,
             ],
             'attributes' => [
-                'id'                => 'date_debut',
+                'id' => 'date_debut',
             ]
         ]);
         //FIN (DATE)
@@ -40,7 +40,7 @@ class HasPeriodeFieldset extends Fieldset {
                 'format' => HasPeriodeFieldset::format,
             ],
             'attributes' => [
-                'id'                => 'date_fin',
+                'id' => 'date_fin',
             ]
         ]);
     }

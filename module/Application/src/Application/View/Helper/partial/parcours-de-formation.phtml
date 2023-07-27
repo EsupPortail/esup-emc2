@@ -46,14 +46,14 @@ usort($formationArray,
     $mode = (isset($options['mode']))?$options['mode']:"affichage";
 ?>
 
-<?php if (array_search($mode, $modesAutorises) === false) : ?>
+<?php if (!in_array($mode, $modesAutorises)) : ?>
 <div class="alert alert-danger">
     Le <strong>mode</strong> [<?php echo $mode; ?>] est non géré par l'aide de vue [ParcoursDeFormationViewHelper].
 </div>
 <?php endif; ?>
 
 <?php /** Récupération du droit associé à la modification *************************************************************/
-    $canModifier = isset($options['modification'])?$options['modification']:false;
+    $canModifier = $options['modification'] ?? false;
 ?>
 
 <div class="parcours">

@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 
 class RifseepForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         // specificite
         $this->add([

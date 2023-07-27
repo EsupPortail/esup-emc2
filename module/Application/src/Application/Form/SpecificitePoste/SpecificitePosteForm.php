@@ -7,7 +7,7 @@ use Laminas\Form\Form;
 
 class SpecificitePosteForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         // specificite
         $this->add([

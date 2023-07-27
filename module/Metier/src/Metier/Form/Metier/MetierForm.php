@@ -14,7 +14,7 @@ class MetierForm extends Form {
     use CategorieServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //domaines
         $this->add([

@@ -14,7 +14,7 @@ class CorrespondanceViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(?Correspondance $correspondance, array $options = [])
+    public function __invoke(?Correspondance $correspondance, array $options = []): string|Partial
     {
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));

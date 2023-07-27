@@ -40,7 +40,7 @@ class AgentMissionSpecifiqueForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //Mission
         $this->add([

@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 class InscriptionForm extends Form {
 
 
-    public function init()
+    public function init(): void
     {
         //description
         $this->add([

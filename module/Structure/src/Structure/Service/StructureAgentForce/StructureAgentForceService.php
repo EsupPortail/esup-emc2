@@ -4,7 +4,7 @@ namespace Structure\Service\StructureAgentForce;
 
 use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;

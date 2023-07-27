@@ -10,10 +10,11 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\PdfTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -83,9 +84,15 @@ class EntretienProfessionnelController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($user);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
+        try {
+            $intranet = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::INTRANET_DOCUMENT);
+        } catch (Exception $e) {
+            throw new RuntimeException("Une erreur est survenue lors de la récupération du paramètre [".EntretienProfessionnelParametres::TYPE."|".EntretienProfessionnelParametres::INTRANET_DOCUMENT."]",0,$e);
+        }
 
         return new ViewModel([
             'entretiens' => $entretiens,
+            'intranet' => $intranet,
         ]);
     }
 
@@ -123,7 +130,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
     /** Gestion des entretiens professionnels *************************************************************************/
 
-    public function creerAction()
+    public function creerAction(): ViewModel|Response
     {
         // From route
         $structureId = $this->params()->fromQuery('structure');
@@ -400,7 +407,7 @@ class EntretienProfessionnelController extends AbstractActionController
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.",0, $e);
         }
 
         /** @see EntretienProfessionnelController::accederAction */

@@ -4,14 +4,18 @@ namespace Element\Form\SelectionApplication;
 
 use Element\Service\Application\ApplicationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SelectionApplicationFormFactory {
 
     /**
      * @param ContainerInterface $container
      * @return SelectionApplicationForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): SelectionApplicationForm
     {
         /**
          * @var ApplicationService $applicationService

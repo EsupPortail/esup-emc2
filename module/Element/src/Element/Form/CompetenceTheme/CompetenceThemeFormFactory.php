@@ -2,12 +2,12 @@
 
 namespace Element\Form\CompetenceTheme;
 
-use Element\Form\CompetenceType\CompetenceTypeForm;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class CompetenceThemeFormFactory {
+class CompetenceThemeFormFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -15,7 +15,7 @@ class CompetenceThemeFormFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : CompetenceThemeForm
+    public function __invoke(ContainerInterface $container): CompetenceThemeForm
     {
         /** @var CompetenceThemeHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(CompetenceThemeHydrator::class);

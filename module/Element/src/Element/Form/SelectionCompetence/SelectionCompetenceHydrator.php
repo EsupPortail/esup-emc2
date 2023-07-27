@@ -16,7 +16,7 @@ class SelectionCompetenceHydrator implements HydratorInterface {
 
     /**
      * @param HasCompetenceCollectionInterface $object
-     * @return array|void
+     * @return array
      */
     public function extract($object): array
     {

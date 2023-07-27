@@ -15,7 +15,7 @@ class ReferenceForm extends Form {
     use MetierServiceAwareTrait;
     use ReferentielServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //metier
         $this->add([

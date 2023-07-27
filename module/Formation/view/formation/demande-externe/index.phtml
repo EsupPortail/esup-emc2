@@ -14,7 +14,7 @@ use UnicaenEtat\Entity\Db\Etat;
 
 $this->headTitle("Demandes de formations externes");
 
-// ATTENTION :: ici pas d'appel à l'assertion pour économiser du temps
+// ATTENTION : ici pas d'appel à l'assertion pour économiser du temps
 $canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 $canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
 $canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));

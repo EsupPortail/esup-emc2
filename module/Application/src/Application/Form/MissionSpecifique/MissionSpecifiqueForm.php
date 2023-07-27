@@ -17,7 +17,7 @@ class MissionSpecifiqueForm extends Form
     use MissionSpecifiqueThemeServiceAwareTrait;
     use MissionSpecifiqueTypeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle
         $this->add([

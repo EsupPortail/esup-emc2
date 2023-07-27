@@ -12,7 +12,7 @@ use Structure\Service\Structure\StructureServiceAwareTrait;
 class AgentHierarchieCalculForm extends Form {
     use StructureServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

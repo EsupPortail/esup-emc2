@@ -14,7 +14,7 @@ class ApplicationElementForm extends Form {
     use ApplicationServiceAwareTrait;
     use NiveauServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //competence
         $this->add([
@@ -84,7 +84,7 @@ class ApplicationElementForm extends Form {
         ]));
     }
 
-    public function masquerClef()
+    public function masquerClef(): void
     {
         $this->remove('clef');
     }

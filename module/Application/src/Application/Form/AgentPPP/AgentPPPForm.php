@@ -15,7 +15,7 @@ use Laminas\InputFilter\Factory;
 class AgentPPPForm extends Form {
     use EtatServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

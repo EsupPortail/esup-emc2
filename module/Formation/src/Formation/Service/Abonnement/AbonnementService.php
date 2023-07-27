@@ -5,7 +5,7 @@ namespace Formation\Service\Abonnement;
 use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;

@@ -3,7 +3,7 @@
 namespace Formation\Service\Formateur;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formateur;
 use UnicaenApp\Exception\RuntimeException;

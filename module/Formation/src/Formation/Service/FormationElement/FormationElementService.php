@@ -2,7 +2,7 @@
 
 namespace Formation\Service\FormationElement;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
 use Doctrine\ORM\NonUniqueResultException;
