@@ -101,7 +101,8 @@ class AgentTutoratService {
             ->join('tutorat.agent', 'agent')->addSelect('agent')
             ->leftjoin('tutorat.cible', 'cible')->addSelect('cible')
             ->leftjoin('tutorat.metier', 'metier')->addSelect('metier')
-            ->leftjoin('tutorat.etat', 'etat')->addSelect('etat');
+            //->leftjoin('tutorat.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

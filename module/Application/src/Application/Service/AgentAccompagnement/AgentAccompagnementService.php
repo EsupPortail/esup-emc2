@@ -92,9 +92,6 @@ class AgentAccompagnementService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(AgentAccompagnement::class)->createQueryBuilder('accompagnement')
@@ -102,7 +99,8 @@ class AgentAccompagnementService {
             ->leftjoin('accompagnement.cible', 'cible')->addSelect('cible')
             ->leftjoin('accompagnement.bap', 'bap')->addSelect('bap')
             ->leftjoin('accompagnement.corps', 'corps')->addSelect('corps')
-            ->leftjoin('accompagnement.etat', 'etat')->addSelect('etat');
+        //    ->leftjoin('accompagnement.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

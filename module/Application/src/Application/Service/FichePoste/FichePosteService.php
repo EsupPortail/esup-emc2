@@ -148,7 +148,7 @@ class FichePosteService {
                 ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
                 ->addSelect('reference')->leftJoin('metier.references', 'reference')
                 ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
-                ->addSelect('etat')->leftJoin('fiche.etat', 'etat');
+                ->addSelect('etats')->leftJoin('fiche.etats', 'etat');
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
         }
@@ -260,7 +260,7 @@ select
     s.id as structure_id, s.libelle_court as structure,
     m.libelle_default as fiche_principale,
     e.id as etat,
-    e.code as etat_code,
+    -- e.code as etat_code,
    (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours,
    f.fin_validite as fin_validite
 from ficheposte f
@@ -270,9 +270,11 @@ left join structure s on aa.structure_id = s.id
 left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
-left join unicaen_etat_etat e on f.etat_id = e.id
+-- left join unicaen_etat_etat e on f.etat_id = e.id
 where (fte.principale = true OR fte IS NULL)
-  and (aa IS NULL OR aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
+  and (                 aa IS NULL OR aa.t_principale = 'O' 
+                    and aa.date_debut <= current_date 
+                    AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
 
 EOS;
 

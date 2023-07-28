@@ -102,7 +102,8 @@ class AgentStageObservationService {
             ->join('stageobs.agent', 'agent')->addSelect('agent')
             ->leftjoin('stageobs.structure', 'structure')->addSelect('structure')
             ->leftjoin('stageobs.metier', 'metier')->addSelect('metier')
-            ->leftjoin('stageobs.etat', 'etat')->addSelect('etat');
+        //    ->leftjoin('stageobs.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

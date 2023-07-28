@@ -100,7 +100,8 @@ class AgentPPPService {
 
         $qb = $this->getEntityManager()->getRepository(AgentPPP::class)->createQueryBuilder('ppp')
             ->join('ppp.agent', 'agent')->addSelect('agent')
-            ->leftjoin('ppp.etat', 'etat')->addSelect('etat');
+        //    ->leftjoin('ppp.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

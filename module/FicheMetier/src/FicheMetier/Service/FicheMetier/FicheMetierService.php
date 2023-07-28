@@ -148,8 +148,8 @@ class FicheMetierService
             ->addSelect('metier')->join('ficheMetier.metier', 'metier')
             ->addSelect('domaine')->join('metier.domaines', 'domaine')
             ->addSelect('famille')->join('domaine.familles', 'famille')
-            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
-            ->addSelect('etype')->join('etat.type', 'etype')
+            ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
+            ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('reference')->leftJoin('metier.references', 'reference')
             ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
@@ -190,7 +190,7 @@ class FicheMetierService
             if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
         }
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
-            $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $filtre['etat']);
+            $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
         if (isset($filtre['domaine']) and $filtre['domaine'] != '') {
             $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);

@@ -44,6 +44,7 @@ class FichePosteAssertion extends AbstractAssertion {
         if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($referencedAgent,$connectedAgent);
         if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($referencedAgent,$connectedAgent);
 
+        $etatCode = ($entity->getEtatActif())?$entity->getEtatActif()->getType()->getCode():null;
         switch($privilege) {
 
             case FichePostePrivileges::FICHEPOSTE_AFFICHER :
@@ -61,7 +62,7 @@ class FichePosteAssertion extends AbstractAssertion {
                         return $isAutorite;
                     case AppRoleProvider::AGENT:
                         $isAgent = ($entity->getAgent()->getUtilisateur() === $user);
-                        return $isAgent AND ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK OR $entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE);
+                        return $isAgent AND ($etatCode === FichePosteEtats::ETAT_CODE_OK OR $etatCode === FichePosteEtats::ETAT_CODE_SIGNEE);
                     default:
                         return false;
                 }
@@ -69,7 +70,7 @@ class FichePosteAssertion extends AbstractAssertion {
             case FichePostePrivileges::FICHEPOSTE_MODIFIER :
             case FichePostePrivileges::FICHEPOSTE_HISTORISER :
                 // REMARQUE on ne peut plus agir sur une fiche signée et plus active
-                if ($entity->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return false;
+                if ($etatCode === FichePosteEtats::ETAT_CODE_SIGNEE) return false;
                 switch ($role->getRoleId()) {
                     case AppRoleProvider::ADMIN_FONC:
                     case AppRoleProvider::ADMIN_TECH:

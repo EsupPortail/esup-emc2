@@ -15,7 +15,7 @@ use Formation\Entity\Db\FormationInstance;
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> État</dt>
-        <dd class="col-md-9">  <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
+        <dd class="col-md-9">  <?php echo ($instance->getEtatActif())?$this->etattype($instance->getEtatActif()->getType())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
         <?php if ($instance->getComplement() !== null) : ?>
             <dt class="col-md-3"> Compléments </dt>
             <dd class="col-md-9"> <?php echo $instance->getComplement(); ?></dd>

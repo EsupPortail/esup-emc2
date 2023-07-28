@@ -62,7 +62,7 @@ if ($retour)    $query['retour'] = $retour;
         <?php
         if ($fiche instanceof FichePoste) {
             $id = $fiche->getId();
-            $etat = $fiche->getEtat()->getCode();
+            $etat = ($fiche->getEtatActif())?$fiche->getEtatActif()->getType()->getCode():null;
             $destruction = $fiche->getHistoDestruction();
             $agentId = ($fiche->getAgent())?$fiche->getAgent()->getId():null;
             $agent = ($fiche->getAgent())?$fiche->getAgent()->getDenomination():null;
@@ -201,7 +201,7 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['etat']) : ?>
                     <td>
-                            <?php echo $this->etatbadge($etat); ?>
+                            <?php echo ($etat)?$this->etattype($etat):"N.C."; ?>
                     </td>
                 <?php endif; ?>
 

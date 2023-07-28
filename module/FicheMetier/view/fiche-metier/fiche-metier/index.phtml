@@ -3,21 +3,21 @@
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Entity\Db\FicheMetier;
 use Metier\Entity\Db\Domaine;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\EtatType;
 
 /**
- * @see \Application\Controller\FicheMetierController::indexAction()
+ * @see \FicheMetier\Controller\FicheMetierController::indexAction()
  * @var Domaine[] $domaines
  * @var FicheMetier[] $fiches
- * @var UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat[] $etats
+ * @var EtatType[] $etatTypes
  * @var array $params
  */
 
-$canAjouter     = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AJOUTER));
-$canVoir        = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
-$canHistoriser  = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_HISTORISER));
-$canEditer      = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
-$canDetruire    = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_DETRUIRE));
+$canAjouter = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AJOUTER));
+$canVoir = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_AFFICHER));
+$canHistoriser = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_HISTORISER));
+$canEditer = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_MODIFIER));
+$canDetruire = $this->isAllowed(FicheMetierPrivileges::getResourceId(FicheMetierPrivileges::FICHEMETIER_DETRUIRE));
 
 $this->headTitle('Index des fiches métiers');
 
@@ -51,20 +51,20 @@ $this->headTitle('Index des fiches métiers');
 
 <div class="main">
 
-    <?php echo $this->partial('partial/filtre.phtml', ['etats' => $etats, 'domaines'=> $domaines, 'params' => $params]); ?>
+    <?php echo $this->partial('partial/filtre.phtml', ['etatTypes' => $etatTypes, 'domaines' => $domaines, 'params' => $params]); ?>
 
 
     <table id="fiches" class="table table-condensed datatable">
         <thead>
         <tr>
-            <th> Libellé </th>
-            <th> Domaine </th>
-            <th  style="width:8rem;"> État </th>
-            <th  class="action"> Action </th>
+            <th> Libellé</th>
+            <th> Domaine</th>
+            <th style="width:8rem;"> État</th>
+            <th class="action"> Action</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($fiches as $fiche): ?>
+        <?php foreach ($fiches as $fiche): ?>
             <tr <?php if ($fiche->estHistorise()) echo "class='historise'"; ?> >
                 <td>
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
@@ -89,13 +89,14 @@ $this->headTitle('Index des fiches métiers');
                 <td class="cell-etat">
                     <?php if ($canEditer) : ?>
                     <a
-                        <?php /** @see FicheMetierController::modifierEtatAction() */?>
+                        <?php /** @see FicheMetierController::modifierEtatAction() */ ?>
                             href="<?php echo $this->url('fiche-metier/modifier-etat', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                             title="Changer l'état de la fiche métier"
                             class="ajax-modal" data-event="changer-etat"
                     >
                         <?php endif; ?>
-                        <?php echo $this->etatbadge($fiche->getEtat()); ?>
+                        <?php $etat = $fiche->getEtatActif(); ?>
+                        <?php echo ($etat)?$this->etattype($etat->getType()):"N.C."; ?>
                         <?php if ($canEditer) : ?>
                     </a>
                 <?php endif; ?>
@@ -103,7 +104,7 @@ $this->headTitle('Index des fiches métiers');
                 <td class="action">
                     <?php if ($canVoir) : ?>
                         <a
-                            <?php /** @see FicheMetierController::afficherAction() */?>
+                            <?php /** @see FicheMetierController::afficherAction() */ ?>
                                 href="<?php echo $this->url('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true); ?>">
                             <span class="icon icon-voir"></span>
                             Afficher
@@ -112,7 +113,7 @@ $this->headTitle('Index des fiches métiers');
                     <?php if ($canVoir) : ?>
                         <br/>
                         <a
-                            <?php /** @see FicheMetierController::exporterAction() */?>
+                            <?php /** @see FicheMetierController::exporterAction() */ ?>
                                 href="<?php echo $this->url('fiche-metier/exporter', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                 title="Exporter en PDF la fiche métier"
                         >
@@ -138,7 +139,7 @@ $this->headTitle('Index des fiches métiers');
                     <?php endif; ?>
                     <?php if ($canHistoriser) : ?>
                         <br>
-                        <?php if($fiche->estNonHistorise()) :?>
+                        <?php if ($fiche->estNonHistorise()) : ?>
                             <?php /** @see FicheMetierController::historiserAction() */ ?>
                             <a href="<?php echo $this->url('fiche-metier/historiser', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                title="Historiser la fiche metier">
@@ -157,7 +158,7 @@ $this->headTitle('Index des fiches métiers');
                     <?php if ($canDetruire) : ?>
                         <br>
                         <a
-                            <?php /** @see FicheMetierController::supprimerAction() */?>
+                            <?php /** @see FicheMetierController::supprimerAction() */ ?>
                                 href="<?php echo $this->url('fiche-metier/supprimer', ['fiche-metier' => $fiche->getId()], [], true); ?>"
                                 title="Détruire la fiche metier"
                                 class="ajax-modal" data-event="modification"
@@ -175,7 +176,7 @@ $this->headTitle('Index des fiches métiers');
     </table>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('table#fiches').DataTable({
                 "paging": false
             });
@@ -187,29 +188,29 @@ $this->headTitle('Index des fiches métiers');
 
 
 <script>
-    $(document).ready(function() {
-        $('#datatable').DataTable( {
+    $(document).ready(function () {
+        $('#datatable').DataTable({
             language: {
                 url: '/localisation/fr_FR.json'
             }
-        } );
-    } );
+        });
+    });
 
-    $(function() {
+    $(function () {
         $("body").on("creation", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
     });
 
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
     });
 
-    $(function() {
+    $(function () {
         $("body").on("changer-etat", function (event) {
             event.div.modal('hide');
             window.location.reload();
