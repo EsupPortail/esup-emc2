@@ -14,15 +14,15 @@ use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatsInterface {
     use HistoriqueAwareTrait;
-    use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
+    use HasEtatsTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
@@ -47,10 +47,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?DateTime $dateEntretien = null;
     private ?string $lieu = null;
 
-    /** @var FormulaireInstance */
-    private $formulaireInstance;
-    /** @var FormulaireInstance */
-    private $formationInstance;
+    private ?FormulaireInstance $formulaireInstance = null;
+    private ?FormulaireInstance $formationInstance = null;
 
     /** @var ArrayCollection (Observation) */
     private $observations;
@@ -119,22 +117,11 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->lieu = $lieu;
     }
 
-
-
-
-
-
-    /**
-     * @return bool
-     */
     public function isComplete() : bool
     {
-        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
+        return ($this->getEtatActif() !== null AND $this->getEtatActif()->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
     }
 
-    /**
-     * @return FormulaireInstance
-     */
     public function getFormulaireInstance() : ?FormulaireInstance
     {
         return $this->formulaireInstance;
@@ -312,9 +299,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $validations[0];
     }
 
-    /**
-     * @return string
-     */
     public function getToken() : ?string
     {
         return $this->token;
@@ -330,9 +314,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getAcceptation() : ?DateTime
     {
         return $this->acceptation;

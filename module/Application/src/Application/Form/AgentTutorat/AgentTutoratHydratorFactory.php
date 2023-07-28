@@ -5,29 +5,33 @@ namespace Application\Form\AgentTutorat;
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class AgentTutoratHydratorFactory {
 
     /**
      * @param ContainerInterface $container
      * @return AgentTutoratHydrator
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : AgentTutoratHydrator
     {
         /**
          * @var AgentService $agentService
+         * @var EtatTypeService $etatTypeService
          * @var MetierService $metierService
-         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $agentService = $container->get(AgentService::class);
         $metierService = $container->get(MetierService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
 
         $hydrator = new AgentTutoratHydrator();
         $hydrator->setAgentService($agentService);
         $hydrator->setMetierService($metierService);
-        $hydrator->setEtatService($etatService);
+        $hydrator->setEtatTypeService($etatTypeService);
         return $hydrator;
     }
 }

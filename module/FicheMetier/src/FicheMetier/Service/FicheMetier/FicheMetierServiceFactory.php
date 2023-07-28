@@ -18,7 +18,7 @@ use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
@@ -38,7 +38,7 @@ class FicheMetierServiceFactory {
          * @var CompetenceElementService $competenceElementService
          * @var ConfigurationService $configurationService
          * @var DomaineService $domaineService
-         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          * @var MissionPrincipaleService $missionPrincipaleService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService
@@ -53,7 +53,7 @@ class FicheMetierServiceFactory {
         $competenceElementService = $container->get(CompetenceElementService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $domaineService = $container->get(DomaineService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $renduService = $container->get(RenduService::class);
         $hasApplicationCollectionService = $container->get(HasApplicationCollectionService::class);
@@ -76,7 +76,7 @@ class FicheMetierServiceFactory {
         $service->setCompetenceElementService($competenceElementService);
         $service->setConfigurationService($configurationService);
         $service->setDomaineService($domaineService);
-        $service->setEtatService($etatService);
+        $service->setEtatTypeService($etatTypeService);
         $service->setMissionPrincipaleService($missionPrincipaleService);
         $service->setRenduService($renduService);
 

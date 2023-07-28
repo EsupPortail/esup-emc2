@@ -7,8 +7,8 @@
  *
  * @var TemplateService $templateService
  * @var PrivilegeService $privilegeService
- * @var UnicaenEtat\src\UnicaenEtat\Service\EtatType\EtatTypeService $etatTypeService
- * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
+ * @var EtatTypeService $etatTypeService
+ * @var EtatCategorieService $etatCategorieService
  * @var RoleService $roleService
  * @var TypeService $evenementTypeService
  * @var ValidationTypeService $validationTypeService
@@ -19,8 +19,8 @@
  */
 
 
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
-use UnicaenEtat\src\UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenParametre\Service\Categorie\CategorieService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -229,7 +229,7 @@ $this->headTitle("Vérification de l'installation");
                         $type = null;
                         if (isset( $constants['TYPE'])) {
                             $typeName = $constants['TYPE'];
-                            $type = $etatTypeService->getEtatTypeByCode($typeName);
+                            $type = $etatCategorieService->getEtatCategorieByCode($typeName);
                         }
                         if ($type !== null) {
                             echo "<span class='icon icon-checked text-success'></span> Type d'état [".$typeName."] bien déclarée <br>";
@@ -239,7 +239,7 @@ $this->headTitle("Vérification de l'installation");
 
                         foreach ($constants as $name => $value) {
                             if ($name !== 'TYPE') {
-                                $etat = $etatService->getEtatByCode($value);
+                                $etat = $etatTypeService->getEtatTypeByCode($value);
                                 if ($etat !== null) {
                                     echo "<span class='icon icon-checked text-success'></span> L'état [".$value."] bien déclarée <br>";
                                 } else {

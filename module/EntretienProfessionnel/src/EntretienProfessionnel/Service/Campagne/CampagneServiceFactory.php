@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class CampagneServiceFactory {
 
@@ -22,16 +22,16 @@ class CampagneServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
-         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
 
         $service = new CampagneService();
         $service->setEntityManager($entityManager);
         $service->setAgentService($agentService);
-        $service->setEtatService($etatService);
+        $service->setEtatTypeService($etatTypeService);
         return $service;
     }
 }

@@ -6,19 +6,25 @@ use Application\Service\Agent\AgentService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
 class FichePosteServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FichePosteService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): FichePosteService
     {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
-         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var SpecificitePosteService $specificitePosteService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
@@ -26,7 +32,6 @@ class FichePosteServiceFactory {
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
-        $etatService = $container->get(EtatService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -36,7 +41,6 @@ class FichePosteServiceFactory {
         $service = new FichePosteService();
         $service->setEntityManager($entityManager);
         $service->setAgentService($agentService);
-        $service->setEtatService($etatService);
         $service->setSpecificitePosteService($specificitePosteService);
         $service->setStructureService($structureService);
         $service->setValidationInstanceService($validationInstanceService);

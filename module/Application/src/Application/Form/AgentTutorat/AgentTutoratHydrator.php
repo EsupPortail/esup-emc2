@@ -8,12 +8,12 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Laminas\Hydrator\HydratorInterface;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentTutoratHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
 
     /**
      * @param AgentTutorat $object
@@ -23,7 +23,7 @@ class AgentTutoratHydrator implements HydratorInterface {
     {
         $data = [
             'cible'             => ($object->getCible())?['id' => $object->getCible()->getId(), 'label' => $object->getCible()->getDenomination()]:null,
-            'metier'            => ($object->getMetier())?($object->getMetier())->getId():null,
+            'metier'            => ($object->getMetier())?->getId(),
             'HasPeriode'        => [
                 'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
@@ -42,13 +42,13 @@ class AgentTutoratHydrator implements HydratorInterface {
      * @param AgentTutorat $object
      * @return AgentTutorat
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         $cible = (isset($data['cible']) AND isset($data['cible']['id']) AND trim($data['cible']['id']) !== '')?$this->getAgentService()->getAgent($data['cible']['id']):null;
         $metier = (isset($data['metier']) AND trim($data['metier']) !== '')?$this->getMetierService()->getMetier($data['metier']):null;
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
-        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatService()->getEtat($data['etat']['etat']):null;
+        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatTypeService()->getEtatType($data['etat']['etat']):null;
         $complement = (isset($data['complement']) AND trim($data['complement']) !== '')?trim($data['complement']):null;
         $formation = (isset($data['formation']) AND trim($data['formation']) !== '')?($data['formation']):null;
 

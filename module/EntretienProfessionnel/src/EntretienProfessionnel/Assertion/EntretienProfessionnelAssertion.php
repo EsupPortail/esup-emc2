@@ -98,6 +98,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         $predicats = $this->computePredicats($entity, $agent, $role);
 
+        $etatCode = $entity->getEtatA()->getType()->getCode();
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
                 if ($isAgent AND (

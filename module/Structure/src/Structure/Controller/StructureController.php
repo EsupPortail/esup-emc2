@@ -27,14 +27,13 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
-use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
 use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 
@@ -42,14 +41,13 @@ class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
-    use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
@@ -219,7 +217,7 @@ class StructureController extends AbstractActionController {
             'agents' => $allAgents,
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
-            'etats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
+            'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FichePosteEtats::TYPE),
         ]);
     }
 
@@ -546,19 +544,5 @@ class StructureController extends AbstractActionController {
         $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
         return $pdf->export("temp.pdf");
     }
-
-    public function synchroniserAction() : ViewModel
-    {
-        $log = "Synchronisation des données liées aux structures\n";
-
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_TYPE");
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE");
-
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_RESPONSABLE");
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_GESTIONNAIRE");
-
-        return new ViewModel(['log' => $log]);
-    }
-
 
 }

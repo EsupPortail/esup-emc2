@@ -16,13 +16,13 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -211,7 +211,7 @@ class CampagneService {
 
     /**
      * @param Campagne $campagne
-     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat[] $etats
+     * @param EtatType[] $etats
      * @return EntretienProfessionnel[]
      */
     public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
@@ -343,8 +343,8 @@ class CampagneService {
     public function getEntretiensEnAttenteResponsable(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -358,8 +358,8 @@ class CampagneService {
     public function getEntretiensEnAttenteAutorite(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -373,7 +373,7 @@ class CampagneService {
     public function getEntretiensEnAttenteAgent(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -387,7 +387,7 @@ class CampagneService {
     public function getEntretiensCompletes(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);

@@ -4,24 +4,15 @@ namespace Application\Form\AgentPPP;
 
 trait AgentPPPFormAwareTrait {
 
-    /** @var AgentPPPForm */
-    private $agentPPPForm;
+    private AgentPPPForm $agentPPPForm;
 
-    /**
-     * @return AgentPPPForm
-     */
     public function getAgentPPPForm(): AgentPPPForm
     {
         return $this->agentPPPForm;
     }
 
-    /**
-     * @param AgentPPPForm $agentPPPForm
-     * @return AgentPPPForm
-     */
-    public function setAgentPPPForm(AgentPPPForm $agentPPPForm): AgentPPPForm
+    public function setAgentPPPForm(AgentPPPForm $agentPPPForm): void
     {
         $this->agentPPPForm = $agentPPPForm;
-        return $this->agentPPPForm;
     }
 }

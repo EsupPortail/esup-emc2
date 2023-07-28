@@ -9,11 +9,9 @@ use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
-use UnicaenEtat\src\UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 
 class AgentPPPForm extends Form {
-    use EtatServiceAwareTrait;
 
     public function init(): void
     {

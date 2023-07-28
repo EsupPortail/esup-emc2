@@ -10,16 +10,14 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenEtat\src\UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 
 class AgentTutoratForm extends Form
 {
     use AgentServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use EtatServiceAwareTrait;
 
-    public $urlAgent;
+    public string $urlAgent;
 
     public function init(): void
     {
@@ -28,7 +26,7 @@ class AgentTutoratForm extends Form
         $cible = new SearchAndSelect('cible', ['label' => "Agent :"]);
         $cible
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'cible',
                 'placeholder' => "Agent encadré par le tutorat ...",

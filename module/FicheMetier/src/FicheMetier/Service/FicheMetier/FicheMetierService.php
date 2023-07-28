@@ -35,7 +35,7 @@ use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
@@ -47,8 +47,8 @@ class FicheMetierService
     use CompetenceElementServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
-    use EtatServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use RenduServiceAwareTrait;
 
@@ -401,7 +401,7 @@ class FicheMetierService
 
     public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $fiche->setEtat($this->getEtatTypeService()->getEtatTypeByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
         return $fiche;
     }
@@ -551,7 +551,7 @@ class FicheMetierService
         }
 
         //etat
-        $duplicata->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $duplicata->setEtat($this->getEtatTypeService()->getEtatTypeByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->update($duplicata);
 
         return $duplicata;
@@ -610,7 +610,7 @@ class FicheMetierService
         //init
         $fiche = new FicheMetier();
         $fiche->setMetier($csvInfos['metier']);
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $fiche->setEtat($this->getEtatTypeService()->getEtatTypeByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->create($fiche);
 
         // MISSIONS PRINCIPALES

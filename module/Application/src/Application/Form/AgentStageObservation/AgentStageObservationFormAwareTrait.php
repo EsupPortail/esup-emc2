@@ -4,24 +4,15 @@ namespace Application\Form\AgentStageObservation;
 
 trait AgentStageObservationFormAwareTrait {
 
-    /** @var AgentStageObservationForm */
-    private $agentStageObservationForm;
+    private AgentStageObservationForm $agentStageObservationForm;
 
-    /**
-     * @return AgentStageObservationForm
-     */
     public function getAgentStageObservationForm(): AgentStageObservationForm
     {
         return $this->agentStageObservationForm;
     }
 
-    /**
-     * @param AgentStageObservationForm $agentStageObservationForm
-     * @return AgentStageObservationForm
-     */
-    public function setAgentStageObservationForm(AgentStageObservationForm $agentStageObservationForm): AgentStageObservationForm
+    public function setAgentStageObservationForm(AgentStageObservationForm $agentStageObservationForm): void
     {
         $this->agentStageObservationForm = $agentStageObservationForm;
-        return $this->agentStageObservationForm;
     }
 }

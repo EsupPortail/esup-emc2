@@ -20,14 +20,14 @@ use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
 class FicheMetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -49,7 +49,7 @@ class FicheMetierController extends AbstractActionController {
         $expertise = $fromQueries['expertise'] ?? null;
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
-        $etats = $this->getEtatService()->getEtatsByTypeCode(FicheMetierEtats::TYPE);
+        $etats = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
         $domaines = $this->getDomaineService()->getDomaines();
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);

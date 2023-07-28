@@ -9,13 +9,11 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 
 class AgentStageObservationForm extends Form {
     use StructureServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use EtatServiceAwareTrait;
 
     public function init(): void
     {

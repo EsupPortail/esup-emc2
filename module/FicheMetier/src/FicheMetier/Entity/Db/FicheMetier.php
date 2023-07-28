@@ -14,16 +14,16 @@ use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface, HasMetierInterface,
+class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
-    use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
+    use HasEtatsTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
