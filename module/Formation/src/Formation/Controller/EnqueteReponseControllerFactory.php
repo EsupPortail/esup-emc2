@@ -2,12 +2,7 @@
 
 namespace Formation\Controller;
 
-use Doctrine\ORM\EntityManager;
-use Formation\Form\EnqueteCategorie\EnqueteCategorieForm;
-use Formation\Form\EnqueteQuestion\EnqueteQuestionForm;
-use Formation\Form\EnqueteReponse\EnqueteReponseForm;
 use Formation\Service\EnqueteCategorie\EnqueteCategorieService;
-use Formation\Service\EnqueteQuestion\EnqueteQuestionService;
 use Formation\Service\EnqueteReponse\EnqueteReponseService;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
@@ -15,7 +10,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class EnqueteReponseControllerFactory {
+class EnqueteReponseControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -23,7 +19,7 @@ class EnqueteReponseControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : EnqueteReponseController
+    public function __invoke(ContainerInterface $container): EnqueteReponseController
     {
         /**
          * @var EnqueteCategorieService $enqueteCategorieService

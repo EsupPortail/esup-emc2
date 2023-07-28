@@ -20,7 +20,7 @@ class FormationInstanceFraisControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceFraisController
+    public function __invoke(ContainerInterface $container): FormationInstanceFraisController
     {
         /**
          * @var FormationInstanceService $formationInstanceService

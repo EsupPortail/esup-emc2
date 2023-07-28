@@ -6,9 +6,9 @@ use Application\Entity\Db\AgentTutorat;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
-use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
+use Metier\Service\Metier\MetierServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class AgentTutoratHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;

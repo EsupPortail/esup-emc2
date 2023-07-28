@@ -2,6 +2,7 @@
 
 namespace Formation\Service\FormationElement;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
@@ -97,9 +98,12 @@ class FormationElementService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationElement::class)->createQueryBuilder('formationelement')
-            ->addSelect('formation')->join('formationelement.formation', 'formation')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(FormationElement::class)->createQueryBuilder('formationelement')
+                ->addSelect('formation')->join('formationelement.formation', 'formation');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . FormationElement::class . "]", 0, $e);
+        }
         return $qb;
     }
 
@@ -116,7 +120,7 @@ class FormationElementService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationElement partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs FormationElement partagent le même id [".$id."]",0,$e);
         }
         return $result;
     }

@@ -4,11 +4,19 @@ namespace Formation\Form\Formation;
 
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FormationFormFactory
 {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return FormationForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): FormationForm
     {
         /**
          * @var FormationGroupeService $formationGroupeService

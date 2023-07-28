@@ -4,6 +4,8 @@ namespace Formation\Service\Formation;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FormationServiceFactory
 {
@@ -11,6 +13,8 @@ class FormationServiceFactory
     /**
      * @param ContainerInterface $container
      * @return FormationService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : FormationService
     {

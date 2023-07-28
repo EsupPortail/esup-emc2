@@ -5,7 +5,7 @@ namespace Application\Form\AgentStageObservation;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class AgentStageObservationFormFactory {
 
@@ -18,7 +18,7 @@ class AgentStageObservationFormFactory {
         /**
          * @var StructureService $structureService
          * @var MetierService $metierService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $structureService = $container->get(StructureService::class);
         $metierService = $container->get(MetierService::class);

@@ -4,8 +4,8 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Formateur;
 use Formation\Form\Formateur\FormateurFormAwareTrait;
-use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -18,7 +18,7 @@ class FormateurController extends AbstractActionController
     use FormateurFormAwareTrait;
     use FormateurFormAwareTrait;
 
-    public function ajouterFormateurAction() : ViewModel
+    public function ajouterFormateurAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -47,7 +47,7 @@ class FormateurController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierFormateurAction() : ViewModel
+    public function modifierFormateurAction(): ViewModel
     {
         $formateur = $this->getFormateurService()->getRequestedFormateur($this);
 
@@ -73,21 +73,21 @@ class FormateurController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserFormateurAction() : Response
+    public function historiserFormateurAction(): Response
     {
         $formateur = $this->getFormateurService()->getRequestedFormateur($this);
         $this->getFormateurService()->historise($formateur);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
     }
 
-    public function restaurerFormateurAction() : Response
+    public function restaurerFormateurAction(): Response
     {
         $formateur = $this->getFormateurService()->getRequestedFormateur($this);
         $this->getFormateurService()->restore($formateur);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $formateur->getInstance()->getId()], [], true);
     }
 
-    public function supprimerFormateurAction() : ViewModel
+    public function supprimerFormateurAction(): ViewModel
     {
         $formateur = $this->getFormateurService()->getRequestedFormateur($this);
 

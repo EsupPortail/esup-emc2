@@ -4,24 +4,15 @@ namespace Formation\Service\Notification;
 
 trait NotificationServiceAwareTrait {
 
-    /** @var NotificationService */
-    private $notificationService;
+    private NotificationService $notificationService;
 
-    /**
-     * @return NotificationService
-     */
     public function getNotificationService(): NotificationService
     {
         return $this->notificationService;
     }
 
-    /**
-     * @param NotificationService $notificationService
-     * @return NotificationService
-     */
-    public function setNotificationService(NotificationService $notificationService): NotificationService
+    public function setNotificationService(NotificationService $notificationService): void
     {
         $this->notificationService = $notificationService;
-        return $this->notificationService;
     }
 }

@@ -15,7 +15,7 @@ namespace Formation\Controller;
  use Psr\Container\ContainerExceptionInterface;
  use Psr\Container\ContainerInterface;
  use Psr\Container\NotFoundExceptionInterface;
- use UnicaenEtat\Service\Etat\EtatService;
+ use UnicaenEtat\Service\EtatType\EtatTypeService;
 
  class ImportationLagafControllerFactory {
 
@@ -28,7 +28,7 @@ namespace Formation\Controller;
      public function __invoke(ContainerInterface $container) : ImportationLagafController
      {
          /**
-          * @var EtatService $etatService
+          * @var EtatTypeService $etatTypeService
           * @var FormationService $formationService
           * @var FormationGroupeService $formationGroupeService
           * @var FormationInstanceService $formationInstanceService
@@ -39,7 +39,7 @@ namespace Formation\Controller;
           * @var HasFormationCollectionService $hasFormationCollectionService
           * @var StagiaireService $stagiaireService
           */
-         $etatService = $container->get(EtatService::class);
+         $etatTypeService = $container->get(EtatTypeService::class);
          $formationService = $container->get(FormationService::class);
          $formationGroupeService = $container->get(FormationGroupeService::class);
          $formationInstanceService = $container->get(FormationInstanceService::class);
@@ -51,7 +51,7 @@ namespace Formation\Controller;
          $stagiaireService = $container->get(StagiaireService::class);
 
          $controller = new ImportationLagafController();
-         $controller->setEtatService($etatService);
+         $controller->setEtatTypeService($etatTypeService);
          $controller->setFormationService($formationService);
          $controller->setFormationGroupeService($formationGroupeService);
          $controller->setFormationInstanceService($formationInstanceService);

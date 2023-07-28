@@ -6,12 +6,12 @@ use EntretienProfessionnel\Entity\Db\Observation;
 use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 class ObservationController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;

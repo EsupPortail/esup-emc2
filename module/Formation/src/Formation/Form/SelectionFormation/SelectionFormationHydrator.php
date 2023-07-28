@@ -12,7 +12,7 @@ class SelectionFormationHydrator implements HydratorInterface
 
     /**
      * @param HasFormationCollectionInterface $object
-     * @return array|void
+     * @return array
      */
     public function extract($object): array
     {
@@ -24,8 +24,8 @@ class SelectionFormationHydrator implements HydratorInterface
         return $data;
     }
 
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
-        //never used
+        return $object;
     }
 }

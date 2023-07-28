@@ -3,11 +3,11 @@
 namespace Formation\Service\HasFormationCollection;
 
 use DateTime;
+use Doctrine\ORM\Exception\ORMException;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
-use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -24,11 +24,11 @@ class HasFormationCollectionService
      * @param HasFormationCollectionInterface $object
      * @return HasFormationCollectionInterface
      */
-    public function updateObject(HasFormationCollectionInterface $object)
+    public function updateObject(HasFormationCollectionInterface $object): HasFormationCollectionInterface
     {
         if ($object instanceof HistoriqueAwareInterface) {
             $user = $this->getUserService()->getConnectedUser();
-            if ($user === null) $user = $this->getUserService()->getUtilisateur(0);
+            if ($user === null) $user = $this->getUserService()->find(0);
             $date = new DateTime();
             $object->setHistoModification($date);
             $object->setHistoModificateur($user);
@@ -79,7 +79,7 @@ class HasFormationCollectionService
      * @param FormationElement $formationElement
      * @return HasFormationCollectionInterface
      */
-    public function addFormation(HasFormationCollectionInterface $object, FormationElement $formationElement)
+    public function addFormation(HasFormationCollectionInterface $object, FormationElement $formationElement): HasFormationCollectionInterface
     {
         $this->getFormationElementService()->create($formationElement);
         $object->getFormationCollection()->add($formationElement);
@@ -92,7 +92,7 @@ class HasFormationCollectionService
      * @param FormationElement $formationElement
      * @return HasFormationCollectionInterface
      */
-    public function deleteFormation(HasFormationCollectionInterface $object, FormationElement $formationElement)
+    public function deleteFormation(HasFormationCollectionInterface $object, FormationElement $formationElement): HasFormationCollectionInterface
     {
         $object->getFormationCollection()->removeElement($formationElement);
         $this->updateObject($object);
@@ -103,7 +103,7 @@ class HasFormationCollectionService
      * @param HasFormationCollectionInterface $object
      * @return HasFormationCollectionInterface
      */
-    public function clearFormation(HasFormationCollectionInterface $object)
+    public function clearFormation(HasFormationCollectionInterface $object): HasFormationCollectionInterface
     {
         $object->getFormationCollection()->clear();
         $this->updateObject($object);

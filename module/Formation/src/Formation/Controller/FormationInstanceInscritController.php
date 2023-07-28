@@ -22,7 +22,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -33,8 +33,8 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class FormationInstanceInscritController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
-    use EtatServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
@@ -81,7 +81,7 @@ class FormationInstanceInscritController extends AbstractActionController
             if ($form->isValid()) {
                 if (!$instance->hasAgent($inscrit->getAgent())) {
                     $inscrit->setListe($instance->getListeDisponible());
-                    $inscrit->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
+                    $inscrit->setEtat($this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::ETAT_VALIDER_DRH));
                     $inscrit->setSource(HasSourceInterface::SOURCE_EMC2);
                     $this->getFormationInstanceInscritService()->create($inscrit);
 
@@ -208,7 +208,7 @@ class FormationInstanceInscritController extends AbstractActionController
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise();});
-        $demandesNonValidees = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+        $demandesNonValidees = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getType()->getCode() === DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
         return new ViewModel([
             'agent' => $agent,
@@ -244,8 +244,8 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
-        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
-        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
+        $demandes = array_filter($demandes, function (DemandeExterne $d) { return $d->estNonHistorise() AND $d->getEtat()->getType()->getCode() !== DemandeExterneEtats::ETAT_REJETEE AND $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE;});
+        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getType()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
         return new ViewModel([
             'agent' => $agent,
@@ -263,7 +263,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscription = new FormationInstanceInscrit();
         $inscription->setInstance($instance);
         $inscription->setAgent($agent);
-        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_DEMANDE));
+        $inscription->setEtat($this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::ETAT_DEMANDE));
 
         $form = $this->getInscriptionForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true));

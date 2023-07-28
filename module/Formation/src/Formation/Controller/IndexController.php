@@ -8,12 +8,13 @@ use Laminas\View\Model\ViewModel;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class IndexController extends AbstractActionController {
+class IndexController extends AbstractActionController
+{
 
     use AgentServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         /** @var User $connectedUser */
         $connectedUser = $this->getUserService()->getConnectedUser();
@@ -35,12 +36,12 @@ class IndexController extends AbstractActionController {
         ]);
     }
 
-    public function aproposAction() : ViewModel
+    public function aproposAction(): ViewModel
     {
         return new ViewModel([]);
     }
 
-    public function contactAction() : ViewModel
+    public function contactAction(): ViewModel
     {
         return new ViewModel([]);
     }

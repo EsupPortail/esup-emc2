@@ -8,15 +8,16 @@ use Application\Entity\Db\Traits\HasSourceTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Formation\Provider\Etat\SessionEtats;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatInterface
+class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface
 {
-    use HasEtatTrait;
+    use HasEtatsTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
@@ -26,34 +27,32 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     const RATTACHEMENT_PREVENTION = 'prévention';
     const RATTACHEMENT_BIBLIOTHEQUE = 'bibliotheque';
 
-    /** @var integer */
-    private $id;
-    /** @var Formation */
-    private $formation;
-    /** @var string */
-    private $complement;
-    /** @var boolean */
-    private $autoInscription;
+    private ?int $id = null;
+    private ?Formation $formation = null;
+    private ?string $complement = null;
+    private ?bool $autoInscription = null;
 
     private int $nbPlacePrincipale = -1;
     private int $nbPlaceComplementaire = -1;
-    /** @var string */
-    private $lieu;
-    /** @var string */
-    private $type;
+    private ?string $lieu = null;
+    private ?string $type = null;
     private ?float $coutHt  = null;
     private ?float $coutTtc = null;
     private bool $affichage = true;
 
-    /** @var ArrayCollection (FormationInstanceJournee) */
-    private $journees;
-    /** @var ArrayCollection (FormationInstanceInscrit) */
-    private $inscrits;
-    /** @var ArrayCollection (Formateur) */
-    private $formateurs;
+    private Collection $journees;
+    private Collection $inscrits;
+    private Collection $formateurs;
 
     private ?SessionParametre $parametre = null;
 
+
+    public function __construct()
+    {
+        $this->journees = new ArrayCollection();
+        $this->inscrits = new ArrayCollection();
+        $this->formateurs = new ArrayCollection();
+    }
     /**
      * @return string
      */
@@ -223,7 +222,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      */
     public function getFormateurs(): ?array
     {
-        if ($this->formateurs === null) return null;
+        if (!isset($this->formateurs)) return null;
         return $this->formateurs->toArray();
     }
 
@@ -234,7 +233,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      */
     public function getJournees() : ?array
     {
-        if ($this->journees === null) return null;
+        if (!isset($this->journees)) return null;
         return $this->journees->toArray();
     }
 
@@ -482,25 +481,28 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function estPreparation() : bool
     {
+        $etatCode = $this->getEtatActif()->getType()->getCode();
         return (
-            $this->getEtat()->getCode() === SessionEtats::ETAT_CREATION_EN_COURS OR
-            $this->getEtat()->getCode() === SessionEtats::ETAT_INSCRIPTION_OUVERTE OR
-            $this->getEtat()->getCode() === SessionEtats::ETAT_INSCRIPTION_FERMEE
+            $etatCode === SessionEtats::ETAT_CREATION_EN_COURS ||
+            $etatCode === SessionEtats::ETAT_INSCRIPTION_OUVERTE ||
+            $etatCode === SessionEtats::ETAT_INSCRIPTION_FERMEE
         );
     }
 
     public function estPrete() : bool
     {
+        $etatCode = $this->getEtatActif()->getType()->getCode();
         return (
-            $this->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION
+            $etatCode === SessionEtats::ETAT_FORMATION_CONVOCATION
         );
     }
 
     public function estRealisee() : bool
     {
+        $etatCode = $this->getEtatActif()->getType()->getCode();
         return (
-            $this->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS OR
-            $this->getEtat()->getCode() === SessionEtats::ETAT_CLOTURE_INSTANCE
+            $etatCode === SessionEtats::ETAT_ATTENTE_RETOURS ||
+            $etatCode === SessionEtats::ETAT_CLOTURE_INSTANCE
         );
     }
 

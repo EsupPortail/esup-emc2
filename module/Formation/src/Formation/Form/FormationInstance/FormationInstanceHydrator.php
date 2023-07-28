@@ -32,7 +32,7 @@ class FormationInstanceHydrator implements HydratorInterface
      * @param FormationInstance $object
      * @return FormationInstance
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         $description = (isset($data['description']) and trim($data['description']) !== "") ? trim($data['description']) : null;
         $principale = (isset($data['principale'])) ? ((int)$data['principale']) : 0;

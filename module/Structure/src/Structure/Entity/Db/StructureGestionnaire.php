@@ -8,7 +8,8 @@ use Application\Entity\Db\Traits\DbImportableAwareTrait;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Entity\Db\Traits\HasSourceTrait;
 
-class StructureGestionnaire implements HasPeriodeInterface {
+class StructureGestionnaire implements HasPeriodeInterface
+{
     use DbImportableAwareTrait;
     use HasPeriodeTrait;
     use HasSourceTrait;

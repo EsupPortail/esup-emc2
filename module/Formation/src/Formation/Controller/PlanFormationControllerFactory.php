@@ -12,7 +12,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PlanFormationControllerFactory {
+class PlanFormationControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -20,7 +21,7 @@ class PlanFormationControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PlanFormationController
+    public function __invoke(ContainerInterface $container): PlanFormationController
     {
         /**
          * @var AbonnementService $abonnementService

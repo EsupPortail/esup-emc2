@@ -16,7 +16,7 @@ class EnqueteReponseHydrator implements HydratorInterface {
 
     /**
      * @param object|ArrayCollection $object
-     * @return array|void
+     * @return array
      */
     public function extract(object $object) : array
     {
@@ -34,9 +34,9 @@ class EnqueteReponseHydrator implements HydratorInterface {
     /**
      * @param array $data
      * @param FormationInstanceInscrit $object
-     * @return FormationInstanceInscrit|void
+     * @return FormationInstanceInscrit
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         foreach($object as $item) {
             [$question, $reponse] = $item;

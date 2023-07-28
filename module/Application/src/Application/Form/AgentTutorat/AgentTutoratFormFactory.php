@@ -4,10 +4,10 @@ namespace Application\Form\AgentTutorat;
 
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
-use Metier\Service\Metier\MetierService;
-use UnicaenEtat\Service\Etat\EtatService;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+use Metier\Service\Metier\MetierService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class AgentTutoratFormFactory {
 
@@ -20,7 +20,7 @@ class AgentTutoratFormFactory {
         /**
          * @var AgentService $agentService
          * @var MetierService $metierService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $agentService = $container->get(AgentService::class);
         $metierService = $container->get(MetierService::class);

@@ -10,13 +10,13 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentStageObservationController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentStageObservationServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
 
     use AgentStageObservationFormAwareTrait;
@@ -32,8 +32,9 @@ class AgentStageObservationController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('agent/stageobs/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($stageObservation);
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('STAGE_OBSERVATION');
-        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+        $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('STAGE_OBSERVATION');
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
+        $form->get('etat')->resetEtats($types);
 
 
         $request = $this->getRequest();

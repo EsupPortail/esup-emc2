@@ -20,18 +20,21 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
+use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 
@@ -57,9 +60,9 @@ class StructureController extends AbstractActionController {
     use HasDescriptionFormAwareTrait;
 
 
-    private $renderer;
+    private PhpRenderer $renderer;
 
-    public function setRenderer($renderer)
+    public function setRenderer(PhpRenderer $renderer): void
     {
         $this->renderer = $renderer;
     }
@@ -134,6 +137,12 @@ class StructureController extends AbstractActionController {
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
+        try {
+            $emailAssistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+        } catch (Exception $e) {
+            throw new RuntimeException("Une erreur est survenu lors de la récupération du paramètre [".GlobalParametres::TYPE."|".GlobalParametres::EMAIL_ASSISTANCE."]",0,$e);
+        }
+
         return new ViewModel([
             'structure' => $structure,
             'selecteur' => $selecteur,
@@ -143,7 +152,7 @@ class StructureController extends AbstractActionController {
             'autorites' => $autorites,
 
             'campagnes' => $campagnes,
-            'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
+            'emailAssistance' => $emailAssistance,
         ]);
     }
 

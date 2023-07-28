@@ -8,7 +8,7 @@ use Application\Service\AgentTutorat\AgentTutoratService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class AgentTutoratControllerFactory {
@@ -24,22 +24,20 @@ class AgentTutoratControllerFactory {
         /**
          * @var AgentService $agentService
          * @var AgentTutoratService $agentTutoratService
-         * @var EtatService $etatService
+         * @var EtatCategorieService $etatCategorieService
          * @var EtatTypeService $etatTypeService
-         *
          * @var AgentTutoratForm $agentTutoratForm
          */
         $agentService = $container->get(AgentService::class);
         $agentTutoratService = $container->get(AgentTutoratService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatCategorieService = $container->get(EtatCategorieService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
-
         $agentTutoratForm = $container->get('FormElementManager')->get(AgentTutoratForm::class);
 
         $controller = new AgentTutoratController();
         $controller->setAgentService($agentService);
         $controller->setAgentTutoratService($agentTutoratService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatCategorieService($etatCategorieService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setAgentTutoratForm($agentTutoratForm);
 

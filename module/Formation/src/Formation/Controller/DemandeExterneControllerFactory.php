@@ -14,9 +14,10 @@ use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 
-class DemandeExterneControllerFactory {
+class DemandeExterneControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -24,19 +25,19 @@ class DemandeExterneControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : DemandeExterneController
+    public function __invoke(ContainerInterface $container): DemandeExterneController
     {
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
-         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          * @var FichierService $fichierService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $fichierService = $container->get(FichierService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -56,7 +57,7 @@ class DemandeExterneControllerFactory {
         $controller = new DemandeExterneController();
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFichierService($fichierService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);

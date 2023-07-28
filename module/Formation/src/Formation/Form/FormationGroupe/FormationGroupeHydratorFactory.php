@@ -11,7 +11,7 @@ class FormationGroupeHydratorFactory
      * @param ContainerInterface $container
      * @return FormationGroupeHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): FormationGroupeHydrator
     {
         /** @var FormationGroupeHydrator $hydrator */
         $hydrator = new FormationGroupeHydrator();

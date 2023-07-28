@@ -4,25 +4,16 @@ namespace Formation\Service\EnqueteReponse;
 
 trait EnqueteReponseServiceAwareTrait
 {
-    /** @var EnqueteReponseService */
-    private $enqueteReponseService;
+    private EnqueteReponseService $enqueteReponseService;
 
-    /**
-     * @return EnqueteReponseService
-     */
     public function getEnqueteReponseService(): EnqueteReponseService
     {
         return $this->enqueteReponseService;
     }
 
-    /**
-     * @param EnqueteReponseService $enqueteReponseService
-     * @return EnqueteReponseService
-     */
-    public function setEnqueteReponseService(EnqueteReponseService $enqueteReponseService): EnqueteReponseService
+    public function setEnqueteReponseService(EnqueteReponseService $enqueteReponseService): void
     {
         $this->enqueteReponseService = $enqueteReponseService;
-        return $this->enqueteReponseService;
     }
 
 }

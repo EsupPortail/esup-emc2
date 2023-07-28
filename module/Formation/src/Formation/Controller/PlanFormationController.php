@@ -3,8 +3,6 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationGroupe;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -13,7 +11,8 @@ use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class PlanFormationController extends AbstractActionController {
+class PlanFormationController extends AbstractActionController
+{
     use AbonnementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
@@ -22,7 +21,7 @@ class PlanFormationController extends AbstractActionController {
 
     use FormationInstanceServiceAwareTrait;
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
 

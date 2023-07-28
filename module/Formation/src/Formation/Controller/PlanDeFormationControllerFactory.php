@@ -13,7 +13,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PlanDeFormationControllerFactory {
+class PlanDeFormationControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -21,7 +22,7 @@ class PlanDeFormationControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PlanDeFormationController
+    public function __invoke(ContainerInterface $container): PlanDeFormationController
     {
         /**
          * @var AbonnementService $abonnementService

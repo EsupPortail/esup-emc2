@@ -24,8 +24,10 @@
     "unicaen/aide": "^0",
     "ext-json": "*",
     "unicaen/indicateur": "^0",
+    "unicaen/synchro": "^6.0",
 
-    "unicaen/utilisateur-ldap-adapter" : "^2.0"
+    "unicaen/utilisateur-ldap-adapter" : "^2.0",
+    "unicaen/etat": "6.x-dev"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

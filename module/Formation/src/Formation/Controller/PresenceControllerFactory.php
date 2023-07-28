@@ -19,7 +19,7 @@ class PresenceControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PresenceController
+    public function __invoke(ContainerInterface $container): PresenceController
     {
         /**
          * @var FormationInstanceService $formationInstanceService

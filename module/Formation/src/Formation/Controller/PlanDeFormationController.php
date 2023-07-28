@@ -3,8 +3,6 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
@@ -15,7 +13,8 @@ use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class PlanDeFormationController extends AbstractActionController {
+class PlanDeFormationController extends AbstractActionController
+{
     use AbonnementServiceAwareTrait;
     use AgentServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
@@ -25,7 +24,7 @@ class PlanDeFormationController extends AbstractActionController {
 
     use PlanDeFormationFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $plans = $this->getPlanDeFormationService()->getPlansDeFormation();
         return new ViewModel([
@@ -33,7 +32,7 @@ class PlanDeFormationController extends AbstractActionController {
         ]);
     }
 
-    public function courantAction() : ViewModel
+    public function courantAction(): ViewModel
     {
         $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
 
@@ -67,7 +66,7 @@ class PlanDeFormationController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 
@@ -95,7 +94,7 @@ class PlanDeFormationController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $plan = new PlanDeFormation();
 
@@ -116,12 +115,12 @@ class PlanDeFormationController extends AbstractActionController {
         $vm = new ViewModel([
             'title' => "Ajouter un plan de formation",
             'form' => $form,
-            ]);
+        ]);
         $vm->setTemplate('application/default/default-form');
         return $vm;
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 
@@ -147,7 +146,7 @@ class PlanDeFormationController extends AbstractActionController {
         return $vm;
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
 

@@ -5,7 +5,7 @@ namespace Application\Controller;
 use Application\Provider\Parametre\GlobalParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenEvenement\Service\Type\TypeServiceAwareTrait;
 use UnicaenParametre\Service\Categorie\CategorieServiceAwareTrait;
@@ -18,7 +18,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 class VerificationController extends AbstractActionController {
     use PrivilegeServiceAwareTrait;
     use TemplateServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use CategorieServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -35,7 +35,7 @@ class VerificationController extends AbstractActionController {
             'installation_path' => $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH)->getValeur(),
             'templateService' => $this->getTemplateService(),
             'privilegeService' => $this->getPrivilegeService(),
-            'etatService' => $this->getEtatService(),
+            'etatCategorieService' => $this->getEtatCategorieService(),
             'etatTypeService' => $this->getEtatTypeService(),
             'evenementTypeService' => $this->getTypeService(),
             'roleService' => $this->getRoleService(),

@@ -5,25 +5,16 @@ namespace Formation\Form\SelectionFormation;
 trait SelectionFormationFormAwareTrait
 {
 
-    /** @var SelectionFormationForm */
-    private $selectionFormationForm;
+    private SelectionFormationForm $selectionFormationForm;
 
-    /**
-     * @return SelectionFormationForm
-     */
-    public function getSelectionFormationForm()
+    public function getSelectionFormationForm(): SelectionFormationForm
     {
         return $this->selectionFormationForm;
     }
 
-    /**
-     * @param SelectionFormationForm $selectionFormationForm
-     * @return SelectionFormationForm
-     */
-    public function setSelectionFormationForm(SelectionFormationForm $selectionFormationForm)
+    public function setSelectionFormationForm(SelectionFormationForm $selectionFormationForm): void
     {
         $this->selectionFormationForm = $selectionFormationForm;
-        return $this->selectionFormationForm;
     }
 
 }

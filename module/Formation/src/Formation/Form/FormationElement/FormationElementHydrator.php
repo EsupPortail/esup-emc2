@@ -37,10 +37,10 @@ class FormationElementHydrator implements HydratorInterface {
      * @param FormationElement $object
      * @return FormationElement
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         $formation = isset($data['formation'])?$this->getFormationService()->getFormation($data['formation']):null;
-        $niveau = isset($data['niveau'])?$data['niveau']:"Débutant";
+        $niveau = $data['niveau'] ?? "Débutant";
         $annee= (isset($data['annee']) AND $data['annee'] !== "")? ($data['annee']):null;
         $commentaire = $annee . " - " . $niveau;
 

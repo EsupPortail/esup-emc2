@@ -4,6 +4,8 @@ namespace Formation\Service\FormationInstanceFrais;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FormationInstanceFraisServiceFactory
 {
@@ -11,8 +13,10 @@ class FormationInstanceFraisServiceFactory
     /**
      * @param ContainerInterface $container
      * @return FormationInstanceFraisService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): FormationInstanceFraisService
     {
         /**
          * @var EntityManager $entityManager

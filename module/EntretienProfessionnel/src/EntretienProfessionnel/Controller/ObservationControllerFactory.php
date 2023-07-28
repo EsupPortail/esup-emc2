@@ -6,7 +6,7 @@ use EntretienProfessionnel\Form\Observation\ObservationForm;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Observation\ObservationService;
 use Interop\Container\ContainerInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class ObservationControllerFactory {
@@ -19,7 +19,7 @@ class ObservationControllerFactory {
     {
         /**
          * @var EntretienProfessionnelService $entretienProfessionnelService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var ObservationService $observationService
          * @var ValidationInstanceService $validationInstanceService
          */

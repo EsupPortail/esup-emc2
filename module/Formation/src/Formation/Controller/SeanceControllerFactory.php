@@ -18,7 +18,7 @@ class SeanceControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : SeanceController
+    public function __invoke(ContainerInterface $container): SeanceController
     {
         /**
          * @var FormationInstanceService $formationInstanceService

@@ -8,7 +8,7 @@
  * @var Campagne[] $campagnes
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
- * @var EtatType[] $etats
+ * @var UnicaenEtat\src\UnicaenEtat\Entity\Db\EtatType[] $etats
  */
 
 use Application\Entity\Db\Agent;
@@ -20,7 +20,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use Fichier\Entity\Db\Fichier;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
-use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\EtatType;
 
 $canVoirFichePoste          = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER));
 $canExporterFichePoste      = $canVoirFichePoste;

@@ -2,13 +2,15 @@
 
 namespace Structure\Entity\Db;
 
-use Application\Entity\Db\Traits\DbImportableAwareTrait;
-use UnicaenDbImport\Domain\ImportInterface;
 
-class StructureType  {
-    use DbImportableAwareTrait;
+use UnicaenSynchro\Entity\Db\IsSynchronisableInterface;
+use UnicaenSynchro\Entity\Db\IsSynchronisableTrait;
 
-    private ?int $id = -1 ;
+class StructureType implements IsSynchronisableInterface
+{
+    use IsSynchronisableTrait;
+
+    private ?int $id = -1;
     private ?string $code = null;
     private ?string $libelle = null;
 
@@ -22,7 +24,7 @@ class StructureType  {
         $this->id = $id;
     }
 
-    public function getCode() : ?string
+    public function getCode(): ?string
     {
         return $this->code;
     }
@@ -37,14 +39,14 @@ class StructureType  {
         $this->libelle = $libelle;
     }
 
-    public function getLibelle() : ?string
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return ($this->getLibelle())?:"Aucun type";
+        return ($this->getLibelle()) ?: "Aucun type";
     }
 
 }

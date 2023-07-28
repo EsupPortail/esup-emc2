@@ -3,6 +3,7 @@
 namespace Formation\Service\FormationGroupe;
 
 use Application\Service\RendererAwareTrait;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -99,8 +100,13 @@ class FormationGroupeService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
-            ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
+                ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . FormationGroupe::class . "]", 0, $e);
+
+        }
         return $qb;
     }
 

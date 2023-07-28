@@ -4,6 +4,8 @@ namespace Formation\Service\FormationInstanceInscrit;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 
 class FormationInstanceInscritServiceFactory
@@ -12,8 +14,10 @@ class FormationInstanceInscritServiceFactory
     /**
      * @param ContainerInterface $container
      * @return FormationInstanceInscritService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): FormationInstanceInscritService
     {
         /**
          * @var EntityManager $entityManager

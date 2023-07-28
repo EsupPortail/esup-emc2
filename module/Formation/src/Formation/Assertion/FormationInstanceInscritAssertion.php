@@ -3,15 +3,13 @@
 namespace Formation\Assertion;
 
 use Application\Entity\Db\Agent;
-use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Privilege\FormationPrivileges;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class FormationInstanceInscritAssertion extends AbstractAssertion
 {

@@ -5,6 +5,8 @@ namespace Formation\Service\Evenement;
 use Doctrine\ORM\EntityManager;
 use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEvenement\Service\Etat\EtatService;
 use UnicaenEvenement\Service\Type\TypeService;
 
@@ -13,6 +15,8 @@ class RappelAgentAvantFormationServiceFactory {
     /**
      * @param ContainerInterface $container
      * @return RappelAgentAvantFormationService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : RappelAgentAvantFormationService
     {

@@ -8,7 +8,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class IndexControllerFactory {
+class IndexControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -16,7 +17,7 @@ class IndexControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : IndexController
+    public function __invoke(ContainerInterface $container): IndexController
     {
         /**
          * @var AgentService $agentService

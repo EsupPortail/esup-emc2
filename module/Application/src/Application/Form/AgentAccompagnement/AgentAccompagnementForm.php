@@ -6,20 +6,20 @@ use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
-use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use UnicaenApp\Form\Element\SearchAndSelect;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentAccompagnementForm extends Form
 {
     use AgentServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
     use CorpsServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
 
     public $urlAgent;
 

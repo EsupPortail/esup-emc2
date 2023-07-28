@@ -5,25 +5,16 @@ namespace Formation\Service\FormationInstanceFrais;
 trait FormationInstanceFraisServiceAwareTrait
 {
 
-    /** @var FormationInstanceFraisService */
-    private $formationInstanceFraisService;
+    private FormationInstanceFraisService $formationInstanceFraisService;
 
-    /**
-     * @return FormationInstanceFraisService
-     */
     public function getFormationInstanceFraisService(): FormationInstanceFraisService
     {
         return $this->formationInstanceFraisService;
     }
 
-    /**
-     * @param FormationInstanceFraisService $formationInstanceFraisService
-     * @return FormationInstanceFraisService
-     */
-    public function setFormationInstanceFraisService(FormationInstanceFraisService $formationInstanceFraisService): FormationInstanceFraisService
+    public function setFormationInstanceFraisService(FormationInstanceFraisService $formationInstanceFraisService): void
     {
         $this->formationInstanceFraisService = $formationInstanceFraisService;
-        return $this->formationInstanceFraisService;
     }
 
 

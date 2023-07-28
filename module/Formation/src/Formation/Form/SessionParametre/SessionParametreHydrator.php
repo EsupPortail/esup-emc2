@@ -26,7 +26,7 @@ class SessionParametreHydrator implements HydratorInterface {
      * @param SessionParametre $object
      * @return SessionParametre
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $isMail = $data['mail'] ?? false;
         $isEvenement = $data['evenement'] ?? false;

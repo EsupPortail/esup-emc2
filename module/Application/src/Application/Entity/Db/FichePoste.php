@@ -14,16 +14,16 @@ use FicheMetier\Entity\Db\MissionActivite;
 use FichePoste\Entity\Db\MissionAdditionnelle;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface {
+class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatsInterface {
     use FichePosteMacroTrait;
     use HistoriqueAwareTrait;
-    use HasEtatTrait;
+    use HasEtatsTrait;
     use HasValidationsTrait;
 
     const TYPE_DEFAULT  = 'DEFAULT';

@@ -3,14 +3,14 @@
 namespace Application\Form\AgentStageObservation;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use Metier\Service\Metier\MetierServiceAwareTrait;
-use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Service\Metier\MetierServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Form\EtatFieldset\EtatFieldset;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class AgentStageObservationForm extends Form {
     use StructureServiceAwareTrait;

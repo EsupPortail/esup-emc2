@@ -9,7 +9,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class SessionParametreControllerFactory {
+class SessionParametreControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -17,7 +18,7 @@ class SessionParametreControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : SessionParametreController
+    public function __invoke(ContainerInterface $container): SessionParametreController
     {
         /**
          * @var FormationInstanceService $sessionService

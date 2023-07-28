@@ -20,13 +20,15 @@ class FormationGroupeController extends AbstractActionController
     use FormationGroupeFormAwareTrait;
     use SelectionFormationGroupeFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
 
         $groupes = $this->getFormationGroupeService()->getFormationsGroupes();
-        if ($source !== null) $groupes = array_filter($groupes, function (FormationGroupe $a) use ($source) { return $a->getSource() === $source; });
+        if ($source !== null) $groupes = array_filter($groupes, function (FormationGroupe $a) use ($source) {
+            return $a->getSource() === $source;
+        });
         if ($historise !== null) $groupes = array_filter($groupes, function (FormationGroupe $a) use ($historise) {
             if ($historise === "1") return $a->estHistorise();
             if ($historise === "0") return $a->estNonHistorise();
@@ -42,7 +44,7 @@ class FormationGroupeController extends AbstractActionController
 
     /** CRUD **********************************************************************************************************/
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
@@ -52,7 +54,7 @@ class FormationGroupeController extends AbstractActionController
         ]);
     }
 
-    public function ajouterGroupeAction() : ViewModel
+    public function ajouterGroupeAction(): ViewModel
     {
         $groupe = new FormationGroupe();
         $form = $this->getFormationGroupeForm();
@@ -80,7 +82,7 @@ class FormationGroupeController extends AbstractActionController
         return $vm;
     }
 
-    public function editerGroupeAction() : ViewModel
+    public function editerGroupeAction(): ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $form = $this->getFormationGroupeForm();
@@ -106,7 +108,7 @@ class FormationGroupeController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserGroupeAction() : Response
+    public function historiserGroupeAction(): Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->historise($groupe);
@@ -116,7 +118,7 @@ class FormationGroupeController extends AbstractActionController
         return $this->redirect()->toRoute('formation-groupe', [], [], true);
     }
 
-    public function restaurerGroupeAction() : Response
+    public function restaurerGroupeAction(): Response
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
         $this->getFormationGroupeService()->restore($groupe);
@@ -126,7 +128,7 @@ class FormationGroupeController extends AbstractActionController
         return $this->redirect()->toRoute('formation-groupe', [], [], true);
     }
 
-    public function detruireGroupeAction() : ViewModel
+    public function detruireGroupeAction(): ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
@@ -152,7 +154,7 @@ class FormationGroupeController extends AbstractActionController
 
     /** DEBOULONNAGE **************************************************************************************************/
 
-    public function dedoublonnerAction() : ViewModel
+    public function dedoublonnerAction(): ViewModel
     {
         $groupe = $this->getFormationGroupeService()->getRequestedFormationGroupe($this);
 
@@ -164,7 +166,7 @@ class FormationGroupeController extends AbstractActionController
             $data = $request->getPost();
             $groupeSub = $this->getFormationGroupeService()->getFormationGroupe($data['groupes']);
 
-            if ($groupeSub AND $groupeSub !== $groupe) {
+            if ($groupeSub and $groupeSub !== $groupe) {
                 //décalages des formations
                 $formations = $groupe->getFormations();
                 foreach ($formations as $formation) {
@@ -181,7 +183,7 @@ class FormationGroupeController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Sélection de le groupe qui remplacera [".$groupe->getLibelle()."]",
+            'title' => "Sélection de le groupe qui remplacera [" . $groupe->getLibelle() . "]",
             'form' => $form,
         ]);
         return $vm;

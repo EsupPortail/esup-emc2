@@ -14,15 +14,16 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
-
 class FormationInstanceController extends AbstractActionController
 {
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
@@ -32,7 +33,7 @@ class FormationInstanceController extends AbstractActionController
     use PresenceAwareTrait;
     use FormationInstanceFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $instances = $this->getFormationInstanceService()->getFormationInstanceEnCours();
 
@@ -41,9 +42,9 @@ class FormationInstanceController extends AbstractActionController
         ]);
     }
 
-    /** NB: par defaut les instances de formation sont toutes en autoinscription **************************************/
+    /** NB : par defaut les instances de formation sont toutes en autoinscription **************************************/
 
-    public function ajouterAction() : Response
+    public function ajouterAction(): Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $instance = $this->getFormationInstanceService()->createNouvelleInstance($formation);
@@ -51,7 +52,7 @@ class FormationInstanceController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function ajouterAvecFormulaireAction() : ViewModel
+    public function ajouterAvecFormulaireAction(): ViewModel
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -61,7 +62,7 @@ class FormationInstanceController extends AbstractActionController
 
             if ($formation) {
                 $instance = $this->getFormationInstanceService()->createNouvelleInstance($formation);
-                $this->flashMessenger()->addSuccessMessage("La session #". $instance->getId()." vient d'être créée.");
+                $this->flashMessenger()->addSuccessMessage("La session #" . $instance->getId() . " vient d'être créée.");
             } else {
                 $this->flashMessenger()->addErrorMessage("La formation sélectionnée est incorrecte.");
             }
@@ -73,7 +74,7 @@ class FormationInstanceController extends AbstractActionController
 
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
@@ -93,7 +94,7 @@ class FormationInstanceController extends AbstractActionController
         ]);
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -103,7 +104,7 @@ class FormationInstanceController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->historise($instance);
@@ -111,7 +112,7 @@ class FormationInstanceController extends AbstractActionController
         return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->restore($instance);
@@ -119,7 +120,7 @@ class FormationInstanceController extends AbstractActionController
         return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
     }
 
-    public function supprimerAction() : ViewModel
+    public function supprimerAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -143,7 +144,7 @@ class FormationInstanceController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierInformationsAction() : ViewModel
+    public function modifierInformationsAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -169,7 +170,7 @@ class FormationInstanceController extends AbstractActionController
         return $vm;
     }
 
-    public function ouvrirInscriptionAction() : Response
+    public function ouvrirInscriptionAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->ouvrirInscription($instance);
@@ -177,17 +178,16 @@ class FormationInstanceController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function fermerInscriptionAction() : Response
+    public function fermerInscriptionAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->fermerInscription($instance);
 
 
-
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function envoyerConvocationAction() : Response
+    public function envoyerConvocationAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->envoyerConvocation($instance);
@@ -195,44 +195,44 @@ class FormationInstanceController extends AbstractActionController
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function demanderRetourAction() : Response
+    public function demanderRetourAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->demanderRetour($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function cloturerAction() : Response
+    public function cloturerAction(): Response
     {
-          $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-          $this->getFormationInstanceService()->cloturer($instance);
-          return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
+        $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $this->getFormationInstanceService()->cloturer($instance);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function annulerAction() : Response
+    public function annulerAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->annuler($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function reouvrirAction() : Response
+    public function reouvrirAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->reouvrir($instance);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
 
-    public function changerEtatAction() : ViewModel
+    public function changerEtatAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $etat = $this->getEtatService()->getEtat($data['etat']);
+            $etat = $this->getEtatTypeService()->getEtatType($data['etat']);
 
-            switch($etat->getCode()) {
+            switch ($etat->getCode()) {
                 case SessionEtats::ETAT_CREATION_EN_COURS :
                     $this->getFormationInstanceService()->recreation($instance);
                     exit();
@@ -258,9 +258,9 @@ class FormationInstanceController extends AbstractActionController
         }
 
         return new ViewModel([
-           'title' => "Changer l'état de la session de formation",
-           'etats' => $this->getEtatService()->getEtatsByTypeCode(SessionEtats::TYPE),
-           'instance' => $instance,
+            'title' => "Changer l'état de la session de formation",
+            'etats' => $this->getEtatCategorieService()->getEtatCategorieByCode(SessionEtats::TYPE),
+            'instance' => $instance,
         ]);
     }
 }

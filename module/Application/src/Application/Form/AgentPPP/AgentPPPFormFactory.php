@@ -3,14 +3,14 @@
 namespace Application\Form\AgentPPP;
 
 use Interop\Container\ContainerInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class AgentPPPFormFactory {
 
     public function __invoke(ContainerInterface $container) : AgentPPPForm
     {
         /**
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $etatService = $container->get(EtatService::class);
 

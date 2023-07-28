@@ -13,11 +13,12 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
-class DemandeExterneServiceFactory {
+class DemandeExterneServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -25,11 +26,11 @@ class DemandeExterneServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : DemandeExterneService
+    public function __invoke(ContainerInterface $container): DemandeExterneService
     {
         /**
          * @var EntityManager $entityManager
-         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
@@ -41,7 +42,7 @@ class DemandeExterneServiceFactory {
          * @var ValidationTypeService $validationTypeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
@@ -54,7 +55,7 @@ class DemandeExterneServiceFactory {
 
         $service = new DemandeExterneService();
         $service->setEntityManager($entityManager);
-        $service->setEtatService($etatService);
+        $service->setEtatTypeService($etatTypeService);
         $service->setFormationService($formationService);
         $service->setFormationInstanceService($formationInstanceService);
         $service->setFormationGroupeService($formationGroupeService);

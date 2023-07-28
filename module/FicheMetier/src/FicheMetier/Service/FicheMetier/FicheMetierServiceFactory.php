@@ -18,7 +18,7 @@ use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FicheMetierServiceFactory {
@@ -38,7 +38,7 @@ class FicheMetierServiceFactory {
          * @var CompetenceElementService $competenceElementService
          * @var ConfigurationService $configurationService
          * @var DomaineService $domaineService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var MissionPrincipaleService $missionPrincipaleService
          *
          * @var HasApplicationCollectionService $hasApplicationCollectionService

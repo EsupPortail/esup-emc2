@@ -40,7 +40,7 @@ $modules = [
     'UnicaenAide',
     'UnicaenIndicateur',
     'Unicaen\Console',
-    'Referentiel',
+    'UnicaenSynchro',
 
     'Structure',
     'EntretienProfessionnel',

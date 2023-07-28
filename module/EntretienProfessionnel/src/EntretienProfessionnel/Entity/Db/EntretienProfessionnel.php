@@ -4,25 +4,25 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use Doctrine\Common\Collections\Collection;
-use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
-use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface {
     use HistoriqueAwareTrait;
-    use HasEtatTrait;
+    use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';

@@ -14,7 +14,7 @@ use Formation\Service\FormationInstance\FormationInstanceServiceFactory;
 use Formation\View\Helper\FormationInstanceArrayViewHelper;
 use Formation\View\Helper\FormationInstanceInformationsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
-use Laminas\Mvc\Console\Router\Simple;
+use Unicaen\Console\Router\Simple;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 

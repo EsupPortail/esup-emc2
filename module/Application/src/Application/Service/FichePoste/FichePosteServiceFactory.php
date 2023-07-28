@@ -7,7 +7,7 @@ use Application\Service\SpecificitePoste\SpecificitePosteService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
@@ -18,7 +18,7 @@ class FichePosteServiceFactory {
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var SpecificitePosteService $specificitePosteService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService

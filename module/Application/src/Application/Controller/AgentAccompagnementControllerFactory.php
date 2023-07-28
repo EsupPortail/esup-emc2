@@ -8,10 +8,11 @@ use Application\Service\AgentAccompagnement\AgentAccompagnementService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 
-class AgentAccompagnementControllerFactory {
+class AgentAccompagnementControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -19,27 +20,25 @@ class AgentAccompagnementControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : AgentAccompagnementController
+    public function __invoke(ContainerInterface $container): AgentAccompagnementController
     {
         /**
          * @var AgentService $agentService
          * @var AgentAccompagnementService $agentAccompagnementService
-         * @var EtatService $etatService
-         * @var EtatTypeService $etatTypeService
-         *
          * @var AgentAccompagnementForm $agentAccompagnementForm
+         * @var EtatCategorieService $etatCategorieService
+         * @var EtatTypeService $etatTypeService
          */
         $agentService = $container->get(AgentService::class);
         $agentAccompagnementService = $container->get(AgentAccompagnementService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatCategorieService = $container->get(EtatCategorieService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
-
         $agentAccompagnementForm = $container->get('FormElementManager')->get(AgentAccompagnementForm::class);
 
         $controller = new AgentAccompagnementController();
         $controller->setAgentService($agentService);
         $controller->setAgentAccompagnementService($agentAccompagnementService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatCategorieService($etatCategorieService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setAgentAccompagnementForm($agentAccompagnementForm);
 

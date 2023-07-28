@@ -13,14 +13,14 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface, HasSourceInterface, ResourceInterface
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatsInterface, HasSourceInterface, ResourceInterface
 {
-    use HasEtatTrait;
+    use HasEtatsTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 

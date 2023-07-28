@@ -6,16 +6,21 @@ use Application\Entity\Db\Agent;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenEtat\Entity\Db\Etat;
+use RuntimeException;
+use UnicaenEtat\Entity\Db\EtatInstance;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
+class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface
+{
     use HistoriqueAwareTrait;
+    use HasEtatsTrait;
     use HasValidationsTrait;
 
-    public function getResourceId() : string
+    public function getResourceId(): string
     {
         return 'DemandeExterne';
     }
@@ -31,10 +36,9 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
     private ?DateTime $fin = null;
     private bool $priseEnCharge = true;
     private ?string $cofinanceur = null;
-    private string $modalite= "présentiel";
+    private string $modalite = "présentiel";
 
     private ?Agent $agent = null;
-    private ?Etat $etat = null;
 
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
@@ -120,7 +124,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
      * Utiliser por les macros
      * @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction)
      */
-    public function getDebutAsString() : string
+    public function getDebutAsString(): string
     {
         if ($this->getDebut() === null) return "Date de début absente";
         return $this->getDebut()->format('d/m/Y');
@@ -135,16 +139,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
      * Utiliser por les macros
      * @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction)
      **/
-    public function getFinAsString() : string
+    public function getFinAsString(): string
     {
         if ($this->getFin() === null) return "Date de fin absente";
         return $this->getFin()->format('d/m/Y');
     }
 
-    public function getPeriodeAsString() : string
+    public function getPeriodeAsString(): string
     {
         if ($this->getDebut() === $this->getFin()) return $this->getDebutAsString();
-        return $this->getDebutAsString()." au ".$this->getFinAsString();
+        return $this->getDebutAsString() . " au " . $this->getFinAsString();
     }
 
     public function setFin(?DateTime $fin): void
@@ -208,19 +212,20 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
         $this->agent = $agent;
     }
 
-    public function getEtat(): ?Etat
+    public function getEtat(): ?EtatInstance
     {
-        return $this->etat;
+        return $this->getEtatActif();
     }
 
-    public function setEtat(?Etat $etat): void
+    public function setEtat(?EtatInstance $etat): void
     {
-        $this->etat = $etat;
+        throw new RuntimeException("Passer par le service maintenant...");
+        //$this->etat = $etat;
     }
 
-    public function generateTag() : string
+    public function generateTag(): string
     {
-        return 'DemandeExterne_' . $this->getId() ;
+        return 'DemandeExterne_' . $this->getId();
     }
 
     public function getJustificationResponsable(): ?string
@@ -243,12 +248,12 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface {
         $this->justificationRefus = $justificationRefus;
     }
 
-    public function getDevis() : array
+    public function getDevis(): array
     {
         return $this->devis->toArray();
     }
 
-    public function addDevis($fichier)
+    public function addDevis($fichier): void
     {
         $this->devis->add($fichier);
     }

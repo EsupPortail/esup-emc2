@@ -5,7 +5,7 @@ namespace Application\Form\AgentTutorat;
 use Application\Service\Agent\AgentService;
 use Interop\Container\ContainerInterface;
 use Metier\Service\Metier\MetierService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class AgentTutoratHydratorFactory {
 
@@ -18,7 +18,7 @@ class AgentTutoratHydratorFactory {
         /**
          * @var AgentService $agentService
          * @var MetierService $metierService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $agentService = $container->get(AgentService::class);
         $metierService = $container->get(MetierService::class);

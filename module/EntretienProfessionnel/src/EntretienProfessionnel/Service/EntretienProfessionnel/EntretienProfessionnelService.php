@@ -4,27 +4,26 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
-
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureResponsable;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class EntretienProfessionnelService {
     use AgentServiceAwareTrait;
@@ -119,7 +118,7 @@ class EntretienProfessionnelService {
      * @param Agent|null $responsable
      * @param Structure|null $structure
      * @param Campagne|null $campagne
-     * @param Etat|null $etat
+     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null $etat
      * @return EntretienProfessionnel[]
      */
     public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?Etat $etat = null) : array

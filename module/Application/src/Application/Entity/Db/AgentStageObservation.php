@@ -7,7 +7,7 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use Structure\Entity\Db\Structure;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -24,7 +24,7 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterf
     private $structure;
     /** @var string|null */
     private $complement;
-    /** @var Etat|null */
+    /** @var UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null */
     private $etat;
 
     /**
@@ -90,18 +90,18 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterf
     }
 
     /**
-     * @return Etat|null
+     * @return UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null
      */
-    public function getEtat(): ?Etat
+    public function getEtat(): ?UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat
     {
         return $this->etat;
     }
 
     /**
-     * @param Etat|null $etat
+     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null $etat
      * @return AgentStageObservation
      */
-    public function setEtat(?Etat $etat): AgentStageObservation
+    public function setEtat(?UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat $etat): AgentStageObservation
     {
         $this->etat = $etat;
         return $this;

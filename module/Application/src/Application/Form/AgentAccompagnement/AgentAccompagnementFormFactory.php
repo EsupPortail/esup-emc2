@@ -6,11 +6,11 @@ use Application\Service\Agent\AgentService;
 use Carriere\Service\Corps\CorpsService;
 use Carriere\Service\Correspondance\CorrespondanceService;
 use Interop\Container\ContainerInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class AgentAccompagnementFormFactory {
 
@@ -26,12 +26,12 @@ class AgentAccompagnementFormFactory {
          * @var AgentService $agentService
          * @var CorrespondanceService $correspondanceService
          * @var CorpsService $corpsService
-         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          */
         $agentService = $container->get(AgentService::class);
         $correspondanceService = $container->get(CorrespondanceService::class);
         $corpsService = $container->get(CorpsService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
 
         /** @var AgentAccompagnementHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(AgentAccompagnementHydrator::class);
@@ -49,7 +49,7 @@ class AgentAccompagnementFormFactory {
         $form->setAgentService($agentService);
         $form->setCorpsService($corpsService);
         $form->setCorrespondanceService($correspondanceService);
-        $form->setEtatService($etatService);
+        $form->setEtatTypeService($etatTypeService);
         $form->setHydrator($hydrator);
         return $form;
     }

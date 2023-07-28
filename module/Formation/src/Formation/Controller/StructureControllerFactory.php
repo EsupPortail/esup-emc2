@@ -10,7 +10,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 
-class StructureControllerFactory {
+class StructureControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -18,7 +19,7 @@ class StructureControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : StructureController
+    public function __invoke(ContainerInterface $container): StructureController
     {
         /**
          * @var AgentService $agentService

@@ -6,8 +6,8 @@ use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
@@ -35,7 +35,7 @@ use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 

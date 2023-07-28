@@ -49,8 +49,6 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
@@ -102,14 +100,12 @@ class AgentController extends AbstractActionController
     use AgentAccompagnementServiceAwareTrait;
     use AgentAccompagnementFormAwareTrait;
 
-    use EtatTypeServiceAwareTrait;
-    use EtatServiceAwareTrait;
 
-    public function indexAction()  : ViewModel
+    public function indexAction(): ViewModel
     {
         $params = $this->params()->fromQuery();
         $agents = [];
-        if ($params !== null AND !empty($params)) {
+        if ($params !== null and !empty($params)) {
             $agents = $this->getAgentService()->getAgentsWithFiltre($params);
         }
 
@@ -119,7 +115,7 @@ class AgentController extends AbstractActionController
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         //Recupération de l'agent
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -133,16 +129,20 @@ class AgentController extends AbstractActionController
 
         //Récupération des supérieures et autorités
         $superieures = array_map(
-            function (AgentSuperieur $a) { return $a->getSuperieur(); },
+            function (AgentSuperieur $a) {
+                return $a->getSuperieur();
+            },
             $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
         $autorites = array_map(
-                function (AgentAutorite $a) { return $a->getAutorite(); },
-                $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
+            function (AgentAutorite $a) {
+                return $a->getAutorite();
+            },
+            $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
         $fichespostes = $this->getFichePosteService()->getFichesPostesByAgent($agent);
 
-        $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL','INTRANET_DOCUMENT');
-        $lienIntranet = ($parametreIntranet)?$parametreIntranet->getValeur():"Aucun lien vers l'intranet";
+        $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', 'INTRANET_DOCUMENT');
+        $lienIntranet = ($parametreIntranet) ? $parametreIntranet->getValeur() : "Aucun lien vers l'intranet";
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',
@@ -162,14 +162,14 @@ class AgentController extends AbstractActionController
             'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),
 
             'ppps' => $this->getAgentPPPService()->getAgentPPPsByAgent($agent),
-            'stages' =>  $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
-            'tutorats' =>  $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
+            'stages' => $this->getAgentStageObservationService()->getAgentStageObservationsByAgent($agent),
+            'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
             'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
             'intranet' => $lienIntranet,
         ]);
     }
 
-    public function afficherStatutsGradesAction() : ViewModel
+    public function afficherStatutsGradesAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -178,7 +178,7 @@ class AgentController extends AbstractActionController
         $agentGrades = $this->getAgentGradeService()->getAgentGradesByAgent($agent, false);
 
         $param = $this->getParametreService()->getParametreByCode('GLOBAL', 'CODE_UNIV');
-        $codeEtabPrincipal = ($param)?$param->getValeur():null;
+        $codeEtabPrincipal = ($param) ? $param->getValeur() : null;
 
         return new ViewModel([
             'title' => 'Listing de tous les statuts et grades de ' . $agent->getDenomination(),
@@ -192,7 +192,7 @@ class AgentController extends AbstractActionController
 
     /** Gestion des ACQUIS ***************************************************************************************/
 
-    public function ajouterFormationAction()  : ViewModel
+    public function ajouterFormationAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $formation = $this->getFormationService()->getRequestedFormation($this);
@@ -227,7 +227,7 @@ class AgentController extends AbstractActionController
 
     /** Validation élement associée à l'agent *************************************************************************/
 
-    public function validerElementAction() : ViewModel
+    public function validerElementAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $entityId = $this->params()->fromRoute('id');
@@ -301,7 +301,7 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function revoquerElementAction() : Response
+    public function revoquerElementAction(): Response
     {
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
@@ -312,17 +312,17 @@ class AgentController extends AbstractActionController
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.");
+            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.", 0, $e);
         }
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour !== null) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('home', [],[], true);
+        return $this->redirect()->toRoute('home', [], [], true);
     }
 
     /** Fichier associé à l'agent *************************************************************************************/
 
-    public function uploadFichierAction()
+    public function uploadFichierAction(): ViewModel|Response
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -356,7 +356,7 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
-    public function uploadFichePostePdfAction()
+    public function uploadFichePostePdfAction(): ViewModel|Response
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         $nature = $this->getNatureService()->getNatureByCode('FICHE_POSTE');
@@ -392,19 +392,19 @@ class AgentController extends AbstractActionController
 
     /** Vérification lien Utilisateur <=> Agent **/
 
-    public function verifierLienAction() : ViewModel
+    public function verifierLienAction(): ViewModel
     {
         $user = $this->getUserService()->getRequestedUser($this);
         if ($user === null) $user = $this->getUserService()->getConnectedUser();
 
         $agentByUser = $this->getAgentService()->getAgentByUser($user);
         $agentByLogin = $this->getAgentService()->getAgentByLogin($user->getUsername());
-        if ($agentByUser === null AND $agentByLogin === null) {
+        if ($agentByUser === null and $agentByLogin === null) {
             throw new RuntimeException(
-            "
+                "
                 Aucun agent de trouvé depuis l'utilisateur·trice connecté·e
-                [id:".$user->getId()." username:".$user->getUsername()."] 
-            ",0);
+                [id:" . $user->getId() . " username:" . $user->getUsername() . "] 
+            ", 0);
         }
 
         return new ViewModel([
@@ -416,7 +416,7 @@ class AgentController extends AbstractActionController
 
     /** Recherche d'agent  ********************************************************************************************/
 
-    public function rechercherLargeAction() : JsonModel
+    public function rechercherLargeAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsLargeByTerm($term);
@@ -426,7 +426,7 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherAction() : JsonModel
+    public function rechercherAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $agents = $this->getAgentService()->getAgentsByTerm($term);
@@ -436,7 +436,7 @@ class AgentController extends AbstractActionController
         exit;
     }
 
-    public function rechercherWithStructureMereAction() : JsonModel
+    public function rechercherWithStructureMereAction(): JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 

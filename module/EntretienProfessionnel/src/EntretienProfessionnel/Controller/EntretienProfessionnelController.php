@@ -23,21 +23,21 @@ use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
-use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenMail\Service\Mail\MailServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenPdf\Exporter\PdfExporter;
-use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenMail\Service\Mail\MailServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenPdf\Exporter\PdfExporter;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 

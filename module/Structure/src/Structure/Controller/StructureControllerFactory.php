@@ -20,9 +20,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use Referentiel\Service\Synchronisation\SynchronisationService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
 
@@ -40,7 +39,7 @@ class StructureControllerFactory {
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var EntretienProfessionnelService $entretienService
          * @var CampagneService $campagneService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var ParametreService $parametreService

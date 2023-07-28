@@ -5,8 +5,9 @@ namespace Formation\Service\DemandeExterne;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateTime;
-use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
@@ -26,12 +27,12 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAw
 use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Entity\Db\ValidationType;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -39,8 +40,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class DemandeExterneService {
     use EntityManagerAwareTrait;
-
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -112,9 +112,12 @@ class DemandeExterneService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
-            ->join('demande.agent', 'agent')->addSelect('agent')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+                ->join('demande.agent', 'agent')->addSelect('agent');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".DemandeExterne::class."]", 0 ,$e);
+        }
         return $qb;
     }
 
@@ -364,9 +367,9 @@ class DemandeExterneService {
 
         //session
         $session = new FormationInstance();
-        $session->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
+        $session->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
         $session->setFormation($formation);
-        $session->setAutoInscription(false);
+        $session->setAutoInscription();
         $session->setNbPlacePrincipale(1);
         $session->setNbPlaceComplementaire(0);
         $session->setType("stage externe");
@@ -377,7 +380,7 @@ class DemandeExterneService {
         $inscription = new FormationInstanceInscrit();
         $inscription->setAgent($demande->getAgent());
         $inscription->setInstance($session);
-        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
+        $inscription->setEtat($this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::ETAT_VALIDER_DRH));
         $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
         $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationInstanceInscritService()->create($inscription);
@@ -429,7 +432,7 @@ class DemandeExterneService {
 
     /**
      * @param Agent[] $agents
-     * @param Etat[] $etats
+     * @param EtatType[] $etats
      * @param int|null $annee
      * @return DemandeExterne[]
      */
@@ -439,15 +442,18 @@ class DemandeExterneService {
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
         $fin   = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
 
-        $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
-            ->andWhere('demande.histoDestruction IS NULL')
-            ->join('demande.etat', 'etat')->addSelect('etat')
-            ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
-            ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
-            ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
-            ->join('demande.agent', 'agent')->addSelect('agent')
-            ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+                ->andWhere('demande.histoDestruction IS NULL')
+                ->join('demande.etat', 'etat')->addSelect('etat')
+                ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
+                ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
+                ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
+                ->join('demande.agent', 'agent')->addSelect('agent')
+                ->andWhere('agent in (:agents)')->setParameter('agents', $agents);
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".DemandeExterne::class."]", 0 ,$e);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;

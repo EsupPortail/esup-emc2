@@ -32,31 +32,20 @@ class StructureAssertion extends AbstractAssertion {
 
         switch($privilege) {
             case StructurePrivileges::STRUCTURE_AFFICHER :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                    case AppRoleProvider::OBSERVATEUR:
-                    case AppRoleProvider::DRH:
-                        return true;
-                    case RoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    default:
-                        return false;
-                }
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
+                    RoleProvider::RESPONSABLE => $isResponsable,
+                    default => false,
+                };
             case StructurePrivileges::STRUCTURE_DESCRIPTION:
             case StructurePrivileges::STRUCTURE_GESTIONNAIRE:
             case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
             case StructurePrivileges::STRUCTURE_AGENT_FORCE:
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_FONC:
-                    case AppRoleProvider::ADMIN_TECH:
-                    case AppRoleProvider::DRH:
-                        return true;
-                    case RoleProvider::RESPONSABLE:
-                        return $isResponsable;
-                    default:
-                        return false;
-                }
+                return match ($role->getRoleId()) {
+                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
+                    RoleProvider::RESPONSABLE => $isResponsable,
+                    default => false,
+                };
         }
         return true;
     }

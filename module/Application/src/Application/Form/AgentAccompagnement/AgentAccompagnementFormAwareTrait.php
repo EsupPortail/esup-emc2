@@ -4,24 +4,15 @@ namespace Application\Form\AgentAccompagnement;
 
 trait AgentAccompagnementFormAwareTrait {
 
-    /** @var AgentAccompagnementForm */
-    private $agentAccompagnementForm;
+    private AgentAccompagnementForm $agentAccompagnementForm;
 
-    /**
-     * @return AgentAccompagnementForm
-     */
     public function getAgentAccompagnementForm(): AgentAccompagnementForm
     {
         return $this->agentAccompagnementForm;
     }
 
-    /**
-     * @param AgentAccompagnementForm $agentAccompagnementForm
-     * @return AgentAccompagnementForm
-     */
-    public function setAgentAccompagnementForm(AgentAccompagnementForm $agentAccompagnementForm): AgentAccompagnementForm
+    public function setAgentAccompagnementForm(AgentAccompagnementForm $agentAccompagnementForm): void
     {
         $this->agentAccompagnementForm = $agentAccompagnementForm;
-        return $this->agentAccompagnementForm;
     }
 }

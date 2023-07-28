@@ -5,10 +5,10 @@ namespace Application\Form\AgentStageObservation;
 use Application\Entity\Db\AgentStageObservation;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use DateTime;
+use Laminas\Hydrator\HydratorInterface;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use Laminas\Hydrator\HydratorInterface;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class AgentStageObservationHydrator implements HydratorInterface {
     use StructureServiceAwareTrait;

@@ -4,25 +4,16 @@ namespace Formation\Service\EnqueteQuestion;
 
 trait EnqueteQuestionServiceAwareTrait
 {
-    /** @var EnqueteQuestionService */
-    private $enqueteQuestionService;
+    private EnqueteQuestionService $enqueteQuestionService;
 
-    /**
-     * @return EnqueteQuestionService
-     */
     public function getEnqueteQuestionService(): EnqueteQuestionService
     {
         return $this->enqueteQuestionService;
     }
 
-    /**
-     * @param EnqueteQuestionService $enqueteQuestionService
-     * @return EnqueteQuestionService
-     */
-    public function setEnqueteQuestionService(EnqueteQuestionService $enqueteQuestionService): EnqueteQuestionService
+    public function setEnqueteQuestionService(EnqueteQuestionService $enqueteQuestionService): void
     {
         $this->enqueteQuestionService = $enqueteQuestionService;
-        return $this->enqueteQuestionService;
     }
 
 }

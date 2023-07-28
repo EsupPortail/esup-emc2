@@ -4,7 +4,6 @@ namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\DomaineRepartition;
-use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -16,21 +15,22 @@ use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\Domaine;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
     use EntityManagerAwareTrait;

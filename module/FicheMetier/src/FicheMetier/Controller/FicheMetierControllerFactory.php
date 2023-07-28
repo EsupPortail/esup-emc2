@@ -16,8 +16,8 @@ use Metier\Service\Metier\MetierService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class FicheMetierControllerFactory {
 
@@ -31,7 +31,7 @@ class FicheMetierControllerFactory {
     {
         /**
          * @var DomaineService $domaineService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
@@ -50,7 +50,7 @@ class FicheMetierControllerFactory {
          * @var RaisonForm $raisonForm
          * @var SelectionApplicationForm $selectionnerApplicationForm
          * @var SelectionCompetenceForm $selectionnerCompetenceForm
-         * @var SelectionEtatForm $selectionnerEtatForm
+         * @var UnicaenEtat\src\UnicaenEtat\Form\SelectionEtat\SelectionEtatForm $selectionnerEtatForm
          * @var SelectionnerMetierForm $selectionnerMetierForm
          */
         $importationForm = $container->get('FormElementManager')->get(FicheMetierImportationForm::class);

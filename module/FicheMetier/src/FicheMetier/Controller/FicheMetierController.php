@@ -20,8 +20,8 @@ use Laminas\View\Model\ViewModel;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
-use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 

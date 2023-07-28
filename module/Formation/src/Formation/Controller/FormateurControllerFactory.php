@@ -18,7 +18,7 @@ class FormateurControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormateurController
+    public function __invoke(ContainerInterface $container): FormateurController
     {
         /**
          * @var FormationInstanceService $formationInstanceService

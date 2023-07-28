@@ -19,7 +19,7 @@ class FormationInstanceFraisController extends AbstractActionController
     use FormationInstanceFraisFormAwareTrait;
     use SeanceServiceAwareTrait;
 
-    public function renseignerFraisAction()
+    public function renseignerFraisAction(): ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         if ($inscrit->getFrais() === null) {

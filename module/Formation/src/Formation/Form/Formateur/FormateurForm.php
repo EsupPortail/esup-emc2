@@ -3,7 +3,6 @@
 namespace Formation\Form\Formateur;
 
 use Formation\Entity\Db\Formateur;
-use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;

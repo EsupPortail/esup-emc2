@@ -17,7 +17,7 @@ class InscriptionHydrator implements HydratorInterface
     public function extract(object $object): array
     {
         $description = null;
-        switch ($object->getEtat()->getCode()) {
+        switch ($object->getEtat()->getType()->getCode()) {
             case InscriptionEtats::ETAT_DEMANDE :
                 $description = $object->getJustificationAgent();
                 break;
@@ -42,11 +42,11 @@ class InscriptionHydrator implements HydratorInterface
      * @param FormationInstanceInscrit|DemandeExterne $object
      * @return FormationInstanceInscrit
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) AND trim($data['HasDescription']['description']) !== '')?trim($data['HasDescription']['description']):null;
 
-        switch ($object->getEtat()->getCode()) {
+        switch ($object->getEtat()->getType()->getCode()) {
             case InscriptionEtats::ETAT_DEMANDE :
                 $object->setJustificationAgent($description);
                 break;

@@ -16,7 +16,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
@@ -41,7 +41,7 @@ class EntretienProfessionnelControllerFactory {
          * @var RenduService $renduService
          * @var UserService $userService
          * @var EntretienProfessionnelService $entretienProfesionnelService
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          * @var FichePosteService $fichePosteService
          * @var MailService $mailService
          * @var NotificationService $notificationService

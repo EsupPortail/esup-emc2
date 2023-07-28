@@ -18,7 +18,7 @@ class PresenceController extends AbstractActionController
     use SeanceServiceAwareTrait;
 
 
-    public function renseignerPresencesAction() : ViewModel
+    public function renseignerPresencesAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $presences = $this->getPresenceService()->getPresenceByInstance($instance);
@@ -34,7 +34,7 @@ class PresenceController extends AbstractActionController
         ]);
     }
 
-    public function togglePresenceAction() : ViewModel
+    public function togglePresenceAction(): ViewModel
     {
         $journeeId = $this->params()->fromRoute('journee');
         $journee = $this->getSeanceService()->getSeance($journeeId);
@@ -63,7 +63,7 @@ class PresenceController extends AbstractActionController
         return $vm;
     }
 
-    public function togglePresencesAction() : ViewModel
+    public function togglePresencesAction(): ViewModel
     {
         $mode = $this->params()->fromRoute('mode');
         $inscritId = $this->params()->fromRoute('inscrit');
@@ -96,7 +96,7 @@ class PresenceController extends AbstractActionController
         return $vm;
     }
 
-    public function toggleToutesPresencesAction() : ViewModel
+    public function toggleToutesPresencesAction(): ViewModel
     {
         $mode = $this->params()->fromRoute('mode');
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);

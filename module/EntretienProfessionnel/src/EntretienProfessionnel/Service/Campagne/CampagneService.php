@@ -6,18 +6,18 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
@@ -211,7 +211,7 @@ class CampagneService {
 
     /**
      * @param Campagne $campagne
-     * @param Etat[] $etats
+     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat[] $etats
      * @return EntretienProfessionnel[]
      */
     public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array

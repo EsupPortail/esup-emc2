@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
@@ -11,19 +12,18 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMetierInterface,
+class FicheMetier implements HistoriqueAwareInterface, UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatInterface, HasMetierInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
-    use HasEtatTrait;
+    use UnicaenEtat\src\UnicaenEtat\Entity\Db\HasEtatTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 

@@ -5,7 +5,7 @@ namespace Application\Form\AgentPPP;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService;
 
 class AgentPPPHydratorFactory {
 
@@ -18,7 +18,7 @@ class AgentPPPHydratorFactory {
     public function __invoke(ContainerInterface $container) : AgentPPPHydrator
     {
         /**
-         * @var EtatService $etatService
+         * @var UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatService $etatService
          */
         $etatService = $container->get(EtatService::class);
 

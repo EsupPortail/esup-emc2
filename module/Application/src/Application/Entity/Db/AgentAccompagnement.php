@@ -6,7 +6,7 @@ use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Carriere\Entity\Db\Correspondance;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -28,7 +28,7 @@ class AgentAccompagnement implements HasPeriodeInterface, HistoriqueAwareInterfa
     private $complement;
     /** @var bool|null */
     private $resultat;
-    /** @var Etat|null */
+    /** @var UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null */
     private $etat;
 
     /**
@@ -158,18 +158,18 @@ class AgentAccompagnement implements HasPeriodeInterface, HistoriqueAwareInterfa
     }
 
     /**
-     * @return Etat|null
+     * @return UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null
      */
-    public function getEtat(): ?Etat
+    public function getEtat(): ?UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat
     {
         return $this->etat;
     }
 
     /**
-     * @param Etat|null $etat
+     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null $etat
      * @return AgentAccompagnement
      */
-    public function setEtat(?Etat $etat): AgentAccompagnement
+    public function setEtat(?UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat $etat): AgentAccompagnement
     {
         $this->etat = $etat;
         return $this;

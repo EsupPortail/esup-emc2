@@ -2,10 +2,10 @@
 
 namespace Formation\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use Formation\Entity\Db\Formation;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 
@@ -17,7 +17,7 @@ class FormationInformationsViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(Formation $formation, $mode = 'liste', $options = [])
+    public function __invoke(Formation $formation, string $mode = 'liste', array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

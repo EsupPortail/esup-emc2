@@ -2,7 +2,6 @@
 
 namespace Formation\Service\PlanDeFormation;
 
-use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;

@@ -36,14 +36,13 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
-use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
-class AgentControllerFactory {
+class AgentControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -51,7 +50,7 @@ class AgentControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : AgentController
+    public function __invoke(ContainerInterface $container): AgentController
     {
         /**
          * @var ApplicationElementService $applicationElementService
@@ -65,7 +64,6 @@ class AgentControllerFactory {
          * @var ParcoursDeFormationService $parcoursService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
-
          * @var NatureService $natureService
          * @var FichierService $fichierService
          * @var ApplicationService $applicationService
@@ -184,16 +182,6 @@ class AgentControllerFactory {
         $controller->setAgentStageObservationService($agentStageObservationService);
         $controller->setAgentTutoratService($agentTutoratService);
         $controller->setAgentAccompagnementService($agentAccompagnementService);
-
-        /**
-         * @var EtatService $etatService
-         * @var EtatTypeService $etatTypeService
-         */
-        $etatService = $container->get(EtatService::class);
-        $etatTypeService = $container->get(EtatTypeService::class);
-
-        $controller->setEtatService($etatService);
-        $controller->setEtatTypeService($etatTypeService);
 
         return $controller;
     }

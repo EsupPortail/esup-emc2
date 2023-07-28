@@ -5,25 +5,16 @@ namespace Formation\Form\FormationInstance;
 trait FormationInstanceFormAwareTrait
 {
 
-    /** @var FormationInstanceForm */
-    private $formationInstanceForm;
+    private FormationInstanceForm $formationInstanceForm;
 
-    /**
-     * @return FormationInstanceForm
-     */
-    public function getFormationInstanceForm()
+    public function getFormationInstanceForm(): FormationInstanceForm
     {
         return $this->formationInstanceForm;
     }
 
-    /**
-     * @param FormationInstanceForm $formationInstanceForm
-     * @return FormationInstanceFormAwareTrait
-     */
-    public function setFormationInstanceForm(FormationInstanceForm $formationInstanceForm)
+    public function setFormationInstanceForm(FormationInstanceForm $formationInstanceForm): void
     {
         $this->formationInstanceForm = $formationInstanceForm;
-        return $this;
     }
 
 }

@@ -17,10 +17,11 @@ use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\View\Model\ViewModel;
+use UnicaenApp\Service\EntityManagerAwareTrait;
 
-class EnqueteQuestionController extends AbstractActionController {
+class EnqueteQuestionController extends AbstractActionController
+{
     use EntityManagerAwareTrait;
     use EnqueteCategorieServiceAwareTrait;
     use EnqueteQuestionServiceAwareTrait;
@@ -33,22 +34,32 @@ class EnqueteQuestionController extends AbstractActionController {
 
     /** ENQUETE *******************************************************************************************************/
 
-    public function afficherResultatsAction() : ViewModel
+    public function afficherResultatsAction(): ViewModel
     {
         $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
-        $questions = array_filter($questions, function (EnqueteQuestion $a) { return $a->estNonHistorise();});
-        usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() > $b->getOrdre();});
+        $questions = array_filter($questions, function (EnqueteQuestion $a) {
+            return $a->estNonHistorise();
+        });
+        usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) {
+            return $a->getOrdre() > $b->getOrdre();
+        });
 
         $reponses = $this->getEntityManager()->getRepository(EnqueteReponse::class)->findAll();
 
         //todo exploiter le filtre pour réduire
-        if ($session) $reponses = array_filter($reponses, function (EnqueteReponse $r) use ($session) { return $r->getInscription()->getInstance() === $session;});
+        if ($session) $reponses = array_filter($reponses, function (EnqueteReponse $r) use ($session) {
+            return $r->getInscription()->getInstance() === $session;
+        });
         //todo fin
 
-        $reponses = array_filter($reponses, function (EnqueteReponse $a) { return $a->estNonHistorise();});
-        usort($reponses, function (EnqueteReponse $a, EnqueteReponse $b) { return $a->getQuestion()->getId() > $b->getQuestion()->getId();});
+        $reponses = array_filter($reponses, function (EnqueteReponse $a) {
+            return $a->estNonHistorise();
+        });
+        usort($reponses, function (EnqueteReponse $a, EnqueteReponse $b) {
+            return $a->getQuestion()->getId() > $b->getQuestion()->getId();
+        });
 
         /** PREP HISTOGRAMME $histogramme */
         $histogramme = [];
@@ -86,7 +97,7 @@ class EnqueteQuestionController extends AbstractActionController {
 
     /** QUESTIONS *****************************************************************************************************/
 
-    public function afficherQuestionsAction() : ViewModel
+    public function afficherQuestionsAction(): ViewModel
     {
         $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
         $categories = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->findAll();
@@ -97,7 +108,7 @@ class EnqueteQuestionController extends AbstractActionController {
         ]);
     }
 
-    public function ajouterCategorieAction() : ViewModel
+    public function ajouterCategorieAction(): ViewModel
     {
         $question = new EnqueteCategorie();
 
@@ -114,7 +125,7 @@ class EnqueteQuestionController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Ajout d'une catégorie",
             'form' => $form,
         ]);
@@ -122,7 +133,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierCategorieAction() : ViewModel
+    public function modifierCategorieAction(): ViewModel
     {
         $categorie = $this->getEnqueteCategorieService()->getRequestedEnqueteCategorie($this);
 
@@ -139,7 +150,7 @@ class EnqueteQuestionController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Modification de la catégorie",
             'form' => $form,
         ]);
@@ -147,7 +158,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserCategorieAction() : Response
+    public function historiserCategorieAction(): Response
     {
         $categorie = $this->getEnqueteCategorieService()->getRequestedEnqueteCategorie($this);
         $this->getEnqueteCategorieService()->historise($categorie);
@@ -157,7 +168,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $this->redirect()->toRoute('formation/enquete/question', [], [], true);
     }
 
-    public function restaurerCategorieAction() : Response
+    public function restaurerCategorieAction(): Response
     {
         $categorie = $this->getEnqueteCategorieService()->getRequestedEnqueteCategorie($this);
         $this->getEnqueteCategorieService()->restore($categorie);
@@ -191,7 +202,8 @@ class EnqueteQuestionController extends AbstractActionController {
         return $vm;
     }
 
-    public function ajouterQuestionAction() : ViewModel {
+    public function ajouterQuestionAction(): ViewModel
+    {
 
         $question = new EnqueteQuestion();
 
@@ -208,7 +220,7 @@ class EnqueteQuestionController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Ajout d'une question",
             'form' => $form,
         ]);
@@ -216,7 +228,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierQuestionAction() : ViewModel
+    public function modifierQuestionAction(): ViewModel
     {
         $question = $this->getEnqueteQuestionService()->getRequestedEnqueteQuestion($this);
 
@@ -233,7 +245,7 @@ class EnqueteQuestionController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Modification de la question",
             'form' => $form,
         ]);
@@ -241,7 +253,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserQuestionAction() : Response
+    public function historiserQuestionAction(): Response
     {
         $question = $this->getEnqueteQuestionService()->getRequestedEnqueteQuestion($this);
         $this->getEnqueteQuestionService()->historise($question);
@@ -251,7 +263,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $this->redirect()->toRoute('formation/enquete/question', [], [], true);
     }
 
-    public function restaurerQuestionAction() : Response
+    public function restaurerQuestionAction(): Response
     {
         $question = $this->getEnqueteQuestionService()->getRequestedEnqueteQuestion($this);
         $this->getEnqueteQuestionService()->restore($question);
@@ -261,7 +273,7 @@ class EnqueteQuestionController extends AbstractActionController {
         return $this->redirect()->toRoute('formation/enquete/question', [], [], true);
     }
 
-    public function supprimerQuestionAction() : ViewModel
+    public function supprimerQuestionAction(): ViewModel
     {
         $question = $this->getEnqueteQuestionService()->getRequestedEnqueteQuestion($this);
 
@@ -286,19 +298,25 @@ class EnqueteQuestionController extends AbstractActionController {
 
     /** REPONSES ******************************************************************************************************/
 
-    public function repondreQuestionsAction() : ViewModel
+    public function repondreQuestionsAction(): ViewModel
     {
         $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
         /** @var EnqueteQuestion[] $questions */
         $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
-        $questions = array_filter($questions, function (EnqueteQuestion $a) { return $a->estNonHistorise();});
+        $questions = array_filter($questions, function (EnqueteQuestion $a) {
+            return $a->estNonHistorise();
+        });
         $dictionnaireQuestion = [];
         foreach ($questions as $question) $dictionnaireQuestion[$question->getId()] = $question;
-        usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) {
+            return $a->getOrdre() > $b->getOrdre();
+        });
 
         $reponses = $this->getEnqueteReponseService()->findEnqueteReponseByInscription($inscription);
-        $reponses = array_filter($reponses, function (EnqueteReponse $a) { return $a->estNonHistorise();});
+        $reponses = array_filter($reponses, function (EnqueteReponse $a) {
+            return $a->estNonHistorise();
+        });
         $dictionnaireReponse = [];
         foreach ($reponses as $reponse) $dictionnaireReponse[$reponse->getQuestion()->getId()] = $reponse;
         $enquete = new ArrayCollection();
@@ -318,7 +336,7 @@ class EnqueteQuestionController extends AbstractActionController {
         $form->bind($enquete);
 
         $request = $this->getRequest();
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
@@ -340,7 +358,7 @@ class EnqueteQuestionController extends AbstractActionController {
         ]);
     }
 
-    public function validerQuestionsAction() : ViewModel
+    public function validerQuestionsAction(): ViewModel
     {
         $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 

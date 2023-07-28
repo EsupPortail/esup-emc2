@@ -5,25 +5,16 @@ namespace Formation\Service\FormationInstanceInscrit;
 trait FormationInstanceInscritServiceAwareTrait
 {
 
-    /** @var FormationInstanceInscritService */
-    private $formationInstanceInscritService;
+    private FormationInstanceInscritService $formationInstanceInscritService;
 
-    /**
-     * @return FormationInstanceInscritService
-     */
-    public function getFormationInstanceInscritService()
+    public function getFormationInstanceInscritService(): FormationInstanceInscritService
     {
         return $this->formationInstanceInscritService;
     }
 
-    /**
-     * @param FormationInstanceInscritService $formationInstanceInscritService
-     * @return FormationInstanceInscritService
-     */
-    public function setFormationInstanceInscritService(FormationInstanceInscritService $formationInstanceInscritService)
+    public function setFormationInstanceInscritService(FormationInstanceInscritService $formationInstanceInscritService): void
     {
         $this->formationInstanceInscritService = $formationInstanceInscritService;
-        return $this->formationInstanceInscritService;
     }
 
 

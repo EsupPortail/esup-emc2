@@ -5,8 +5,8 @@ namespace Application\Form\AgentPPP;
 use Application\Entity\Db\AgentPPP;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use DateTime;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
+use UnicaenEtat\src\UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class AgentPPPHydrator implements HydratorInterface {
     use EtatServiceAwareTrait;

@@ -2,14 +2,14 @@
 
 namespace Formation\View\Helper;
 
-use Application\View\Renderer\PhpRenderer;
 use Formation\Entity\Db\FormationInstance;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
+use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 /**
- * le tableau d'options peut recevoir un ensemble de booléen pour les droits afin de ne pas recalculer ou transmettre des valeurs différentes.
+ * Le tableau d'options peut recevoir un ensemble de booléen pour les droits afin de ne pas recalculer ou transmettre des valeurs différentes.
  * $options['droits']['afficher' => Boolean, 'historiser' => Boolean, 'supprimer' => Boolean]
  */
 
@@ -20,7 +20,7 @@ class FormationInstanceArrayViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $instances, array $options = [])
+    public function __invoke(array $instances, array $options = []): string|Partial
     {
         /** @var PhpRenderer $view */
         $view = $this->getView();

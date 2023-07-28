@@ -6,13 +6,12 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
+use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use Laminas\View\Renderer\PhpRenderer;
 
 class FormationInstanceDocumentControllerFactory
 {
@@ -23,7 +22,7 @@ class FormationInstanceDocumentControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceDocumentController
+    public function __invoke(ContainerInterface $container): FormationInstanceDocumentController
     {
         /**
          * @var AgentService $agentService
