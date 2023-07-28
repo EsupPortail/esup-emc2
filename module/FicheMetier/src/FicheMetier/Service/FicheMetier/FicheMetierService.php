@@ -73,7 +73,7 @@ class FicheMetierService
             $this->getEntityManager()->persist($fiche);
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -87,7 +87,7 @@ class FicheMetierService
         try {
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -102,7 +102,7 @@ class FicheMetierService
             $fiche->historiser();
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -117,7 +117,7 @@ class FicheMetierService
             $fiche->dehistoriser();
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -132,7 +132,7 @@ class FicheMetierService
             $this->getEntityManager()->remove($fiche);
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -225,7 +225,7 @@ class FicheMetierService
     public function getFichesMetiersValides(string $order = 'id'): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('etat.code = :ucode')
+            ->andWhere('etype.code = :ucode')
             ->setParameter('ucode', FicheMetierEtats::ETAT_VALIDE)
             ->orderBy('ficheMetier.', $order);
 

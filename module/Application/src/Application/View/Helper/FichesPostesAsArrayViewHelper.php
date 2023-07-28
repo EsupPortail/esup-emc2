@@ -2,9 +2,11 @@
 
 namespace Application\View\Helper;
 
+use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\FichePoste;
 
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\View\Helper\Partial;
@@ -15,6 +17,7 @@ use Laminas\View\Resolver\TemplatePathStack;
 
 class FichesPostesAsArrayViewHelper extends AbstractHelper
 {
+    use EtatTypeServiceAwareTrait;
     use UserServiceAwareTrait;
 
     /**
@@ -47,6 +50,9 @@ class FichesPostesAsArrayViewHelper extends AbstractHelper
         if (isset($options['displays']) AND isset($options['displays']['etat'])) $displays['etat'] = ($options['displays']['etat'] !== false);
         if (isset($options['displays']) AND isset($options['displays']['validite'])) $displays['validite'] = ($options['displays']['validite'] !== false);
 
-        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'structure' => $structure, 'displays' => $displays, 'options' => $options]);
+        $etats = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FichePosteEtats::TYPE);
+
+
+        return $view->partial('fiches-postes-as-table', ['fiches' => $fiches, 'structure' => $structure, 'displays' => $displays, 'options' => $options, 'etats' => $etats]);
     }
 }
