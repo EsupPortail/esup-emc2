@@ -17,6 +17,8 @@ use FicheMetier\Form\SelectionFicheMetier\SelectionFicheMetierFormFactory;
 use FicheMetier\Provider\Privilege\FicheMetierPrivileges;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceFactory;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -360,6 +362,7 @@ return [
     'service_manager' => [
         'factories' => [
             FicheMetierService::class => FicheMetierServiceFactory::class,
+            FicheMetierMissionService::class => FicheMetierMissionServiceFactory::class,
         ],
     ],
     'controllers'     => [

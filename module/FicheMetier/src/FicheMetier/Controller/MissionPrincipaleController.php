@@ -10,6 +10,7 @@ use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
 use Element\Form\SelectionCompetence\SelectionCompetenceFormAwareTrait;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -19,6 +20,7 @@ use Metier\Form\SelectionnerDomaines\SelectionnerDomainesFormAwareTrait;
 
 class MissionPrincipaleController extends AbstractActionController
 {
+    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NiveauEnveloppeServiceAwareTrait;
 
@@ -241,7 +243,7 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function modifierActiviteAction() : ViewModel
     {
-        $activite = $this->getMissionPrincipaleService()->getRequestedActivite($this);
+        $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
         $form = $this->getModifierLibelleForm();
         $form->setAttribute('action', $this->url()->fromRoute('mission-principale/modifier-activite', ['mission-principale' => $activite->getId()], [], true));
         $form->bind($activite);
@@ -251,7 +253,7 @@ class MissionPrincipaleController extends AbstractActionController
             $data  =$request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getMissionPrincipaleService()->modifierActivite($activite);
+                $this->getMissionActiviteService()->update($activite);
                 exit();
             }
         }
@@ -266,9 +268,9 @@ class MissionPrincipaleController extends AbstractActionController
 
     public function supprimerActiviteAction() : Response
     {
-        $activite = $this->getMissionPrincipaleService()->getRequestedActivite($this);
+        $activite = $this->getMissionActiviteService()->getRequestedActivite($this);
         $mission = $activite->getMission();
-        $this->getMissionPrincipaleService()->supprimerActivite($activite);
+        $this->getMissionActiviteService()->delete($activite);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);

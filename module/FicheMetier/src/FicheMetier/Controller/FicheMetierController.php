@@ -176,7 +176,7 @@ class FicheMetierController extends AbstractActionController {
 
     /** AUTRE MANIPULATION ********************************************************************************************/
 
-    public function dupliquerAction()
+    public function dupliquerAction(): ViewModel|Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -194,7 +194,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function importerAction()
+    public function importerAction(): ViewModel|Response
     {
         $form = $this->getFicheMetierImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/importer', ['mode' => 'preview', 'path' => null], [], true));

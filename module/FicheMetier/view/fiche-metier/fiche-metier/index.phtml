@@ -70,7 +70,7 @@ $this->headTitle('Index des fiches métiers');
                 <span title='<?php echo $fiche->getMetier()->generateTooltip(); ?>'
                       data-bs-toggle='tooltip' data-bs-html='true'
                 >
-                    <?php echo $fiche->getMetier()->getLibelle(true); ?>
+                    <?php echo $fiche->getMetier()->getLibelle(); ?>
                 </span>
                     <?php if ($fiche->hasExpertise() === true) : ?>
                         <span class="badge" style="background: lightskyblue;">Expertise</span>
@@ -176,7 +176,7 @@ $this->headTitle('Index des fiches métiers');
     </table>
 
     <script>
-        $(document).ready(function () {
+        $(function() {
             $('table#fiches').DataTable({
                 "paging": false
             });
@@ -188,7 +188,7 @@ $this->headTitle('Index des fiches métiers');
 
 
 <script>
-    $(document).ready(function () {
+    $(function() {
         $('#datatable').DataTable({
             language: {
                 url: '/localisation/fr_FR.json'

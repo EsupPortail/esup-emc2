@@ -37,6 +37,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function __construct()
     {
         $this->activites = new ArrayCollection();
+        $this->etats = new ArrayCollection();
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
@@ -145,7 +146,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
         $competence = $competences[0];
         $competenceType = "";
-        switch($competence->getType()->getId()) {
+        switch($competence->getCompetence()->getType()->getId()) {
             case 1 : $competenceType = "Compétences comportementales"; break;
             case 2 : $competenceType = "Compétences opérationnelles"; break;
             case 3 : $competenceType = "Connaissances"; break;

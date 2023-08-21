@@ -6,6 +6,8 @@ use Application\View\Helper\ActiviteViewHelper;
 use FicheMetier\Controller\MissionPrincipaleController;
 use FicheMetier\Controller\MissionPrincipaleControllerFactory;
 use FicheMetier\Provider\Privilege\MissionPrincipalePrivileges;
+use FicheMetier\Service\MissionActivite\MissionActiviteService;
+use FicheMetier\Service\MissionActivite\MissionActiviteServiceFactory;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceFactory;
 use Laminas\Router\Http\Literal;
@@ -296,6 +298,7 @@ return [
     'service_manager' => [
         'factories' => [
             MissionPrincipaleService::class => MissionPrincipaleServiceFactory::class,
+            MissionActiviteService::class => MissionActiviteServiceFactory::class,
         ],
     ],
     'controllers'     => [

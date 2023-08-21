@@ -87,7 +87,7 @@ class Mission implements HistoriqueAwareInterface,
         $result = [];
         foreach ($this->listeFicheMetierMission as $ficheMetierMission) {
             $result[] = $ficheMetierMission;
-        };
+        }
         return $result;
     }
 

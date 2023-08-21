@@ -10,13 +10,13 @@ use Laminas\Form\Form;
 
 ?>
 
-<?php if ($info) : ?>
+<?php if (isset($info)) : ?>
     <div class="alert alert-info">
         <?php echo $info; ?>
     </div>
 <?php endif; ?>
 
-<?php if ($warning) : ?>
+<?php if (isset($warning)) : ?>
     <div class="alert alert-warning">
         <?php echo $warning; ?>
     </div>
