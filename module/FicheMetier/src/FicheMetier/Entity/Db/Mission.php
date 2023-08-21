@@ -10,7 +10,6 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use FichePoste\Entity\Db\MissionAdditionnelle;
-use Metier\Entity\Db\Domaine;
 use Metier\Entity\HasDomainesInterface;
 use Metier\Entity\HasDomainesTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -82,7 +81,7 @@ class Mission implements HistoriqueAwareInterface,
     /** Liste des éléments possèdant la mission */
 
     /** @return FicheMetierMission[] */
-    public function getListeFicheMetier(bool $historise = false) : array
+    public function getListeFicheMetier(): array
     {
         $result = [];
         foreach ($this->listeFicheMetierMission as $ficheMetierMission) {
@@ -92,12 +91,12 @@ class Mission implements HistoriqueAwareInterface,
     }
 
     /** @return MissionAdditionnelle[] */
-    public function getListeFichePoste(bool $historise = false) : array
+    public function getListeFichePoste(bool $historise = false): array
     {
         $result = [];
         /** @var MissionAdditionnelle $fichePosteMission */
         foreach ($this->listeFichePosteMission as $fichePosteMission) {
-            if (!$historise OR $fichePosteMission->estNonHistorise()) {
+            if (!$historise or $fichePosteMission->estNonHistorise()) {
                 $result[] = $fichePosteMission;
             }
         }
