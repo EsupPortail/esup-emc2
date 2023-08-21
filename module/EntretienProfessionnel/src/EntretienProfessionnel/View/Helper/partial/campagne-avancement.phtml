@@ -44,6 +44,7 @@ $nbEncours = count($encours);
 $nbSans = count($sans);
 $nbTotal =  $nbValiderAgent + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
 
+$ratioAgent = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";
 if ($nbTotal !== 0) {
     $ratioAgent = $nbValiderAgent / $nbTotal * 100;
     $ratioAutorite = $nbValiderAutorite / $nbTotal * 100;

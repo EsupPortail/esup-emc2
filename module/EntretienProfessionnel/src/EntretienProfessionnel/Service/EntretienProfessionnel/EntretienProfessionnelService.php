@@ -6,6 +6,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -19,7 +20,7 @@ use Structure\Entity\Db\StructureResponsable;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -95,33 +96,28 @@ class EntretienProfessionnelService {
 
     public function createQueryBuilder(bool $withAffectation = true) : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->addSelect('agent')->join('entretien.agent', 'agent')
-            ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
-            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
-            ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
+        try {
+            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+                ->addSelect('agent')->join('entretien.agent', 'agent')
+                ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
+                ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+                ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
+                ->addSelect('responsable')->join('entretien.responsable', 'responsable')
+                ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
+                ->addSelect('campagne')->join('entretien.campagne', 'campagne')
+                ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
+                ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".EntretienProfessionnel::class."]",0,$e);
+        }
 
-            ->addSelect('responsable')->join('entretien.responsable', 'responsable')
-            ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
-            ->addSelect('campagne')->join('entretien.campagne', 'campagne')
-            ->addSelect('validation')->leftjoin('entretien.validations','validation')
-            ->addSelect('vtype')->leftjoin('validation.type','vtype')
-        ;
-
-        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien');
         if ($withAffectation) $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
         return $qb;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @param Agent|null $responsable
-     * @param Structure|null $structure
-     * @param Campagne|null $campagne
-     * @param UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat|null $etat
-     * @return EntretienProfessionnel[]
-     */
-    public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?Etat $etat = null) : array
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?EtatType $etat = null) : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.annee, agent.nomUsuel, agent.prenom');
@@ -138,7 +134,7 @@ class EntretienProfessionnelService {
                 ->setParameter('campagne', $campagne);
         }
         if ($etat !== null) {
-            $qb = $qb->andWhere('entretien.etat = :etat')
+            $qb = $qb->andWhere('etat.type = :etat')
                 ->setParameter('etat', $etat);
         }
         if ($structure !== null) {
@@ -453,7 +449,7 @@ class EntretienProfessionnelService {
             ->join('entretien.agent', 'agent')->addSelect('agent')
             ->join('entretien.responsable', 'responsable')->addSelect('responsable')
             ->join('entretien.campagne', 'campagne')->addSelect('campagne')
-            ->join('entretien.etat', 'etat')->addSelect('etat')
+            ->join('entretien.etats', 'etat')->addSelect('etat')
             ->join('etat.type', 'etype')->addSelect('etype')
         ;
 
@@ -461,7 +457,7 @@ class EntretienProfessionnelService {
             $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
         }
         if ($params['etat'] !== null and $params['etat'] !== "") {
-            $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $params['etat']);
+            $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $params['etat']);
         }
         if ($params['structure-filtre'] !== null and $params['structure-filtre']['id'] !== "") {
             $qb = $qb

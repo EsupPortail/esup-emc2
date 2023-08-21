@@ -158,7 +158,7 @@ $canAfficherInformationMetier = (
                     <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
                     <dt class="col-md-4"> État </dt>
                     <dd class="col-md-8">
-                        <?php echo $this->etatbadge($entretien->getEtat()); ?>
+                        <?php echo $this->etatbadge($entretien->getEtatActif()); ?>
                     </dd>
                 </dl>
             </div>

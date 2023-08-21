@@ -31,9 +31,9 @@
         <field name="acceptation"       type="datetime"                 column="acceptation"        nullable="true"/>
 
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
-            <join-table name="entretienprofesionnel_etat">
+            <join-table name="entretienprofessionnel_etat">
                 <join-columns>
-                    <join-column name="entretienprofessionnel_id" referenced-column-name="id" />
+                    <join-column name="entretien_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="etat_id" referenced-column-name="id" />
