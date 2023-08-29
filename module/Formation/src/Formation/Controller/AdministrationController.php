@@ -78,6 +78,7 @@ class AdministrationController extends AbstractActionController
 
         $vm =  new ViewModel([
             'templates' => $templates,
+            'title' => "Gestion des templates",
         ]);
         $vm->setTemplate('unicaen-renderer/template/index');
         return $vm;
@@ -86,9 +87,9 @@ class AdministrationController extends AbstractActionController
     public function etatAction() : ViewModel
     {
         $types = [
-            $this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::TYPE),
-            $this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::TYPE),
-            $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::TYPE),
+            SessionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
+            InscriptionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(InscriptionEtats::TYPE),
+            DemandeExterneEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE),
         ];
 
         $vm = new ViewModel([

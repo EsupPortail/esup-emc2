@@ -7,8 +7,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use RuntimeException;
-use UnicaenEtat\Entity\Db\EtatInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -44,7 +42,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
     private ?string $justificationRefus = null;
-    private ?Collection $devis = null;
+    private ?Collection $devis;
 
     public function __construct()
     {

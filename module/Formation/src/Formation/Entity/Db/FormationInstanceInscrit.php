@@ -184,7 +184,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
                 try {
                     $temp = new DateInterval('PT' . $volume . 'H');
                 } catch (Exception $e) {
-                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]");
+                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
                 }
                 $sum->add($temp);
             }

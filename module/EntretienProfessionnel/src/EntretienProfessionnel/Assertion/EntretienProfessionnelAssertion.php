@@ -213,6 +213,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
 
         $predicats = [];
+        $entretien = null;
         if ($agent) {
             //to remove copium here
             $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien-professionnel')));
@@ -221,7 +222,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             if ($entretien) $predicats = $this->computePredicats($entretien, $agent, $role);
         }
 
-
+        if ($entretien === null) return true;
         switch ($action) {
             case 'exporter-crep' :
             case 'exporter-cref' :

@@ -33,10 +33,8 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
         return $this->id;
     }
 
-    /** /!\ NB: utilise pour creer le groupe : sans groupe
-     * @param int $id
-     */
-    public function setId(int $id)
+    /** /!\ NB: utilise pour creer le groupe : sans groupe */
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -56,7 +54,7 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
         return $this->ordre;
     }
 
-    public function setOrdre(?string $ordre) : void
+    public function setOrdre(?int $ordre) : void
     {
         $this->ordre = $ordre;
     }

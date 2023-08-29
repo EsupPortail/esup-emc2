@@ -1,16 +1,18 @@
 <?php
 
 /**
- * @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::indexAction()
- * @var UnicaenEtat\src\UnicaenEtat\Entity\Db\EtatType[] $etatTypes
+ * @see \Formation\Controller\AdministrationController::etatAction()
+ * @var EtatType[] $etatTypes
  */
 
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\EtatType;
 
-$etats = [];
-foreach ($etatTypes as $type) {
-    $etats_ = $type->getEtats();
-    $etats = array_merge($etats, $etats_);
+use UnicaenEtat\Entity\Db\EtatType;
+
+/** @var EtatType[] $types */
+$types = []; $categories = [];
+foreach ($etatTypes as $type => $etattypes) {
+    $types = array_merge($types, $etattypes);
+    if (!empty($etattypes)) $categories[] = current($etattypes)->getCategorie();
 }
 ?>
 <h1 class="page-header">
@@ -20,15 +22,9 @@ foreach ($etatTypes as $type) {
 <div class="main">
 
     <h2>
-        Etat Type
+        Catégorie d'états
         <span class="badge"><?php echo count($etatTypes); ?></span>
     </h2>
-    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::ajouterAction() */ ?>
-    <a href="<?php echo $this->url('unicaen-etat/etat-type/ajouter', [], [], true); ?>"
-       class="btn btn-primary action ajax-modal" data-event="modification">
-        <span class="icon icon-ajouter"></span>
-        Ajouter un type d'état
-    </a>
 
     <br/>
 
@@ -42,29 +38,29 @@ foreach ($etatTypes as $type) {
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($etatTypes as $etatType) : ?>
-            <tr class="<?php if ($etatType->estHistorise()) echo "historise"; ?>">
-                <td> <?php echo $this->etattype($etatType); ?> </td>
-                <td> <?php echo $etatType->getCode(); ?> </td>
-                <td> <?php echo $etatType->getLibelle(); ?> </td>
-                <td>
-                    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('unicaen-etat/etat-type/modifier', ['etat-type' => $etatType->getId()], [], true); ?>"
+        <?php foreach ($categories as $categorie) : ?>
+            <tr>
+                <td> <?php echo $this->etatcategorie($categorie); ?> </td>
+                <td> <?php echo $categorie->getCode(); ?> </td>
+                <td> <?php echo $categorie->getLibelle(); ?> </td>
+                <td class="action">
+                    <?php /** @see \UnicaenEtat\Controller\EtatCategorieController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-etat/etat-categorie/modifier', ['categorie' => $categorie->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-editer"></span></a>
-                    <?php if ($etatType->estNonHistorise()) : ?>
-                        <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('unicaen-etat/etat-type/historiser', ['etat-type' => $etatType->getId()], [], true); ?>">
-                            <span class="icon icon-historiser"></span></a>
-                    <?php else: ?>
-                        <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('unicaen-etat/etat-type/restaurer', ['etat-type' => $etatType->getId()], [], true); ?>">
-                            <span class="icon icon-restaurer"></span></a>
-                    <?php endif; ?>
-                    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatTypeController::supprimerAction() */ ?>
-                    <a href="<?php echo $this->url('unicaen-etat/etat-type/supprimer', ['etat-type' => $etatType->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="icon icon-unchecked"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+
+<!--                    <br>-->
+<!---->
+<!--                    --><?php ///** @see \UnicaenEtat\Controller\EtatCategorieController::supprimerAction() */ ?>
+<!--                    <a href="--><?php //echo $this->url('unicaen-etat/etat-categorie/supprimer', ['categorie' => $categorie->getId()], [], true); ?><!--"-->
+<!--                       class="ajax-modal" data-event="modification">-->
+<!--                            <span class="text-danger">-->
+<!--                                <span class="icon icon-unchecked"></span>-->
+<!--                                Supprimer-->
+<!--                            </span>-->
+<!--                    </a>-->
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -72,11 +68,11 @@ foreach ($etatTypes as $type) {
     </table>
 
     <h2>
-        États
-        <span class="badge"><?php echo count($etats); ?></span>
+        États types
+        <span class="badge"><?php echo count($types); ?></span>
     </h2>
-    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatController::ajouterAction() */ ?>
-    <a href="<?php echo $this->url('unicaen-etat/etat/ajouter', [], [], true); ?>"
+    <?php /** @see \UnicaenEtat\Controller\EtatTypeController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('unicaen-etat/etat-type/ajouter', [], [], true); ?>"
        class="btn btn-primary action ajax-modal" data-event="modification">
         <span class="icon icon-ajouter"></span>
         Ajouter un d'état
@@ -89,36 +85,34 @@ foreach ($etatTypes as $type) {
             <th>Code</th>
             <th>Libelle</th>
             <th>Ordre</th>
-            <th>Type</th>
+            <th>Catégorie</th>
             <th style="width: 8rem;">Action</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($etats as $etat) : ?>
-            <tr class="<?php if ($etat->estHistorise()) echo "historise"; ?>">
-                <td> <?php echo $this->etattype($etat); ?>  </td>
-                <td> <?php echo $etat->getCode(); ?> </td>
-                <td> <?php echo $etat->getLibelle(); ?> </td>
-                <td> <?php echo $etat->getOrdre(); ?> </td>
-                <td> <?php echo $this->etattype($etat->getType()); ?>  </td>
-                <td>
-                    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('unicaen-etat/etat/modifier', ['etat' => $etat->getId()], [], true); ?>"
+        <?php foreach ($types as $type) : ?>
+            <tr>
+                <td> <?php echo $this->etattype($type); ?>  </td>
+                <td> <?php echo $type->getCode(); ?> </td>
+                <td> <?php echo $type->getLibelle(); ?> </td>
+                <td> <?php echo $type->getOrdre(); ?> </td>
+                <td> <?php echo $this->etatcategorie($type->getCategorie()); ?>  </td>
+                <td class="action">
+                    <?php /** @see \UnicaenEtat\Controller\EtatTypeController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('unicaen-etat/etat-type/modifier', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification">
-                        <span class="icon icon-editer"></span></a>
-                    <?php if ($etat->estNonHistorise()) : ?>
-                        <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('unicaen-etat/etat/historiser', ['etat' => $etat->getId()], [], true); ?>">
-                            <span class="icon icon-historiser"></span></a>
-                    <?php else: ?>
-                        <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('unicaen-etat/etat/restaurer', ['etat' => $etat->getId()], [], true); ?>">
-                            <span class="icon icon-restaurer"></span></a>
-                    <?php endif; ?>
-                    <?php /** @see UnicaenEtat\src\UnicaenEtat\Controller\EtatController::supprimerAction() */ ?>
-                    <a href="<?php echo $this->url('unicaen-etat/etat/supprimer', ['etat' => $etat->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="icon icon-unchecked"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
+                    <br>
+                        <?php /** @see \UnicaenEtat\Controller\EtatTypeController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('unicaen-etat/etat-type/supprimer', ['type' => $type->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                                <span class="text-danger">
+                                    <span class="icon icon-unchecked"></span>
+                                    Supprimer
+                                </span>
+                        </a>
                 </td>
             </tr>
         <?php endforeach; ?>

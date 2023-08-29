@@ -9,7 +9,9 @@ use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Exception;
 use Formation\Provider\Etat\SessionEtats;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -238,11 +240,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $this->journees->toArray();
     }
 
-    /**
-     * @param bool $datetime
-     * @return string|DateTime|null
-     */
-    public function getDebut(bool $datetime = false)
+    public function getDebut(bool $datetime = false): string|DateTime|null
     {
         $minimum = null;
         /** @var Seance $journee */
@@ -269,11 +267,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $minimum;
     }
 
-    /**
-     * @param bool $datetime
-     * @return string|null
-     */
-    public function getFin(bool $datetime = false)
+    public function getFin(bool $datetime = false): string|DateTime|null
     {
         $maximum = null;
         /** @var Seance $journee */
@@ -300,9 +294,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $maximum;
     }
 
-    /**
-     * @return bool
-     */
     public function hasJournee() : bool
     {
         /** @var Seance $journee */
@@ -314,20 +305,18 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** INSCRIT *******************************************************************************************************/
 
     /**
-     * @return FormationInstanceInscrit[]|null
+     * @return FormationInstanceInscrit[]
      */
-    public function getInscrits() : ?array
+    public function getInscrits() : array
     {
-        if ($this->inscrits === null) return null;
         return $this->inscrits->toArray();
     }
 
     /**
-     * @return FormationInstanceInscrit[]|null
+     * @return FormationInstanceInscrit[]
      */
-    public function getListePrincipale() : ?array
+    public function getListePrincipale() : array
     {
-        if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
             return ($a->getListe() === FormationInstanceInscrit::PRINCIPALE AND $a->estNonHistorise());
         });
@@ -338,11 +327,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /**
-     * @return FormationInstanceInscrit[]|null
+     * @return FormationInstanceInscrit[]
      */
-    public function getListeComplementaire() : ?array
+    public function getListeComplementaire() : array
     {
-        if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
             return ($a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE AND $a->estNonHistorise());
         });
@@ -353,11 +341,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /**
-     * @return FormationInstanceInscrit[]|null
+     * @return FormationInstanceInscrit[]
      */
-    public function getListeHistorisee() : ?array
+    public function getListeHistorisee() : array
     {
-        if ($this->inscrits === null) return null;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
             return $a->estHistorise();
         });
@@ -367,24 +354,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $array;
     }
 
-    /**
-     * @return bool
-     */
     public function isListePrincipaleComplete() : bool
     {
-        if ($this->inscrits === null) return false;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
             return $a->getListe() === FormationInstanceInscrit::PRINCIPALE;
         });
         return (count($array) >= $this->getNbPlacePrincipale());
     }
 
-    /**
-     * @return bool
-     */
     public function isListeComplementaireComplete() : bool
     {
-        if ($this->inscrits === null) return false;
         $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
             return $a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE;
         });
@@ -510,22 +489,25 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /** Fonctions pour les macros **********************************************************************************/
 
+    /** @noinspection PhpUnused */
     public function getInstanceLibelle() : string
     {
         return $this->getFormation()->getLibelle();
     }
 
-
+    /** @noinspection PhpUnused */
     public function getLieuString() : string
     {
         return ($this->getLieu())?" à ".$this->getLieu():"";
     }
 
+    /** @noinspection PhpUnused */
     public function getInstanceCode() : string
     {
         return $this->getFormation()->getId() . "/" . $this->getId();
     }
 
+    /** @noinspection PhpUnused */
     public function getListeFormateurs() : string
     {
         /** @var Formateur[] $formateurs */
@@ -554,6 +536,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $text;
     }
 
+    /** @noinspection PhpUnused */
     public function getListeJournees() : string
     {
         /** @var Seance[] $journees */
@@ -590,6 +573,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $text;
     }
 
+    /** @noinspection PhpUnused */
     public function getPeriode() : string
     {
         if ($this->getDebut() === null or $this->getFin() === null) return "formation sans date";
@@ -597,9 +581,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $this->getDebut() . " au " . $this->getFin();
     }
 
+    /** @noinspection PhpUnused */
     public function getListeComplementaireAgents() : string
     {
-        /** @var Seance[] $inscrits */
+        /** @var FormationInstanceInscrit[] $inscrits */
         $inscrits = $this->getListeComplementaire();
         $inscrits = array_filter($inscrits, function (FormationInstanceInscrit $a) {
             return $a->estNonHistorise();
@@ -630,6 +615,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $text;
     }
 
+    /** @noinspection PhpUnused */
     public function getDuree() : string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
@@ -649,7 +635,11 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             if ($journee->getType() === Seance::TYPE_VOLUME) {
                 $volume = $journee->getVolume();
                 if ($volume) {
-                    $temp = new DateInterval('PT'.$volume.'H');
+                    try {
+                        $temp = new DateInterval('PT' . $volume . 'H');
+                    } catch (Exception $e) {
+                        throw new RuntimeException("Une erreur est survenue lors de la création de l'interval",0,$e);
+                    }
                     $sum->add($temp);
                 }
 
@@ -663,6 +653,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $text;
     }
 
+    /** @noinspection PhpUnused */
     public function getPlaceDisponible(string $liste) : int
     {
         $inscriptions = array_filter(

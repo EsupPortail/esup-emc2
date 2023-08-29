@@ -136,14 +136,10 @@ class FormationInstanceService
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return FormationInstance[]
-     */
+    /**@return FormationInstance[] */
     public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+        $qb = $this->createQueryBuilder()
             ->join('Finstance.source', 'source')->addSelect('source')
             ->orderBy('Finstance.' . $champ, $ordre);
 
@@ -151,26 +147,12 @@ class FormationInstanceService
         return $result;
     }
 
-    /**
-     * @param Formation $formation
-     * @return array
-     */
+    /** @return FormationInstance[] */
     public function getFormationsInstancesByFormation(Formation $formation): array
     {
-//        $qb = $this->createQueryBuilder()
-//            ->addSelect('finstance')->leftJoin('formation.instances', 'finstance')
-//            ->andWhere('formation.id = :id')
-//            ->setParameter('id', $formation->getId())
-//            ->orderBy('Finstance.' . $champ, $ordre);
-
-        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
-            ->addSelect('formation')->join('Finstance.formation', 'formation')
-            ->addSelect('inscrit')->join('Finstance.inscrits', 'inscrit')
-            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
-            ->andWhere('formation.id = :id')
-            ->setParameter('id', $formation->getId());
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
+        ;
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -178,16 +160,9 @@ class FormationInstanceService
 
     public function getFormationsInstancesOuvertesByFormation(Formation $formation)
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
-            ->addSelect('formation')->join('Finstance.formation', 'formation')
-            ->addSelect('etat')->join('Finstance.etats', 'etat')
-            ->addSelect('type')->join('etat.type', 'type')
-            ->addSelect('inscrit')->leftjoin('Finstance.inscrits', 'inscrit')
-            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+        $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
-            ->andWhere('type.code in (:etats)')->setParameter('etats', [SessionEtats::ETAT_INSCRIPTION_OUVERTE]);
+            ->andWhere('etype.code in (:etats)')->setParameter('etats', [SessionEtats::ETAT_INSCRIPTION_OUVERTE]);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -199,15 +174,8 @@ class FormationInstanceService
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annees[0]);
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . $annees[1]);
 
-        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
-            ->addSelect('formation')->join('Finstance.formation', 'formation')
-            ->addSelect('journee')->leftjoin('Finstance.journees', 'journee')
-//            ->addSelect('inscrit')->leftjoin('Finstance.inscrits', 'inscrit')
-//            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
-//            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat')
+        $qb = $this->createQueryBuilder()
             ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
-//            ->andWhere('journee.jour > :debut')->setParameter('debut', $debut)
-//            ->andWhere('journee.jour < :fin')->setParameter('fin', $fin)
         ;
 
         $result = $qb->getQuery()->getResult();
@@ -218,11 +186,6 @@ class FormationInstanceService
             if ($instance->getDebut(true) > $debut and $instance->getFin(true) < $fin) $trueR[] = $instance;
 
         }
-//        $debut = $debut->format('d/m/Y');
-//        $fin = $fin->format('d/m/Y');
-//        $formationL = $formation->getLibelle();
-//        $result = $qb->getQuery()->getResult();
-//        $count = count($result);
         return $trueR;
     }
 
@@ -267,22 +230,6 @@ class FormationInstanceService
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstance($id);
 
-        return $result;
-    }
-
-    public function getFormationInstanceBySource(string $source, string $idSource): ?FormationInstance
-    {
-
-        $qb = $this->createQueryBuilder()
-            ->andWhere('Finstance.source = :source')
-            ->andWhere('Finstance.idSource = :idSource')
-            ->setParameter('source', $source)
-            ->setParameter('idSource', $idSource);
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationInstance partagent le même idSource [" . $source . "-" . $idSource . "]", 0, $e);
-        }
         return $result;
     }
 
@@ -480,8 +427,8 @@ class FormationInstanceService
     public function getFormationInstanceEnCours(): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('Finstance.etat IS NOT NULL')
-            ->andWhere('etat.code <> :annuler AND etat.code <> :cloturer')
+            ->andWhere('etat IS NOT NULL')
+            ->andWhere('etype.code <> :annuler AND etype.code <> :cloturer')
             ->setParameter('cloturer', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->setParameter('annuler', SessionEtats::ETAT_SESSION_ANNULEE);
 

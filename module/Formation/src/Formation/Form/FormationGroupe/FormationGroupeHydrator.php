@@ -35,7 +35,7 @@ class FormationGroupeHydrator implements HydratorInterface
 
         $object->setLibelle($libelle);
         $object->setDescription($description);
-        $object->setOrdre($ordre);
+        $object->setOrdre($ordre?((int) $ordre):null);
         return $object;
     }
 
