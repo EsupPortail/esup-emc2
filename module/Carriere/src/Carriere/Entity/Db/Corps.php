@@ -27,6 +27,8 @@ class Corps implements HasPeriodeInterface
     private ?NiveauEnveloppe $niveaux = null;
     private Collection $agentGrades;
 
+    private bool $superieurAsAutorite = false;
+
     public function __construct()
     {
         $this->agentGrades = new ArrayCollection();
@@ -85,6 +87,15 @@ class Corps implements HasPeriodeInterface
         return $this->agentGrades->toArray();
     }
 
+    public function isSuperieurAsAutorite(): bool
+    {
+        return $this->superieurAsAutorite;
+    }
+
+    public function setSuperieurAsAutorite(bool $superieurAsAutorite): void
+    {
+        $this->superieurAsAutorite = $superieurAsAutorite;
+    }
 
     public function __toString() : string
     {
