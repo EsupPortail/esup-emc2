@@ -25,7 +25,6 @@ class Corps implements HasPeriodeInterface
     private ?DateTime $histo = null;
     private ?Niveau $niveau = null;
     private ?NiveauEnveloppe $niveaux = null;
-
     private Collection $agentGrades;
 
     public function __construct()
