@@ -7,6 +7,7 @@ use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -93,6 +94,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         if (!in_array($role, $listings)) return false;
         //todo FIN BIZARERIE ...
 
+        $grades = $entity->getAgent()->getGradesActifs($entity->getDateEntretien());
+        $inhibition = false;
+        foreach ($grades as $grade) {
+            if ($grade->getCorps()->isSuperieurAsAutorite()) {
+                $inhibition = true;
+                break;
+            }
+        }
 
         $isAgent = ($agent === $entity->getAgent());
 
@@ -191,7 +200,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return true;
                     case RoleProvider::RESPONSABLE:
                     case Agent::ROLE_AUTORITE:
-                        return ($predicats['isAutoriteHierarchique'] && !$predicats['isResponsableEntretien']);
+                        return ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien']));
                     default:
                         return false;
                 }

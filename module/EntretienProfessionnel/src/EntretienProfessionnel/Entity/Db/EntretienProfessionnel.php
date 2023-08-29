@@ -59,6 +59,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function __construct()
     {
+        $this->etats = new ArrayCollection();
         $this->observations = new ArrayCollection();
         $this->sursis = new ArrayCollection();
         $this->validations = new ArrayCollection();

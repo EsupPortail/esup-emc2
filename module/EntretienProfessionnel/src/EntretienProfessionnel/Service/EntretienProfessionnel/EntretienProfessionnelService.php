@@ -98,13 +98,13 @@ class EntretienProfessionnelService {
     {
         try {
             $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-                ->addSelect('agent')->join('entretien.agent', 'agent')
+                ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
                 ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
                 ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
                 ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
-                ->addSelect('responsable')->join('entretien.responsable', 'responsable')
+                ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
                 ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
-                ->addSelect('campagne')->join('entretien.campagne', 'campagne')
+                ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
                 ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
                 ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
         } catch (NotSupported $e) {
@@ -303,7 +303,7 @@ class EntretienProfessionnelService {
             ->orderBy('entretien.dateEntretien', 'DESC');
         $result = $qb->getQuery()->getResult();
 
-        if ($result === null) return null;
+        if (!isset($result)) return null;
         return $result[0];
     }
 

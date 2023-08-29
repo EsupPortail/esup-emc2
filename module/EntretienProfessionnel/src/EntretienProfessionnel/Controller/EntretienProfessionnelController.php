@@ -31,6 +31,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -48,6 +49,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use AgentSuperieurServiceAwareTrait;
     use RenduServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use CampagneServiceAwareTrait;
@@ -179,8 +181,8 @@ class EntretienProfessionnelController extends AbstractActionController
                 if ($entretien->getDateEntretien() < $jplus15 ) {
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
-               $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION));
                $this->getEntretienProfessionnelService()->initialiser($entretien);
+                $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
