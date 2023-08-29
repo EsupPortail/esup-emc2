@@ -14,6 +14,7 @@ use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class DemandeExterneControllerFactory
@@ -30,6 +31,7 @@ class DemandeExterneControllerFactory
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
+         * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FichierService $fichierService
          * @var NatureService $natureService
@@ -37,6 +39,7 @@ class DemandeExterneControllerFactory
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $fichierService = $container->get(FichierService::class);
         $natureService = $container->get(NatureService::class);
@@ -57,6 +60,7 @@ class DemandeExterneControllerFactory
         $controller = new DemandeExterneController();
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
+        $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFichierService($fichierService);
         $controller->setNatureService($natureService);

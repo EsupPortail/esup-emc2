@@ -261,7 +261,7 @@ class EntretienProfessionnelService {
             ->setParameter('agent', $agent);
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
-        $qb = EntretienProfessionnel::decorateWithEtat($qb, 'entretien');
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien');
 
         $result = $qb->getQuery()->getResult();
         return $result;

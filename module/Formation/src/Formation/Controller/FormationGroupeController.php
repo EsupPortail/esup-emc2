@@ -142,7 +142,7 @@ class FormationGroupeController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($groupe !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du thème de formation [" . $groupe->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

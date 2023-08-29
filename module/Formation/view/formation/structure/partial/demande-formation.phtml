@@ -28,7 +28,7 @@ foreach ($inscriptions as $inscription) {
 
 $attentes = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->estNonHistorise() AND $inscription->getEtat()->getCode() === InscriptionEtats::ETAT_DEMANDE) {
+    if ($inscription->estNonHistorise() && $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) {
         $formation = $inscription->getInstance()->getFormation();
         $instance = $inscription->getInstance();
         $attentes[$formation->getId()]["formation"] = $formation;
@@ -79,7 +79,7 @@ usort($dictionnaryDemandes,
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
-                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
                         (<?php echo $d->getInstance()->getPeriode(); ?>)
                         <br/>
@@ -109,7 +109,7 @@ usort($dictionnaryDemandes,
                     <?php foreach ($ds as $d) : ?>
                         <?php $canDemandeAfficher = $this->isAllowed($d, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER); ?>
                         <br/>
-                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getLibelle(); ?>
                         (<?php echo $d->getPeriodeAsString(); ?>)
                     <br>
@@ -118,7 +118,7 @@ usort($dictionnaryDemandes,
                             <?php  /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
                             <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $d->getId()], [], true); ?>" class="ajax-modal"> <span class="icon icon-voir"></span>Afficher</a>
                         <?php endif; ?>
-                        <?php if ($d->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_AGENT) : ?>
+                        <?php if ($d->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT)) : ?>
                             <?php if ($canValiderResponsable ) : ?>
                                 <?php  /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
                                 <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>

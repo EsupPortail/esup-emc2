@@ -121,7 +121,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function isComplete() : bool
     {
-        return ($this->getEtatActif() !== null AND $this->getEtatActif()->getType()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
+        return $this->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
     }
 
     public function getFormulaireInstance() : ?FormulaireInstance

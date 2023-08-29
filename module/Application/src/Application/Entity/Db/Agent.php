@@ -577,10 +577,10 @@ class Agent implements
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
             if ($fiche->isEnCours() AND $fiche->estNonHistorise()) {
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_OK) && ($best === NULL OR !$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_REDACTION) && ($best === NULL OR (!$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) && !$best->isEtatActif(FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_MASQUEE) && ($best === NULL)) $best = $fiche;
             }
         }
         return $best;

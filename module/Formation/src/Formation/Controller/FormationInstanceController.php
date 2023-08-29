@@ -134,7 +134,7 @@ class FormationInstanceController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($instance !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression d'une instance de formation",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
@@ -259,7 +259,7 @@ class FormationInstanceController extends AbstractActionController
 
         return new ViewModel([
             'title' => "Changer l'état de la session de formation",
-            'etats' => $this->getEtatCategorieService()->getEtatCategorieByCode(SessionEtats::TYPE),
+            'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
             'instance' => $instance,
         ]);
     }

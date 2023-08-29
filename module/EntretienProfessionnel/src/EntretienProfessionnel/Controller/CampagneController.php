@@ -404,7 +404,7 @@ class CampagneController extends AbstractActionController {
         $finalises = [];
         $encours = [];
         foreach ($entretiens as $entretien) {
-            if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT) {
+            if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {
                 $finalises[] = $entretien;
             } else {
                 $encours[] = $entretien;

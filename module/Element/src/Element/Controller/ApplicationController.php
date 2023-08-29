@@ -2,6 +2,7 @@
 
 namespace Element\Controller;
 
+use Application\Provider\Etat\FicheMetierEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Element\Entity\Db\Application;
@@ -196,7 +197,7 @@ class ApplicationController  extends AbstractActionController {
         foreach ($metiers as $metier) {
             if ($metier->estNonHistorise()) {
                 foreach ($metier->getFichesMetiers() as $ficheMetier) {
-                    if ($ficheMetier->estNonHistorise() AND $ficheMetier->getEtat()->getCode() === 'FICHE_METIER_OK') {
+                    if ($ficheMetier->estNonHistorise() AND $ficheMetier->isEtatActif(FicheMetierEtats::ETAT_VALIDE)) {
                         foreach ($ficheMetier->getApplicationListe() as $applicationElement) {
                             if ($applicationElement->estNonHistorise()) $link[$metier->getLibelle()][$applicationElement->getApplication()->getLibelle()] = 1;
                         }

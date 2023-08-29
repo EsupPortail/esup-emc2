@@ -159,7 +159,7 @@ class PlanDeFormationController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($plan !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du plan de formation " . $plan->getAnnee(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

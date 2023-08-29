@@ -74,7 +74,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                 <?php endif; ?>
             </td>
             <td>
-                <?php echo ($instance->getEtat())?$this->etatbadge($instance->getEtat()):"N.C."; ?>
+                <?php echo ($instance->getEtatActif())?$this->etatinstance($instance->getEtatActif()):"N.C."; ?>
             </td>
             <td>
                 <?php if ($canAfficherInstance) : ?>

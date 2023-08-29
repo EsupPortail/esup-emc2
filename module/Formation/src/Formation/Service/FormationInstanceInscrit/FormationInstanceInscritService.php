@@ -4,6 +4,7 @@ namespace Formation\Service\FormationInstanceInscrit;
 
 use Application\Entity\Db\Agent;
 use DateTime;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -12,12 +13,11 @@ use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
+use RuntimeException;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 
 class FormationInstanceInscritService
 {
@@ -107,18 +107,22 @@ class FormationInstanceInscritService
      */
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
-            ->addSelect('agent')->join('inscrit.agent', 'agent')
-            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-            ->addSelect('finstance')->join('inscrit.instance', 'finstance')
-            ->addSelect('formation')->join('finstance.formation', 'formation')
-            ->addSelect('journee')->join('finstance.journees', 'journee')
-            ->addSelect('instanceetat')->leftjoin('finstance.etat', 'instanceetat')
-            ->addSelect('instanceetattype')->leftjoin('instanceetat.type', 'instanceetattype')
-            ->addSelect('inscritetat')->leftjoin('inscrit.etat', 'inscritetat')
-            ->addSelect('inscritetattype')->leftjoin('inscritetat.type', 'inscritetattype');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
+                ->addSelect('agent')->leftjoin('inscrit.agent', 'agent')
+                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+                ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
+                ->addSelect('finstance')->leftjoin('inscrit.instance', 'finstance')
+                ->addSelect('formation')->leftjoin('finstance.formation', 'formation')
+                ->addSelect('journee')->leftjoin('finstance.journees', 'journee')
+                ->addSelect('instanceetat')->leftjoin('finstance.etats', 'instanceetat')
+                ->addSelect('instanceetattype')->leftjoin('instanceetat.type', 'instanceetattype')
+                ->addSelect('inscritetat')->leftjoin('inscrit.etats', 'inscritetat')
+                ->addSelect('inscritetattype')->leftjoin('inscritetat.type', 'inscritetattype');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FormationInstanceInscrit::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -173,7 +177,7 @@ class FormationInstanceInscritService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('instanceetat.code <> :code')
+            ->andWhere('inscritetattype.code <> :code')
             ->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
             ->orderBy('formation.libelle', 'ASC');
@@ -191,7 +195,7 @@ class FormationInstanceInscritService
         $qb = $this->createQueryBuilder()
             ->andWhere('inscrit.agent = :agent')
             ->setParameter('agent', $agent)
-            ->andWhere('instanceetat.code = :retour OR instanceetat.code = :close')
+            ->andWhere('instanceetattype.code = :retour OR instanceetattype.code = :close')
             ->setParameter('retour', SessionEtats::ETAT_ATTENTE_RETOURS)
             ->setParameter('close', SessionEtats::ETAT_CLOTURE_INSTANCE)
             ->andWhere('inscrit.histoDestruction IS NULL')
@@ -254,17 +258,11 @@ class FormationInstanceInscritService
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscription')
-            ->andWhere('inscription.histoDestruction IS NULL')
-            ->join('inscription.etat', 'etat')->addSelect('etat')
-            ->join('etat.type', 'etype')->addSelect('etype')
-            ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
-            ->join('inscription.agent', 'agent')->addSelect('agent')
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscrit.histoDestruction IS NULL')
+            ->andWhere('inscritetattype.code in (:etats)')->setParameter('etats', $etats)
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
-            ->leftJoin('inscription.frais', 'frais')->addSelect('frais')
-            ->leftJoin('inscription.instance', 'session')->addSelect('session')
-            ->leftJoin('session.journees', 'journee')->addSelect('journee')
-            ->andWhere('session.histoDestruction IS NULL');
+            ->andWhere('finstance.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         $result = array_filter($result, function (FormationInstanceInscrit $a) use ($debut, $fin) {

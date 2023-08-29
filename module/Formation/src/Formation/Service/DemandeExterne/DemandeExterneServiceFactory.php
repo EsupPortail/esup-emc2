@@ -13,6 +13,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -30,6 +31,7 @@ class DemandeExterneServiceFactory
     {
         /**
          * @var EntityManager $entityManager
+         * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
@@ -42,6 +44,7 @@ class DemandeExterneServiceFactory
          * @var ValidationTypeService $validationTypeService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
@@ -55,6 +58,7 @@ class DemandeExterneServiceFactory
 
         $service = new DemandeExterneService();
         $service->setEntityManager($entityManager);
+        $service->setEtatInstanceService($etatInstanceService);
         $service->setEtatTypeService($etatTypeService);
         $service->setFormationService($formationService);
         $service->setFormationInstanceService($formationInstanceService);

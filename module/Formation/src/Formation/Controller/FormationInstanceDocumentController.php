@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
@@ -146,9 +147,9 @@ class FormationInstanceDocumentController extends AbstractActionController
             $texte .= "<ul>";
             foreach ($inscriptions as $inscription) {
                 $dureeSuivie = $inscription->getDureePresence();
+                /** @var FormationInstance $session */
                 $session = $inscription->getInstance();
-                $sessionEtat = $session->getEtat()->getCode();
-                if ($dureeSuivie != '0 heures ' and ($sessionEtat === SessionEtats::ETAT_CLOTURE_INSTANCE or $sessionEtat === SessionEtats::ETAT_ATTENTE_RETOURS)) {
+                if ($dureeSuivie != '0 heures ' && ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE) || $session->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS))) {
                     $libelle = $session->getFormation()->getLibelle();
                     $periode = $session->getPeriode();
                     $texte .= "<li>";

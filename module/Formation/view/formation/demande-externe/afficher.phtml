@@ -146,7 +146,7 @@ use Formation\Provider\Validation\DemandeExterneValidations;
 <!--    </a>-->
 <?php //endif; ?>
 <!---->
-<?php //if ($canValiderDrh AND $demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_RESP) : ?>
+<?php //if ($canValiderDrh AND $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_RESP)) : ?>
 <!--    --><?php ///** @see \Formation\Controller\DemandeExterneController::validerDrhAction() */ ?>
 <!--    <a href="--><?php //echo $this->url('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true); ?><!--"-->
 <!--       class="btn btn-success ajax-modal" data-event="modification">-->

@@ -15,7 +15,7 @@ use Formation\Entity\Db\FormationInstance;
 <?php if ($mode === 'liste') : ?>
     <dl class="row">
         <dt class="col-md-3"> État</dt>
-        <dd class="col-md-9">  <?php echo ($instance->getEtatActif())?$this->etattype($instance->getEtatActif()->getType())." ".$instance->getEtat()->getLibelle():"N.C."; ?> </dd>
+        <dd class="col-md-9">  <?php echo ($instance->getEtatActif())?$this->etattype($instance->getEtatActif()->getType())." ".$instance->getEtatActif()->getType()->getLibelle():"N.C."; ?> </dd>
         <?php if ($instance->getComplement() !== null) : ?>
             <dt class="col-md-3"> Compléments </dt>
             <dd class="col-md-9"> <?php echo $instance->getComplement(); ?></dd>
@@ -50,7 +50,7 @@ use Formation\Entity\Db\FormationInstance;
 <?php endif; ?>
 
 <?php if ($mode === 'bloc') : ?>
-    <?php echo $this->etatbadge($instance->getEtat()); ?>
+    <?php echo $this->etatinstance($instance->getEtatActif()); ?>
     <strong><?php echo $instance->getFormation()->getLibelle(); ?></strong>
     <br/>
     Session <?php echo $instance->getId(); ?> du <?php echo $instance->getDebut(); ?> au <?php echo $instance->getFin(); ?>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+<doctrine-mapping>
     <entity name="Formation\Entity\Db\FormationInstance" table="formation_instance">
 
         <id name="id" type="integer" column="id">
@@ -18,9 +18,9 @@
         <field name="complement"                type="string" length="4096"     column="complement"                  nullable="true"/>
 
         <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
-            <join-table name="formation_seance_etat">
+            <join-table name="formation_session_etat">
                 <join-columns>
-                    <join-column name="seance_id" referenced-column-name="id" />
+                    <join-column name="session_id" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="etat_id" referenced-column-name="id" />

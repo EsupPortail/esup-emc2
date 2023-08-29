@@ -67,11 +67,10 @@ class AgentController extends AbstractActionController
         $demandes = array_filter($demandes, function (DemandeExterne $d) {
             return (
                 $d->estNonHistorise() &&
-                $d->getEtatActif()->getType()->getCode() !== DemandeExterneEtats::ETAT_REJETEE &&
-                $d->getEtatActif()->getType()->getCode() !== DemandeExterneEtats::ETAT_TERMINEE
+                !$d->isEtatActif(DemandeExterneEtats::ETAT_REJETEE) &&
+                !$d->isEtatActif(DemandeExterneEtats::ETAT_TERMINEE)
             );
         });
-//        $demandesValidees    = array_filter($demandes, function (DemandeExterne $d) { return $d->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS; });
 
         return new ViewModel([
             'agent' => $agent,

@@ -163,7 +163,7 @@ class FormationController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($formation !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la formation [" . $formation->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

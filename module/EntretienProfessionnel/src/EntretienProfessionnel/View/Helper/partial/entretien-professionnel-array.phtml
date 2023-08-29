@@ -150,7 +150,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <td> <?php echo $entretien->getLieu(); ?> </td>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <td style="text-align: center;"> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
+            <td style="text-align: center;"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td class="action">
@@ -261,7 +261,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 </style>
 
 <script>
-    $(document).ready(function() {
+    $(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
             'paging' : false,
             'searching' : false,

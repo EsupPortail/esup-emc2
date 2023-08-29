@@ -68,9 +68,9 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
 
-<?php if ($isAgent AND (
-    $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
-    $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER )) : ?>
+<?php if ($isAgent && (
+    $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) ||
+    $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER))) : ?>
 
     <div class="alert alert-info">
         Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.

@@ -47,7 +47,7 @@ foreach ($inscriptions as $inscription) {
 <!--            >-->
 <!--                <span class="icon icon-unchecked"> J'annule mon inscription </span>-->
 <!--            </a>-->
-<!--            --><?php //if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+<!--            --><?php //if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
 <!--                <br/>-->
 <!--                <a-->
 <!--                    --><?php ///** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
@@ -86,7 +86,7 @@ foreach ($inscriptions as $inscription) {
 <!--                >-->
 <!--                    <span class="icon icon-unchecked"> J'annule mon inscription </span>-->
 <!--                </a>-->
-<!--                --><?php //if ($instance->getEtat()->getCode() === SessionEtats::ETAT_FORMATION_CONVOCATION AND $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
+<!--                --><?php //if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === FormationInstanceInscrit::PRINCIPALE) : ?>
 <!--                    <br/>-->
 <!--                    <a-->
 <!--                        --><?php ///** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>

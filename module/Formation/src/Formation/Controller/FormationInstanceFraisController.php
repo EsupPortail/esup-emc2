@@ -43,7 +43,7 @@ class FormationInstanceFraisController extends AbstractActionController
         }
 
         $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
+        $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Saisie des frais de " . $inscrit->getAgent()->getDenomination(),
             'form' => $form,

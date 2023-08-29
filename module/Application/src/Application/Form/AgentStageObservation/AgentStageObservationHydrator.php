@@ -29,7 +29,7 @@ class AgentStageObservationHydrator implements HydratorInterface {
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'etat'              => [
-                'etat' => ($object->getEtat())?$object->getEtat()->getId():null,
+                'etat' => ($object->getEtat())?$object->getEtat()->getType()->getId():null,
             ],
             'complement'        => $object->getComplement(),
         ];

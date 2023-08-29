@@ -13,7 +13,7 @@ use Formation\Provider\Etat\DemandeExterneEtats;
 $demandesValidees = [];
 $demandesAttentes = [];
 foreach ($stages as $demande) {
-    if ($demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) {
+    if ($demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_DRH)) {
         $demandesValidees[] = $demande;
     } else {
         $demandesAttentes[] = $demande;

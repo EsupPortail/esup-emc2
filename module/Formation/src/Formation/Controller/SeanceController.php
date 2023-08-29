@@ -101,7 +101,7 @@ class SeanceController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($journee !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la journée de formation du [" . $journee->getJour()->format('d/m/Y') . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

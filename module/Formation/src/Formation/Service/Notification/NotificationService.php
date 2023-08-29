@@ -70,9 +70,10 @@ class NotificationService {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
 
         $mail = $this->getMailService()->sendMail($this->getMailsSuperieursByAgent($agent), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 

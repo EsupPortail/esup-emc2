@@ -28,25 +28,21 @@ $this->headTitle("Configuration de l'application");
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<div class="main">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="fiche-metier-tab"
+                data-bs-toggle="tab" data-bs-target="#fiche-metier"
+                type="button" role="tab" aria-controls="fiche-metier" aria-selected="true">
+            Fiche métier
+        </button>
+        <button class="nav-link" id="mail-tab"
+                data-bs-toggle="tab" data-bs-target="#entretien-pro"
+                type="button" role="tab" aria-controls="entretien-pro" aria-selected="true">
+            Entretien Professionnel
+        </button>
+    </div>
 
-    <div role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="fiche-metier">
-                <a href="#fiche-metier" aria-controls="fiche-metier" role="tab" data-toggle="tabz" >
-                    Fiche métier
-                </a>
-            </li>
-            <li role="entretien-pro">
-                <a href="#entretien-pro" aria-controls="entretien-pro" role="tab" data-toggle="tabz">
-                    Entretien pro.
-                </a>
-            </li>
-        </ul>
 
-        <div class="main-with-tab">
-
-            <div class="tab-content">
+    <div class="tab-content">
                 <!-- ONGLET FICHE METIER ------------------------------------------------------------------------------>
                 <div id="fiche-metier" class="tab-pane " role="tabpanel">
                     <h2> Configuration des fiches métiers</h2>
@@ -171,9 +167,6 @@ $this->headTitle("Configuration de l'application");
                 </div>
 
             </div>
-        </div>
-    </div>
-</div>
 
 <script>
     $(function() {
@@ -183,21 +176,26 @@ $this->headTitle("Configuration de l'application");
         });
     });
 
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "fiche-metier";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
-        });
-
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on("click",function (e) {
+            let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#" + anchor);
         });
     });
 </script>

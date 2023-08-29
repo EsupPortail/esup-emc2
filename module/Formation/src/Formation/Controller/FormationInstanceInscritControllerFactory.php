@@ -12,6 +12,7 @@ use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
@@ -32,6 +33,7 @@ class FormationInstanceInscritControllerFactory
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
+         * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
@@ -43,6 +45,7 @@ class FormationInstanceInscritControllerFactory
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
@@ -62,6 +65,7 @@ class FormationInstanceInscritControllerFactory
         $controller = new FormationInstanceInscritController();
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
+        $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);

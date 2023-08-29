@@ -49,6 +49,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function __construct()
     {
+        $this->etats = new ArrayCollection();
         $this->journees = new ArrayCollection();
         $this->inscrits = new ArrayCollection();
         $this->formateurs = new ArrayCollection();
@@ -481,7 +482,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function estPreparation() : bool
     {
-        $etatCode = $this->getEtatActif()->getType()->getCode();
+        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
         return (
             $etatCode === SessionEtats::ETAT_CREATION_EN_COURS ||
             $etatCode === SessionEtats::ETAT_INSCRIPTION_OUVERTE ||
@@ -491,7 +492,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function estPrete() : bool
     {
-        $etatCode = $this->getEtatActif()->getType()->getCode();
+        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
         return (
             $etatCode === SessionEtats::ETAT_FORMATION_CONVOCATION
         );
@@ -499,7 +500,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     public function estRealisee() : bool
     {
-        $etatCode = $this->getEtatActif()->getType()->getCode();
+        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
         return (
             $etatCode === SessionEtats::ETAT_ATTENTE_RETOURS ||
             $etatCode === SessionEtats::ETAT_CLOTURE_INSTANCE

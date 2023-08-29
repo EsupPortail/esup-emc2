@@ -47,6 +47,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
 
     public function __construct()
     {
+        $this->etats = new ArrayCollection();
         $this->presences = new ArrayCollection();
         $this->reponsesEnquete = new ArrayCollection();
     }

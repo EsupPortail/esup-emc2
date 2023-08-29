@@ -18,7 +18,7 @@ $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getListePrincipale();
 
-$canPresenceModifier = /**$instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS &&**/
+$canPresenceModifier = /** $instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS) &&**/
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
 
 $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode() . " " . $instance->getFormation()->getLibelle());

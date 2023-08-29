@@ -160,7 +160,7 @@ $statuts = AgentStatut::generateStatutsArray($agentStatuts);
 <script>
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "formations";
 
         $('a[aria-controls=' + name + ']').tab('show');

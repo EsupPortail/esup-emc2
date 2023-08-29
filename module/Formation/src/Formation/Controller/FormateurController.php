@@ -101,7 +101,7 @@ class FormateurController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($formateur !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression du formateur de formation du [" . $formateur->getPrenom() . " " . $formateur->getNom() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

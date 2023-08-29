@@ -64,7 +64,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                 <?php foreach($etats as $etat) : ?>
                                     <option
                                             value="<?php echo $etat->getId(); ?>"
-                                            data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "&apos;", $etat->getLibelle()); ?>'
+                                            data-content='<?php  echo $this->etattype($etat); ?> <?php echo str_replace("'", "&apos;", $etat->getLibelle()); ?>'
                                         <?php if ($etat->getId() == $params['etatId']) echo " selected "; ?>
                                     >
                                         <?php echo $etat->getLibelle(); ?>

@@ -71,7 +71,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     <dd><?php echo ($ppp->getFormationPriseEnCharge() !== null)? ($ppp->getFormationPriseEnCharge() . " €"):"Aucun"; ?></dd>
                 </dl>
             </td>
-            <td> <?php echo $this->etatbadge($ppp->getEtat()); ?> </td>
+            <td> <?php echo $this->etatinstance($ppp->getEtatActif()); ?> </td>
             <td>
                 <?php if ($canModifierPPP) : ?>
                     <?php /** @see \Application\Controller\AgentController::modifierPppAction() */ ?>
@@ -148,7 +148,7 @@ $canDetruirePPP     = $canAjouterPPP;
                 <?php echo $stage->getDateFintoString(); ?>
             </td>
             <td> <?php echo $stage->getComplement(); ?> </td>
-            <td> <?php echo $this->etatbadge($stage->getEtat()); ?> </td>
+            <td> <?php echo $this->etatinstance($stage->getEtat()); ?> </td>
             <td>
                 <?php if ($canModifierPPP) : ?>
                     <?php /** @see \Application\Controller\AgentController::modifierStageObservationAction() */ ?>

@@ -72,6 +72,7 @@ return [
                         'options' => [
                             'route'    => '/generer-attestation/:inscrit',
                             'defaults' => [
+                                /** @see FormationInstanceDocumentController::genererAttestationAction() */
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-attestation',
                             ],

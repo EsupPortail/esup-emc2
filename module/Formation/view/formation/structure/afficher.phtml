@@ -129,7 +129,7 @@ $filles = array_filter($filles, function (Structure $a) use ($now) {
 
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "formation-demande";
 
         $('a[aria-controls=' + name + ']').tab('show');

@@ -44,7 +44,7 @@ $canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo $demande->getLibelle(); ?> </td>
             <td> <?php echo $demande->getOrganisme(); ?> </td>
-            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td> <?php echo $this->etatinstance($demande->getEtatActif()->getType()->getCode()); ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
@@ -64,7 +64,7 @@ $canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                 <?php else : ?>
                     <span class="icon icon-editer nope"></span>
                 <?php endif; ?>
-                <?php if ($canGerer AND $demande->getEtat()->getCode() === DemandeExterneEtats::ETAT_VALIDATION_DRH) : ?>
+                <?php if ($canGerer && $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_DRH)) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::gererAction() */ ?>
                     <a href="<?php echo $this->url('formation/demande-externe/gerer', ['demande-externe' => $demande->getId()],[], true); ?>"
                        class="ajax-modal" data-event="modification"

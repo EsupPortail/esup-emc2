@@ -9,6 +9,7 @@ use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Controller\FormationInstanceController;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
@@ -20,6 +21,7 @@ use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
@@ -27,6 +29,7 @@ class FormationInstanceService
 {
     use EntityManagerAwareTrait;
     use EtatTypeServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use AbonnementServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -113,20 +116,23 @@ class FormationInstanceService
 
     /**
      * @return QueryBuilder
-     * @throws NotSupported
      */
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
-            ->addSelect('formation')->join('Finstance.formation', 'formation')
-            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-            ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
-            ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-            ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
-            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-            ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-            ->addSelect('etat')->leftjoin('Finstance.etat', 'etat')
-            ->addSelect('etype')->leftjoin('etat.type', 'etype');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+                ->addSelect('formation')->join('Finstance.formation', 'formation')
+                ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
+                ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
+                ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
+                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+                ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
+                ->addSelect('etype')->leftjoin('etat.type', 'etype');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problem est survenu lors de la création du QueryBuilder de [".FormationInstanceController::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -134,7 +140,6 @@ class FormationInstanceService
      * @param string $champ
      * @param string $ordre
      * @return FormationInstance[]
-     * @throws NotSupported
      */
     public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
     {
@@ -149,7 +154,6 @@ class FormationInstanceService
     /**
      * @param Formation $formation
      * @return array
-     * @throws NotSupported
      */
     public function getFormationsInstancesByFormation(Formation $formation): array
     {
@@ -166,41 +170,34 @@ class FormationInstanceService
             ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
             ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
             ->andWhere('formation.id = :id')
-            ->setParameter('id', $formation->getId())
-        ;
+            ->setParameter('id', $formation->getId());
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /**
-     * @throws NotSupported
-     */
     public function getFormationsInstancesOuvertesByFormation(Formation $formation)
     {
         $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
-            ->addSelect('etat')->join('Finstance.etat', 'etat')
+            ->addSelect('etat')->join('Finstance.etats', 'etat')
+            ->addSelect('type')->join('etat.type', 'type')
             ->addSelect('inscrit')->leftjoin('Finstance.inscrits', 'inscrit')
             ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
             ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
             ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
             ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
-            ->andWhere('etat.code in (:etats)')->setParameter('etats', [SessionEtats::ETAT_INSCRIPTION_OUVERTE])
-        ;
+            ->andWhere('type.code in (:etats)')->setParameter('etats', [SessionEtats::ETAT_INSCRIPTION_OUVERTE]);
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /**
-     * @throws NotSupported
-     */
-    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan) : array
+    public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan): array
     {
-        $annees = explode("/",$plan->getAnnee());
-        $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annees[0]);
-        $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.$annees[1]);
+        $annees = explode("/", $plan->getAnnee());
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annees[0]);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . $annees[1]);
 
         $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
             ->addSelect('formation')->join('Finstance.formation', 'formation')
@@ -218,7 +215,7 @@ class FormationInstanceService
 
         /** @var FormationInstance $instance */
         foreach ($result as $instance) {
-            if ($instance->getDebut(true) > $debut AND $instance->getFin(true) < $fin) $trueR[] = $instance;
+            if ($instance->getDebut(true) > $debut and $instance->getFin(true) < $fin) $trueR[] = $instance;
 
         }
 //        $debut = $debut->format('d/m/Y');
@@ -236,7 +233,7 @@ class FormationInstanceService
     public function getFormationsInstancesByEtat(string $etatCode): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('etat.code = :code')
+            ->andWhere('etype.code = :code')
             ->setParameter('code', $etatCode);
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -273,7 +270,7 @@ class FormationInstanceService
         return $result;
     }
 
-    public function getFormationInstanceBySource( string $source, string $idSource): ?FormationInstance
+    public function getFormationInstanceBySource(string $source, string $idSource): ?FormationInstance
     {
 
         $qb = $this->createQueryBuilder()
@@ -299,9 +296,8 @@ class FormationInstanceService
         $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_PRINCIPALE')->getValeur());
         $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_COMPLEMENTAIRE')->getValeur());
         $instance->setFormation($formation);
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CREATION_EN_COURS));
-
         $this->create($instance);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
         $instance->setSource(HasSourceInterface::SOURCE_EMC2);
         $instance->setIdSource(($formation->getIdSource()) ? (($formation->getIdSource()) . "-" . $instance->getId()) : ($formation->getId() . "-" . $instance->getId()));
         $this->update($instance);
@@ -312,9 +308,9 @@ class FormationInstanceService
     /** Fonctions associées aux états de l'instance *******************************************************************/
 
 
-    public function recreation(FormationInstance $instance) : FormationInstance
+    public function recreation(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CREATION_EN_COURS));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
 
         return $instance;
@@ -327,8 +323,9 @@ class FormationInstanceService
      */
     public function ouvrirInscription(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_INSCRIPTION_OUVERTE));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         $this->update($instance);
+
 
         //notification abonnement
         $abonnements = $instance->getFormation()->getAbonnements();
@@ -345,7 +342,7 @@ class FormationInstanceService
      */
     public function fermerInscription(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_INSCRIPTION_FERMEE));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_INSCRIPTION_FERMEE);
         $this->update($instance);
 
         foreach ($instance->getListePrincipale() as $inscrit) {
@@ -363,9 +360,14 @@ class FormationInstanceService
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
         }
 
-        $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
-        $dateRappel->sub(new DateInterval('P4D'));
-        $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
+        $debut = $instance->getDebut();
+        if ($debut !== null) {
+            $dateRappel = DateTime::createFromFormat('d/m/Y H:i', $instance->getDebut() . " 08:00");
+            $dateRappel->sub(new DateInterval('P4D'));
+            $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
+        } else {
+           throw new RuntimeException("Aucun événement/rappel ne peut être créé sans au moins une séance de planifiée",0);
+        }
 
         return $instance;
     }
@@ -376,10 +378,9 @@ class FormationInstanceService
      */
     public function envoyerConvocation(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_FORMATION_CONVOCATION));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_FORMATION_CONVOCATION);
         $this->update($instance);
-        foreach ($instance->getListePrincipale() as $inscrit)
-        {
+        foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
@@ -402,8 +403,9 @@ class FormationInstanceService
      */
     public function demanderRetour(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_ATTENTE_RETOURS));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_ATTENTE_RETOURS);
         $this->update($instance);
+
         foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerDemandeRetour($inscrit);
         }
@@ -416,7 +418,7 @@ class FormationInstanceService
      */
     public function cloturer(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CLOTURE_INSTANCE);
         $this->update($instance);
         return $instance;
     }
@@ -427,7 +429,7 @@ class FormationInstanceService
      */
     public function annuler(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_SESSION_ANNULEE));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_SESSION_ANNULEE);
         $this->update($instance);
         foreach ($instance->getInscrits() as $inscrit) {
             $this->getNotificationService()->triggerSessionAnnulee($inscrit);
@@ -445,14 +447,14 @@ class FormationInstanceService
      */
     public function reouvrir(FormationInstance $instance): FormationInstance
     {
-        $instance->setEtat($this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CREATION_EN_COURS));
+        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
         return $instance;
     }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
     /** @throws ORMException */
-    public function classerInscription(FormationInstanceInscrit $inscription) : FormationInstanceInscrit
+    public function classerInscription(FormationInstanceInscrit $inscription): FormationInstanceInscrit
     {
         $session = $inscription->getInstance();
         $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
@@ -494,8 +496,7 @@ class FormationInstanceService
 
         $qb = $this->createQueryBuilder()
             ->andWhere('Finstance.histoCreation > :date')->setParameter('date', $date)
-            ->andWhere('formation.affichage = :true')->setParameter('true', true)
-        ;
+            ->andWhere('formation.affichage = :true')->setParameter('true', true);
         $result = $qb->getQuery()->getResult();
 
         return $result;

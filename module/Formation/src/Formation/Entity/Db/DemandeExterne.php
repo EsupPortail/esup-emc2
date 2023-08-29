@@ -4,6 +4,7 @@ namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
@@ -44,6 +45,13 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationResponsable = null;
     private ?string $justificationRefus = null;
     private ?Collection $devis = null;
+
+    public function __construct()
+    {
+        $this->etats = new ArrayCollection();
+        $this->devis = new ArrayCollection();
+
+    }
 
     public function getId(): ?int
     {
@@ -210,17 +218,6 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     public function setAgent(?Agent $agent): void
     {
         $this->agent = $agent;
-    }
-
-    public function getEtat(): ?EtatInstance
-    {
-        return $this->getEtatActif();
-    }
-
-    public function setEtat(?EtatInstance $etat): void
-    {
-        throw new RuntimeException("Passer par le service maintenant...");
-        //$this->etat = $etat;
     }
 
     public function generateTag(): string

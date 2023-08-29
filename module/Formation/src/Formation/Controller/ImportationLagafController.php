@@ -27,11 +27,11 @@ use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 
 class ImportationLagafController extends AbstractActionController
 {
-    use EtatTypeServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -192,7 +192,7 @@ class ImportationLagafController extends AbstractActionController
         $report .= "<thead><tr><th>Action Id</th><th>Session Id</th><th>Lieu</th><th>Responsable</th></tr></thead>";
         $report .= "<tbody>";
 
-        $etat_ok = $this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::ETAT_CLOTURE_INSTANCE);
+
         $lagaf = $this->sourceLagaf;
 
         $actions = $this->getFormationService()->getFormations();
@@ -235,8 +235,10 @@ class ImportationLagafController extends AbstractActionController
                     $instance->setNbPlacePrincipale(0);
                     $instance->setNbPlaceComplementaire(0);
                     $instance->setAutoInscription();
-                    $instance->setEtat($etat_ok);
                     $this->getFormationInstanceService()->create($instance);
+                    $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
+                    $this->getFormationInstanceService()->update($instance);
+
                     $instances[] = $instance;
                 }
             } else {
@@ -475,8 +477,6 @@ class ImportationLagafController extends AbstractActionController
         $inscrits = [];
         foreach ($inscrits_tmp as $inscrit) $inscrits[$inscrit->getId()] = $inscrit;
 
-        $etat_ok = $this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::ETAT_VALIDER_DRH);
-        $validee = $this->getEtatTypeService()->getEtatTypeByCode('VALIDATION_INSCRIPTION');
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
@@ -504,10 +504,10 @@ class ImportationLagafController extends AbstractActionController
                     $inscription->setAgent($agent);
                     $inscription->setListe("principale");
                     $inscription->setSource($this->sourceLagaf);
-                    $inscription->setEtat($validee);
                     $inscription->setIdSource($st_iscrit_id);
-                    $inscription->setEtat($etat_ok);
                     $this->getFormationInstanceInscritService()->create($inscription);
+                    $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
+                    $this->getFormationInstanceInscritService()->update($inscription);
                     $inscriptions[] = $inscription;
 
                     $st_frepas = trim($data[$position_FRepas]);

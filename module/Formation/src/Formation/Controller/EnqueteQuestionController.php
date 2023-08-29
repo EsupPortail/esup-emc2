@@ -303,10 +303,8 @@ class EnqueteQuestionController extends AbstractActionController
         $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
 
         /** @var EnqueteQuestion[] $questions */
-        $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
-        $questions = array_filter($questions, function (EnqueteQuestion $a) {
-            return $a->estNonHistorise();
-        });
+        $questions = $this->getEnqueteQuestionService()->getEnqueteQuestions();
+
         $dictionnaireQuestion = [];
         foreach ($questions as $question) $dictionnaireQuestion[$question->getId()] = $question;
         usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) {
@@ -348,7 +346,7 @@ class EnqueteQuestionController extends AbstractActionController
             }
         }
 
-        $categories = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->findAll();
+        $categories = $this->getEnqueteCategorieService()->getEnqueteCateories();
 
         return new ViewModel([
             'inscription' => $inscription,

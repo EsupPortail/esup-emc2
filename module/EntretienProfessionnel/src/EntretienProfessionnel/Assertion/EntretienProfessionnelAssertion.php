@@ -98,12 +98,11 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         $predicats = $this->computePredicats($entity, $agent, $role);
 
-        $etatCode = $entity->getEtatA()->getType()->getCode();
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
                 if ($isAgent AND (
-                    $entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER OR
-                    $entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION )) return false;
+                    $entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
+                    $entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION))) return false;
                 switch ($role->getRoleId()) {
                     case AppRoleProvider::ADMIN_FONC:
                     case AppRoleProvider::ADMIN_TECH:
@@ -111,8 +110,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR:
                         return true;
                     case AppRoleProvider::AGENT:
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
+                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
+                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
@@ -133,8 +132,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR:
                         return true;
                     case AppRoleProvider::AGENT:
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
-                        if ($entity->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
+                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
+                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
@@ -232,8 +231,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR :
                         return true;
                     case Agent::ROLE_AGENT :
-                        if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) return false;
-                        if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) return false;
+                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
+                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
                     case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
