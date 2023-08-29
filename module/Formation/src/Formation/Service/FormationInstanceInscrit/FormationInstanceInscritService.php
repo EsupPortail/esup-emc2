@@ -133,7 +133,7 @@ class FormationInstanceInscritService
      */
     public function getFormationsInstancesInscrits(string $champ = 'id', string $ordre = 'ASC'): array
     {
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
+        $qb = $this->createQueryBuilder()
             ->orderBy('inscrit.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -229,11 +229,7 @@ class FormationInstanceInscritService
         ;
 
         if ($anneeCourrante) {
-            $today = new DateTime();
-            $month = ((int)$today->format('m'));
-            $year = ((int)$today->format('Y'));
-            $annee = ($month > 8) ? $year : ($year - 1);
-
+            $annee = Formation::getAnnee();
             $mini = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
             $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
@@ -252,9 +248,9 @@ class FormationInstanceInscritService
      * @param int|null $annee
      * @return FormationInstanceInscrit[]
      */
-    public function getInscriptionsValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
+    public function getInscriptionsByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
     {
-        if ($annee === null) Formation::getAnnee();
+        if ($annee === null) $annee = Formation::getAnnee();
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
@@ -268,7 +264,7 @@ class FormationInstanceInscritService
         $result = array_filter($result, function (FormationInstanceInscrit $a) use ($debut, $fin) {
             $sessionDebut = DateTime::createFromFormat('d/m/Y', $a->getInstance()->getDebut());
             $sessionFin = DateTime::createFromFormat('d/m/Y', $a->getInstance()->getFin());
-            return ($sessionDebut >= $debut and $sessionFin <= $fin);
+            return ($sessionDebut >= $debut && $sessionFin <= $fin);
         });
         return $result;
     }
@@ -281,7 +277,7 @@ class FormationInstanceInscritService
     public function getInscriptionsValideesByAgents(array $agents, ?int $annee): array
     {
         $etats = [InscriptionEtats::ETAT_VALIDER_DRH, InscriptionEtats::ETAT_REFUSER];
-        $result = $this->getInscriptionsValideesByAgentsAndEtats($agents, $etats, $annee);
+        $result = $this->getInscriptionsByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }
 
@@ -293,7 +289,7 @@ class FormationInstanceInscritService
     public function getInscriptionsNonValideesByAgents(array $agents, ?int $annee): array
     {
         $etats = [InscriptionEtats::ETAT_DEMANDE, InscriptionEtats::ETAT_VALIDER_RESPONSABLE];
-        $result = $this->getInscriptionsValideesByAgentsAndEtats($agents, $etats, $annee);
+        $result = $this->getInscriptionsByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }
 
@@ -340,19 +336,6 @@ class FormationInstanceInscritService
         return $inscriptions;
     }
 
-    public function getFormationInstanceInscritBySource(?string $source, string $id): ?FormationInstanceInscrit
-    {
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
-            ->andWhere('inscrit.source = :source')->setParameter('source', $source)
-            ->andWhere('inscrit.idSource = :id')->setParameter('id', $id);
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Inscription partagent la même source [" . $source . "," . $id . "]");
-        }
-        return $result;
-    }
-
     /**
      * @param Agent[] $agents
      * @return FormationInstanceInscrit[]
@@ -362,7 +345,7 @@ class FormationInstanceInscritService
         $agentIds = array_map(function (Agent $a) {
             return $a->getId();
         }, $agents);
-        $qb = $this->getEntityManager()->getRepository(FormationInstanceInscrit::class)->createQueryBuilder('inscrit')
+        $qb = $this->createQueryBuilder()
             ->leftJoin('inscrit.agent', 'agent')->addSelect('agent')
             ->andWhere('agent.id in (:agentIds)')->setParameter('agentIds', $agentIds);
         return $qb->getQuery()->getResult();

@@ -421,10 +421,6 @@ class NotificationService {
         return null;
     }
 
-    /**
-     * @param FormationInstance[] $closes
-     * @return Mail|null
-     */
     public function triggerNotifierConvocationAutomatique(array $convocations): ?Mail
     {
         if (!empty($convocations)) {

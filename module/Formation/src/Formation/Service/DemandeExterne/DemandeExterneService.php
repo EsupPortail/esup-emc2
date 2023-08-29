@@ -268,11 +268,7 @@ class DemandeExterneService {
         ;
 
         if ($anneeCourrante) {
-            $today = new DateTime();
-            $month = ((int) $today->format('m'));
-            $year  = ((int) $today->format('Y'));
-            $annee = ($month > 8 ) ? $year : ($year-1) ;
-
+            $annee = Formation::getAnnee();
             $mini = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
             $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee+1));
 

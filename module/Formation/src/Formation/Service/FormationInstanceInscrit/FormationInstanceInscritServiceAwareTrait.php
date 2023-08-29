@@ -4,7 +4,6 @@ namespace Formation\Service\FormationInstanceInscrit;
 
 trait FormationInstanceInscritServiceAwareTrait
 {
-
     private FormationInstanceInscritService $formationInstanceInscritService;
 
     public function getFormationInstanceInscritService(): FormationInstanceInscritService
@@ -16,6 +15,4 @@ trait FormationInstanceInscritServiceAwareTrait
     {
         $this->formationInstanceInscritService = $formationInstanceInscritService;
     }
-
-
 }

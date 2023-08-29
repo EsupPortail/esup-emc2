@@ -26,7 +26,6 @@ class FormationInstanceInscritServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $structureService = $container->get(StructureService::class);
 
-        /** @var FormationInstanceInscritService $service */
         $service = new FormationInstanceInscritService();
         $service->setEntityManager($entityManager);
         $service->setStructureService($structureService);
