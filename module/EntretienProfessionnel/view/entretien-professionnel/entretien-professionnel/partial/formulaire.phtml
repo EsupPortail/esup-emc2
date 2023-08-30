@@ -28,7 +28,7 @@ $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entreti
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 
 ?>
@@ -78,7 +78,7 @@ $date_depassee = (($isAgent) AND ($now > $date));
     <?php if ($canRenseigner) : ?>
         <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
             <?php
-                /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+                /** @see \UnicaenAutoform\View\Helper\InstanceAsFormulaireHelper */
                 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
                 /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
                 $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);

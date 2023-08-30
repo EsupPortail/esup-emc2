@@ -18,11 +18,13 @@ use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatsInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatsInterface, HasValidationsInterface {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
+    use HasValidationsTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
@@ -52,7 +54,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     private Collection $observations;
     private Collection $sursis;
-    private Collection $validations;
 
     private ?string $token = null;
     private ?DateTime $acceptation = null;
@@ -200,7 +201,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function getMaxSaisiObservation() : ?DateTime
     {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
         $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
@@ -211,42 +212,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
             throw new RuntimeException("Problème de création du DateInterval",0,$e);
         }
         return $date;
-    }
-
-    /** VALIDATION ****************************************************************************************************/
-    // todo unicaenValidation ?
-
-    /** @return ValidationInstance[] */
-    public function getValidations(?string $type = null, bool $historisee = false) : array
-    {
-        $validations =  $this->validations->toArray();
-        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
-        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->estNonHistorise();});
-        return $validations;
-    }
-
-    public function addValidation(ValidationInstance $validation) : EntretienProfessionnel
-    {
-        $this->validations->add($validation);
-        return $this;
-    }
-
-    public function removeValidation(ValidationInstance $validation) : EntretienProfessionnel
-    {
-        $this->validations->removeElement($validation);
-        return $this;
-    }
-
-    public function getValidationByType(?string $type, bool $historisee = false) : ?ValidationInstance
-    {
-        $validations =  $this->validations->toArray();
-        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
-        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->getHistoDestruction() === null;});
-
-        if ($validations === []) return null;
-        $validations = array_filter($validations, function (ValidationInstance $a) {return $a->estNonHistorise();});
-        usort($validations, function (ValidationInstance $a, ValidationInstance $b) { return $a->getHistoCreation() > $b->getHistoCreation();});
-        return $validations[0];
     }
 
     public function getToken() : ?string
@@ -383,7 +348,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @noinspection PhpUnused */
     public function  toStringValidationAgent() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_AGENT);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -392,7 +357,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @noinspection PhpUnused */
     public function  toStringValidationResponsable() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
@@ -401,7 +366,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @noinspection PhpUnused */
     public function  toStringValidationHierarchie() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }

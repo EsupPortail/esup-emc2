@@ -23,7 +23,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
             <dl>
                 <dt> Validation du responsable </dt>
                 <dd>
-                    <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE); ?>
+                    <?php $validationResponsable = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE); ?>
                     <?php if ($validationResponsable === null) : ?>
                         Aucune validation
                     <?php else : ?>
@@ -34,7 +34,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                 </dd>
                 <dt> Validation de l'agent </dt>
                 <dd>
-                    <?php $validationAgent = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_AGENT); ?>
+                    <?php $validationAgent = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_AGENT); ?>
                     <?php if ($validationAgent === null) : ?>
                         Aucune validation
                     <?php else : ?>

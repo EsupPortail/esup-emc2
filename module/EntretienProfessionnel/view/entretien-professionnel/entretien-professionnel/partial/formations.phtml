@@ -54,7 +54,7 @@ $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 $res = ($now <= $date);
 
-$validationReponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationReponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 ?>
 

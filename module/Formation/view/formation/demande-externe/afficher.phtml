@@ -110,25 +110,25 @@ use Formation\Provider\Validation\DemandeExterneValidations;
     </div>
     <div class="card-body">
         <dl class="row">
-            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT)) : ?>
+            <?php if ($validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT)) : ?>
                 <dt class="col-md-4"> Validation de l'agent </dt>
                 <dd class="col-md-8">
                     <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>
                     <?php echo $demande->getJustificationAgent(); ?>
                 </dd>
             <?php endif; ?>
-            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE)) : ?>
+            <?php if ($validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE)) : ?>
                 <dt class="col-md-4"> Validation du responsable </dt>
                 <dd class="col-md-8">
                     <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>
                     <?php echo $demande->getJustificationResponsable(); ?>
                 </dd>
             <?php endif; ?>
-            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH)) : ?>
+            <?php if ($validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH)) : ?>
                 <dt class="col-md-4"> Validation de la DRH </dt>
                 <dd class="col-md-8"> <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> </dd>
             <?php endif; ?>
-            <?php if ($validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS)) : ?>
+            <?php if ($validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS)) : ?>
                 <dt class="col-md-4"> Refus </dt>
                 <dd class="col-md-8">
                     <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?> <br/>

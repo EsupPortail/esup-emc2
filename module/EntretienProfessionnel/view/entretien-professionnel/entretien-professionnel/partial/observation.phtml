@@ -18,15 +18,15 @@ $canModifierObservation = $this->isAllowed(ObservationPrivileges::getResourceId(
 $canHistoriserObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_HISTORISER));
 $canDetruireObservation = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_SUPPRIMER));
 
-$validationObservation  = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
+$validationObservation  = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
 
 $date_non_depassee = ($date !== null AND $date >= $now);
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
-$validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+$validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationHierarchie = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
 ?>
 
 <!-- Observation de l'agent : CONTROLE -------------------------------------------------------------------------------->

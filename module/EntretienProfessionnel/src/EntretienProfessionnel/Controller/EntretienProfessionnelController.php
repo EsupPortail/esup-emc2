@@ -342,39 +342,40 @@ class EntretienProfessionnelController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validation = $entretien->getValidationByType($type);
+            $validation = $entretien->getValidationActiveByTypeCode($type);
             if ($validation === null) {
-                if ($data["reponse"] === "oui") $validation = $this->getEntretienProfessionnelService()->addValidation($type, $entretien);
+                if ($data["reponse"] === "oui") {
+                    $this->getValidationInstanceService()->setValidationActive($entretien,$type);
+                    $this->getEntretienProfessionnelService()->update($entretien);
+                }
                 if ($data["reponse"] === "non") $validation = $this->getEntretienProfessionnelService()->addValidation($type, $entretien, 'Refus');
             }
-            if ($validation !== null) {
-                switch ($type) {
-                    case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
-                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
-                        $this->getEntretienProfessionnelService()->update($entretien);
-                        $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
-                        $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
-                        $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
-                        break;
+            switch ($type) {
+                case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
+                    $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
+                    $this->getEntretienProfessionnelService()->update($entretien);
+                    $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
+                    $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
+                    $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
+                    break;
 
-                    case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
-                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
-                        $this->getEntretienProfessionnelService()->update($entretien);
-                        $this->getNotificationService()->triggerObservations($entretien);
-                        break;
+                case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
+                    $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
+                    $this->getEntretienProfessionnelService()->update($entretien);
+                    $this->getNotificationService()->triggerObservations($entretien);
+                    break;
 
-                    case EntretienProfessionnelValidations::VALIDATION_DRH :
-                        $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
-                        $this->getEntretienProfessionnelService()->update($entretien);
-                        $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
-                        break;
+                case EntretienProfessionnelValidations::VALIDATION_DRH :
+                    $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
+                    $this->getEntretienProfessionnelService()->update($entretien);
+                    $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
+                    break;
 
-                    case EntretienProfessionnelValidations::VALIDATION_AGENT :
-                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
-                        $this->getEntretienProfessionnelService()->update($entretien);
-                        $this->getNotificationService()->triggerValidationAgent($entretien);
-                        break;
-                }
+                case EntretienProfessionnelValidations::VALIDATION_AGENT :
+                    $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
+                    $this->getEntretienProfessionnelService()->update($entretien);
+                    $this->getNotificationService()->triggerValidationAgent($entretien);
+                    break;
             }
             exit();
         }
@@ -439,7 +440,7 @@ class EntretienProfessionnelController extends AbstractActionController
             $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_DRH) {
-            if ($entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
+            if ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
             } else {
                 $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);

@@ -2,21 +2,26 @@
 
 namespace Element\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Element\Entity\Db\Interfaces\HasNiveauInterface;
 use Element\Entity\Db\Traits\HasNiveauTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use UnicaenValidation\Entity\ValidableAwareTrait;
-use UnicaenValidation\Entity\ValidableInterface;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 
-class CompetenceElement implements HistoriqueAwareInterface, ValidableInterface, HasNiveauInterface {
+class CompetenceElement implements HistoriqueAwareInterface, HasValidationsInterface, HasNiveauInterface {
     use HistoriqueAwareTrait;
-    use ValidableAwareTrait;
+    use HasValidationsTrait;
     use HasNiveauTrait;
 
     private ?int $id = null;
     private ?Competence $competence = null;
     private ?string $commentaire = null;
+
+    public function __construct() {
+        $this->validations = new ArrayCollection();
+    }
 
     public function getId(): int
     {

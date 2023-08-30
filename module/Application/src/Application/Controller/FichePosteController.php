@@ -899,7 +899,7 @@ class FichePosteController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validation = $ficheposte->getValidationByTypeCode($type);
+            $validation = $ficheposte->getValidationActiveByTypeCode($type);
             if ($validation === null) {
                 if ($data["reponse"] === "oui") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte);
                 if ($data["reponse"] === "non") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte, 'Refus');

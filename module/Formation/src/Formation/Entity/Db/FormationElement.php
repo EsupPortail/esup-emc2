@@ -2,19 +2,25 @@
 
 namespace Formation\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use UnicaenValidation\Entity\ValidableAwareTrait;
-use UnicaenValidation\Entity\ValidableInterface;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 
-class FormationElement implements HistoriqueAwareInterface, ValidableInterface
+class FormationElement implements HistoriqueAwareInterface, HasValidationsInterface
 {
     use HistoriqueAwareTrait;
-    use ValidableAwareTrait;
+    use HasValidationsTrait;
 
     private ?int $id = null;
     private ?Formation $formation = null;
     private ?string $commentaire = null;
+
+    public function __construct() {
+        $this->validations = new ArrayCollection();
+    }
+
 
     public function getId(): int
     {

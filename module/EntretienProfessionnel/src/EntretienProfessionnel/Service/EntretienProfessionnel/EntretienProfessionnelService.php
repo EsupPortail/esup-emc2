@@ -16,24 +16,22 @@ use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
 use Structure\Entity\Db\Structure;
-use Structure\Entity\Db\StructureResponsable;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
-class EntretienProfessionnelService {
+class EntretienProfessionnelService
+{
     use AgentServiceAwareTrait;
     use EntityManagerAwareTrait;
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
 
@@ -41,7 +39,7 @@ class EntretienProfessionnelService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function create(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         try {
             $this->getEntityManager()->persist($entretien);
@@ -53,16 +51,8 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    public function update(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function update(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        $user = $this->getUserService()->getConnectedUser();
-        if ($user === null) {
-            $default = $this->config['default-user'] ?? null;
-            $user = $this->getUserService()->getRepo()->find($default);
-        }
-        $entretien->setHistoModificateur($user);
-        $entretien->setHistoDestructeur($user);
-
         try {
             $this->getEntityManager()->flush($entretien);
         } catch (ORMException $e) {
@@ -71,7 +61,7 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    public function historise(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function historise(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         try {
             $entretien->historiser();
@@ -82,7 +72,7 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    public function restore(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function restore(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         try {
             $entretien->dehistoriser();
@@ -93,7 +83,7 @@ class EntretienProfessionnelService {
         return $entretien;
     }
 
-    public function delete(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function delete(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         try {
             $this->getEntityManager()->remove($entretien);
@@ -106,7 +96,7 @@ class EntretienProfessionnelService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder(bool $withAffectation = true) : QueryBuilder
+    public function createQueryBuilder(bool $withAffectation = true): QueryBuilder
     {
         try {
             $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
@@ -119,9 +109,9 @@ class EntretienProfessionnelService {
                 ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
                 ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
                 ->addSelect('vtype')->leftjoin('validation.type', 'vtype')
-            ;
+;
         } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".EntretienProfessionnel::class."]",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . EntretienProfessionnel::class . "]", 0, $e);
         }
 
         $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
@@ -130,7 +120,7 @@ class EntretienProfessionnelService {
     }
 
     /** @return EntretienProfessionnel[] */
-    public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne  $campagne = null, ?EtatType $etat = null) : array
+    public function getEntretiensProfessionnels(?Agent $agent = null, ?Agent $responsable = null, ?Structure $structure = null, ?Campagne $campagne = null, ?EtatType $etat = null): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.annee, agent.nomUsuel, agent.prenom');
@@ -167,11 +157,11 @@ class EntretienProfessionnelService {
      * @param string $texte
      * @return Agent[]
      */
-    public function findAgentByTerm(string $texte) : array
+    public function findAgentByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder(false)
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         $agents = [];
@@ -187,11 +177,11 @@ class EntretienProfessionnelService {
      * @param string $texte
      * @return Agent[]
      */
-    public function findResponsableByTerm(string $texte) : array
+    public function findResponsableByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder(false)
             ->andWhere("LOWER(CONCAT(responsable.prenom, ' ', responsable.nomUsuel)) like :search OR LOWER(CONCAT(responsable.nomUsuel, ' ', responsable.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         $responsables = [];
@@ -207,16 +197,15 @@ class EntretienProfessionnelService {
      * @param string $texte
      * @return Structure[]
      */
-    public function findStructureByTerm(string $texte) : array
+    public function findStructureByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder(false)
             ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
-            ->setParameter('search', '%'.strtolower($texte).'%')
+            ->setParameter('search', '%' . strtolower($texte) . '%')
             ->andWhere('structure.fermeture IS NULL')
             ->andWhere('affectation.dateDebut <= entretien.dateEntretien')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
-        ;
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien');
         $result = $qb->getQuery()->getResult();
 
         $structures = [];
@@ -234,7 +223,7 @@ class EntretienProfessionnelService {
      * @param int|null $id
      * @return EntretienProfessionnel|null
      */
-    public function getEntretienProfessionnel(?int $id) : ?EntretienProfessionnel
+    public function getEntretienProfessionnel(?int $id): ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder(false)
             ->addSelect('formulaireInstance')->leftJoin('entretien.formulaireInstance', 'formulaireInstance')
@@ -247,17 +236,12 @@ class EntretienProfessionnelService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même identifiant [".$id."]", $e);
+            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même identifiant [" . $id . "]", $e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @return EntretienProfessionnel
-     */
-    public function getRequestedEntretienProfessionnel(AbstractActionController $controller, string $paramName = 'entretien-professionnel') : ?EntretienProfessionnel
+    public function getRequestedEntretienProfessionnel(AbstractActionController $controller, string $paramName = 'entretien-professionnel'): ?EntretienProfessionnel
     {
         $id = $controller->params()->fromRoute($paramName);
         $entretien = $this->getEntretienProfessionnel($id);
@@ -265,35 +249,26 @@ class EntretienProfessionnelService {
     }
 
     /** @return EntretienProfessionnel[] */
-    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false)  : array
+    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false): array
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->leftJoin('entretien.responsable', 'responsable')->addSelect('responsable')
-            ->andWhere('entretien.agent = :agent')
-            ->setParameter('agent', $agent);
+        $qb = $this->createQueryBuilder()
+            ->andWhere('entretien.agent = :agent')->setParameter('agent', $agent);
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
-
-        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien');
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /**
-     * @param string token
-     * @return EntretienProfessionnel|null
-     */
-    public function getEntretienProfessionnelByToken(string $token) : ?EntretienProfessionnel
+    public function getEntretienProfessionnelByToken(string $token): ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('entretien.token = :token')
-            ->setParameter('token', $token)
-        ;
+            ->setParameter('token', $token);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même token [".$token."]", $e);
+            throw new RuntimeException("Plusieurs EntretienProfessionnel partagent le même token [" . $token . "]", $e);
         }
         return $result;
     }
@@ -302,7 +277,7 @@ class EntretienProfessionnelService {
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel|null
      */
-    public function getPreviousEntretienProfessionnel(EntretienProfessionnel $entretien) : ?EntretienProfessionnel
+    public function getPreviousEntretienProfessionnel(EntretienProfessionnel $entretien): ?EntretienProfessionnel
     {
         $agent = $entretien->getAgent();
         $date = $entretien->getDateEntretien();
@@ -324,20 +299,19 @@ class EntretienProfessionnelService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel|null
      */
-    public function getEntretienProfessionnelByAgentAndCampagne(Agent $agent, Campagne $campagne) : ?EntretienProfessionnel
+    public function getEntretienProfessionnelByAgentAndCampagne(Agent $agent, Campagne $campagne): ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('entretien.agent = :agent')
             ->setParameter('agent', $agent)
             ->andWhere('entretien.campagne = :campagne')
             ->setParameter('campagne', $campagne)
-            ->andWhere('entretien.histoDestruction IS NULL')
-            ;
+            ->andWhere('entretien.histoDestruction IS NULL');
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs entretiens professionnels ont été trouvés pour la campagne [".$campagne->getId()."|".$campagne->getAnnee()."] et l'agent [".$agent->getId()."|".$agent->getDenomination()."]",0,$e);
+            throw new RuntimeException("Plusieurs entretiens professionnels ont été trouvés pour la campagne [" . $campagne->getId() . "|" . $campagne->getAnnee() . "] et l'agent [" . $agent->getId() . "|" . $agent->getDenomination() . "]", 0, $e);
         }
         return $result;
     }
@@ -348,7 +322,7 @@ class EntretienProfessionnelService {
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel
      */
-    public function generateToken(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function generateToken(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         try {
             $token = Uuid::uuid4();
@@ -365,7 +339,7 @@ class EntretienProfessionnelService {
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel
      */
-    public function recopiePrecedent(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function recopiePrecedent(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         $previous = $this->getPreviousEntretienProfessionnel($entretien);
         if ($previous) {
@@ -381,7 +355,7 @@ class EntretienProfessionnelService {
     /**
      * @return array
      */
-    public function getDocumentsUtiles() : array
+    public function getDocumentsUtiles(): array
     {
         $liste = ['INTRANET_DOCUMENT'];
         $documents = [];
@@ -396,31 +370,10 @@ class EntretienProfessionnelService {
     }
 
     /**
-     * @param Structure $structure
-     * @param string $term
-     * @return Agent[]
-     */
-    public function findResponsablePourEntretien(Structure $structure, string $term) : array
-    {
-        $result_resp = array_map(
-            function (StructureResponsable $a) { return $a->getAgent(); },
-            $structure->getResponsables()
-        );
-        $result_resp = array_filter($result_resp, function (Agent $a) use ($term) { return str_contains(strtolower($a->getDenomination()),strtolower($term)); });
-
-        if ($structure->getParent() AND $structure->getParent() !== $structure) {
-            $parent = $this->findResponsablePourEntretien($structure->getParent(), $term);
-            $result_resp = array_merge($result_resp, $parent);
-        }
-        return $result_resp;
-    }
-
-
-    /**
      * @param EntretienProfessionnel $entretien
      * @return EntretienProfessionnel
      */
-    public function initialiser(EntretienProfessionnel $entretien) : EntretienProfessionnel
+    public function initialiser(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         $entretien_instance = $this->getFormulaireInstanceService()->createInstance('CREP');
         $formation_instance = $this->getFormulaireInstanceService()->createInstance('CREF');
@@ -437,7 +390,7 @@ class EntretienProfessionnelService {
      * @param string|null $value
      * @return ValidationInstance
      */
-    public function addValidation(string $type, ?EntretienProfessionnel $entretien, ?string $value = null) : ValidationInstance
+    public function addValidation(string $type, ?EntretienProfessionnel $entretien, ?string $value = null): ValidationInstance
     {
         $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
 
@@ -455,17 +408,20 @@ class EntretienProfessionnelService {
      * @param array $params
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnelsWithFiltre(array $params) : array
+    public function getEntretiensProfessionnelsWithFiltre(array $params): array
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
-            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
-            ->join('entretien.etats', 'etat')->addSelect('etat')
-            ->join('etat.type', 'etype')->addSelect('etype')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+                ->join('entretien.agent', 'agent')->addSelect('agent')
+                ->join('entretien.responsable', 'responsable')->addSelect('responsable')
+                ->join('entretien.campagne', 'campagne')->addSelect('campagne')
+                ->join('entretien.etats', 'etat')->addSelect('etat')
+                ->join('etat.type', 'etype')->addSelect('etype');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survnu lors de la création du QueryBuilder [" . EntretienProfessionnel::class . "]", 0, $e);
+        }
 
-        if ($params['campagne'] !== null  and $params['campagne'] !== "") {
+        if ($params['campagne'] !== null and $params['campagne'] !== "") {
             $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
         }
         if ($params['etat'] !== null and $params['etat'] !== "") {
@@ -491,19 +447,14 @@ class EntretienProfessionnelService {
         return $result;
     }
 
-    /**
-     * @param Campagne|null $campagne
-     * @param array $agents
-     * @return EntretienProfessionnel[] @desc [agentId => entretien]
-     */
-    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false) : array
+    /** @return EntretienProfessionnel[] @desc [agentId => entretien] */
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false): array
     {
         if ($campagne === null) return [];
 
         $qb = $this->createQueryBuilder()
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
-            ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents)
-        ;
+            ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents);
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();

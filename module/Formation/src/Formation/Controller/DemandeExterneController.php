@@ -187,7 +187,7 @@ class DemandeExterneController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validation = $demande->getValidationByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
+            $validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
             if ($validation === null) {
                 if ($data["reponse"] === "oui") {
                     $this->getDemandeExterneService()->addValidationAgent($demande);

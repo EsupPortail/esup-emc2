@@ -332,11 +332,11 @@ class CampagneController extends AbstractActionController {
         foreach ($entretiens as $entretien) {
             if ($entretien->estNonHistorise()) {
                 $resume[$entretien->getAgent()->getId()]['Responsable d\'entretien'] = $entretien->getResponsable()->getDenomination();
-                $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+                $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
                 if ($validationResponsable) $resume[$entretien->getAgent()->getId()]['Validation du responsable'] = $validationResponsable->getHistoCreation()->format('d/m/Y à H:i');
-                $validationAutorite = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+                $validationAutorite = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
                 if ($validationAutorite) $resume[$entretien->getAgent()->getId()]['Validation de l\'autorité'] = $validationAutorite->getHistoCreation()->format('d/m/Y à H:i');
-                $validationAgent = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
+                $validationAgent = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_AGENT);
                 if ($validationAgent) $resume[$entretien->getAgent()->getId()]['Validation de l\'agent'] = $validationAgent->getHistoCreation()->format('d/m/Y à H:i');
             }
         }

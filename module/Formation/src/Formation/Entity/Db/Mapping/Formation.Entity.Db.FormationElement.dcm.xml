@@ -10,7 +10,7 @@
             <join-column name="formation_id" referenced-column-name="id"/>
         </many-to-one>
         <field name="commentaire"     type="string" length="4096"       column="commentaire"     nullable="true"/>
-        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validation">
+        <one-to-one target-entity="UnicaenValidation\Entity\Db\ValidationInstance" field="validations">
             <join-column name="validation_id" referenced-column-name="id" />
         </one-to-one>
 

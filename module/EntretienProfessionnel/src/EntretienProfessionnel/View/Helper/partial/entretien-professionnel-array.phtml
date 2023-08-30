@@ -114,7 +114,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         //todo l'assertion merde
 //        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
         $canConvoquer = (
-                ($entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
+                ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
              && $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
         ?>
     <tr>
