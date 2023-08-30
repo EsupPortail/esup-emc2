@@ -18,19 +18,21 @@ use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatsInterface {
+class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgentInterface, HasEtatsInterface, HasValidationsInterface
+{
     use FichePosteMacroTrait;
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
 
-    const TYPE_DEFAULT  = 'DEFAULT';
+    const TYPE_DEFAULT = 'DEFAULT';
     const TYPE_INCLUSIF = 'INCLUSIF';
-    const TYPE_GENRE    = 'GENRE';
+    const TYPE_GENRE = 'GENRE';
 
-    public function getResourceId() : string
+    public function getResourceId(): string
     {
         return 'FichePoste';
     }
@@ -38,7 +40,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     private ?int $id = null;
     private ?string $libelle = null;
     private ?Agent $agent = null;
-    private ?SpecificitePoste  $specificite = null;
+    private ?SpecificitePoste $specificite = null;
     private ?int $rifseep = null;
     private ?int $nbi = null;
     private ?DateTime $finValidite = null;
@@ -53,36 +55,39 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** @var array */
     private array $dictionnaires = [];
 
-    public function __invoke()
+    public function __construct()
     {
         $this->fichesMetiers = new ArrayCollection();
         $this->descriptionsRetirees = new ArrayCollection();
         $this->applicationsRetirees = new ArrayCollection();
         $this->competencesRetirees = new ArrayCollection();
         $this->missionsAdditionnelles = new ArrayCollection();
+
+        $this->etats = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getLibelle() : ?string
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function setLibelle(?string $libelle) : void
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
     }
 
-    public function getAgent() : ?Agent
+    public function getAgent(): ?Agent
     {
         return $this->agent;
     }
 
-    public function setAgent(?Agent $agent) : void
+    public function setAgent(?Agent $agent): void
     {
         $this->agent = $agent;
     }
@@ -117,29 +122,29 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         $this->finValidite = $finValidite;
     }
 
-    public function isEnCours(?DateTime $date = null) : bool
+    public function isEnCours(?DateTime $date = null): bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->finValidite === null OR $date < $this->getFinValidite());
+        return ($this->finValidite === null or $date < $this->getFinValidite());
     }
 
     /** @return FicheTypeExterne[] */
-    public function getFichesMetiers() : array
+    public function getFichesMetiers(): array
     {
         return $this->fichesMetiers->toArray();
     }
 
-    public function addFicheTypeExterne($type) : void
+    public function addFicheTypeExterne($type): void
     {
         $this->fichesMetiers->add($type);
     }
 
-    public function removeFicheTypeExterne($type) : void
+    public function removeFicheTypeExterne($type): void
     {
         $this->fichesMetiers->removeElement($type);
     }
 
-    public function getFicheTypeExternePrincipale() : ?FicheTypeExterne
+    public function getFicheTypeExternePrincipale(): ?FicheTypeExterne
     {
         $res = [];
         /** @var FicheTypeExterne $ficheMetier */
@@ -150,14 +155,14 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         }
 
         $nb = count($res);
-        if ( $nb > 1) {
+        if ($nb > 1) {
             throw new RuntimeException("Plusieurs fiches metiers sont déclarées comme principale");
         }
         if ($nb === 1) return current($res);
         return null;
     }
 
-    public function getQuotiteTravaillee() : int
+    public function getQuotiteTravaillee(): int
     {
         $somme = 0;
         /** @var FicheTypeExterne $ficheMetier */
@@ -169,23 +174,23 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** Specificité et missions additionnelles  */
 
-    public function getSpecificite() : ?SpecificitePoste
+    public function getSpecificite(): ?SpecificitePoste
     {
         return $this->specificite;
     }
 
-    public function setSpecificite(?SpecificitePoste $specificite) : void
+    public function setSpecificite(?SpecificitePoste $specificite): void
     {
         $this->specificite = $specificite;
     }
 
     /** @return MissionAdditionnelle[] */
-    public function getMissionsAdditionnelles(bool $historise = false) : array
+    public function getMissionsAdditionnelles(bool $historise = false): array
     {
         $result = [];
         /** @var MissionAdditionnelle $missionAdditionnelle */
         foreach ($this->missionsAdditionnelles as $missionAdditionnelle) {
-            if (!$historise OR $missionAdditionnelle->estNonHistorise()) $result[] = $missionAdditionnelle;
+            if (!$historise or $missionAdditionnelle->estNonHistorise()) $result[] = $missionAdditionnelle;
         }
         return $result;
     }
@@ -193,33 +198,34 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Descriptions Retirées ******************************************************************************************/
 
     /** @return FicheposteActiviteDescriptionRetiree[] */
-    public function getDescriptionsRetirees() : array{
+    public function getDescriptionsRetirees(): array
+    {
         return $this->descriptionsRetirees->toArray();
     }
 
-    public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Mission $activite) : array
+    public function getDescriptionsRetireesByFicheMetierAndActivite(FicheMetier $fichemetier, Mission $activite): array
     {
         $result = [];
         /** @var FicheposteActiviteDescriptionRetiree $descriptionsRetiree */
         foreach ($this->getDescriptionsRetirees() as $descriptionsRetiree) {
-            if ($descriptionsRetiree->getFicheMetier() === $fichemetier AND $descriptionsRetiree->getMission() === $activite) {
+            if ($descriptionsRetiree->getFicheMetier() === $fichemetier and $descriptionsRetiree->getMission() === $activite) {
                 $result[] = $descriptionsRetiree;
             }
         }
         return $result;
     }
 
-    public function addDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description) : void
+    public function addDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description): void
     {
         $this->descriptionsRetirees->add($description);
     }
 
-    public function removeDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description) : void
+    public function removeDescriptionRetiree(FicheposteActiviteDescriptionRetiree $description): void
     {
         $this->descriptionsRetirees->removeElement($description);
     }
 
-    public function clearDescriptionsRetirees() : void
+    public function clearDescriptionsRetirees(): void
     {
         $this->descriptionsRetirees->clear();
     }
@@ -227,20 +233,22 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Competences Retirées ******************************************************************************************/
 
     /** @return FicheposteCompetenceRetiree[] */
-    public function getCompetencesRetirees() : array {
+    public function getCompetencesRetirees(): array
+    {
         return $this->competencesRetirees->toArray();
     }
 
-    public function addCompetenceRetiree(FicheposteCompetenceRetiree $competence) {
+    public function addCompetenceRetiree(FicheposteCompetenceRetiree $competence)
+    {
         $this->competencesRetirees->add($competence);
     }
 
-    public function removeCompetenceRetiree(FicheposteCompetenceRetiree $competence) : void
+    public function removeCompetenceRetiree(FicheposteCompetenceRetiree $competence): void
     {
         $this->competencesRetirees->removeElement($competence);
     }
 
-    public function clearCompetencesRetirees() : void
+    public function clearCompetencesRetirees(): void
     {
         $this->competencesRetirees->clear();
     }
@@ -248,33 +256,36 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
     /** Applications Retirées *****************************************************************************************/
 
     /** @return FicheposteApplicationRetiree[] */
-    public function getApplicationsRetirees() : array
+    public function getApplicationsRetirees(): array
     {
         return $this->applicationsRetirees->toArray();
     }
 
-    public function addApplicationRetiree(FicheposteApplicationRetiree $application) {
+    public function addApplicationRetiree(FicheposteApplicationRetiree $application)
+    {
         $this->applicationsRetirees->add($application);
     }
 
-    public function removeApplicationRetiree(FicheposteApplicationRetiree $application) {
+    public function removeApplicationRetiree(FicheposteApplicationRetiree $application)
+    {
         $this->applicationsRetirees->removeElement($application);
     }
 
-    public function clearApplicationsRetirees() {
+    public function clearApplicationsRetirees()
+    {
         $this->applicationsRetirees->clear();
     }
 
     /** EXPERTISE *****************************************************************************************************/
 
     /** @return Expertise[] */
-    public function getExpertises() : array
+    public function getExpertises(): array
     {
         return $this->expertises->toArray();
     }
 
-     /* @return Expertise[] */
-    public function getCurrentExpertises($date = null) : array
+    /* @return Expertise[] */
+    public function getCurrentExpertises($date = null): array
     {
         if ($date === null) $date = (new DateTime());
 
@@ -290,15 +301,15 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** Fonctions pour simplifier  */
 
-     /* @return MissionActivite[] */
-    public function getDescriptions(FicheMetierMission $mission, DateTime $date) : array
+    /* @return MissionActivite[] */
+    public function getDescriptions(FicheMetierMission $mission, DateTime $date): array
     {
         $dictionnaire = $mission->getMission()->getActivites($date);
         return $dictionnaire;
     }
 
     /** @return MissionActivite[] */
-    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission, DateTime $date) : array
+    public function getDescriptionsConservees(FicheMetierMission $ficheMetierMission, DateTime $date): array
     {
         /** @var MissionActivite[] $activites */
         $activites = $ficheMetierMission->getMission()->getActivites($date);
@@ -306,8 +317,8 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         foreach ($activites as $activite) {
             $found = false;
             /** @var FicheposteActiviteDescriptionRetiree $retiree */
-            foreach($this->getDescriptionsRetirees() as $retiree) {
-                if ($retiree->estNonHistorise() AND $retiree->getActivite() === $activite) {
+            foreach ($this->getDescriptionsRetirees() as $retiree) {
+                if ($retiree->estNonHistorise() and $retiree->getActivite() === $activite) {
                     $found = true;
                     break;
                 }
@@ -317,23 +328,23 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $dictionnaire;
     }
 
-    public function isComplete() : bool
+    public function isComplete(): bool
     {
-        if (! $this->getAgent()) return false;
+        if (!$this->getAgent()) return false;
 //        if (! $this->getPoste()) return false;
-        if (! $this->getFicheTypeExternePrincipale()) return false;
+        if (!$this->getFicheTypeExternePrincipale()) return false;
         return true;
     }
 
-    public function isVide() : bool
+    public function isVide(): bool
     {
-        if ( $this->getAgent()) return false;
+        if ($this->getAgent()) return false;
 //        if ( $this->getPoste()) return false;
-        if ( $this->getFicheTypeExternePrincipale()) return false;
+        if ($this->getFicheTypeExternePrincipale()) return false;
         return true;
     }
 
-    public function hasExpertise() : bool
+    public function hasExpertise(): bool
     {
         /** @var FicheTypeExterne $fichesMetier */
         foreach ($this->fichesMetiers as $fichesMetier) {
@@ -344,7 +355,7 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
 
     /** Fonction pour les affichages dans les documents ***************************************************************/
 
-    public function addDictionnaire(string $clef, $valeur) : void
+    public function addDictionnaire(string $clef, $valeur): void
     {
         $this->dictionnaires[$clef] = $valeur;
     }
@@ -354,25 +365,27 @@ class FichePoste implements ResourceInterface, HistoriqueAwareInterface, HasAgen
         return $this->dictionnaires[$clef];
     }
 
-    public function getLibelleMetierPrincipal(string $type = FichePoste::TYPE_INCLUSIF) : ?string
+    public function getLibelleMetierPrincipal(string $type = FichePoste::TYPE_INCLUSIF): ?string
     {
         if ($this->getFicheTypeExternePrincipale() === null) return null;
         $metier = $this->getFicheTypeExternePrincipale()->getFicheType()->getMetier();
 
         switch ($type) {
-            case FichePoste::TYPE_INCLUSIF : return $metier->getLibelle();
+            case FichePoste::TYPE_INCLUSIF :
+                return $metier->getLibelle();
             case FichePoste::TYPE_GENRE :
                 if ($this->agent === null) return $metier->getLibelle();
-                if ($this->agent->getSexe() === 'M' AND $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
-                if ($this->agent->getSexe() === 'F' AND $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
+                if ($this->agent->getSexe() === 'M' and $metier->getLibelleMasculin()) return $metier->getLibelleMasculin();
+                if ($this->agent->getSexe() === 'F' and $metier->getLibelleFeminin()) return $metier->getLibelleFeminin();
                 return $metier->getLibelle();
-            case FichePoste::TYPE_DEFAULT : return $metier->getLibelle(false);
+            case FichePoste::TYPE_DEFAULT :
+                return $metier->getLibelle(false);
         }
 
         return $metier->getLibelle();
     }
 
-    public function generateTag() : string
+    public function generateTag(): string
     {
         return 'FICHEPOSTE_' . $this->getId();
     }

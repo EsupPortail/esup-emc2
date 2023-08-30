@@ -148,10 +148,12 @@ class FichePosteService {
                 ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
                 ->addSelect('reference')->leftJoin('metier.references', 'reference')
                 ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
-                ->addSelect('etat')->leftJoin('fiche.etats', 'etat');
+            ;
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
         }
+
+        $qb = FichePoste::decorateWithEtats($qb, 'fiche');
         return $qb;
     }
 
@@ -224,7 +226,7 @@ class FichePosteService {
             ->setParameter('agent', $agent)
             ->andWhere('fiche.histoCreation <= :date')
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
-            ->andWhere('etat.code = :OK AND etat.code = :SIGNEE')
+            ->andWhere('type.code = :OK AND type.code = :SIGNEE')
             ->setParameter('date', $date)
             ->setParameter('OK', FichePosteEtats::ETAT_CODE_OK)
             ->setParameter('SIGNEE', FichePosteEtats::ETAT_CODE_SIGNEE)
@@ -861,26 +863,6 @@ EOS;
         }
 
         return $nouvelleFiche;
-    }
-
-    /**
-     * @param string $type
-     * @param FichePoste|null $ficheposte
-     * @param string|null $value
-     * @return ValidationInstance
-     */
-    public function addValidation(string $type, ?FichePoste $ficheposte, ?string $value = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
-
-        $validation = new ValidationInstance();
-        $validation->setEntity($ficheposte);
-        $validation->setType($vtype);
-        $validation->setValeur($value);
-        $this->getValidationInstanceService()->create($validation);
-        $ficheposte->addValidation($validation);
-        $this->update($ficheposte);
-        return $validation;
     }
 
     /**

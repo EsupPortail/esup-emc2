@@ -115,10 +115,10 @@ class FichePosteController extends AbstractActionController
         }
 
         $fiche = new FichePoste();
-        $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_REDACTION);
-        $fiche->addEtat($etatInstance);
         $fiche->setAgent($agent);
         $this->getFichePosteService()->create($fiche);
+        $this->getEtatInstanceService()->setEtatActif($fiche,FichePosteEtats::ETAT_CODE_REDACTION);
+        $this->getFichePosteService()->update($fiche);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
     }
 
@@ -154,8 +154,7 @@ class FichePosteController extends AbstractActionController
             }
 
             $nouvelleFiche->setAgent($agent);
-            $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_REDACTION);
-            $nouvelleFiche->addEtat($etatInstance);
+            $this->getEtatInstanceService()->setEtatActif($nouvelleFiche,FichePosteEtats::ETAT_CODE_REDACTION);
             $this->getFichePosteService()->update($nouvelleFiche);
 
             /**  Commenter pour eviter perte de temps et clignotement de la fenêtre modal */
@@ -901,27 +900,30 @@ class FichePosteController extends AbstractActionController
             $data = $request->getPost();
             $validation = $ficheposte->getValidationActiveByTypeCode($type);
             if ($validation === null) {
-                if ($data["reponse"] === "oui") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte);
-                if ($data["reponse"] === "non") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte, 'Refus');
+                if ($data["reponse"] === "oui") {
+                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type);
+                    $this->getFichePosteService()->update($ficheposte);
+                }
+                if ($data["reponse"] === "non") {
+                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type, 'Refus');
+                    $this->getFichePosteService()->update($ficheposte);
+                }
             }
             switch ($type) {
                 case FichePosteValidations::VALIDATION_RESPONSABLE :
-                    $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_OK);
-                    $ficheposte->addEtat($etatInstance);
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_OK);
                     $this->getFichePosteService()->update($ficheposte);
                     $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
                     break;
 
                 case FichePosteValidations::VALIDATION_AGENT :
                     $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
-                    $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_SIGNEE);
-                    $ficheposte->addEtat($etatInstance);
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_SIGNEE);
                     $this->getFichePosteService()->update($ficheposte);
 
                     $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
                     $newFiche->setAgent($ficheposte->getAgent());
-                    $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_REDACTION);
-                    $newFiche->addEtat($etatInstance);
+                    $this->getEtatInstanceService()->setEtatActif($newFiche,FichePosteEtats::ETAT_CODE_REDACTION);
                     $this->getFichePosteService()->update($newFiche);
 
                     $date = new DateTime();
@@ -979,12 +981,12 @@ class FichePosteController extends AbstractActionController
 
         switch ($validation->getType()->getCode()) {
             case FichePosteValidations::VALIDATION_RESPONSABLE :
-                $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_REDACTION);
-                $ficheposte->addEtat($etatInstance);
+                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_REDACTION);
+                $this->getFichePosteService()->update($ficheposte);
                 break;
             case FichePosteValidations::VALIDATION_AGENT :
-                $etatInstance = $this->getEtatInstanceService()->createWithCode(FichePosteEtats::ETAT_CODE_OK);
-                $ficheposte->addEtat($etatInstance);
+                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_OK);
+                $this->getFichePosteService()->update($ficheposte);
                 break;
         }
 
