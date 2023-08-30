@@ -97,7 +97,7 @@ else $autorites = $agent->getAutorites();
                 <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
                         <a
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationResponsable->getId()], [], true); ?>"
+                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
                                 class="btn btn-danger action"
                         >
                             <span class="icon validation-undo"></span>
@@ -177,7 +177,7 @@ else $autorites = $agent->getAutorites();
                         <div class="pull-right">
                             <a
                                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
+                                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationObservation->getId()], [], true); ?>"
                                     class="btn btn-danger action"
                             >
                                 <span class="icon validation-undo"></span>
@@ -272,7 +272,7 @@ else $autorites = $agent->getAutorites();
                 <?php if ($canValiderDrh AND $validationAgent === null) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationHierarchie->getId()], [], true); ?>"
+                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationHierarchie->getId()], [], true); ?>"
                             class="btn btn-danger action"
                     >
                         <span class="icon validation-undo"></span>
@@ -347,7 +347,7 @@ else $autorites = $agent->getAutorites();
                 <?php if ($canValiderAgent AND $entretien->getCampagne()->estEnCours()) : ?>
                     <a
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationAgent->getId()], [], true); ?>"
+                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
                             class="btn btn-danger action"
                     >
                         <span class="icon validation-undo"></span>

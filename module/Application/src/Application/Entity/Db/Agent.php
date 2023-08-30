@@ -274,11 +274,12 @@ class Agent implements
     }
 
 
-    public function getDenomination() : ?string
+    public function getDenomination(bool $prenomFirst = false) : ?string
     {
         $prenom = $this->getPrenom();
         $prenom = str_replace("É", "é", $prenom);
         $prenom = str_replace("È", "è", $prenom);
+        if ($prenomFirst) return  ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') ;
         return  (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') . ' ' . ucwords(strtolower($prenom), "- ");
 
     }

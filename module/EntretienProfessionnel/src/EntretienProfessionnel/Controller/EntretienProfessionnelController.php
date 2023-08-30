@@ -379,12 +379,48 @@ class EntretienProfessionnelController extends AbstractActionController
             exit();
         }
 
+        $title = "Validation de l'entretien";
+        $text = "Validation de l'entretien";
+        switch ($type) {
+            case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
+                $title = "Validation par le responsable de l'entretien professionnel";
+                $text  = "<p>";
+                $text .= "Cette validation figera les comptes-rendus d'entretien et de formation de ".$entretien->getAgent()->getDenomination(true).".<br>";
+                $text .= "La validation ouvre la période de huit jours pour l'expression des observations et notifie ".$entretien->getAgent()->getDenomination(true).".";
+                $text .= "</p>";
+                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                break;
+            case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
+                $title = "Validation des observations (ou de l'absence de observations) de l'agent·e";
+                $text  = "<p>";
+                $text .= "Cette validation figera les observations si elles ont été faites.<br>";
+                $text .= "La validation ouvre la possibilité aux autorités hiérachiques de valider à leur tour cet entretien.";
+                $text .= "</p>";
+                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                break;
+            case EntretienProfessionnelValidations::VALIDATION_DRH :
+                $title = "Validation de l'autorité hiérarchique";
+                $text  = "<p>";
+                $text .= "Cette validation vaut pour visa de la lecture de l'entretien professionnel de ".$entretien->getAgent()->getDenomination(true).".<br>";
+                $text .= "La validation ouvre la possibilité à ".$entretien->getAgent()->getDenomination(true)." de finaliser son entretien.";
+                $text .= "</p>";
+                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                break;
+            case EntretienProfessionnelValidations::VALIDATION_AGENT :
+                $title = "Validation de l'agent·e";
+                $text  = "<p>";
+                $text .= "Cette validation finalise l'entretien professionnel de ".$entretien->getAgent()->getDenomination(true).".";
+                $text .= "</p>";
+                $text .= "Êtes-vous sur·e de vouloir valider ?";
+                break;
+        }
+
         $vm = new ViewModel();
         $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
         $vm->setVariables([
-            'title' => "Validation de l'entretien",
-            'text' => "Validation de l'entretien",
             'action' => $this->url()->fromRoute('entretien-professionnel/valider-element', ["type" => $type, "entretien" => $entretien->getId()], [], true),
+            'title' => $title,
+            'text' => $text,
             'refus' => false,
         ]);
         return $vm;
@@ -392,33 +428,32 @@ class EntretienProfessionnelController extends AbstractActionController
 
     public function revoquerValidationAction() : Response
     {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
-
-
-        /** @var EntretienProfessionnel $entity */
-        $entity = $this->getValidationInstanceService()->getEntity($validation);
+        $this->getValidationInstanceService()->historise($validation);
 
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) {
-            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_OBSERVATION) {
-            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_DRH) {
-            if ($entity->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
-                $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
+            if ($entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
+                $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
             } else {
-                $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
+                $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
             }
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_AGENT) {
-            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
         }
 
-        $this->getEntretienProfessionnelService()->update($entity);
+        $this->getEntretienProfessionnelService()->update($entretien);
+
 
         /** @see EntretienProfessionnelController::accederAction */
-        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entity->getId()], ['fragment' => 'validation'], true);
+        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['fragment' => 'validation'], true);
     }
 
     public function exporterCrepAction() : string

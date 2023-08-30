@@ -64,7 +64,9 @@ return [
                         'rechercher-responsable',
                         'rechercher-structure',
                     ],
-                    'roles' => [],
+                    'roles' => [
+                        'user'
+                    ],
                 ],
                 [
                     'controller' => EntretienProfessionnelController::class,
@@ -368,8 +370,9 @@ return [
                         'type'  => Segment::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/revoquer-validation/:validation',
+                            'route'    => '/revoquer-validation/:entretien-professionnel/:validation',
                             'defaults' => [
+                                /** @see EntretienProfessionnelController::revoquerValidationAction() */
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'revoquer-validation',
                             ],

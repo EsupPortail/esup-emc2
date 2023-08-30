@@ -22,6 +22,7 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
@@ -32,8 +33,11 @@ class EntretienProfessionnelService {
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
+
+    public array $config = [];
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -51,6 +55,14 @@ class EntretienProfessionnelService {
 
     public function update(EntretienProfessionnel $entretien) : EntretienProfessionnel
     {
+        $user = $this->getUserService()->getConnectedUser();
+        if ($user === null) {
+            $default = $this->config['default-user'] ?? null;
+            $user = $this->getUserService()->getRepo()->find($default);
+        }
+        $entretien->setHistoModificateur($user);
+        $entretien->setHistoDestructeur($user);
+
         try {
             $this->getEntityManager()->flush($entretien);
         } catch (ORMException $e) {

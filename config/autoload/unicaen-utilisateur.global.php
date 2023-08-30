@@ -76,6 +76,7 @@ return [
             \Structure\Provider\IdentityProvider::class,
         ],
         'application-username' => 'preecog',
+        'default-user' => 0,
     ],
 
     // pour la mise a jour des champs d'historisation ...

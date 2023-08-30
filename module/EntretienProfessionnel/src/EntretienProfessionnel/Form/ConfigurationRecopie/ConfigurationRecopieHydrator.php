@@ -16,8 +16,8 @@ class ConfigurationRecopieHydrator implements HydratorInterface {
         $splits = explode(";",$object->getValeur());
         $data = [
             'operation' => 'recopie',
-            'from' => $splits[0],
-            'to'   => $splits[1],
+            'from' => $splits[0]??null,
+            'to'   => $splits[1]??null,
         ];
         return $data;
     }

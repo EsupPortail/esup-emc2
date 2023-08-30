@@ -301,13 +301,26 @@ class AgentController extends AbstractActionController
         return $vm;
     }
 
+    /** TODO :: reprendre le même systeme que pour la validation pour ne plus utiliser la méthode getEntity **/
     public function revoquerElementAction(): Response
     {
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
         $this->getValidationInstanceService()->historise($validation);
 
-        /** @var ApplicationElement $entity */
-        $entity = $this->getValidationInstanceService()->getEntity($validation);
+        $type = $this->params()->fromRoute('type');
+        $entityId = $this->params()->fromRoute('id');
+        switch ($type) {
+            case 'AGENT_APPLICATION' :
+                $entity = $this->getApplicationElementService()->getApplicationElement($entityId);
+                break;
+            case 'AGENT_COMPETENCE' :
+                $entity = $this->getCompetenceElementService()->getCompetenceElement($entityId);
+                break;
+            case 'AGENT_FORMATION' :
+                $entity = $this->getFormationElementService()->getFormationElement($entityId);
+                break;
+        }
+
         $entity->setValidation(null);
         try {
             $this->getValidationInstanceService()->getEntityManager()->flush($entity);

@@ -10,6 +10,7 @@ use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenUtilisateur\Service\User\UserService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
 
@@ -29,6 +30,7 @@ class EntretienProfessionnelServiceFactory
          * @var ConfigurationService $configurationService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
+         * @var UserService $userService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          */
@@ -37,6 +39,7 @@ class EntretienProfessionnelServiceFactory
         $configurationService = $container->get(ConfigurationService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
+        $userService = $container->get(UserService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
 
@@ -46,8 +49,12 @@ class EntretienProfessionnelServiceFactory
         $service->setConfigurationService($configurationService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);
+        $service->setUserService($userService);
         $service->setValidationInstanceService($validationInstanceService);
         $service->setValidationTypeService($validationTypeService);
+
+        $config = $container->get('Configuration')['unicaen-utilisateur'];
+        $service->config = $config;
         return $service;
     }
 }

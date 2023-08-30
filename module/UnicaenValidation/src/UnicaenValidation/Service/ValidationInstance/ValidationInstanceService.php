@@ -208,19 +208,6 @@ class ValidationInstanceService {
     }
 
     /**
-     * @param ValidationInstance $validation
-     * @return mixed
-     */
-    public function getEntity(ValidationInstance $validation)
-    {
-        if ($validation->getEntityId() !== null AND $validation->getEntityClass() !== null) {
-            $entity = $this->getEntityManager()->getRepository($validation->getEntityClass())->find($validation->getEntityId());
-            return $entity;
-        }
-        return null;
-    }
-
-    /**
      * @param ValidationType $validationType
      * @param EntretienProfessionnel $entretien
      * @param string $value
