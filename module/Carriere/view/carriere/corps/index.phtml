@@ -39,6 +39,7 @@ $canAction = ($canModifier OR $canLister);
         <th> Libellé</th>
         <th> #Agent/Grade </th>
         <th> Catégorie </th>
+        <th> Supérieur = Autorité </th>
         <th> Niveaux </th>
         <?php if ($canAction) : ?>
             <th class="action"> Action </th>
@@ -58,6 +59,23 @@ $canAction = ($canModifier OR $canLister);
             </td>
             <td> <?php echo count($corp->getAgentGrades()); ?> </td>
             <td> <?php echo $corp->getCategorie(); ?> </td>
+            <td class="action">
+                <?php if ($corp->isSuperieurAsAutorite()) : ?>
+                    <span class="text-success">
+                        <span class="icon icon-checked"></span> Oui
+                    </span>
+                <?php else : ?>
+                    <span class="text-danger">
+                        <span class="icon icon-unchecked"></span> Non
+                    </span>
+
+                <?php endif; ?>
+                &nbsp;
+                <?php /** @see \Carriere\Controller\CorpsController::toggleSuperieurAutoriteAction() */ ?>
+                <a href="<?php echo $this->url('corps/toggle-superieur-autorite', ['corps' => $corp->getId()], [], true); ?>">
+                    <span class="icon icon-refresh"></span>Changer
+                </a>
+            </td>
             <td class="action">
                 <?php echo $this->niveauEnveloppe($corp->getNiveaux()) ?>
                 <?php if ($canModifier) : ?>

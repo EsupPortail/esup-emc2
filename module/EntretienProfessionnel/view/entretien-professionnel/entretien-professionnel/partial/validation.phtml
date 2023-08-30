@@ -35,7 +35,19 @@ $depasse = ($date === null or $date < $now);
 
 $agent = $entretien->getAgent();
 $responsable = $entretien->getResponsable();
-$autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
+
+// Filtrage du responsable de l'entretien pro parmi les autorités SAUF si inhiber par le corps (par exemple BIB).
+$grades = $agent->getGradesActifs($entretien->getDateEntretien());
+$inhibition = false;
+foreach ($grades as $grade) {
+    if ($grade->getCorps()->isSuperieurAsAutorite()) {
+        $inhibition = true;
+        break;
+    }
+}
+if (!$inhibition) $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
+else $autorites = $agent->getAutorites();
+
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>

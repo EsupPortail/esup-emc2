@@ -94,6 +94,15 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         //todo FIN BIZARERIE ...
 
 
+		$grades = $entity->getAgent()->getGradesActifs($entity->getDateEntretien());
+        $inhibition = false;
+		foreach ($grades as $grade) {
+			if ($grade->getCorps()->isSuperieurAsAutorite()) {
+				$inhibition = true;
+				break;
+			}
+		}
+
         $isAgent = ($agent === $entity->getAgent());
 
         $predicats = $this->computePredicats($entity, $agent, $role);
@@ -191,7 +200,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return true;
                     case RoleProvider::RESPONSABLE:
                     case Agent::ROLE_AUTORITE:
-                        return ($predicats['isAutoriteHierarchique'] && !$predicats['isResponsableEntretien']);
+                        return ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien']));
                     default:
                         return false;
                 }

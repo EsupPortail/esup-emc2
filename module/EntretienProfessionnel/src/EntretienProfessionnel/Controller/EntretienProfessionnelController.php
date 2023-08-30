@@ -263,14 +263,28 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction() : Response
+	public function historiserAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $this->getEntretienProfessionnelService()->historise($entretien);
 
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->historise($entretien);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/confirmation');
+        if ($entretien !== null) {
+            $vm->setVariables([
+                'title' => "Historisation de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
+                'text' => "L'historisation masquera et annulera cet entretien professionnel. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/historiser', ["entretien" => $entretien->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction() : Response

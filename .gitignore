@@ -6,3 +6,4 @@ composer.lock
 vendor
 !/public/vendor
 /public/css/local.css
+/public/css/logos.css
