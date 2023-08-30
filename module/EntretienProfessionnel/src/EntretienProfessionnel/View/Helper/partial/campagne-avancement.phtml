@@ -16,6 +16,9 @@ if (isset($options['mode'])) $mode = $options['mode'];
 
 $validerSuperieur = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
 foreach ($entretiens as $entretien) {
+    if ($entretien->getEtatActif() === null) {
+        throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
+    }
     switch ($entretien->getEtatActif()->getType()->getCode()) {
         case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
         case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :

@@ -80,6 +80,7 @@ $date_depassee = (($isAgent) AND ($now > $date));
             <?php
                 /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
                 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+                /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
                 $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
                 echo $this->instanceAsFormulaire()->render($instance, $url, $data);

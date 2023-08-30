@@ -106,12 +106,13 @@ class EntretienProfessionnelService {
                 ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
                 ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
                 ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
-                ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
+                ->addSelect('vtype')->leftjoin('validation.type', 'vtype')
+            ;
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".EntretienProfessionnel::class."]",0,$e);
         }
 
-        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien');
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
         if ($withAffectation) $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
         return $qb;
     }
@@ -229,8 +230,7 @@ class EntretienProfessionnelService {
             ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
             ->addSelect('categorie')->leftJoin('champ.categorie', 'categorie')
             ->addSelect('formulaire')->leftJoin('formulaireInstance.formulaire', 'formulaire')
-            ->andWhere('entretien.id = :id')
-            ->setParameter('id', $id);
+            ->andWhere('entretien.id = :id')->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -303,7 +303,7 @@ class EntretienProfessionnelService {
             ->orderBy('entretien.dateEntretien', 'DESC');
         $result = $qb->getQuery()->getResult();
 
-        if (!isset($result)) return null;
+        if (empty($result)) return null;
         return $result[0];
     }
 

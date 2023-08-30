@@ -183,6 +183,7 @@ class EntretienProfessionnelController extends AbstractActionController
                 }
                $this->getEntretienProfessionnelService()->initialiser($entretien);
                 $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
+                $this->getEntretienProfessionnelService()->update($entretien);
                $this->getNotificationService()->triggerConvocationDemande($entretien);
             }
         }
@@ -224,7 +225,7 @@ class EntretienProfessionnelController extends AbstractActionController
                     $this->flashMessenger()->addWarningMessage("<strong>Attention le délai de 15 jours n'est pas respecté.</strong><br/> Veuillez-vous assurer que votre agent est bien d'accord avec les dates d'entretien professionnel.");
                 }
 
-                $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION));
+                $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION);
                 $this->getEntretienProfessionnelService()->generateToken($entretien);
                 $this->getEntretienProfessionnelService()->update($entretien);
 
@@ -272,14 +273,28 @@ class EntretienProfessionnelController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction() : Response
+    public function historiserAction() : ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this, 'entretien');
-        $this->getEntretienProfessionnelService()->historise($entretien);
 
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('entretien-professionnel', [], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getEntretienProfessionnelService()->historise($entretien);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/confirmation');
+        if ($entretien !== null) {
+            $vm->setVariables([
+                'title' => "Historisation de l'entretien professionnel de " . $entretien->getAgent()->getDenomination() . " en date du " . $entretien->getDateEntretien()->format('d/m/Y'),
+                'text' => "L'historisation masquera et annulera cet entretien professionnel. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('entretien-professionnel/historiser', ["entretien" => $entretien->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction() : Response
@@ -335,33 +350,28 @@ class EntretienProfessionnelController extends AbstractActionController
             if ($validation !== null) {
                 switch ($type) {
                     case EntretienProfessionnelValidations::VALIDATION_RESPONSABLE :
-                        $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
+                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
                         $this->getEntretienProfessionnelService()->update($entretien);
-
                         $this->getNotificationService()->triggerValidationResponsableEntretien($entretien);
-
                         $dateNotification = (new DateTime())->add(new DateInterval('P1W'));
                         $this->getRappelPasObservationService()->creer($entretien, $dateNotification);
                         break;
 
                     case EntretienProfessionnelValidations::VALIDATION_OBSERVATION:
-                        $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION));
+                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
                         $this->getEntretienProfessionnelService()->update($entretien);
-
                         $this->getNotificationService()->triggerObservations($entretien);
                         break;
 
                     case EntretienProfessionnelValidations::VALIDATION_DRH :
-                        $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE));
+                        $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
                         $this->getEntretienProfessionnelService()->update($entretien);
-
                         $this->getNotificationService()->triggerValidationResponsableHierarchique($entretien);
                         break;
 
                     case EntretienProfessionnelValidations::VALIDATION_AGENT :
-                        $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT));
+                        $this->getEtatInstanceService()->setEtatActif($entretien,EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
                         $this->getEntretienProfessionnelService()->update($entretien);
-
                         $this->getNotificationService()->triggerValidationAgent($entretien);
                         break;
                 }
@@ -383,34 +393,29 @@ class EntretienProfessionnelController extends AbstractActionController
     public function revoquerValidationAction() : Response
     {
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
-        $this->getValidationInstanceService()->historise($validation);
 
 
         /** @var EntretienProfessionnel $entity */
         $entity = $this->getValidationInstanceService()->getEntity($validation);
 
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) {
-            $entity->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER));
+            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_OBSERVATION) {
-            $entity->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
+            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_DRH) {
             if ($entity->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION) !== null) {
-                $entity->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION));
+                $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
             } else {
-                $entity->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE));
+                $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE);
             }
         }
         if ($validation->getType()->getCode() === EntretienProfessionnelValidations::VALIDATION_AGENT) {
-            $entity->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE));
+            $this->getEtatInstanceService()->setEtatActif($entity, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE);
         }
 
-        try {
-            $this->getValidationInstanceService()->getEntityManager()->flush($entity);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en base.",0, $e);
-        }
+        $this->getEntretienProfessionnelService()->update($entity);
 
         /** @see EntretienProfessionnelController::accederAction */
         return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $entity->getId()], ['fragment' => 'validation'], true);
@@ -463,7 +468,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
             $entretien->setToken(null);
             $entretien->setAcceptation((new DateTime()));
-            $entretien->setEtat($this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER));
+            $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER);
             $this->getEntretienProfessionnelService()->update($entretien);
 
             $this->getNotificationService()->triggerConvocationAcceptation($entretien);

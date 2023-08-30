@@ -94,7 +94,9 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
                         <?php endif; ?>
                         <?php if ($entretien->estNonHistorise()) : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::historiserAction() */ ?>
-                            <a href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>">
+                            <a href="<?php echo $this->url('entretien-professionnel/historiser', ['entretien' => $entretien->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
                                 <span class="icon icon-historiser"></span></a>
                         <?php else : ?>
                             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::restaurerAction() */ ?>

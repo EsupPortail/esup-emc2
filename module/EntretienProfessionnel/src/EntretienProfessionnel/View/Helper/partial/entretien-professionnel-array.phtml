@@ -203,6 +203,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             ['entretien' => $entretien->getId()],
                             ['query' => ['retour' => $this->url(null,[],['force_canonical' => true], true)]],
                             true); ?>"
+                        class="ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span>
                         Historiser
@@ -261,6 +262,11 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 </style>
 
 <script>
+    $("body").on("modification", function (event) {
+        event.div.modal('hide');
+        window.location.reload();
+    });
+
     $(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
             'paging' : false,
