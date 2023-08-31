@@ -18,6 +18,10 @@ $now = new DateTime();
 $agents = $grade->getAgentGrades();
 $agents = array_filter($agents, function (AgentGrade $a) { return !$a->isDeleted();});
 usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
+
+$actifs = 0; $inactifs = 0;
+foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++;}
+
 ?>
 
 <div class="row">
@@ -28,7 +32,7 @@ usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->ge
 <!--            <dt class="col-md-5"> #Agent </dt>-->
 <!--            <dd class="col-md-7"> --><?php //echo count($agents); ?><!--</dd>-->
             <dt class="col-md-5"> #AgentGrade </dt>
-            <dd class="col-md-7"> <?php echo count($agentGrades); ?></dd>
+            <dd class="col-md-7"> <?php echo $actifs; ?> actifs (<?php echo $inactifs ?> inactifs)</dd>
         </dl>
     </div>
     <div class="col-md-6">
@@ -40,6 +44,9 @@ usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->ge
         </dl>
     </div>
 </div>
+
+<label for="actif_only">Conserver les actifs seulement</label>
+<input type="checkbox" name="actif_only" id="actif_only" checked>
 
 <table class="table table-condensed">
     <thead>
@@ -71,6 +78,12 @@ usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->ge
 </table>
 
 <script>
+    $('tr.historise').hide();
+    $('#actif_only').on('change', function() {
+        let val = $('#actif_only').is(':checked');
+        if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
+    });
+
     $('a.linkexterne').on('click',function(e) {
         e.preventDefault();
         $('.modal').modal("hide");

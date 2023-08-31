@@ -41,6 +41,8 @@ $now = new DateTime();
     </div>
 </div>
 
+<label for="actif_only">Conserver les actifs seulement</label>
+<input type="checkbox" name="actif_only" id="actif_only" checked>
 
 <table class="table table-condensed">
     <thead>
@@ -74,6 +76,12 @@ $now = new DateTime();
 
 
 <script>
+    $('tr.historise').hide();
+    $('#actif_only').on('change', function() {
+        let val = $('#actif_only').is(':checked');
+        if (val === true) $('tr.historise').hide(); else $('tr.historise').show();
+    });
+
     $('a.linkexterne').on('click',function(e) {
         e.preventDefault();
         $('.modal').modal("hide");
