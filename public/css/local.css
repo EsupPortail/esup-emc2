@@ -1,0 +1,22 @@
+:root {
+    /** EMC2 **/
+    --color-dark: rgb(46,139,87); /** seagreen **/
+
+    /** MES FORMATIONS **/
+    --color-main-formation: rgb(106,90,205); /** slateblue **/
+}
+
+footer div#comue {
+    background-image: url('../img/normandie-universite-logo.svg');
+    height: 85px;
+    width: 146px;
+    margin-top: -20px;
+}
+
+footer div#etablissement {
+    background-image: url('../img/unicaen-logo-noir.svg');
+    height:85px;
+    width:160px;
+    margin-top: -20px;
+}
+
