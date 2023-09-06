@@ -13,15 +13,18 @@ use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -287,8 +290,20 @@ class CampagneService {
     {
         $obligatoires = [];  $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
+
+        /** @var Agent $agent */
         foreach ($agents as $agent) {
-            if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+            $ok = false;
+            if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
+                $facultatifs[] = $agent;
+                $ok = true;
+            }
+            $res = $this->getAgentService()->isValideEmploiType($agent,  $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
+            if (!$ok && !$res) {
+                $facultatifs[] = $agent;
+                $ok = true;
+            }
+            if (!$ok) $obligatoires[] = $agent;
         }
         return [$obligatoires, $facultatifs];
     }

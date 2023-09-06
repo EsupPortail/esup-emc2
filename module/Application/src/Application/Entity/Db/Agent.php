@@ -261,6 +261,15 @@ class Agent implements
         return $statuts;
     }
 
+    /** @return AgentGrade[] */
+    public function getEmploiTypesActifs(?DateTime $date = null, ?array $structures = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        $affectations =  $this->getGrades($date);
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentGrade $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        return $affectations;
+    }
+
     /** Autres accesseurs *********************************************************************************************/
 
     public function getUtilisateur() : ?AbstractUser

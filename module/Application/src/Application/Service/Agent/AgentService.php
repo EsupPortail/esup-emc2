@@ -785,6 +785,77 @@ EOS;
         return $result;
     }
 
+    public function isValideEmploiType(Agent $agent, ?Parametre $parametre, ?DateTime $date = null, ?Structure $structure = null) : bool
+    {
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $emploitypes = $agent->getEmploiTypesActifs($date, $structure?[$structure]:null);
+        $count = [];
+        foreach ($emploitypes as $grade) {
+            $count[$grade->getEmploiType()->getCode()] = true;
+        }
+
+        $keep = true;
+        foreach($on as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false ; break;
+            }
+        }
+        foreach($off as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false ; break;
+            }
+        }
+        return $keep;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Parametre|null $parametre
+     * @param DateTime|null $date
+     * @param Structure|null $structure
+     * @return Agent[]
+     */
+    public function filtrerWithEmploiTypeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?Structure $structure = null) : array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $count = [];
+            $grades = $agent->getEmploiTypesActifs($date, $structure);
+            foreach ($grades as $grade) {
+                $count[$grade->getEmploiType()->getCode()] = true;
+            }
+
+            $keep = true;
+            foreach($on as $temoin) {
+                if (!isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            foreach($off as $temoin) {
+                if (isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            if ($keep) $result[] = $agent;
+        }
+
+        return $result;
+    }
+
     /**
      * @return Agent[]
      */

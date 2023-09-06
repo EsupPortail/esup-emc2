@@ -377,7 +377,6 @@ class CampagneController extends AbstractActionController {
         $agentsAll = $this->getAgentService()->filtrerWithStatutTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
         $agentsAll = $this->getAgentService()->filtrerWithAffectationTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
 
-
         /** Filtrage des agents (seuls les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
         $agents = [];
         /** @var Agent $agent */

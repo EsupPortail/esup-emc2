@@ -385,26 +385,6 @@ class EntretienProfessionnelService
     }
 
     /**
-     * @param string $type
-     * @param EntretienProfessionnel|null $entretien
-     * @param string|null $value
-     * @return ValidationInstance
-     */
-    public function addValidation(string $type, ?EntretienProfessionnel $entretien, ?string $value = null): ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
-
-        $validation = new ValidationInstance();
-        $validation->setEntity($entretien);
-        $validation->setType($vtype);
-        $validation->setValeur($value);
-        $this->getValidationInstanceService()->create($validation);
-        $entretien->addValidation($validation);
-        $this->update($entretien);
-        return $validation;
-    }
-
-    /**
      * @param array $params
      * @return EntretienProfessionnel[]
      */

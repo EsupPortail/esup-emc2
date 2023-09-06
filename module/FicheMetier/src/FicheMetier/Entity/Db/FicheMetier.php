@@ -93,6 +93,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getIntitule() : string
     {
         $metier = $this->getMetier();
@@ -121,6 +122,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetences() : string
     {
         $competences = $this->getCompetenceListe();
@@ -135,6 +137,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getComptencesByType(int $typeId) : string
     {
         $competences = $this->getCompetenceListe();
@@ -163,21 +166,25 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getConnaissances() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_CONNAISSANCE);
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetencesOperationnelles() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_OPERATIONNELLE);
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetencesComportementales() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
+    /** @noinspection PhpUnused */
     public function getApplicationsAffichage() : string
     {
         $applications = $this->getApplicationListe();

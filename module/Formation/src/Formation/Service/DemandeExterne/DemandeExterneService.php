@@ -206,12 +206,14 @@ class DemandeExterneService {
 
     /** FACADE ********************************************************************************************************/
 
+    /** @deprecated ... */
     public function addValidation(ValidationType $type, ?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
     {
         $validation = new ValidationInstance();
         $validation->setEntity($demande);
         $validation->setType($type);
-        $validation->setValeur($justification);
+        $validation->setRefus($justification !== null);
+        $validation->setJustification($justification);
         $this->getValidationInstanceService()->create($validation);
         $demande->addValidation($validation);
         $this->update($demande);

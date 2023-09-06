@@ -268,7 +268,7 @@ class AgentController extends AbstractActionController
                 $validation = new ValidationInstance();
                 $validation->setType($validationType);
                 $validation->setEntity($entity);
-                $validation->setValeur("Refus");
+                $validation->setRefus(true);
                 $this->getValidationInstanceService()->create($validation);
             }
 
