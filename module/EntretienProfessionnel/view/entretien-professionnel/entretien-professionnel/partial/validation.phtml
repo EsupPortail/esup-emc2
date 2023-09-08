@@ -191,7 +191,7 @@ else $autorites = $agent->getAutorites();
         </div>
     <?php else :?>
     <?php if ($step >= 1) : ?>
-        <?php if ($canValiderObservation) : ?>
+        <?php if ($canValiderObservation && $validationHierarchie === null) : ?>
             <?php if ($entretien->getObservationActive()) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>

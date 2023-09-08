@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Service\Evenement;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -27,12 +28,14 @@ class RappelCampagneAvancementAutoriteServiceFactory {
          * @var AgentAutoriteService $agentAutoriteService
          * @var CampagneService $campagneService
          * @var EtatService $etatService
+		 * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var NotificationService $notificationService
          * @var StructureService $structureService
          * @var TypeService $typeService
          */
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $campagneService = $container->get(CampagneService::class);
+		$entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $etatService = $container->get(EtatService::class);
         $notificationService = $container->get(NotificationService::class);
         $structureService = $container->get(StructureService::class);
@@ -41,6 +44,7 @@ class RappelCampagneAvancementAutoriteServiceFactory {
         $service = new RappelCampagneAvancementAutoriteService();
         $service->setAgentAutoriteService($agentAutoriteService);
         $service->setCampagneService($campagneService);
+		$service->setEntretienProfessionnelService($entretienProfessionnelService);
         $service->setEtatEvenementService($etatService);
         $service->setNotificationService($notificationService);
         $service->setStructureService($structureService);

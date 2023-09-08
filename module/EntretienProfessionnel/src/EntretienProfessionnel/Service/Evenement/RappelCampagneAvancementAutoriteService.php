@@ -7,7 +7,9 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
+use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -19,6 +21,7 @@ use UnicaenEvenement\Service\Evenement\EvenementService;
 class RappelCampagneAvancementAutoriteService extends EvenementService {
     use AgentAutoriteServiceAwareTrait;
     use CampagneServiceAwareTrait;
+	use EntretienProfessionnelServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use StructureServiceAwareTrait;
 
@@ -61,8 +64,19 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
             $dictionnaire  = [];
             foreach ($autorites as $autorite) $dictionnaire[$autorite->getAutorite()->getId()] = $autorite;
             foreach ($dictionnaire as $autorite) {
-                $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
-                $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
+                $completed = true;
+                $agents = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite);
+                foreach ($agents as $agent) {
+                    $ep = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent->getAgent(), $campagne);
+                    if ($ep === null || $ep->getEtatActif()->getType()->getCode() !== EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT) {
+                        $completed = false;
+                        break;
+                    }
+                }
+                if (!$completed) {
+                    $this->getNotificationService()->triggerRappelCampagneAutorite($campagne, $autorite->getAutorite());
+                    $message .= "Notification faites vers " . $autorite->getAutorite()->getDenomination() . "<br/>\n";
+                }
             }
         } catch(Exception $e) {
             $evenement->setLog($message . $e->getMessage());
