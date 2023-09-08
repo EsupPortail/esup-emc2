@@ -11,6 +11,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure[] $selecteur
  *
  * @var Agent[] $responsables
+ * @var Agent[] $gestionnaires
  *
  * @var Structure $niveau2
  * @var Structure $parent
@@ -22,6 +23,9 @@ use Structure\Provider\Privilege\StructurePrivileges;
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
 $canEditerDescription   = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_DESCRIPTION);
+$canGererGestionnaire = $this->isAllowed(StructurePrivileges::getResourceId(StructurePrivileges::STRUCTURE_GESTIONNAIRE));
+
+
 $date = new DateTime();
 $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $s->isDeleted() ; });
 
@@ -108,7 +112,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
         <?php if (empty($responsables)) : ?>
             <span class="text-warning">
                 <span class="icon icon-attention"></span>
-                Aucun responsable de désigné·e pour cette structure.
+                Aucun·e responsable de désigné·e pour cette structure.
             </span>
         <?php else : ?>
             <ul>
@@ -120,6 +124,27 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                     </li>
                 <?php endforeach; ?>
             </ul>
+        <?php endif; ?>
+
+        <?php if ($canGererGestionnaire) : ?>
+            <h2> Gestionnaire·s </h2>
+
+            <?php if (empty($gestionnaires)) : ?>
+                <span class="text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucun·e gestionnaire de désigné·e pour cette structure.
+                </span>
+            <?php else : ?>
+                <ul>
+                    <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                        <li>
+                        <span title="Gestion valide sur la période du <?php echo ($gestionnaire->getDateDebut())?$gestionnaire->getDateDebut()->format('d/m/Y'):"N.C"; ?> au  <?php echo ($gestionnaire->getDateFin())?$gestionnaire->getDateFin()->format('d/m/Y'):"N.C"; ?>">
+                            <?php echo $gestionnaire->getAgent()->getDenomination(); ?>
+                        </span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         <?php endif; ?>
 
         <h2> Positionnement de la structure </h2>

@@ -1,9 +1,28 @@
 :root {
     /** EMC2 **/
-    --color-dark: rgb(46,139,87); /** seagreen **/
 
     /** MES FORMATIONS **/
     --color-main-formation: rgb(106,90,205); /** slateblue **/
+}
+
+
+.unistrap.unistrap-th-emc2 {
+    --unistrap-color-main: rgb(55, 104, 155);
+    --unistrap-color-dark: rgb(15,64,95);
+    --unistrap-color-light: rgb(155, 204, 255);
+
+    --bs-success: rgb(0, 100, 0);
+    --bs-success-rgb: 0, 100, 0;
+    --bs-danger: rgb(200, 0, 0);
+    --bs-danger-rgb: 200,0,0;
+    --bs-info: rgb(0, 0, 100);
+    --bs-info-rgb: 0,0,255;
+    --bs-warning: Sienna;
+    --bs-warning-rgb: 160, 82, 45;
+    --bs-primary: #0d6efd;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary: #6c757d;
+    --bs-secondary-rgb: 108, 117, 125;
 }
 
 footer div#comue {

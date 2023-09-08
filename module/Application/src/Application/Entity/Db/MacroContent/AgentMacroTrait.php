@@ -397,7 +397,7 @@ trait AgentMacroTrait
         return $texte;
     }
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function getDateNaissanceAsString() : string
     {
         /** @var Agent $agent */

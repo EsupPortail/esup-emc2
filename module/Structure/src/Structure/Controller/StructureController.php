@@ -27,6 +27,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
+use Mpdf\MpdfException;
 use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
@@ -80,6 +81,7 @@ class StructureController extends AbstractActionController {
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
+        $gestionnaires = $this->getStructureService()->getGestionnaires($structure, new DateTime());
 
         $niveau2 = $structure->getNiv2();
         $parent = $structure->getParent();
@@ -94,6 +96,7 @@ class StructureController extends AbstractActionController {
             'selecteur' => $selecteur,
             'structure' => $structure,
             'responsables' => $responsables,
+            'gestionnaires' => $gestionnaires,
 
             'niveau2' => $niveau2,
             'parent' => $parent,
@@ -355,14 +358,12 @@ class StructureController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-//        if ($structureAgentForce !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Retirer [".$structureAgentForce->getAgent()->getDenomination()."] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
                 'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
             ]);
-//        }
         return $vm;
     }
 
@@ -537,12 +538,16 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
         ];
 
-        $pdf = new PdfExporter();
-        $pdf->setRenderer($this->renderer);
-        $pdf->setHeaderScript('structure/structure/header.phtml');
-        $pdf->setFooterScript('structure/structure/footer.phtml');
-        $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
-        return $pdf->export("temp.pdf");
+        try {
+            $pdf = new PdfExporter();
+            $pdf->setRenderer($this->renderer);
+            $pdf->setHeaderScript('structure/structure/header.phtml');
+            $pdf->setFooterScript('structure/structure/footer.phtml');
+            $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
+            return $pdf->export("temp.pdf");
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors la génération du PDF",0,$e);
+        }
     }
 
 }

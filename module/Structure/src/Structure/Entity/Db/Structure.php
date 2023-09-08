@@ -2,7 +2,6 @@
 
 namespace Structure\Entity\Db;
 
-use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\DbImportableAwareTrait;
@@ -168,21 +167,6 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $this->missions->toArray();
     }
 
-    public function addMission(AgentMissionSpecifique $mission) : void
-    {
-        $this->missions->add($mission);
-    }
-
-    public function removeMission(AgentMissionSpecifique $mission) : void
-    {
-        $this->postes->removeElement($mission);
-    }
-
-    public function hasMission(AgentMissionSpecifique $mission) : bool
-    {
-        return $this->missions->contains($mission);
-    }
-
     public function getParent() : ?Structure
     {
         return $this->parent;
@@ -269,14 +253,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
 
     /** MACRO *********************************************************************************************************/
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function toStringLibelle() : string
     {
         $texte = $this->getLibelleLong();
         return $texte;
     }
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function toStringLibelleLong() : string
     {
         $texte = "";
@@ -288,7 +272,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $texte;
     }
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function toStringResume() : string
     {
         /** @var Structure $structure */
@@ -304,7 +288,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $texte;
     }
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function toStringStructureBloc() : string
     {
         /** @var Structure $structure */
@@ -318,7 +302,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $texte;
     }
 
-    /**  @SuppressWarnings(Generic.CodeAnalysis.UnusedFunction) */
+    /** @noinspection PhpUnused */
     public function toStringResponsables() : string
     {
         $date = new DateTime();

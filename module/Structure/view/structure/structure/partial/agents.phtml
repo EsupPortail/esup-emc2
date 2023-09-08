@@ -117,7 +117,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php endif; ?>
 
                 <?php if ($isForce AND $canRetirerAgentForce) : ?>
-                    <?php /** @see \Application\Controller\StructureController::retirerManuellementAgentAction() */ ?>
+                    <?php /** @see \Structure\Controller\StructureController::retirerManuellementAgentAction() */ ?>
                     <a  class="ajax-modal" data-event="modification"
                         href="<?php echo $this->url('structure/retirer-manuellement-agent', [ 'structure' => $structure->getId(), 'agent' => $agent->getId()], [], true); ?>"
                     >

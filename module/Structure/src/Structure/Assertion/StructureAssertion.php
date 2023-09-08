@@ -30,24 +30,35 @@ class StructureAssertion extends AbstractAssertion {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
         }
 
-        switch($privilege) {
-            case StructurePrivileges::STRUCTURE_AFFICHER :
-                return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::OBSERVATEUR, AppRoleProvider::DRH => true,
-                    RoleProvider::RESPONSABLE => $isResponsable,
-                    default => false,
-                };
-            case StructurePrivileges::STRUCTURE_DESCRIPTION:
-            case StructurePrivileges::STRUCTURE_GESTIONNAIRE:
-            case StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT:
-            case StructurePrivileges::STRUCTURE_AGENT_FORCE:
-                return match ($role->getRoleId()) {
-                    AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
-                    RoleProvider::RESPONSABLE => $isResponsable,
-                    default => false,
-                };
-        }
-        return true;
+        return match ($privilege) {
+            StructurePrivileges::STRUCTURE_AFFICHER => match ($role->getRoleId()) {
+                AppRoleProvider::ADMIN_FONC,
+                AppRoleProvider::ADMIN_TECH,
+                AppRoleProvider::OBSERVATEUR,
+                AppRoleProvider::DRH
+                            => true,
+                RoleProvider::RESPONSABLE
+                            => $isResponsable,
+                default
+                            => false,
+            },
+            StructurePrivileges::STRUCTURE_DESCRIPTION,
+            StructurePrivileges::STRUCTURE_GESTIONNAIRE,
+            StructurePrivileges::STRUCTURE_COMPLEMENT_AGENT,
+            StructurePrivileges::STRUCTURE_AGENT_FORCE
+                        => match ($role->getRoleId()) {
+                            AppRoleProvider::ADMIN_FONC,
+                            AppRoleProvider::ADMIN_TECH,
+                            AppRoleProvider::DRH
+                                            => true,
+                            RoleProvider::RESPONSABLE
+                                            => $isResponsable,
+                            default
+                                            => false,
+            },
+            default
+                        => true,
+        };
     }
 
     protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
@@ -64,21 +75,21 @@ class StructureAssertion extends AbstractAssertion {
         $structureId = (($this->getMvcEvent()->getRouteMatch()->getParam('structure')));
         $entity = $this->getStructureService()->getStructure($structureId);
 
-        switch($action) {
-            case 'afficher' :
-                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AFFICHER);
-            case 'editer-description' :
-            case 'toggle-resume-mere' :
-                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_DESCRIPTION);
-            case 'ajouter-gestionnaire' :
-            case 'retirer-gestionnaire' :
-            case 'ajouter-responsable' :
-            case 'retirer-responsable' :
-                return $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_GESTIONNAIRE);
-            case 'ajouter-manuellement-agent' :
-            case 'retirer-manuellement-agent' :
-                return  $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AGENT_FORCE);
-        }
-        return true;
+        return match ($action) {
+            'afficher'
+                    => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AFFICHER),
+            'editer-description',
+            'toggle-resume-mere'
+                    => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_DESCRIPTION),
+            'ajouter-gestionnaire',
+            'retirer-gestionnaire',
+            'ajouter-responsable',
+            'retirer-responsable'
+                    => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_GESTIONNAIRE),
+            'ajouter-manuellement-agent',
+            'retirer-manuellement-agent'
+                    => $this->computeAssertion($entity, StructurePrivileges::STRUCTURE_AGENT_FORCE),
+            default => true,
+        };
     }
 }
