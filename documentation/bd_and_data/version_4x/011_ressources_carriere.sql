@@ -99,9 +99,6 @@ create table carriere_corps
     created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on            timestamp(0),
     deleted_on            timestamp(0),
-    histo_createur_id     bigint,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint,
     superieur_as_autorite boolean      default false                                         not null
 );
 
@@ -120,9 +117,6 @@ create table carriere_grade
     created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on            timestamp(0),
     deleted_on            timestamp(0),
-    histo_createur_id     bigint,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint
 );
 
 create table carriere_correspondance_type
@@ -139,9 +133,6 @@ create table carriere_correspondance_type
     created_on            timestamp(0) default LOCALTIMESTAMP(0) not null,
     updated_on            timestamp(0),
     deleted_on            timestamp(0),
-    histo_createur_id     bigint                                 not null,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint,
     source_id             varchar(128)                           not null,
     id_orig               varchar(100)
 );
@@ -161,9 +152,6 @@ create table carriere_correspondance
     created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on            timestamp(0),
     deleted_on            timestamp(0),
-    histo_createur_id     bigint,
-    histo_modificateur_id bigint,
-    histo_destructeur_id  bigint,
     type_id               bigint
         constraint carriere_correspondance_carriere_correspondance_type_null_fk
         references carriere_correspondance_type

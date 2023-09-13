@@ -289,7 +289,7 @@ create table agent_carriere_grade
     structure_id          integer,
     grade_id              integer,
     corps_id              integer,
-    bap_id                integer,
+    correspondance_id     integer,
     d_debut               timestamp,
     d_fin                 timestamp,
     source_id             varchar(128),

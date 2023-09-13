@@ -232,7 +232,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('parametre', 'UnicaenParametre - Gestion des paramètres', 'UnicaenParametre\Provider\Privilege', 70001);
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_privilege (CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'parametre_afficher', 'Afficher un paramètre', 10 UNION
     SELECT 'parametre_ajouter', 'Ajouter un paramètre', 20 UNION
@@ -246,7 +246,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametre';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('parametrecategorie', 'UnicaenParametre - Gestion des catégories de paramètres', 'UnicaenParametre\Provider\Privilege', 70000);
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
+INSERT INTO unicaen_privilege_privilege (CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'parametrecategorie_index', 'Affichage de l''index des paramètres', 10 UNION
     SELECT 'parametrecategorie_afficher', 'Affichage des détails d''une catégorie', 20 UNION
