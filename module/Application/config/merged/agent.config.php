@@ -336,6 +336,7 @@ return [
                         'options' => [
                             'route'    => '/afficher[/:agent]',
                             'defaults' => [
+                                /** @see AgentController::afficherAction() */
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
                             ],

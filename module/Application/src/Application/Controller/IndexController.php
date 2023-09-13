@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\Agent;
 use Application\Provider\Template\TexteTemplate;
@@ -16,6 +17,7 @@ use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Laminas\Http\Response;
 use Structure\Controller\StructureController;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
@@ -49,7 +51,7 @@ class IndexController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
 
-    public function indexAction()
+    public function indexAction() : ViewModel|Response
     {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
         $texte = $rendu->getCorps();
@@ -72,6 +74,7 @@ class IndexController extends AbstractActionController
             switch ($connectedRole->getRoleId()) {
                 case AppRoleProvider::AGENT :
                     $agent = $this->getAgentService()->getAgentByUser($connectedUser);
+                    /** @see AgentController::afficherAction() */
                     return $this->redirect()->toRoute('agent/afficher', ['agent' => $agent->getId()], [], true);
                 case RoleProvider::RESPONSABLE :
                     $structures = $this->getStructureService()->getStructuresByResponsable($connectedUser);
@@ -92,6 +95,7 @@ class IndexController extends AbstractActionController
             'user' => $connectedUser,
             'role' => $connectedRole,
             'texte' => $texte,
+            'agent' => $agent,
         ]);
     }
 
