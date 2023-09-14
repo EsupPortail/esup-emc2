@@ -742,7 +742,8 @@ public function isValideEmploiType(Agent $agent, ?Parametre $parametre, ?DateTim
         $emploitypes = $agent->getEmploiTypesActifs($date, $structure?[$structure]:null);
         $count = [];
         foreach ($emploitypes as $grade) {
-            $count[$grade->getEmploiType()->getCode()] = true;
+            if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
+            //$count[$grade->getEmploiType()->getCode()] = true;
         }
 
         $keep = true;
@@ -829,7 +830,7 @@ public function isValideEmploiType(Agent $agent, ?Parametre $parametre, ?DateTim
             $count = [];
             $grades = $agent->getEmploiTypesActifs($date, $structure);
             foreach ($grades as $grade) {
-                $count[$grade->getEmploiType()->getCode()] = true;
+                if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
             }
 
             $keep = true;
