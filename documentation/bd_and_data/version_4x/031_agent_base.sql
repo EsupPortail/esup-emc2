@@ -410,6 +410,62 @@ create table agent_hierarchie_autorite
 create index agent_autorite_agent_id_index  on agent_hierarchie_autorite (agent_id);
 create index agent_autorite_autorite_id_index   on agent_hierarchie_autorite (autorite_id);
 
+
+create table agent_fichier
+(
+    agent   varchar(40) not null,
+    fichier varchar(13) not null
+        constraint agent_fichier_fichier_fk
+            references fichier_fichier
+            on delete cascade,
+    constraint agent_fichier_pk
+        primary key (agent, fichier)
+);
+
+create table agent_element_application
+(
+    agent_id               varchar(40) not null
+        constraint agent_application_agent_c_individu_fk
+            references agent
+            on delete cascade,
+    application_element_id integer     not null
+        constraint agent_application_application_element_id_fk
+            references element_application_element
+            on delete cascade,
+    constraint agent_application_pk
+        primary key (agent_id, application_element_id)
+);
+
+create table agent_element_competence
+(
+    agent_id              varchar(40) not null
+        constraint agent_competence_agent_c_individu_fk
+            references agent
+            on delete cascade,
+    competence_element_id integer     not null
+        constraint agent_competence_competence_element_id_fk
+            references element_competence_element
+            on delete cascade,
+    constraint agent_competence_pk
+        primary key (agent_id, competence_element_id)
+);
+
+create table agent_element_formation
+(
+    agent_id             varchar(40) not null
+        constraint agent_formation_agent_c_individu_fk
+            references agent
+            on delete cascade,
+    formation_element_id integer     not null
+        constraint agent_formation_formation_element_id_fk
+            references formation_element
+            on delete cascade,
+    constraint agent_formation_pk
+        primary key (agent_id, formation_element_id)
+);
+
+
+
 -- PRIVILEGE --------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)

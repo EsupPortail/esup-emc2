@@ -79,12 +79,12 @@ create table unicaen_autoform_categorie
         constraint autoform_categorie_formulaire_fk
             references unicaen_autoform_formulaire,
     mots_clefs            varchar(1024),
-    histo_creation        timestamp             not null,
-    histo_createur_id     integer               not null
+    histo_creation        timestamp              default now() not null,
+    histo_createur_id     integer                default 0 not null
         constraint autoform_categorie_createur_fk
             references unicaen_utilisateur_user,
-    histo_modification    timestamp             not null,
-    histo_modificateur_id integer               not null
+    histo_modification    timestamp             ,
+    histo_modificateur_id integer
         constraint autoform_categorie_modificateur_fk
             references unicaen_utilisateur_user,
     histo_destruction     timestamp,
@@ -111,12 +111,12 @@ create table unicaen_autoform_champ
     balise                boolean,
     options               varchar(1024),
     mots_clefs            varchar(1024),
-    histo_creation        timestamp             not null,
-    histo_createur_id     integer               not null
+    histo_creation        timestamp              default now() not null,
+    histo_createur_id     integer                default 0 not null
         constraint autoform_champ_createur_fk
             references unicaen_utilisateur_user,
-    histo_modification    timestamp             not null,
-    histo_modificateur_id integer               not null
+    histo_modification    timestamp            ,
+    histo_modificateur_id integer
         constraint autoform_champ_modificateur_fk
             references unicaen_utilisateur_user,
     histo_destruction     timestamp,

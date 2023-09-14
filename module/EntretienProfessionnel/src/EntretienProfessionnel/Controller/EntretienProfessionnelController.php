@@ -498,7 +498,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $token = $this->params()->fromRoute('token');
         if ($entretien === null) throw new RuntimeException("Aucun entretien professionnel de remonté pour l'id #" . $this->params()->fromRoute('entretien-professionnel'));
 
-        $delai = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', 'DELAI_ACCEPTATION_AGENT')->getValeur();
+        try {
+            $delai = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::DELAI_ACCEPTATION_AGENT);
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+        }
         try {
             $dateButoir = (DateTime::createFromFormat('d/m/Y', $entretien->getHistoModification()->format('d/m/Y')))->add(new DateInterval('P' . $delai . 'D'));
         } catch (Exception $e) {

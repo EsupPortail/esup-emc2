@@ -49,7 +49,7 @@ class AgentHierarchieCalculForm extends Form {
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
-                'label' => 'Traiter le ficher',
+                'label' => 'Calculer pour la structure',
                 'label_options' => [ 'disable_html_escape' => true, ],
             ],
             'attributes' => [

@@ -17,23 +17,25 @@ if (isset($options['mode'])) $mode = $options['mode'];
 $validerSuperieur = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
 foreach ($entretiens as $entretien) {
     if ($entretien->getEtatActif() === null) {
-        throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
-    }
-    switch ($entretien->getEtatActif()->getType()->getCode()) {
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
+        $encours[] = $entretien;
+        //throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
+    } else {
+        switch ($entretien->getEtatActif()->getType()->getCode()) {
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
 
-            $validerSuperieur[] = $entretien;
-            break;
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
-            $validerAutorite[] = $entretien;
-            break;
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
-            $validerAgent[] = $entretien;
-            break;
-        default :
-            $encours[] = $entretien;
-            break;
+                $validerSuperieur[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
+                $validerAutorite[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
+                $validerAgent[] = $entretien;
+                break;
+            default :
+                $encours[] = $entretien;
+                break;
+        }
     }
 }
 foreach ($agents as $agent) {

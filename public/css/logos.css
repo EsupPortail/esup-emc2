@@ -5,4 +5,5 @@ footer div#etablissement {
     height:85px;
     width:160px;
     display: inline-block;
+    background-repeat: no-repeat;
 }

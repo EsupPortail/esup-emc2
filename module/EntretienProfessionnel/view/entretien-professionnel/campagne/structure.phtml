@@ -103,3 +103,6 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
 <?php endif; ?>
 
 
+<script>
+    $('button#campagne<?php echo $campagne->getId(); ?>-tab').addClass('active');
+</script>

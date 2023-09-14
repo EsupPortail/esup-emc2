@@ -257,3 +257,11 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametrecategorie';
+
+-- ETAT DE EVENEMENT
+
+INSERT INTO unicaen_evenement_etat (code, libelle, description) VALUES ('en_attente', 'En attente', null);
+INSERT INTO unicaen_evenement_etat (code, libelle, description) VALUES ('en_cours', 'En cours', null);
+INSERT INTO unicaen_evenement_etat (code, libelle, description) VALUES ('echec', 'Échec', null);
+INSERT INTO unicaen_evenement_etat (code, libelle, description) VALUES ('succes', 'Succès', null);
+INSERT INTO unicaen_evenement_etat (code, libelle, description) VALUES ('annule', 'Événement dont le traitement a été annulé', null);

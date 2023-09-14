@@ -454,7 +454,7 @@ create unique index formation_instance_frais_id_uindex
 
 create table formation_seance
 (
-    id                    integer      default nextval('formation_seance_id_seq'::regclass) not null
+    id                    serial not null
         constraint formation_instance_journee_pk
         primary key,
     instance_id           integer                                                           not null
@@ -491,7 +491,7 @@ create unique index formation_instance_journee_id_uindex
 
 create table formation_formateur
 (
-    id                    integer default nextval('formation_formateur_id_seq'::regclass) not null
+    id  serial not null
         constraint formation_instance_formateur_pk
         primary key,
     instance_id           integer                                                         not null
@@ -524,7 +524,7 @@ create unique index formation_instance_formateur_id_uindex
 
 create table formation_presence
 (
-    id                    integer      default nextval('formation_presence_id_seq'::regclass) not null
+    id   serial not null
         constraint formation_instance_presence_pk
         primary key,
     journee_id            integer                                                             not null

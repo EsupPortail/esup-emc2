@@ -95,7 +95,6 @@ class IndexController extends AbstractActionController
             'user' => $connectedUser,
             'role' => $connectedRole,
             'texte' => $texte,
-            'agent' => $agent,
         ]);
     }
 

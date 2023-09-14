@@ -5,18 +5,11 @@
  * @var User $user
  * @var Role $role
  * @var string $texte
- * @var Agent|null $agent
  */
 
 use Application\Entity\Db\Agent;
-use Application\Provider\Privilege\AgentPrivileges;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
-
-$test = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
-var_dump($test);
-$test = $this->isAllowed($agent, AgentPrivileges::AGENT_AFFICHER);
-var_dump($test);
 
 ?>
 

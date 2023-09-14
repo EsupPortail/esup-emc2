@@ -40,7 +40,7 @@ $this->headTitle("Chaînes hiérarchiques calculées");
     <?php endif; ?>
 <?php endif; ?>
 
-<?php if ($structure) : ?>
+<?php if (isset($structure)) : ?>
     <h2> Calcul des chaînes hiérarchiques pour
         <?php if ($structure->getNiv2() !== null) : ?>
             <?php echo $structure->getNiv2()->getLibelleCourt(); ?> >
