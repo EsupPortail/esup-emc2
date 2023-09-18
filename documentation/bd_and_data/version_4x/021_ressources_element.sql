@@ -140,8 +140,8 @@ create table element_competence_type
             primary key,
     libelle               varchar(256) not null,
     ordre                 integer,
-    histo_creation        timestamp    not null,
-    histo_createur_id     integer      not null
+    histo_creation        timestamp    default now() not null,
+    histo_createur_id     integer      default 0 not null
         constraint competence_type_createur_fk
             references unicaen_utilisateur_user,
     histo_modification    timestamp,
@@ -321,3 +321,7 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'niveau';
 
+-- COMPETENCE TYPE (copie données unicaen)
+INSERT INTO element_competence_type (id,libelle, ordre) VALUES (3,'Connaissances', 10);
+INSERT INTO element_competence_type (id,libelle, ordre) VALUES (2,'Compétences opérationnelles', 20);
+INSERT INTO element_competence_type (id,libelle, ordre) VALUES (1,'Compétences comportementales', 30);

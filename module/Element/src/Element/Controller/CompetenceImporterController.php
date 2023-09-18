@@ -33,43 +33,45 @@ class CompetenceImporterController extends AbstractActionController {
 
         for($position = 1 ; $position < $nbLine; $position++) {
             $line = $lines[$position];
-            $depth = 0;
-            for ($i = 0; $i < strlen($line) ; $i++) {
-                if ($line[$i] === ';' and $depth === 0) $line[$i] = '|';
-                if ($line[$i] === "\"") {
-                    if ($depth === 0) $depth = 1; else $depth = 0;
+            if ($line !== '') {
+                $depth = 0;
+                for ($i = 0; $i < strlen($line) ; $i++) {
+                    if ($line[$i] === ';' and $depth === 0) $line[$i] = '|';
+                    if ($line[$i] === "\"") {
+                        if ($depth === 0) $depth = 1; else $depth = 0;
+                    }
                 }
-            }
-            $elements = explode("|", $line);
-            $domaine = $elements[0];
-            $registre = $elements[1];
-            $libelle = $elements[2];
-            $definition = $elements[3];
-            $id = ((int)$elements[4]);
+                $elements = explode("|", $line);
+                $domaine = $elements[0];
+                $registre = $elements[1];
+                $libelle = $elements[2];
+                $definition = $elements[3];
+                $id = ((int)$elements[4]);
 
-            if ($libelle !== null and $libelle !== '') {
-                //Existe-t-elle ?
-                $theme = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($domaine);
-                if ($theme === null) {
-                    $theme = new CompetenceTheme();
-                    $theme->setLibelle($domaine);
-                    $this->getCompetenceThemeService()->create($theme);
-                }
-                $competence = $this->getCompetenceService()->getCompetenceByIdSource("REFERENS 3", $id);
-                $new_competence = ($competence === null);
-                if ($new_competence) {
-                    $competence = new Competence();
-                }
-                $competence->setLibelle($libelle);
-                if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
-                $competence->setType($types[$registre]);
-                $competence->setTheme($theme);
-                $competence->setSource(Competence::SOURCE_REFERENS3);
-                $competence->setIdSource($id);
-                if ($new_competence) {
-                    $this->getCompetenceService()->create($competence);
-                } else {
-                    $this->getCompetenceService()->update($competence);
+                if ($libelle !== null and $libelle !== '') {
+                    //Existe-t-elle ?
+                    $theme = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($domaine);
+                    if ($theme === null) {
+                        $theme = new CompetenceTheme();
+                        $theme->setLibelle($domaine);
+                        $this->getCompetenceThemeService()->create($theme);
+                    }
+                    $competence = $this->getCompetenceService()->getCompetenceByIdSource("REFERENS3", $id);
+                    $new_competence = ($competence === null);
+                    if ($new_competence) {
+                        $competence = new Competence();
+                    }
+                    $competence->setLibelle($libelle);
+                    if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
+                    $competence->setType($types[$registre]);
+                    $competence->setTheme($theme);
+                    $competence->setSource(Competence::SOURCE_REFERENS3);
+                    $competence->setIdSource($id);
+                    if ($new_competence) {
+                        $this->getCompetenceService()->create($competence);
+                    } else {
+                        $this->getCompetenceService()->update($competence);
+                    }
                 }
             }
         }

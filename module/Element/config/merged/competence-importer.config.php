@@ -32,6 +32,7 @@ return [
                 'options' => [
                     'route' => '/competence-import',
                     'defaults' => [
+                        /** @see CompetenceImporterController::importerAction() */
                         'controller' => CompetenceImporterController::class,
                         'action' => 'importer',
                     ],

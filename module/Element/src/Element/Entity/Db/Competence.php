@@ -8,7 +8,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class Competence implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const SOURCE_REFERENS3 = 'REFERENS 3';
+    const SOURCE_REFERENS3 = 'REFERENS3';
     const SOURCE_EMC2 = 'EMC2';
 
     private ?int $id = null;

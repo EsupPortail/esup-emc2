@@ -360,7 +360,7 @@ class NotificationService {
             }
             $texte .= "</ul>";
 
-            $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_PERSONNEL')->getValeur();
+            $email = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE,FormationParametres::MAIL_PERSONNEL)->getValeur();
             $vars = [
                 'UrlService' => $this->getUrlService(),
             ];

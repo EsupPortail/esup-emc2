@@ -36,6 +36,9 @@ class PlanDeFormationController extends AbstractActionController
     {
         $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
 
+        if (empty($planDeFormation)) {
+            return new ViewModel();
+        }
 
         $formations = $planDeFormation->getFormations();
 

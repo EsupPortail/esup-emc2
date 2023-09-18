@@ -15,6 +15,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -240,8 +241,8 @@ class FormationInstanceService
         $instance = new FormationInstance();
         $instance->setType(FormationInstance::TYPE_INTERNE);
         $instance->setAutoInscription(true);
-        $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_PRINCIPALE')->getValeur());
-        $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode('FORMATION', 'NB_PLACE_COMPLEMENTAIRE')->getValeur());
+        $instance->setNbPlacePrincipale($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_PRINCIPALE)->getValeur());
+        $instance->setNbPlaceComplementaire($this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::NB_PLACE_COMPLEMENTAIRE)->getValeur());
         $instance->setFormation($formation);
         $this->create($instance);
         $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);

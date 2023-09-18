@@ -325,6 +325,28 @@ e'<p><span style="text-decoration: underline;">Objet :</span> ouverture de la ca
 <p>La DRH reste à votre disposition pour toute demande de renseignement complémentaire.</p>
 <p>Cordialement</p>',
     'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css) VALUES ('NOTIFICATION_RAPPEL_ENTRETIEN', '<p>Courrier envoyé à l''agent lui rappelant la date de son entretien professionnel</p>', 'mail', 'Rappel de votre entretien professionnel du VAR[ENTRETIEN#date] pour la campagne VAR[CAMPAGNE#annee]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p><span style="text-decoration: underline;">Objet :</span> rappel de votre entretien professionnel du VAR[ENTRETIEN#date] pour la campagne VAR[CAMPAGNE#annee]</p>
+<p> </p>
+<p>Bonjour,</p>
+<p>Vous avez été informé<span style="color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">·</span>e par votre supérieure hiérarchique direct des éléments concernant votre entretien professionnel :</p>
+<table style="width: 443px;">
+<tbody>
+<tr>
+<td style="width: 200.55px;">Date</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#date]</td>
+</tr>
+<tr>
+<td style="width: 200.55px;">Lieu</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#lieu]</td>
+</tr>
+<tr>
+<td style="width: 200.55px;">Responsable</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#responsable]</td>
+</tr>
+</tbody>
+</table>
+<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences<br /><br /><br /></p>', 'table { border : 1px; }');
 
 
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES ('ENTRETIEN#ActiviteService', null, 'entretien', 'toStringActiviteService');

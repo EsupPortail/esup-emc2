@@ -54,8 +54,8 @@ create table unicaen_validation_type
     code                  varchar(256)         not null,
     libelle               varchar(1024)        not null,
     refusable             boolean default true not null,
-    histo_creation        timestamp            not null,
-    histo_createur_id     integer              not null
+    histo_creation        timestamp            default now() not null,
+    histo_createur_id     integer              default 0 not null
         constraint unicaen_validation_type_createur_fk
             references unicaen_utilisateur_user,
     histo_modification    timestamp,

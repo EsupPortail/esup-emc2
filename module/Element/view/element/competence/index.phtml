@@ -91,7 +91,7 @@ $this->headTitle("Liste des compétences");
                 <td> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </td>
                 <td>
                     <?php if ($competence->getSource() !== null) : ?>
-                    <span class="badge"><?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?></span></td>
+                    <span class="badge <?php echo $competence->getSource(); ?>"><?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?></span></td>
                 <?php else : ?>
                     Sans source
                 <?php endif; ?>
@@ -166,3 +166,13 @@ $this->headTitle("Liste des compétences");
         });
     });
 </script>
+
+<style>
+    span.badge.EMC2 {
+        background: var(--unistrap-color-main);
+    }
+
+    span.badge.REFERENS3 {
+        background: indianred;
+    }
+</style>

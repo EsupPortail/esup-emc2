@@ -78,6 +78,9 @@ class CompetenceController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $this->getCompetenceService()->create($competence);
+                $competence->setSource("EMC2");
+                $competence->setIdSource($competence->getId());
+                $this->getCompetenceService()->update($competence);
             }
         }
 
