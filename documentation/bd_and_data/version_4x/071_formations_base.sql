@@ -960,14 +960,13 @@ FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';
 
 -- TEMPLATE - PDF ------------------------------------------------------------------
-
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_ATTESTATION', null, 'pdf', 'Attestation de formation de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle]', e'<p> </p>
 <p> </p>
 <p> </p>
 <p> </p>
 <p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p> </p>
-<p style="text-align: right;">À Caen le VAR[EMC2#date]</p>
+<p style="text-align: right;">À Caen le VAR[EMC2#Date]</p>
 <p> </p>
 <h1 style="text-align: center;">Attestation de stage</h1>
 <p> </p>
@@ -984,14 +983,14 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p> </p>
 <p> </p>
 <h1 style="text-align: center;">Convocation à une action de formation</h1>
-<p style="text-align: right;"> À Caen, le VAR[EMC2#date]</p>
+<p style="text-align: right;"> À Caen, le VAR[EMC2#Date]</p>
 <p>Bonjour <strong>VAR[AGENT#denomination]</strong>,</p>
 <p> </p>
 <p>Le bureau conseil carrière compétences vous informe que vous êtes retenu-e à la formation :</p>
 <p style="text-align: center;"><strong>VAR[SESSION#libelle]<br /></strong></p>
 <p>à laquelle vous êtes inscrit-e et se déroulera selon le calendrier ci-dessous :</p>
 <p>VAR[SESSION#seances] </p>
-<p>En cas d\'impossibilité d\'assister à tout ou partie de ce stage, vous êtes invité-e à vous connecter dans la partie "Formation"/"S\'inscrire à une formation" de VAR[EMC2#appname], dans les meilleurs délais, afin de nous permettre de contacter une personne sur liste d\'attente.</p>
+<p>En cas d\'impossibilité d\'assister à tout ou partie de ce stage, vous êtes invité-e à vous connecter dans la partie "Formation"/"S\'inscrire à une formation" de VAR[EMC2#AppName], dans les meilleurs délais, afin de nous permettre de contacter une personne sur liste d\'attente.</p>
 <p style="text-align: justify;"> </p>
 <p style="text-align: justify;">Le bureau conseil, carrière, compétences vous souhaite un stage fructueux.</p>
 <p style="text-align: justify;"> </p>
@@ -1364,3 +1363,10 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
 ('SESSION#lieu', '', 'session', 'getLieuString'),
 ('SESSION#periode', 'retourne la période sous la forme <em>DEBUT au FIN</em>', 'session', 'getPeriode'),
 ('SESSION#seances', '', 'session', 'getListeJournees');
+
+-- MACROS A PROPOS DES INSCRIPTIONS
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('INSCRIPTION#duree', '<p>Affiche la durée de présence de l inscrit</p>', 'inscription', 'getDureePresence'),
+('INSCRIPTION#justificationAgent', '<p>Retourne la motivation de l agent</p>', 'inscription', 'getJustificationAgent'),
+('INSCRIPTION#justificationRefus', '<p>Retourne la motivation de la désinscription ou du refus</p>', 'inscription', 'getJustificationRefus'),
+('INSCRIPTION#justificationResponsable', '<p>Retourne la motivation du responsable</p>', 'inscription', 'getJustificationResponsable');

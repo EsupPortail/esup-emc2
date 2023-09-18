@@ -23,3 +23,11 @@ INSERT INTO unicaen_privilege_privilege_role_linker (role_id, privilege_id)
 SELECT 2 as role_id, p.id as privilege_id
 FROM unicaen_privilege_privilege p
 LEFT JOIN unicaen_privilege_categorie c on p.categorie_id = c.id and c.namespace like 'Unicaen%';
+
+
+-- MACRO GENERAL -----------------------------------------------------------------------
+INSERT INTO public.unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('EMC2#AppLink', '<p>Retour un lien vers l''application (en capsuler dans une balise a)</p>', 'UrlService', 'getUrlApp'),
+('EMC2#AppName', '<p>Retourne le nom de l''application</p>', 'UrlService', 'getNameApp'),
+('EMC2#Date', '<p>Affiche la date au format d/m/Y</p>', 'UrlService', 'toStringDate'),
+('EMC2#DateTime', '<p>Retourne la date au format d/m/Y à H:i</p>', 'UrlService', 'toStringDateTime');

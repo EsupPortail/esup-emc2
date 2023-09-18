@@ -14,6 +14,7 @@ use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Url\UrlServiceAwareTrait;
 use JetBrains\PhpStorm\NoReturn;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Mpdf\MpdfException;
@@ -31,6 +32,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     use RenduServiceAwareTrait;
     use SeanceServiceAwareTrait;
     use TemplateServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     private $renderer;
 
@@ -86,6 +88,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'session' => $inscrit->getInstance(),
             'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
         $exporter = new PdfExporter();
@@ -111,6 +114,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'session' => $inscrit->getInstance(),
             'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();
