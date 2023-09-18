@@ -146,28 +146,28 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
     </div>
 
     <!-- ONGLET :: TAB ------------------------------------------------------------------------------------------------>
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link" href="#information" aria-controls="information">
-                Information sur la session
-            </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#inscriptions" aria-controls="inscriptions">
-                    Inscription et listes
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#presences" aria-controls="presences">
-                    Présences aux séances
-                </a>
-            </li class="nav-item">
-            <li class="nav-item">
-                <a class="nav-link" href="#mails" aria-controls="mails">
-                    Mails
-                </a>
-            </li>
-        </ul>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="information-tab"
+                data-bs-toggle="tab" data-bs-target="#information"
+                type="button" role="tab" aria-controls="information" aria-selected="true">
+            Informations sur la session
+        </button>
+        <button class="nav-link" id="inscriptions-tab"
+                data-bs-toggle="tab" data-bs-target="#inscriptions"
+                type="button" role="tab" aria-controls="inscriptions" aria-selected="true">
+            Inscription et listes
+        </button>
+        <button class="nav-link" id="presences-tab"
+                data-bs-toggle="tab" data-bs-target="#presences"
+                type="button" role="tab" aria-controls="presences" aria-selected="true">
+            Présences aux séances
+        </button>
+        <button class="nav-link" id="mails-tab"
+                data-bs-toggle="tab" data-bs-target="#mails"
+                type="button" role="tab" aria-controls="mails" aria-selected="true">
+            Mails
+        </button>
+    </div>
 
     <!-- ONGLET :: PANE------------------------------------------------------------------------------------------------>
     <div class="tab-content">
@@ -418,7 +418,6 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'presences' => $presences, 'titre' => false], [], true); ?>
         </div>
 
-</div>
 </div>
 
 

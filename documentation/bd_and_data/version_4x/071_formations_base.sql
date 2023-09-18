@@ -1349,6 +1349,18 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 
 -- TEMPLATE - TEXTE ---------------------------------------------------------------------
 
-INSERT INTO public.unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('PARCOURS_ENTREE_TEXTE', '<p>Texte descriptif du parcours d''entrée</p>', 'texte', '...', e'<p>Ceci est le texte d\'introduction au parcours d\'entrée à la formation</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('PARCOURS_ENTREE_TEXTE', '<p>Texte descriptif du parcours d''entrée</p>', 'texte', '...', e'<p>Ceci est le texte d\'introduction au parcours d\'entrée à la formation</p>
 <p> </p>
 <p>&gt;&gt; ICI LIEN VERS MOODLE ET LE PARCOURS DE L\'AGENT</p>', null, 'Formation\Provider\Template');
+
+-- MACRO --------------------------------------------------------------------------------
+
+-- MACROS A PROPOS DES SESSIONS
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('SESSION#duree', 'retourne la durée en heure de la session', 'session', 'getDuree'),
+('SESSION#formateurs', 'retourne la liste des formateurs sous la forme d un tableau', 'session', 'getListeFormateurs'),
+('SESSION#identification', 'retourne l identifiant unique de la session sous la forme <em>ACTION/SESSION</em>', 'session', 'getInstanceCode'),
+('SESSION#libelle', 'retourne le libellé de la session', 'session', 'getInstanceLibelle'),
+('SESSION#lieu', '', 'session', 'getLieuString'),
+('SESSION#periode', 'retourne la période sous la forme <em>DEBUT au FIN</em>', 'session', 'getPeriode'),
+('SESSION#seances', '', 'session', 'getListeJournees');

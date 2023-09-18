@@ -173,13 +173,13 @@ ksort($groupes);
 <!--                                            href="--><?php //echo $this->url('agent/valider-element', ['type' => "AGENT_FORMATION", 'id' => $entite->getId()], [], true); ?><!--"-->
 <!--                                            class="ajax-modal" data-event="modification"-->
 <!--                                    >-->
-<!--                                        <span class="icon validation-do" title="Valider la formation"></span></a>-->
+<!--                                        <span class="icon icon-checked" title="Valider la formation"></span></a>-->
 <!--                                --><?php //else: ?>
 <!--                                    <a-->
 <!--                                        --><?php ///** @see \Application\Controller\AgentController::revoquerElementAction() */ ?>
 <!--                                            href="--><?php //echo $this->url('agent/revoquer-element', ['validation' => $entite->getValidation()->getId()], ['query' => ['retour' => $options['retour']]], true); ?><!--"-->
 <!--                                    >-->
-<!--                                        <span class="icon validation-undo" title="Révoquer la validation associée à la formation"></span></a>-->
+<!--                                        <span class="icon icon-unchecked" title="Révoquer la validation associée à la formation"></span></a>-->
 <!--                                --><?php //endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>

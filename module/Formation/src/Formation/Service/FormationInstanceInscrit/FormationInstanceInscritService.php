@@ -297,7 +297,7 @@ class FormationInstanceInscritService
     {
         $qb = $this->createQueryBuilder()->orderBy('inscrit.histoCreation', 'asc');
 
-        if (isset($params['etat'])) $qb = $qb->andWhere('inscrit.etat = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['etat'])) $qb = $qb->andWhere('instanceetat.type = :etat')->setParameter('etat', $params['etat']);
         if (isset($params['historise'])) {
             if ($params['historise'] === '1') $qb = $qb->andWhere('inscrit.histoDestruction IS NOT NULL');
             if ($params['historise'] === '0') $qb = $qb->andWhere('inscrit.histoDestruction IS NULL');

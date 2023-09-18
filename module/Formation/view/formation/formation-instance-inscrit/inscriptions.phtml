@@ -42,6 +42,8 @@ foreach ($inscriptions as $inscription) {
     Mes inscriptions validées
 </h1>
 
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+
 <?php if (empty($formationValidees) AND empty($demandesValidees)) : ?>
     <em> Aucune formation validée </em>
 <?php else : ?>

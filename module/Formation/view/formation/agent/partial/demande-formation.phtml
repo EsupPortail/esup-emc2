@@ -86,9 +86,9 @@ usort($dictionnaryDemandes,
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <?php if ($canValiderResponsable ) : ?>
                             <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
+                            <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
                             <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
+                            <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </li>
@@ -121,9 +121,9 @@ usort($dictionnaryDemandes,
                         <?php if ($d->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT)) : ?>
                             <?php if ($canValiderResponsable ) : ?>
                                 <?php  /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
-                                <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span></a>
+                                <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
                                 <?php  /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
-                                <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span></a>
+                                <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>

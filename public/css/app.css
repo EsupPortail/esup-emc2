@@ -223,3 +223,13 @@ small a {
     }
 }
 
+/** Keep on */
+
+div.alert-danger .fa-exclamation-triangle {
+    color: var(--bs-danger);
+}
+
+.unistrap .nav-tabs button.active
+{
+    border-top: 5px solid var(--unistrap-color-main);
+}

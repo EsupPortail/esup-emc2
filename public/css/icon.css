@@ -117,10 +117,3 @@ span.icon.obligatoire:before {
 }
 
 
-.icon.icon-follow:before {
-    content: "\f0f3";
-}
-
-.icon.icon-unfollow:before {
-    content: "\f1f6";
-}

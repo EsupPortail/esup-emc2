@@ -512,4 +512,11 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agentaffichage';
 
+-- MACRO ---------------------------------------------------------------------------
+
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('AGENT#denomination', null, 'agent', 'getDenomination'),
+('AGENT#Prenom', null, 'agent', 'toStringPrenom'),
+('AGENT#NomUsage', null, 'agent', 'toStringNomUsage'),
+('AGENT#NomFamille', null, 'agent', 'toStringNomFamille');
 

@@ -75,9 +75,9 @@ $inscriptions = $instance->getInscrits();
             <td class="action">
                     <?php if ($canInscritModifier && $inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
                         <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span>  </a>
+                        <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
                         <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span>  </a>
+                        <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger"> Refuser</span>  </a>
                     <?php endif; ?>
                     <?php if ($inscrit->getEtatActif() && !$inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
                         <em>  Inscription non validée </em>

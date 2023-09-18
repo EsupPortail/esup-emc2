@@ -401,21 +401,24 @@ class FormationInstanceService
     }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
-    /** @throws ORMException */
     public function classerInscription(FormationInstanceInscrit $inscription): FormationInstanceInscrit
     {
         $session = $inscription->getInstance();
         $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
-        if ($session->getNbPlacePrincipale() > $placePrincipale) {
-            $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
-            $this->getEntityManager()->flush($inscription);
-            return $inscription;
-        }
-        $placeComplementaire = $session->getPlaceDisponible(FormationInstanceInscrit::COMPLEMENTAIRE);
-        if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
-            $inscription->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
-            $this->getEntityManager()->flush($inscription);
-            return $inscription;
+        try {
+            if ($session->getNbPlacePrincipale() > $placePrincipale) {
+                $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+                $this->getEntityManager()->flush($inscription);
+                return $inscription;
+            }
+            $placeComplementaire = $session->getPlaceDisponible(FormationInstanceInscrit::COMPLEMENTAIRE);
+            if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
+                $inscription->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
+                $this->getEntityManager()->flush($inscription);
+                return $inscription;
+            }
+        } catch (ORMException $e) {
+            throw new RuntimeException("Un problème est survenu en base de donnée.",0,$e);
         }
         return $inscription;
     }

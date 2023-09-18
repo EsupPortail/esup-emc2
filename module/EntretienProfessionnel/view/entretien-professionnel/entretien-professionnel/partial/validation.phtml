@@ -90,7 +90,7 @@ else $autorites = $agent->getAutorites();
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
                             class="btn btn-danger action"
                     >
-                        <span class="icon validation-undo"></span>
+                        <span class="icon icon-unchecked"></span>
                         Révoquer la validation
                     </a>
             <?php endif; ?>
@@ -102,7 +102,7 @@ else $autorites = $agent->getAutorites();
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation du responsable
             </a>
         <?php endif; ?>
@@ -158,7 +158,7 @@ else $autorites = $agent->getAutorites();
                             href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationObservation->getId()], [], true); ?>"
                             class="btn btn-danger action"
                     >
-                        <span class="icon validation-undo"></span>
+                        <span class="icon icon-unchecked"></span>
                         Révoquer la validation
                     </a>
                 </div>
@@ -174,7 +174,7 @@ else $autorites = $agent->getAutorites();
                         class="btn btn-success action ajax-modal"
                         data-event="modification"
                 >
-                    <span class="icon validation-do"></span>
+                    <span class="icon icon-checked"></span>
                     Valider les observations
                 </a>
             <?php else : ?>
@@ -184,7 +184,7 @@ else $autorites = $agent->getAutorites();
                             class="btn btn-success action ajax-modal"
                             data-event="modification"
                     >
-                        <span class="icon validation-do"></span>
+                        <span class="icon icon-checked"></span>
                         Je ne fais pas d'observation
                     </a>
             <?php endif; ?>
@@ -241,7 +241,7 @@ else $autorites = $agent->getAutorites();
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationHierarchie->getId()], [], true); ?>"
                     class="btn btn-danger action"
             >
-                <span class="icon validation-undo"></span>
+                <span class="icon icon-unchecked"></span>
                 Révoquer la validation
             </a>
         <?php endif; ?>
@@ -253,7 +253,7 @@ else $autorites = $agent->getAutorites();
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation de l'autorité
             </a>
         <?php endif; ?>
@@ -304,7 +304,7 @@ else $autorites = $agent->getAutorites();
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
                     class="btn btn-danger action"
             >
-                <span class="icon validation-undo"></span>
+                <span class="icon icon-unchecked"></span>
                 Révoquer la validation
             </a>
         <?php endif; ?>
@@ -316,7 +316,7 @@ else $autorites = $agent->getAutorites();
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation de l'agent
             </a>
         <?php endif; ?>

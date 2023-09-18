@@ -170,7 +170,7 @@ class DemandeExterneService {
 
         if (isset($params['agent'])) $qb = $qb->andWhere('demande.agent = :agent')->setParameter('agent', $params['agent']);
         if (isset($params['organisme']) AND trim($params['organisme'] !== '')) $qb = $qb->andWhere('demande.organisme = :organisme')->setParameter('organisme', $params['organisme']);
-        if (isset($params['etat'])) $qb = $qb->andWhere('demande.etat = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['etat'])) $qb = $qb->andWhere('etat.type = :etat')->setParameter('etat', $params['etat']);
         if (isset($params['historise'])) {
             if ($params['historise'] === '1') $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
             if ($params['historise'] === '0') $qb = $qb->andWhere('demande.histoDestruction IS NULL');
