@@ -14,7 +14,9 @@ use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\PlanformationPrivileges;
 
-$canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_AJOUTER));
+$canIndex = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_INDEX));
+$canAjouterFormation = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
+$canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
 
 ?>
 
@@ -33,19 +35,28 @@ $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(Planform
     </a>
 <?php endif; ?>
 
-<?php //if ($canAjouter): ?>
-<!--    --><?php ///** @see \Formation\Controller\PlanDeFormationController::ajouterAction() */ ?>
-<!--    <a href="--><?php //echo $this->url('plan-de-formation/reprendre', ['plan-de-formation' => $plan->getId()], ['force_canonical' => true], true); ?><!--"-->
-<!--       class="btn btn-primary ajax-modal" data-event="modification">-->
-<!--        Ajouter une formation-->
-<!--    </a>-->
-<?php //endif; ?>
+<?php if ($canAjouterFormation): ?>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::gererFormationsAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/gerer-formations', ['plan-de-formation' => $plan->getId()], ['force_canonical' => true], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        Gérer les formations
+    </a>
+<?php endif; ?>
+
+<?php if ($canIndex): ?>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::indexAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation', [], ['force_canonical' => true], true); ?>"
+       class="btn btn-secondary ajax-modal" data-event="modification">
+        <span class="icon icon-retour"></span>
+        Retour à la liste des plans de formation
+    </a>
+<?php endif; ?>
 
 <h2> Formations dans le plan </h2>
 
-
+<ul>
 <?php foreach ($groupes as $groupe) : ?>
-    <ul>
+    <?php if( $groupe !== null) : ?>
         <li>
             <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
             (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
@@ -58,12 +69,9 @@ $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(Planform
                 <?php endforeach; ?>
             </ul>
         </li>
-    </ul>
+    <?php endif; ?>
 <?php endforeach; ?>
-
-
-<h2> Autres infos <span class="todo">extra ? ... ?</span></h2>
-
+</ul>
 
 <script>
     $(function() {

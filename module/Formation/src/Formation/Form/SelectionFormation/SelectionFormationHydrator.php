@@ -16,7 +16,7 @@ class SelectionFormationHydrator implements HydratorInterface
      */
     public function extract($object): array
     {
-        $formations = array_map(function (FormationElement $a) { return $a->getFormation(); }, $object->getFormationListe());
+        $formations = array_map(function ($a) { return ($a instanceof  Formation)?$a: $a->getFormation(); }, $object->getFormationListe());
         $formationIds = array_map(function (Formation $f) { return $f->getId();}, $formations);
         $data = [
             'formations' => $formationIds,

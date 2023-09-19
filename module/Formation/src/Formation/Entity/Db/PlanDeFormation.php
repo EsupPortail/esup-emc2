@@ -44,4 +44,11 @@ class PlanDeFormation {
         return $this->formations->toArray();
     }
 
+    /**
+     * Bircole pour rendre compatible le formulaire de sélection des enseignements
+     */
+    public function getFormationListe(): array
+    {
+        return $this->formations->toArray();
+    }
 }

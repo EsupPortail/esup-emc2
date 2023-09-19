@@ -54,7 +54,6 @@ return [
                     'controller' => PlanDeFormationController::class,
                     'action' => [
                         'ajouter',
-                        'reprendre',
                     ],
                     'privileges' => [
                         PlanformationPrivileges::PLANFORMATION_AJOUTER
@@ -72,6 +71,8 @@ return [
                 [
                     'controller' => PlanDeFormationController::class,
                     'action' => [
+                        'gerer-formations',
+                        'reprendre',
                         'supprimer'
                     ],
                     'privileges' => [
@@ -151,6 +152,17 @@ return [
                             'defaults' => [
                                 'controller' => PlanDeFormationController::class,
                                 'action'     => 'ajouter',
+                            ],
+                        ],
+                    ],
+                    'gerer-formations' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            /** @see PlanDeFormationController::gererFormationsAction() */
+                            'route'    => '/gerer-formations/:plan-de-formation',
+                            'defaults' => [
+                                'controller' => PlanDeFormationController::class,
+                                'action'     => 'ajouter-formation',
                             ],
                         ],
                     ],
