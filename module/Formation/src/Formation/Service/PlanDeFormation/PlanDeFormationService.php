@@ -7,12 +7,14 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class PlanDeFormationService {
     use EntityManagerAwareTrait;
+    use FormationServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -128,5 +130,25 @@ class PlanDeFormationService {
             throw new RuntimeException("Plusieurs plan de formation partagent la même année [".$annee."]", 0 , $e);
         }
         return $result;
+    }
+
+    public function getPlansDeFormationAsOption(string $champ='annee', string $ordre='ASC') : array
+    {
+        $plans = $this->getPlansDeFormation($champ, $ordre);
+        $options = [];
+        foreach ($plans as $plan) {
+            $options[$plan->getId()] = $plan->getAnnee();
+        }
+        return $options;
+    }
+
+    public function transferer(PlanDeFormation $toRecopy, PlanDeFormation $planDeFormation) : void
+    {
+        foreach ($toRecopy->getFormations() as $formation) {
+            if (!$formation->hasPlanDeFormation($planDeFormation)) {
+                $formation->addPlanDeForamtion($planDeFormation);
+                $this->getFormationService()->update($formation);
+            }
+        }
     }
 }

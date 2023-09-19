@@ -12,7 +12,9 @@
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Privilege\PlanformationPrivileges;
 
+$canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_AJOUTER));
 
 ?>
 
@@ -22,6 +24,22 @@ use Formation\Entity\Db\PlanDeFormation;
         <?php echo $plan->getAnnee(); ?>
     </span>
 </h1>
+
+<?php if ($canReprendre): ?>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::reprendreAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/reprendre', ['plan-de-formation' => $plan->getId()], ['force_canonical' => true], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        Reprendre les formations d'un autre plan de formation
+    </a>
+<?php endif; ?>
+
+<?php //if ($canAjouter): ?>
+<!--    --><?php ///** @see \Formation\Controller\PlanDeFormationController::ajouterAction() */ ?>
+<!--    <a href="--><?php //echo $this->url('plan-de-formation/reprendre', ['plan-de-formation' => $plan->getId()], ['force_canonical' => true], true); ?><!--"-->
+<!--       class="btn btn-primary ajax-modal" data-event="modification">-->
+<!--        Ajouter une formation-->
+<!--    </a>-->
+<?php //endif; ?>
 
 <h2> Formations dans le plan </h2>
 
@@ -46,3 +64,12 @@ use Formation\Entity\Db\PlanDeFormation;
 
 <h2> Autres infos <span class="todo">extra ? ... ?</span></h2>
 
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

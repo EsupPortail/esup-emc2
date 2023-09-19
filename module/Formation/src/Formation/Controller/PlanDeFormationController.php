@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
+use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationFormAwareTrait;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -23,6 +24,7 @@ class PlanDeFormationController extends AbstractActionController
     use FormationInstanceServiceAwareTrait;
 
     use PlanDeFormationFormAwareTrait;
+    use SelectionPlanDeFormationFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -170,5 +172,32 @@ class PlanDeFormationController extends AbstractActionController
             ]);
         }
         return $vm;
+    }
+
+    /** Reprend les formations d'un plan de formation et les ajoute à plan courant */
+    public function reprendreAction() : ViewModel
+    {
+        $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
+
+        $form = $this->getSelectionPlanDeFormationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('plan-de-formation/reprendre', ['plan-de-formation' => $planDeFormation->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $toRecopy = $this->getPlanDeFormationService()->getPlanDeFormation($data['plan']);
+            if ($toRecopy !== null) {
+                $this->getPlanDeFormationService()->transferer($toRecopy, $planDeFormation);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel([
+            'title' => "Reprendre un plan de formation pour le plan de formation [".$planDeFormation->getAnnee()."]",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+
     }
 }

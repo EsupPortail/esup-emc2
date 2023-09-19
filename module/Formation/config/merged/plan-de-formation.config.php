@@ -8,6 +8,10 @@ use Formation\Form\PlanDeFormation\PlanDeFormationForm;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormFactory;
 use Formation\Form\PlanDeFormation\PlanDeFormationHydrator;
 use Formation\Form\PlanDeFormation\PlanDeFormationHydratorFactory;
+use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationForm;
+use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationFormFactory;
+use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationHydrator;
+use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationHydratorFactory;
 use Formation\Provider\Privilege\PlanformationPrivileges;
 use Formation\Service\PlanDeFormation\PlanDeFormationService;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceFactory;
@@ -50,6 +54,7 @@ return [
                     'controller' => PlanDeFormationController::class,
                     'action' => [
                         'ajouter',
+                        'reprendre',
                     ],
                     'privileges' => [
                         PlanformationPrivileges::PLANFORMATION_AJOUTER
@@ -149,6 +154,17 @@ return [
                             ],
                         ],
                     ],
+                    'reprendre' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            /** @see PlanDeFormationController::reprendreAction() */
+                            'route'    => '/reprendre/:plan-de-formation',
+                            'defaults' => [
+                                'controller' => PlanDeFormationController::class,
+                                'action'     => 'reprendre',
+                            ],
+                        ],
+                    ],
                     'afficher' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -201,11 +217,13 @@ return [
     'form_elements' => [
         'factories' => [
             PlanDeFormationForm::class => PlanDeFormationFormFactory::class,
+            SelectionPlanDeFormationForm::class => SelectionPlanDeFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             PlanDeFormationHydrator::class => PlanDeFormationHydratorFactory::class,
+            SelectionPlanDeFormationHydrator::class => SelectionPlanDeFormationHydratorFactory::class,
         ],
     ]
 

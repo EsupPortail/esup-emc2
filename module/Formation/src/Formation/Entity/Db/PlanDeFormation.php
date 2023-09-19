@@ -44,5 +44,4 @@ class PlanDeFormation {
         return $this->formations->toArray();
     }
 
-
 }
