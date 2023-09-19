@@ -74,11 +74,22 @@ class AdministrationController extends AbstractActionController
 
     public function templateAction() : ViewModel
     {
-        $templates = $this->getTemplateService()->getTemplatesByNamespace('Formation\Provider\Template');
+        $namespace = 'Formation\Provider\Template';
+
+        $type = $this->params()->fromQuery('type');
+        $type = ($type !== '')?$type:null;
+
+        $templates = $this->getTemplateService()->getTemplatesByTypeAndNamespaces($type, $namespace);
+        $namespaces = [$namespace];
+        $types = $this->getTemplateService()->getTypes();
 
         $vm =  new ViewModel([
+            'title' => 'Gestion des templates',
             'templates' => $templates,
-            'title' => "Gestion des templates",
+            'namespaces' => $namespaces,
+            'types' => $types,
+            'namespace' => $namespace,
+            'type' => $type,
         ]);
         $vm->setTemplate('unicaen-renderer/template/index');
         return $vm;
