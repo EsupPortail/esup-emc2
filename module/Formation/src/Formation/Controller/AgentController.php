@@ -126,12 +126,13 @@ class AgentController extends AbstractActionController
         $agent = $this->getAgentService()->getAgentByUser($user);
 
         $agents = [];
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $agents = array_map(function (AgentSuperieur $a) {
-            return $a->getAgent();
-        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $agents = array_map(function (AgentAutorite $a) {
-            return $a->getAgent();
-        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE)
+            $agents = array_map(
+                function (AgentSuperieur $a) {return $a->getAgent();},
+                $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE)
+            $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },
+            $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = $a->getNomUsuel() . " " . $a->getPrenom() . " " . $a->getId();

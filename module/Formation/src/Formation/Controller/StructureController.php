@@ -83,9 +83,7 @@ class StructureController extends AbstractActionController
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);
-
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] = $structure;
+        $structures = $this->getStructureService()->getStructuresFilles($structure,true);
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
