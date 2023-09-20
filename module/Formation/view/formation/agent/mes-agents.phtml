@@ -39,23 +39,18 @@ $nbAgent = count($agents)
     </div>
 </div>
 
-<ul class="nav">
-    <li class="nav-item">
-        <a href="#formation-demande" class="nav-link" aria-controls="formation-demande">
-            Demandes de <br/> formations
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="#formation-liste" class="nav-link" aria-controls="formation-liste">
-            Listes des <br/> formations
-        </a>
-    </li>
-    <!--    <li class="nav-item">-->
-    <!--        <a href="#extraction" class="nav-link" aria-controls="extraction">-->
-    <!--            Extractions  <br/> &nbsp;-->
-    <!--        </a>-->
-    <!--    </li>-->
-</ul>
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="formation-demande-tab"
+            data-bs-toggle="tab" data-bs-target="#formation-demande"
+            type="button" role="tab" aria-controls="formation-demande" aria-selected="true">
+        Demandes de formations
+    </button>
+    <button class="nav-link" id="formation-liste-tab"
+            data-bs-toggle="tab" data-bs-target="#formation-liste"
+            type="button" role="tab" aria-controls="formation-liste" aria-selected="true">
+        Listes des formations
+    </button>
+</div>
 
 <div class="tab-content">
     <div id="formation-demande" class="tab-pane">
@@ -73,20 +68,30 @@ $nbAgent = count($agents)
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
-        let name = hash.substring(1);
+        let name = hash.substr(1);
         if (name === undefined || name === "") name = "formation-demande";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav a').click(function (e) {
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
             let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
-            $(this).tab('show');
+            history.replaceState(null, null, "#" + anchor);
         });
+    });
 
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
