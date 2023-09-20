@@ -52,11 +52,13 @@ class InscriptionHydrator implements HydratorInterface
         switch ($etattype) {
             case null :
             case InscriptionEtats::ETAT_DEMANDE :
-                $object->setJustificationAgent($description);
+                //note deplacer dans le controller : malin ?
+//                $object->setJustificationAgent($description);
                 break;
             case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
             case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                $object->setJustificationResponsable($description);
+                //note deplacer dans le controller : malin ?
+//                $object->setJustificationResponsable($description);
                 break;
             case InscriptionEtats::ETAT_REFUSER :
             case DemandeExterneEtats::ETAT_REJETEE :

@@ -277,10 +277,10 @@ create table formation_enquete_categorie
     libelle               varchar(1024) not null,
     description           text,
     ordre                 integer       not null,
-    histo_createur_id     integer       not null
+    histo_createur_id     integer       not null default 0
         constraint formation_enquete_categorie_utilisateur_id_fk_1
         references unicaen_utilisateur_user,
-    histo_creation        timestamp     not null,
+    histo_creation        timestamp     not null default now(),
     histo_modificateur_id integer
         constraint formation_enquete_categorie_utilisateur_id_fk_2
         references unicaen_utilisateur_user,
@@ -301,10 +301,10 @@ create table formation_enquete_question
     libelle               varchar(1024) not null,
     description           text,
     ordre                 integer       not null,
-    histo_createur_id     integer       not null
+    histo_createur_id     integer       not null default 0
         constraint formation_enquete_question_utilisateur_id_fk_1
         references unicaen_utilisateur_user,
-    histo_creation        timestamp     not null,
+    histo_creation        timestamp     not null default now(),
     histo_modificateur_id integer
         constraint formation_enquete_question_utilisateur_id_fk_2
         references unicaen_utilisateur_user,
@@ -939,7 +939,6 @@ INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recu
 
 -- PARAMETRE --------------------------------------
 
-
 INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
 VALUES ('FORMATION', 'Paramètres liés aux formations', 5000, null);
 INSERT INTO unicaen_parametre_parametre (categorie_id, code, libelle, description, valeurs_possibles, ordre)
@@ -958,6 +957,39 @@ WITH d(code, libelle, description, valeurs_possibles, ordre) AS (
 SELECT cp.id, d.code, d.libelle, d.description, d.valeurs_possibles, d.ordre
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';
+
+-- ENQUETE -----------------------------------------------------------------------
+
+INSERT INTO formation_enquete_categorie (libelle, description, ordre)
+VALUES ('La formation', null, 10);
+INSERT INTO formation_enquete_question (categorie_id, libelle, description, ordre)
+WITH d(libelle, description, ordre) AS (
+    SELECT 'Quelles étaient vos attentes en vous inscrivant à cette formation?', null, 1 UNION
+    SELECT 'Les contenus abordés sont-ils conformes au programme?', null, 2 UNION
+    SELECT 'La durée de la formation', null, 3 UNION
+    SELECT 'Réutilisation des apports de la formation', null, 4 UNION
+    SELECT 'La formation est-elle adéquate par rapport à vos attentes?', 'Lister les points forts et/ou points faibles', 5 UNION
+    SELECT 'Recommanderiez-vous la formation?', null, 5 UNION
+    SELECT 'Auriez-vous besoin ou envie d''aborder d''autres thèmes de formation?', 'Si oui, lesquels', 95 UNION
+    SELECT 'Autres observations', null, 99
+)
+SELECT cp.id, d.libelle, d.description, d.ordre
+FROM d
+JOIN formation_enquete_categorie cp ON cp.libelle = 'La formation';
+
+INSERT INTO public.formation_enquete_categorie (libelle, description, ordre)
+VALUES ('La pédagogie', null, 20);
+INSERT INTO formation_enquete_question (categorie_id, libelle, description, ordre)
+WITH d(libelle, description, ordre) AS (
+    SELECT 'Les méthodes pédagogiques sont-elles pertinentes?', null, 1 UNION
+    SELECT 'Qualités de l''approche pédagogique de l''intervenant-e', null, 2 UNION
+    SELECT 'Capacité d''écoute et disponibilité de l''intervenant-e', null, 3 UNION
+    SELECT 'Les supports sont-ils satisfaisants?', null, 4
+
+)
+SELECT cp.id, d.libelle, d.description, d.ordre
+FROM d
+JOIN formation_enquete_categorie cp ON cp.libelle = 'La pédagogie';
 
 -- TEMPLATE - PDF ------------------------------------------------------------------
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_ATTESTATION', null, 'pdf', 'Attestation de formation de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle]', e'<p> </p>
@@ -1176,7 +1208,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p>Le bureau conseil carrière compétences se tient à votre disposition pour toute information complémentaire.</p>
 <p><br />La responsable du bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr</p>
 <p> </p>', 'table {border:1px solid black;}', 'Formation\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_NOTIFICATION_ABONNEMENT_FORMATION', '<p>Mail envoyé aux agents abonnés lors d''une nouvelle session</p>', 'mail', 'Un session de formation vient être ouverte pour l''action de formation "VAR[FORMATION_INSTANCE#Libelle]"', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br />DRH Bureau de la formation, conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN</p>
+INSERT INTO public.unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('FORMATION_NOTIFICATION_ABONNEMENT_FORMATION', '<p>Mail envoyé aux agents abonnés lors d''une nouvelle session</p>', 'mail', 'Un session de formation vient être ouverte pour l''action de formation "VAR[FORMATION_INSTANCE#Libelle]"', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br />DRH Bureau de la formation, conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">A Caen, le VAR[EMC2#date]</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
@@ -1370,3 +1402,7 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
 ('INSCRIPTION#justificationAgent', '<p>Retourne la motivation de l agent</p>', 'inscription', 'getJustificationAgent'),
 ('INSCRIPTION#justificationRefus', '<p>Retourne la motivation de la désinscription ou du refus</p>', 'inscription', 'getJustificationRefus'),
 ('INSCRIPTION#justificationResponsable', '<p>Retourne la motivation du responsable</p>', 'inscription', 'getJustificationResponsable');
+
+-- MACROS ASSOCIEES A URL SERVICE
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+('URL#SessionAfficher', 'Retourne l''url pour accéder à la page de gestion d''une session de formation', 'UrlService', 'getUrlSessionAfficher');

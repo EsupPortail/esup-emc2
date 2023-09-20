@@ -23,9 +23,10 @@ class EnqueteReponseHydrator implements HydratorInterface {
         $data = [];
         foreach ($object as $item) {
             [$question, $reponse] = $item;
-
-            $data["select_".$reponse->getQuestion()->getId()] = $reponse->getNiveau();
-            $data["textarea_".$reponse->getQuestion()->getId()] = $reponse->getDescription();
+            if (isset($reponse)) {
+                $data["select_" . $reponse->getQuestion()->getId()] = $reponse->getNiveau();
+                $data["textarea_" . $reponse->getQuestion()->getId()] = $reponse->getDescription();
+            }
         }
         return $data;
 

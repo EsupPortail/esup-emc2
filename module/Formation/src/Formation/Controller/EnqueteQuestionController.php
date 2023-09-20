@@ -319,11 +319,12 @@ class EnqueteQuestionController extends AbstractActionController
         foreach ($reponses as $reponse) $dictionnaireReponse[$reponse->getQuestion()->getId()] = $reponse;
         $enquete = new ArrayCollection();
         foreach ($dictionnaireQuestion as $id => $question) {
-            $reponse = $dictionnaireReponse[$id];
-            if ($reponse === null) {
+            if (! isset($dictionnaireReponse[$id])) {
                 $reponse = new EnqueteReponse();
                 $reponse->setInscription($inscription);
                 $reponse->setQuestion($question);
+            } else {
+                $reponse = $dictionnaireReponse[$id];
             }
             $element = [$question, $reponse];
             $enquete->add($element);
@@ -377,6 +378,8 @@ class EnqueteQuestionController extends AbstractActionController
                 'title' => "Validation de l'enquête",
                 'text' => "La validation est définitive, après celle-ci vous ne pourrez pas revenir sur l'enquête. <br/> Êtes-vous sûr·e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('formation/enquete/valider-questions', ["inscription" => $inscription->getId()], [], true),
+                'confirmation' => false,
+                'complement' => false,
             ]);
         }
         return $vm;

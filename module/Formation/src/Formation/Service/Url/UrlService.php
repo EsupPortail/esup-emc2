@@ -15,7 +15,7 @@ class UrlService extends \Application\Service\Url\UrlService
         return $url;
     }
 
-    public function getUrlFormationInstanceAfficher() : string
+    public function getUrlSessionAfficher() : string
     {
         /** @var FormationInstance $instance */
         $instance = $this->getVariable('instance');

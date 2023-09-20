@@ -22,9 +22,9 @@ class EnqueteReponseController extends AbstractActionController {
         $formationId = (isset($fromQueries['formation']) AND isset($fromQueries['formation']['id']))?((int) $fromQueries['formation']['id']):null;
         $params = [
             'formation' => $this->getFormationService()->getFormation($formationId),
-            'formateur' => $fromQueries['formateur']['id'],
-            'formateur_denomination' => $fromQueries['formateur']['label'],
-            'annee'     =>  $fromQueries['annee'],
+            'formateur' => $fromQueries['formateur']['id']??null,
+            'formateur_denomination' => $fromQueries['formateur']['label']??null,
+            'annee'     =>  $fromQueries['annee']??null,
         ];
 
         $categories = $this->getEnqueteCategorieService()->getEnqueteCateories();
@@ -33,7 +33,7 @@ class EnqueteReponseController extends AbstractActionController {
         $histogramme = [];
         foreach ($categories as $categorie) {
             foreach ($categorie->getQuestions() as $question) {
-                $histogramme[$question->getId] = [];
+                if (! isset($histogramme[$question->getId()])) $histogramme[$question->getId()] = [];
                 foreach (EnqueteReponse::NIVEAUX as $v => $niveau) $histogramme[$question->getId()][$v] = 0;
             }
         }

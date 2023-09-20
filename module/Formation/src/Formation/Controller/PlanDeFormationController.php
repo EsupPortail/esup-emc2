@@ -46,12 +46,19 @@ class PlanDeFormationController extends AbstractActionController
         }
 
         $formations = $planDeFormation->getFormations();
+        $sansgroupe = new FormationGroupe();
+        $sansgroupe->setLibelle("Formations sans groupe");
 
         $groupes = [];
         $formationsArrayByGroupe = [];
         foreach ($formations as $formation) {
-            $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
-            $formationsArrayByGroupe[$formation->getGroupe()->getId()][] = $formation;
+            if ($formation->getGroupe()) {
+                $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
+                $formationsArrayByGroupe[$formation->getGroupe()->getId()][] = $formation;
+            } else {
+                $groupes[-1] = $sansgroupe;
+                $formationsArrayByGroupe[-1][] = $formation;
+            }
         }
 
         $sessionsArrayByFormation = [];

@@ -147,3 +147,19 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'structure';
 
+-- PARAMETRE -------------------------------------------------------------------------
+
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre)
+VALUES ('STRUCTURE', 'Paramètres associés aux structures', 300);
+INSERT INTO unicaen_parametre_parametre (categorie_id, code, libelle, description, valeurs_possibles, ordre)
+WITH d(code, libelle, description, valeurs_possibles, ordre) AS (
+    SELECT 'AGENT_TEMOIN_STATUT', 'Filtre sur les témoins de statuts associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : cdi, cdd, titulaire, vacataire, enseignant, administratif, chercheur, doctorant, detacheIn, detacheOut, dispo <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 100 UNION
+    SELECT 'AGENT_TEMOIN_AFFECTATION', 'Filtre sur les témoins d''affectations associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : principale, hierarchique, fonctionnelle <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 200
+)
+SELECT cp.id, d.code, d.libelle, d.description, d.valeurs_possibles, d.ordre
+FROM d
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'STRUCTURE';
+
+-- VALEUR DE L'INSTANCE UNICAEN POUR LES PARAMETRES --- FAIRE LA JOINTURE !!!
+update unicaen_parametre_parametre set valeur='administratif;!dispo;!doctorant' where code='AGENT_TEMOIN_STATUT' and categorie_id='STRUCTURE';
+update unicaen_parametre_parametre set valeur='principale' where code='AGENT_TEMOIN_AFFECTATION' and categorie_id='STRUCTURE';

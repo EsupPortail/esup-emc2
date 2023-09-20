@@ -422,20 +422,30 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
 
 
 <script>
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
         let name = hash.substring(1);
         if (name === undefined || name === "") name = "information";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav a').click(function (e) {
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
             let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
-            $(this).tab('show');
+            history.replaceState(null, null, "#" + anchor);
         });
+    });
 
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             tinyMCE.editors=[];
