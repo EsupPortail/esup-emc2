@@ -11,9 +11,10 @@ use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface
+class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, HasEtatsInterface, HasValidationsInterface
 {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;

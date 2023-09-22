@@ -958,6 +958,10 @@ SELECT cp.id, d.code, d.libelle, d.description, d.valeurs_possibles, d.ordre
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';
 
+-- NATURE FICHIER ----------------------------------------------------------------
+
+INSERT INTO fichier_nature (code, libelle) VALUES ('DEMANDEEXTERNE_DEVIS', 'Devis de demande externe');
+
 -- ENQUETE -----------------------------------------------------------------------
 
 INSERT INTO formation_enquete_categorie (libelle, description, ordre)

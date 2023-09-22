@@ -25,6 +25,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
@@ -36,6 +37,7 @@ class DemandeExterneController extends AbstractActionController {
     use FichierServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
 
     use DemandeExterneFormAwareTrait;
     use Demande2FormationFormAwareTrait;
@@ -46,11 +48,11 @@ class DemandeExterneController extends AbstractActionController {
     {
         $fromQueries  = $this->params()->fromQuery();
         $params = [
-            'agent' => $this->getAgentService()->getAgent($fromQueries['agent']['id']),
-            'organisme' => $fromQueries['organisme']['id'],
-            'etat' => $this->getEtatTypeService()->getEtatType((trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null),
-            'historise' => $fromQueries['historise'],
-            'annee' =>  $fromQueries['annee'],
+            'agent' => $this->getAgentService()->getAgent($fromQueries['agent']['id']??null),
+            'organisme' => $fromQueries['organisme']['id']??null,
+            'etat' => $this->getEtatTypeService()->getEtatType((isset($fromQueries['etat']) && trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null),
+            'historise' => $fromQueries['historise']??null,
+            'annee' =>  $fromQueries['annee']??null,
         ];
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($params);
@@ -190,7 +192,7 @@ class DemandeExterneController extends AbstractActionController {
             $validation = $demande->getValidationActiveByTypeCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
             if ($validation === null) {
                 if ($data["reponse"] === "oui") {
-                    $this->getDemandeExterneService()->addValidationAgent($demande);
+                    $this->getValidationInstanceService()->setValidationActive($demande,DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
                     $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_AGENT);
                     $this->getDemandeExterneService()->update($demande);
                     $this->getNotificationService()->triggerValidationAgent($demande);
@@ -226,7 +228,7 @@ class DemandeExterneController extends AbstractActionController {
                 if ($demande->getJustificationResponsable() === null) {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec de la validation </strong> <br/> Veuillez justifier votre validation !");
                 } else {
-                    $this->getDemandeExterneService()->addValidationResponsable($demande);
+                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
                     $this->getDemandeExterneService()->update($demande);
                     $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                     $this->getNotificationService()->triggerValidationResponsableAgent($demande);
@@ -262,7 +264,7 @@ class DemandeExterneController extends AbstractActionController {
                 if ($demande->getJustificationRefus() === null) {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
                 } else {
-                    $this->getDemandeExterneService()->addValidationRefus($demande);
+                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
                     $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
                     $this->getDemandeExterneService()->update($demande);
                     $this->flashMessenger()->addSuccessMessage("Refus effectué.");
@@ -295,7 +297,7 @@ class DemandeExterneController extends AbstractActionController {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getDemandeExterneService()->addValidationDrh($demande);
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
                 $this->getDemandeExterneService()->update($demande);
                 $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                 $this->getNotificationService()->triggerValidationDrh($demande);
@@ -332,7 +334,7 @@ class DemandeExterneController extends AbstractActionController {
                 if ($demande->getJustificationRefus() === null) {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
                 } else {
-                    $this->getDemandeExterneService()->addValidationRefus($demande);
+                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
                     $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
                     $this->getDemandeExterneService()->update($demande);
                     $this->flashMessenger()->addSuccessMessage("Refus effectué.");

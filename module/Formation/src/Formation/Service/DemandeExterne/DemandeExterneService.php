@@ -206,44 +206,6 @@ class DemandeExterneService {
 
     /** FACADE ********************************************************************************************************/
 
-    /** @deprecated ... */
-    public function addValidation(ValidationType $type, ?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $validation = new ValidationInstance();
-        $validation->setEntity($demande);
-        $validation->setType($type);
-        $validation->setRefus($justification !== null);
-        $validation->setJustification($justification);
-        $this->getValidationInstanceService()->create($validation);
-        $demande->addValidation($validation);
-        $this->update($demande);
-        return $validation;
-    }
-
-    public function addValidationAgent(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationResponsable(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationDrh(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationRefus(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
     /**
      * @param Structure $structure
      * @param bool $avecStructuresFilles

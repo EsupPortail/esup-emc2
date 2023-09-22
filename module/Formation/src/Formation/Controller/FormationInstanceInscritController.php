@@ -201,6 +201,7 @@ class FormationInstanceInscritController extends AbstractActionController
             'agent' => $agent,
         ]);
     }
+
     public function inscriptionExterneAction() : ViewModel
     {
         $utilisateur = $this->getUserService()->getConnectedUser();

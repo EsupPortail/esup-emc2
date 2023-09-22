@@ -69,6 +69,7 @@ class FormationGroupeController extends AbstractActionController
             if ($form->isValid()) {
                 $groupe->setSource(HasSourceInterface::SOURCE_EMC2);
                 $this->getFormationGroupeService()->create($groupe);
+                $groupe->setIdSource($groupe->getId());
                 $this->getFormationGroupeService()->update($groupe);
             }
         }

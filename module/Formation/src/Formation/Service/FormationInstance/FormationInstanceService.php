@@ -130,7 +130,8 @@ class FormationInstanceService
                 ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
                 ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
                 ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
-                ->addSelect('etype')->leftjoin('etat.type', 'etype');
+                ->addSelect('etype')->leftjoin('etat.type', 'etype')
+                ->andWhere('etat.histoDestruction IS NULL');
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problem est survenu lors de la création du QueryBuilder de [".FormationInstanceController::class."]",0,$e);
         }

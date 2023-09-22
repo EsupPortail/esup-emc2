@@ -46,7 +46,7 @@ $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(Planform
 <?php if ($canIndex): ?>
     <?php /** @see \Formation\Controller\PlanDeFormationController::indexAction() */ ?>
     <a href="<?php echo $this->url('plan-de-formation', [], ['force_canonical' => true], true); ?>"
-       class="btn btn-secondary ajax-modal" data-event="modification">
+       class="btn btn-secondary">
         <span class="icon icon-retour"></span>
         Retour à la liste des plans de formation
     </a>

@@ -162,7 +162,7 @@ return [
                             'route'    => '/gerer-formations/:plan-de-formation',
                             'defaults' => [
                                 'controller' => PlanDeFormationController::class,
-                                'action'     => 'ajouter-formation',
+                                'action'     => 'gerer-formations',
                             ],
                         ],
                     ],

@@ -38,6 +38,16 @@ create table unicaen_indicateur_tableau_indicateur
         primary key (tableau_id, indicateur_id)
 );
 
+
+create table unicaen_indicateur_abonnement
+(
+    id serial not null constraint abonnement_pk primary key,
+    user_id integer not null constraint indicateur_abonnement_user_id_fk references unicaen_utilisateur_user on delete cascade,
+    indicateur_id integer not null constraint indicateur_abonnement_indicateur_definition_id_fk references unicaen_indicateur_indicateur on delete cascade,
+    frequence varchar(256),
+    dernier_envoi timestamp
+);
+create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
 -- TABLES - EVENEMENT ----------------------------------------------------------------------
 
 create table unicaen_evenement_etat
