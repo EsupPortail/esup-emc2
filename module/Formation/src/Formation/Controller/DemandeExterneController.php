@@ -17,6 +17,7 @@ use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -224,17 +225,20 @@ class DemandeExterneController extends AbstractActionController {
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-            if ($form->isValid()) {
-                if ($demande->getJustificationResponsable() === null) {
+            $justification = $data['HasDescription']['description'];
+//            if ($form->isValid()) {
+//              if ($demande->getJustificationResponsable() === null) {
+            if ($justification === null || trim($justification) === '') {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec de la validation </strong> <br/> Veuillez justifier votre validation !");
                 } else {
                     $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
+                    $demande->setJustificationResponsable($justification);
                     $this->getDemandeExterneService()->update($demande);
                     $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
                     $this->getNotificationService()->triggerValidationResponsableAgent($demande);
                     $this->getNotificationService()->triggerValidationResponsableDrh($demande);
                 }
-            }
+//            }
         }
 
         $vm =  new ViewModel([
@@ -295,14 +299,12 @@ class DemandeExterneController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-                $this->getDemandeExterneService()->update($demande);
-                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
-                $this->getNotificationService()->triggerValidationDrh($demande);
-                $this->getNotificationService()->triggerValidationComplete($demande);
-            }
+            $justification = $data['HasDescription']['description'];
+            $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH, $justification);
+            $this->getDemandeExterneService()->update($demande);
+            $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+            $this->getNotificationService()->triggerValidationDrh($demande);
+            $this->getNotificationService()->triggerValidationComplete($demande);
         }
 
         $vm =  new ViewModel([
@@ -416,7 +418,9 @@ class DemandeExterneController extends AbstractActionController {
         $fichier->setNature($devisNature);
         $form = $this->getUploadForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true));
-        $form->get('nature')->setValueOptions([$devisNature->getId() => $devisNature->getLibelle()]);
+        /** @var Select $select */
+        $select = $form->get('nature');
+        $select->setValueOptions([$devisNature->getId() => $devisNature->getLibelle()]);
         $form->bind($fichier);
 
 
@@ -433,7 +437,7 @@ class DemandeExterneController extends AbstractActionController {
                 $demande->addDevis($fichier);
                 $this->getDemandeExterneService()->update($demande);
             }
-            return $this->redirect()->toRoute('inscription-formation', [], [], true);
+            return $this->redirect()->toRoute('inscription-externe', [], [], true);
         }
 
         $vm = new ViewModel();

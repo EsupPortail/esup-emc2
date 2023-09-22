@@ -252,8 +252,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
                     if ($minimum === null or $reversed < $minimum) $minimum = $reversed;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
-                    $debut = $journee->getVolumeDebut()->format("Y/m/d");
-                    if ($minimum === null or $debut < $minimum) $minimum = $debut;
+                    if ($journee->getVolumeDebut()) {
+                        $debut = $journee->getVolumeDebut()->format("Y/m/d");
+                        if ($minimum === null or $debut < $minimum) $minimum = $debut;
+                    }
                 }
             }
         }
@@ -279,8 +281,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
                     if ($maximum === null or $reversed > $maximum) $maximum = $reversed;
                 }
                 if ($journee->getType() === Seance::TYPE_VOLUME) {
-                    $fin = $journee->getVolumeFin()->format("Y/m/d");
-                    if ($maximum === null or $fin > $maximum) $maximum = $fin;
+                    if ($journee->getVolumeFin()) {
+                        $fin = $journee->getVolumeFin()->format("Y/m/d");
+                        if ($maximum === null or $fin > $maximum) $maximum = $fin;
+                    }
                 }
             }
         }
