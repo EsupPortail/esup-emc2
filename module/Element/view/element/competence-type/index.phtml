@@ -7,6 +7,7 @@
 
 use Element\Entity\Db\CompetenceType;
 use Element\Provider\Privilege\CompetencePrivileges;
+use Element\Provider\Privilege\CompetencereferentielPrivileges;
 use Element\Provider\Privilege\CompetencethemePrivileges;
 use Element\Provider\Privilege\CompetencetypePrivileges;
 
@@ -14,6 +15,7 @@ $this->headTitle("Liste des types de compétence");
 
 $canCompetenceIndex = $this->isAllowed(CompetencePrivileges::getResourceId(CompetencePrivileges::COMPETENCE_INDEX));
 $canCompetenceThemeIndex = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencethemePrivileges::COMPETENCETHEME_INDEX));
+$canCompetenceReferentielIndex = $this->isAllowed(CompetencereferentielPrivileges::getResourceId(CompetencereferentielPrivileges::COMPETENCEREFERENTIEL_INDEX));
 
 $canAfficher = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_AFFICHER));
 $canAjouter  = $this->isAllowed(CompetencethemePrivileges::getResourceId(CompetencetypePrivileges::COMPETENCETYPE_AJOUTER));
@@ -45,15 +47,23 @@ $canAction = ($canAfficher OR $canModifier OR $canHistoriser OR $canDetruire);
         <?php if ($canCompetenceIndex) : ?>
             <?php /** @see \Element\Controller\CompetenceController::indexAction() */ ?>
             <a href="<?php echo $this->url('element/competence', [], [], true); ?>" class="btn btn-secondary">
-                <span class="icon acceder"></span>
+                <span class="icon icon-lister"></span>
                 Accéder aux compétences</a>
         <?php endif; ?>
 
         <?php if ($canCompetenceThemeIndex) : ?>
             <?php /** @see \Element\Controller\CompetenceThemeController::indexAction() */ ?>
             <a href="<?php echo $this->url('element/competence-theme', [], [], true); ?>" class="btn btn-secondary">
-                <span class="icon acceder"></span>
+                <span class="icon icon-lister"></span>
                 Accéder aux thèmes</a>
+        <?php endif; ?>
+
+        <?php if ($canCompetenceReferentielIndex) : ?>
+            <?php /** @see \Element\Controller\CompetenceReferentielController::indexAction() */ ?>
+            <a href="<?php echo $this->url('element/competence-referentiel', [], [], true); ?>"
+               class="btn btn-secondary">
+                <span class="icon icon-lister"></span>
+                Accéder aux référentiels</a>
         <?php endif; ?>
     </div>
 </div>

@@ -17,6 +17,9 @@
         <many-to-one target-entity="Element\Entity\Db\CompetenceTheme"  field="theme">
             <join-column name="theme_id" referenced-column-name="id"/>
         </many-to-one>
+        <many-to-one target-entity="Element\Entity\Db\CompetenceReferentiel"  field="referentiel">
+            <join-column name="referentiel_id" referenced-column-name="id"/>
+        </many-to-one>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
