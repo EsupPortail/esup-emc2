@@ -47,6 +47,12 @@ $this->headTitle("Liste des compétences");
                 <span class="icon icon-ajouter"></span>
                 Ajouter une compétence
             </a>
+            <?php /** @see \Element\Controller\CompetenceImporterController::importerAction() */ ?>
+            <a href="<?php echo $this->url('competence-import', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" >
+                <span class="icon icon-ajouter"></span>
+                Importer un référentiel
+            </a>
         <?php endif; ?>
     </div>
     <div class="col-md-6">

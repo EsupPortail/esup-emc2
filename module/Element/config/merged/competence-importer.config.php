@@ -4,9 +4,12 @@ namespace Element;
 
 use Element\Controller\CompetenceImporterController;
 use Element\Controller\CompetenceImporterControllerFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
+use Element\Form\CompetenceImportation\CompetenceImportationForm;
+use Element\Form\CompetenceImportation\CompetenceImportationFormFactory;
+use Element\Form\CompetenceImportation\CompetenceImportationHydrator;
+use Element\Form\CompetenceImportation\CompetenceImportationHydratorFactory;
 use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -25,7 +28,7 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'competence-import' => [
                 'type' => Literal::class,
@@ -46,16 +49,20 @@ return [
     'service_manager' => [
         'factories' => [],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             CompetenceImporterController::class => CompetenceImporterControllerFactory::class,
         ],
     ],
     'form_elements' => [
-        'factories' => [],
+        'factories' => [
+            CompetenceImportationForm::class => CompetenceImportationFormFactory::class,
+        ],
     ],
     'hydrators' => [
-        'factories' => [],
+        'factories' => [
+            CompetenceImportationHydrator::class => CompetenceImportationHydratorFactory::class,
+        ],
     ]
 
 ];

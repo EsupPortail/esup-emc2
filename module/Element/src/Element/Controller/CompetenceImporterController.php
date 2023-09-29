@@ -2,80 +2,110 @@
 
 namespace Element\Controller;
 
-use Element\Entity\Db\Competence;
-use Element\Entity\Db\CompetenceTheme;
+use Element\Form\CompetenceImportation\CompetenceImportationFormAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
-use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
-class CompetenceImporterController extends AbstractActionController {
+class CompetenceImporterController extends AbstractActionController
+{
     use CompetenceServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
 
+    use CompetenceImportationFormAwareTrait;
+
     /** IMPORT ET REMPLACEMENT ****************************************************************************************/
 
-    public function importerAction() : Response
+    public function importerAction(): ViewModel
     {
-        $file_path = "/var/www/html/data/competence_referens3.csv";
-        $content = file_get_contents($file_path);
+        $form = $this->getCompetenceImportationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('competence-import', ['mode' => 'preview', 'path' => null], [], true));
 
-        $types = [
-            'Compétences comportementales' => $this->getCompetenceTypeService()->getCompetenceType(1),
-            'Compétences opérationnelles'  => $this->getCompetenceTypeService()->getCompetenceType(2),
-            'Connaissances'                => $this->getCompetenceTypeService()->getCompetenceType(3),
-        ];
 
-        $lines = explode("\n", $content);
-        $nbLine = count($lines);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $error = [];
+            $data = $request->getPost();
+            $file = $request->getFiles();
 
-        for($position = 1 ; $position < $nbLine; $position++) {
-            $line = $lines[$position];
-            if ($line !== '') {
-                $depth = 0;
-                for ($i = 0; $i < strlen($line) ; $i++) {
-                    if ($line[$i] === ';' and $depth === 0) $line[$i] = '|';
-                    if ($line[$i] === "\"") {
-                        if ($depth === 0) $depth = 1; else $depth = 0;
-                    }
+            $fichier_path = $file['fichier']['tmp_name'];
+            $mode = $data['mode'];
+            $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentiel($data['referentiel']);
+
+            //reading
+            $array = [];
+            if ($fichier_path === null or $fichier_path === '') {
+                $error[] = "Aucun fichier !";
+            } else {
+                $handle = fopen($fichier_path, "r");
+
+                while ($content = fgetcsv($handle, 0, ";")) {
+                    $array[] = $content;
                 }
-                $elements = explode("|", $line);
-                $domaine = $elements[0];
-                $registre = $elements[1];
-                $libelle = $elements[2];
-                $definition = $elements[3];
-                $id = ((int)$elements[4]);
+            }
+            $warning = [];
+            if ($mode === 'import' and empty($error)) {
 
-                if ($libelle !== null and $libelle !== '') {
-                    //Existe-t-elle ?
-                    $theme = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($domaine);
+                $typesLibelle = [];
+                $themesLibelle = [];
+                foreach (array_slice($array, 1) as $line) {
+                    $typesLibelle[$line[1]] = $line[1];
+                    $themesLibelle[$line[0]] = $line[0];
+                }
+                $types = [];
+                foreach ($typesLibelle as $typeLibelle) {
+                    $type = $this->getCompetenceTypeService()->getCompetenceTypeByLibelle($typeLibelle);
+                    if ($type === null) {
+                        $type = $this->getCompetenceTypeService()->createWith($typeLibelle);
+                    }
+                    $types[$typeLibelle] = $type;
+                }
+
+                $themes = [];
+                foreach ($themesLibelle as $themeLibelle) {
+                    $theme = $this->getCompetenceThemeService()->getCompetenceThemeByLibelle($themeLibelle);
                     if ($theme === null) {
-                        $theme = new CompetenceTheme();
-                        $theme->setLibelle($domaine);
-                        $this->getCompetenceThemeService()->create($theme);
+                        $theme = $this->getCompetenceThemeService()->createWith($themeLibelle);
                     }
-                    $competence = $this->getCompetenceService()->getCompetenceByIdSource("REFERENS3", $id);
-                    $new_competence = ($competence === null);
-                    if ($new_competence) {
-                        $competence = new Competence();
-                    }
-                    $competence->setLibelle($libelle);
-                    if ($definition !== 'Définition en attente' and $definition !== 'Définition non nécessaire') $competence->setDescription($definition); else $competence->setDescription(null);
-                    $competence->setType($types[$registre]);
-                    $competence->setTheme($theme);
-                    $competence->setSource(Competence::SOURCE_REFERENS3);
-                    $competence->setIdSource($id);
-                    if ($new_competence) {
-                        $this->getCompetenceService()->create($competence);
+                    $themes[$themeLibelle] = $theme;
+                }
+
+                foreach (array_slice($array, 1) as $line) {
+                    $competence = $this->getCompetenceService()->getCompetenceByRefentiel($referentiel, $line[4]);
+                    if ($competence === null) {
+                        $this->getCompetenceService()->createWith($line[2], $line[3], $types[$line[1]], $themes[$line[0]], $referentiel, $line[4]);
                     } else {
-                        $this->getCompetenceService()->update($competence);
+                        $this->getCompetenceService()->updateWith($competence, $line[2], $line[3], $types[$line[1]], $themes[$line[0]]);
                     }
                 }
             }
+
+            if ($mode !== 'import') {
+                $title = "Importation d'un référentiel de compétences (Prévisualisation)";
+            }
+            if ($mode === 'import') {
+                $title = "Importation d'un référentiel de compétences (Importation)";
+            }
+            return new ViewModel([
+                'title' => $title,
+                'fichier_path' => $fichier_path,
+                'form' => $form,
+                'mode' => $mode,
+                'error' => $error,
+                'warning' => $warning,
+                'array' => array_slice($array, 1),
+            ]);
         }
 
-        return $this->redirect()->toRoute('element/competence',[],[], true);
+        $vm = new ViewModel([
+            'title' => "Importation d'un référentiel de compétences",
+            'form' => $form,
+        ]);
+        return $vm;
     }
 }
