@@ -91,6 +91,18 @@ class CompetenceForm extends Form {
                 'data-live-search'  => 'true',
             ],
         ]);
+        //identifiant dans referentiel
+        $this->add([
+            'type' => Text::class,
+            'name' => 'identifiant',
+            'options' => [
+                'label' => "Identifiant dans le référentiel source:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'identifiant',
+            ],
+        ]);
 
         //submit
         $this->add([
@@ -114,6 +126,7 @@ class CompetenceForm extends Form {
             'type'    => [ 'required' => true, ],
             'theme'   => [ 'required' => false, ],
             'referentiel'   => [ 'required' => false, ],
+            'identifiant'   => [ 'required' => false, ],
         ]));
     }
 }
