@@ -103,6 +103,15 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             }
         }
 
+		$grades = $entity->getAgent()->getGradesActifs($entity->getDateEntretien());
+        $inhibition = false;
+		foreach ($grades as $grade) {
+			if ($grade->getCorps()->isSuperieurAsAutorite()) {
+				$inhibition = true;
+				break;
+			}
+		}
+
         $isAgent = ($agent === $entity->getAgent());
 
         $predicats = $this->computePredicats($entity, $agent, $role);

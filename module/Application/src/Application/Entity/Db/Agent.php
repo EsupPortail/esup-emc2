@@ -169,7 +169,7 @@ class Agent implements
         return $affectations;
     }
 
-    /** @return AgentAffectation */ //TODO A reecrire car peut être multiple ...
+    //TODO A reecrire car peut être multiple ...
     public function getAffectationPrincipale(?DateTime $date = null) : ?AgentAffectation
     {
         if ($date === null) {
@@ -463,9 +463,6 @@ class Agent implements
         return false;
     }
 
-    /**
-     * @return NiveauEnveloppe
-     */
     public function getNiveauEnveloppe() : ?NiveauEnveloppe
     {
         $inferieure = null;

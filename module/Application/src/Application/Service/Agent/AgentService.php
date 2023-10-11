@@ -72,7 +72,7 @@ class AgentService {
                 ->andWhere('agent.deleted_on IS NULL')
                 ->andWhere('affectation.deleted_on IS NULL');
         } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Agent."]",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Agent::class."]",0,$e);
         }
         return $qb;
     }
@@ -163,7 +163,7 @@ class AgentService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs agents partagent le même identifiant [".$id."]",0,$e);
         }
         return $result;
     }

@@ -17,8 +17,9 @@ use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
@@ -286,7 +287,35 @@ class CampagneService {
         return $scolaire;
     }
 
-    public function trierAgents(Campagne $campagne, array $agents) : array
+    /**
+     * Cette fonction retourne la liste des agents adminstratifs associés à des structures aux débuts de la campagne
+     * @param array $structures
+     * @param Campagne $campagne
+     * @return Agent[]
+     */
+    public function computeAgentByStructures(array $structures, Campagne $campagne) : array
+    {
+        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->join('agent.affectations', 'affectation')
+            ->join('agent.statuts', 'statut')
+            ->join('agent.grades', 'grade')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateDebut <= :date')
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $campagne->getDateDebut())
+            // Affecté·e à une des structures
+            ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
+            // En contrat ...
+            ->andWhere('statut.titulaire = :on OR statut.cdd = :on OR statut.cdi = :on')->setParameter('on', 'O')
+            ->andWhere('statut.retraite = :off')->setParameter('off', 'N')
+            // Est Administratif
+            ->andWhere('statut.administratif = :on')
+            ->orderBy('agent.nomUsuel, agent.prenom','ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+
+	public function trierAgents(Campagne $campagne, array $agents) : array
     {
         $obligatoires = [];  $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));

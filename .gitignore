@@ -4,5 +4,7 @@ upload/
 config/autoload/*local*
 composer.lock
 vendor
-!public/vendor
+!/public/vendor
+/public/css/local.css
+/public/css/logos.css
 !public/unicaen/app/vendor
