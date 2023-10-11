@@ -2,8 +2,8 @@
 
 namespace Formation;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Formation\Controller\IndexController;
 use Formation\Controller\IndexControllerFactory;
 use Formation\Event\Convocation\ConvocationEvent;
@@ -27,18 +27,11 @@ use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 
-switch(getenv('APPLICATION_ENV')) {
-    case 'development':
-        $hostname = 'mes-formations.n302z-dsi008.png.unicaen.fr:8443';
-        break;
-    case 'test':
-        $hostname = 'mes-formations-pp.unicaen.fr';
-        break;
-    case 'production':
-    default:
-        $hostname = 'mes-formations.unicaen.fr';
-        break;
-}
+$hostname = match (getenv('APPLICATION_ENV')) {
+    'development' => 'mes-formations.n302z-dsi008.png.unicaen.fr:8443',
+    'test' => 'mes-formations-pp.unicaen.fr',
+    default => 'mes-formations.unicaen.fr',
+};
 
 
 return [
@@ -173,7 +166,7 @@ return [
                     'mentions-legales'         => [
                         'label'    => _("Mentions légales"),
                         'title'    => _("Mentions légales"),
-                        'uri'      => 'http://www.unicaen.fr/acces-direct/mentions-legales/',
+                        'uri'      => 'https://www.unicaen.fr/acces-direct/mentions-legales/',
                         'class'    => 'ml',
                         'visible'  => false,
                         'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
@@ -183,7 +176,7 @@ return [
                     'informatique-et-libertes' => [
                         'label'    => _("Vie privée"),
                         'title'    => _("Vie privée"),
-                        'uri'      => 'http://www.unicaen.fr/acces-direct/vie-privee/',
+                        'uri'      => 'https://www.unicaen.fr/acces-direct/vie-privee/',
                         'class'    => 'il',
                         'visible'  => false,
                         'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page

@@ -2,8 +2,8 @@
 
 namespace Structure;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Structure\Provider\IdentityProvider;
 use Structure\Provider\IdentityProviderFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
