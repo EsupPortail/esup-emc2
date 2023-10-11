@@ -7,7 +7,6 @@
       "url": "https://gest.unicaen.fr/packagist"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
     "unicaen/app": "^6",
     "unicaen/authentification": "^6",
@@ -27,7 +26,7 @@
     "unicaen/synchro": "^6.0",
 
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
-    "unicaen/etat": "6.x-dev",
+    "unicaen/etat": "^6.0",
     "unicaen/validation": "^6.0"
   },
   "require-dev": {
