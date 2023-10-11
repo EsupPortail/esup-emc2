@@ -17,11 +17,11 @@ use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
-class CampagneService {
+class CampagneService
+{
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
@@ -29,7 +29,7 @@ class CampagneService {
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    public function create(Campagne $campagne) : Campagne
+    public function create(Campagne $campagne): Campagne
     {
         try {
             $this->getEntityManager()->persist($campagne);
@@ -40,7 +40,7 @@ class CampagneService {
         return $campagne;
     }
 
-    public function update(Campagne $campagne) : Campagne
+    public function update(Campagne $campagne): Campagne
     {
         try {
             $this->getEntityManager()->flush($campagne);
@@ -50,7 +50,7 @@ class CampagneService {
         return $campagne;
     }
 
-    public function historise(Campagne $campagne) : Campagne
+    public function historise(Campagne $campagne): Campagne
     {
         try {
             $campagne->historiser();
@@ -61,7 +61,7 @@ class CampagneService {
         return $campagne;
     }
 
-    public function restore(Campagne $campagne) : Campagne
+    public function restore(Campagne $campagne): Campagne
     {
         try {
             $campagne->dehistoriser();
@@ -72,7 +72,7 @@ class CampagneService {
         return $campagne;
     }
 
-    public function delete(Campagne $campagne) : Campagne
+    public function delete(Campagne $campagne): Campagne
     {
         try {
             $this->getEntityManager()->remove($campagne);
@@ -85,23 +85,22 @@ class CampagneService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         try {
             $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
                 ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
-                ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien')
-            ;
+                ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
 //            $qb = EntretienProfessionnel::decorateWithEtats($qb, "entretien");
         } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Campagne::class."]",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Campagne::class . "]", 0, $e);
         }
 
         return $qb;
     }
 
     /** @return Campagne[] */
-    public function getCampagnes(string $champ='annee', string $ordre='DESC') : array
+    public function getCampagnes(string $champ = 'annee', string $ordre = 'DESC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('campagne.' . $champ, $ordre);
@@ -111,7 +110,7 @@ class CampagneService {
     }
 
     /** @return array (id => string) */
-    public function getCampagnesAsOptions(string $champ='annee', string $ordre='DESC') : array
+    public function getCampagnesAsOptions(string $champ = 'annee', string $ordre = 'DESC'): array
     {
         $campagnes = $this->getCampagnes($champ, $ordre);
 
@@ -122,7 +121,7 @@ class CampagneService {
         return $array;
     }
 
-    public function getCampagne(?int $id) : ?Campagne
+    public function getCampagne(?int $id): ?Campagne
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('campagne.id = :id')
@@ -131,12 +130,12 @@ class CampagneService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs EntretienProfessionnelCampagne partage le même id [".$id."]", 0, $e);
+            throw new RuntimeException("Plusieurs EntretienProfessionnelCampagne partage le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedCampagne(AbstractActionController $controller, string $param = "campagne") : ?Campagne
+    public function getRequestedCampagne(AbstractActionController $controller, string $param = "campagne"): ?Campagne
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getCampagne($id);
@@ -144,7 +143,7 @@ class CampagneService {
     }
 
     /** @return Campagne[] */
-    public function getCampagnesActives(?DateTime $date = null) : array
+    public function getCampagnesActives(?DateTime $date = null): array
     {
         $qb = $this->createQueryBuilder();
         $qb = Campagne::decorateWithActif($qb, 'campagne', $date);
@@ -153,18 +152,17 @@ class CampagneService {
     }
 
 
-    public function getLastCampagne(?DateTime $date = null) : ?Campagne
+    public function getLastCampagne(?DateTime $date = null): ?Campagne
     {
         if ($date === null) $date = new DateTime();
         $qb = $this->createQueryBuilder()
             ->andWhere('campagne.dateFin < :date')
-            ->setParameter('date', $date)
-        ;
+            ->setParameter('date', $date);
         $result = $qb->getQuery()->getResult();
         $last = null;
         /** @var Campagne $item */
         foreach ($result as $item) {
-            if ($last === null OR $item->getAnnee() > $last->getAnnee()) $last = $item;
+            if ($last === null or $item->getAnnee() > $last->getAnnee()) $last = $item;
         }
         return $last;
     }
@@ -173,12 +171,15 @@ class CampagneService {
      * @return EntretienProfessionnel[]
      * todo a mettre dans EPS
      */
-    public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
+    public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats): array
     {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
-            ->andWhere('entretien.histoDestruction IS NULL')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+                ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
+                ->andWhere('entretien.histoDestruction IS NULL');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un probleme est sruvenu lors de la création du QueryBuilder",0,$e);
+        }
         $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien', $etats);
         $result = $qb->getQuery()->getResult();
 
@@ -194,7 +195,7 @@ class CampagneService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensProfessionnels(Campagne $campagne) : array
+    public function getEntretiensProfessionnels(Campagne $campagne): array
     {
         $entretiens = [];
         foreach ($campagne->getEntretiensProfessionnels() as $entretien) {
@@ -210,7 +211,7 @@ class CampagneService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensEnAttenteResponsable(Campagne $campagne) : array
+    public function getEntretiensEnAttenteResponsable(Campagne $campagne): array
     {
         $etats = [
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
@@ -225,7 +226,7 @@ class CampagneService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensEnAttenteAutorite(Campagne $campagne) : array
+    public function getEntretiensEnAttenteAutorite(Campagne $campagne): array
     {
         $etats = [
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
@@ -240,7 +241,7 @@ class CampagneService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensEnAttenteAgent(Campagne $campagne) : array
+    public function getEntretiensEnAttenteAgent(Campagne $campagne): array
     {
         $etats = [
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
@@ -254,7 +255,7 @@ class CampagneService {
      * @param Campagne $campagne
      * @return EntretienProfessionnel[]
      */
-    public function getEntretiensCompletes(Campagne $campagne) : array
+    public function getEntretiensCompletes(Campagne $campagne): array
     {
         $etats = [
             $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
@@ -264,20 +265,22 @@ class CampagneService {
         return $entretiens;
     }
 
-    public function getAgentsEligibles(Campagne $campagne) : array
+    public function getAgentsEligibles(Campagne $campagne): array
     {
         $agents = $this->getAgentService()->getAgents();
-        $agents = array_filter($agents, function (Agent $a) use ($campagne) { return $campagne->isEligible($a); });
+        $agents = array_filter($agents, function (Agent $a) use ($campagne) {
+            return $campagne->isEligible($a);
+        });
         return $agents;
     }
 
     /** FACADE ********************************************************************************************************/
 
-    public static function getAnneeScolaire() : string
+    public static function getAnneeScolaire(): string
     {
         $date = new DateTime();
-        $annee = ((int) $date->format("Y"));
-        $mois  = ((int) $date->format("m"));
+        $annee = ((int)$date->format("Y"));
+        $mois = ((int)$date->format("m"));
 
         if ($mois < 9) {
             $scolaire = ($annee - 1) . "/" . ($annee);
@@ -287,37 +290,10 @@ class CampagneService {
         return $scolaire;
     }
 
-    /**
-     * Cette fonction retourne la liste des agents adminstratifs associés à des structures aux débuts de la campagne
-     * @param array $structures
-     * @param Campagne $campagne
-     * @return Agent[]
-     */
-    public function computeAgentByStructures(array $structures, Campagne $campagne) : array
+    public function trierAgents(Campagne $campagne, array $agents): array
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->join('agent.affectations', 'affectation')
-            ->join('agent.statuts', 'statut')
-            ->join('agent.grades', 'grade')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateDebut <= :date')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $campagne->getDateDebut())
-            // Affecté·e à une des structures
-            ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
-            // En contrat ...
-            ->andWhere('statut.titulaire = :on OR statut.cdd = :on OR statut.cdi = :on')->setParameter('on', 'O')
-            ->andWhere('statut.retraite = :off')->setParameter('off', 'N')
-            // Est Administratif
-            ->andWhere('statut.administratif = :on')
-            ->orderBy('agent.nomUsuel, agent.prenom','ASC')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-
-	public function trierAgents(Campagne $campagne, array $agents) : array
-    {
-        $obligatoires = [];  $facultatifs = [];
+        $obligatoires = [];
+        $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
 
         /** @var Agent $agent */
@@ -327,7 +303,7 @@ class CampagneService {
                 $facultatifs[] = $agent;
                 $ok = true;
             }
-            $res = $this->getAgentService()->isValideEmploiType($agent,  $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
+            $res = $this->getAgentService()->isValideEmploiType($agent, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
             if (!$ok && !$res) {
                 $facultatifs[] = $agent;
                 $ok = true;
