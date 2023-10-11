@@ -8,7 +8,7 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use DateTime;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -48,7 +48,7 @@ class HasApplicationCollectionService
      * @param array $data
      * @return HasApplicationCollectionInterface
      */
-    public function updateApplications(HasApplicationCollectionInterface $object, $data)
+    public function updateApplications(HasApplicationCollectionInterface $object, $data): HasApplicationCollectionInterface
     {
         $applicationIds = [];
         if (isset($data['applications'])) $applicationIds = $data['applications'];
@@ -56,7 +56,7 @@ class HasApplicationCollectionService
         //Suppression des applications plus présentes
         /** @var ApplicationElement $applicationElement */
         foreach ($object->getApplicationCollection() as $applicationElement) {
-            if (array_search($applicationElement->getApplication()->getId(), $applicationIds) === false) {
+            if (!in_array($applicationElement->getApplication()->getId(), $applicationIds)) {
                 $this->getApplicationElementService()->historise($applicationElement);
             }
         }
@@ -72,7 +72,7 @@ class HasApplicationCollectionService
             if ($application !== null and !$object->hasApplication($application)) {
                 $applicationElement = new ApplicationElement();
                 $applicationElement->setApplication($application);
-                //TODO ajouter les autres elements : commentaires / validations tout çà
+                //TODO ajouter les autres elements : commentaires / validations tout ça
                 $this->getApplicationElementService()->create($applicationElement);
                 $object->getApplicationCollection()->add($applicationElement);
                 $this->updateObject($object);

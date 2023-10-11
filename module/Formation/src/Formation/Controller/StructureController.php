@@ -10,7 +10,6 @@ use Formation\Entity\Db\Formation;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -23,7 +22,7 @@ class StructureController extends AbstractActionController
     use FormationInstanceInscritServiceAwareTrait;
     use StructureServiceAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $structures_ = $this->getStructureService()->getStructures();
 
@@ -40,25 +39,27 @@ class StructureController extends AbstractActionController
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
-        if (!empty($selecteur) AND $structure===null) $structure = $selecteur[0];
+        if (!empty($selecteur) and $structure === null) $structure = $selecteur[0];
 
         $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] =  $structure;
+        $structures[] = $structure;
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
+        $agentsForces = array_map(function (StructureAgentForce $a) {
+            return $a->getAgent();
+        }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
         //formations
-        $demandesNonValidees =  $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
-        $demandesValidees =  $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
+        $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
+        $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
         $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
         $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
 
@@ -78,18 +79,18 @@ class StructureController extends AbstractActionController
         ]);
     }
 
-    public function listerLesAgentsAction() : ViewModel
+    public function listerLesAgentsAction(): ViewModel
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);
-
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] =  $structure;
+        $structures = $this->getStructureService()->getStructuresFilles($structure,true);
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
+        $agentsForces = array_map(function (StructureAgentForce $a) {
+            return $a->getAgent();
+        }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
         return new ViewModel([
@@ -98,18 +99,20 @@ class StructureController extends AbstractActionController
         ]);
     }
 
-    public function extractionFormationsAction() : JsonModel
+    public function extractionFormationsAction(): CsvModel
     {
         /**  Récupération du sous-arbre des structures */
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] =  $structure;
+        $structures[] = $structure;
 
         /** Récupération des agents et postes liés aux structures */
         $agents = $this->getAgentService()->getAgentsByStructures($structures);
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $agentsForces = array_map(function (StructureAgentForce $a) { return $a->getAgent(); }, $agentsForces);
+        $agentsForces = array_map(function (StructureAgentForce $a) {
+            return $a->getAgent();
+        }, $agentsForces);
         $allAgents = array_merge($agents, $agentsForces);
 
         $header = ['Dénomination', 'Statuts', 'Affectation', 'Formation', 'Période', 'Volume suivi', 'Volume dispensé'];
@@ -122,8 +125,8 @@ class StructureController extends AbstractActionController
             $action = $session->getFormation();
             $result[] = [
                 'Dénomination' => $agent->getDenomination(),
-                'Status' => implode("\n",AgentStatut::generateStatutsArray($agent->getStatutsActifs())),
-                'Affectations' => implode("\n",AgentAffectation::generateAffectationsArray($agent->getAffectationsActifs())),
+                'Status' => implode("\n", AgentStatut::generateStatutsArray($agent->getStatutsActifs())),
+                'Affectations' => implode("\n", AgentAffectation::generateAffectationsArray($agent->getAffectationsActifs())),
                 'Libellé' => $action->getLibelle(),
                 'Période' => $session->getPeriode(),
                 'Volume suivi' => $formation->getDureePresence(),
@@ -131,7 +134,7 @@ class StructureController extends AbstractActionController
             ];
         }
 
-        $filename = (new DateTime())->format("Ymd-his")."_extraction_formations.csv";
+        $filename = (new DateTime())->format("Ymd-his") . "_extraction_formations.csv";
         $CSV = new CsvModel();
         $CSV->setDelimiter(';');
         $CSV->setEnclosure('"');

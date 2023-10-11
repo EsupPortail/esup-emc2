@@ -4,24 +4,15 @@ namespace Application\Service\FichePoste;
 
 Trait FichePosteServiceAwareTrait {
 
-    /** @var FichePosteService */
-    private $fichePosteService;
+    private FichePosteService $fichePosteService;
 
-    /**
-     * @return FichePosteService
-     */
-    public function getFichePosteService()
+    public function getFichePosteService(): FichePosteService
     {
         return $this->fichePosteService;
     }
 
-    /**
-     * @param FichePosteService $fichePosteService
-     * @return FichePosteService
-     */
-    public function setFichePosteService($fichePosteService)
+    public function setFichePosteService(FichePosteService $fichePosteService): void
     {
         $this->fichePosteService = $fichePosteService;
-        return $this->fichePosteService;
     }
 }

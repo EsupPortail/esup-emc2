@@ -21,7 +21,7 @@ class ConvocationEvent extends  EvenementService
     use NotificationServiceAwareTrait;
 
     private ?string  $deadline = null;
-    public function setDeadline(string $deadline) { $this->deadline = $deadline; }
+    public function setDeadline(string $deadline): void { $this->deadline = $deadline; }
 
     /**
      * @param DateTime|null $dateTraitement

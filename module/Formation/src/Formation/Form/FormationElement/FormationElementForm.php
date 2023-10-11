@@ -5,15 +5,15 @@ namespace Formation\Form\FormationElement;
 use DateTime;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
-class FormationElementForm extends Form {
+class FormationElementForm extends Form
+{
     use FormationServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //formation
         $this->add([
@@ -28,9 +28,9 @@ class FormationElementForm extends Form {
                 'value_options' => $this->getFormationService()->getFormationsGroupesAsGroupOptions(),
             ],
             'attributes' => [
-                'id'                => 'formation',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'formation',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ]
         ]);
         //niveau
@@ -44,15 +44,15 @@ class FormationElementForm extends Form {
                 ],
                 'empty_option' => "Sélectionner un niveau ... ",
                 'value_options' => [
-                    'Débutant'          => "Débutant",
-                    'Intermédiaire'       => "Intermédiaire",
-                    'Expert'       => "Expert",
+                    'Débutant' => "Débutant",
+                    'Intermédiaire' => "Intermédiaire",
+                    'Expert' => "Expert",
                 ],
             ],
             'attributes' => [
-                'id'                => 'niveau',
-                'class'             => 'bootstrap-selectpicker show-tick',
-                'data-live-search'  => 'true',
+                'id' => 'niveau',
+                'class' => 'bootstrap-selectpicker show-tick',
+                'data-live-search' => 'true',
             ]
         ]);
         //Année
@@ -62,7 +62,7 @@ class FormationElementForm extends Form {
             'options' => [
                 'label' => "Année de la formation :",
                 'empty_value' => 'Sélectionner une année ...',
-                'value_options' => $this->getAnneesScolaires(( (int) (new DateTime())->format('Y')) - 20, ( (int) (new DateTime())->format('Y')) + 5),
+                'value_options' => $this->getAnneesScolaires(((int)(new DateTime())->format('Y')) - 20, ((int)(new DateTime())->format('Y')) + 5),
             ],
             'attributes' => [
                 'id' => 'annee',
@@ -85,9 +85,9 @@ class FormationElementForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'formation'   => [ 'required' => true, ],
-            'niveau'          => [ 'required' => true, ],
-            'annee'         => [ 'required' => false, ],
+            'formation' => ['required' => true,],
+            'niveau' => ['required' => true,],
+            'annee' => ['required' => false,],
         ]));
     }
 
@@ -96,11 +96,11 @@ class FormationElementForm extends Form {
      * @param int $fin
      * @return array
      */
-    public function getAnneesScolaires(int $debut, int $fin) : array
+    public function getAnneesScolaires(int $debut, int $fin): array
     {
         $result = [];
-        for($annee = $debut ; $annee <= $fin; $annee++) {
-            $result[] = $annee .'/'. ($annee+1);
+        for ($annee = $debut; $annee <= $fin; $annee++) {
+            $result[] = $annee . '/' . ($annee + 1);
         }
         return $result;
     }

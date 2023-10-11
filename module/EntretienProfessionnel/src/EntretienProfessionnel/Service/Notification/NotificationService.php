@@ -11,15 +11,20 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
+use Exception;
 use Laminas\View\Renderer\PhpRenderer;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
+use UnicaenParametre\Exception\ParametreMalTypeException;
+use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
@@ -109,7 +114,11 @@ class NotificationService {
     {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
-        $mail_DAC = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_DAC')->getValeur();
+        try {
+            $mail_DAC = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::MAIL_LISTE_DAC);
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+        }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_DAC, $vars);
         $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
         $mailDac->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
@@ -122,7 +131,11 @@ class NotificationService {
     {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
-        $mail_BIATS = $this->parametreService->getParametreByCode('ENTRETIEN_PROFESSIONNEL','MAIL_LISTE_BIATS')->getValeur();
+        try {
+            $mail_BIATS = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::MAIL_LISTE_BIATS);
+        } catch (Exception $e) {
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+        }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_BIATSS, $vars);
         $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
         $mailBiats->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);

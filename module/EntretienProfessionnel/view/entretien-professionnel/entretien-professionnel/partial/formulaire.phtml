@@ -28,7 +28,7 @@ $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entreti
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 
-$validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 $date_depassee = (($isAgent) AND ($now > $date));
 
 ?>
@@ -37,9 +37,9 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
-<?php if ($isAgent AND (
-        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION OR
-        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER )) : ?>
+<?php if ($isAgent && (
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) ||
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER))) : ?>
 
     <div class="alert alert-info">
         Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.
@@ -78,8 +78,9 @@ $date_depassee = (($isAgent) AND ($now > $date));
     <?php if ($canRenseigner) : ?>
         <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
             <?php
-                /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+                /** @see \UnicaenAutoform\View\Helper\InstanceAsFormulaireHelper */
                 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+                /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
                 $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
                 echo $this->instanceAsFormulaire()->render($instance, $url, $data);

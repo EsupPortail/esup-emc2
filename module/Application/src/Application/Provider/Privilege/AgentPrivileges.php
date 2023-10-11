@@ -12,6 +12,7 @@ class AgentPrivileges extends Privileges
     const AGENT_AJOUTER           = 'agent-agent_ajouter';
     const AGENT_EDITER            = 'agent-agent_editer';
     const AGENT_EFFACER           = 'agent-agent_effacer';
+    const AGENT_RECHERCHER        = 'agent-agent_rechercher';
 
     const AGENT_ELEMENT_VOIR                = 'agent-agent_element_voir';
     const AGENT_ELEMENT_AJOUTER             = 'agent-agent_element_ajouter';

@@ -23,13 +23,9 @@ use FicheMetier\Entity\Db\Mission;
     <dd class="col-md-8"> <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Aucun"; ?> </dd>
     <dt class="col-md-4"> Description </dt>
     <dd class="col-md-8"> <?php echo $competence->getDescription(); ?> </dd>
-    <dt class="col-md-4"> Source </dt>
+    <dt class="col-md-4"> Référence </dt>
     <dd class="col-md-8">
-        <?php if ($competence->getSource() !== null) : ?>
-            <?php echo $competence->getSource(); ?> - <?php echo $competence->getIdSource(); ?>
-        <?php else : ?>
-            Aucune source de renseignée
-        <?php endif; ?>
+        <?php echo ($competence->getReferentiel())?$this->competenceReference($competence):"Aucun"; ?>
     </dd>
     <dt class="col-md-4"> Fiche·s metier·s </dt>
     <dd class="col-md-8">

@@ -8,34 +8,35 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\Correspondance\CorrespondanceServiceAwareTrait;
 use DateTime;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
-class AgentAccompagnementHydrator implements HydratorInterface {
+class AgentAccompagnementHydrator implements HydratorInterface
+{
     use AgentServiceAwareTrait;
     use CorpsServiceAwareTrait;
     use CorrespondanceServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
 
     /**
      * @param AgentAccompagnement $object
      * @return array
      */
-    public function extract(object $object) : array
+    public function extract(object $object): array
     {
         $data = [
-            'cible'             => ($object->getCible())?['id' => $object->getCible()->getId(), 'label' => $object->getCible()->getDenomination()]:null,
-            'bap'               => ($object->getBap())?($object->getBap())->getId():null,
-            'corps'             => ($object->getCorps())?($object->getCorps())->getId():null,
-            'HasPeriode'        => [
-                'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
-                'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
+            'cible' => ($object->getCible()) ? ['id' => $object->getCible()->getId(), 'label' => $object->getCible()->getDenomination()] : null,
+            'bap' => ($object->getBap()) ? ($object->getBap())->getId() : null,
+            'corps' => ($object->getCorps()) ? ($object->getCorps())->getId() : null,
+            'HasPeriode' => [
+                'date_debut' => ($object->getDateDebut()) ? $object->getDateDebut()->format(HasPeriodeFieldset::format) : null,
+                'date_fin' => ($object->getDateFin()) ? $object->getDateFin()->format(HasPeriodeFieldset::format) : null,
             ],
-            'etat'              => [
-                'etat' => ($object->getEtat())?$object->getEtat()->getId():null,
+            'etat' => [
+                'etat' => ($object->getEtat()) ? $object->getEtat()->getType()->getId() : null,
             ],
-            'complement'        => $object->getComplement(),
-            'resutlat'          => $object->getResultat(),
+            'complement' => $object->getComplement(),
+            'resutlat' => $object->getResultat(),
         ];
         return $data;
     }
@@ -45,16 +46,16 @@ class AgentAccompagnementHydrator implements HydratorInterface {
      * @param AgentAccompagnement $object
      * @return AgentAccompagnement
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
-        $cible = (isset($data['cible']) AND isset($data['cible']['id']) AND trim($data['cible']['id']) !== '')?$this->getAgentService()->getAgent($data['cible']['id']):null;
-        $bap = (isset($data['bap']) AND trim($data['bap']) !== '')?$this->getCorrespondanceService()->getCorrespondance($data['bap']):null;
-        $corps = (isset($data['corps']) AND trim($data['corps']) !== '')?$this->getCorpsService()->getCorp($data['corps']):null;
-        $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
-        $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
-        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatService()->getEtat($data['etat']['etat']):null;
-        $complement = (isset($data['complement']) AND trim($data['complement']) !== '')?trim($data['complement']):null;
-        $resultat = (isset($data['resultat']) AND trim($data['resultat']) !== '')?($data['resultat']):null;
+        $cible = (isset($data['cible']) and isset($data['cible']['id']) and trim($data['cible']['id']) !== '') ? $this->getAgentService()->getAgent($data['cible']['id']) : null;
+        $bap = (isset($data['bap']) and trim($data['bap']) !== '') ? $this->getCorrespondanceService()->getCorrespondance($data['bap']) : null;
+        $corps = (isset($data['corps']) and trim($data['corps']) !== '') ? $this->getCorpsService()->getCorp($data['corps']) : null;
+        $dataDebut = (isset($data['HasPeriode']) and isset($data['HasPeriode']['date_debut']) and trim($data['HasPeriode']['date_debut']) !== '') ? DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']) : null;
+        $dateFin = (isset($data['HasPeriode']) and isset($data['HasPeriode']['date_fin']) and trim($data['HasPeriode']['date_fin']) !== '') ? DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']) : null;
+        $etat = (isset($data['etat']) and isset($data['etat']['etat'])) ? $this->getEtatTypeService()->getEtatTypeByCode($data['etat']['etat']) : null;
+        $complement = (isset($data['complement']) and trim($data['complement']) !== '') ? trim($data['complement']) : null;
+        $resultat = (isset($data['resultat']) and trim($data['resultat']) !== '') ? ($data['resultat']) : null;
 
         $object->setCible($cible);
         $object->setBap($bap);

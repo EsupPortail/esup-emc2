@@ -12,7 +12,7 @@ use Laminas\InputFilter\Factory;
 class FonctionActiviteForm extends Form {
     use FonctionServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         /** CODE */
         //libelle

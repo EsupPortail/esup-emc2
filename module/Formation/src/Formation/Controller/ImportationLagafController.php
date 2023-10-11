@@ -27,10 +27,11 @@ use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 
-class ImportationLagafController extends AbstractActionController {
-    use EtatServiceAwareTrait;
+class ImportationLagafController extends AbstractActionController
+{
+    use EtatInstanceServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -43,27 +44,27 @@ class ImportationLagafController extends AbstractActionController {
 
     public string $sourceLagaf;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         return new ViewModel();
     }
 
     /** IMPORT SANS REMPLACEMENT **************************************************************************************/
 
-    public function themeAction() : ViewModel
+    public function themeAction(): ViewModel
     {
 
         $report = "";
         $file_path = "upload/Source700_020922/Theme.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $theme_index = array_search('Thème', $array[0]);
         $id_index = array_search('TypeForm1', $array[0]);
-        for($position = 1 ; $position < count($array); $position++) {
+        for ($position = 1; $position < count($array); $position++) {
             $data = $array[$position];
             $libelle = $data[$theme_index];
             $id = $data[$id_index];
@@ -77,7 +78,7 @@ class ImportationLagafController extends AbstractActionController {
                 $groupe->setSource($this->sourceLagaf);
                 $groupe->setIdSource($id);
                 $this->getFormationGroupeService()->create($groupe);
-                $report .= "Ajout du thème " . $libelle . "(LAGAF - ".$id.") <br/>";
+                $report .= "Ajout du thème " . $libelle . "(LAGAF - " . $id . ") <br/>";
             }
         }
 
@@ -92,7 +93,7 @@ class ImportationLagafController extends AbstractActionController {
 
     }
 
-    public function actionAction() : ViewModel
+    public function actionAction(): ViewModel
     {
         $report = "";
         $formations = [];
@@ -102,57 +103,57 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Action.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $nbLine = count($array);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_id            = array_search('NAction', $array[0]);
-        $position_libelle       = array_search('Action', $array[0]);
-        $position_groupe        = array_search('Domaine', $array[0]);
-        $position_description   = array_search('Objectifs', $array[0]);
+        $position_id = array_search('NAction', $array[0]);
+        $position_libelle = array_search('Action', $array[0]);
+        $position_groupe = array_search('Domaine', $array[0]);
+        $position_description = array_search('Objectifs', $array[0]);
 
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Id</th><th>Libelle</th><th>Groupe</th><th>Description</th></tr></thead>";
         $report .= "<tbody>";
-        for($position = 1 ; $position < $nbLine; $position++) {
-              $data = $array[$position];
-              $st_id = $data[$position_id];
-              $st_libelle = $data[$position_libelle];
-              $st_groupe = $data[$position_groupe];
-              $st_description = $data[$position_description];
+        for ($position = 1; $position < $nbLine; $position++) {
+            $data = $array[$position];
+            $st_id = $data[$position_id];
+            $st_libelle = $data[$position_libelle];
+            $st_groupe = $data[$position_groupe];
+            $st_description = $data[$position_description];
 
-              $report .= "<tr>";
-              $report .= "<td>"        . $st_id . "</td>";
-              $report .= "<td>"        . $st_libelle . "</td>";
-              $report .= "<td>"        . $st_groupe . "</td>";
-              $report .= "<td>"        . $st_description . "</td>";
-              $report .= "</tr>";
+            $report .= "<tr>";
+            $report .= "<td>" . $st_id . "</td>";
+            $report .= "<td>" . $st_libelle . "</td>";
+            $report .= "<td>" . $st_groupe . "</td>";
+            $report .= "<td>" . $st_description . "</td>";
+            $report .= "</tr>";
 
-              /** recherche du groupe de formation */
-              $groupe = $this->getFormationGroupeService()->getFormationGroupeByLibelle($st_groupe);
-              if ($groupe === null) {
-                  $groupe = new FormationGroupe();
-                  $groupe->setLibelle($st_groupe);
-                  $groupe->setSource($this->sourceLagaf);
-                  $this->getFormationGroupeService()->create($groupe);
-                  $groupes[] = $groupe;
-              }
+            /** recherche du groupe de formation */
+            $groupe = $this->getFormationGroupeService()->getFormationGroupeByLibelle($st_groupe);
+            if ($groupe === null) {
+                $groupe = new FormationGroupe();
+                $groupe->setLibelle($st_groupe);
+                $groupe->setSource($this->sourceLagaf);
+                $this->getFormationGroupeService()->create($groupe);
+                $groupes[] = $groupe;
+            }
 
-              $formation = $this->getFormationService()->getFormationBySource($this->sourceLagaf, $st_id);
-              if ($formation === null) {
-                  $formation = new Formation();
-                  $formation->setLibelle($st_libelle);
-                  $formation->setGroupe($groupe);
-                  $formation->setDescription($st_description);
-                  $formation->setSource($this->sourceLagaf);
-                  $formation->setIdSource($st_id);
-                  $this->getFormationService()->create($formation);
-                  $formations[] = $formation;
-              }
+            $formation = $this->getFormationService()->getFormationBySource($this->sourceLagaf, $st_id);
+            if ($formation === null) {
+                $formation = new Formation();
+                $formation->setLibelle($st_libelle);
+                $formation->setGroupe($groupe);
+                $formation->setDescription($st_description);
+                $formation->setSource($this->sourceLagaf);
+                $formation->setIdSource($st_id);
+                $this->getFormationService()->create($formation);
+                $formations[] = $formation;
+            }
         }
         $report .= "</tbody>";
         $report .= "</table>";
@@ -174,49 +175,55 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Session.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $nbLine = count($array);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_action_id     = array_search('N4Action', $array[0]);
-        $position_session_id    = array_search('NSession', $array[0]);
-        $position_lieu          = array_search('LieuConvoc', $array[0]);
-        $position_responsable   = array_search('RespPédag', $array[0]);
+        $position_action_id = array_search('N4Action', $array[0]);
+        $position_session_id = array_search('NSession', $array[0]);
+        $position_lieu = array_search('LieuConvoc', $array[0]);
+        $position_responsable = array_search('RespPédag', $array[0]);
 
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Action Id</th><th>Session Id</th><th>Lieu</th><th>Responsable</th></tr></thead>";
         $report .= "<tbody>";
 
-        $etat_ok = $this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CLOTURE_INSTANCE);
+
         $lagaf = $this->sourceLagaf;
 
         $actions = $this->getFormationService()->getFormations();
-        $actions = array_filter($actions, function (Formation $a) use ($lagaf) { return $a->getSource() === $lagaf; });
-        $dictionnaireA = []; foreach ($actions as $action) $dictionnaireA[$action->getIdSource()] = $action;
+        $actions = array_filter($actions, function (Formation $a) use ($lagaf) {
+            return $a->getSource() === $lagaf;
+        });
+        $dictionnaireA = [];
+        foreach ($actions as $action) $dictionnaireA[$action->getIdSource()] = $action;
 
         $sessions = $this->getFormationInstanceService()->getFormationsInstances();
-        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) { return $a->getSource() === $lagaf; });
-        $dictionnaireS = []; foreach ($sessions as $session) $dictionnaireS[$session->getIdSource()] = $session;
+        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
+            return $a->getSource() === $lagaf;
+        });
+        $dictionnaireS = [];
+        foreach ($sessions as $session) $dictionnaireS[$session->getIdSource()] = $session;
 
-        for($position = 1 ; $position < $nbLine; $position++) {
+        for ($position = 1; $position < $nbLine; $position++) {
             $data = $array[$position];
             $st_action_id = $data[$position_action_id];
             $st_session_id = $data[$position_session_id];
-            $st_lieu = (trim($data[$position_lieu]) !== '')?trim($data[$position_lieu]):null ;
-            $st_responsable = (trim($data[$position_responsable]) !== '')?trim($data[$position_responsable]):null;
+            $st_lieu = (trim($data[$position_lieu]) !== '') ? trim($data[$position_lieu]) : null;
+            $st_responsable = (trim($data[$position_responsable]) !== '') ? trim($data[$position_responsable]) : null;
 
             $report .= "<tr>";
-            $report .= "<td>"        . $st_action_id . "</td>";
-            $report .= "<td>"        . $st_session_id . "</td>";
-            $report .= "<td>"        . $st_lieu . "</td>";
-            $report .= "<td>"        . $st_responsable . "</td>";
+            $report .= "<td>" . $st_action_id . "</td>";
+            $report .= "<td>" . $st_session_id . "</td>";
+            $report .= "<td>" . $st_lieu . "</td>";
+            $report .= "<td>" . $st_responsable . "</td>";
             $report .= "</tr>";
 
-            $idOrig = $st_action_id ."-".$st_session_id;
+            $idOrig = $st_action_id . "-" . $st_session_id;
             if ($dictionnaireA[$st_action_id] !== null) {
                 if ($dictionnaireS[$idOrig] === null) {
                     $instance = new FormationInstance();
@@ -228,12 +235,13 @@ class ImportationLagafController extends AbstractActionController {
                     $instance->setNbPlacePrincipale(0);
                     $instance->setNbPlaceComplementaire(0);
                     $instance->setAutoInscription();
-                    $instance->setEtat($etat_ok);
                     $this->getFormationInstanceService()->create($instance);
+                    $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
+                    $this->getFormationInstanceService()->update($instance);
+
                     $instances[] = $instance;
                 }
-            }
-            else {
+            } else {
                 $problemes[] = ['raison' => "Pas de formation de trouver pour l'instance", 'data' => $data];
             }
         }
@@ -256,48 +264,54 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Seance.csv";
         $handle = fopen($file_path, "r");
         $arraySeance = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $arraySeance[] = $content;
         }
 
         $file_path = "upload/Source700_020922/Plage.csv";
         $handle = fopen($file_path, "r");
         $arrayPlage = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $arrayPlage[] = $content;
         }
 
         $nbLine = count($arraySeance);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_action_id     = array_search('N6Action', $arraySeance[0]); //seance
-        $position_session_id    = array_search('N4Session', $arraySeance[0]); //seance
-        $position_seance_id     = array_search('NSéance', $arraySeance[0]); //plage <-> Nseance de seance
-        $position_date          = array_search('DateSéance', $arraySeance[0]); //seance
+        $position_action_id = array_search('N6Action', $arraySeance[0]); //seance
+        $position_session_id = array_search('N4Session', $arraySeance[0]); //seance
+        $position_seance_id = array_search('NSéance', $arraySeance[0]); //plage <-> Nseance de seance
+        $position_date = array_search('DateSéance', $arraySeance[0]); //seance
 
-        $position_seance2_id     = array_search('N2Séance', $arrayPlage[0]); //plage <-> Nseance de seance
-        $position_plage_id      = array_search('NPlage', $arrayPlage[0]); //plage
-        $position_debut         = array_search('HDébut', $arrayPlage[0]); //plage
-        $position_fin           = array_search('HFin', $arrayPlage[0]); //plage
+        $position_seance2_id = array_search('N2Séance', $arrayPlage[0]); //plage <-> Nseance de seance
+        $position_plage_id = array_search('NPlage', $arrayPlage[0]); //plage
+        $position_debut = array_search('HDébut', $arrayPlage[0]); //plage
+        $position_fin = array_search('HFin', $arrayPlage[0]); //plage
 
         $lagaf = $this->sourceLagaf;
 
         $sessions = $this->getFormationInstanceService()->getFormationsInstances();
-        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) { return $a->getSource() === $lagaf; });
-        $dictionnaireS = []; foreach ($sessions as $session) $dictionnaireS[$session->getIdSource()] = $session;
+        $sessions = array_filter($sessions, function (FormationInstance $a) use ($lagaf) {
+            return $a->getSource() === $lagaf;
+        });
+        $dictionnaireS = [];
+        foreach ($sessions as $session) $dictionnaireS[$session->getIdSource()] = $session;
 
         $seances = $this->getSeanceService()->getSeances();
-        $seances = array_filter($seances, function (Seance $a) use ($lagaf) { return $a->getSource() === $lagaf; });
-        $dictionnaireP = []; foreach ($seances as $seance) $dictionnaireP[$seance->getIdSource()] = $seance;
+        $seances = array_filter($seances, function (Seance $a) use ($lagaf) {
+            return $a->getSource() === $lagaf;
+        });
+        $dictionnaireP = [];
+        foreach ($seances as $seance) $dictionnaireP[$seance->getIdSource()] = $seance;
 
-        for ($position_seance = 1 ; $position_seance < count($arraySeance); $position_seance++) {
+        for ($position_seance = 1; $position_seance < count($arraySeance); $position_seance++) {
             $action_id = $arraySeance[$position_seance][$position_action_id];
             $session_id = $arraySeance[$position_seance][$position_session_id];
             $date = $arraySeance[$position_seance][$position_date];
             $seance_id = $arraySeance[$position_seance][$position_seance_id];
 
 
-            if ($dictionnaireS[$action_id."-".$session_id]) {
+            if ($dictionnaireS[$action_id . "-" . $session_id]) {
                 $plages = array_filter($arrayPlage, function ($a) use ($position_seance2_id, $seance_id) {
                     return $a[$position_seance2_id] == $seance_id;
                 });
@@ -311,10 +325,10 @@ class ImportationLagafController extends AbstractActionController {
                         $aaa = DateTime::createFromFormat('m/d/y H:i:s', $date);
                         if (!$aaa instanceof DateTime) throw new RuntimeException("Pb de date : " . $date);
                         $seance->setJour($aaa);
-                        $arrayDebut = explode(":",explode(" ", $plage[$position_debut])[1]);
-                        $arrayFin = explode(":",explode(" ", $plage[$position_fin])[1]);
-                        $seance->setDebut($arrayDebut[0].":".$arrayDebut[1]);
-                        $seance->setFin($arrayFin[0].":".$arrayFin[1]);
+                        $arrayDebut = explode(":", explode(" ", $plage[$position_debut])[1]);
+                        $arrayFin = explode(":", explode(" ", $plage[$position_fin])[1]);
+                        $seance->setDebut($arrayDebut[0] . ":" . $arrayDebut[1]);
+                        $seance->setFin($arrayFin[0] . ":" . $arrayFin[1]);
                         $seance->setInstance($dictionnaireS[$action_id . "-" . $session_id]);
                         $seance->setType("SEANCE");
                         $seance->setLieu("Import LAGAF");
@@ -322,7 +336,7 @@ class ImportationLagafController extends AbstractActionController {
                     }
                 }
             } else {
-                $problemes[] .= "Session ".$seance_id." non trouvée";
+                $problemes[] .= "Session " . $seance_id . " non trouvée";
             }
         }
 
@@ -342,30 +356,30 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Stagiaire.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $nbLine = count($array);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_stagiaire_id     = array_search('NStagiaire', $array[0]);
-        $position_harp_id          = array_search('NumStagiaire', $array[0]);
-        $position_nom              = array_search('PatronymeS', $array[0]);
-        $position_prenom           = array_search('PrénomS', $array[0]);
-        $position_annee            = array_search('AnnéeNaiss', $array[0]);
+        $position_stagiaire_id = array_search('NStagiaire', $array[0]);
+        $position_harp_id = array_search('NumStagiaire', $array[0]);
+        $position_nom = array_search('PatronymeS', $array[0]);
+        $position_prenom = array_search('PrénomS', $array[0]);
+        $position_annee = array_search('AnnéeNaiss', $array[0]);
 
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Stagiaire Id</th><th>Nom</th><th>Prenom</th><th>Année</th><th>harp</th><th>octopus</th></tr></thead>";
         $report .= "<tbody>";
-        for($position = 1 ; $position < $nbLine; $position++) {
+        for ($position = 1; $position < $nbLine; $position++) {
             $data = $array[$position];
             $st_stagiaire_id = $data[$position_stagiaire_id];
-            $st_harp_id = (trim($data[$position_harp_id]) !== '')?trim($data[$position_harp_id]):null ;
-            $st_nom = (trim($data[$position_nom]) !== '')?trim($data[$position_nom]):null ;
-            $st_prenom = (trim($data[$position_prenom]) !== '')?trim($data[$position_prenom]):null ;
-            $st_annee = (trim($data[$position_annee]) !== '')?trim($data[$position_annee]):null ;
+            $st_harp_id = (trim($data[$position_harp_id]) !== '') ? trim($data[$position_harp_id]) : null;
+            $st_nom = (trim($data[$position_nom]) !== '') ? trim($data[$position_nom]) : null;
+            $st_prenom = (trim($data[$position_prenom]) !== '') ? trim($data[$position_prenom]) : null;
+            $st_annee = (trim($data[$position_annee]) !== '') ? trim($data[$position_annee]) : null;
 
             $stagiaire = new LAGAFStagiaire();
             $stagiaire->setNStagiaire($st_stagiaire_id);
@@ -382,12 +396,12 @@ class ImportationLagafController extends AbstractActionController {
             $stagiaires[] = $stagiaire;
 
             $report .= "<tr>";
-            $report .= "<td>"        . $st_stagiaire_id . "</td>";
-            $report .= "<td>"        . $st_nom . "</td>";
-            $report .= "<td>"        . $st_prenom . "</td>";
-            $report .= "<td>"        . $st_annee . "</td>";
-            $report .= "<td>"        . $stagiaire->getHarpId() . "</td>";
-            $report .= "<td>"        . $stagiaire->getOctopusId() . "</td>";
+            $report .= "<td>" . $st_stagiaire_id . "</td>";
+            $report .= "<td>" . $st_nom . "</td>";
+            $report .= "<td>" . $st_prenom . "</td>";
+            $report .= "<td>" . $st_annee . "</td>";
+            $report .= "<td>" . $stagiaire->getHarpId() . "</td>";
+            $report .= "<td>" . $stagiaire->getOctopusId() . "</td>";
             $report .= "</tr>";
 
         }
@@ -412,19 +426,19 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Inscription.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $nbLine = count($array);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_stagiaire_id     = array_search('N3Stagiaire', $array[0]);
-        $position_action_id        = array_search('N3Action', $array[0]);
-        $position_session_id       = array_search('N2Session', $array[0]);
-        $position_FRepas           = array_search('FRepas', $array[0]);
-        $position_FHebergement     = array_search('FHebergement', $array[0]);
-        $position_FTransport       = array_search('FTransport', $array[0]);
+        $position_stagiaire_id = array_search('N3Stagiaire', $array[0]);
+        $position_action_id = array_search('N3Action', $array[0]);
+        $position_session_id = array_search('N2Session', $array[0]);
+        $position_FRepas = array_search('FRepas', $array[0]);
+        $position_FHebergement = array_search('FHebergement', $array[0]);
+        $position_FTransport = array_search('FTransport', $array[0]);
 
         $instances_tmp = $this->getFormationInstanceService()->getFormationsInstances();
         $instances = [];
@@ -457,18 +471,19 @@ class ImportationLagafController extends AbstractActionController {
         } else {
             $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
         }
-        $inscrits_tmp = array_filter($inscrits_tmp, function (FormationInstanceInscrit $a) use ($lagaf) { return $a->getSource() === $lagaf; });
-        $inscrits = []; foreach ($inscrits_tmp as $inscrit) $inscrits[$inscrit->getId()] = $inscrit;
+        $inscrits_tmp = array_filter($inscrits_tmp, function (FormationInstanceInscrit $a) use ($lagaf) {
+            return $a->getSource() === $lagaf;
+        });
+        $inscrits = [];
+        foreach ($inscrits_tmp as $inscrit) $inscrits[$inscrit->getId()] = $inscrit;
 
-        $etat_ok = $this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH);
-        $validee = $this->getEtatService()->getEtatByCode('VALIDATION_INSCRIPTION');
 
         $report .= "<table class='table table-condensed'>";
         $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
         $report .= "<tbody>";
 
 
-        for($position = 1 ; $position < $nbLine; $position++) {
+        for ($position = 1; $position < $nbLine; $position++) {
 
             $data = $array[$position];
             $st_nstagiaire = $data[$position_stagiaire_id];
@@ -489,10 +504,10 @@ class ImportationLagafController extends AbstractActionController {
                     $inscription->setAgent($agent);
                     $inscription->setListe("principale");
                     $inscription->setSource($this->sourceLagaf);
-                    $inscription->setEtat($validee);
                     $inscription->setIdSource($st_iscrit_id);
-                    $inscription->setEtat($etat_ok);
                     $this->getFormationInstanceInscritService()->create($inscription);
+                    $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
+                    $this->getFormationInstanceInscritService()->update($inscription);
                     $inscriptions[] = $inscription;
 
                     $st_frepas = trim($data[$position_FRepas]);
@@ -512,8 +527,8 @@ class ImportationLagafController extends AbstractActionController {
 
                     if ($id !== null) {
                         $report .= "<tr>";
-                        $report .= "<td>".$agent->getDenomination() ."</td>";
-                        $report .= "<td>".$instance->getFormation()->getLibelle() ."</td>";
+                        $report .= "<td>" . $agent->getDenomination() . "</td>";
+                        $report .= "<td>" . $instance->getFormation()->getLibelle() . "</td>";
                         $report .= "</tr>";
                     }
                 } else {
@@ -543,19 +558,19 @@ class ImportationLagafController extends AbstractActionController {
         $file_path = "upload/Source700_020922/Presence.csv";
         $handle = fopen($file_path, "r");
         $array = [];
-        while ($content = fgetcsv ( $handle, 0)) {
+        while ($content = fgetcsv($handle, 0)) {
             $array[] = $content;
         }
 
         $nbLine = count($array);
         $report .= "Nombre de ligne dans le fichier CSV : " . $nbLine . "\n";
 
-        $position_stagiaire_id     = array_search('NStagiaire', $array[0]);
-        $position_action_id        = array_search('NAction', $array[0]);
-        $position_session_id       = array_search('NSession', $array[0]);
-        $position_seance_id        = array_search('NSéance', $array[0]);
-        $position_plage_id         = array_search('NPlage', $array[0]);
-        $position_presence         = array_search('Présence', $array[0]);
+        $position_stagiaire_id = array_search('NStagiaire', $array[0]);
+        $position_action_id = array_search('NAction', $array[0]);
+        $position_session_id = array_search('NSession', $array[0]);
+        $position_seance_id = array_search('NSéance', $array[0]);
+        $position_plage_id = array_search('NPlage', $array[0]);
+        $position_presence = array_search('Présence', $array[0]);
 
         $journees_tmp = $this->getSeanceService()->getSeances();
         $journees = [];
@@ -584,12 +599,12 @@ class ImportationLagafController extends AbstractActionController {
         $report .= "<thead><tr><th>Stagiaire </th><th>Session</th><th>FRepas</th><th>FTransport</th><th>FHebergement</th></tr></thead>";
         $report .= "<tbody>";
 
-        for($position = 1 ; $position < $nbLine; $position++) {
+        for ($position = 1; $position < $nbLine; $position++) {
 
             $data = $array[$position];
 
 
-            if ($id === null OR $data[$position_stagiaire_id] == $id) {
+            if ($id === null or $data[$position_stagiaire_id] == $id) {
 
                 $st_journee = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_seance_id] . "-" . $data[$position_plage_id];
                 $st_inscrit = $data[$position_action_id] . "-" . $data[$position_session_id] . "-" . $data[$position_stagiaire_id];
@@ -625,7 +640,8 @@ class ImportationLagafController extends AbstractActionController {
         ]);
     }
 
-    public function elementAction() : ViewModel{
+    public function elementAction(): ViewModel
+    {
 
         $nbElement = 0;
         $formations = $this->getFormationService()->getFormations();

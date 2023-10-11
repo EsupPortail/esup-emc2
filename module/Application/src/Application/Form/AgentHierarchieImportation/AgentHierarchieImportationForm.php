@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 
 class AgentHierarchieImportationForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         //file CSV
         $this->add([

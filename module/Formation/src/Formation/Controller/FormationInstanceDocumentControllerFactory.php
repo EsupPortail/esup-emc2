@@ -6,13 +6,13 @@ use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\FormationInstanceJournee\FormationInstanceJourneeService;
 use Formation\Service\Seance\SeanceService;
+use Formation\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
+use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenRenderer\Service\Rendu\RenduService;
-use Laminas\View\Renderer\PhpRenderer;
 
 class FormationInstanceDocumentControllerFactory
 {
@@ -23,7 +23,7 @@ class FormationInstanceDocumentControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceDocumentController
+    public function __invoke(ContainerInterface $container): FormationInstanceDocumentController
     {
         /**
          * @var AgentService $agentService
@@ -32,6 +32,7 @@ class FormationInstanceDocumentControllerFactory
          * @var MacroService $macroService
          * @var RenduService $renduService
          * @var SeanceService $seanceService
+         * @var UrlService $urlService
          */
         $agentService = $container->get(AgentService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
@@ -39,6 +40,7 @@ class FormationInstanceDocumentControllerFactory
         $macroService = $container->get(MacroService::class);
         $renduService = $container->get(RenduService::class);
         $seanceService = $container->get(SeanceService::class);
+        $urlService = $container->get(UrlService::class);
 
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
@@ -51,6 +53,7 @@ class FormationInstanceDocumentControllerFactory
         $controller->setMacroService($macroService);
         $controller->setRenduService($renduService);
         $controller->setSeanceService($seanceService);
+        $controller->setUrlService($urlService);
         $controller->setRenderer($renderer);
 
         return $controller;

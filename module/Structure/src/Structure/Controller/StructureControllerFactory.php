@@ -17,12 +17,10 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Referentiel\Service\Synchronisation\SynchronisationService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
-use UnicaenUtilisateur\Service\User\UserService;
 
 class StructureControllerFactory {
 
@@ -39,29 +37,27 @@ class StructureControllerFactory {
          * @var AgentAffectationService $agentAffectationService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var EntretienProfessionnelService $entretienService
+         * @var EtatTypeService $etatTypeService
          * @var CampagneService $campagneService
-         * @var EtatService $etatService
          * @var FichePosteService $fichePosteService
          * @var FicheProfilService $ficheProfilService
          * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
          * @var StructureAgentForceService $structureAgentForceService
-         * @var SynchronisationService $synchronisationService
          */
         $agentService = $container->get(AgentService::class);
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $entretienService = $container->get(EntretienProfessionnelService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $campagneService = $container->get(CampagneService::class);
-        $etatService = $container->get(EtatService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $parametreService = $container->get(ParametreService::class);
         $ficheProfilService = $container->get(FicheProfilService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
-        $synchronisationService = $container->get(SynchronisationService::class);
 
         /**
          * @var AgentMissionSpecifiqueForm $affectationForm
@@ -79,15 +75,14 @@ class StructureControllerFactory {
         $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setEntretienProfessionnelService($entretienService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
-        $controller->setEtatService($etatService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setFicheProfilService($ficheProfilService);
         $controller->setParametreService($parametreService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);
         $controller->setStructureAgentForceService($structureAgentForceService);
-        $controller->setSynchronisationService($synchronisationService);
 
         $controller->setAgentMissionSpecifiqueForm($affectationForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

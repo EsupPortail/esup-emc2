@@ -6,30 +6,28 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
-use Structure\Entity\Db\Structure;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CampagneService {
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
+    use ParametreServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
-    /**
-     * @param Campagne $campagne
-     * @return Campagne
-     */
     public function create(Campagne $campagne) : Campagne
     {
         try {
@@ -41,10 +39,6 @@ class CampagneService {
         return $campagne;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return Campagne
-     */
     public function update(Campagne $campagne) : Campagne
     {
         try {
@@ -55,10 +49,6 @@ class CampagneService {
         return $campagne;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return Campagne
-     */
     public function historise(Campagne $campagne) : Campagne
     {
         try {
@@ -70,10 +60,6 @@ class CampagneService {
         return $campagne;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return Campagne
-     */
     public function restore(Campagne $campagne) : Campagne
     {
         try {
@@ -85,10 +71,6 @@ class CampagneService {
         return $campagne;
     }
 
-    /**
-     * @param Campagne $campagne
-     * @return Campagne
-     */
     public function delete(Campagne $campagne) : Campagne
     {
         try {
@@ -102,26 +84,22 @@ class CampagneService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
-            ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
-            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien')
-            ->addSelect('etat')->leftJoin('entretien.etat', 'etat')
-            ->addSelect('etattype')->leftJoin('etat.type', 'etattype')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
+                ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
+                ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien')
+            ;
+//            $qb = EntretienProfessionnel::decorateWithEtats($qb, "entretien");
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Campagne::class."]",0,$e);
+        }
 
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Campagne[]
-     */
+    /** @return Campagne[] */
     public function getCampagnes(string $champ='annee', string $ordre='DESC') : array
     {
         $qb = $this->createQueryBuilder()
@@ -131,11 +109,7 @@ class CampagneService {
         return $result;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return array (id => string)
-     */
+    /** @return array (id => string) */
     public function getCampagnesAsOptions(string $champ='annee', string $ordre='DESC') : array
     {
         $campagnes = $this->getCampagnes($champ, $ordre);
@@ -147,10 +121,6 @@ class CampagneService {
         return $array;
     }
 
-    /**
-     * @param int|null $id
-     * @return Campagne
-     */
     public function getCampagne(?int $id) : ?Campagne
     {
         $qb = $this->createQueryBuilder()
@@ -165,11 +135,6 @@ class CampagneService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return Campagne|null
-     */
     public function getRequestedCampagne(AbstractActionController $controller, string $param = "campagne") : ?Campagne
     {
         $id = $controller->params()->fromRoute($param);
@@ -177,10 +142,7 @@ class CampagneService {
         return $result;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return Campagne[]
-     */
+    /** @return Campagne[] */
     public function getCampagnesActives(?DateTime $date = null) : array
     {
         $qb = $this->createQueryBuilder();
@@ -189,10 +151,7 @@ class CampagneService {
         return $result;
     }
 
-    /**
-     * @param DateTime|null $date
-     * @return Campagne|null
-     */
+
     public function getLastCampagne(?DateTime $date = null) : ?Campagne
     {
         if ($date === null) $date = new DateTime();
@@ -210,17 +169,16 @@ class CampagneService {
     }
 
     /**
-     * @param Campagne $campagne
-     * @param Etat[] $etats
      * @return EntretienProfessionnel[]
+     * todo a mettre dans EPS
      */
     public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats) : array
     {
         $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
             ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
-            ->andWhere('entretien.etat in (:etats)')->setParameter('etats', $etats)
             ->andWhere('entretien.histoDestruction IS NULL')
         ;
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien', $etats);
         $result = $qb->getQuery()->getResult();
 
         $entretiens = [];
@@ -229,95 +187,6 @@ class CampagneService {
             $entretiens[$entretien->getAgent()->getId()][] = $entretien;
         }
         return $entretiens;
-    }
-
-    public function getAgentsSansEntretien(Campagne $campagne, Structure $structure)
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('agent.affectations', 'affectation')->addSelect('affectation')
-            ->andWhere('entretien.campagne = :campagne')
-            ->andWhere('affectation.structure = :structure')
-            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= :now')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :now')
-            ->setParameter('campagne', $campagne)
-            ->setParameter('structure', $structure)
-            ->setParameter('now', new DateTime())
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getAgentsAvecEntretiensEnCours(Campagne $campagne, array $agents)
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('entretien.etat','etat')->addSelect('etat')
-            ->andWhere('etat.code <> :code')
-            ->andWhere('entretien.campagne = :campagne')
-            ->andWhere('agent in (:agents)')
-            ->setParameter('code', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)
-            ->setParameter('campagne', $campagne)
-            ->setParameter('agents', $agents)
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getAgentsAvecEntretiensPlanifies(Campagne $campagne, array $agents)
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('entretien.etat','etat')->addSelect('etat')
-            ->andWhere('etat.code = :CONVOCATION OR etat.code = :ACCEPTER')
-            ->andWhere('entretien.campagne = :campagne')
-            ->andWhere('agent in (:agents)')
-            ->setParameter('CONVOCATION', EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)
-            ->setParameter('ACCEPTER', EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)
-            ->setParameter('campagne', $campagne)
-            ->setParameter('agents', $agents)
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getAgentsAvecEntretiensFaits(Campagne $campagne, array $agents)
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('entretien.etat','etat')->addSelect('etat')
-            ->andWhere('etat.code = :RESPONSABLE OR etat.code = :OBSERVATION OR etat.code = :AUTORITE')
-            ->andWhere('entretien.campagne = :campagne')
-            ->andWhere('agent in (:agents)')
-            ->setParameter('RESPONSABLE', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)
-            ->setParameter('OBSERVATION', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION)
-            ->setParameter('AUTORITE', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)
-            ->setParameter('campagne', $campagne)
-            ->setParameter('agents', $agents)
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    public function getAgentsAvecEntretiensFinalises(Campagne $campagne, array $agents)
-    {
-        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-            ->join('entretien.agent', 'agent')->addSelect('agent')
-            ->join('entretien.etat','etat')->addSelect('etat')
-            ->andWhere('etat.code = :code')
-            ->andWhere('entretien.campagne = :campagne')
-            ->andWhere('agent in (:agents)')
-            ->setParameter('code', EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)
-            ->setParameter('campagne', $campagne)
-            ->setParameter('agents', $agents)
-        ;
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
     }
 
     /**
@@ -343,8 +212,8 @@ class CampagneService {
     public function getEntretiensEnAttenteResponsable(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -358,8 +227,8 @@ class CampagneService {
     public function getEntretiensEnAttenteAutorite(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -373,7 +242,7 @@ class CampagneService {
     public function getEntretiensEnAttenteAgent(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -387,7 +256,7 @@ class CampagneService {
     public function getEntretiensCompletes(Campagne $campagne) : array
     {
         $etats = [
-            $this->getEtatService()->getEtatByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
+            $this->getEtatTypeService()->getEtatTypeByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT),
         ];
 
         $entretiens = $this->getEntretiensByCampagneAndEtats($campagne, $etats);
@@ -417,39 +286,24 @@ class CampagneService {
         return $scolaire;
     }
 
-    /**
-     * Cette fonction retourne la liste des agents adminstratifs associés à des structures aux débuts de la campagne
-     * @param array $structures
-     * @param Campagne $campagne
-     * @return Agent[]
-     */
-    public function computeAgentByStructures(array $structures, Campagne $campagne) : array
-    {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->join('agent.affectations', 'affectation')
-            ->join('agent.statuts', 'statut')
-            ->join('agent.grades', 'grade')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateDebut <= :date')
-            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= :date')->setParameter('date', $campagne->getDateDebut())
-            // Affecté·e à une des structures
-            ->andWhere('affectation.structure in (:structures)')->setParameter('structures', $structures)
-            // En contrat ...
-            ->andWhere('statut.titulaire = :on OR statut.cdd = :on OR statut.cdi = :on')->setParameter('on', 'O')
-            ->andWhere('statut.retraite = :off')->setParameter('off', 'N')
-            // Est Administratif
-            ->andWhere('statut.administratif = :on')
-            ->orderBy('agent.nomUsuel, agent.prenom','ASC')
-        ;
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
     public function trierAgents(Campagne $campagne, array $agents) : array
     {
         $obligatoires = [];  $facultatifs = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
+
+        /** @var Agent $agent */
         foreach ($agents as $agent) {
-            if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+            $ok = false;
+            if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
+                $facultatifs[] = $agent;
+                $ok = true;
+            }
+            $res = $this->getAgentService()->isValideEmploiType($agent,  $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
+            if (!$ok && !$res) {
+                $facultatifs[] = $agent;
+                $ok = true;
+            }
+            if (!$ok) $obligatoires[] = $agent;
         }
         return [$obligatoires, $facultatifs];
     }

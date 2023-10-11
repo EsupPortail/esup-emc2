@@ -3,7 +3,7 @@
 namespace Element\Service\Niveau;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Niveau;
 use UnicaenApp\Exception\RuntimeException;

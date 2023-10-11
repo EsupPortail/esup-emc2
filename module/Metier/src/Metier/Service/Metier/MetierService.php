@@ -5,7 +5,7 @@ namespace Metier\Service\Metier;
 use Carriere\Service\Niveau\NiveauService;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Metier\Entity\Db\FamilleProfessionnelle;
 use Metier\Entity\Db\Metier;
 use Doctrine\ORM\NonUniqueResultException;

@@ -4,12 +4,12 @@ namespace Formation;
 
 use Laminas\Config\Factory as ConfigFactory;
 use Laminas\Loader\StandardAutoloader;
-use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\Glob;
+use Unicaen\Console\Controller\AbstractConsoleController;
 
 class Module
 {

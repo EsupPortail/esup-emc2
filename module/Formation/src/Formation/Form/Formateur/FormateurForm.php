@@ -3,7 +3,6 @@
 namespace Formation\Form\Formateur;
 
 use Formation\Entity\Db\Formateur;
-use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
@@ -14,7 +13,7 @@ use Laminas\Validator\Callback;
 class FormateurForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         // type
         $this->add([

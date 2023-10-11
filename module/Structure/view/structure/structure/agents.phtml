@@ -53,3 +53,8 @@ $canAjouterAgent = $this->isAllowed($structure, StructurePrivileges::STRUCTURE_A
 <?php endif; ?>
 
 <?php echo $this->partial('partial/agents', [ 'structure' => $structure, 'agents' => $agentsForces, 'options' => ['force' => true, 'id' => 'force']]); ?>
+
+
+<script>
+    $('button#agents-tab').addClass('active');
+</script>

@@ -20,18 +20,21 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
-use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
+use Laminas\View\Renderer\PhpRenderer;
+use Mpdf\MpdfException;
+use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 
@@ -39,14 +42,13 @@ class StructureController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentAffectationServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use FicheProfilServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
-    use SynchronisationServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
@@ -57,9 +59,9 @@ class StructureController extends AbstractActionController {
     use HasDescriptionFormAwareTrait;
 
 
-    private $renderer;
+    private PhpRenderer $renderer;
 
-    public function setRenderer($renderer)
+    public function setRenderer(PhpRenderer $renderer): void
     {
         $this->renderer = $renderer;
     }
@@ -79,6 +81,7 @@ class StructureController extends AbstractActionController {
 
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
+        $gestionnaires = $this->getStructureService()->getGestionnaires($structure, new DateTime());
 
         $niveau2 = $structure->getNiv2();
         $parent = $structure->getParent();
@@ -93,6 +96,7 @@ class StructureController extends AbstractActionController {
             'selecteur' => $selecteur,
             'structure' => $structure,
             'responsables' => $responsables,
+            'gestionnaires' => $gestionnaires,
 
             'niveau2' => $niveau2,
             'parent' => $parent,
@@ -134,6 +138,12 @@ class StructureController extends AbstractActionController {
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
 
+        try {
+            $emailAssistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
+        } catch (Exception $e) {
+            throw new RuntimeException("Une erreur est survenu lors de la récupération du paramètre [".GlobalParametres::TYPE."|".GlobalParametres::EMAIL_ASSISTANCE."]",0,$e);
+        }
+
         return new ViewModel([
             'structure' => $structure,
             'selecteur' => $selecteur,
@@ -143,7 +153,7 @@ class StructureController extends AbstractActionController {
             'autorites' => $autorites,
 
             'campagnes' => $campagnes,
-            'emailAssistance' => $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE),
+            'emailAssistance' => $emailAssistance,
         ]);
     }
 
@@ -210,7 +220,7 @@ class StructureController extends AbstractActionController {
             'agents' => $allAgents,
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
-            'etats' => $this->getEtatService()->getEtatsByTypeCode(FichePosteEtats::TYPE),
+            'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FichePosteEtats::TYPE),
         ]);
     }
 
@@ -348,14 +358,12 @@ class StructureController extends AbstractActionController {
         }
 
         $vm = new ViewModel();
-//        if ($structureAgentForce !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
                 'title' => "Retirer [".$structureAgentForce->getAgent()->getDenomination()."] de la structure [" . $structureAgentForce->getStructure()->getLibelleCourt() . "]",
                 'text' => "Le retrait est définitif, êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('structure/retirer-manuellement-agent', ["structure" => $structure->getId(), "agent" => $agent->getId()], [], true),
             ]);
-//        }
         return $vm;
     }
 
@@ -530,26 +538,16 @@ class StructureController extends AbstractActionController {
             'agents' => $agents,
         ];
 
-        $pdf = new PdfExporter();
-        $pdf->setRenderer($this->renderer);
-        $pdf->setHeaderScript('structure/structure/header.phtml');
-        $pdf->setFooterScript('structure/structure/footer.phtml');
-        $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
-        return $pdf->export("temp.pdf");
+        try {
+            $pdf = new PdfExporter();
+            $pdf->setRenderer($this->renderer);
+            $pdf->setHeaderScript('structure/structure/header.phtml');
+            $pdf->setFooterScript('structure/structure/footer.phtml');
+            $pdf->addBodyScript('structure/structure/organigramme.phtml', false, $vars);
+            return $pdf->export("temp.pdf");
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors la génération du PDF",0,$e);
+        }
     }
-
-    public function synchroniserAction() : ViewModel
-    {
-        $log = "Synchronisation des données liées aux structures\n";
-
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_TYPE");
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE");
-
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_RESPONSABLE");
-        $log .= $this->getSynchronisationService()->synchronise("STRUCTURE_GESTIONNAIRE");
-
-        return new ViewModel(['log' => $log]);
-    }
-
 
 }

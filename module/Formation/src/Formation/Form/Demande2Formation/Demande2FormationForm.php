@@ -10,7 +10,8 @@ use Laminas\InputFilter\Factory;
 
 class Demande2FormationForm extends Form {
 
-    public function init() {
+    public function init(): void
+    {
 
         //libelle
         $this->add([

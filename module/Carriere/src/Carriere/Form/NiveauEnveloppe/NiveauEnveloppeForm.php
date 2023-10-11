@@ -14,7 +14,7 @@ class NiveauEnveloppeForm extends Form {
 
     public array $niveaux = [];
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

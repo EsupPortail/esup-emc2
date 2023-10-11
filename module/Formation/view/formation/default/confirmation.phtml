@@ -21,7 +21,7 @@
         <input type="hidden" name="reponse" value="oui">
         <input type="submit" name="oui" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
         <?php if ($complement === 'oui') : ?>
-            </td></tr><tr></tr><td>
+            </td><td>
                 <label for="complement">Compléments liés à l'acceptation</label>
                 <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;"></textarea>
         <?php endif; ?>
@@ -37,7 +37,7 @@
                 <input type="hidden" name="reponse" value="non">
                 <input type="submit" id="non" name="non" class="btn btn-danger action"  value="Non, je ne veux pas">
                 <?php if ($complement === 'non') : ?>
-        </td></tr><tr></tr><td>
+        </td><td>
                     <label for="complement">Compléments liés au refus</label>
                     <textarea id="complement" name="complement" class="type2 form-control" style="width: 100%;"></textarea>
                 <?php endif; ?>
@@ -53,7 +53,7 @@
         $(function() {
             $("input#non").click(function(e){
                 $('div.modal').modal('hide');
-                e.preventDefault(e);
+                e.preventDefault();
             });
         });
     </script>

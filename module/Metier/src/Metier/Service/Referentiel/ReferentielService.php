@@ -3,7 +3,7 @@
 namespace Metier\Service\Referentiel;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Metier\Entity\Db\Referentiel;
 use UnicaenApp\Exception\RuntimeException;

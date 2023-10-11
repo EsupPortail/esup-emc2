@@ -4,6 +4,8 @@ namespace Application\Service\AgentAffectation;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AgentAffectationServiceFactory
 {
@@ -11,6 +13,8 @@ class AgentAffectationServiceFactory
     /**
      * @param ContainerInterface $container
      * @return AgentAffectationService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container): AgentAffectationService
     {

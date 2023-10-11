@@ -18,7 +18,7 @@ class ModifierRattachementForm extends Form
     use MetierServiceAwareTrait;
     use DomaineServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

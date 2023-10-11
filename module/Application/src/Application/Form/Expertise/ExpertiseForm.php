@@ -9,7 +9,8 @@ use Laminas\InputFilter\Factory;
 
 class ExpertiseForm extends Form {
 
-    public function init() {
+    public function init(): void
+    {
 
         //libelle
         $this->add([

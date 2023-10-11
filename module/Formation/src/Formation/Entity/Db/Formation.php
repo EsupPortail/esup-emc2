@@ -69,8 +69,10 @@ class Formation implements HistoriqueAwareInterface,
     public static function getAnnee(?DateTime $date = null) : ?int
     {
         if ($date === null) $date = new DateTime();
-        if ((int) $date->format("m") > 8) return (int) $date->format('Y');
-        return ((int) $date->format('Y') - 1);
+        $month = (int) $date->format("m");
+        $year = (int) $date->format("Y");
+        if ($month > 8) return $year;
+        return ($year - 1);
     }
 
     /**

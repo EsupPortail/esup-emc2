@@ -74,10 +74,22 @@ class AdministrationController extends AbstractActionController
 
     public function templateAction() : ViewModel
     {
-        $templates = $this->getTemplateService()->getTemplatesByNamespace('Formation\Provider\Template');
+        $namespace = 'Formation\Provider\Template';
+
+        $type = $this->params()->fromQuery('type');
+        $type = ($type !== '')?$type:null;
+
+        $templates = $this->getTemplateService()->getTemplatesByTypeAndNamespaces($type, $namespace);
+        $namespaces = [$namespace];
+        $types = $this->getTemplateService()->getTypes();
 
         $vm =  new ViewModel([
+            'title' => 'Gestion des templates',
             'templates' => $templates,
+            'namespaces' => $namespaces,
+            'types' => $types,
+            'namespace' => $namespace,
+            'type' => $type,
         ]);
         $vm->setTemplate('unicaen-renderer/template/index');
         return $vm;
@@ -86,9 +98,9 @@ class AdministrationController extends AbstractActionController
     public function etatAction() : ViewModel
     {
         $types = [
-            $this->getEtatTypeService()->getEtatTypeByCode(SessionEtats::TYPE),
-            $this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::TYPE),
-            $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::TYPE),
+            SessionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
+            InscriptionEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(InscriptionEtats::TYPE),
+            DemandeExterneEtats::TYPE => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE),
         ];
 
         $vm = new ViewModel([

@@ -19,7 +19,7 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
  * @var Mail[] $mails
  */
 
-$estAnnulee = ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+$estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
 $canInformation     = (!$estAnnulee AND $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
 $canAfficherMail    = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
@@ -77,7 +77,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 Retour à l'index des formations
             </a>
             <?php if ($canGererInscription) : ?>
-                <?php if ($instance->isEtat(SessionEtats::ETAT_CREATION_EN_COURS) AND $instance->hasJournee())  : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_CREATION_EN_COURS) && $instance->hasJournee())  : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/ouvrir-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -85,7 +85,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                         Ouvrir les inscriptions
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->isEtat(SessionEtats::ETAT_INSCRIPTION_OUVERTE)) : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/fermer-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -93,7 +93,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                         Fermer les inscriptions
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->isEtat(SessionEtats::ETAT_INSCRIPTION_FERMEE)) : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_FERMEE)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
                             href="<?php echo $this->url('formation-instance/envoyer-convocation', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -101,7 +101,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                         Convoquer les inscrits
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->isEtat(SessionEtats::ETAT_FORMATION_CONVOCATION)) : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
                             href="<?php echo $this->url('formation-instance/demander-retour', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -109,7 +109,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                         Demander les retours
                     </a>
                 <?php endif; ?>
-                <?php if ($instance->isEtat(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
                     <a      <?php /** @see FormationInstanceController::cloturerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
@@ -128,7 +128,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php endif; ?>
             <?php if ($canAnnuler) : ?>
                 <br/>
-                <?php if ($instance->getEtat() AND $instance->getEtat()->getCode() !== SessionEtats::ETAT_SESSION_ANNULEE) : ?>
+                <?php if ($instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) : ?>
                     <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-danger action">
@@ -138,7 +138,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                     <a      <?php /** @see FormationInstanceController::reouvrirAction() */ ?>
                             href="<?php echo $this->url('formation-instance/reouvrir', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
-                        Ré-ouvrir la session
+                        Remettre la session en édition
                     </a>
                 <?php endif; ?>
             <?php endif; ?>
@@ -146,28 +146,28 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
     </div>
 
     <!-- ONGLET :: TAB ------------------------------------------------------------------------------------------------>
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link" href="#information" aria-controls="information">
-                Information sur la session
-            </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#inscriptions" aria-controls="inscriptions">
-                    Inscription et listes
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#presences" aria-controls="presences">
-                    Présences aux séances
-                </a>
-            </li class="nav-item">
-            <li class="nav-item">
-                <a class="nav-link" href="#mails" aria-controls="mails">
-                    Mails
-                </a>
-            </li>
-        </ul>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="information-tab"
+                data-bs-toggle="tab" data-bs-target="#information"
+                type="button" role="tab" aria-controls="information" aria-selected="true">
+            Informations sur la session
+        </button>
+        <button class="nav-link" id="inscriptions-tab"
+                data-bs-toggle="tab" data-bs-target="#inscriptions"
+                type="button" role="tab" aria-controls="inscriptions" aria-selected="true">
+            Inscription et listes
+        </button>
+        <button class="nav-link" id="presences-tab"
+                data-bs-toggle="tab" data-bs-target="#presences"
+                type="button" role="tab" aria-controls="presences" aria-selected="true">
+            Présences aux séances
+        </button>
+        <button class="nav-link" id="mails-tab"
+                data-bs-toggle="tab" data-bs-target="#mails"
+                type="button" role="tab" aria-controls="mails" aria-selected="true">
+            Mails
+        </button>
+    </div>
 
     <!-- ONGLET :: PANE------------------------------------------------------------------------------------------------>
     <div class="tab-content">
@@ -187,7 +187,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                             Modifier les informations<!-- de la session -->
                         </a>
                         <br/>
-                        <?php if ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS) : ?>
+                        <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                             <?php /** @see FormationInstancePresenceController::renseignerPresencesAction() */ ?>
                             <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
                                class="btn btn-primary action">
@@ -419,24 +419,33 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
         </div>
 
 </div>
-</div>
 
 
 <script>
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "information";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav a').click(function (e) {
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
             let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
-            $(this).tab('show');
+            history.replaceState(null, null, "#" + anchor);
         });
+    });
 
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             tinyMCE.editors=[];

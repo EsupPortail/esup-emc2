@@ -29,7 +29,7 @@ class NiveauForm extends Form {
 //    }
 
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([

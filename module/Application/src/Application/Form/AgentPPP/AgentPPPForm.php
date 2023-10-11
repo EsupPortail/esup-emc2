@@ -3,19 +3,17 @@
 namespace Application\Form\AgentPPP;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 
 class AgentPPPForm extends Form {
-    use EtatServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

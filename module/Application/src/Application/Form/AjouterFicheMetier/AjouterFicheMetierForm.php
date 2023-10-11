@@ -40,7 +40,7 @@ class AjouterFicheMetierForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //Fiche Métier
         $this->add([
@@ -175,7 +175,7 @@ class AjouterFicheMetierForm extends Form {
         $fiches = array_filter($fiches, function (FicheMetier $a) use ($agent) {
             return (
                 $a->estNonHistorise() AND
-                $a->getEtat()->getCode() === FicheMetierEtats::ETAT_VALIDE AND
+                $a->getEtat()->getType()->getCode() === FicheMetierEtats::ETAT_VALIDE AND
                 ($a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
         });
 

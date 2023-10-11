@@ -5,25 +5,16 @@ namespace Formation\Service\FormationGroupe;
 trait FormationGroupeServiceAwareTrait
 {
 
-    /** @var FormationGroupeService */
-    private $formationGroupeService;
+    private FormationGroupeService $formationGroupeService;
 
-    /**
-     * @return FormationGroupeService
-     */
     public function getFormationGroupeService() : FormationGroupeService
     {
         return $this->formationGroupeService;
     }
 
-    /**
-     * @param FormationGroupeService $formationGroupeService
-     * @return FormationGroupeService
-     */
-    public function setFormationGroupeService(FormationGroupeService $formationGroupeService) : FormationGroupeService
+    public function setFormationGroupeService(FormationGroupeService $formationGroupeService) : void
     {
         $this->formationGroupeService = $formationGroupeService;
-        return $this->formationGroupeService;
     }
 
 }

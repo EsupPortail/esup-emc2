@@ -38,7 +38,7 @@ class DemandeExterneHydrator implements HydratorInterface {
      * @param DemandeExterne $object
      * @return DemandeExterne
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $organisme = (isset($data['organisme']) AND trim($data['organisme']) !== '')?trim($data['organisme']):null;

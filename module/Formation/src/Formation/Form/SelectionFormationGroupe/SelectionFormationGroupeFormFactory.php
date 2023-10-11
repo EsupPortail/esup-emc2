@@ -5,6 +5,8 @@ namespace Formation\Form\SelectionFormationGroupe;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SelectionFormationGroupeFormFactory
 {
@@ -12,6 +14,8 @@ class SelectionFormationGroupeFormFactory
     /**
      * @param ContainerInterface $container
      * @return SelectionFormationGroupeForm
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : SelectionFormationGroupeForm
     {

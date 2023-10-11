@@ -62,7 +62,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 <script>
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "agent";
 
         $('a[aria-controls=' + name + ']').tab('show');

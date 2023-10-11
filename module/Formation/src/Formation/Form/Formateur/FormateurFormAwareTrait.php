@@ -6,21 +6,13 @@ trait FormateurFormAwareTrait
 {
     private FormateurForm $formateurForm;
 
-    /**
-     * @return FormateurForm
-     */
     public function getFormateurForm(): FormateurForm
     {
         return $this->formateurForm;
     }
 
-    /**
-     * @param FormateurForm $formateurForm
-     * @return FormateurForm
-     */
-    public function setFormateurForm(FormateurForm $formateurForm): FormateurForm
+    public function setFormateurForm(FormateurForm $formateurForm): void
     {
         $this->formateurForm = $formateurForm;
-        return $this->formateurForm;
     }
 }

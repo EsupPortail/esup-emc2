@@ -15,11 +15,11 @@ $principales = $instance->getListePrincipale();
 $complementaires = $instance->getListeComplementaire();
 $historises = $instance->getListeHistorisee();
 
-$estAnnulee = ($instance->getEtat() AND $instance->getEtat()->getCode() === SessionEtats::ETAT_SESSION_ANNULEE);
+$estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
-$canInscritModifier     = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
+$canInscritModifier     = (!$estAnnulee && $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
-$canFraisModifier       = (!$estAnnulee AND  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
+$canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
 
 ?>
 
@@ -63,6 +63,7 @@ $inscriptions = $instance->getInscrits();
     </thead>
     <tbody>
     <?php foreach ($inscriptions as $inscrit) : ?>
+        <?php if ($inscrit->estNonHistorise()) : ?>
         <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
             <td>
                 <?php echo $inscrit->getAgent()->getDenomination(); ?>
@@ -70,25 +71,45 @@ $inscriptions = $instance->getInscrits();
             <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
             <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
             <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
-            <td> <?php echo $this->etatbadge($inscrit->getEtat()); ?> </td>
-            <td>
-                <?php if ($inscrit->estNonHistorise()) : ?>
-                    <?php if ($canInscritModifier AND $inscrit->getEtat() !== null AND $inscrit->getEtat()->getCode() === InscriptionEtats::ETAT_VALIDER_RESPONSABLE) : ?>
+            <td> <?php echo $this->etatinstance($inscrit->getEtatActif()); ?> </td>
+            <td class="action">
+                    <?php if ($canInscritModifier && $inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
                         <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-do text-success">Valider</span>  </a>
+                        <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
                         <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon validation-undo text-danger">Refuser</span>  </a>
+                        <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger"> Refuser</span>  </a>
                     <?php endif; ?>
-                    <?php if ($inscrit->getEtat()->getCode() === InscriptionEtats::ETAT_DEMANDE) : ?>
+                    <?php if ($inscrit->getEtatActif() && !$inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
                         <em>  Inscription non validée </em>
                     <?php endif; ?>
-                    <?php if ($inscrit->getEtat()->getCode() === InscriptionEtats::ETAT_VALIDER_DRH AND $inscrit->getListe() === null) :?>
+                    <?php if ($inscrit->getEtatActif()&& $inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && $inscrit->getListe() === null) :?>
                         <?php  /** @see \Formation\Controller\FormationInstanceInscritController::classerInscriptionAction() */ ?>
                         <a href="<?php echo $this->url('formation-instance/classer-inscription', ['inscrit' => $inscrit->getId()], [], true); ?>"> <span class="icon icon-synchroniser" title="Classer l'inscription"></span></a>
                     <?php endif; ?>
-                <?php endif; ?>
+
+                    <br>
+                    <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation"
+                    >
+                        <span class="icon icon-historiser"></span>
+                        Historiser
+                    </a>
+
+                    <br>
+                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                        class="ajax-modal" data-event="modification"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                    >
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </span>
+                    </a>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table><br/>

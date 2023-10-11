@@ -17,7 +17,7 @@ use Structure\Entity\Db\Structure;
 <h2>Listing des fiches de postes</h2>
 
 <a
-        <?php /** @see \Application\Controller\StructureController::extractionListingFichePosteAction() */ ?>
+        <?php /** @see \Structure\Controller\StructureController::extractionListingFichePosteAction() */ ?>
         href="<?php echo $this->url('structure/extraction/listing-fiche-poste', ['structure' => $structure->getId()], [], true); ?>"
    class="btn btn-primary action"
 >
@@ -27,7 +27,7 @@ use Structure\Entity\Db\Structure;
 <h2>Listing des missions spécifiques</h2>
 
 <a
-    <?php /** @see \Application\Controller\StructureController::extractionListingMissionSpecifiqueAction() */ ?>
+    <?php /** @see \Structure\Controller\StructureController::extractionListingMissionSpecifiqueAction() */ ?>
         href="<?php echo $this->url('structure/extraction/listing-mission-specifique', ['structure' => $structure->getId()], [], true); ?>"
         class="btn btn-primary action"
 >
@@ -59,3 +59,7 @@ use Structure\Entity\Db\Structure;
         </a>
     </div>
 </div>
+
+<script>
+    $('button#extraction-tab').addClass('active');
+</script>

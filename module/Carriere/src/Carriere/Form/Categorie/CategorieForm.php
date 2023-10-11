@@ -9,7 +9,7 @@ use Laminas\InputFilter\Factory;
 
 class CategorieForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         //code
         //libelle

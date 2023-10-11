@@ -4,25 +4,16 @@ namespace Formation\Service\HasFormationCollection;
 
 trait HasFormationCollectionServiceAwareTrait {
 
-    /** @var HasFormationCollectionService */
-    private $hasFormationCollectionService;
+    private HasFormationCollectionService $hasFormationCollectionService;
 
-    /**
-     * @return HasFormationCollectionService
-     */
     public function getHasFormationCollectionService(): HasFormationCollectionService
     {
         return $this->hasFormationCollectionService;
     }
 
-    /**
-     * @param HasFormationCollectionService $hasFormationCollectionService
-     * @return HasFormationCollectionService
-     */
-    public function setHasFormationCollectionService(HasFormationCollectionService $hasFormationCollectionService): HasFormationCollectionService
+    public function setHasFormationCollectionService(HasFormationCollectionService $hasFormationCollectionService): void
     {
         $this->hasFormationCollectionService = $hasFormationCollectionService;
-        return $this->hasFormationCollectionService;
     }
 
 }

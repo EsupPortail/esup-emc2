@@ -2,10 +2,14 @@
 
 namespace Element\Service\Competence;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Competence;
+use Element\Entity\Db\CompetenceReferentiel;
+use Element\Entity\Db\CompetenceTheme;
+use Element\Entity\Db\CompetenceType;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -75,10 +79,13 @@ class CompetenceService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
-            ->addSelect('type')->leftJoin('competence.type', 'type')
-            ->addSelect('theme')->leftJoin('competence.theme', 'theme')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Competence::class)->createQueryBuilder('competence')
+                ->addSelect('type')->leftJoin('competence.type', 'type')
+                ->addSelect('theme')->leftJoin('competence.theme', 'theme');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors dela création du QueryBuilder de [".Competence::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -176,8 +183,63 @@ class CompetenceService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs compétences partagent le même id source [".$source."-".$id."]");
+            throw new RuntimeException("Plusieurs compétences partagent le même id source [".$source."-".$id."]",0,$e);
         }
         return $result;
+    }
+
+    public function getCompetenceByRefentiel(CompetenceReferentiel $referentiel, string $id)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('competence.referentiel = :referentiel')
+            ->setParameter('referentiel', $referentiel)
+            ->andWhere('competence.idSource = :id')
+            ->setParameter('id', $id)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs compétences partagent le même id referentiel [".$referentiel->getId()."-".$id."]",0,$e);
+        }
+        return $result;
+    }
+
+    /** FACADE ****************************************************************************************************/
+
+    public function createWith(string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme, CompetenceReferentiel $referentiel, string $id) : Competence
+    {
+        $competence = new Competence();
+        $competence->setLibelle($libelle);
+        $competence->setDescription($description);
+        $competence->setType($type);
+        $competence->setTheme($theme);
+        $competence->setReferentiel($referentiel);
+        $competence->setIdSource($id);
+        $this->create($competence);
+        return $competence;
+    }
+
+    public function updateWith(Competence $competence, string $libelle, ?string $description, ?CompetenceType $type, ?CompetenceTheme $theme) : Competence
+    {
+        $wasModified = false;
+        if ($competence->getLibelle() !== $libelle) {
+            $competence->setLibelle($libelle);
+            $wasModified = true;
+        }
+        if ($competence->getDescription() !== $description) {
+            $competence->setDescription($description);
+            $wasModified = true;
+        }
+        if ($competence->getType() !== $type) {
+            $competence->setType($type);
+            $wasModified = true;
+        }
+        if ($competence->getTheme() !== $theme) {
+            $competence->setTheme($theme);
+            $wasModified = true;
+        }
+
+        if ($wasModified) $this->update($competence);
+        return $competence;
     }
 }

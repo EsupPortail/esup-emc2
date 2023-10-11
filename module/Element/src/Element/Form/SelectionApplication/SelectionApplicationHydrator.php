@@ -15,7 +15,7 @@ class SelectionApplicationHydrator implements HydratorInterface {
 
     /**
      * @param HasApplicationCollectionInterface $object
-     * @return array|void
+     * @return array
      */
     public function extract($object): array
     {

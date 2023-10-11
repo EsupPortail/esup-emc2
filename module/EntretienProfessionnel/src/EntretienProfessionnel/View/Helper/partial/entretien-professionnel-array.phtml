@@ -91,13 +91,13 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <th> Structure </th>
         <?php endif; ?>
         <?php if ($displayDate) : ?>
-            <th style="width:15rem;"> Date</th>
+            <th data-type="num" style="width:15rem;"> Date</th>
         <?php endif; ?>
         <?php if ($displayLieu) : ?>
             <th> Lieu</th>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <th style="min-width:6rem;"> État </th>
+            <th data-type="num" style="min-width:6rem;"> État </th>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <?php if (!$dropdowns) : ?>
@@ -114,7 +114,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         //todo l'assertion merde
 //        $canConvoquer = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER);
         $canConvoquer = (
-                ($entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
+                ($entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE) === null)
              && $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
         ?>
     <tr>
@@ -142,7 +142,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             </td>
         <?php endif; ?>
         <?php if ($displayDate) : ?>
-            <td>
+            <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>">
                 <?php echo $entretien->getDateEntretien()->format('d/m/Y H:i'); ?>
             </td>
         <?php endif; ?>
@@ -150,7 +150,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <td> <?php echo $entretien->getLieu(); ?> </td>
         <?php endif; ?>
         <?php if ($displayEtat) : ?>
-            <td style="text-align: center;"> <?php echo $this->etatbadge($entretien->getEtat()); ?> </td>
+            <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>" style="text-align: center;"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
         <?php endif; ?>
         <?php if ($displayAction) : ?>
         <td class="action">
@@ -203,6 +203,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
                             ['entretien' => $entretien->getId()],
                             ['query' => ['retour' => $this->url(null,[],['force_canonical' => true], true)]],
                             true); ?>"
+                        class="ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-historiser" title="Historiser le compte-rendu de l'entretien professionnel"></span>
                         Historiser
@@ -261,7 +262,12 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
 </style>
 
 <script>
-    $(document).ready(function() {
+    $("body").on("modification", function (event) {
+        event.div.modal('hide');
+        window.location.reload();
+    });
+
+    $(function() {
         $("table#<?php echo $options['id']; ?>").DataTable( {
             'paging' : false,
             'searching' : false,

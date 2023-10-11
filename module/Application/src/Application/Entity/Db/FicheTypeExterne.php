@@ -3,13 +3,14 @@
 namespace Application\Entity\Db;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use FicheMetier\Entity\Db\FicheMetier;
 
 /**
  * Class FicheTypeExterne
  * Lien entre une fiche métier et les fiches types
  *
- * NB : $activites stocke la liste des activités conservées dans un string donts les ids sont concaténés avec ';'
+ * NB : $activites stocke la liste des activités conservées dans un string donts les ids sont concaténés avec ;
  */
 
 class FicheTypeExterne {
@@ -17,124 +18,80 @@ class FicheTypeExterne {
     const ACTIVITE_SEPARATOR = ";";
 
 
-    /** @var integer */
-    private $id;
-    /** @var FichePoste */
-    private $fichePoste;
+    private ?int $id = null;
+    private ?FichePoste $fichePoste = null;
     private ?FicheMetier $ficheType = null;
-    /** @var integer */
-    private $quotite;
-    /** @var boolean */
-    private $estPrincipale;
-    /** @var string */
-    private $activites;
-    /** @var ArrayCollection (DomaineRepartition) */
-    private $domaineRepartitions;
+    private ?int $quotite = null;
+    private bool $estPrincipale = false;
+    private ?string $activites = null;
+    private Collection $domaineRepartitions;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function __construct()
+    {
+        $this->domaineRepartitions = new ArrayCollection();
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FichePoste
-     */
-    public function getFichePoste()
+    public function getFichePoste(): ?FichePoste
     {
         return $this->fichePoste;
     }
 
-    /**
-     * @param FichePoste $fichePoste
-     * @return FicheTypeExterne
-     */
-    public function setFichePoste($fichePoste)
+    public function setFichePoste(FichePoste $fichePoste): void
     {
         $this->fichePoste = $fichePoste;
-        return $this;
     }
 
-    /**
-     * @return FicheMetier
-     */
-    public function getFicheType()
+    public function getFicheType(): FicheMetier
     {
         return $this->ficheType;
     }
 
-    /**
-     * @param FicheMetier $ficheType
-     * @return FicheTypeExterne
-     */
-    public function setFicheType($ficheType)
+    public function setFicheType(FicheMetier $ficheType): void
     {
         $this->ficheType = $ficheType;
-        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuotite()
+    public function getQuotite(): ?int
     {
         return $this->quotite;
     }
 
-    /**
-     * @param int $quotite
-     * @return FicheTypeExterne
-     */
-    public function setQuotite($quotite)
+    public function setQuotite(int $quotite): void
     {
         $this->quotite = $quotite;
-        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getPrincipale()
+    public function getPrincipale(): bool
     {
         return $this->estPrincipale;
     }
 
-    /**
-     * @param bool $estPrincipale
-     * @return FicheTypeExterne
-     */
-    public function setPrincipale($estPrincipale)
+    public function setPrincipale(bool $estPrincipale): void
     {
         $this->estPrincipale = $estPrincipale;
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getActivites()
+    public function getActivites(): ?string
     {
         return $this->activites;
     }
 
-    /**
-     * @param string $activites
-     * @return FicheTypeExterne
-     */
-    public function setActivites($activites)
+    public function setActivites(?string $activites): void
     {
         $this->activites = $activites;
-        return $this;
     }
 
-    public function getDomaineRepartitions()
+    public function getDomaineRepartitions(): Collection
     {
         return $this->domaineRepartitions;
     }
 
-    public function getDomaineRepartitionsAsArray()
+    public function getDomaineRepartitionsAsArray(): array
     {
         $array = [];
         /** @var DomaineRepartition $repartition */
@@ -147,7 +104,7 @@ class FicheTypeExterne {
     /**
      * @return FicheTypeExterne
      */
-    public function clone_it()
+    public function clone_it(): FicheTypeExterne
     {
         $result = new FicheTypeExterne();
         $result->setFicheType($this->getFicheType());

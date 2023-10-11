@@ -13,22 +13,23 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
 <?php if ($entretien === null) : ?>
     <div class="alert alert-danger">
-        <p> Aucun entretien professionnel de remonté pour le token <?php echo $token; ?> </p>
-        <p>
-            Le problème peut-être lié au fait que :
-            <ul>
-                <li> vous avez déjà accepter votre entretien, </li>
-                <li> l'entretien est déjà passé, </li>
-                <li> l'entretien a été effacé, </li>
-            </ul>
-        </p>
+        Aucun entretien professionnel de remonté pour le token <?php echo $token; ?>
+
+        <br/>
+
+        Le problème peut-être lié au fait que :
+        <ul>
+            <li> vous avez déjà accepter votre entretien, </li>
+            <li> l'entretien est déjà passé, </li>
+            <li> l'entretien a été effacé, </li>
+        </ul>
     </div>
 <?php else : ?>
 
     <?php if ($depassee) : ?>
         <div class="alert alert-warning">
             <p> Le délai d'accepation de l'entretien professionnel est maintenant dépassé. </p>
-            <p> Vous pouvez encore accepter celui-ci mais votre responsable d'entretien peut maintenant refuser celui-ci.</p>
+            <p> Vous pouvez encore accepter celui-ci ; mais votre responsable d'entretien peut maintenant refuser celui-ci.</p>
         </div>
     <?php endif; ?>
 

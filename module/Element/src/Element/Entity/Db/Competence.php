@@ -8,7 +8,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class Competence implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const SOURCE_REFERENS3 = 'REFERENS 3';
+    const SOURCE_REFERENS3 = 'REFERENS3';
     const SOURCE_EMC2 = 'EMC2';
 
     private ?int $id = null;
@@ -16,6 +16,7 @@ class Competence implements HistoriqueAwareInterface {
     private ?string $description = null;
     private ?CompetenceType $type = null;
     private ?CompetenceTheme $theme = null;
+    private ?CompetenceReferentiel $referentiel = null;
     private ?string $source = null;
     private ?string $idSource = null;
 
@@ -62,6 +63,16 @@ class Competence implements HistoriqueAwareInterface {
     public function setTheme(?CompetenceTheme $theme) : void
     {
         $this->theme = $theme;
+    }
+
+    public function getReferentiel(): ?CompetenceReferentiel
+    {
+        return $this->referentiel;
+    }
+
+    public function setReferentiel(?CompetenceReferentiel $referentiel): void
+    {
+        $this->referentiel = $referentiel;
     }
 
     public function getSource(): ?string

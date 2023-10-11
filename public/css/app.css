@@ -1,46 +1,22 @@
-:root {
-    /*--unistrap-color-default: rgb(111, 133, 111);*/
-    /*--color-dark-bis: black;*/
-    /*--color-medium: #bbb;*/
-    /*--color-medium-bis: #999;*/
-    /*--color-light: #F3F3F3;*/
-    /*--color-light-bis: #FFF;*/
-    /*--bs-link-color: #273c83;*/
-}
-
-
-.unistrap.unistrap-th-emc2 {
-    --color-dark: var(--color-main-emc2);
-    --color-light: var(--color-light-emc2);
-    --unistrap-color-dark: var(--color-dark-emc2);
-}
-
-.unistrap.unistrap-th-formation {
-    --unistrap-color-main: var(--color-main-formation);
-    --unistrap-color-light: var(--color-light-formation);
-    --unistrap-color-dark: var(--color-dark-formation);
-}
-
-h1 {
-    color: black;
-}
-
-span.text-warning {
-    color: saddlebrown !important;
-}
-
-/** MODAL *************************************************************************************************************/
-
-table.xdebug-error.xe-warning {
+table.xdebug-error {
     margin-top: 4rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
 }
 
-div.alert{
-    margin-top:1rem;
-    margin-bottom:1.5rem;
+
+.unistrap.unistrap-th-apc .text-info {
+    color: var(--bs-info);
 }
+.unistrap.unistrap-th-apc .text-danger {
+    color: var(--bs-danger);
+}
+.unistrap.unistrap-th-apc .text-warning {
+    color: var(--bs-warning);
+}
+
+.bg-default {
+    background: rgb(238,238,238);
+}
+/** MODAL *************************************************************************************************************/
 
 div.modal div.modal-dialog {
     width: 80%;
@@ -49,20 +25,16 @@ div.modal div.modal-dialog {
 
 div.modal div.modal-content {
     width: 100%;
-    border : 1px solid black;
-}
-div.modal div.modal-header {
-    border-radius : 0;
-    border : 1px solid black;
-    background-color: var(--header-background);
-    color: white;
 }
 
-div.modal h2.modal-title{
-    color: white;
+div.modal div.modal-header {
+    border-radius : 0;
+    background: var(--unistrap-color-main);
+    color: var(--bs-dark);
 }
+
 button.btn-close {
-    color: white;
+    color: var(--bs-dark);
     opacity: 1;
     font-size: large;
 }
@@ -71,98 +43,41 @@ div.modal div.modal-footer {
     display: none;
 }
 
-/** ACTION et autre semantique de lien ********************************************************************************/
+/** TABLE ************************************/
 
-button,
-input[type=button],
-input[type=submit],
-a.btn,
-span.btn
+th.action {
+    width:8rem;
+}
+
+td.action,
+div.action
 {
-    margin: 0.25rem 0.25rem;
+    font-size: small;
+}
+td.action a,
+div.action a {
+    text-decoration: none;
 }
 
+/** TAB *****************************************/
 
-div.bloc {
-    margin:1rem;
-    padding: 1rem;
-}
-/** DL ****************************************************************************************************************/
-
-dl.dl-horizontal dt {
-    font-weight: 500;
-    margin-right: 1rem;
-    width: 20rem;
+div.tab-content {
+    border-top: 1px gray solid;
 }
 
-/*!** BADGE STRUCTURE ********************************************************************!*/
-
-span.badge.structure {
-    border-radius: 0.25em;
-    width:100%;
-    background:#3c6c8b;
+.unistrap .nav-tabs  button.active {
+    cursor: default ;
 }
-
-span.fiche-metier {
-    font-weight: bolder;
-    color: blue;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-
-span.raison.formation {
-    font-weight: bolder;
-    color: #ffb700;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-
-span.activite {
-    font-weight: bolder;
-    color: orangered;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-span.inconnue {
-    font-weight: bolder;
-    color: gray;
-    font-family: monospace;
-    cursor: help;
-    font-variant-position: super;
-}
-
-tr.termine {
-    background: #d7d7d7;
-}
+/** HISTORISER ****************************************************************************************************************/
 
 tr.historise td:not(.action) {
     text-decoration: line-through darkred 2px;
 }
 
-th.action {
-    width: 8rem;
+li.historise,
+span.historise {
+    text-decoration: line-through darkred 2px;
 }
-
-td.action {
-    font-size: small;
-}
-
-td.action a {
-    text-decoration: none;
-}
-
-div.action {
-    font-size: small;
-}
-
-
-div.action a {
-    text-decoration: none;
-}
-
 
 dt.historise {
     text-decoration: line-through gray;
@@ -171,11 +86,15 @@ dd.historise {
     text-decoration: line-through gray;
 }
 
-span.historise,
-span.historisee
-{
-    text-decoration: line-through darkred 2px;
+.result-historiser {
+    color: darkred;
 }
+
+.result-historiser label {
+    text-decoration: line-through gray;
+}
+
+/** todoes et lettrines *************************************************************************************************/
 
 span.todo {
     color:darkred;
@@ -191,17 +110,6 @@ span.todo:before {
     text-decoration: underline;
 }
 
-
-table.elements {
-    width:100%;
-}
-
-table.elements th.titre {
-    background: linear-gradient(to right, lightgrey, whitesmoke);
-    color: #3c6c8b;
-    padding: 0.5rem;
-}
-
 span.lettrine {
     position:relative;
     left:-0.75rem;
@@ -209,7 +117,6 @@ span.lettrine {
     font-weight:bolder;
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
-
 
 span.small-lettrine {
     position:relative;
@@ -221,300 +128,108 @@ span.small-lettrine {
     text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
-span.small-lettrine-xxx {
-    position:relative;
-    left:-0.75rem;
-    top:0.5rem;
-    font-weight:bolder;
-    font-size:7pt;
-    text-decoration: none;
+/** LIEN **************************************************************************************************************/
+
+div.ui-datepicker {
+    z-index: 1061 !important; /* NB: doit être supérieur à la modale Bootstrap qui est à 1050 et au popover(1060) */
 }
 
-span.probleme {
-    color: darkred;
+/** RATTRAPAGE **/
+
+div.alert a.btn span.icon {
+    color:white;
 }
 
-.titre-bloc {
-    background-color:var(--color-light-bis);
-    padding: 0 0 0 2rem;
-    margin: 0;
-    border: 1px var(--content-color) solid;
+a.btn,
+button {
+    margin : 0.25rem;
 }
 
-.titre-bloc h3 {
-    margin: 0;
+.btn-secondary {
+    background: var(--bs-info);
 }
 
-.groupe-libelle {
-    background: var(--color-medium);
-    color: #3c6c8b;
-    font-weight: bold;
-    padding: 0.5rem;
-    display: block;
-}
-
-.element-libelle {
-    /*padding-left: 1rem;*/
-    display: block;
-}
-/*** Datatable ******/
-
-table.datatable thead {
-    background-color: var(--header-background);
-    border: none;
-    color: var(--header-color);
-}
-
-table.datatable thead tr th {
-    height: 4rem;
-    padding: 5px;
-}
-
-table.datatable tbody tr td {
-    border-bottom: 1px solid var(--header-background-hover);
-    padding: 5px;
-}
-
-/** AUTRES MISE ENFORME ***********************************************************************************************/
-
-.page-header-tab {
-    border-bottom: 1px solid var(--information-background);
-    font-variant: small-caps;
-    color: var(--information-background);
-    padding-left: 1rem;
-    margin-left: 0.5rem;
-    margin-right: 1.5rem;
-}
-
-.reponse_categorie {
-    border-bottom: 1px solid grey;
-    margin-right: 1.5rem;
-    font-variant: small-caps;
-}
-
-.reponse_textarea {
-    border-left: 1px solid grey;
-    background: whitesmoke;
-    padding: 0.5rem 0.5rem 0.5rem 3rem;
-    margin: 0.5rem 1.5rem 0.5rem 1rem;
-}
-
-/** ENTRETIEN PRO *****************************************************************************************************/
-
-div.entretien-professionnel-observation {
-    margin-left: 3rem;
-}
-
-div.information {
-    background: whitesmoke;
-    margin: 0.5rem;
-    padding: 0.5rem;
-    border: 1px lightgrey solid;
-    border-radius: 0.5rem ;
-}
-
-div.information div.description {
-    border-left: 1px lightslategray solid ;
-    padding: 0.5rem;
-    margin: 0.5rem;
-}
-
-/** PARCOURS (DE FORMATION OU APPLICATIF) *****************************************************************************/
-
-div.parcours {
-    margin-bottom: 1rem;
-}
-div.parcours div.titre {
-    background:var(--color-light-bis);
-    padding-left: 2rem;
-    border: 1px var(--content-color) solid;
-    margin: 1rem;
-}
-
-div.parcours div.listing table {
-    width: 100%;
-}
-
-div.parcours div.listing table th {
-    background: lightgrey;
-    color: #3c6c8b;
-    padding: 0.5rem 0.5rem 0.5rem 3rem;
-}
-
-div.parcours div.listing table td {
-    background: var(--content-background);
-    padding: 0.1rem 0.1rem 0.1rem 3rem;
-}
-
-div.parcours div.listing table td.validation {
-    width:5rem;
-}
-
-div.titre {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-}
-div.listing table {
-    width:90%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-div.listing table th {
-    background: lightgrey;
-    color: #3c6c8b;
-    padding: 0.5rem 0.5rem 0.5rem 3rem;
-}
-
-div.listing td.libelle {
-    padding-left: 3rem;
-}
-
-div.listing  td.niveau {
-    width: 8rem;
-    text-align: right;
-    padding-left: 1rem;
-    /*background: lightblue;*/
-}
-
-div.listing  td.clef {
-    width: 4rem;
-    text-align: center;
-    /*background: lightblue;*/
-}
-
-div.listing  td.validation {
-    width: 8rem;
-    text-align: right;
-    padding-left: 1rem;
-    /*background: lightgoldenrodyellow;*/
-}
-
-
-div.listing  td.action {
-    width: 10rem;
-    text-align: right;
-    padding-left: 1rem;
-    /*background: lightgreen;*/
-}
-
-/** SOURCE **/
-
-span.badge.source {
-    width:15rem;
-}
-
-span.badge.EMC2 {
-    background: #123456;
-}
-
-span.badge.LAGAF {
-    background: darkred;
-}
-
-th.cell-etat,
-td.cell-etat
+.btn-secondary:hover,
+.btn-secondary:focus
 {
-  width:6rem;
+    background: var(--bs-info);
 }
 
-a:hover {
-    background: #9eabb6;
-    color: #1c70b8;
+.disabled:hover {
+    color: var(--bs-danger);
+    cursor: not-allowed;
 }
 
-ul.ui-autocomplete a:hover {
-    background: #e6e6e6;
+button.float-end-bis {
+    margin-left: auto;
 }
 
-/** ECART & COLORATION ************************************************************************************************/
-
-div.delta_1 {
-    background: #ffffbf;
+span.badge {
+    background: var(--unistrap-color-main);
 }
 
-div.delta_2 {
-    background: #fdc075;
+.card {
+    margin-bottom: 0.25rem;
 }
 
-div.delta_3 {
-    background: #f09a80;
+/** STYLE PARTICULIER **/
+
+h1.page-header {
+    border-left: 2rem solid  var(--unistrap-color-main);
+    padding-left: 1rem;
 }
 
-div.delta_4 {
-    background: #f08080;
+.card-header {
+    font-weight: bold;
+    font-variant: small-caps;
+}
+.card-info {
+    background: #badaff;
 }
 
-div.delta_5 {
-    background: #c24040;
-}
-
-div.row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/** Badge *************************************************************************************************************/
-
-span.reference {
-    background-color: #dfc4b2;
-    margin: 1rem;
-    padding: 0.5rem 1rem;
+span.label {
     border-radius: 0.25rem;
-}
-
-span.reference:before {
-    font-family: "Font Awesome 5 Free";
+    padding: 0.25rem;
+    margin: 0.1rem;
     display: inline-block;
-    padding-right: 3px;
-    vertical-align: middle;
-    font-weight: 900;
-    font-size: large;
-    content: "\f02d";
+    border: 2px solid;
 }
 
-span.expertise {
-    margin: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-}
-
-span.expertise.avec {
-    background-color: lightgreen;
-}
-span.expertise.sans {
-    background-color: lightcoral;
-}
-
-div.panel-heading  h2 {
-    margin: 0;
-    color: #3c6c8b;
+small a {
     text-decoration: none;
 }
 
-div.panel-heading a.btn {
-    margin: 0;
+@media only screen and (min-width: 1600px) {
+    div#contenu-principal{
+        min-width:1550px;
+    }
 }
 
-h3.popover-header {
-    color: var(--color-main-emc2);
+@media only screen and (min-width: 1700px) {
+    div#contenu-principal{
+        min-width:1650px;
+    }
 }
 
-div.card-header h2 {
-     margin-top: 0.5rem;
-     font-size: larger;
+@media only screen and (min-width: 1800px) {
+    div#contenu-principal{
+        min-width:1700px;
+    }
 }
 
-.bg-default {
-    background: var(--unistrap-color-default);
-    color: black;
+@media only screen and (min-width: 1900px) {
+    div#contenu-principal{
+        min-width:1800px;
+    }
 }
 
-.card-body {
-    padding: 0.25rem;
+/** Keep on */
+
+div.alert-danger .fa-exclamation-triangle {
+    color: var(--bs-danger);
 }
 
-.form-control {
-    height:auto;
+.unistrap .nav-tabs button.active
+{
+    border-top: 5px solid var(--unistrap-color-main);
 }

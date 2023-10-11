@@ -22,7 +22,7 @@ class SelectionAgentForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //Agent
         $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);

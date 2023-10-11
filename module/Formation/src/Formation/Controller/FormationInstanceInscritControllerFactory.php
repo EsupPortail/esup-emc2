@@ -12,7 +12,8 @@ use Formation\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
@@ -27,12 +28,13 @@ class FormationInstanceInscritControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceInscritController
+    public function __invoke(ContainerInterface $container): FormationInstanceInscritController
     {
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
-         * @var EtatService $etatService
+         * @var EtatInstanceService $etatInstanceService
+         * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MailService $mailService
@@ -43,7 +45,8 @@ class FormationInstanceInscritControllerFactory
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $mailService = $container->get(MailService::class);
@@ -62,7 +65,8 @@ class FormationInstanceInscritControllerFactory
         $controller = new FormationInstanceInscritController();
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatInstanceService($etatInstanceService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setMailService($mailService);

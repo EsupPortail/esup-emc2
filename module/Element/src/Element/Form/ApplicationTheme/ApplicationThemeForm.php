@@ -10,7 +10,7 @@ use Laminas\InputFilter\Factory;
 
 class ApplicationThemeForm extends Form {
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([

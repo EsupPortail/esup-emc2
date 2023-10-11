@@ -5,10 +5,18 @@ namespace Formation\Service\Stagiaire;
 use Application\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class StagiaireServiceFactory {
 
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @return StagiaireService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): StagiaireService
     {
         /**
          * @var EntityManager $entityManager

@@ -2,8 +2,10 @@
 
 namespace Element\Service\CompetenceTheme;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\CompetenceTheme;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -90,6 +92,17 @@ class CompetenceThemeService {
 
     /** REQUETE *******************************************************************************************************/
 
+    public function createQueryBuilder() : QueryBuilder
+    {
+        try {
+            $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
+                ->addSelect('competence')->leftJoin('theme.competences', 'competence');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la creation que QueryBuilder de [".QueryBuilder::class."]",0, $e);
+        }
+        return $qb;
+    }
+
     /**
      * @param string $champ
      * @param string $order
@@ -97,8 +110,7 @@ class CompetenceThemeService {
      */
     public function getCompetencesThemes(string $champ = 'libelle', string $order = 'ASC') : array
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
-            ->addSelect('competence')->leftJoin('theme.competences', 'competence')
+        $qb = $this->createQueryBuilder()
             ->orderBy('theme.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -126,9 +138,8 @@ class CompetenceThemeService {
      */
     public function getCompetenceTheme(?int $id) : ?CompetenceTheme
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
-            ->andWhere('theme.id = :id')
-            ->setParameter('id', $id)
+        $qb = $this->createQueryBuilder()
+            ->andWhere('theme.id = :id') ->setParameter('id', $id)
         ;
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -156,18 +167,26 @@ class CompetenceThemeService {
      */
     public function getCompetenceThemeByLibelle(string $libelle) : ?CompetenceTheme
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceTheme::class)->createQueryBuilder('theme')
-            ->andWhere('theme.libelle = :libelle')
-            ->setParameter('libelle', $libelle)
+        $qb = $this->createQueryBuilder()
+            ->andWhere('theme.libelle = :libelle') ->setParameter('libelle', $libelle)
         ;
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException('Plusieurs CompetenceTheme partagent le même libellé ['.$libelle.']');
+            throw new RuntimeException('Plusieurs CompetenceTheme partagent le même libellé ['.$libelle.']',0,$e);
         }
         return $result;
     }
 
+    /** FACADE ***********************************************************************/
+
+    public function createWith(?string $libelle) : CompetenceTheme
+    {
+        $theme = new CompetenceTheme();
+        $theme->setLibelle($libelle);
+        $this->create($theme);
+        return $theme;
+    }
 
 }

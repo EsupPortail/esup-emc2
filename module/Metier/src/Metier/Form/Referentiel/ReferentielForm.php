@@ -13,7 +13,7 @@ use Laminas\InputFilter\Factory;
 class ReferentielForm extends Form {
     use DomaineServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle court
         $this->add([

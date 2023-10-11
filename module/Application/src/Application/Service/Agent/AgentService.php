@@ -13,8 +13,9 @@ use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Fichier\Entity\Db\Fichier;
@@ -60,17 +61,19 @@ class AgentService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            //affectations
-            ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-            ->addSelect('affectation_structure')->leftJoin('affectation.structure', 'affectation_structure')
-            //quotite de l'agent
-            ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
-
-            ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
-            ->andWhere('agent.deleted_on IS NULL')
-            ->andWhere('affectation.deleted_on IS NULL')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+                //affectations
+                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+                ->addSelect('affectation_structure')->leftJoin('affectation.structure', 'affectation_structure')
+                //quotite de l'agent
+                ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
+                ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
+                ->andWhere('agent.deleted_on IS NULL')
+                ->andWhere('affectation.deleted_on IS NULL');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Agent."]",0,$e);
+        }
         return $qb;
     }
 
@@ -95,12 +98,16 @@ class AgentService {
      */
     public function getAgents() : array
     {
-        $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
-            ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-//            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
-            ->andWhere('agent.deleted_on IS NULL')
-            ->orderBy('agent.nomUsuel, agent.prenom');
+        try {
+            $qb = $this->getEntityManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+                ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
+                ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
+                //            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+                ->andWhere('agent.deleted_on IS NULL')
+                ->orderBy('agent.nomUsuel, agent.prenom');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Agent::class."]",0,$e);
+        }
         $result =  $qb->getQuery()->getResult();
         return $result;
     }
@@ -759,6 +766,77 @@ EOS;
                         $count[$temoin] = true;
                     }
                 }
+            }
+
+            $keep = true;
+            foreach($on as $temoin) {
+                if (!isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            foreach($off as $temoin) {
+                if (isset($count[$temoin])) {
+                    $keep = false ; break;
+                }
+            }
+            if ($keep) $result[] = $agent;
+        }
+
+        return $result;
+    }
+
+    public function isValideEmploiType(Agent $agent, ?Parametre $parametre, ?DateTime $date = null, ?Structure $structure = null) : bool
+    {
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $emploitypes = $agent->getEmploiTypesActifs($date, $structure?[$structure]:null);
+        $count = [];
+        foreach ($emploitypes as $grade) {
+            if($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
+        }
+
+        $keep = true;
+        foreach($on as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false ; break;
+            }
+        }
+        foreach($off as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false ; break;
+            }
+        }
+        return $keep;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Parametre|null $parametre
+     * @param DateTime|null $date
+     * @param Structure|null $structure
+     * @return Agent[]
+     */
+    public function filtrerWithEmploiTypeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?Structure $structure = null) : array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $listing = explode(";", $parametre->getValeur());
+        $on = []; $off = [];
+        foreach ($listing as $item) {
+            if ($item[0] === '!') $off[] = substr($item,1); else $on[] = $item;
+        }
+
+        $result = [];
+        foreach ($agents as $agent) {
+            $count = [];
+            $grades = $agent->getEmploiTypesActifs($date, $structure);
+            foreach ($grades as $grade) {
+                if($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
             }
 
             $keep = true;

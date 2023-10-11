@@ -27,11 +27,11 @@ class FormationInstanceFraisHydrator implements HydratorInterface
      * @param FormationInstanceFrais $object
      * @return FormationInstanceFrais
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
-        $repas = isset($data['repas']) ? $data['repas'] : null;
-        $hebergement = isset($data['hebergement']) ? $data['hebergement'] : null;
-        $transport = isset($data['transport']) ? $data['transport'] : null;
+        $repas = $data['repas'] ?? null;
+        $hebergement = $data['hebergement'] ?? null;
+        $transport = $data['transport'] ?? null;
 
         $object->setFraisRepas($repas);
         $object->setFraisHebergement($hebergement);

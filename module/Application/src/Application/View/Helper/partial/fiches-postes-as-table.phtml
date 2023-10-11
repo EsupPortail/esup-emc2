@@ -4,12 +4,14 @@ use Application\Entity\Db\FichePoste;
 use Application\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Structure\Entity\Db\Structure;
+use UnicaenEtat\Entity\Db\EtatType;
 
 /**
  * @see \Application\View\Helper\FichesPostesAsArrayViewHelper
  * @var FichePoste[] $fiches
  * @var boolean[] $displays
  * @var Structure|null $structure
+ * @var EtatType[] $etats
  */
 
 $canAjouter     = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AJOUTER));
@@ -62,7 +64,7 @@ if ($retour)    $query['retour'] = $retour;
         <?php
         if ($fiche instanceof FichePoste) {
             $id = $fiche->getId();
-            $etat = $fiche->getEtat()->getCode();
+            $etat = ($fiche->getEtatActif())?$fiche->getEtatActif()->getType()->getCode():null;
             $destruction = $fiche->getHistoDestruction();
             $agentId = ($fiche->getAgent())?$fiche->getAgent()->getId():null;
             $agent = ($fiche->getAgent())?$fiche->getAgent()->getDenomination():null;
@@ -201,7 +203,7 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['etat']) : ?>
                     <td>
-                            <?php echo $this->etatbadge($etat); ?>
+                            <?php echo $this->etattype($etats[$etat]); ?>
                     </td>
                 <?php endif; ?>
 
@@ -248,7 +250,7 @@ if ($retour)    $query['retour'] = $retour;
                         <?php if ($canHistoriser) : ?>
                             <?php if ($destruction === null) : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::historiserAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
+                                <a href="<?php echo $this->url('fiche-poste/historiser', ['fiche-poste' =>  $id], ["query" => $query??[]], true); ?>">
                                     <span class="icon icon-historiser"
                                        data-bs-toggle="tooltip" data-bs-html="true"
                                        title="Historiser la fiche de poste"></span></a>

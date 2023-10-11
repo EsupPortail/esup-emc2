@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Macro\MacroServiceAwareTrait;
 use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
@@ -13,6 +14,8 @@ use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
+use Formation\Service\Url\UrlServiceAwareTrait;
+use JetBrains\PhpStorm\NoReturn;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Mpdf\MpdfException;
 use UnicaenApp\Exception\RuntimeException;
@@ -29,6 +32,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     use RenduServiceAwareTrait;
     use SeanceServiceAwareTrait;
     use TemplateServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     private $renderer;
 
@@ -57,7 +61,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         exit;
     }
 
-    public function exportTousEmargementsAction()
+    #[NoReturn] public function exportTousEmargementsAction(): void
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $journees = $instance->getJournees();
@@ -84,6 +88,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'session' => $inscrit->getInstance(),
             'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
         $exporter = new PdfExporter();
@@ -109,6 +114,7 @@ class FormationInstanceDocumentController extends AbstractActionController
             'formation' => $inscrit->getInstance()->getFormation(),
             'session' => $inscrit->getInstance(),
             'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();
@@ -145,9 +151,9 @@ class FormationInstanceDocumentController extends AbstractActionController
             $texte .= "<ul>";
             foreach ($inscriptions as $inscription) {
                 $dureeSuivie = $inscription->getDureePresence();
+                /** @var FormationInstance $session */
                 $session = $inscription->getInstance();
-                $sessionEtat = $session->getEtat()->getCode();
-                if ($dureeSuivie != '0 heures ' and ($sessionEtat === SessionEtats::ETAT_CLOTURE_INSTANCE or $sessionEtat === SessionEtats::ETAT_ATTENTE_RETOURS)) {
+                if ($dureeSuivie != '0 heures ' && ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE) || $session->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS))) {
                     $libelle = $session->getFormation()->getLibelle();
                     $periode = $session->getPeriode();
                     $texte .= "<li>";

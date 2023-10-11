@@ -4,6 +4,7 @@ namespace Carriere\Service\Grade;
 
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Grade;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -20,9 +21,12 @@ class GradeService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
-            ->andWhere('grade.deleted_on IS NULL')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
+                ->andWhere('grade.deleted_on IS NULL');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [".Grade::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -77,7 +81,7 @@ class GradeService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs grades partagent le même identifiant [".$id."]");
+            throw new RuntimeException("Plusieurs grades partagent le même identifiant [".$id."]",0,$e);
         }
         return $result;
     }

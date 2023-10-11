@@ -11,7 +11,7 @@ use Laminas\Form\Form;
 class UploadForm extends Form {
     use NatureServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //upload
         $this->add([

@@ -4,77 +4,45 @@ namespace Application\Entity\Db;
 
 use Metier\Entity\Db\Domaine;
 
-/** QUID historiser cela ? */
 class DomaineRepartition {
 
-    /** @var integer */
-    private $id;
-    /** @var FicheTypeExterne */
-    private $ficheMetierExterne;
-    /** @var Domaine */
-    private $domaine;
-    /** @var Integer */
-    private $quotite;
+    private ?int $id = null;
+    private ?FicheTypeExterne $ficheMetierExterne = null;
+    private ?Domaine $domaine = null;
+    private ?int $quotite = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return FicheTypeExterne
-     */
-    public function getFicheMetierExterne()
+    public function getFicheMetierExterne(): ?FicheTypeExterne
     {
         return $this->ficheMetierExterne;
     }
 
-    /**
-     * @param FicheTypeExterne $ficheMetierExterne
-     * @return DomaineRepartition
-     */
-    public function setFicheMetierExterne(FicheTypeExterne $ficheMetierExterne)
+    public function setFicheMetierExterne(FicheTypeExterne $ficheMetierExterne): void
     {
         $this->ficheMetierExterne = $ficheMetierExterne;
-        return $this;
     }
 
-    /**
-     * @return Domaine
-     */
-    public function getDomaine()
+    public function getDomaine(): ?Domaine
     {
         return $this->domaine;
     }
 
-    /**
-     * @param Domaine|null $domaine
-     * @return DomaineRepartition
-     */
-    public function setDomaine(Domaine $domaine)
+    public function setDomaine(Domaine $domaine): void
     {
         $this->domaine = $domaine;
-        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuotite()
+    public function getQuotite(): ?int
     {
         return $this->quotite;
     }
 
-    /**
-     * @param int $quotite
-     * @return DomaineRepartition
-     */
-    public function setQuotite($quotite)
+    public function setQuotite(int $quotite): void
     {
         $this->quotite = $quotite;
-        return $this;
     }
 }

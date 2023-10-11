@@ -2,10 +2,10 @@
 
 use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 
 /**
- * @var Etat[] $etats;
+ * @var UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat[] $etats;
  * @var Campagne[] $campagnes
  *
  * @var array $params
@@ -91,7 +91,7 @@ use UnicaenEtat\Entity\Db\Etat;
                             <?php foreach($etats as $etat) : ?>
                                 <option
                                         value="<?php echo $etat->getId(); ?>"
-                                        data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                                        data-content='<?php  echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
                                 >
                                     <?php echo $etat->getLibelle(); ?>
                                 </option>

@@ -6,6 +6,7 @@ use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
 use Fichier\Service\Fichier\FichierServiceAwareTrait;
 use Fichier\Service\Nature\NatureServiceAwareTrait;
+use JetBrains\PhpStorm\NoReturn;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -56,7 +57,7 @@ class FichierController extends AbstractActionController {
         return $vm;
     }
 
-    public function downloadAction()
+    #[NoReturn] public function downloadAction(): void
     {
         $fichier = $this->getFichierService()->getRequestedFichier($this, 'fichier');
 

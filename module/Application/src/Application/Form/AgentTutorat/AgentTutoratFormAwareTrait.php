@@ -4,24 +4,15 @@ namespace Application\Form\AgentTutorat;
 
 trait AgentTutoratFormAwareTrait {
 
-    /** @var AgentTutoratForm */
-    private $agentTutoratForm;
+    private AgentTutoratForm $agentTutoratForm;
 
-    /**
-     * @return AgentTutoratForm
-     */
     public function getAgentTutoratForm(): AgentTutoratForm
     {
         return $this->agentTutoratForm;
     }
 
-    /**
-     * @param AgentTutoratForm $agentTutoratForm
-     * @return AgentTutoratForm
-     */
-    public function setAgentTutoratForm(AgentTutoratForm $agentTutoratForm): AgentTutoratForm
+    public function setAgentTutoratForm(AgentTutoratForm $agentTutoratForm): void
     {
         $this->agentTutoratForm = $agentTutoratForm;
-        return $this->agentTutoratForm;
     }
 }

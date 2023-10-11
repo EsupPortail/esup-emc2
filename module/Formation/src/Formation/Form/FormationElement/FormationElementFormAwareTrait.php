@@ -5,24 +5,16 @@ namespace Formation\Form\FormationElement;
 trait FormationElementFormAwareTrait {
 
     /** @var FormationElementForm */
-    private $formationElementForm;
+    private FormationElementForm $formationElementForm;
 
-    /**
-     * @return FormationElementForm
-     */
     public function getFormationElementForm() :FormationElementForm
     {
         return $this->formationElementForm;
     }
 
-    /**
-     * @param FormationElementForm $formationElementForm
-     * @return FormationElementForm
-     */
-    public function setFormationElementForm(FormationElementForm $formationElementForm) : FormationElementForm
+    public function setFormationElementForm(FormationElementForm $formationElementForm) : void
     {
         $this->formationElementForm = $formationElementForm;
-        return $this->formationElementForm;
     }
 
 }

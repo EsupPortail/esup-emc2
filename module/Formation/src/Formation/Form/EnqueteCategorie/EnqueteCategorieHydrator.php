@@ -5,14 +5,15 @@ namespace Formation\Form\EnqueteCategorie;
 use Formation\Entity\Db\EnqueteCategorie;
 use Laminas\Hydrator\HydratorInterface;
 
-class EnqueteCategorieHydrator implements HydratorInterface {
+class EnqueteCategorieHydrator implements HydratorInterface
+{
 
 
     /**
      * @param object|EnqueteCategorie $object
      * @return array
      */
-    public function extract(object $object) : array
+    public function extract(object $object): array
     {
         $data = [
             'libelle' => $object->getLibelle(),
@@ -27,11 +28,11 @@ class EnqueteCategorieHydrator implements HydratorInterface {
      * @param EnqueteCategorie $object
      * @return EnqueteCategorie
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
-        $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
-        $description = (isset($data['description']) AND trim($data['description']) !== '')?trim($data['description']):null;
-        $ordre = (isset($data['ordre']))?trim($data['ordre']):null;
+        $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '') ? trim($data['libelle']) : null;
+        $description = (isset($data['description']) and trim($data['description']) !== '') ? trim($data['description']) : null;
+        $ordre = (isset($data['ordre'])) ? trim($data['ordre']) : null;
 
         $object->setLibelle($libelle);
         $object->setDescription($description);

@@ -4,25 +4,27 @@ namespace EntretienProfessionnel\Entity\Db;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\HasAgentInterface;
-use Doctrine\Common\Collections\Collection;
-use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
-use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenApp\Exception\RuntimeException;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
-use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenValidation\Entity\HasValidationsInterface;
+use UnicaenValidation\Entity\HasValidationsTrait;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatsInterface, HasValidationsInterface {
     use HistoriqueAwareTrait;
-    use HasEtatTrait;
+    use HasEtatsTrait;
+    use HasValidationsTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
@@ -47,22 +49,22 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?DateTime $dateEntretien = null;
     private ?string $lieu = null;
 
-    /** @var FormulaireInstance */
-    private $formulaireInstance;
-    /** @var FormulaireInstance */
-    private $formationInstance;
+    private ?FormulaireInstance $formulaireInstance = null;
+    private ?FormulaireInstance $formationInstance = null;
 
-    /** @var ArrayCollection (Observation) */
-    private $observations;
-    /** @var ArrayCollection (Sursis) */
-    private $sursis;
+    private Collection $observations;
+    private Collection $sursis;
 
-    private Collection $validations;
+    private ?string $token = null;
+    private ?DateTime $acceptation = null;
 
-    /** @var string */
-    private $token;
-    /** @var DateTime */
-    private $acceptation;
+    public function __construct()
+    {
+        $this->etats = new ArrayCollection();
+        $this->observations = new ArrayCollection();
+        $this->sursis = new ArrayCollection();
+        $this->validations = new ArrayCollection();
+    }
 
     public function getId() : ?int
     {
@@ -119,49 +121,27 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->lieu = $lieu;
     }
 
-
-
-
-
-
-    /**
-     * @return bool
-     */
     public function isComplete() : bool
     {
-        return ($this->getEtat() !== null AND $this->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
+        return $this->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT);
     }
 
-    /**
-     * @return FormulaireInstance
-     */
     public function getFormulaireInstance() : ?FormulaireInstance
     {
         return $this->formulaireInstance;
     }
 
-    /**
-     * @param FormulaireInstance|null $formulaireInstance
-     * @return EntretienProfessionnel
-     */
     public function setFormulaireInstance(?FormulaireInstance $formulaireInstance) : EntretienProfessionnel
     {
         $this->formulaireInstance = $formulaireInstance;
         return $this;
     }
 
-    /**
-     * @return FormulaireInstance
-     */
-    public function getFormationInstance() : FormulaireInstance
+    public function getFormationInstance() : ?FormulaireInstance
     {
         return $this->formationInstance;
     }
 
-    /**
-     * @param FormulaireInstance|null $formationInstance
-     * @return EntretienProfessionnel
-     */
     public function setFormationInstance(?FormulaireInstance $formationInstance) : EntretienProfessionnel
     {
         $this->formationInstance = $formationInstance;
@@ -170,47 +150,28 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** OBSERVATIONS **************************************************************************************************/
 
-    /**
-     * @return Observation[]
-     */
     public function getObservations() : array
     {
         return $this->observations->toArray();
     }
 
-    /**
-     * @param Observation|null $observation
-     * @return boolean
-     */
     public function hasObservation(?Observation $observation) : bool
     {
         return $this->observations->contains($observation);
     }
 
-    /**
-     * @param Observation|null $observation
-     * @return EntretienProfessionnel
-     */
     public function addObservation(?Observation $observation) : EntretienProfessionnel
     {
         if ($this->hasObservation($observation)) $this->observations->add($observation);
         return $this;
     }
 
-    /**
-     * @param Observation|null $observation
-     * @return EntretienProfessionnel
-     */
     public function removeObservation(?Observation $observation) : EntretienProfessionnel
     {
         $this->observations->removeElement($observation);
         return $this;
     }
 
-    /**
-     * @param Observation[] $observations
-     * @return EntretienProfessionnel
-     */
     public function setObservations(array $observations) : EntretienProfessionnel
     {
         $this->observations->clear();
@@ -218,9 +179,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $this;
     }
 
-    /**
-     * @return Observation|null
-     */
     public function getObservationActive() : ?Observation
     {
         $observation = null;
@@ -234,9 +192,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $observation;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getMaxSaisiEntretien() : ?DateTime
     {
         $date = DateTime::createFromFormat('d/m/Y H:i:s', $this->getDateEntretien()->format('d/m/Y 23:59:59'));
@@ -246,7 +201,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function getMaxSaisiObservation() : ?DateTime
     {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation === null) return null;
 
         $date = DateTime::createFromFormat("d/m/Y H:i:s", $validation->getHistoCreation()->format("d/m/Y H:i:s"));
@@ -259,89 +214,22 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $date;
     }
 
-    /** VALIDATION ****************************************************************************************************/
-    // todo faire un trait pour généraliser les validations ???
-
-    /**
-     * @param string|null $type
-     * @param bool $historisee
-     * @return ValidationInstance[]
-     */
-    public function getValidations(?string $type = null, bool $historisee = false) : array
-    {
-        $validations =  $this->validations->toArray();
-        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
-        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->estNonHistorise();});
-        return $validations;
-    }
-
-    /**
-     * @param ValidationInstance $validation
-     * @return EntretienProfessionnel
-     */
-    public function addValidation(ValidationInstance $validation) : EntretienProfessionnel
-    {
-        $this->validations->add($validation);
-        return $this;
-    }
-
-    /**
-     * @param ValidationInstance $validation
-     * @return EntretienProfessionnel
-     */
-    public function removeValidation(ValidationInstance $validation) : EntretienProfessionnel
-    {
-        $this->validations->removeElement($validation);
-        return $this;
-    }
-
-    /**
-     * @param string|null $type
-     * @param bool $historisee
-     * @return ValidationInstance|null
-     */
-    public function getValidationByType(?string $type, bool $historisee = false) : ?ValidationInstance
-    {
-        $validations =  $this->validations->toArray();
-        if ($type !== null) $validations = array_filter($validations, function (ValidationInstance $a) use ($type) { return $a->getType()->getCode() === $type;});
-        if ($historisee !== true) $validations = array_filter($validations, function (ValidationInstance $a) { return $a->getHistoDestruction() === null;});
-
-        if ($validations === []) return null;
-        $validations = array_filter($validations, function (ValidationInstance $a) {return $a->estNonHistorise();});
-        usort($validations, function (ValidationInstance $a, ValidationInstance $b) { return $a->getHistoCreation() > $b->getHistoCreation();});
-        return $validations[0];
-    }
-
-    /**
-     * @return string
-     */
     public function getToken() : ?string
     {
         return $this->token;
     }
 
-    /**
-     * @param string|null $token
-     * @return EntretienProfessionnel
-     */
     public function setToken(?string $token) : EntretienProfessionnel
     {
         $this->token = $token;
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getAcceptation() : ?DateTime
     {
         return $this->acceptation;
     }
 
-    /**
-     * @param DateTime|null $acceptation
-     * @return EntretienProfessionnel
-     */
     public function setAcceptation(?DateTime $acceptation) : EntretienProfessionnel
     {
         $this->acceptation = $acceptation;
@@ -350,19 +238,11 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** PREDICATS *****************************************************************************************************/
 
-    /**
-     * @param Agent|null $agent
-     * @return bool
-     */
     public function isAgent(?Agent $agent) : bool
     {
         return $agent === $this->getAgent();
     }
 
-    /**
-     * @param Agent|null $agent
-     * @return bool
-     */
     public function isReponsable(?Agent $agent) : bool
     {
         return $agent === $this->getResponsable();
@@ -370,25 +250,31 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** MACROS ********************************************************************************************/
 
+    /** @noinspection PhpUnused */
     public function toStringLieu() : string {
         if ($this->lieu !== null) return $this->lieu;
         return "Aucun lieu donné";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringDate() : string {
         if ($this->getDateEntretien() !== null) return $this->dateEntretien->format('d/m/Y à H:i');
         return "Aucune date donnée";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringAgent() : string {
         if ($this->getAgent() !== null) return $this->getAgent()->getDenomination();
         return "Aucun agent donné";
     }
+
+    /** @noinspection PhpUnused */
     public function toStringResponsable() : string {
         if ($this->getResponsable() !== null) return $this->getResponsable()->getDenomination();
         return "Aucun responsable d'entretien donné";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsableNomUsage() : string
     {
         /** @var Agent $agent */
@@ -397,6 +283,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $agent->getNomUsuel();
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsableNomFamille() : string
     {
         /** @var Agent $agent */
@@ -405,6 +292,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $agent->getNomFamille();
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsablePrenom() : string
     {
         /** @var Agent $agent */
@@ -413,6 +301,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $agent->getPrenom();
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsableCorpsGrade() : string
     {
         /** @var Agent $agent */
@@ -428,6 +317,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsableStructure() : string
     {
         /** @var Agent $agent */
@@ -440,6 +330,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $structure->getNiv2()->getLibelleLong();
     }
 
+    /** @noinspection PhpUnused */
     public function toStringReponsableIntitulePoste() : string
     {
         /** @var Agent $responsble */
@@ -455,30 +346,34 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $metier;
     }
 
+    /** @noinspection PhpUnused */
     public function  toStringValidationAgent() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_AGENT);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation de l'agent";
     }
 
+    /** @noinspection PhpUnused */
     public function  toStringValidationResponsable() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation du responsable d'entretien";
     }
 
+    /** @noinspection PhpUnused */
     public function  toStringValidationHierarchie() : string {
-        $validation = $this->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
+        $validation = $this->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
         if ($validation !== null) {
             return $validation->getHistoCreation()->format('d/m/Y à H:i'). " par " .$validation->getHistoCreateur()->getDisplayName();
         }
         return "Aucune validation du responsable hiérarchique";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringCR_Entretien() : string {
 
         if ($this->formulaireInstance !== null) {
@@ -487,6 +382,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucune formulaire";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringCR_Formation() : string {
 
         if ($this->formationInstance !== null) {
@@ -495,44 +391,56 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return "Aucune formulaire";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringObservationEntretien() : string {
         $observation = $this->getObservationActive();
         if ($observation AND $observation->getObservationAgentEntretien()) return $observation->getObservationAgentEntretien();
         return "Aucune observation";
     }
 
+    /** @noinspection PhpUnused */
     public function toStringObservationPerspective() : string {
         $observation = $this->getObservationActive();
         if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
         return "Aucune observation";
     }
+
+    /** @noinspection PhpUnused */
     public function toString_CREP_projet() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'projet']);
-        if ($res === null OR trim($res) === '' ) return "Non";
+        if (trim($res) === '' ) return "Non";
         return "Oui";
     }
+
+    /** @noinspection PhpUnused */
     public function toString_CREP_encadrement() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement']);
-        if ($res === null OR trim($res) === '' ) return "Non";
+        if (trim($res) === '' ) return "Non";
         return "Oui";
     }
 
+    /** @noinspection PhpUnused */
     public function toString_CREP_encadrementA() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement_A']);
-        if ($res === null OR trim($res) === '' ) return "0";
-        return $res;
-    }
-    public function toString_CREP_encadrementB() : string {
-        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement_B']);
-        if ($res === null OR trim($res) === '' ) return "0";
-        return $res;
-    }
-    public function toString_CREP_encadrementC() : string {
-        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement_C']);
-        if ($res === null OR trim($res) === '' ) return "0";
+        if (trim($res) === '' ) return "0";
         return $res;
     }
 
+    /** @noinspection PhpUnused */
+    public function toString_CREP_encadrementB() : string {
+        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement_B']);
+        if (trim($res) === '' ) return "0";
+        return $res;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toString_CREP_encadrementC() : string {
+        $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'encadrement_C']);
+        if (trim($res) === '' ) return "0";
+        return $res;
+    }
+
+    /** @noinspection PhpUnused */
     public function toString_CREP_experiencepro() : string {
         $texte1 =  $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'exppro_1']);
         $texte2 =  $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'exppro_2']);
@@ -544,7 +452,8 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $res;
     }
 
-    public function toStringCREP_Champ($motsClefs)
+    /** @noinspection PhpUnused */
+    public function toStringCREP_Champ($motsClefs): string
     {
         $mots = explode(";", $motsClefs);
         $texte = $this->formulaireInstance->fetchChampReponseByMotsClefs($mots);
@@ -553,18 +462,21 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** MACRO du CREF *************************************************************************************************/
 
+    /** @noinspection PhpUnused */
     public function toStringCREF_Champ($motsClefs) : string
     {
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampReponseByMotsClefs($mots);
     }
 
+    /** @noinspection PhpUnused */
     public function toStringCREF_Champs($motsClefs) : string
     {
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampsReponseByMotsClefs($mots);
     }
 
+    /** @noinspection PhpUnused */
     public function toStringCompetencesTechniques() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.1']);
         $items = explode(";",$reponses);
@@ -601,6 +513,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function toStringActiviteService() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.2']);
         $items = explode(";",$reponses);
@@ -643,6 +556,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function toStringCompetencesPersonnelles() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.3']);
         $items = explode(";",$reponses);
@@ -667,6 +581,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function toStringEncadrementConduite() : string {
         $reponses = $this->getFormulaireInstance()->fetchChampReponseByMotsClefs(['CREP','3.1.4']);
         $items = explode(";",$reponses);

@@ -18,7 +18,7 @@ $journees = $instance->getJournees();
 /** @var FormationInstanceInscrit[] $inscrits */
 $inscrits = $instance->getListePrincipale();
 
-$canPresenceModifier = /**$instance->getEtat()->getCode() === SessionEtats::ETAT_ATTENTE_RETOURS &&**/
+$canPresenceModifier = /** $instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS) &&**/
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
 
 $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode() . " " . $instance->getFormation()->getLibelle());
@@ -68,7 +68,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
         </dl>
     <?php endif; ?>
 
-    <center>
+    <div style="text-align: center;">
         <table class="presence">
             <tr>
                 <td class="separateur">
@@ -137,7 +137,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     <?php foreach ($journees as $journee) : ?>
                         <td class="reponse <?php if ($canPresenceModifier) echo "toggle"; ?>"
                             id="<?php echo $journee->getId(); ?>_<?php echo $inscrit->getId(); ?>">
-                            <?php if ($presences[$journee->getId()][$inscrit->getId()]) : ?>
+                            <?php if (isset($presences[$journee->getId()][$inscrit->getId()])) : ?>
                                 <?php if ($presences[$journee->getId()][$inscrit->getId()]->getStatut() === Presence::PRESENCE_PRESENCE) : ?>
                                     <span class="icon icon-checked" style="color:darkgreen;" title="Présent"></span>
                                 <?php endif; ?>
@@ -159,7 +159,7 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 </tr>
             <?php endforeach; ?>
         </table>
-    </center>
+    </div>
 </div>
 
 <style>
@@ -237,12 +237,13 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     },
                 success:
                     function (retour) {
+                        // console.log(id);
                         // console.log(retour);
                         let texte = "";
-                        if (retour === 'NON RENSEIGNEE') texte = "<span class='icon icon-question' style='color:cadetblue;' title='Non renseignée'></span>";
+                        if (retour === 'NON_RENSEIGNEE') texte = "<span class='icon icon-question' style='color:cadetblue;' title='Non renseignée'></span>";
                         if (retour === 'PRESENCE') texte = "<span class='icon icon-checked' style='color:darkgreen;' title='Présent·e'></span>";
-                        if (retour === 'ABSENCE NON JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:darkred;' title='Absence non justifiée'></span><span class='small-lettrine'>NJ</span>";
-                        if (retour === 'ABSENCE JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:#ff7979;' title='Absence justifiée'></span><span class='small-lettrine'>J</span>";
+                        if (retour === 'ABSENCE_NON_JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:darkred;' title='Absence non justifiée'></span><span class='small-lettrine'>NJ</span>";
+                        if (retour === 'ABSENCE_JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:#ff7979;' title='Absence justifiée'></span><span class='small-lettrine'>J</span>";
                         document.getElementById(id).innerHTML = texte;
                     }
             });

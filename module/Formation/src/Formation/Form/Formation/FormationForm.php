@@ -17,7 +17,7 @@ class FormationForm extends Form
 {
     use FormationGroupeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
 
         //libelle

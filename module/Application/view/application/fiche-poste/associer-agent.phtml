@@ -13,7 +13,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
 ?>
 
 <form method="post" action="<?php echo $this->url('fiche-poste/associer-agent', ['fiche-poste' => $ficheposte->getId()], ['query' => ['structure' => ($structure)?$structure->getId():null]], true); ?>">
-    <label for="formation">Agent à associé à la fiche de poste : </label>
+    <label for="formation">Agent·e a associé à la fiche de poste : </label>
     <?php
 
     $structureF = new SearchAndSelect('agent');

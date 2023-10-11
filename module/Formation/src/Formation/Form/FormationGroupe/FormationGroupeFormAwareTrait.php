@@ -5,25 +5,16 @@ namespace Formation\Form\FormationGroupe;
 trait FormationGroupeFormAwareTrait
 {
 
-    /** @var FormationGroupeForm */
-    private $formationGroupeForm;
+    private FormationGroupeForm $formationGroupeForm;
 
-    /**
-     * @return FormationGroupeForm
-     */
-    public function getFormationGroupeForm()
+    public function getFormationGroupeForm(): FormationGroupeForm
     {
         return $this->formationGroupeForm;
     }
 
-    /**
-     * @param FormationGroupeForm $formationGroupeForm
-     * @return FormationGroupeForm
-     */
-    public function setFormationGroupeForm(FormationGroupeForm $formationGroupeForm)
+    public function setFormationGroupeForm(FormationGroupeForm $formationGroupeForm): void
     {
         $this->formationGroupeForm = $formationGroupeForm;
-        return $this->formationGroupeForm;
     }
 
 

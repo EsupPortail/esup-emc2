@@ -10,13 +10,13 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentAccompagnementController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentAccompagnementServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use AgentAccompagnementFormAwareTrait;
 
@@ -31,8 +31,9 @@ class AgentAccompagnementController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($accompagnement);
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
-        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+        $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('ACCOMPAGNEMENT');
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
+        $form->get('etat')->resetEtats($types);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -60,8 +61,9 @@ class AgentAccompagnementController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('agent/accompagnement/modifier', ['accompagnement' => $accompagnement->getId()], [], true));
         $form->bind($accompagnement);
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('ACCOMPAGNEMENT');
-        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+        $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('ACCOMPAGNEMENT');
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
+        $form->get('etat')->resetEtats($types);
 
 
         $request = $this->getRequest();

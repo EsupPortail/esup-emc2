@@ -113,13 +113,10 @@ class Formateur implements HistoriqueAwareInterface
 
     public function getDenomination() : string
     {
-        switch ($this->type) {
-            case Formateur::TYPE_FORMATEUR :
-                return $this->getPrenom() . " " . strtoupper($this->getNom());
-            case Formateur::TYPE_ORGANISME :
-                return $this->organisme;
-            default:
-                return "Type de formateur non prévu";
-        }
+        return match ($this->type) {
+            Formateur::TYPE_FORMATEUR => $this->getPrenom() . " " . strtoupper($this->getNom()),
+            Formateur::TYPE_ORGANISME => $this->organisme,
+            default => "Type de formateur non prévu",
+        };
     }
 }

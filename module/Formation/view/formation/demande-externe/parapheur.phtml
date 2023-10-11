@@ -12,7 +12,7 @@ use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 $this->headTitle("Parapheur des formations externes");
 
-// ATTENTION :: ici pas d'appel à l'assertion pour économiser du temps
+// ATTENTION : ici pas d'appel à l'assertion pour économiser du temps
 $canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 $canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
 $canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
@@ -46,7 +46,9 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo $demande->getInstance()->getFormation()->getLibelle(); ?> </td>
             <td> <?php echo $demande->getInstance()->getType(); ?> </td>
-            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td> <?php
+                echo $this->etatinstance($demande->getEtatActif());
+                ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\FormationInstanceInscritController::afficherAgentAction() */ ?>
@@ -120,7 +122,10 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
             <td> <?php echo $demande->getLibelle(); ?> </td>
             <td> <?php echo $demande->getOrganisme(); ?> </td>
-            <td> <?php echo $this->etatbadge($demande->getEtat()->getCode()); ?> </td>
+            <td>
+                <?php
+                echo $this->etatinstance($demande->getEtatActif());
+                ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>

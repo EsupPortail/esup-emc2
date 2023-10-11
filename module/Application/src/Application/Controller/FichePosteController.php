@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Entity\Db\Expertise;
 use Application\Entity\Db\FichePoste;
@@ -43,14 +42,14 @@ use Mpdf\MpdfException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
-
-class FichePosteController extends AbstractActionController {
+class FichePosteController extends AbstractActionController
+{
     /** Trait utilitaire */
 
     /** Service **/
@@ -58,10 +57,9 @@ class FichePosteController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use AgentPosteServiceAwareTrait;
-
     use ApplicationsRetireesServiceAwareTrait;
     use CompetencesRetireesServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use ExpertiseServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
@@ -81,7 +79,7 @@ class FichePosteController extends AbstractActionController {
     use SelectionEtatFormAwareTrait;
     use SpecificitePosteFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $fiches = $this->getFichePosteService()->getFichesPostesAsArray();
 
@@ -89,9 +87,9 @@ class FichePosteController extends AbstractActionController {
         $fichesIncompletes = [];
         $ficheVides = [];
         foreach ($fiches as $fiche) {
-            if ($fiche['agent_id'] !== null AND $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
+            if ($fiche['agent_id'] !== null and $fiche['fiche_principale'] !== null) $fichesCompletes[] = $fiche;
             else {
-                if ($fiche['agent_id'] === null AND $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
+                if ($fiche['agent_id'] === null and $fiche['fiche_principale'] === null) $ficheVides[] = $fiche;
                 else $fichesIncompletes[] = $fiche;
             }
         }
@@ -100,11 +98,11 @@ class FichePosteController extends AbstractActionController {
             'fiches' => $fiches,
             'fichesIncompletes' => $fichesIncompletes,
             'fichesVides' => $ficheVides,
-            'fichesCompletes'       => $fichesCompletes,
+            'fichesCompletes' => $fichesCompletes,
         ]);
     }
 
-    public function ajouterAction() : Response
+    public function ajouterAction(): Response
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -117,13 +115,14 @@ class FichePosteController extends AbstractActionController {
         }
 
         $fiche = new FichePoste();
-        $fiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
         $fiche->setAgent($agent);
         $this->getFichePosteService()->create($fiche);
+        $this->getEtatInstanceService()->setEtatActif($fiche,FichePosteEtats::ETAT_CODE_REDACTION);
+        $this->getFichePosteService()->update($fiche);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fiche->getId()], [], true);
     }
 
-    public function dupliquerAction()
+    public function dupliquerAction(): ViewModel|Response
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
         if ($agent !== null) {
@@ -144,10 +143,10 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $ficheId = ($data['fiche'] !== 'null')?$data['fiche']:null;
+            $ficheId = ($data['fiche'] !== 'null') ? $data['fiche'] : null;
             $fiche = $this->getFichePosteService()->getFichePoste($ficheId);
 
-            if ($fiche !== null ) {
+            if ($fiche !== null) {
                 $nouvelleFiche = $this->getFichePosteService()->clonerFichePoste($fiche, false);
             } else {
                 $nouvelleFiche = new FichePoste();
@@ -155,23 +154,23 @@ class FichePosteController extends AbstractActionController {
             }
 
             $nouvelleFiche->setAgent($agent);
-            $nouvelleFiche->setEtat($this->getEtatService()->getEtatByCode('FICHE_POSTE_REDACTION'));
+            $this->getEtatInstanceService()->setEtatActif($nouvelleFiche,FichePosteEtats::ETAT_CODE_REDACTION);
             $this->getFichePosteService()->update($nouvelleFiche);
 
-            /**  Commenter pour eviter perte de temps et clignotement de la modal */
+            /**  Commenter pour eviter perte de temps et clignotement de la fenêtre modal */
             return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $nouvelleFiche->getId()], ["query" => ["structure" => $structure->getId()]], true);
             //exit();
         }
 
         return new ViewModel([
-            'title' => "Duplication d'une fiche de poste pour [".$agent->getDenomination()."]",
+            'title' => "Duplication d'une fiche de poste pour [" . $agent->getDenomination() . "]",
             'structure' => $structure,
             'agent' => $agent,
             'fiches' => $fiches,
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -185,8 +184,8 @@ class FichePosteController extends AbstractActionController {
         } else {
             $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
         }
-        if($fiche->getLibelle() !== null) {
-            $titre .= "(" .$fiche->getLibelle(). ")";
+        if ($fiche->getLibelle() !== null) {
+            $titre .= "(" . $fiche->getLibelle() . ")";
         }
         $titre .= '</strong>';
 
@@ -207,11 +206,11 @@ class FichePosteController extends AbstractActionController {
             'activites' => $activites,
             'parcours' => $parcours,
             'structure' => $structure,
-            'postes' => ($fiche->getAgent())?$this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()):[],
+            'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
         ]);
     }
 
-    public function editerAction()
+    public function editerAction(): ViewModel|Response
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
@@ -219,7 +218,7 @@ class FichePosteController extends AbstractActionController {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
-        if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [] ,true);
+        if ($fiche->getEtatActif()->getType()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [], true);
         $agent = $fiche->getAgent();
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
@@ -238,33 +237,33 @@ class FichePosteController extends AbstractActionController {
             'competences' => $competences,
             'activites' => $activites,
             'parcours' => $parcours,
-            'postes' => ($fiche->getAgent())?$this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()):[],
+            'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
         ]);
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         $this->getFichePosteService()->historise($fiche);
 
-        $retour  = $this->params()->fromQuery('retour');
+        $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
 
         return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         $this->getFichePosteService()->restore($fiche);
 
-        $retour  = $this->params()->fromQuery('retour');
+        $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
 
         return $this->redirect()->toRoute('fiche-poste', [], [], true);
     }
 
-    public function detruireAction() : ViewModel
+    public function detruireAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -286,7 +285,7 @@ class FichePosteController extends AbstractActionController {
         if ($fiche !== null) {
             $vm->setTemplate('application/default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression de la fiche de poste  de ". (($fiche->getAgent())?$fiche->getAgent()->getDenomination():"[Aucun Agent]"),
+                'title' => "Suppression de la fiche de poste  de " . (($fiche->getAgent()) ? $fiche->getAgent()->getDenomination() : "[Aucun Agent]"),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('fiche-poste/detruire', ["fiche-poste" => $fiche->getId()], ["query" => $params], true),
             ]);
@@ -294,7 +293,7 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function exporterAction() : string
+    public function exporterAction(): string
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $agent = $ficheposte->getAgent();
@@ -306,7 +305,7 @@ class FichePosteController extends AbstractActionController {
         $vars = [
             'ficheposte' => $ficheposte,
             'agent' => $agent,
-            'structure' => ($agent)?$agent->getAffectationPrincipale()->getStructure():null,
+            'structure' => ($agent) ? $agent->getAffectationPrincipale()->getStructure() : null,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::FICHE_POSTE, $vars);
 
@@ -317,15 +316,15 @@ class FichePosteController extends AbstractActionController {
             $exporter->setFooterScript('');
             $exporter->addBodyHtml($rendu->getCorps());
             return $exporter->export($rendu->getSujet());
-        } catch(MpdfException $e) {
-            throw new RuntimeException("Un problème lié à MPDF est survenue",0,$e);
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème lié à MPDF est survenue", 0, $e);
         }
     }
 
 
     /** GESTION DES ETATS DES FICHES POSTES ***************************************************************************/
 
-    public function changerEtatAction() : ViewModel
+    public function changerEtatAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -354,7 +353,7 @@ class FichePosteController extends AbstractActionController {
 
     /** TITRE *********************************************************************************************************/
 
-    public function associerTitreAction() : ViewModel
+    public function associerTitreAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -384,7 +383,7 @@ class FichePosteController extends AbstractActionController {
 
     /** AGENT *********************************************************************************************************/
 
-    public function associerAgentAction() : ViewModel
+    public function associerAgentAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         $structureId = $this->params()->fromQuery('structure');
@@ -429,7 +428,7 @@ class FichePosteController extends AbstractActionController {
 
     /** FICHE METIER **************************************************************************************************/
 
-    public function ajouterFicheMetierAction() : ViewModel
+    public function ajouterFicheMetierAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         $agent = $fiche->getAgent();
@@ -439,7 +438,7 @@ class FichePosteController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('fiche-poste/ajouter-fiche-metier', ['fiche-poste' => $fiche->getId()], [], true));
         $form->bind($ficheTypeExterne);
 
-        if ($agent AND ! empty($agent->getGradesActifs())) $form->reinitWithAgent($agent);
+        if ($agent and !empty($agent->getGradesActifs())) $form->reinitWithAgent($agent);
 
         /** @var Request $request */
         $request = $this->getRequest();
@@ -469,7 +468,7 @@ class FichePosteController extends AbstractActionController {
                 foreach ($missions as $mission) {
                     $tab[] = $mission->getMission()->getId();
                 }
-                $text = implode(";",$tab);
+                $text = implode(";", $tab);
                 $ficheTypeExterne->setActivites($text);
                 $this->getFichePosteService()->updateFicheTypeExterne($ficheTypeExterne);
             }
@@ -478,12 +477,12 @@ class FichePosteController extends AbstractActionController {
         $vm = new ViewModel();
         $vm->setVariables([
             'title' => 'Ajout d\'une fiche métier',
-            'form'  => $form,
+            'form' => $form,
         ]);
         return $vm;
     }
 
-    public function modifierFicheMetierAction() : ViewModel
+    public function modifierFicheMetierAction(): ViewModel
     {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
@@ -522,12 +521,12 @@ class FichePosteController extends AbstractActionController {
         $vm->setTemplate('application/fiche-poste/ajouter-fiche-metier');
         $vm->setVariables([
             'title' => 'Modification d\'une fiche métier',
-            'form'  => $form,
+            'form' => $form,
         ]);
         return $vm;
     }
 
-    public function retirerFicheMetierAction() : Response
+    public function retirerFicheMetierAction(): Response
     {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
@@ -535,10 +534,10 @@ class FichePosteController extends AbstractActionController {
 
         if ($ficheTypeExterne && $fichePoste) $this->getFichePosteService()->deleteFicheTypeExterne($ficheTypeExterne);
 
-        return $this->redirect()->toRoute('fiche-poste/editer',['fiche-poste' => $fichePoste->getId()], [], true);
+        return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $fichePoste->getId()], [], true);
     }
 
-    public function selectionnerActiviteAction() : ViewModel
+    public function selectionnerActiviteAction(): ViewModel
     {
         $fichePoste = $this->getFichePosteService()->getRequestedFichePoste($this);
         $ficheTypeExterneId = $this->params()->fromRoute('fiche-type-externe');
@@ -559,24 +558,24 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => 'Liste des activités de la fiche métier <br/> <strong>'. $ficheTypeExterne->getFicheType()->getMetier() .'</strong>',
+            'title' => 'Liste des activités de la fiche métier <br/> <strong>' . $ficheTypeExterne->getFicheType()->getMetier() . '</strong>',
             'fichePoste' => $fichePoste,
             'ficheTypeExterne' => $ficheTypeExterne,
         ]);
     }
 
-    private function checkValidite(FichePoste $fiche, $data) : ?ViewModel
+    private function checkValidite(FichePoste $fiche, $data): ?ViewModel
     {
         $cut = false;
-        if ($data['est_principale'] === "1"  && ((int) $data['quotite']) < 50) {
+        if ($data['est_principale'] === "1" && ((int)$data['quotite']) < 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier principale doit avoir une quotité d'au moins 50%.");
         }
-        if ($data['est_principale'] === "0" && ((int) $data['quotite']) > 50) {
+        if ($data['est_principale'] === "0" && ((int)$data['quotite']) > 50) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La fichie métier non principale doit avoir une quotité d'au plus 50%.");
         }
-        if ($fiche->getQuotiteTravaillee() + ((int) $data['quotite']) - ((int) $data['old']) > 100) {
+        if ($fiche->getQuotiteTravaillee() + ((int)$data['quotite']) - ((int)$data['old']) > 100) {
             $cut = true;
             $this->flashMessenger()->addErrorMessage("La somme des quotités travaillées ne peut dépasser 100%.");
         }
@@ -588,11 +587,11 @@ class FichePosteController extends AbstractActionController {
 
     /** Applications et Compétences de la fiche de postes  ************************************************************/
 
-    public function selectionnerApplicationsRetireesAction() : ViewModel
+    public function selectionnerApplicationsRetireesAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $applications*/
+        /** @var array $applications */
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -602,12 +601,12 @@ class FichePosteController extends AbstractActionController {
 
             foreach ($applications as $item) {
                 $application = $item['entite'];
-                $checked = (isset($data[$application->getId()]) AND $data[$application->getId()] === "on");
+                $checked = (isset($data[$application->getId()]) and $data[$application->getId()] === "on");
 
-                if ($checked === false AND $item['conserve'] === true) {
+                if ($checked === false and $item['conserve'] === true) {
                     $this->getApplicationsRetireesService()->add($ficheposte, $application);
                 }
-                if ($checked === true AND $item['conserve'] === false) {
+                if ($checked === true and $item['conserve'] === false) {
                     $this->getApplicationsRetireesService()->remove($ficheposte, $application);
                 }
             }
@@ -620,11 +619,11 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function selectionnerCompetencesRetireesAction()  : ViewModel
+    public function selectionnerCompetencesRetireesAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 
-        /** @var array $competences*/
+        /** @var array $competences */
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte);
 
         /** @var Request $request */
@@ -634,12 +633,12 @@ class FichePosteController extends AbstractActionController {
 
             foreach ($competences as $item) {
                 $competence = $item['entite'];
-                $checked = (isset($data[$competence->getId()]) AND $data[$competence->getId()] === "on");
+                $checked = (isset($data[$competence->getId()]) and $data[$competence->getId()] === "on");
 
-                if ($checked === false AND $item['conserve'] === true) {
+                if ($checked === false and $item['conserve'] === true) {
                     $this->getCompetencesRetireesService()->add($ficheposte, $competence);
                 }
-                if ($checked === true AND $item['conserve'] === false) {
+                if ($checked === true and $item['conserve'] === false) {
                     $this->getCompetencesRetireesService()->remove($ficheposte, $competence);
                 }
             }
@@ -654,7 +653,7 @@ class FichePosteController extends AbstractActionController {
 
     /** Descriprition conservées **************************************************************************************/
 
-    public function selectionnerDescriptionsRetireesAction() : ViewModel
+    public function selectionnerDescriptionsRetireesAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
@@ -675,14 +674,14 @@ class FichePosteController extends AbstractActionController {
             foreach ($activites as $description) {
                 $found = null;
                 foreach ($retirees as $retiree) {
-                    if ($retiree->getHistoDestruction() === null AND $retiree->getActivite() === $description) {
+                    if ($retiree->getHistoDestruction() === null and $retiree->getActivite() === $description) {
                         $found = $retiree;
                     }
                 }
-                $checked = (isset($data[$description->getId()]) AND $data[$description->getId()] === "on");
+                $checked = (isset($data[$description->getId()]) and $data[$description->getId()] === "on");
 
-                if ($found !== null AND $checked) $this->getActivitesDescriptionsRetireesService()->delete($found);
-                if ($found === null AND !$checked) {
+                if ($found !== null and $checked) $this->getActivitesDescriptionsRetireesService()->delete($found);
+                if ($found === null and !$checked) {
                     $item = new FicheposteActiviteDescriptionRetiree();
                     $item->setFichePoste($ficheposte);
                     $item->setFicheMetier($fichemetier);
@@ -695,7 +694,7 @@ class FichePosteController extends AbstractActionController {
         }
 
         return new ViewModel([
-            'title' => "Sélection de sous-activité pour l'activité [" .$mission->getLibelle() ."]",
+            'title' => "Sélection de sous-activité pour l'activité [" . $mission->getLibelle() . "]",
             'ficheposte' => $ficheposte,
             'fichemetier' => $fichemetier,
             'mission' => $mission,
@@ -706,7 +705,7 @@ class FichePosteController extends AbstractActionController {
 
     /** EXPERTISE *****************************************************************************************************/
 
-    public function ajouterExpertiseAction() : ViewModel
+    public function ajouterExpertiseAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $expertise = new Expertise();
@@ -735,7 +734,7 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierExpertiseAction() : ViewModel
+    public function modifierExpertiseAction(): ViewModel
     {
         $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
 
@@ -762,21 +761,21 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserExpertiseAction() : Response
+    public function historiserExpertiseAction(): Response
     {
         $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
         $this->getExpertiseService()->historise($expertise);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
     }
 
-    public function restaurerExpertiseAction() : Response
+    public function restaurerExpertiseAction(): Response
     {
         $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
         $this->getExpertiseService()->restore($expertise);
         return $this->redirect()->toRoute('fiche-poste/editer', ['fiche-poste' => $expertise->getFicheposte()->getId()], [], true);
     }
 
-    public function supprimerExpertiseAction() : ViewModel
+    public function supprimerExpertiseAction(): ViewModel
     {
         $expertise = $this->getExpertiseService()->getRequestedExpertise($this);
 
@@ -803,7 +802,7 @@ class FichePosteController extends AbstractActionController {
 
     /** RIFSEEP ET NBI  ***********************************************************************************************/
 
-    public function editerRifseepAction() : ViewModel
+    public function editerRifseepAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -821,7 +820,7 @@ class FichePosteController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => 'Renseignement du RIFSEEP et du NBI',
             'form' => $form,
         ]);
@@ -831,7 +830,7 @@ class FichePosteController extends AbstractActionController {
 
     /** SPECIFICITE ***************************************************************************************************/
 
-    public function editerSpecificiteAction() : ViewModel
+    public function editerSpecificiteAction(): ViewModel
     {
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
@@ -865,10 +864,10 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function modifierRepartitionAction() : ViewModel
+    public function modifierRepartitionAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
-        $fichetype  = $this->getFichePosteService()->getFicheTypeExterne($this->params()->fromRoute('fiche-type'));
+        $fichetype = $this->getFichePosteService()->getFicheTypeExterne($this->params()->fromRoute('fiche-type'));
 
         $domaines = $fichetype->getFicheType()->getMetier()->getDomaines();
         $repartitions = $fichetype->getDomaineRepartitionsAsArray();
@@ -889,7 +888,7 @@ class FichePosteController extends AbstractActionController {
         ]);
     }
 
-    public function validerAction() : ViewModel
+    public function validerAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $agent = $ficheposte->getAgent();
@@ -899,27 +898,32 @@ class FichePosteController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $validation = $ficheposte->getValidationByTypeCode($type);
+            $validation = $ficheposte->getValidationActiveByTypeCode($type);
             if ($validation === null) {
-                if ($data["reponse"] === "oui") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte);
-                if ($data["reponse"] === "non") $validation = $this->getFichePosteService()->addValidation($type, $ficheposte, 'Refus');
-            }
-            switch($type) {
-                case FichePosteValidations::VALIDATION_RESPONSABLE :
-                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
+                if ($data["reponse"] === "oui") {
+                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type);
                     $this->getFichePosteService()->update($ficheposte);
-
+                }
+                if ($data["reponse"] === "non") {
+                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type, 'Refus');
+                    $this->getFichePosteService()->update($ficheposte);
+                }
+            }
+            switch ($type) {
+                case FichePosteValidations::VALIDATION_RESPONSABLE :
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_OK);
+                    $this->getFichePosteService()->update($ficheposte);
                     $this->getNotificationService()->triggerValidationResponsableFichePoste($ficheposte, $validation);
                     break;
 
                 case FichePosteValidations::VALIDATION_AGENT :
                     $oldFiches = $this->getFichePosteService()->getFichesPostesSigneesActives($agent);
-                    $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_SIGNEE));
+                    $this->getEtatInstanceService()->setEtatActif($ficheposte,FichePosteEtats::ETAT_CODE_SIGNEE);
                     $this->getFichePosteService()->update($ficheposte);
 
                     $newFiche = $this->getFichePosteService()->clonerFichePoste($ficheposte, true);
                     $newFiche->setAgent($ficheposte->getAgent());
-                    $newFiche->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION));
+                    $this->getEtatInstanceService()->setEtatActif($newFiche,FichePosteEtats::ETAT_CODE_REDACTION);
                     $this->getFichePosteService()->update($newFiche);
 
                     $date = new DateTime();
@@ -936,11 +940,11 @@ class FichePosteController extends AbstractActionController {
 
         $titre = "Validation de la fiche de poste";
         $texte = "Validation de la fiche de poste";
-        switch($type) {
+        switch ($type) {
             case FichePosteValidations::VALIDATION_RESPONSABLE :
-                $titre  = "Validation du responsable de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
-                $texte  = "Cette validation rendra visible la fiche de poste à l'agent (".$ficheposte->getAgent()->getDenomination().").<br/>";
-                $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (".$ficheposte->getAgent()->getDenomination().") afin qu'il puisse valider à son tour celle-ci.<br/>";
+                $titre = "Validation du responsable de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
+                $texte = "Cette validation rendra visible la fiche de poste à l'agent (" . $ficheposte->getAgent()->getDenomination() . ").<br/>";
+                $texte .= "Suite à cette validation un courrier électronique sera envoyé à l'agent associé à la fiche de poste  (" . $ficheposte->getAgent()->getDenomination() . ") afin qu'il puisse valider à son tour celle-ci.<br/>";
                 break;
             case FichePosteValidations::VALIDATION_AGENT :
                 $responsables = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
@@ -949,11 +953,13 @@ class FichePosteController extends AbstractActionController {
                     $bbb = $b->getSuperieur()->getNomUsuel() . " " . $b->getSuperieur()->getPrenom();
                     return $aaa > $bbb;
                 });
-                $responsables = array_map(function (AgentSuperieur $a) { return $a->getAgent()->getDenomination();} , $responsables);
+                $responsables = array_map(function (AgentSuperieur $a) {
+                    return $a->getAgent()->getDenomination();
+                }, $responsables);
                 $responsables = implode(', ', $responsables);
-                $titre  = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
-                $texte  = "Cette validation finalise la fiche de poste de l'agent.<br/>";
-                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérachique·s direct·e·s de l'agent (".$responsables.") pour le·s informer de la validation de celle-ci.<br/>";
+                $titre = "Validation de l'agent de la fiche de poste de " . $ficheposte->getAgent()->getDenomination();
+                $texte = "Cette validation finalise la fiche de poste de l'agent.<br/>";
+                $texte .= "Suite à cette validation un courrier électronique sera envoyé au·x supérieur·e·s hiérachique·s direct·e·s de l'agent (" . $responsables . ") pour le·s informer de la validation de celle-ci.<br/>";
                 break;
         }
         $vm = new ViewModel();
@@ -967,7 +973,7 @@ class FichePosteController extends AbstractActionController {
         return $vm;
     }
 
-    public function revoquerAction() : Response
+    public function revoquerAction(): Response
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
         $validation = $this->getValidationInstanceService()->getRequestedValidationInstance($this);
@@ -975,11 +981,11 @@ class FichePosteController extends AbstractActionController {
 
         switch ($validation->getType()->getCode()) {
             case FichePosteValidations::VALIDATION_RESPONSABLE :
-                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION));
+                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_REDACTION);
                 $this->getFichePosteService()->update($ficheposte);
                 break;
             case FichePosteValidations::VALIDATION_AGENT :
-                $ficheposte->setEtat($this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_OK));
+                $this->getEtatInstanceService()->setEtatActif($ficheposte, FichePosteEtats::ETAT_CODE_OK);
                 $this->getFichePosteService()->update($ficheposte);
                 break;
         }
@@ -988,7 +994,7 @@ class FichePosteController extends AbstractActionController {
 
     }
 
-    public function actionAction() : ViewModel
+    public function actionAction(): ViewModel
     {
         $ficheposte = $this->getFichePosteService()->getRequestedFichePoste($this);
 

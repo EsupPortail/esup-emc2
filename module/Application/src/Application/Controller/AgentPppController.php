@@ -10,13 +10,13 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentPppController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentPPPServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
 
     use AgentPPPFormAwareTrait;
@@ -32,8 +32,9 @@ class AgentPppController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('agent/ppp/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($ppp);
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('PPP');
-        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+        $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('PPP');
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
+        $form->get('etat')->resetEtats($types);
 
         $request = $this->getRequest();
         if ($request->isPost()) {

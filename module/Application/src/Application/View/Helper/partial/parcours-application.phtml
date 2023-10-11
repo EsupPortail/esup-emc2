@@ -40,14 +40,14 @@ ksort($applicationsArray);
     $mode = (isset($options['mode']))?$options['mode']:"affichage";
 ?>
 
-<?php if (array_search($mode, $modesAutorises) === false) : ?>
+<?php if (!in_array($mode, $modesAutorises)) : ?>
 <div class="alert alert-danger">
     Le <strong>mode</strong> [<?php echo $mode; ?>] est non géré par l'aide de vue [ParcoursDeFormationViewHelper].
 </div>
 <?php endif; ?>
 
 <?php /** Récupération du droit associé à la modification *************************************************************/
-    $canModifier = isset($options['modification'])?$options['modification']:false;
+    $canModifier = $options['modification'] ?? false;
 ?>
 
 <div class="parcours">
@@ -83,26 +83,27 @@ ksort($applicationsArray);
                                         </a>
                                     <?php endif; ?>
                                 <?php else : ?>
-                                    <?php $validation = ($hasApplication AND $hasApplication->getValidation())?$hasApplication->getValidation():null; ?>
-                                    <?php if ($validation) : ?>
-                                        <?php echo $this->validationBadge($validation); ?>
-                                    <?php else : ?>
-                                        <?php if ($canModifier) : ?>
-                                            <a
-                                            <?php /** @see \Application\Controller\AgentController::validerElementAction() */ ?>
-                                            href="<?php echo $this->url('agent/valider-element', ['type' => "AGENT_APPLICATION", 'id' => $hasApplication->getId()], [], true); ?>"
-                                            class="ajax-modal"
-                                            data-event="modification"
-                                            >
-                                        <?php endif; ?>
-                                        <span class="icon icon-question" style="color: cornflowerblue;"
-                                              data-bs-toggle="tooltip" data-bs-html="true"
-                                              title="Application en attente de validation"
-                                        ></span>
-                                        <?php if ($canModifier) : ?>
-                                            </a>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
+                                    <span class="todo">Restaurer avec UnicaenValidation </span>
+<!--                                    --><?php //$validation = ($hasApplication AND $hasApplication->getValidationActiveByTypeCode())?$hasApplication->getValidation():null; ?>
+<!--                                    --><?php //if ($validation) : ?>
+<!--                                        --><?php //echo $this->validationBadge($validation); ?>
+<!--                                    --><?php //else : ?>
+<!--                                        --><?php //if ($canModifier) : ?>
+<!--                                            <a-->
+<!--                                            --><?php ///** @see \Application\Controller\AgentController::validerElementAction() */ ?>
+<!--                                            href="--><?php //echo $this->url('agent/valider-element', ['type' => "AGENT_APPLICATION", 'id' => $hasApplication->getId()], [], true); ?><!--"-->
+<!--                                            class="ajax-modal"-->
+<!--                                            data-event="modification"-->
+<!--                                            >-->
+<!--                                        --><?php //endif; ?>
+<!--                                        <span class="icon icon-question" style="color: cornflowerblue;"-->
+<!--                                              data-bs-toggle="tooltip" data-bs-html="true"-->
+<!--                                              title="Application en attente de validation"-->
+<!--                                        ></span>-->
+<!--                                        --><?php //if ($canModifier) : ?>
+<!--                                            </a>-->
+<!--                                        --><?php //endif; ?>
+<!--                                    --><?php //endif; ?>
                                 <?php endif; ?>
                             </td>
                         </tr>

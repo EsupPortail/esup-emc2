@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @var Etat[] $etats
+ * @var EtatType[] $etatTypes
  * @var Domaine[] $domaines
  * @var array $params
  */
 
 use Metier\Entity\Db\Domaine;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\EtatType;
 
 ?>
 
@@ -42,13 +42,13 @@ use UnicaenEtat\Entity\Db\Etat;
                         <label for="etat">État de la fiche :</label>
                         <select id="etat" name="etat" class="selectpicker">
                             <option value=""> Tous les états </option>
-                            <?php foreach($etats as $etat) : ?>
+                            <?php foreach($etatTypes as $etatType) : ?>
                                 <option
-                                        value="<?php echo $etat->getId(); ?>"
-                                        data-content='<?php  echo $this->etatbadge($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
-                                    <?php if ($etat->getId() === $params['etat']) echo " selected "; ?>
+                                        value="<?php echo $etatType->getId(); ?>"
+                                        data-content='<?php  echo $this->etattype($etatType); ?> <?php echo str_replace("'", "", $etatType->getLibelle()); ?>'
+                                    <?php if ($etatType->getId() === $params['etat']) echo " selected "; ?>
                                 >
-                                    <?php echo $etat->getLibelle(); ?>
+                                    <?php echo $etatType->getLibelle(); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -86,15 +86,15 @@ use UnicaenEtat\Entity\Db\Etat;
 
 
 <script>
-    $("form#filtre").submit(function(e){
+    $("form#filtre").on("submit",function(e){
         e.preventDefault();
     });
 
-    $('button#clear').click(function() {
+    $('button#clear').on("click",function() {
         window.location.href = 'fiche-metier';
     });
 
-    $('button#filter').click(function() {
+    $('button#filter').on("click",function() {
         let etatId = $('select#etat option:selected').val();
         let domaineId = $('select#domaine option:selected').val();
         let expertise = $('select#expertise').val();

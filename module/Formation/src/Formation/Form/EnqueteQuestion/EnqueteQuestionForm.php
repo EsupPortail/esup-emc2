@@ -10,10 +10,11 @@ use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
-class EnqueteQuestionForm extends Form {
+class EnqueteQuestionForm extends Form
+{
     use EnqueteCategorieServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([
@@ -41,8 +42,8 @@ class EnqueteQuestionForm extends Form {
         ]);
         //categorie
         $this->add([
-           'type' => Select::class,
-           'name' => 'categorie',
+            'type' => Select::class,
+            'name' => 'categorie',
             'options' => [
                 'label' => "Catégorie associée à la question :",
                 'empty_option' => "Aucune catégorie",
@@ -84,9 +85,9 @@ class EnqueteQuestionForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'libelle'       => [ 'required' => true, ],
-            'description'   => [ 'required' => false, ],
-            'ordre'         => [ 'required' => true, ],
+            'libelle' => ['required' => true,],
+            'description' => ['required' => false,],
+            'ordre' => ['required' => true,],
         ]));
     }
 }

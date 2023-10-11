@@ -34,7 +34,7 @@ class AbonnementHydrator implements HydratorInterface {
      * @param FormationAbonnement $object
      * @return FormationAbonnement
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $agent = (isset($data['agent']) AND isset($data['agent']['id']))?$this->getAgentService()->getAgent($data['agent']['id']):null;
         $formation = (isset($data['formation']))?$this->getFormationService()->getFormation($data['formation']):null;

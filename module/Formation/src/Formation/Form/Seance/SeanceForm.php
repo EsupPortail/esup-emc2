@@ -8,6 +8,7 @@ use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Time;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
@@ -16,7 +17,7 @@ use UnicaenApp\Form\Element\Date;
 class SeanceForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         //type
         $this->add([
@@ -53,7 +54,7 @@ class SeanceForm extends Form
         ]);
         //debut
         $this->add([
-            'type' => DateTime::class,
+            'type' => Time::class,
             'name' => 'debut',
             'options' => [
                 'label' => "Début de la journée * :",
@@ -65,7 +66,7 @@ class SeanceForm extends Form
         ]);
         //fin
         $this->add([
-            'type' => DateTime::class,
+            'type' => Time::class,
             'name' => 'fin',
             'options' => [
                 'label' => "Fin de la journée * :",

@@ -4,9 +4,11 @@
 /**
  * @var AgentPoste[] $postes
  * @var string $mode
+ * @var FichePoste $fiche
  */
 
 use Application\Entity\Db\AgentPoste;
+use Application\Entity\Db\FichePoste;
 use Application\Provider\Privilege\FichePostePrivileges;
 
 $canAfficher = $this->isAllowed(FichePostePrivileges::getResourceId(FichePostePrivileges::FICHEPOSTE_AFFICHER_POSTE));

@@ -46,19 +46,9 @@ class CorrespondanceType  {
         return $this->libelleCourt;
     }
 
-    public function setLibelleCourt(?string $libelleCourt): void
-    {
-        $this->libelleCourt = $libelleCourt;
-    }
-
     public function getLibelleLong(): ?string
     {
         return $this->libelleLong;
-    }
-
-    public function setLibelleLong(?string $libelleLong): void
-    {
-        $this->libelleLong = $libelleLong;
     }
 
     public function getDateOuverture(): ?DateTime
@@ -66,19 +56,9 @@ class CorrespondanceType  {
         return $this->dateOuverture;
     }
 
-    public function setDateOuverture(?DateTime $dateOuverture): void
-    {
-        $this->dateOuverture = $dateOuverture;
-    }
-
     public function getDateFermeture(): ?DateTime
     {
         return $this->dateFermeture;
-    }
-
-    public function setDateFermeture(?DateTime $dateFermeture): void
-    {
-        $this->dateFermeture = $dateFermeture;
     }
 
     public function getCorrespondances(): Collection

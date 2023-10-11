@@ -14,7 +14,7 @@ class CampagneForm extends Form
 {
     use CampagneServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //ANNEE (SELECT)
         $current = (new DateTime())->format('Y');

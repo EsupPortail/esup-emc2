@@ -10,7 +10,6 @@
 $canInscrire = true; //todo !!!!
 
 use Application\Entity\Db\Agent;
-use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
 
@@ -83,7 +82,7 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
 
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "instances";
 
         $('a[aria-controls=' + name + ']').tab('show');

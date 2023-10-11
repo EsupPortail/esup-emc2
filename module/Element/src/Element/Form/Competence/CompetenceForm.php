@@ -3,6 +3,7 @@
 namespace Element\Form\Competence;
 
 use Element\Service\Competence\CompetenceServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Form\Element\Button;
@@ -14,10 +15,11 @@ use Laminas\InputFilter\Factory;
 
 class CompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
     use CompetenceThemeServiceAwareTrait;
     use CompetenceTypeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //libelle
         $this->add([
@@ -74,6 +76,34 @@ class CompetenceForm extends Form {
                 'data-live-search'  => 'true',
             ],
         ]);
+        //referentiel
+        $this->add([
+            'type' => Select::class,
+            'name' => 'referentiel',
+            'options' => [
+                'label' => "Référentiel de compétence :",
+                'empty_option' => "Sélectionner un référentiel pour la compétence ...",
+                'value_options' => $this->getCompetenceReferentielService()->getCompetencesReferentielsAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'referentiel',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
+            ],
+        ]);
+        //identifiant dans referentiel
+        $this->add([
+            'type' => Text::class,
+            'name' => 'identifiant',
+            'options' => [
+                'label' => "Identifiant dans le référentiel source:",
+                'label_options' => [ 'disable_html_escape' => true, ],
+            ],
+            'attributes' => [
+                'id' => 'identifiant',
+            ],
+        ]);
+
         //submit
         $this->add([
             'type' => Button::class,
@@ -95,6 +125,8 @@ class CompetenceForm extends Form {
             'description' => [ 'required' => false,  ],
             'type'    => [ 'required' => true, ],
             'theme'   => [ 'required' => false, ],
+            'referentiel'   => [ 'required' => false, ],
+            'identifiant'   => [ 'required' => false, ],
         ]));
     }
 }

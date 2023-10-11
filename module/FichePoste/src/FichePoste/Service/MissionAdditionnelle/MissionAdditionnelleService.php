@@ -4,7 +4,7 @@ namespace FichePoste\Service\MissionAdditionnelle;
 
 use Application\Entity\Db\FichePoste;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use FicheMetier\Entity\Db\Mission;
 use FichePoste\Entity\Db\MissionAdditionnelle;

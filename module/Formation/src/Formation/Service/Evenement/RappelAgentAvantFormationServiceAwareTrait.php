@@ -5,25 +5,16 @@ namespace Formation\Service\Evenement;
 
 trait RappelAgentAvantFormationServiceAwareTrait {
 
-    /** @var RappelAgentAvantFormationService */
-    private $rappelAgentAvantFormationService;
+    private RappelAgentAvantFormationService $rappelAgentAvantFormationService;
 
-    /**
-     * @return RappelAgentAvantFormationService
-     */
     public function getRappelAgentAvantFormationService(): RappelAgentAvantFormationService
     {
         return $this->rappelAgentAvantFormationService;
     }
 
-    /**
-     * @param RappelAgentAvantFormationService $rappelAgentAvantFormationService
-     * @return RappelAgentAvantFormationService
-     */
-    public function setRappelAgentAvantFormationService(RappelAgentAvantFormationService $rappelAgentAvantFormationService): RappelAgentAvantFormationService
+    public function setRappelAgentAvantFormationService(RappelAgentAvantFormationService $rappelAgentAvantFormationService): void
     {
         $this->rappelAgentAvantFormationService = $rappelAgentAvantFormationService;
-        return $this->rappelAgentAvantFormationService;
     }
 
 }

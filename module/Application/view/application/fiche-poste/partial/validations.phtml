@@ -23,7 +23,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
             <dl>
                 <dt> Validation du responsable </dt>
                 <dd>
-                    <?php $validationResponsable = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE); ?>
+                    <?php $validationResponsable = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_RESPONSABLE); ?>
                     <?php if ($validationResponsable === null) : ?>
                         Aucune validation
                     <?php else : ?>
@@ -34,7 +34,7 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
                 </dd>
                 <dt> Validation de l'agent </dt>
                 <dd>
-                    <?php $validationAgent = $fiche->getValidationByTypeCode(FichePosteValidations::VALIDATION_AGENT); ?>
+                    <?php $validationAgent = $fiche->getValidationActiveByTypeCode(FichePosteValidations::VALIDATION_AGENT); ?>
                     <?php if ($validationAgent === null) : ?>
                         Aucune validation
                     <?php else : ?>
@@ -84,8 +84,9 @@ $canFichePosteValiderAgent          = $this->isAllowed($fiche, FichePostePrivile
     <div class="col-md-6">
         <?php if ($fiche->getAgent() !== null) : ?>
             <h2>État de la fiche de poste</h2>
-            <?php echo $this->etatbadge($fiche->getEtat()); ?>
-            <?php if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+            <?php $etattype = $fiche->getEtatActif()->getType(); ?>
+            <?php echo $this->etattype($etattype); ?>
+            <?php if ($etattype === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
                 Validité : <?php echo ($fiche->getFinValidite())?$fiche->getFinValidite()->format('d/m/Y'):"En cours"; ?>
             <?php else : ?>
                 La fiche de poste n'est pas encore visée par l'agent·e.

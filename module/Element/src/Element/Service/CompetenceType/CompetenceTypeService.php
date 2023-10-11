@@ -2,9 +2,11 @@
 
 namespace Element\Service\CompetenceType;
 
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\CompetenceType;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -91,6 +93,18 @@ class CompetenceTypeService
 
     /** REQUETE *******************************************************************************************************/
 
+    public function createQueryBuilder() : QueryBuilder
+    {
+        try {
+            $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
+                ->addSelect('competence')->leftJoin('type.competences', 'competence')
+            ;
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".CompetenceType::class."]",0,$e);
+        }
+        return $qb;
+    }
+
     /**
      * @param string $champ
      * @param string $order
@@ -98,8 +112,7 @@ class CompetenceTypeService
      */
     public function getCompetencesTypes(string $champ = 'libelle', string $order = 'ASC') : array
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
-            ->addSelect('competence')->leftJoin('type.competences', 'competence')
+        $qb = $this->createQueryBuilder()
             ->orderBy('type.'.$champ, $order)
         ;
         $result = $qb->getQuery()->getResult();
@@ -127,7 +140,7 @@ class CompetenceTypeService
      */
     public function getCompetenceType(?int $id) : ?CompetenceType
     {
-        $qb = $this->getEntityManager()->getRepository(CompetenceType::class)->createQueryBuilder('type')
+        $qb = $this->createQueryBuilder()
             ->andWhere('type.id = :id')
             ->setParameter('id', $id)
         ;
@@ -148,6 +161,30 @@ class CompetenceTypeService
     {
         $id = $controller->params()->fromRoute($paramName);
         $type = $this->getCompetenceType($id);
+        return $type;
+    }
+
+    public function getCompetenceTypeByLibelle(string $libelle)
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('type.libelle = :libelle')
+            ->setParameter('libelle', $libelle)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch(NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceType partagent le même id [".$libelle."]", $e);
+        }
+        return $result;
+    }
+
+    /** FACADE ***********************************************************************/
+
+    public function createWith(?string $libelle) : CompetenceType
+    {
+        $type = new CompetenceType();
+        $type->setLibelle($libelle);
+        $this->create($type);
         return $type;
     }
 }

@@ -6,8 +6,9 @@ use Application\Provider\Etat\FicheMetierEtats;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
 use Carriere\Service\Niveau\NiveauService;
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
@@ -25,17 +26,17 @@ use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\FicheMetierMission;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
+use FicheMetier\Service\FicheMetierMission\FicheMetierMissionServiceAwareTrait;
+use FicheMetier\Service\MissionActivite\MissionActiviteServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
-use Laminas\Form\Form;
-use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractController;
 use Metier\Entity\Db\Domaine;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use Mpdf\MpdfException;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
@@ -47,8 +48,10 @@ class FicheMetierService
     use CompetenceElementServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
-    use EtatServiceAwareTrait;
     use EntityManagerAwareTrait;
+    use EtatInstanceServiceAwareTrait;
+    use FicheMetierMissionServiceAwareTrait;
+    use MissionActiviteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use RenduServiceAwareTrait;
 
@@ -73,7 +76,7 @@ class FicheMetierService
             $this->getEntityManager()->persist($fiche);
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -87,7 +90,7 @@ class FicheMetierService
         try {
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -102,7 +105,7 @@ class FicheMetierService
             $fiche->historiser();
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -117,7 +120,7 @@ class FicheMetierService
             $fiche->dehistoriser();
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
@@ -132,40 +135,35 @@ class FicheMetierService
             $this->getEntityManager()->remove($fiche);
             $this->getEntityManager()->flush($fiche);
         } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
+            throw new RuntimeException("Un problème est survenu lors de l'enregistrement en BD.", $e);
         }
         return $fiche;
     }
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
-            ->addSelect('metier')->join('ficheMetier.metier', 'metier')
-            ->addSelect('domaine')->join('metier.domaines', 'domaine')
-            ->addSelect('famille')->join('domaine.familles', 'famille')
-            ->addSelect('etat')->join('ficheMetier.etat', 'etat')
-            ->addSelect('etype')->join('etat.type', 'etype')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FicheMetier::class)->createQueryBuilder('ficheMetier')
+                ->addSelect('metier')->join('ficheMetier.metier', 'metier')
+                ->addSelect('domaine')->join('metier.domaines', 'domaine')
+                ->addSelect('famille')->join('domaine.familles', 'famille')
+                ->addSelect('etat')->leftjoin('ficheMetier.etats', 'etat')
+                ->addSelect('etype')->leftjoin('etat.type', 'etype')
+                ->addSelect('reference')->leftJoin('metier.references', 'reference')
+                ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FicheMetier::class."]",0,$e);
+        }
         $qb = NiveauService::decorateWithNiveau($qb, 'metier');
         return $qb;
     }
 
-    /**
-     * @param string $order an attribute use to sort
-     * @return FicheMetier[]
-     */
+    /** @return FicheMetier[] */
     public function getFichesMetiers(string $order = 'id'): array
     {
         $qb = $this->createQueryBuilder()
-//            ->addSelect('application')->leftJoin('ficheMetier.applications', 'application')
-//            ->addSelect('formation')->leftJoin('ficheMetier.formations', 'formation')
-//            ->addSelect('competence')->leftJoin('ficheMetier.competences', 'competence')
             ->orderBy('ficheMetier.', $order);
 
         $result = $qb->getQuery()->getResult();
@@ -190,7 +188,7 @@ class FicheMetierService
             if ($expertise !== null) $qb = $qb->andWhere('ficheMetier.hasExpertise = :expertise')->setParameter('expertise', $expertise);
         }
         if (isset($filtre['etat']) and $filtre['etat'] != '') {
-            $qb = $qb->andWhere('etat.id = :etat')->setParameter('etat', $filtre['etat']);
+            $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $filtre['etat']);
         }
         if (isset($filtre['domaine']) and $filtre['domaine'] != '') {
             $qb = $qb->andWhere('domaine.id = :domaine')->setParameter('domaine', $filtre['domaine']);
@@ -225,7 +223,7 @@ class FicheMetierService
     public function getFichesMetiersValides(string $order = 'id'): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('etat.code = :ucode')
+            ->andWhere('etype.code = :ucode')
             ->setParameter('ucode', FicheMetierEtats::ETAT_VALIDE)
             ->orderBy('ficheMetier.', $order);
 
@@ -233,10 +231,6 @@ class FicheMetierService
         return $result;
     }
 
-    /**
-     * @param int|null $id
-     * @return FicheMetier
-     */
     public function getFicheMetier(?int $id): ?FicheMetier
     {
         $qb = $this->createQueryBuilder()
@@ -273,17 +267,11 @@ class FicheMetierService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs fiches métiers portent le même identifiant [" . $id . "].");
+            throw new RuntimeException("Plusieurs fiches métiers portent le même identifiant [" . $id . "].",0,$e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractController $controller
-     * @param string $name
-     * @param bool $notNull
-     * @return FicheMetier|null
-     */
     public function getRequestedFicheMetier(AbstractController $controller, string $name = 'fiche', bool $notNull = false): ?FicheMetier
     {
         $ficheId = $controller->params()->fromRoute($name);
@@ -293,10 +281,7 @@ class FicheMetierService
         return $fiche;
     }
 
-    /**
-     * @param Domaine $domaine
-     * @return FicheMetier[]
-     */
+    /** @return FicheMetier[] */
     public function getFicheByDomaine(Domaine $domaine): array
     {
         $qb = $this->createQueryBuilder()
@@ -308,9 +293,6 @@ class FicheMetierService
         return $result;
     }
 
-    /**
-     * @return array
-     */
     public function getFichesMetiersAsOptionGroup(): array
     {
         $domaines = $this->getDomaineService()->getDomaines();
@@ -334,92 +316,62 @@ class FicheMetierService
 
     /** FACADE ********************************************************************************************************/
 
-    // GESTION DES MISSIONS ////////////////////////////////////////////////////////////////////////////////////////////
-    // todo faire un service dédier FicheMetierMission
-    public function addMission(FicheMetier $ficheMetier, Mission $missionPrincipale) {
+    public function addMission(FicheMetier $ficheMetier, Mission $missionPrincipale) : void
+    {
 
         $fichemetierMission = new FicheMetierMission();
         $fichemetierMission->setFicheMetier($ficheMetier);
         $fichemetierMission->setMission($missionPrincipale);
         $fichemetierMission->setOrdre(9999 );
-        $this->getEntityManager()->persist($fichemetierMission);
-        $this->getEntityManager()->flush($fichemetierMission);
+        $this->getFicheMetierMissionService()->create($fichemetierMission);
     }
 
     public function moveMission(FicheMetier $ficheMetier, Mission $missionPrincipale, string $direction) : void
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
-            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
-            ->andWhere('fmm.mission = :missionprincipale')->setParameter('missionprincipale', $missionPrincipale)
-        ;
-        $fichemetierMission = $qb->getQuery()->getOneOrNullResult();
+        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
+        if ($fichemetierMission === null) return;
 
         $position = $fichemetierMission->getOrdre();
         $newPosition = -1;
         if ($direction === 'up') $newPosition = $position - 1;
         if ($direction === 'down') $newPosition = $position + 1;
 
-        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
-            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
-            ->andWhere('fmm.ordre = :ordre')->setParameter('ordre', $newPosition)
-        ;
-        $fichemetierMissionBis = $qb->getQuery()->getOneOrNullResult();
+        $fichemetierMissionBis = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndPosition($ficheMetier, $newPosition);
+        if ($fichemetierMissionBis === null) return;
 
-        if ($fichemetierMission AND $fichemetierMissionBis AND $fichemetierMission !== $fichemetierMissionBis) {
+        if ($fichemetierMission !== $fichemetierMissionBis) {
             $fichemetierMission->setOrdre($newPosition);
-            $this->getEntityManager()->flush($fichemetierMission);
+            $this->getFicheMetierMissionService()->update($fichemetierMission);
             $fichemetierMissionBis->setOrdre($position);
-            $this->getEntityManager()->flush($fichemetierMissionBis);
+            $this->getFicheMetierMissionService()->update($fichemetierMissionBis);
         }
     }
 
     public function removeMission(FicheMetier $ficheMetier, Mission $missionPrincipale) : void
     {
-        $qb = $this->getEntityManager()->getRepository(FicheMetierMission::class)->createQueryBuilder('fmm')
-            ->andWhere('fmm.ficheMetier = :fichemetier')->setParameter('fichemetier', $ficheMetier)
-            ->andWhere('fmm.mission = :missionprincipale')->setParameter('missionprincipale', $missionPrincipale)
-        ;
-        $fichemetierMission = $qb->getQuery()->getOneOrNullResult();
-
-        if ($fichemetierMission !== null) {
-            $this->getEntityManager()->remove($fichemetierMission);
-            $this->getEntityManager()->flush($fichemetierMission);
-        }
+        $fichemetierMission = $this->getFicheMetierMissionService()->getFicherMetierMissionByFicheMetierAndMission($ficheMetier, $missionPrincipale);
+        $this->getFicheMetierMissionService()->delete($fichemetierMission);
     }
 
-    public function compressMission(FicheMetier $ficheMetier) {
+    public function compressMission(FicheMetier $ficheMetier) : void
+    {
         $missions = $ficheMetier->getMissions();
         usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() > $b->getOrdre();});
 
         $position = 1;
         foreach ($missions as $mission) {
             $mission->setOrdre($position);
-            $this->getEntityManager()->flush($mission);
+            $this->getFicheMetierMissionService()->update($mission);
             $position++;
         }
     }
 
     public function setDefaultValues(FicheMetier $fiche): FicheMetier
     {
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
         $this->getConfigurationService()->addDefaultToFicheMetier($fiche);
         return $fiche;
     }
-
-    /**
-     * @param Request $request
-     * @param Form $form
-     * @param $service
-     */
-    public function updateFromForm(Request $request, Form $form, $service)
-    {
-        $data = $request->getPost();
-        $form->setData($data);
-        if ($form->isValid()) {
-            $service->update($form->getObject());
-        }
-    }
-
 
     /**
      * @param FicheMetier $fiche
@@ -516,7 +468,7 @@ class FicheMetierService
                 $this->getEntityManager()->persist($activiteDuplicata);
                 $this->getEntityManager()->flush($activiteDuplicata);
             } catch (ORMException $e) {
-                throw new RuntimeException("Un problème est survenu lors de la duplication d'un activité");
+                throw new RuntimeException("Un problème est survenu lors de la duplication d'un activité",0,$e);
             }
         }
 
@@ -551,7 +503,7 @@ class FicheMetierService
         }
 
         //etat
-        $duplicata->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
+        $this->getEtatInstanceService()->setEtatActif($duplicata, FicheMetierEtats::ETAT_REDACTION);
         $this->update($duplicata);
 
         return $duplicata;
@@ -610,8 +562,8 @@ class FicheMetierService
         //init
         $fiche = new FicheMetier();
         $fiche->setMetier($csvInfos['metier']);
-        $fiche->setEtat($this->getEtatService()->getEtatByCode(FicheMetierEtats::ETAT_REDACTION));
         $this->create($fiche);
+        $this->getEtatInstanceService()->setEtatActif($fiche, FicheMetierEtats::ETAT_REDACTION);
 
         // MISSIONS PRINCIPALES
         $mission = new Mission();
@@ -627,7 +579,7 @@ class FicheMetierService
             $activite->setLibelle($libelle);
             $activite->setOrdre($ordre);
             $ordre++;
-            $this->getMissionPrincipaleService()->createActivite($activite);
+            $this->getMissionActiviteService()->create($activite);
         }
 
         //APPLICATION (invoker l'hydrator plutôt)

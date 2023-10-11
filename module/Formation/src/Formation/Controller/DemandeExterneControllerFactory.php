@@ -14,9 +14,12 @@ use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
-class DemandeExterneControllerFactory {
+class DemandeExterneControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -24,22 +27,26 @@ class DemandeExterneControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : DemandeExterneController
+    public function __invoke(ContainerInterface $container): DemandeExterneController
     {
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
-         * @var EtatService $etatService
+         * @var EtatInstanceService $etatInstanceService
+         * @var EtatTypeService $etatTypeService
          * @var FichierService $fichierService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
+         * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $fichierService = $container->get(FichierService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
+        $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
          * @var DemandeExterneForm $demandeExterneForm
@@ -56,10 +63,12 @@ class DemandeExterneControllerFactory {
         $controller = new DemandeExterneController();
         $controller->setAgentService($agentService);
         $controller->setDemandeExterneService($demandeExterneService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatInstanceService($etatInstanceService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFichierService($fichierService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
+        $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setDemandeExterneForm($demandeExterneForm);
         $controller->setDemande2formationForm($demande2formationForm);

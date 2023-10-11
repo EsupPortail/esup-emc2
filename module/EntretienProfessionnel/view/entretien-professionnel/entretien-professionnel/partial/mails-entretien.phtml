@@ -1,8 +1,8 @@
 <?php
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use Mailing\Model\Db\Mail;
-use Mailing\Provider\Privilege\MailingPrivileges;
+use UnicaenMail\Entity\Db\Mail;
+use UnicaenMail\Provider\Privilege\MailPrivileges;
 
 /**
  * @var EntretienProfessionnel $entretien
@@ -10,8 +10,8 @@ use Mailing\Provider\Privilege\MailingPrivileges;
  * @var string $retour
  */
 
-$canAfficherMail  = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_AFFICHER));
-$canReEnvoyerMail = $this->isAllowed(MailingPrivileges::getResourceId(MailingPrivileges::MAILING_REENVOI));
+$canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
+$canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
 ?>
 
 <h2 class="page-header-tab">
@@ -20,39 +20,39 @@ $canReEnvoyerMail = $this->isAllowed(MailingPrivileges::getResourceId(MailingPri
 
 <table class="table table-condensed">
     <thead>
-        <tr>
-            <th> Date d'envoi </th>
-            <th> Destinataire </th>
-            <th> Sujet </th>
-            <th style="width:8rem;"> État </th>
-            <th style="width:8rem;"> Action </th>
-        </tr>
+    <tr>
+        <th> Date d'envoi</th>
+        <th> Destinataire</th>
+        <th> Sujet</th>
+        <th style="width:8rem;"> État</th>
+        <th style="width:8rem;"> Action</th>
+    </tr>
     </thead>
     <tbody>
-        <?php foreach ($mails as $mail) : ?>
-            <tr>
-                <td> <?php echo $mail->getDateEnvoi()->format('d/m/Y à H:i:s'); ?> </td>
-                <td> <?php echo $mail->getDestinatires(); ?> </td>
-                <td> <?php echo $mail->getSujet(); ?> </td>
-                <td style="text-align: center;"> <?php echo $this->etatbadge($mail->getStatusEnvoi()); ?> </td>
-                <td style="text-align: right;">
-                    <?php if($canAfficherMail) : ?>
-                        <a <?php /** @see \Mailing\Controller\MailingController::afficherAction() */?>
-                            href="<?php echo $this->url('mailing/afficher',  ['id' => $mail->getId()], [], true); ?>"
+    <?php foreach ($mails as $mail) : ?>
+        <tr>
+            <td> <?php echo $mail->getDateEnvoi()->format('d/m/Y à H:i:s'); ?> </td>
+            <td> <?php echo $mail->getDestinataires(); ?> </td>
+            <td> <?php echo $mail->getSujet(); ?> </td>
+            <td style="text-align: center;"> <?php echo $mail->getStatusEnvoi(); ?> </td>
+            <td style="text-align: right;">
+                <?php if ($canAfficherMail) : ?>
+                    <a <?php /** @see \UnicaenMail\Controller\MailController::afficherAction() */ ?>
+                            href="<?php echo $this->url('mailing/afficher', ['id' => $mail->getId()], [], true); ?>"
                             class="ajax-modal"
                             title="Affichage du mail" data-bs-toggle="tooltip" data-bs-html="true"
-                        >
-                            <span class="icon icon-voir"></span></a>
-                    <?php endif; ?>
-                    <?php if($canReEnvoyerMail) : ?>
-                        <a <?php /** @see \Mailing\Controller\MailingController::reEnvoiAction() */?>
-                                href="<?php echo $this->url('mailing/re-envoi',  ['id' => $mail->getId()], ['query' => ['retour' => $retour]], true); ?>"
-                                title="Re-envoi du mail" data-bs-toggle="tooltip" data-bs-html="true"
-                        >
-                            <span class="icon icon-notifier"></span></a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                    >
+                        <span class="icon icon-voir"></span></a>
+                <?php endif; ?>
+                <?php if ($canReEnvoyerMail) : ?>
+                    <a <?php /** @see \UnicaenMail\Controller\MailController::reEnvoiAction() */ ?>
+                            href="<?php echo $this->url('mailing/re-envoi', ['id' => $mail->getId()], ['query' => ['retour' => $retour]], true); ?>"
+                            title="Re-envoi du mail" data-bs-toggle="tooltip" data-bs-html="true"
+                    >
+                        <span class="icon icon-notifier"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
     </tbody>
 </table>

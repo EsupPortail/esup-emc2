@@ -13,15 +13,15 @@ class AbonnementForm extends Form {
     use FormationServiceAwareTrait;
 
     private ?string $urlAgent = null;
-    public function setUrlAgent(string $url) { $this->urlAgent = $url; }
+    public function setUrlAgent(string $url):void { $this->urlAgent = $url; }
 
-    public function init()
+    public function init(): void
     {
         //Agent
         $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'agent',
                 'placeholder' => "Agent effectuant la mission ...",

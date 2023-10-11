@@ -2,7 +2,7 @@
 
 namespace Metier\Service\Domaine;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Metier\Entity\Db\Domaine;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

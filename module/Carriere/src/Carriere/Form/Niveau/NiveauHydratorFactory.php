@@ -8,7 +8,7 @@ class NiveauHydratorFactory {
 
     /**
      * @param ContainerInterface $container
-     * @return mixed
+     * @return NiveauHydrator
      */
     public function __invoke(ContainerInterface $container) : NiveauHydrator
     {

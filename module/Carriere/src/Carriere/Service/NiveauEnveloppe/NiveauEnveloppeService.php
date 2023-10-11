@@ -3,7 +3,7 @@
 namespace Carriere\Service\NiveauEnveloppe;
 
 use Carriere\Entity\Db\NiveauEnveloppe;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 

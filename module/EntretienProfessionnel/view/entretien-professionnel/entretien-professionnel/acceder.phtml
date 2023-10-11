@@ -54,10 +54,10 @@ $date = $entretien->getMaxSaisiObservation();
 $depasseObs = ($date !== null AND $date < $now);
 
 $step = 0;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE) $step = 1;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION OR $depasseObs) $step = 2;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE)  $step = 3;
-if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)       $step = 4;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) $step = 1;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) OR $depasseObs) $step = 2;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE))  $step = 3;
+if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT))       $step = 4;
 
 ?>
 
@@ -73,8 +73,8 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_
     <div class="col-md-3">
     <?php $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser; ?>
     <?php if ($isAgent AND (
-        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER OR
-        $entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION )) : ?>
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
+        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) )) : ?>
     <?php else : ?>
         <?php if ($canExporterEP) : ?>
             <div class="pull-right">
@@ -198,7 +198,7 @@ if ($entretien->getEtat()->getCode() === EntretienProfessionnelEtats::ENTRETIEN_
 
     $(function() {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "formulaire";
 
         $('a[aria-controls=' + name + ']').tab('show');

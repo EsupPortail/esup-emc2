@@ -21,13 +21,13 @@ use Metier\Form\SelectionnerMetier\SelectionnerMetierFormAwareTrait;
 use Metier\Service\Domaine\DomaineServiceAwareTrait;
 use Metier\Service\Metier\MetierServiceAwareTrait;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatFormAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
 class FicheMetierController extends AbstractActionController {
     use DomaineServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FicheMetierServiceAwareTrait;
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
@@ -49,7 +49,7 @@ class FicheMetierController extends AbstractActionController {
         $expertise = $fromQueries['expertise'] ?? null;
         $params = ['etat' => $etatId, 'domaine' => $domaineId, 'expertise' => $expertise];
 
-        $etats = $this->getEtatService()->getEtatsByTypeCode(FicheMetierEtats::TYPE);
+        $etatTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(FicheMetierEtats::TYPE);
         $domaines = $this->getDomaineService()->getDomaines();
 
         $fichesMetiers = $this->getFicheMetierService()->getFichesMetiersWithFiltre($params);
@@ -57,7 +57,7 @@ class FicheMetierController extends AbstractActionController {
         return new ViewModel([
             'params' => $params,
             'domaines' => $domaines,
-            'etats' => $etats,
+            'etatTypes' => $etatTypes,
             'fiches' => $fichesMetiers,
         ]);
     }
@@ -176,7 +176,7 @@ class FicheMetierController extends AbstractActionController {
 
     /** AUTRE MANIPULATION ********************************************************************************************/
 
-    public function dupliquerAction()
+    public function dupliquerAction(): ViewModel|Response
     {
         $fichemetier = $this->getFicheMetierService()->getRequestedFicheMetier($this, 'fiche-metier');
 
@@ -194,7 +194,7 @@ class FicheMetierController extends AbstractActionController {
         return $vm;
     }
 
-    public function importerAction()
+    public function importerAction(): ViewModel|Response
     {
         $form = $this->getFicheMetierImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('fiche-metier/importer', ['mode' => 'preview', 'path' => null], [], true));

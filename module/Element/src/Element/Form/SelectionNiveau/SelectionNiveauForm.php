@@ -12,10 +12,7 @@ use Laminas\InputFilter\Factory;
 class SelectionNiveauForm extends Form {
     use NiveauServiceAwareTrait;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @param string $type
@@ -27,7 +24,7 @@ class SelectionNiveauForm extends Form {
         return $this;
     }
 
-    public function init()
+    public function init(): void
     {
         //select :: niveau
         $this->add([
@@ -76,7 +73,7 @@ class SelectionNiveauForm extends Form {
         ]));
     }
 
-    public function masquerClef()
+    public function masquerClef(): void
     {
         $this->remove('clef');
     }

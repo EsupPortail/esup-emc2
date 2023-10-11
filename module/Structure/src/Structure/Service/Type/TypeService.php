@@ -2,7 +2,7 @@
 
 namespace Structure\Service\Type;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use RuntimeException;
 use Structure\Entity\Db\StructureType;
 use UnicaenApp\Service\EntityManagerAwareTrait;

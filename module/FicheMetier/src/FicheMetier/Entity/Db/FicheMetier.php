@@ -2,6 +2,7 @@
 
 namespace FicheMetier\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\Competence;
@@ -11,19 +12,18 @@ use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;
 use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMetierInterface,
+class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMetierInterface,
     HasApplicationCollectionInterface, HasCompetenceCollectionInterface {
     use HistoriqueAwareTrait;
     use HasMetierTrait;
-    use HasEtatTrait;
+    use HasEtatsTrait;
     use HasApplicationCollectionTrait;
     use HasCompetenceCollectionTrait;
 
@@ -37,6 +37,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
     public function __construct()
     {
         $this->activites = new ArrayCollection();
+        $this->etats = new ArrayCollection();
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
@@ -92,6 +93,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getIntitule() : string
     {
         $metier = $this->getMetier();
@@ -120,6 +122,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetences() : string
     {
         $competences = $this->getCompetenceListe();
@@ -134,6 +137,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getComptencesByType(int $typeId) : string
     {
         $competences = $this->getCompetenceListe();
@@ -145,7 +149,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
 
         $competence = $competences[0];
         $competenceType = "";
-        switch($competence->getType()->getId()) {
+        switch($competence->getCompetence()->getType()->getId()) {
             case 1 : $competenceType = "Compétences comportementales"; break;
             case 2 : $competenceType = "Compétences opérationnelles"; break;
             case 3 : $competenceType = "Connaissances"; break;
@@ -162,21 +166,25 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatInterface, HasMeti
         return $texte;
     }
 
+    /** @noinspection PhpUnused */
     public function getConnaissances() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_CONNAISSANCE);
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetencesOperationnelles() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_OPERATIONNELLE);
     }
 
+    /** @noinspection PhpUnused */
     public function getCompetencesComportementales() : string
     {
         return $this->getComptencesByType(CompetenceType::CODE_COMPORTEMENTALE);
     }
 
+    /** @noinspection PhpUnused */
     public function getApplicationsAffichage() : string
     {
         $applications = $this->getApplicationListe();

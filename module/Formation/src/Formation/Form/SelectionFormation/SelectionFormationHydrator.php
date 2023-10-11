@@ -12,11 +12,11 @@ class SelectionFormationHydrator implements HydratorInterface
 
     /**
      * @param HasFormationCollectionInterface $object
-     * @return array|void
+     * @return array
      */
     public function extract($object): array
     {
-        $formations = array_map(function (FormationElement $a) { return $a->getFormation(); }, $object->getFormationListe());
+        $formations = array_map(function ($a) { return ($a instanceof  Formation)?$a: $a->getFormation(); }, $object->getFormationListe());
         $formationIds = array_map(function (Formation $f) { return $f->getId();}, $formations);
         $data = [
             'formations' => $formationIds,
@@ -24,8 +24,8 @@ class SelectionFormationHydrator implements HydratorInterface
         return $data;
     }
 
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
-        //never used
+        return $object;
     }
 }

@@ -7,7 +7,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
-class ProjetPersonnelControllerFactory {
+class ProjetPersonnelControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -15,7 +16,7 @@ class ProjetPersonnelControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : ProjetPersonnelController
+    public function __invoke(ContainerInterface $container): ProjetPersonnelController
     {
         /**
          * @var ParametreService $parametreService

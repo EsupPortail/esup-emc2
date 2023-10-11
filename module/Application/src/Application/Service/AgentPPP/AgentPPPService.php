@@ -5,7 +5,7 @@ namespace Application\Service\AgentPPP;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentPPP;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -100,7 +100,8 @@ class AgentPPPService {
 
         $qb = $this->getEntityManager()->getRepository(AgentPPP::class)->createQueryBuilder('ppp')
             ->join('ppp.agent', 'agent')->addSelect('agent')
-            ->leftjoin('ppp.etat', 'etat')->addSelect('etat');
+        //    ->leftjoin('ppp.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

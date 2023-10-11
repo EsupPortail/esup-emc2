@@ -5,25 +5,16 @@ namespace Formation\Service\Formation;
 trait FormationServiceAwareTrait
 {
 
-    /** @var FormationService $formationService */
-    private $formationService;
+    private FormationService $formationService;
 
-    /**
-     * @return FormationService
-     */
     public function getFormationService() : FormationService
     {
         return $this->formationService;
     }
 
-    /**
-     * @param FormationService $formationService
-     * @return FormationService
-     */
-    public function setFormationService(FormationService $formationService) : FormationService
+    public function setFormationService(FormationService $formationService) : void
     {
         $this->formationService = $formationService;
-        return $this->formationService;
     }
 
 

@@ -14,11 +14,11 @@ use Formation\Entity\Db\FormationAbonnement;
 
 $retour = null;
 
-if ($agent !== null) {
+if (isset($agent) !== null) {
     $this->headTitle("Listing des abonnements pour l'agent [".$agent->getDenomination()."]");
     $retour = $this->url('formation/abonnement/lister-abonnements-par-agent', ['agent' => $agent->getId()], [], true);
 }
-if ($formation !== null) {
+if (isset($formation)) {
     $this->headTitle("Listing des abonnements pour la formation [".$formation->getLibelle()."]");
     $retour = $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true);
 }
@@ -27,20 +27,20 @@ $nb = count($abonnements);
 ?>
 
 <?php echo $nb; ?> abonnement<?php if ($nb > 1) echo "s"; ?>
-<?php if ($agent !== null) : ?>
+<?php if (isset($agent)) : ?>
     pour l'agent <em><?php echo $agent->getDenomination(); ?></em>
 <?php endif; ?>
-<?php if ($formation !== null) : ?>
+<?php if (isset($formation)) : ?>
     pour la formation <em><?php echo $formation->getLibelle(); ?></em>
 <?php endif; ?>
 
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <?php if ($formation !== null) : ?>
+        <?php if (isset($formation)) : ?>
             <th> Agent </th>
         <?php endif; ?>
-        <?php if ($agent !== null): ?>
+        <?php if (isset($agent)): ?>
             <th> Formation </th>
         <?php endif; ?>
         <th> Date d'abonnement </th>
@@ -50,10 +50,10 @@ $nb = count($abonnements);
     <tbody>
     <?php foreach ($abonnements as $abonnement) : ?>
         <tr>
-            <?php if ($formation !== null) : ?>
+            <?php if (isset($formation)) : ?>
                 <td> <?php echo $abonnement->getAgent()->getDenomination(); ?> </td>
             <?php endif; ?>
-            <?php if ($agent !== null): ?>
+            <?php if (isset($agent)): ?>
                 <td> <?php echo $abonnement->getFormation()->getLibelle(); ?> </td>
             <?php endif; ?>
             <td> <?php echo $abonnement->getDateInscription()->format('d/m/Y à H:i'); ?> </td>

@@ -52,7 +52,7 @@ usort($dictionnaryDemandes,
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
-                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
                         (<?php echo $d->getInstance()->getPeriode(); ?>)
                     <?php endforeach; ?>
@@ -73,7 +73,7 @@ usort($dictionnaryDemandes,
 
                 <?php foreach ($ds as $d) : ?>
                     <br/>
-                        <?php echo $this->etatbadge($d->getEtat()); ?>
+                        <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getLibelle(); ?>
                         (<?php echo $d->getPeriodeAsString(); ?>)
                 <?php endforeach; ?>

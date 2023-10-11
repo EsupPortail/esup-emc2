@@ -5,25 +5,16 @@ namespace Formation\Form\FormationInstanceFrais;
 trait FormationInstanceFraisFormAwareTrait
 {
 
-    /** @var FormationInstanceFraisForm */
-    private $formationInstanceFraisForm;
+    private FormationInstanceFraisForm $formationInstanceFraisForm;
 
-    /**
-     * @return FormationInstanceFraisForm
-     */
     public function getFormationInstanceFraisForm(): FormationInstanceFraisForm
     {
         return $this->formationInstanceFraisForm;
     }
 
-    /**
-     * @param FormationInstanceFraisForm $formationInstanceFraisForm
-     * @return FormationInstanceFraisForm
-     */
-    public function setFormationInstanceFraisForm(FormationInstanceFraisForm $formationInstanceFraisForm): FormationInstanceFraisForm
+    public function setFormationInstanceFraisForm(FormationInstanceFraisForm $formationInstanceFraisForm): void
     {
         $this->formationInstanceFraisForm = $formationInstanceFraisForm;
-        return $this->formationInstanceFraisForm;
     }
 
 }

@@ -16,21 +16,26 @@ if (isset($options['mode'])) $mode = $options['mode'];
 
 $validerSuperieur = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
 foreach ($entretiens as $entretien) {
-    switch ($entretien->getEtat()->getCode()) {
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
+    if ($entretien->getEtatActif() === null) {
+        $encours[] = $entretien;
+        //throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
+    } else {
+        switch ($entretien->getEtatActif()->getType()->getCode()) {
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
 
-            $validerSuperieur[] = $entretien;
-            break;
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
-            $validerAutorite[] = $entretien;
-            break;
-        case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
-            $validerAgent[] = $entretien;
-            break;
-        default :
-            $encours[] = $entretien;
-            break;
+                $validerSuperieur[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
+                $validerAutorite[] = $entretien;
+                break;
+            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
+                $validerAgent[] = $entretien;
+                break;
+            default :
+                $encours[] = $entretien;
+                break;
+        }
     }
 }
 foreach ($agents as $agent) {
@@ -44,6 +49,7 @@ $nbEncours = count($encours);
 $nbSans = count($sans);
 $nbTotal =  $nbValiderAgent + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
 
+$ratioAgent = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";
 if ($nbTotal !== 0) {
     $ratioAgent = $nbValiderAgent / $nbTotal * 100;
     $ratioAutorite = $nbValiderAutorite / $nbTotal * 100;

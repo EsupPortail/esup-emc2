@@ -9,12 +9,13 @@ use Formation\Service\SessionParametre\SessionParametreServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class SessionParametreController extends AbstractActionController {
+class SessionParametreController extends AbstractActionController
+{
     use FormationInstanceServiceAwareTrait;
     use SessionParametreServiceAwareTrait;
     use SessionParametreFormAwareTrait;
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
 
@@ -27,7 +28,7 @@ class SessionParametreController extends AbstractActionController {
         }
 
         $form = $this->getSessionParametreForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/session-parametre', ['session'=>$session->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session-parametre', ['session' => $session->getId()], [], true));
         $form->bind($parametre);
 
         $request = $this->getRequest();
@@ -39,7 +40,7 @@ class SessionParametreController extends AbstractActionController {
             }
         }
 
-        $vm =  new ViewModel([
+        $vm = new ViewModel([
             'title' => "Paramètre de la session de formation",
             'form' => $form,
         ]);

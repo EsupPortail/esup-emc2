@@ -4,7 +4,6 @@ namespace Application\Service\FichePoste;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\DomaineRepartition;
-use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
@@ -16,26 +15,26 @@ use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
 use Doctrine\DBAL\Exception as DBA_Exception;
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Metier\Entity\Db\Domaine;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class FichePosteService {
     use EntityManagerAwareTrait;
     use AgentServiceAwareTrait;
-    use EtatServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
     use StructureServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -119,64 +118,63 @@ class FichePosteService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    /**
-     * @return QueryBuilder
-     */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-            //status de l'agent
-//            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-//            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
-            //grade de l'agent
-//            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
-//            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
-//            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
-//            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
-//            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
-            //missions spécifiques
-//            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
-//            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
-//            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
-//            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
-//            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
+        try {
+            $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+                // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+                //status de l'agent
+                //            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+                //            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
+                //grade de l'agent
+                //            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+                //            ->addSelect('grade_structure')->leftJoin('grade.structure', 'grade_structure')
+                //            ->addSelect('grade_grade')->leftJoin('grade.grade', 'grade_grade')
+                //            ->addSelect('grade_corps')->leftJoin('grade.corps', 'grade_corps')
+                //            ->addSelect('grade_correspondance')->leftJoin('grade.bap', 'grade_correspondance')
+                //missions spécifiques
+                //            ->addSelect('missionSpecifique')->leftJoin('agent.missionsSpecifiques', 'missionSpecifique')
+                //            ->addSelect('structureM')->leftJoin('missionSpecifique.structure', 'structureM')
+                //            ->addSelect('mission')->leftJoin('missionSpecifique.mission', 'mission')
+                //            ->addSelect('mission_theme')->leftJoin('mission.theme', 'mission_theme')
+                //            ->addSelect('mission_type')->leftJoin('mission.type', 'mission_type')
 
 
-
-//            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
-//            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
-            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-            ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-            ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-            ->addSelect('reference')->leftJoin('metier.references', 'reference')
-            ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
-            ->addSelect('etat')->leftJoin('fiche.etat', 'etat')
+                //            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
+                //            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
+                ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+                ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
+                ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
+                ->addSelect('reference')->leftJoin('metier.references', 'reference')
+                ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
+        }
+
+        $qb = FichePoste::decorateWithEtats($qb, 'fiche');
         return $qb;
     }
 
-    /**
-     * @return FichePoste[]
-     */
+    /** @return FichePoste[] */
     public function getFichesPostes() : array
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-            ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-//        $qb = $this->createQueryBuilder()
-            ->andWhere('fiche.histoDestruction IS NULL')
-            ->orderBy('fiche.id', 'ASC');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+                ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+                ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+                //        $qb = $this->createQueryBuilder()
+                ->andWhere('fiche.histoDestruction IS NULL')
+                ->orderBy('fiche.id', 'ASC');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
+        }
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    /**
-     * @param int|null $id
-     * @return FichePoste
-     */
     public function getFichePoste(?int $id) : ?FichePoste
     {
         $qb = $this->createQueryBuilder()
@@ -192,12 +190,6 @@ class FichePosteService {
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $paramName
-     * @param bool $notNull
-     * @return FichePoste
-     */
     public function getRequestedFichePoste(AbstractActionController $controller, string $paramName = 'fiche-poste', bool $notNull = false) : ?FichePoste
     {
         $id = $controller->params()->fromRoute($paramName);
@@ -207,28 +199,24 @@ class FichePosteService {
 
     }
 
-    /** Recupération des fiche de postes par agent ********************************************************************/
+    /** Recupération des fiches de postes par agent ********************************************************************/
 
-    /**
-     * @var Agent $agent
-     * @return FichePoste[]
-     */
+    /** @return FichePoste[] */
     public function getFichesPostesByAgent(Agent $agent) : array
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->andWhere('fiche.agent = :agent')
-            ->setParameter('agent', $agent)
-            ->orderBy('fiche.id', 'ASC');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+                ->andWhere('fiche.agent = :agent')
+                ->setParameter('agent', $agent)
+                ->orderBy('fiche.id', 'ASC');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
+        }
         /** @var FichePoste[] $result */
         $result = $qb->getQuery()->getResult();
        return $result;
     }
 
-    /**
-     * @param Agent $agent
-     * @param DateTime|null $date
-     * @return FichePoste|null
-     */
     public function getFichePosteByAgent(Agent $agent, ?DateTime $date = null) : ?FichePoste
     {
         if ($date === null) $date = new DateTime();
@@ -238,7 +226,7 @@ class FichePosteService {
             ->setParameter('agent', $agent)
             ->andWhere('fiche.histoCreation <= :date')
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
-            ->andWhere('etat.code = :OK AND etat.code = :SIGNEE')
+            ->andWhere('type.code = :OK AND type.code = :SIGNEE')
             ->setParameter('date', $date)
             ->setParameter('OK', FichePosteEtats::ETAT_CODE_OK)
             ->setParameter('SIGNEE', FichePosteEtats::ETAT_CODE_SIGNEE)
@@ -246,55 +234,17 @@ class FichePosteService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch(NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs fiches de poste remontées pour l'agent [".$agent->getDenomination()."] en date du [".$date->format('d/m/Y')."]");
+            throw new RuntimeException("Plusieurs fiches de poste remontées pour l'agent [".$agent->getDenomination()."] en date du [".$date->format('d/m/Y')."]",0,$e);
         }
         return $result;
     }
 
-    /**
-     * @param Agent $agent
-     * @return FichePoste|null
-     */
     public function getFichePosteActiveByAgent(Agent $agent) : ?FichePoste
     {
         return $this->getFichePosteByAgent($agent);
     }
 
     /** AUTRES *******************************************************************************************/
-
-    /**
-     * @param int $id
-     * @return array
-     */
-    public function getFichePosteAsArray(int $id) : array
-    {
-        $params = ['id' => $id];
-
-        $sql = <<<EOS
-select
-    id,
-    a.c_individu as agent_id
-from ficheposte f
-left join agent a on f.agent = a.c_individu
-where f.id = :id
-EOS;
-
-        $tmp = null;
-        try {
-            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
-            $tmp = $res->fetchAssociative();
-        } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
-        } catch (DRV_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
-        }
-
-        $array = [
-            'id' => $id,
-            'agent_id' => $tmp['agent_id'],
-        ];
-        return $array;
-    }
 
     /**
      * @param Agent[] $agents
@@ -311,8 +261,8 @@ select
     aa.id_orig,
     s.id as structure_id, s.libelle_court as structure,
     m.libelle_default as fiche_principale,
-    e.id as etat,
-    e.code as etat_code,
+    et.id as etat,
+    et.code as etat_code,
    (f.fin_validite IS NULL OR f.fin_validite > current_timestamp) as en_cours,
    f.fin_validite as fin_validite
 from ficheposte f
@@ -322,13 +272,16 @@ left join structure s on aa.structure_id = s.id
 left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
 left join fichemetier f2 on fte.fiche_type = f2.id
 left join metier_metier m on m.id = f2.metier_id
-left join unicaen_etat_etat e on f.etat_id = e.id
+left join ficheposte_etat fpe on f.id=fpe.ficheposte_id
+left join unicaen_etat_instance ei on fpe.etat_id = ei.id
+left join unicaen_etat_type et on ei.type_id = et.id
 where (fte.principale = true OR fte IS NULL)
-  and (aa IS NULL OR aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
+  and (                 aa IS NULL OR aa.t_principale = 'O' 
+                    and aa.date_debut <= current_date 
+                    AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null)
 
 EOS;
 
-        $tmp = null;
         try {
             $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_INT_ARRAY]);
             $tmp = $res->fetchAllAssociative();
@@ -340,62 +293,9 @@ EOS;
         return $tmp;
     }
 
-    /**
-     * @param Agent[] $agents
-     * @return array
-     */
-    public function getFichesPostesbyAgents(array $agents) : array
-    {
-        if (empty($agents)) return [];
-
-        $params = ['agent_ids' => array_map(function (Agent $a) { return $a->getId();}, $agents)];
-
-        $sql = <<<EOS
-select
-       f.id, 
-       a.c_individu AS agent_id, a.prenom, a.nom_usage,
-       s.id as structure_id, s.libelle_court as structure, 
-       m.libelle_default as fiche_principale, f.libelle as fiche_libelle, f.histo_destruction,
-       e.id as etat,
-       e.code as etat_code,
-       (f.fin_validite) as en_cours
-from ficheposte f
-join agent a on f.agent = a.c_individu
-join agent_carriere_affectation aa on a.c_individu = aa.agent_id
-join structure s on aa.structure_id = s.id
-left join ficheposte_fichemetier fte on f.id = fte.fiche_poste
-left join fichemetier f2 on fte.fiche_type = f2.id
-left join metier_metier m on m.id = f2.metier_id
-left join unicaen_etat_etat e on e.id = f.etat_id
-where a.c_individu in (:agent_ids)
-  and aa.t_principale = 'O' and aa.date_debut <= current_date AND (aa.date_fin IS NULL or aa.date_fin >= current_date) and aa.deleted_on is null
-  and (fte.principale = true OR fte IS NULL)
-EOS;
-
-        $tmp = null;
-        try {
-            $res = $this->getEntityManager()->getConnection()->executeQuery($sql, $params, ['agent_ids' => Connection::PARAM_INT_ARRAY]);
-            $tmp = $res->fetchAllAssociative();
-        } catch (DBA_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
-        } catch (DRV_Exception $e) {
-            throw new RuntimeException("Un problème est survenue lors de la récupération des agents d'un groupe de structures", 0, $e);
-        }
-
-        $array = [];
-        foreach ($tmp as $fiche) {
-            $array[$fiche['agent_id']][] = $fiche;
-        }
-        return $array;
-    }
-
     /** FICHE TYPE EXTERNE ********************************************************************************************/
 
-    /**
-     * @param FicheTypeExterne $ficheTypeExterne
-     * @return FicheTypeExterne
-     */
-    public function createFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
+    public function createFicheTypeExterne(FicheTypeExterne $ficheTypeExterne): FicheTypeExterne
     {
         try {
             $this->getEntityManager()->persist($ficheTypeExterne);
@@ -425,7 +325,7 @@ EOS;
      * @param FicheTypeExterne $ficheTypeExterne
      * @return FicheTypeExterne
      */
-    public function updateFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
+    public function updateFicheTypeExterne(FicheTypeExterne $ficheTypeExterne): FicheTypeExterne
     {
         try {
             $this->getEntityManager()->flush($ficheTypeExterne);
@@ -439,7 +339,7 @@ EOS;
      * @param FicheTypeExterne $ficheTypeExterne
      * @return FicheTypeExterne
      */
-    public function deleteFicheTypeExterne(FicheTypeExterne $ficheTypeExterne)
+    public function deleteFicheTypeExterne(FicheTypeExterne $ficheTypeExterne): FicheTypeExterne
     {
         try {
             $this->getEntityManager()->remove($ficheTypeExterne);
@@ -455,11 +355,15 @@ EOS;
      * @param integer $id
      * @return FicheTypeExterne
      */
-    public function getFicheTypeExterne(int $id)
+    public function getFicheTypeExterne(int $id): FicheTypeExterne
     {
-        $qb = $this->getEntityManager()->getRepository(FicheTypeExterne::class)->createQueryBuilder('externe')
-            ->andWhere('externe.id = :id')
-            ->setParameter('id', $id);
+        try {
+            $qb = $this->getEntityManager()->getRepository(FicheTypeExterne::class)->createQueryBuilder('externe')
+                ->andWhere('externe.id = :id')
+                ->setParameter('id', $id);
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FicheTypeExterne::class."]",0,$e);
+        }
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -469,10 +373,7 @@ EOS;
         return $result;
     }
 
-    /**
-     * @return FichePoste
-     */
-    public function getLastFichePoste()
+    public function getLastFichePoste(): FichePoste
     {
         $fiches = $this->getFichesPostes();
         return end($fiches);
@@ -489,13 +390,17 @@ EOS;
         $agentForcees = $this->getAgentService()->getAgentsForcesByStructures($structures);
         $agents = array_merge($agentsStd, $agentForcees);
 
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->andWhere('fiche.agent in (:agents)')
-            ->setParameter('agents', $agents)
-            ->addSelect('agent')->join('fiche.agent', 'agent')
-            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
-            ->addSelect('grade')->leftJoin('agent.grades', 'grade')
-            ->orderBy('agent.nomUsuel, agent.prenom');
+        try {
+            $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+                ->andWhere('fiche.agent in (:agents)')
+                ->setParameter('agents', $agents)
+                ->addSelect('agent')->join('fiche.agent', 'agent')
+                ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
+                ->addSelect('grade')->leftJoin('agent.grades', 'grade')
+                ->orderBy('agent.nomUsuel, agent.prenom');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
+        }
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -513,8 +418,10 @@ EOS;
             return (
                 $a->estNonHistorise() AND
                 $a->isComplete() AND
-                $a->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_MASQUEE AND
-                ($a->getAgent()->getNiveauEnveloppe() !== null AND $agent->getNiveauEnveloppe() !== null AND NiveauEnveloppe::isCompatible($a->getAgent()->getNiveauEnveloppe(), $agent->getNiveauEnveloppe())));
+                $a->getEtatActif()->getType()->getCode() !== FichePosteEtats::ETAT_CODE_MASQUEE AND
+                (   $a->getAgent()->getNiveauEnveloppe() !== null AND
+                    $agent->getNiveauEnveloppe() !== null AND
+                    NiveauEnveloppe::isCompatible($a->getAgent()->getNiveauEnveloppe(), $agent->getNiveauEnveloppe())));
         });
         return $fiches;
 
@@ -527,20 +434,23 @@ EOS;
      */
     public function getFichesPostesSansAgentByStructure(Structure $structure, bool $sousstructure = false)
     {
-        $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
-            ->addSelect('poste')->join('fiche.poste', 'poste')
-            ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
-            ->addSelect('structure')->join('poste.structure', 'structure')
-            ->andWhere('agent.id IS NULL')
-            ->orderBy('poste.numeroPoste')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
+                ->addSelect('poste')->join('fiche.poste', 'poste')
+                ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+                ->addSelect('structure')->join('poste.structure', 'structure')
+                ->andWhere('agent.id IS NULL')
+                ->orderBy('poste.numeroPoste');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
+        }
 
-        if ($structure !== null && $sousstructure === false) {
+        if ($sousstructure === false) {
             $qb = $qb
                 ->andWhere('structure = :structure')
                 ->setParameter('structure', $structure);
         }
-        if ($structure !== null && $sousstructure === true) {
+        if ($sousstructure === true) {
             $qb = $qb
                 ->andWhere('structure = :structure OR structure.parent = :structure')
                 ->setParameter('structure', $structure);
@@ -551,7 +461,7 @@ EOS;
 
     /**
      * Calcul du set d'applications associées à une fiche de poste et/ou une fiche metier "externe".
-     * Va tenir compte de applications conservées (ou retirées par l'auteur de la fiche de poste)
+     * Va tenir compte des applications conservées (ou retirées par l'auteur de la fiche de poste)
      * @param FichePoste $ficheposte
      * @param FicheMetier $fichemetier
      * @return array
@@ -580,7 +490,7 @@ EOS;
                 //provenant des activités
                 $keptActivites = explode(";", $fichemetiertype->getActivites());
                 foreach ($fichemetier->getMissions() as $mission) {
-                    if (array_search($mission->getId(), $keptActivites) !== false) {
+                    if (in_array($mission->getId(), $keptActivites)) {
                         foreach ($mission->getMission()->getApplicationListe() as $applicationElement) {
                             $application = $applicationElement->getApplication();
                             if (!isset($applications[$application->getId()])) {
@@ -698,7 +608,7 @@ EOS;
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
                 $dictionnaire[$id]["object"] = $metierTypeActivite;
-                $dictionnaire[$id]["conserve"] = (array_search($id, $activitesId) !== false);
+                $dictionnaire[$id]["conserve"] = (in_array($id, $activitesId));
             }
         }
 
@@ -728,7 +638,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }
@@ -766,7 +676,7 @@ EOS;
      * @param DateTime $date
      * @return array
      */
-    public function getFormationsDictionnaires(FichePoste $fiche)
+    public function getFormationsDictionnaires(FichePoste $fiche): array
     {
         $dictionnaire = [];
 
@@ -784,7 +694,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }
@@ -798,7 +708,7 @@ EOS;
      * @param DateTime $date
      * @return array
      */
-    public function getCompetencesDictionnaires(FichePoste $fiche)
+    public function getCompetencesDictionnaires(FichePoste $fiche): array
     {
         $dictionnaire = [];
 
@@ -816,7 +726,7 @@ EOS;
             $activitesId = explode(';',$ficheTypeExterne->getActivites());
             foreach ($ficheMetier->getMissions() as $metierTypeActivite) {
                 $id = $metierTypeActivite->getMission()->getId();
-                if (array_search($id, $activitesId) !== false) {
+                if (in_array($id, $activitesId)) {
                     $missions[] = $metierTypeActivite->getMission();
                 }
             }
@@ -940,8 +850,8 @@ EOS;
             }
         }
 
-        $etat = $this->getEtatService()->getEtatByCode(FichePosteEtats::ETAT_CODE_REDACTION);
-        $nouvelleFiche->setEtat($etat);
+//        $etat = $this->getEtatTypeService()->getEtatTypeByCode(FichePosteEtats::ETAT_CODE_REDACTION);
+//        $nouvelleFiche->addEtat($etat);
         $nouvelleFiche = $this->update($nouvelleFiche);
 
 
@@ -953,26 +863,6 @@ EOS;
         }
 
         return $nouvelleFiche;
-    }
-
-    /**
-     * @param string $type
-     * @param FichePoste|null $ficheposte
-     * @param string|null $value
-     * @return ValidationInstance
-     */
-    public function addValidation(string $type, ?FichePoste $ficheposte, ?string $value = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode($type);
-
-        $validation = new ValidationInstance();
-        $validation->setEntity($ficheposte);
-        $validation->setType($vtype);
-        $validation->setValeur($value);
-        $this->getValidationInstanceService()->create($validation);
-        $ficheposte->addValidation($validation);
-        $this->update($ficheposte);
-        return $validation;
     }
 
     /**

@@ -7,7 +7,7 @@ use Laminas\Form\Form;
 
 class HasDescriptionForm extends Form
 {
-    public function init()
+    public function init(): void
     {
         // description
         $this->add([

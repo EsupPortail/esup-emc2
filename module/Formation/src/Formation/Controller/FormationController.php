@@ -26,7 +26,6 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 /** @method FlashMessenger flashMessenger() */
-
 class FormationController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
@@ -45,16 +44,18 @@ class FormationController extends AbstractActionController
 
     /** CRUD **********************************************************************************************************/
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
         $groupe = $this->params()->fromQuery('groupe');
-        $groupe_ = ($groupe !== null AND $groupe !== "")?$this->getFormationGroupeService()->getFormationGroupe((int) $groupe):null;
+        $groupe_ = ($groupe !== null and $groupe !== "") ? $this->getFormationGroupeService()->getFormationGroupe((int)$groupe) : null;
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        if ($source !== null AND $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) { return $a->getSource() === $source; });
-        if ($historise !== null AND $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
+        if ($source !== null and $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) {
+            return $a->getSource() === $source;
+        });
+        if ($historise !== null and $historise !== "") $formations = array_filter($formations, function (Formation $a) use ($historise) {
             if ($historise === "1") return $a->estHistorise();
             if ($historise === "0") return $a->estNonHistorise();
             return true;
@@ -69,7 +70,7 @@ class FormationController extends AbstractActionController
         ]);
     }
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $formation = new Formation();
         $form = $this->getFormationForm();
@@ -89,7 +90,7 @@ class FormationController extends AbstractActionController
                 $this->getFormationService()->update($formation);
 
                 $url = $this->url()->fromRoute('formation/editer', ['formation' => $formation->getId()], ['force_canonical' => true], true);
-                $this->flashMessenger()->addSuccessMessage("Action de formation <strong>".$formation->getLibelle()."</strong> créée. Pour accéder à celle-ci vous pouvez utiliser le lien suivant : <a href='".$url."'>".$url."</a>");
+                $this->flashMessenger()->addSuccessMessage("Action de formation <strong>" . $formation->getLibelle() . "</strong> créée. Pour accéder à celle-ci, vous pouvez utiliser le lien suivant : <a href='" . $url . "'>" . $url . "</a>");
                 exit;
             }
         }
@@ -103,7 +104,7 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function editerAction() : ViewModel
+    public function editerAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -134,21 +135,21 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->historise($formation);
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $this->getFormationService()->restore($formation);
         return $this->redirect()->toRoute('formation', [], [], true);
     }
 
-    public function detruireAction() : ViewModel
+    public function detruireAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -162,7 +163,7 @@ class FormationController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($formation !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la formation [" . $formation->getLibelle() . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
@@ -174,7 +175,7 @@ class FormationController extends AbstractActionController
 
     /** AUTRES MODIFICATIONS ******************************************************************************************/
 
-    public function modifierFormationInformationsAction() : ViewModel
+    public function modifierFormationInformationsAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -202,7 +203,7 @@ class FormationController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterApplicationElementAction() : ViewModel
+    public function ajouterApplicationElementAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $hasApplicationElement = $this->getFormationService()->getRequestedFormation($this);
@@ -236,7 +237,7 @@ class FormationController extends AbstractActionController
         exit();
     }
 
-    public function ajouterCompetenceElementAction() : ViewModel
+    public function ajouterCompetenceElementAction(): ViewModel
     {
         $type = $this->params()->fromRoute('type');
         $hasCompetenceElement = $this->getFormationService()->getRequestedFormation($this);
@@ -272,7 +273,7 @@ class FormationController extends AbstractActionController
 
     /** ACTIONS DE RECHERCHE ******************************************************************************************/
 
-    public function rechercherFormationAction() : JsonModel
+    public function rechercherFormationAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $formations = $this->getFormationService()->findFormationByTerm($term);
@@ -282,7 +283,7 @@ class FormationController extends AbstractActionController
         exit;
     }
 
-    public function rechercherFormateurAction() : JsonModel
+    public function rechercherFormateurAction(): JsonModel
     {
         if (($term = $this->params()->fromQuery('term'))) {
             $formateurs = $this->getFormationService()->findFormateurByTerm($term);
@@ -294,7 +295,7 @@ class FormationController extends AbstractActionController
 
     /** DEBOULONNAGE **************************************************************************************************/
 
-    public function dedoublonnerAction() : ViewModel
+    public function dedoublonnerAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
 
@@ -306,7 +307,7 @@ class FormationController extends AbstractActionController
             $data = $request->getPost();
             $formationSub = $this->getFormationService()->getFormation($data['formations'][0]);
 
-            if ($formationSub AND $formationSub !== $formation) {
+            if ($formationSub and $formationSub !== $formation) {
                 //décalages des éléments
                 $elements = $this->getFormationElementService()->getElementsByFormation($formation);
                 foreach ($elements as $element) {
@@ -350,14 +351,14 @@ class FormationController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('application/default/default-form');
         $vm->setVariables([
-            'title' => "Sélection de la formation qui remplacera [".$formation->getLibelle()."]",
+            'title' => "Sélection de la formation qui remplacera [" . $formation->getLibelle() . "]",
             'form' => $form,
         ]);
         return $vm;
     }
 
 
-    public function ajouterPlanDeFormationAction() : ViewModel
+    public function ajouterPlanDeFormationAction(): ViewModel
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $plans = $this->getPlanDeFormationService()->getPlansDeFormation();
@@ -373,13 +374,13 @@ class FormationController extends AbstractActionController
 
         $vm = new ViewModel([
             'title' => "Inclure dans un plan de formation",
-           'formation' => $formation,
+            'formation' => $formation,
             'plans' => $plans,
         ]);
         return $vm;
     }
 
-    public function retirerPlanDeFormationAction() : Response
+    public function retirerPlanDeFormationAction(): Response
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);

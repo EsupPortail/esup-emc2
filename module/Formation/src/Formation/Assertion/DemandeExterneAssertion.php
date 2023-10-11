@@ -75,18 +75,18 @@ class DemandeExterneAssertion extends AbstractAssertion {
             case FormationRoles::GESTIONNAIRE_FORMATION :
                 return true;
             case AppRoleProvider::AGENT :
-                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
+                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND !$demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) return false;
                 return $agent->getUtilisateur() === $user;
             case Agent::ROLE_AUTORITE :
-                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
+                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND !$demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) return false;
                 $autorites = array_map(function (AgentAutorite $a) { return $a->getAutorite(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
                 return DemandeExterneAssertion::userInAgents($user, $autorites);
             case Agent::ROLE_SUPERIEURE :
-                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
+                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND !$demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) return false;
                 $superieurs = array_map(function (AgentSuperieur $a) { return $a->getSuperieur(); }, $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent));
                 return DemandeExterneAssertion::userInAgents($user, $superieurs);
             case RoleProvider::RESPONSABLE :
-                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND $demande->getEtat()->getCode() !== DemandeExterneEtats::ETAT_CREATION_EN_COURS) return false;
+                if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND !$demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) return false;
                 $structures = $this->getAgentService()->computesStructures($agent);
                 $responsables = DemandeExterneAssertion::agentInStructures(RoleProvider::RESPONSABLE, $structures);
                 return DemandeExterneAssertion::userInAgents($user, $responsables);
@@ -115,29 +115,29 @@ class DemandeExterneAssertion extends AbstractAssertion {
         $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
         $entityAgent = $this->getAgentService()->getAgent($agentId);
 
-        switch($action) {
-            case 'afficher' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER);
-            case 'ajouter' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER, $entityAgent);
-            case 'modifier' :
-            case 'ajouter-devis' :
-            case 'retirer-devis' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER);
-            case 'historiser' :
-            case 'restaurer' :
-            return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER);
-            case 'supprimer' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER);
-            case 'valider-agent' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT);
-            case 'valider-responsable' :
-            case 'refuser-responsable' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE);
-            case 'valider-drh' :
-            case 'refuser-drh' :
-                return $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH);
-        }
-        return true;
+        return match ($action) {
+            'afficher'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER),
+            'ajouter'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER, $entityAgent),
+            'modifier',
+            'ajouter-devis',
+            'retirer-devis'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER),
+            'historiser',
+            'restaurer'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER),
+            'supprimer'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER),
+            'valider-agent'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_AGENT),
+            'valider-responsable',
+            'refuser-responsable'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_RESPONSABLE),
+            'valider-drh',
+            'refuser-drh'
+                => $this->computeAssertion($entity, DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_DRH),
+            default => true,
+        };
     }
 }

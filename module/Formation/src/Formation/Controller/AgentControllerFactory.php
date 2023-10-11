@@ -15,13 +15,14 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class AgentControllerFactory {
+class AgentControllerFactory
+{
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : AgentController
+    public function __invoke(ContainerInterface $container): AgentController
     {
         /**
          * @var AgentService $agentService

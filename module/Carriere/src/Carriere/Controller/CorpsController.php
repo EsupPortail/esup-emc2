@@ -9,6 +9,7 @@ use Carriere\Provider\Parametre\CarriereParametres;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use Carriere\Service\Corps\CorpsServiceAwareTrait;
 use Carriere\Service\NiveauEnveloppe\NiveauEnveloppeServiceAwareTrait;
+use Laminas\Http\Response;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -86,5 +87,14 @@ class CorpsController extends AbstractActionController {
         ]);
         $vm->setTemplate('default/default-form');
         return $vm;
+    }
+
+    public function toggleSuperieurAutoriteAction(): Response
+    {
+        $corps = $this->getCorpsService()->getRequestedCorps($this);
+        $corps->setSuperieurAsAutorite(!$corps->isSuperieurAsAutorite());
+        $this->getCorpsService()->update($corps);
+
+        return $this->redirect()->toRoute('corps', [], [],true);
     }
 }

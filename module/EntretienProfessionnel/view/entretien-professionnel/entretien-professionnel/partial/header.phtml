@@ -158,7 +158,7 @@ $canAfficherInformationMetier = (
                     <dd class="col-md-8"> <?php echo $entretien->getLieu(); ?> </dd>
                     <dt class="col-md-4"> État </dt>
                     <dd class="col-md-8">
-                        <?php echo $this->etatbadge($entretien->getEtat()); ?>
+                        <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
                     </dd>
                 </dl>
             </div>
@@ -177,7 +177,7 @@ $canAfficherInformationMetier = (
                     <dd class="col-md-7"><?php echo ($entretien->getToken() === null) ? '<span class="icon icon-checked" style="color:darkgreen;"></span>' : '<span class="icon sursis" title="Non effectuée"></span> Non effectuée'; ?> </dd>
                     <dt class="col-md-5">Responsable d'entretien </dt>
                     <dd class="col-md-7">
-                        <?php $validationResponsable = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE); ?>
+                        <?php $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE); ?>
                         <?php if ($validationResponsable !== null) : ?>
                             <div>
                                 <div style="display: inline-block; vertical-align: top;">
@@ -194,7 +194,7 @@ $canAfficherInformationMetier = (
                     </dd>
                     <dt class="col-md-5">Autorité hiérachique </dt>
                     <dd class="col-md-7">
-                        <?php $validationHierarchie = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH); ?>
+                        <?php $validationHierarchie = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH); ?>
                         <?php if ($validationHierarchie !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
                                 <span class="icon icon-checked" style="color:darkgreen;"></span>
@@ -209,11 +209,7 @@ $canAfficherInformationMetier = (
                     </dd>
                     <dt class="col-md-5">Agent </dt>
                     <dd class="col-md-7">
-                        <?php
-                        $hasValidationAgent = $entretien->getValidations(EntretienProfessionnelValidations::VALIDATION_AGENT);
-                        $validationAgent = ($hasValidationAgent !== [])?current($hasValidationAgent):null;
-                        ?>
-
+                        <?php $validationAgent = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_AGENT); ?>
                         <?php if ($validationAgent !== null) : ?>
                             <div style="display: inline-block; vertical-align: top;">
                                 <span class="icon icon-checked" style="color:darkgreen;"></span>

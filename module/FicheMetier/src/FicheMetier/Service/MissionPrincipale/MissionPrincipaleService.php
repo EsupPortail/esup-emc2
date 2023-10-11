@@ -2,11 +2,11 @@
 
 namespace FicheMetier\Service\MissionPrincipale;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Element\Entity\Db\Competence;
-use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use FicheMetier\Entity\Db\Mission;
 use FicheMetier\Entity\Db\MissionActivite;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -76,17 +76,21 @@ class MissionPrincipaleService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Mission::class)->createQueryBuilder('mission')
-            ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
-            ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
-            ->leftJoin('mission.activites', 'activite')->addSelect('activite')
-            ->leftJoin('mission.domaines', 'domaine')->addSelect('domaine')
+        try {
+            $qb = $this->getEntityManager()->getRepository(Mission::class)->createQueryBuilder('mission')
+                ->leftJoin('mission.listeFicheMetierMission', 'listeFicheMetierMission')->addSelect('listeFicheMetierMission')
+                ->leftJoin('mission.listeFichePosteMission', 'listeFichePosteMission')->addSelect('listeFichePosteMission')
+                ->leftJoin('mission.activites', 'activite')->addSelect('activite')
+                ->leftJoin('mission.domaines', 'domaine')->addSelect('domaine')
 
-//            ->leftJoin('mission.applications', 'applicationelement')->addSelect('applicationelement')
-//            ->leftJoin('applicationelement.application', 'application')->addSelect('application')
-//            ->leftJoin('mission.competences', 'competenceelement')->addSelect('competenceelement')
-//            ->leftJoin('competenceelement.competence', 'competence')->addSelect('competence')
-        ;
+                //            ->leftJoin('mission.applications', 'applicationelement')->addSelect('applicationelement')
+                //            ->leftJoin('applicationelement.application', 'application')->addSelect('application')
+                //            ->leftJoin('mission.competences', 'competenceelement')->addSelect('competenceelement')
+                //            ->leftJoin('competenceelement.competence', 'competence')->addSelect('competence')
+            ;
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Mission::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -162,39 +166,6 @@ class MissionPrincipaleService {
         return $result;
     }
 
-
-
-
-
-
-
-
-
-    /** TODO faire un service dedié */
-
-    public function createActivite(MissionActivite $activite) : MissionActivite
-    {
-        try {
-            $this->getEntityManager()->persist($activite);
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en base");
-        }
-        return $activite;
-    }
-
-    public function getActivite(?int $id) : ?MissionActivite
-    {
-        if ($id === null) return null;
-        return $this->getEntityManager()->getRepository(MissionActivite::class)->find($id);
-    }
-
-    public function getRequestedActivite(AbstractActionController $controller, string $param='activite') : ?MissionActivite
-    {
-        $id = $controller->params()->fromRoute($param);
-        return $this->getActivite($id);
-    }
-
     public function ajouterActivite(?Mission $mission, MissionActivite $activite) : MissionActivite
     {
         $activite->setMission($mission);
@@ -202,27 +173,6 @@ class MissionPrincipaleService {
         try {
             $this->getEntityManager()->persist($activite);
             $this->compressActiviteOrdre($mission);
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD",0,$e);
-        }
-        return $activite;
-    }
-
-    public function modifierActivite(MissionActivite $activite) : MissionActivite
-    {
-        try {
-            $this->getEntityManager()->flush($activite);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD",0,$e);
-        }
-        return $activite;
-    }
-
-    public function supprimerActivite(MissionActivite $activite) : MissionActivite
-    {
-        try {
-            $this->getEntityManager()->remove($activite);
             $this->getEntityManager()->flush($activite);
         } catch (ORMException $e) {
             throw new RuntimeException("Un problème est survenu en BD",0,$e);

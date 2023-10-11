@@ -9,7 +9,7 @@
 
 ?>
 
-<?php if ($warning !== null) : ?>
+<?php if (isset($warning)) : ?>
     <div class="alert alert-warning">
         <p class="lead">
             <?php echo $warning; ?>
@@ -17,9 +17,11 @@
     </div>
 <?php endif; ?>
 
-<p class="lead">
-<?php echo $text; ?>
-</p>
+<?php if (isset($text)) : ?>
+    <p class="lead">
+        <?php echo $text; ?>
+    </p>
+<?php endif; ?>
 
 <table>
     <tr><td>

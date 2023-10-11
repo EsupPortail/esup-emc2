@@ -2,8 +2,9 @@
 
 namespace Formation\Service\EnqueteCategorie;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\EnqueteCategorie;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -94,7 +95,11 @@ class EnqueteCategorieService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->createQueryBuilder('categorie');
+        try {
+            $qb = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->createQueryBuilder('categorie');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilde de [".EnqueteCategorie::class."]",0,$e);
+        }
         return $qb;
     }
 

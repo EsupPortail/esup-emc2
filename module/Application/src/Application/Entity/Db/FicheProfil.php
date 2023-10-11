@@ -304,8 +304,7 @@ class FicheProfil implements HistoriqueAwareInterface {
     public function getNiveauAffichage()
     {
         if ($this->niveau === null) return null;
-        $texte  = "";
-        $texte .= "<div class='information'>";
+        $texte  = "<div class='information'>";
         $texte .= '<strong> Niveau requis </strong> : ';
         $texte .= $this->niveau;
         $texte .= "</div>";

@@ -2,8 +2,9 @@
 
 namespace Formation\Service\Formateur;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formateur;
 use UnicaenApp\Exception\RuntimeException;
@@ -97,8 +98,12 @@ class FormateurService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-            ->addSelect('finstance')->join('formateur.instance', 'finstance');
+        try {
+            $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+                ->addSelect('finstance')->join('formateur.instance', 'finstance');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formateur::class . "]", 0, $e);
+        }
         return $qb;
     }
 
@@ -114,7 +119,7 @@ class FormateurService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Formateur partagent le même id [" . $id . "]");
+            throw new RuntimeException("Plusieurs Formateur partagent le même id [" . $id . "]",0,$e);
         }
         return $result;
     }

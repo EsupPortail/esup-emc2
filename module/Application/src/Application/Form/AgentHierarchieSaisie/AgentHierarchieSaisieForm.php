@@ -16,7 +16,7 @@ class AgentHierarchieSaisieForm extends Form {
         $this->urlAgent = $url;
     }
 
-    public function init()
+    public function init(): void
     {
         //agent
         $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);

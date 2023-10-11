@@ -19,7 +19,7 @@ class ParcoursDeFormationForm extends Form {
     use MetierServiceAwareTrait;
     use FormationServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle
         $this->add([

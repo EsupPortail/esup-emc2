@@ -9,15 +9,14 @@ use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentTutoratController extends AbstractActionController {
     use AgentServiceAwareTrait;
     use AgentTutoratServiceAwareTrait;
-    use EtatServiceAwareTrait;
+    use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
-
     use AgentTutoratFormAwareTrait;
 
     public function ajouterAction() : ViewModel
@@ -31,8 +30,9 @@ class AgentTutoratController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('agent/tutorat/ajouter', ['agent' => $agent->getId()], [], true));
         $form->bind($tutorat);
 
-        $type = $this->getEtatTypeService()->getEtatTypeByCode('TUTORAT');
-        $form->get('etat')->resetEtats($this->getEtatService()->getEtatsByType($type));
+        $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('TUTORAT');
+        $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
+        $form->get('etat')->resetEtats($types);
 
 
         $request = $this->getRequest();

@@ -13,7 +13,7 @@ use Laminas\InputFilter\Factory;
 class ConfigurationRecopieForm extends Form {
     use FormulaireServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //id => code
         $formulaire = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);

@@ -16,7 +16,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
@@ -41,7 +42,8 @@ class EntretienProfessionnelControllerFactory {
          * @var RenduService $renduService
          * @var UserService $userService
          * @var EntretienProfessionnelService $entretienProfesionnelService
-         * @var EtatService $etatService
+         * @var EtatInstanceService $etatInstanceService
+         * @var EtatTypeService $etatTypeService
          * @var FichePosteService $fichePosteService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -56,7 +58,8 @@ class EntretienProfessionnelControllerFactory {
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $renduService = $container->get(RenduService::class);
         $userService = $container->get(UserService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $fichePosteService = $container->get(FichePosteService::class);
 
         $entretienProfesionnelService = $container->get(EntretienProfessionnelService::class);
@@ -84,7 +87,8 @@ class EntretienProfessionnelControllerFactory {
         $controller->setRenduService($renduService);
         $controller->setUserService($userService);
         $controller->setEntretienProfessionnelService($entretienProfesionnelService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatInstanceService($etatInstanceService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setCampagneService($campagneService);
         $controller->setParametreService($parametreService);

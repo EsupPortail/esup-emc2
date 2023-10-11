@@ -85,7 +85,7 @@ use Metier\Entity\Db\Metier;
         <?php else : ?>
             <ul>
             <?php foreach ($fiches as $fiche) : ?>
-                <li> #<?php echo $fiche->getId(); ?> - <?php echo $metier->getLibelle(); ?> <?php echo $this->etatbadge($fiche->getEtat()); ?></li>
+                <li> #<?php echo $fiche->getId(); ?> - <?php echo $metier->getLibelle(); ?> <?php echo $this->etattype($fiche->getEtatActif()); ?></li>
             <?php endforeach; ?>
             </ul>
         <?php endif; ?>

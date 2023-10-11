@@ -4,7 +4,7 @@ namespace Application\Service\ActivitesDescriptionsRetirees;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
 use UnicaenApp\Exception\RuntimeException;

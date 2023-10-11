@@ -16,16 +16,17 @@ class EnqueteReponseHydrator implements HydratorInterface {
 
     /**
      * @param object|ArrayCollection $object
-     * @return array|void
+     * @return array
      */
     public function extract(object $object) : array
     {
         $data = [];
         foreach ($object as $item) {
             [$question, $reponse] = $item;
-
-            $data["select_".$reponse->getQuestion()->getId()] = $reponse->getNiveau();
-            $data["textarea_".$reponse->getQuestion()->getId()] = $reponse->getDescription();
+            if (isset($reponse)) {
+                $data["select_" . $reponse->getQuestion()->getId()] = $reponse->getNiveau();
+                $data["textarea_" . $reponse->getQuestion()->getId()] = $reponse->getDescription();
+            }
         }
         return $data;
 
@@ -34,9 +35,9 @@ class EnqueteReponseHydrator implements HydratorInterface {
     /**
      * @param array $data
      * @param FormationInstanceInscrit $object
-     * @return FormationInstanceInscrit|void
+     * @return FormationInstanceInscrit
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         foreach($object as $item) {
             [$question, $reponse] = $item;

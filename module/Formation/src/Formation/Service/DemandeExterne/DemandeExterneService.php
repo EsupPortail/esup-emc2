@@ -5,8 +5,9 @@ namespace Formation\Service\DemandeExterne;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateTime;
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
@@ -18,7 +19,6 @@ use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
-use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
@@ -26,21 +26,21 @@ use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAw
 use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenEtat\Entity\Db\Etat;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
-use UnicaenValidation\Entity\Db\ValidationType;
+use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
-class DemandeExterneService {
+class DemandeExterneService
+{
     use EntityManagerAwareTrait;
-
-    use EtatServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
+    use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
@@ -54,7 +54,7 @@ class DemandeExterneService {
 
     /** GESTION ENTITE ************************************************************************************************/
 
-    public function create(DemandeExterne $demande) : DemandeExterne
+    public function create(DemandeExterne $demande): DemandeExterne
     {
         try {
             $this->getEntityManager()->persist($demande);
@@ -65,7 +65,7 @@ class DemandeExterneService {
         return $demande;
     }
 
-    public function update(DemandeExterne $demande) : DemandeExterne
+    public function update(DemandeExterne $demande): DemandeExterne
     {
         try {
             $this->getEntityManager()->flush($demande);
@@ -75,7 +75,7 @@ class DemandeExterneService {
         return $demande;
     }
 
-    public function historise(DemandeExterne $demande) : DemandeExterne
+    public function historise(DemandeExterne $demande): DemandeExterne
     {
         try {
             $demande->historiser();
@@ -86,7 +86,7 @@ class DemandeExterneService {
         return $demande;
     }
 
-    public function restore(DemandeExterne $demande) : DemandeExterne
+    public function restore(DemandeExterne $demande): DemandeExterne
     {
         try {
             $demande->dehistoriser();
@@ -97,7 +97,7 @@ class DemandeExterneService {
         return $demande;
     }
 
-    public function delete(DemandeExterne $demande) : DemandeExterne
+    public function delete(DemandeExterne $demande): DemandeExterne
     {
         try {
             $this->getEntityManager()->remove($demande);
@@ -110,27 +110,34 @@ class DemandeExterneService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
-            ->join('demande.agent', 'agent')->addSelect('agent')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+                ->join('demande.agent', 'agent')->addSelect('agent')
+                ->join('demande.etats', 'etat')->addSelect('etat')
+                ->join('etat.type', 'type')->addSelect('type')
+                ->andWhere('etat.histoDestruction IS NULL')
+                ;
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . DemandeExterne::class . "]", 0, $e);
+        }
         return $qb;
     }
 
-    public function getDemandeExterne(?int $id) : ?DemandeExterne
+    public function getDemandeExterne(?int $id): ?DemandeExterne
     {
         $qb = $this->createQueryBuilder()
-         ->andWhere('demande.id = :id')->setParameter('id', $id);
+            ->andWhere('demande.id = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs DemandeExterne partagent le même id [".$id."]", 0, $e);
+            throw new RuntimeException("Plusieurs DemandeExterne partagent le même id [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedDemandeExterne(AbstractActionController $controller, string $param = 'demande-externe') : ?DemandeExterne
+    public function getRequestedDemandeExterne(AbstractActionController $controller, string $param = 'demande-externe'): ?DemandeExterne
     {
         $id = $controller->params()->fromRoute($param);
         $result = $this->getDemandeExterne($id);
@@ -142,10 +149,10 @@ class DemandeExterneService {
      * @param string $ordre
      * @return DemandeExterne[]
      */
-    public function getDemandesExternes(string $champ = 'histoCreation', string $ordre = 'ASC') : array
+    public function getDemandesExternes(string $champ = 'histoCreation', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('demande.'.$champ, $ordre);
+            ->orderBy('demande.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
@@ -156,83 +163,47 @@ class DemandeExterneService {
      * @param string $ordre
      * @return array
      */
-    public function getDemandesExternesWithFiltre(array $params, string $champ = 'histoCreation', string $ordre = 'ASC') : array
+    public function getDemandesExternesWithFiltre(array $params, string $champ = 'histoCreation', string $ordre = 'ASC'): array
     {
-        $qb = $this->createQueryBuilder()->orderBy('demande.'.$champ, $ordre);
+        $qb = $this->createQueryBuilder()->orderBy('demande.' . $champ, $ordre);
 
         if (isset($params['agent'])) $qb = $qb->andWhere('demande.agent = :agent')->setParameter('agent', $params['agent']);
-        if (isset($params['organisme']) AND trim($params['organisme'] !== '')) $qb = $qb->andWhere('demande.organisme = :organisme')->setParameter('organisme', $params['organisme']);
-        if (isset($params['etat'])) $qb = $qb->andWhere('demande.etat = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['organisme']) && trim($params['organisme'] !== '')) $qb = $qb->andWhere('demande.organisme = :organisme')->setParameter('organisme', $params['organisme']);
+        if (isset($params['etat'])) $qb = $qb->andWhere('etat.type = :etat')->setParameter('etat', $params['etat'])->andWhere('etat.histoDestruction IS NULL');
         if (isset($params['historise'])) {
             if ($params['historise'] === '1') $qb = $qb->andWhere('demande.histoDestruction IS NOT NULL');
             if ($params['historise'] === '0') $qb = $qb->andWhere('demande.histoDestruction IS NULL');
         }
-        if (isset($params['annee']) AND $params['annee'] !== '') {
-            $annee = (int) $params['annee'];
-            $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
-            $fin = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+        if (isset($params['annee']) and $params['annee'] !== '') {
+            $annee = (int)$params['annee'];
+            $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+            $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
             $qb = $qb
                 ->andWhere('demande.fin >= :debut')->setParameter('debut', $debut)
-                ->andWhere('demande.debut <= :fin')->setParameter('fin', $fin)
-            ;
+                ->andWhere('demande.debut <= :fin')->setParameter('fin', $fin);
         }
 
         $result = $qb->getQuery()->getResult();
         return $result;
 
     }
+
     /**
      * @param Agent $agent
      * @param string $champ
      * @param string $ordre
      * @return DemandeExterne[]
      */
-    public function getDemandesExternesByAgent(Agent $agent, string $champ = 'histoCreation', string $ordre = 'ASC') : array
+    public function getDemandesExternesByAgent(Agent $agent, string $champ = 'histoCreation', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('demande.agent = :agent')->setParameter('agent', $agent)
-            ->orderBy('demande.'.$champ, $ordre);
+            ->orderBy('demande.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     /** FACADE ********************************************************************************************************/
-
-    public function addValidation(ValidationType $type, ?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $validation = new ValidationInstance();
-        $validation->setEntity($demande);
-        $validation->setType($type);
-        $validation->setValeur($justification);
-        $this->getValidationInstanceService()->create($validation);
-        $demande->addValidation($validation);
-        $this->update($demande);
-        return $validation;
-    }
-
-    public function addValidationAgent(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_AGENT);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationResponsable(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationDrh(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
-
-    public function addValidationRefus(?DemandeExterne $demande, ?string $justification = null) : ValidationInstance
-    {
-        $vtype = $this->getValidationTypeService()->getValidationTypeByCode(DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
-        return $this->addValidation($vtype, $demande, $justification);
-    }
 
     /**
      * @param Structure $structure
@@ -240,7 +211,7 @@ class DemandeExterneService {
      * @param bool $anneeCourrante
      * @return DemandeExterne[]
      */
-    public function getDemandeByStructure(Structure $structure, bool $avecStructuresFilles = false, bool $anneeCourrante = false) : array
+    public function getDemandeByStructure(Structure $structure, bool $avecStructuresFilles = false, bool $anneeCourrante = false): array
     {
         $structures = [];
         $structures[] = $structure;
@@ -251,7 +222,7 @@ class DemandeExterneService {
         }
 
         $qb = $this->createQueryBuilder()
-            ->addSelect('affectation')->join('agent.affectations','affectation')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->andWhere('affectation.structure in (:structures)')
             ->setParameter('structures', $structures)
             ->andWhere('demande.histoDestruction IS NULL')
@@ -260,35 +231,29 @@ class DemandeExterneService {
         ;
 
         if ($anneeCourrante) {
-            $today = new DateTime();
-            $month = ((int) $today->format('m'));
-            $year  = ((int) $today->format('Y'));
-            $annee = ($month > 8 ) ? $year : ($year-1) ;
-
+            $annee = Formation::getAnnee();
             $mini = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
-            $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee+1));
+            $maxi = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
             $qb = $qb->andWhere('demande.histoCreation >= :mini AND demande.histoCreation <= :maxi')
                 ->setParameter('mini', $mini)
-                ->setParameter('maxi', $maxi)
-            ;
+                ->setParameter('maxi', $maxi);
         }
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getDemandesExternesByAgentsAndAnnee(array $agents, ?int $annee = null) : array
+    public function getDemandesExternesByAgentsAndAnnee(array $agents, ?int $annee = null): array
     {
         if ($annee === null) $annee = Formation::getAnnee();
-        $debut = DateTime::createFromFormat('d/m/Y H:i', '01/09/'.$annee.' 08:00');
-        $fin = DateTime::createFromFormat('d/m/Y H:i', '31/08/'.($annee+1).' 18:00');
+        $debut = DateTime::createFromFormat('d/m/Y H:i', '01/09/' . $annee . ' 08:00');
+        $fin = DateTime::createFromFormat('d/m/Y H:i', '31/08/' . ($annee + 1) . ' 18:00');
 
         $qb = $this->createQueryBuilder()->orderBy('demande.histoCreation', 'asc')
             ->andWhere('demande.agent in (:agents)')->setParameter('agents', $agents)
             ->andWhere('demande.histoCreation >= :debut')->setParameter('debut', $debut)
-            ->andWhere('demande.histoCreation <= :fin')->setParameter('fin', $fin)
-        ;
+            ->andWhere('demande.histoCreation <= :fin')->setParameter('fin', $fin);
         /** @var FormationInstanceInscrit[] $result */
         $result = $qb->getQuery()->getResult();
 
@@ -306,11 +271,11 @@ class DemandeExterneService {
      * @param string $texte
      * @return Agent[]
      */
-    public function findAgentByTerm(string $texte) : array
+    public function findAgentByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search OR LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         $agents = [];
@@ -326,11 +291,11 @@ class DemandeExterneService {
      * @param string $texte
      * @return Agent[]
      */
-    public function findOrganismeByTerm(string $texte) : array
+    public function findOrganismeByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(demande.organisme) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         $organismes = [];
@@ -341,7 +306,7 @@ class DemandeExterneService {
         return $organismes;
     }
 
-    public function transformer(?DemandeExterne $demande, string $libelle, float $volume, float $suivi) : FormationInstance
+    public function transformer(?DemandeExterne $demande, string $libelle, float $volume, float $suivi): FormationInstance
     {
         //theme
         $theme = $this->getFormationGroupeService()->getFormationGroupeByLibelle("Stage externe");
@@ -349,50 +314,61 @@ class DemandeExterneService {
             $theme = new FormationGroupe();
             $theme->setLibelle('Stage externe');
             $theme->setOrdre(99999999);
-            //source ... todo
+            $theme->setSource(HasSourceInterface::SOURCE_EMC2);
             $this->getFormationGroupeService()->create($theme);
+            $theme->setIdSource($theme->getId());
+            $this->getFormationGroupeService()->update($theme);
         }
 
         //creation de l'action de formation
         $formation = new Formation();
         $formation->setLibelle($libelle);
         $formation->setGroupe($theme);
-        $formation->setDescription("Action de formation générée depuis la demande ".$demande->getId());
+        $formation->setDescription("Action de formation générée depuis la demande " . $demande->getId());
         $formation->setAffichage(false);
-        //source ... todo
+        $theme->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationService()->create($formation);
+        $theme->setIdSource($formation->getId());
+        $this->getFormationService()->update($formation);
 
         //session
         $session = new FormationInstance();
-        $session->setEtat($this->getEtatService()->getEtatByCode(SessionEtats::ETAT_CLOTURE_INSTANCE));
         $session->setFormation($formation);
-        $session->setAutoInscription(false);
+        $session->setAutoInscription();
         $session->setNbPlacePrincipale(1);
         $session->setNbPlaceComplementaire(0);
         $session->setType("stage externe");
         $session->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationInstanceService()->create($session);
+        $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_CLOTURE_INSTANCE);
+        $session->setIdSource($formation->getId() . "-" . $session->getId());
+        $this->getFormationInstanceService()->update($session);
 
         //inscription
         $inscription = new FormationInstanceInscrit();
         $inscription->setAgent($demande->getAgent());
         $inscription->setInstance($session);
-        $inscription->setEtat($this->getEtatService()->getEtatByCode(InscriptionEtats::ETAT_VALIDER_DRH));
         $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
         $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationInstanceInscritService()->create($inscription);
+        $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
+        $this->getFormationInstanceInscritService()->update($inscription);
 
         $absence = $volume - $suivi;
 
-        if ($suivi !== 0) {
+        if ($suivi != 0) {
             //seance
             $seance = new Seance();
             $seance->setInstance($session);
             $seance->setVolume($suivi);
             $seance->setLieu("");
             $seance->setType(Seance::TYPE_VOLUME);
-            //source ... todo
+            $seance->setVolumeDebut($demande->getDebut());
+            $seance->setVolumeFin($demande->getFin());
+            $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
             $this->getSeanceService()->create($seance);
+            $seance->setIdSource($formation->getId() . "-" . $session->getId() . "-" . $seance->getId());
+            $this->getSeanceService()->update($seance);
 
             //presence true
             $presence = new Presence();
@@ -404,7 +380,7 @@ class DemandeExterneService {
             $this->getPresenceService()->create($presence);
         }
 
-        if ($absence !== 0) {
+        if ($absence != 0) {
             //seance
             $seance = new Seance();
             $seance->setInstance($session);
@@ -429,25 +405,22 @@ class DemandeExterneService {
 
     /**
      * @param Agent[] $agents
-     * @param Etat[] $etats
+     * @param EtatType[] $etats
      * @param int|null $annee
      * @return DemandeExterne[]
      */
-    public function getDemandesExternesValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee) : array
+    public function getDemandesExternesValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
     {
         if ($annee === null) Formation::getAnnee();
-        $debut = DateTime::createFromFormat('d/m/Y', '01/09/'.$annee);
-        $fin   = DateTime::createFromFormat('d/m/Y', '31/08/'.($annee+1));
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
-        $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+        $qb = $this->createQueryBuilder()
             ->andWhere('demande.histoDestruction IS NULL')
-            ->join('demande.etat', 'etat')->addSelect('etat')
-            ->andWhere('etat.code in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('type.code in (:etats)')->setParameter('etats', $etats)
             ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
             ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
-            ->join('demande.agent', 'agent')->addSelect('agent')
-            ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
-        ;
+            ->andWhere('agent in (:agents)')->setParameter('agents', $agents);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -458,9 +431,9 @@ class DemandeExterneService {
      * @param int|null $annee
      * @return DemandeExterne[]
      */
-    public function getDemandesExternesValideesByAgents(array $agents, ?int $annee) : array
+    public function getDemandesExternesValideesByAgents(array $agents, ?int $annee): array
     {
-        $etats = [ DemandeExterneEtats::ETAT_VALIDATION_DRH, DemandeExterneEtats::ETAT_REJETEE, DemandeExterneEtats::ETAT_TERMINEE];
+        $etats = [DemandeExterneEtats::ETAT_VALIDATION_DRH, DemandeExterneEtats::ETAT_REJETEE, DemandeExterneEtats::ETAT_TERMINEE];
         $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }
@@ -470,9 +443,9 @@ class DemandeExterneService {
      * @param int|null $annee
      * @return DemandeExterne[]
      */
-    public function getDemandesExternesNonValideesByAgents(array $agents, ?int $annee) : array
+    public function getDemandesExternesNonValideesByAgents(array $agents, ?int $annee): array
     {
-        $etats = [ DemandeExterneEtats::ETAT_VALIDATION_AGENT, DemandeExterneEtats::ETAT_VALIDATION_RESP ];
+        $etats = [DemandeExterneEtats::ETAT_VALIDATION_AGENT, DemandeExterneEtats::ETAT_VALIDATION_RESP];
         $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
         return $result;
     }

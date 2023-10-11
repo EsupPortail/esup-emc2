@@ -22,9 +22,18 @@
         <one-to-many target-entity="Application\Entity\Db\FicheposteActiviteDescriptionRetiree" mapped-by="fichePoste" field="descriptionsRetirees"/>
         <one-to-many target-entity="FichePoste\Entity\Db\MissionAdditionnelle" mapped-by="ficheposte" field="missionsAdditionnelles"/>
 
-        <many-to-one field="etat" target-entity="UnicaenEtat\Entity\Db\Etat">
-            <join-column name="etat_id" referenced-column-name="id" />
-        </many-to-one>
+        <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
+            <join-table name="ficheposte_etat">
+                <join-columns>
+                    <join-column name="ficheposte_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="etat_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+
         <field name="rifseep"           type="integer"      column="rifseep"            nullable="true"/>
         <field name="nbi"               type="integer"      column="nbi"                nullable="true"/>
 

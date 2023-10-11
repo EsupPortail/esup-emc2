@@ -4,10 +4,11 @@ namespace Carriere\Service\Corps;
 
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use UnicaenApp\Exception\RuntimeException;
+use RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
@@ -30,9 +31,12 @@ class CorpsService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
-            ->andWhere('corps.deleted_on IS NULL')
-        ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Corps::class)->createQueryBuilder('corps')
+                ->andWhere('corps.deleted_on IS NULL');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Corps::class."]",0,$e);
+        }
         return $qb;
     }
 

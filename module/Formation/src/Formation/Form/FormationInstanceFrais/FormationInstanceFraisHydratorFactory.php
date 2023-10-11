@@ -11,7 +11,7 @@ class FormationInstanceFraisHydratorFactory
      * @param ContainerInterface $container
      * @return FormationInstanceFraisHydrator
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): FormationInstanceFraisHydrator
     {
         $hydrator = new FormationInstanceFraisHydrator();
         return $hydrator;

@@ -37,6 +37,7 @@ return [
                     'controller' => CorpsController::class,
                     'action' => [
                         'modifier-niveaux',
+                        'toggle-superieur-autorite',
                     ],
                     'privileges' => [
                         CorpsPrivileges::CORPS_MODIFIER,
@@ -100,6 +101,18 @@ return [
                                 /** @see CorpsController::modifierNiveauxAction() */
                                 'controller' => CorpsController::class,
                                 'action'     => 'modifier-niveaux',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'toggle-superieur-autorite' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/toggle-superieur-autorite/:corps',
+                            'defaults' => [
+                                /** @see CorpsController::toggleSuperieurAutoriteAction() */
+                                'controller' => CorpsController::class,
+                                'action'     => 'toggle-superieur-autorite',
                             ],
                         ],
                         'may_terminate' => true,

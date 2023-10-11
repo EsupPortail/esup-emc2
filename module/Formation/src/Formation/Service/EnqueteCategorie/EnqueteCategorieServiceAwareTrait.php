@@ -4,25 +4,16 @@ namespace Formation\Service\EnqueteCategorie;
 
 trait EnqueteCategorieServiceAwareTrait
 {
-    /** @var EnqueteCategorieService */
-    private $enqueteCategorieService;
+    private EnqueteCategorieService $enqueteCategorieService;
 
-    /**
-     * @return EnqueteCategorieService
-     */
     public function getEnqueteCategorieService(): EnqueteCategorieService
     {
         return $this->enqueteCategorieService;
     }
 
-    /**
-     * @param EnqueteCategorieService $enqueteCategorieService
-     * @return EnqueteCategorieService
-     */
-    public function setEnqueteCategorieService(EnqueteCategorieService $enqueteCategorieService): EnqueteCategorieService
+    public function setEnqueteCategorieService(EnqueteCategorieService $enqueteCategorieService): void
     {
         $this->enqueteCategorieService = $enqueteCategorieService;
-        return $this->enqueteCategorieService;
     }
 
 }

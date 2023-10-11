@@ -30,7 +30,7 @@ class EnqueteQuestionHydrator implements HydratorInterface {
      * @param EnqueteQuestion $object
      * @return EnqueteQuestion
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $description = (isset($data['description']) AND trim($data['description']) !== '')?trim($data['description']):null;

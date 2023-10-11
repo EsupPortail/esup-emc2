@@ -2,8 +2,9 @@
 
 namespace Formation\Service\EnqueteQuestion;
 
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\EnqueteQuestion;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -93,7 +94,11 @@ class EnqueteQuestionService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->createQueryBuilder('question');
+        try {
+            $qb = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->createQueryBuilder('question');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".EnqueteQuestion::class."]",0,$e);
+        }
         return $qb;
     }
 
@@ -122,6 +127,15 @@ class EnqueteQuestionService {
         $id = $controller->params()->fromRoute($param);
         $categorie = $this->getEnqueteQuestion($id);
         return $categorie;
+    }
+
+    public function getEnqueteQuestions()
+    {
+        $qb = $this->createQueryBuilder()
+        ->andWhere('question.histoDestruction IS NULL')
+    ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
     }
 
     /** FACADE ********************************************************************************************************/

@@ -4,24 +4,15 @@ namespace Formation\Form\EnqueteReponse;
 
 trait EnqueteReponseFormAwareTrait {
 
-    /** @var EnqueteReponseForm */
-    private $enqueteReponseForm;
+    private EnqueteReponseForm $enqueteReponseForm;
 
-    /**
-     * @return EnqueteReponseForm
-     */
     public function getEnqueteReponseForm(): EnqueteReponseForm
     {
         return $this->enqueteReponseForm;
     }
 
-    /**
-     * @param EnqueteReponseForm $enqueteReponseForm
-     * @return EnqueteReponseForm
-     */
-    public function setEnqueteReponseForm(EnqueteReponseForm $enqueteReponseForm): EnqueteReponseForm
+    public function setEnqueteReponseForm(EnqueteReponseForm $enqueteReponseForm): void
     {
         $this->enqueteReponseForm = $enqueteReponseForm;
-        return $this->enqueteReponseForm;
     }
 }

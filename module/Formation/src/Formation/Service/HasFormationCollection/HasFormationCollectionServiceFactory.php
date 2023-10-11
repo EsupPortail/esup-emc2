@@ -6,6 +6,8 @@ use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class HasFormationCollectionServiceFactory {
@@ -13,8 +15,10 @@ class HasFormationCollectionServiceFactory {
     /**
      * @param ContainerInterface $container
      * @return HasFormationCollectionService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): HasFormationCollectionService
     {
         /**
          * @var EntityManager $entityManager

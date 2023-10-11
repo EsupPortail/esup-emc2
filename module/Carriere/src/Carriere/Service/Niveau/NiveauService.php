@@ -3,8 +3,9 @@
 namespace Carriere\Service\Niveau;
 
 use Carriere\Entity\Db\Niveau;
+use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -73,7 +74,11 @@ class NiveauService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Niveau::class)->createQueryBuilder('niveau');
+        try {
+            $qb = $this->getEntityManager()->getRepository(Niveau::class)->createQueryBuilder('niveau');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [".Niveau::class."]",0,$e);
+        }
         return $qb;
     }
 

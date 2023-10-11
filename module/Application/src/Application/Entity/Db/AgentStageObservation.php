@@ -7,14 +7,17 @@ use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
 use Structure\Entity\Db\Structure;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface {
+class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface, HasEtatInterface {
     use HasMetierTrait;
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
 
     /** @var int */
     private $id;
@@ -24,8 +27,6 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterf
     private $structure;
     /** @var string|null */
     private $complement;
-    /** @var Etat|null */
-    private $etat;
 
     /**
      * @return int
@@ -86,24 +87,6 @@ class AgentStageObservation implements HistoriqueAwareInterface, HasMetierInterf
     public function setComplement(?string $complement): AgentStageObservation
     {
         $this->complement = $complement;
-        return $this;
-    }
-
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat|null $etat
-     * @return AgentStageObservation
-     */
-    public function setEtat(?Etat $etat): AgentStageObservation
-    {
-        $this->etat = $etat;
         return $this;
     }
 

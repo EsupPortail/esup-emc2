@@ -5,12 +5,11 @@ namespace Application\Form\AgentPPP;
 use Application\Entity\Db\AgentPPP;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use DateTime;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
+use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
 class AgentPPPHydrator implements HydratorInterface {
-    use EtatServiceAwareTrait;
-
+    use EtatTypeServiceAwareTrait;
     /**
      * @param AgentPPP $object
      * @return array
@@ -25,7 +24,7 @@ class AgentPPPHydrator implements HydratorInterface {
                 'date_fin'   => ($object->getDateFin())?$object->getDateFin()->format(HasPeriodeFieldset::format):null,
             ],
             'etat'              => [
-                'etat' => ($object->getEtat())?$object->getEtat()->getId():null,
+                'etat' => ($object->getEtat())?$object->getEtat()->getType()->getId():null,
             ],
             'cpf'               => $object->getFormationCPF(),
             'cout'              => $object->getFormationCout(),
@@ -41,13 +40,13 @@ class AgentPPPHydrator implements HydratorInterface {
      * @param AgentPPP $object
      * @return AgentPPP
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object):object
     {
         $type = (isset($data['type']) AND trim($data['type']) !== '')?trim($data['type']):null;
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;
-        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatService()->getEtat($data['etat']['etat']):null;
+        $etat = (isset($data['etat']) AND isset($data['etat']['etat']))?$this->getEtatTypeService()->getEtatType($data['etat']['etat']):null;
         $cpf = (isset($data['cpf']) AND trim($data['cpf']) !== '')?$data['cpf']:null;
         $cout = (isset($data['cout']) AND trim($data['cout']) !== '')?$data['cout']:null;
         $priseencharge = (isset($data['priseencharge']) AND trim($data['priseencharge']) !== '')?$data['priseencharge']:null;

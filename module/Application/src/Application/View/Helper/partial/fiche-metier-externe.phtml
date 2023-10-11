@@ -101,7 +101,7 @@ $activitesConservees = explode(FicheTypeExterne::ACTIVITE_SEPARATOR, $fiche->get
         <?php
 
             foreach ($fichemetier->getMissions() as $mission) {
-                if (array_search("".$mission->getMission()->getId(), $activitesConservees) !== false) {
+                if (in_array("" . $mission->getMission()->getId(), $activitesConservees)) {
                     echo $this->activite($mission, $options['mode'], ['fichemetier' => $fichemetier, 'ficheposte' => $ficheposte]);
                 }
             }

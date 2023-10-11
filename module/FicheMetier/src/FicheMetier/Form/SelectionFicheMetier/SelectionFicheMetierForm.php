@@ -12,7 +12,7 @@ class SelectionFicheMetierForm extends Form
 {
     use FicheMetierServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'type' => Select::class,

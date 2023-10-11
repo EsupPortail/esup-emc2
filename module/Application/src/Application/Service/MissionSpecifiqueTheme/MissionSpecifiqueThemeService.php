@@ -3,7 +3,7 @@
 namespace Application\Service\MissionSpecifiqueTheme;
 
 use Application\Entity\Db\MissionSpecifiqueTheme;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;

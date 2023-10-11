@@ -26,7 +26,7 @@ class FormationControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationController
+    public function __invoke(ContainerInterface $container): FormationController
     {
         /**
          * @var FormationService $formationService

@@ -261,6 +261,15 @@ class Agent implements
         return $statuts;
     }
 
+    /** @return AgentGrade[] */
+    public function getEmploiTypesActifs(?DateTime $date = null, ?array $structures = null) : array
+    {
+        if ($date === null) $date = (new DateTime());
+        $affectations =  $this->getGrades($date);
+        if ($structures !== null) $affectations = array_filter($affectations, function (AgentGrade $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        return $affectations;
+    }
+
     /** Autres accesseurs *********************************************************************************************/
 
     public function getUtilisateur() : ?AbstractUser
@@ -274,11 +283,12 @@ class Agent implements
     }
 
 
-    public function getDenomination() : ?string
+    public function getDenomination(bool $prenomFirst = false) : ?string
     {
         $prenom = $this->getPrenom();
         $prenom = str_replace("É", "é", $prenom);
         $prenom = str_replace("È", "è", $prenom);
+        if ($prenomFirst) return  ucwords(strtolower($prenom), "- ") . ' ' . (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') ;
         return  (($this->getNomUsuel())??'<em>'.$this->getNomFamille().'</em>') . ' ' . ucwords(strtolower($prenom), "- ");
 
     }
@@ -577,10 +587,10 @@ class Agent implements
         /** @var FichePoste $fiche */
         foreach ($this->fiches as $fiche) {
             if ($fiche->isEnCours() AND $fiche->estNonHistorise()) {
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_OK AND ($best === NULL OR $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_REDACTION AND ($best === NULL OR ($best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_SIGNEE AND $best->getEtat()->getCode() !== FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
-                if ($fiche->getEtat()->getCode() === FichePosteEtats::ETAT_CODE_MASQUEE AND ($best === NULL)) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_OK) && ($best === NULL OR !$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE))) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_REDACTION) && ($best === NULL OR (!$best->isEtatActif(FichePosteEtats::ETAT_CODE_SIGNEE)) && !$best->isEtatActif(FichePosteEtats::ETAT_CODE_OK))) $best = $fiche;
+                if ($fiche->isEtatActif(FichePosteEtats::ETAT_CODE_MASQUEE) && ($best === NULL)) $best = $fiche;
             }
         }
         return $best;

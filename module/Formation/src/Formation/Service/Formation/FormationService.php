@@ -2,15 +2,16 @@
 
 namespace Formation\Service\Formation;
 
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
+use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
 
 class FormationService
 {
@@ -22,7 +23,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function create(Formation $formation) : Formation
+    public function create(Formation $formation): Formation
     {
         try {
             $this->getEntityManager()->persist($formation);
@@ -37,7 +38,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function update(Formation $formation) : Formation
+    public function update(Formation $formation): Formation
     {
         try {
             $this->getEntityManager()->flush($formation);
@@ -51,7 +52,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function historise(Formation $formation) : Formation
+    public function historise(Formation $formation): Formation
     {
         try {
             $formation->historiser();
@@ -66,7 +67,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function restore(Formation $formation) : Formation
+    public function restore(Formation $formation): Formation
     {
         try {
             $formation->dehistoriser();
@@ -81,7 +82,7 @@ class FormationService
      * @param Formation $formation
      * @return Formation
      */
-    public function delete(Formation $formation) : Formation
+    public function delete(Formation $formation): Formation
     {
         try {
             $this->getEntityManager()->remove($formation);
@@ -97,15 +98,18 @@ class FormationService
     /**
      * @return QueryBuilder
      */
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
-            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
-            ->addSelect('competence')->leftJoin('formation.competences', 'competence')
-            ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
-            ->addSelect('application')->leftJoin('formation.applications', 'application')
-            ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a')
-            ;
+        try {
+            $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+                ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+                ->addSelect('competence')->leftJoin('formation.competences', 'competence')
+                ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
+                ->addSelect('application')->leftJoin('formation.applications', 'application')
+                ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formation::class . "]", 0, $e);
+        }
         return $qb;
     }
 
@@ -114,7 +118,7 @@ class FormationService
      * @param string $ordre
      * @return Formation[]
      */
-    public function getFormations(string $champ = 'libelle', string $ordre = 'ASC') : array
+    public function getFormations(string $champ = 'libelle', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
@@ -128,14 +132,14 @@ class FormationService
      * @param string $ordre
      * @return Formation[]
      */
-    public function getFormationsByGroupe(?FormationGroupe $groupe, string $champ = 'libelle', string $ordre = 'ASC') : array
+    public function getFormationsByGroupe(?FormationGroupe $groupe, string $champ = 'libelle', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
 
         if ($groupe !== null) {
             $qb = $qb->andWhere('formation.groupe = :groupe')
-                     ->setParameter('groupe', $groupe);
+                ->setParameter('groupe', $groupe);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -146,7 +150,7 @@ class FormationService
      * @param int|null $id
      * @return Formation|null
      */
-    public function getFormation(?int $id) : ?Formation
+    public function getFormation(?int $id): ?Formation
     {
         if ($id === null) return null;
         $qb = $this->createQueryBuilder()
@@ -166,26 +170,25 @@ class FormationService
      * @param string $paramName
      * @return Formation|null
      */
-    public function getRequestedFormation(AbstractActionController $controller, string $paramName = 'formation') : ?Formation
+    public function getRequestedFormation(AbstractActionController $controller, string $paramName = 'formation'): ?Formation
     {
         $id = $controller->params()->fromRoute($paramName);
         $activite = $this->getFormation($id);
         return $activite;
     }
 
-    public function getFormationBySource(string $source, string $id) : ?Formation
+    public function getFormationBySource(string $source, string $id): ?Formation
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('formation.source = :source')
             ->andWhere('formation.idSource = :id')
             ->setParameter('source', $source)
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Formation partagent la même source [".$source. "-". $id ."]");
+            throw new RuntimeException("Plusieurs Formation partagent la même source [" . $source . "-" . $id . "]",0,$e);
         }
         return $result;
     }
@@ -193,9 +196,9 @@ class FormationService
     /**
      * @return array
      */
-    public function getFormationsAsOptions() : array
+    public function getFormationsAsOptions(): array
     {
-        $formations = $this->getFormations('libelle');
+        $formations = $this->getFormations();
 
         $result = [];
         foreach ($formations as $formation) {
@@ -208,9 +211,9 @@ class FormationService
      * @param Formation[] $formationsAlreadyUsed
      * @return Formation[]
      */
-    public function getFormationsDisponiblesAsOptions(array $formationsAlreadyUsed = []) : array
+    public function getFormationsDisponiblesAsOptions(array $formationsAlreadyUsed = []): array
     {
-        $formations = $this->getFormations('libelle', 'ASC');
+        $formations = $this->getFormations();
 
         $result = [];
         foreach ($formations as $formation) {
@@ -232,7 +235,7 @@ class FormationService
     /**
      * @return array
      */
-    public function getFormationsGroupesAsGroupOptions() : array
+    public function getFormationsGroupesAsGroupOptions(): array
     {
         $formations = $this->getFormations();
         $dictionnaire = [];
@@ -267,7 +270,7 @@ class FormationService
      * @param array $data
      * @return Formation
      */
-    public function updateLibelle(Formation $formation, array $data) : Formation
+    public function updateLibelle(Formation $formation, array $data): Formation
     {
         /** @var string $libelle */
         $libelle = null;
@@ -283,11 +286,11 @@ class FormationService
      * @param string $texte
      * @return Formation[]
      */
-    public function findFormationByTerm(string $texte) : array
+    public function findFormationByTerm(string $texte): array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere("LOWER(CONCAT(formation.libelle, ' ', groupe.libelle)) like :search OR LOWER(CONCAT(groupe.libelle, ' ', formation.libelle)) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         return $result;
@@ -297,7 +300,7 @@ class FormationService
      * @param Formation[] $formations
      * @return array
      */
-    public function formatFormationtJSON(array $formations) : array
+    public function formatFormationtJSON(array $formations): array
     {
         $result = [];
         /** @var Formation[] $formations */
@@ -305,7 +308,7 @@ class FormationService
             $groupe = $formation->getGroupe();
             $result[] = array(
                 'id' => $formation->getId(),
-                'label' => (($groupe !== null)?$groupe->getLibelle():"Sans thème ") . " > " . $formation->getLibelle(),
+                'label' => (($groupe !== null) ? $groupe->getLibelle() : "Sans thème ") . " > " . $formation->getLibelle(),
             );
         }
         usort($result, function ($a, $b) {
@@ -318,17 +321,21 @@ class FormationService
      * @param string $texte
      * @return array
      */
-    public function findFormateurByTerm(string $texte) : array
+    public function findFormateurByTerm(string $texte): array
     {
-        $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-            ->andWhere("LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search")
-            ->setParameter('search', '%'.strtolower($texte).'%');
+        try {
+            $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+                ->andWhere("LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search")
+                ->setParameter('search', '%' . strtolower($texte) . '%');
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formateur::class . "]", 0, $e);
+        }
         $result = $qb->getQuery()->getResult();
 
         $data = [];
         /** @var Formateur $f */
         foreach ($result as $f) {
-            $data[$f->getEmail()] = $f->getPrenom(). ' ' . strtoupper($f->getNom());
+            $data[$f->getEmail()] = $f->getPrenom() . ' ' . strtoupper($f->getNom());
         }
 
         return $data;
@@ -338,7 +345,7 @@ class FormationService
      * @param array $formateurs [ $email => $denomination ]
      * @return array
      */
-    public function formatFormateurJSON(array $formateurs) : array
+    public function formatFormateurJSON(array $formateurs): array
     {
         $result = [];
         /** @var Formateur[] $formateurs */
@@ -346,7 +353,7 @@ class FormationService
             $result[] = array(
                 'id' => $email,
                 'label' => $denomination,
-                'extra' => "<span class='badge'>".$email."</span>",
+                'extra' => "<span class='badge'>" . $email . "</span>",
             );
         }
         usort($result, function ($a, $b) {

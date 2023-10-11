@@ -4,13 +4,16 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentPPP implements HasPeriodeInterface, HistoriqueAwareInterface {
+class AgentPPP implements HasPeriodeInterface, HistoriqueAwareInterface, HasEtatInterface
+{
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
 
     /** @var int */
     private $id;
@@ -20,8 +23,6 @@ class AgentPPP implements HasPeriodeInterface, HistoriqueAwareInterface {
     private $type;
     /** @var string|null */
     private $libelle;
-    /** @var Etat|null */
-    private $etat;
     /** @var float|null */
     private $formationCPF;
     /** @var float|null */
@@ -93,24 +94,6 @@ class AgentPPP implements HasPeriodeInterface, HistoriqueAwareInterface {
     public function setLibelle(?string $libelle): AgentPPP
     {
         $this->libelle = $libelle;
-        return $this;
-    }
-
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat|null $etat
-     * @return AgentPPP
-     */
-    public function setEtat(?Etat $etat): AgentPPP
-    {
-        $this->etat = $etat;
         return $this;
     }
 

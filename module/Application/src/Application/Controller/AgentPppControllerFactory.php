@@ -8,10 +8,11 @@ use Application\Service\AgentPPP\AgentPPPService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 
-class AgentPppControllerFactory {
+class AgentPppControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -19,26 +20,25 @@ class AgentPppControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : AgentPppController
+    public function __invoke(ContainerInterface $container): AgentPppController
     {
         /**
          * @var AgentService $agentService
          * @var AgentPPPService $agentPppService
-         * @var EtatService $etatService
+         * @var EtatCategorieService $etatCategorieService
          * @var EtatTypeService $etatTypeService
-         *
          * @var AgentPPPForm $agentPppForm
          */
         $agentService = $container->get(AgentService::class);
         $agentPppService = $container->get(AgentPppService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatCategorieService = $container->get(EtatCategorieService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $agentPppForm = $container->get('FormElementManager')->get(AgentPPPForm::class);
 
         $controller = new AgentPppController();
         $controller->setAgentService($agentService);
         $controller->setAgentPPPService($agentPppService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatCategorieService($etatCategorieService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setAgentPPPForm($agentPppForm);
         return $controller;

@@ -68,22 +68,13 @@ class Presence implements HistoriqueAwareInterface, HasSourceInterface
 
     public function tooglePresence(): void
     {
-        switch ($this->statut) {
-            case Presence::PRESENCE_NON_RENSEIGNEE :
-                $this->statut = Presence::PRESENCE_PRESENCE;
-                break;
-            case Presence::PRESENCE_PRESENCE :
-                $this->statut = Presence::PRESENCE_ABSENCE_JUSTIFIEE;
-                break;
-            case Presence::PRESENCE_ABSENCE_JUSTIFIEE :
-                $this->statut = Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE;
-                break;
-            case Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE :
-                $this->statut = Presence::PRESENCE_NON_RENSEIGNEE;
-                break;
-            default :
-                throw new RuntimeException("Valeur [" . $this->statut . "] non attendue");
-        }
+        $this->statut = match ($this->statut) {
+            Presence::PRESENCE_NON_RENSEIGNEE => Presence::PRESENCE_PRESENCE,
+            Presence::PRESENCE_PRESENCE => Presence::PRESENCE_ABSENCE_JUSTIFIEE,
+            Presence::PRESENCE_ABSENCE_JUSTIFIEE => Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE,
+            Presence::PRESENCE_ABSENCE_NON_JUSTIFIEE => Presence::PRESENCE_NON_RENSEIGNEE,
+            default => throw new RuntimeException("Valeur [" . $this->statut . "] non attendue"),
+        };
     }
 
     public function getStatut(): string

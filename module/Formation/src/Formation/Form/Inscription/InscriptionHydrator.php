@@ -17,7 +17,9 @@ class InscriptionHydrator implements HydratorInterface
     public function extract(object $object): array
     {
         $description = null;
-        switch ($object->getEtat()->getCode()) {
+        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
+        switch ($etattype) {
+            case null :
             case InscriptionEtats::ETAT_DEMANDE :
                 $description = $object->getJustificationAgent();
                 break;
@@ -42,17 +44,21 @@ class InscriptionHydrator implements HydratorInterface
      * @param FormationInstanceInscrit|DemandeExterne $object
      * @return FormationInstanceInscrit
      */
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) AND trim($data['HasDescription']['description']) !== '')?trim($data['HasDescription']['description']):null;
 
-        switch ($object->getEtat()->getCode()) {
+        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
+        switch ($etattype) {
+            case null :
             case InscriptionEtats::ETAT_DEMANDE :
-                $object->setJustificationAgent($description);
+                //note deplacer dans le controller : malin ?
+//                $object->setJustificationAgent($description);
                 break;
             case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
             case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                $object->setJustificationResponsable($description);
+                //note deplacer dans le controller : malin ?
+//                $object->setJustificationResponsable($description);
                 break;
             case InscriptionEtats::ETAT_REFUSER :
             case DemandeExterneEtats::ETAT_REJETEE :

@@ -15,7 +15,7 @@ class ApplicationForm extends Form {
     use FormationServiceAwareTrait;
     use ApplicationThemeServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle
         $this->add([

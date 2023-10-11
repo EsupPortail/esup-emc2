@@ -19,7 +19,7 @@ class Demande2FormationHydrator implements HydratorInterface {
         return $data;
     }
 
-    public function hydrate(array $data, object $object)
+    public function hydrate(array $data, object $object): object
     {
         return $object;
     }

@@ -30,9 +30,16 @@
         <field name="token"             type="string" length="255"      column="token"              nullable="true"/>
         <field name="acceptation"       type="datetime"                 column="acceptation"        nullable="true"/>
 
-        <many-to-one target-entity="UnicaenEtat\Entity\Db\Etat"  field="etat">
-            <join-column name="etat_id" referenced-column-name="id"/>
-        </many-to-one>
+        <many-to-many field="etats" target-entity="UnicaenEtat\Entity\Db\EtatInstance">
+            <join-table name="entretienprofessionnel_etat">
+                <join-columns>
+                    <join-column name="entretien_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="etat_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <many-to-many field="validations" target-entity="UnicaenValidation\Entity\Db\ValidationInstance">
             <join-table name="entretienprofessionnel_validation">

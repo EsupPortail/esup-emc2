@@ -22,10 +22,10 @@ $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::E
 
 $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
-$validationResponsable   = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
-$validationObservation   = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
-$validationHierarchie    = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_DRH);
-$validationAgent         = $entretien->getValidationByType(EntretienProfessionnelValidations::VALIDATION_AGENT);
+$validationResponsable   = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationObservation   = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_OBSERVATION);
+$validationHierarchie    = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_DRH);
+$validationAgent         = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_AGENT);
 
 
 $now = new DateTime();
@@ -35,7 +35,18 @@ $depasse = ($date === null or $date < $now);
 
 $agent = $entretien->getAgent();
 $responsable = $entretien->getResponsable();
-$autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
+
+// Filtrage du responsable de l'entretien pro parmi les autorités SAUF si inhiber par le corps (par exemple BIB).
+$grades = $agent->getGradesActifs($entretien->getDateEntretien());
+$inhibition = false;
+foreach ($grades as $grade) {
+    if ($grade->getCorps()->isSuperieurAsAutorite()) {
+        $inhibition = true;
+        break;
+    }
+}
+if (!$inhibition) $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
+else $autorites = $agent->getAutorites();
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -64,37 +75,25 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
     <?php endif; ?>
 
     <?php if ($validationResponsable !== null) : ?>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <div class="col-md-5">
-                        <strong>Validation effectuée</strong>
-                    </div>
-                    <div class="col-md-7">
-                        <dl class="dl-horizontal">
-                            <dt> Validateur </dt>
-                            <dd> <?php echo $validationResponsable->getHistoModificateur()->getDisplayName(); ?> </dd>
-                            <dt> Date </dt>
-                            <dd> <?php echo $validationResponsable->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                        </dl>
-                    </div>
-                    <br/>
-                    <br/>
-                </div>
+            <div class="alert alert-success">
+                <strong>Validation effectuée</strong>
+                <dl class="row">
+                    <dt class="col-md-4"> Validateur </dt>
+                    <dd class="col-md-8"> <?php echo $validationResponsable->getHistoModificateur()->getDisplayName(); ?> </dd>
+                    <dt class="col-md-4"> Date </dt>
+                    <dd class="col-md-8"> <?php echo $validationResponsable->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+                </dl>
             </div>
-            <div class="pull-right">
-                <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
-                        <a
-                            <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationResponsable->getId()], [], true); ?>"
-                                class="btn btn-danger action"
-                        >
-                            <span class="icon validation-undo"></span>
-                            Révoquer la validation
-                        </a>
-                <?php endif; ?>
-            </div>
-        </div>
+            <?php if ($canValiderResponsable and $validationObservation === null and $validationHierarchie === null) : ?>
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationResponsable->getId()], [], true); ?>"
+                            class="btn btn-danger action"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Révoquer la validation
+                    </a>
+            <?php endif; ?>
     <?php else : ?>
         <?php if ($canValiderResponsable) : ?>
             <a
@@ -103,7 +102,7 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation du responsable
             </a>
         <?php endif; ?>
@@ -142,44 +141,32 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
     <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
 
     <?php if ($validationObservation !== null) : ?>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <div class="col-md-5">
-                        <strong>Observations validées</strong>
-                    </div>
-                    <div class="col-md-7">
-                        <dl class="dl-horizontal">
-                            <dt> Validateur </dt>
-                            <dd> <?php echo $validationObservation->getHistoModificateur()->getDisplayName(); ?> </dd>
-                            <dt> Date </dt>
-                            <dd> <?php echo $validationObservation->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                        </dl>
-                    </div>
-                    <br/>
-                    <br/>
-                </div>
-            </div>
-            <div class="pull-right">
-                <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
-                    <?php if ($validationObservation !== null) : ?>
-                        <div class="pull-right">
-                            <a
-                                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationObservation->getId()], [], true); ?>"
-                                    class="btn btn-danger action"
-                            >
-                                <span class="icon validation-undo"></span>
-                                Révoquer la validation
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </div>
+        <div class="alert alert-success">
+            <strong>Observations validées</strong>
+            <dl class="row">
+                <dt class="col-md-4"> Validateur </dt>
+                <dd class="col-md-8"> <?php echo $validationObservation->getHistoModificateur()->getDisplayName(); ?> </dd>
+                <dt class="col-md-4"> Date </dt>
+                <dd class="col-md-8"> <?php echo $validationObservation->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+            </dl>
         </div>
+        <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
+            <?php if ($validationObservation !== null) : ?>
+                <div class="pull-right">
+                    <a
+                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationObservation->getId()], [], true); ?>"
+                            class="btn btn-danger action"
+                    >
+                        <span class="icon icon-unchecked"></span>
+                        Révoquer la validation
+                    </a>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
     <?php else :?>
     <?php if ($step >= 1) : ?>
-        <?php if ($canValiderObservation) : ?>
+        <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
             <?php if ($entretien->getObservationActive()) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
@@ -187,7 +174,7 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
                         class="btn btn-success action ajax-modal"
                         data-event="modification"
                 >
-                    <span class="icon validation-do"></span>
+                    <span class="icon icon-checked"></span>
                     Valider les observations
                 </a>
             <?php else : ?>
@@ -197,7 +184,7 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
                             class="btn btn-success action ajax-modal"
                             data-event="modification"
                     >
-                        <span class="icon validation-do"></span>
+                        <span class="icon icon-checked"></span>
                         Je ne fais pas d'observation
                     </a>
             <?php endif; ?>
@@ -239,37 +226,25 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
     <?php endif; ?>
 
     <?php if ($validationHierarchie !== null) : ?>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <div class="col-md-5">
-                        <strong>Validation effectuée</strong>
-                    </div>
-                    <div class="col-md-7">
-                        <dl class="dl-horizontal">
-                            <dt> Validateur </dt>
-                            <dd> <?php echo $validationHierarchie->getHistoModificateur()->getDisplayName(); ?> </dd>
-                            <dt> Date </dt>
-                            <dd> <?php echo $validationHierarchie->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                        </dl>
-                    </div>
-                    <br/>
-                    <br/>
-                </div>
-            </div>
-            <div class="pull-right">
-                <?php if ($canValiderDrh AND $validationAgent === null) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationHierarchie->getId()], [], true); ?>"
-                            class="btn btn-danger action"
-                    >
-                        <span class="icon validation-undo"></span>
-                        Révoquer la validation
-                    </a>
-                <?php endif; ?>
-            </div>
+        <div class="alert alert-success">
+            <strong>Validation effectuée</strong>
+            <dl class="row">
+                <dt class="col-md-4"> Validateur </dt>
+                <dd class="col-md-8"> <?php echo $validationHierarchie->getHistoModificateur()->getDisplayName(); ?> </dd>
+                <dt class="col-md-4"> Date </dt>
+                <dd class="col-md-8"> <?php echo $validationHierarchie->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+            </dl>
         </div>
+        <?php if ($canValiderDrh AND $validationAgent === null) : ?>
+            <a
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationHierarchie->getId()], [], true); ?>"
+                    class="btn btn-danger action"
+            >
+                <span class="icon icon-unchecked"></span>
+                Révoquer la validation
+            </a>
+        <?php endif; ?>
    <?php else : ?>
         <?php if ($canValiderDrh AND $validationResponsable AND ($validationObservation !== null OR $depasse)) : ?>
             <a
@@ -278,7 +253,7 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation de l'autorité
             </a>
         <?php endif; ?>
@@ -314,37 +289,25 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
     <?php endif; ?>
 
     <?php if ($validationAgent !== null) : ?>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <div class="col-md-5">
-                        <strong>Validation effectuée</strong>
-                    </div>
-                    <div class="col-md-7">
-                        <dl class="dl-horizontal">
-                            <dt> Validateur </dt>
-                            <dd> <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?> </dd>
-                            <dt> Date </dt>
-                            <dd> <?php echo $validationAgent->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-                        </dl>
-                    </div>
-                    <br/>
-                    <br/>
-                </div>
-            </div>
-            <div class="pull-right">
-                <?php if ($canValiderAgent AND $entretien->getCampagne()->estEnCours()) : ?>
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['validation' => $validationAgent->getId()], [], true); ?>"
-                            class="btn btn-danger action"
-                    >
-                        <span class="icon validation-undo"></span>
-                        Révoquer la validation
-                    </a>
-                <?php endif; ?>
-            </div>
+        <div class="alert alert-success">
+            <strong>Validation effectuée</strong>
+            <dl class="row">
+                <dt class="col-md-4"> Validateur </dt>
+                <dd class="col-md-8"> <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?> </dd>
+                <dt class="col-md-4"> Date </dt>
+                <dd class="col-md-8"> <?php echo $validationAgent->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
+            </dl>
         </div>
+        <?php if ($canValiderAgent AND $entretien->getCampagne()->estEnCours()) : ?>
+            <a
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
+                    href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"
+                    class="btn btn-danger action"
+            >
+                <span class="icon icon-unchecked"></span>
+                Révoquer la validation
+            </a>
+        <?php endif; ?>
     <?php else : ?>
         <?php if ($canValiderAgent AND $validationHierarchie !== null) : ?>
             <a
@@ -353,7 +316,7 @@ $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use
                     class="btn btn-success action ajax-modal"
                     data-event="modification"
             >
-                <span class="icon validation-do"></span>
+                <span class="icon icon-checked"></span>
                 Validation de l'agent
             </a>
         <?php endif; ?>

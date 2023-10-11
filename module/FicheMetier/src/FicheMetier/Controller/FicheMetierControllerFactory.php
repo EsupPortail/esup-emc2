@@ -17,7 +17,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 
 class FicheMetierControllerFactory {
 
@@ -31,14 +31,14 @@ class FicheMetierControllerFactory {
     {
         /**
          * @var DomaineService $domaineService
-         * @var EtatService $etatService
+         * @var EtatTypeService $etatTypeService
          * @var FicheMetierService $ficheMetierService
          * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
          */
         $domaineService = $container->get(DomaineService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $ficheMetierService = $container->get(FicheMetierService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $metierService = $container->get(metierService::class);
@@ -63,7 +63,7 @@ class FicheMetierControllerFactory {
 
         $controller = new FicheMetierController();
         $controller->setDomaineService($domaineService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFicheMetierService($ficheMetierService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setMetierService($metierService);

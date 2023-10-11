@@ -11,7 +11,8 @@ use Formation\Service\Presence\PresenceService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
+use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
@@ -24,10 +25,11 @@ class FormationInstanceControllerFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceController
+    public function __invoke(ContainerInterface $container): FormationInstanceController
     {
         /**
-         * @var EtatService $etatService
+         * @var EtatCategorieService $etatCategorieService
+         * @var EtatTypeService $etatTypeService
          * @var FormationService $formationService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
@@ -36,7 +38,8 @@ class FormationInstanceControllerFactory
          * @var ParametreService $parametreService
          * @var PresenceService $presenceService
          */
-        $etatService = $container->get(EtatService::class);
+        $etatCategorieService = $container->get(EtatCategorieService::class);
+        $etatTypeService = $container->get(EtatTypeService::class);
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
@@ -52,7 +55,8 @@ class FormationInstanceControllerFactory
 
         /** @var FormationInstanceController $controller */
         $controller = new FormationInstanceController();
-        $controller->setEtatService($etatService);
+        $controller->setEtatCategorieService($etatCategorieService);
+        $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);

@@ -39,7 +39,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var AgentTutorat[] $tutorats
  * @var AgentAccompagnement[] $accompagnements
  *
- * @var bool $canAffichageDate
  */
 
 $displayParcours = false;
@@ -86,63 +85,59 @@ if ($agent !== null) {
         <strong><?php echo $agent->getDenomination(); ?></strong>
     </h1>
 
-    <div role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-                <a href="#informations" class="nav-link" aria-controls="informations" role="tab" data-toggle="tabz">
-                   Informations <br/> générales
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#fiches" class="nav-link" aria-controls="fiches" role="tab" data-toggle="tabz">
-                    Fiches de poste et <br/>
-                    missions spécifiques
-                </a>
-            </li>
-            <?php if ($displayParcours === true) : ?>
-            <li class="nav-item">
-                <a href="#parcours" class="nav-link" aria-controls="parcours" role="tab" data-toggle="tabz">
-                    Parcours de formation<br/> et logiciels metiers
-                </a>
-            </li>
-            <?php endif; ?>
-            <?php if ($canPortfolio) : ?>
-                <li class="nav-item">
-                    <a href="#acquis" class="nav-link" aria-controls="acquis" role="tab" data-toggle="tabz">
-                        Acquis de l'agent <br/> &nbsp;
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#portfolio" class="nav-link" aria-controls="portfolio" role="tab" data-toggle="tabz">
-                        Portfolio <br/> &nbsp;
-                    </a>
-                </li>
-            <?php endif; ?>
-            <?php if ($canCCC === true) : ?>
-                <li class="nav-item">
-                    <a href="#ppp" class="nav-link" aria-controls="ppp" role="tab" data-toggle="tabz">
-                        Projet professionnel <br/> &nbsp;personnel
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#tutorat" class="nav-link" aria-controls="tutorat" role="tab" data-toggle="tabz">
-                        Tutorats et <br/> encadrements
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="informations-tab"
+                data-bs-toggle="tab" data-bs-target="#informations"
+                type="button" role="tab" aria-controls="informations" aria-selected="true">
+            Informations <br/> générales
+        </button>
+        <button class="nav-link" id="fiches-tab"
+                data-bs-toggle="tab" data-bs-target="#fiches"
+                type="button" role="tab" aria-controls="fiches" aria-selected="true">
+            Fiches de poste et <br/> missions spécifiques
+        </button>
+        <?php if ($displayParcours) : ?>
+            <button class="nav-link" id="parcours-tab"
+                    data-bs-toggle="tab" data-bs-target="#parcours"
+                    type="button" role="tab" aria-controls="parcours" aria-selected="true">
+                Parcours de formation<br/> et logiciels metiers
+            </button>
+        <?php endif; ?>
+        <?php if ($canPortfolio) : ?>
+            <button class="nav-link" id="acquis-tab"
+                    data-bs-toggle="tab" data-bs-target="#acquis"
+                    type="button" role="tab" aria-controls="acquis" aria-selected="true">
+                Acquis de l'agent <br/> &nbsp;
+            </button>
+            <button class="nav-link" id="portfolio-tab"
+                    data-bs-toggle="tab" data-bs-target="#portfolio"
+                    type="button" role="tab" aria-controls="portfolio" aria-selected="true">
+                Portfolio <br/> &nbsp;
+            </button>
+        <?php endif; ?>
+        <?php if ($canCCC === true) : ?>
+            <button class="nav-link" id="ppp-tab"
+                    data-bs-toggle="tab" data-bs-target="#ppp"
+                    type="button" role="tab" aria-controls="ppp" aria-selected="true">
+                Projet professionnel <br/> &nbsp;personnel
+            </button>
+            <button class="nav-link" id="tutorat-tab"
+                    data-bs-toggle="tab" data-bs-target="#tutorat"
+                    type="button" role="tab" aria-controls="tutorat" aria-selected="true">
+                Tutorats et <br/> encadrements
+            </button>
+        <?php endif; ?>
     </div>
 
     <div>
         <div class="tab-content">
-            <div id="informations" class="tab-pane " role="tabpanel">
+            <div id="informations" class="tab-pane fade show" role="tabpanel" aria-labelledby="informations-tab">
 
                 <?php echo $this->partial('partial/informations-generales',
                     ['agent' => $agent,
                         'affectations' => $affectations,
                         'superieures' => $superieures, 'autorites' => $autorites,
-                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite,
-                        'canAffichageDate' => $canAffichageDate]); ?>
+                        'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
             </div>
             <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',
@@ -217,18 +212,29 @@ if ($agent !== null) {
 </style>
 
 <script>
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
         let name = hash.substr(1);
         if (name === undefined || name === "") name = "informations";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav-tabs a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
+            let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#" + anchor);
         });
     });
+
     $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

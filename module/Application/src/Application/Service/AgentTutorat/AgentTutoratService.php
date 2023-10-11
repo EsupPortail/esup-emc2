@@ -5,7 +5,7 @@ namespace Application\Service\AgentTutorat;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentTutorat;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -101,7 +101,8 @@ class AgentTutoratService {
             ->join('tutorat.agent', 'agent')->addSelect('agent')
             ->leftjoin('tutorat.cible', 'cible')->addSelect('cible')
             ->leftjoin('tutorat.metier', 'metier')->addSelect('metier')
-            ->leftjoin('tutorat.etat', 'etat')->addSelect('etat');
+            //->leftjoin('tutorat.etat', 'etat')->addSelect('etat')
+        ;
         return $qb;
     }
 

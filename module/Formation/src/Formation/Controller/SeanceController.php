@@ -17,7 +17,7 @@ class SeanceController extends AbstractActionController
     use SeanceServiceAwareTrait;
     use SeanceFormAwareTrait;
 
-    public function ajouterJourneeAction() : ViewModel
+    public function ajouterJourneeAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
@@ -47,7 +47,7 @@ class SeanceController extends AbstractActionController
         return $vm;
     }
 
-    public function modifierJourneeAction() : ViewModel
+    public function modifierJourneeAction(): ViewModel
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
 
@@ -73,14 +73,14 @@ class SeanceController extends AbstractActionController
         return $vm;
     }
 
-    public function historiserJourneeAction() : Response
+    public function historiserJourneeAction(): Response
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->historise($journee);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $journee->getInstance()->getId()], [], true);
     }
 
-    public function restaurerJourneeAction() : Response
+    public function restaurerJourneeAction(): Response
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
         $this->getSeanceService()->restore($journee);
@@ -101,7 +101,7 @@ class SeanceController extends AbstractActionController
 
         $vm = new ViewModel();
         if ($journee !== null) {
-            $vm->setTemplate('application/default/confirmation');
+            $vm->setTemplate('default/confirmation');
             $vm->setVariables([
                 'title' => "Suppression de la journée de formation du [" . $journee->getJour()->format('d/m/Y') . "]",
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",

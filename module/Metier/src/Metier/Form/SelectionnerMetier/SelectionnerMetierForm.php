@@ -11,7 +11,7 @@ class SelectionnerMetierForm extends Form
 {
     use MetierServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         // libelle
         $this->add([

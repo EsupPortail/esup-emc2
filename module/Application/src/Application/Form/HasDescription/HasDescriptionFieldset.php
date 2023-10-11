@@ -6,7 +6,7 @@ use Laminas\Form\Fieldset;
 
 class HasDescriptionFieldset extends Fieldset {
 
-    public function init()
+    public function init(): void
     {
         // description
         $this->add([

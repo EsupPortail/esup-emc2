@@ -114,7 +114,7 @@ return [
                         'rechercher-gestionnaire',
                     ],
                     'privileges' => [
-                        AgentPrivileges::AGENT_AFFICHER,
+                        AgentPrivileges::AGENT_RECHERCHER,
                     ],
                 ],
                 [
@@ -336,6 +336,7 @@ return [
                         'options' => [
                             'route'    => '/afficher[/:agent]',
                             'defaults' => [
+                                /** @see AgentController::afficherAction() */
                                 'controller' => AgentController::class,
                                 'action'     => 'afficher',
                             ],

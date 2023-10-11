@@ -20,7 +20,7 @@ class CompetenceBlocViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $competences, ?HasCompetenceCollectionInterface $objet = null, array $options = [])
+    public function __invoke(array $competences, ?HasCompetenceCollectionInterface $objet = null, array $options = []): string|Partial
     {
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));

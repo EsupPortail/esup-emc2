@@ -4,11 +4,11 @@ namespace EntretienProfessionnel\Service\EntretienProfessionnel;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Configuration\ConfigurationService;
+use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
-use Doctrine\ORM\EntityManager;
-use Interop\Container\ContainerInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 use UnicaenValidation\Service\ValidationType\ValidationTypeService;
@@ -48,6 +48,9 @@ class EntretienProfessionnelServiceFactory
         $service->setParametreService($parametreService);
         $service->setValidationInstanceService($validationInstanceService);
         $service->setValidationTypeService($validationTypeService);
+
+        $config = $container->get('Configuration')['unicaen-utilisateur'];
+        $service->config = $config;
         return $service;
     }
 }

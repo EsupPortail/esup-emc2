@@ -4,7 +4,7 @@ namespace Fichier\Service\Fichier;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Exception;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Entity\Db\Nature;

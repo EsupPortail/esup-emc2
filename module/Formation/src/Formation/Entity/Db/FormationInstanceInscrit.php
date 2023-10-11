@@ -13,14 +13,14 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatInterface;
-use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatInterface, HasSourceInterface, ResourceInterface
+class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInterface, HasEtatsInterface, HasSourceInterface, ResourceInterface
 {
-    use HasEtatTrait;
+    use HasEtatsTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
 
@@ -47,6 +47,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
 
     public function __construct()
     {
+        $this->etats = new ArrayCollection();
         $this->presences = new ArrayCollection();
         $this->reponsesEnquete = new ArrayCollection();
     }
@@ -183,7 +184,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
                 try {
                     $temp = new DateInterval('PT' . $volume . 'H');
                 } catch (Exception $e) {
-                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]");
+                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
                 }
                 $sum->add($temp);
             }

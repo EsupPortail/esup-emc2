@@ -4,6 +4,8 @@ namespace Application\Service\AgentMissionSpecifique;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 
 class AgentMissionSpecifiqueServiceFactory {
@@ -11,6 +13,8 @@ class AgentMissionSpecifiqueServiceFactory {
     /**
      * @param ContainerInterface $container
      * @return AgentMissionSpecifiqueService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : AgentMissionSpecifiqueService
     {

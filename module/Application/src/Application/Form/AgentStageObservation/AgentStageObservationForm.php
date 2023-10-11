@@ -3,21 +3,19 @@
 namespace Application\Form\AgentStageObservation;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use Metier\Service\Metier\MetierServiceAwareTrait;
-use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
-use UnicaenEtat\Service\Etat\EtatServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Metier\Service\Metier\MetierServiceAwareTrait;
+use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 
 class AgentStageObservationForm extends Form {
     use StructureServiceAwareTrait;
     use MetierServiceAwareTrait;
-    use EtatServiceAwareTrait;
 
-    public function init()
+    public function init(): void
     {
         //--agent déduiu de l'action
         $this->add([

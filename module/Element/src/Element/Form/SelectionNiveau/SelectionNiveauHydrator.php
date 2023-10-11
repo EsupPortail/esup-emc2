@@ -11,7 +11,7 @@ class SelectionNiveauHydrator implements HydratorInterface {
 
     /**
      * @param HasNiveauInterface $object
-     * @return array|void
+     * @return array
      */
     public function extract($object): array
     {
@@ -27,9 +27,9 @@ class SelectionNiveauHydrator implements HydratorInterface {
      * @param HasNiveauInterface $object
      * @return HasNiveauInterface
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, $object): object
     {
-        $niveau = $this->getNiveauService()->getMaitriseNiveau(isset($data['niveau'])?$data['niveau']:null);
+        $niveau = $this->getNiveauService()->getMaitriseNiveau($data['niveau'] ?? null);
         $object->setNiveauMaitrise($niveau);
         $clef = (isset($data['clef']))? ($data['clef'] == 1) : null;
         $object->setClef($clef);

@@ -25,11 +25,12 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenEtat\Form\SelectionEtat\SelectionEtatForm;
-use UnicaenEtat\Service\Etat\EtatService;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
-class FichePosteControllerFactory {
+class FichePosteControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -37,7 +38,7 @@ class FichePosteControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FichePosteController
+    public function __invoke(ContainerInterface $container): FichePosteController
     {
         /**
          * @var AgentService $agentService
@@ -48,7 +49,7 @@ class FichePosteControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var ApplicationsRetireesService $applicationsConserveesService
          * @var CompetencesRetireesService $competencesRetireesService
-         * @var EtatService $etatService
+         * @var EtatInstanceService $etatInstanceService
          * @var ExpertiseService $expertiseService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NotificationService $notificationService
@@ -66,7 +67,7 @@ class FichePosteControllerFactory {
         $applicationsConserveesService = $container->get(ApplicationsRetireesService::class);
         $competencesRetireesService = $container->get(CompetencesRetireesService::class);
         $activitesDescriptionsRetireesService = $container->get(ActivitesDescriptionsRetireesService::class);
-        $etatService = $container->get(EtatService::class);
+        $etatInstanceService = $container->get(EtatInstanceService::class);
         $expertiseService = $container->get(ExpertiseService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -90,7 +91,6 @@ class FichePosteControllerFactory {
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
 
 
-
         /** @var FichePosteController $controller */
         $controller = new FichePosteController();
 
@@ -104,7 +104,7 @@ class FichePosteControllerFactory {
         $controller->setStructureService($structureService);
         $controller->setApplicationsRetireesService($applicationsConserveesService);
         $controller->setCompetencesRetireesService($competencesRetireesService);
-        $controller->setEtatService($etatService);
+        $controller->setEtatInstanceService($etatInstanceService);
         $controller->setExpertiseService($expertiseService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);

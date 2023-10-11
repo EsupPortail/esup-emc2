@@ -70,9 +70,10 @@ class NotificationService {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DEMANDE_AGENT, $vars);
 
         $mail = $this->getMailService()->sendMail($this->getMailsSuperieursByAgent($agent), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
+        if ($mail) {
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+            $this->getMailService()->update($mail);
+        }
         return $mail;
     }
 
@@ -359,7 +360,7 @@ class NotificationService {
             }
             $texte .= "</ul>";
 
-            $email = $this->getParametreService()->getParametreByCode('FORMATION','MAIL_PERSONNEL')->getValeur();
+            $email = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE,FormationParametres::MAIL_PERSONNEL)->getValeur();
             $vars = [
                 'UrlService' => $this->getUrlService(),
             ];
@@ -420,10 +421,6 @@ class NotificationService {
         return null;
     }
 
-    /**
-     * @param FormationInstance[] $closes
-     * @return Mail|null
-     */
     public function triggerNotifierConvocationAutomatique(array $convocations): ?Mail
     {
         if (!empty($convocations)) {
@@ -443,6 +440,8 @@ class NotificationService {
             $this->getMailService()->update($mail);
             return $mail;
         }
+
+        return null;
     }
 
     // NOTIFICATION LIEE AUX DEMANDES DE FORMATION EXTERNE /////////////////////////////////////////////////////////////

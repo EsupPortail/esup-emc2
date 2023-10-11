@@ -1,0 +1,9 @@
+footer div#etablissement {
+    background-image: url('../img/nerv-logo.com.png');
+    position: relative;
+    top: 30px;
+    height:85px;
+    width:160px;
+    display: inline-block;
+    background-repeat: no-repeat;
+}

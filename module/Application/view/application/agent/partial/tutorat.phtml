@@ -74,7 +74,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     Non renseigné
                 <?php endif; ?>
             </td>
-            <td> <?php echo $this->etatbadge($accompagnement->getEtat()); ?> </td>
+            <td> <?php echo $this->etatinstance($accompagnement->getEtat()); ?> </td>
             <td>
                 <?php if ($canModifierPPP) : ?>
                     <?php /** @see \Application\Controller\AgentController::modifierTutoratAction() */ ?>
@@ -173,7 +173,7 @@ $canDetruirePPP     = $canAjouterPPP;
                     Non renseigné
                 <?php endif; ?>
             </td>
-            <td> <?php echo $this->etatbadge($accompagnement->getEtat()); ?> </td>
+            <td> <?php echo $this->etatinstance($accompagnement->getEtat()); ?> </td>
             <td>
                 <?php if ($canModifierPPP) : ?>
                     <?php /** @see \Application\Controller\AgentController::modifierAccompagnementAction() */ ?>

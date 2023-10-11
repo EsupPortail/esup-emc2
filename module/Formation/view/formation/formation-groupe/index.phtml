@@ -55,7 +55,7 @@ $this->headTitle("Thèmes de formation");
                 <?php echo $groupe->getLibelle(); ?>
                 <?php if ($groupe->getDescription() !== null) : ?>
                     <span class="icon icon-info" title="<?php echo $groupe->getDescription(); ?>"
-                          data-toggle="tooltip" data-html="true">
+                          data-bs-toggle="tooltip" data-bs-html="true">
                     </span>
                 <?php endif; ?>
             </td>

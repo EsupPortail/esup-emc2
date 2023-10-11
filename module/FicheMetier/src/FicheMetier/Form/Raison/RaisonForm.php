@@ -8,7 +8,7 @@ use Laminas\InputFilter\Factory;
 
 class RaisonForm extends Form
 {
-    public function init()
+    public function init(): void
     {
         // description
         $this->add([

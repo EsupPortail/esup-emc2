@@ -11,7 +11,8 @@ use Laminas\InputFilter\Factory;
 class CompetenceThemeForm extends Form {
     use CompetenceServiceAwareTrait;
 
-    public function init() {
+    public function init(): void
+    {
 
         //libelle
         $this->add([

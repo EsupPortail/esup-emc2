@@ -15,7 +15,7 @@ use Laminas\Validator\Regex;
 class FormationInstanceForm extends Form
 {
 
-    public function init()
+    public function init(): void
     {
         /** Complement */
         $this->add([
@@ -32,7 +32,7 @@ class FormationInstanceForm extends Form
                 'class' => 'form-control description type2',
             ],
         ]);
-        /** taille liste principale */
+        /** Taille liste principale */
         $this->add([
             'type' => Number::class,
             'name' => 'principale',
@@ -43,7 +43,7 @@ class FormationInstanceForm extends Form
                 'id' => 'principale',
             ],
         ]);
-        /** taille liste complementaire */
+        /** Taille liste complementaire */
         $this->add([
             'type' => Number::class,
             'name' => 'complementaire',
@@ -54,7 +54,7 @@ class FormationInstanceForm extends Form
                 'id' => 'complementaire',
             ],
         ]);
-        /** taille liste complementaire */
+        /** Taille liste complementaire */
         $this->add([
             'type' => Select::class,
             'name' => 'type',
@@ -71,7 +71,7 @@ class FormationInstanceForm extends Form
                 'id' => 'type',
             ],
         ]);
-        /** taille liste complementaire */
+        /** Taille liste complementaire */
         $this->add([
             'type' => Select::class,
             'name' => 'inscription',
@@ -87,7 +87,7 @@ class FormationInstanceForm extends Form
                 'id' => 'inscription',
             ],
         ]);
-        /** taille liste complementaire */
+        /** Taille liste complementaire */
         $this->add([
             'type' => Text::class,
             'name' => 'lieu',

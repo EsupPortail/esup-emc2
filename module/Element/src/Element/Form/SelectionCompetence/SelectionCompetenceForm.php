@@ -11,7 +11,8 @@ use Laminas\InputFilter\Factory;
 class SelectionCompetenceForm extends Form {
     use CompetenceServiceAwareTrait;
 
-    public function init() {
+    public function init(): void
+    {
 
         //select multiple avec groupe
         $this->add([

@@ -4,17 +4,19 @@ namespace Application\Entity\Db;
 
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
-use Metier\Entity\Db\Metier;
 use Metier\Entity\HasMetierInterface;
 use Metier\Entity\HasMetierTrait;
-use UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\HasEtatInterface;
+use UnicaenEtat\Entity\Db\HasEtatTrait;
+use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class AgentTutorat implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface {
+class AgentTutorat implements HistoriqueAwareInterface, HasMetierInterface, HasPeriodeInterface, HasEtatInterface {
     use HasMetierTrait;
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
+    use HasEtatTrait;
 
     /** @var int */
     private $id;
@@ -26,8 +28,6 @@ class AgentTutorat implements HistoriqueAwareInterface, HasMetierInterface, HasP
     private $complement;
     /** @var bool|null */
     private $formation;
-    /** @var Etat|null */
-    private $etat;
 
     /**
      * @return int
@@ -109,21 +109,4 @@ class AgentTutorat implements HistoriqueAwareInterface, HasMetierInterface, HasP
         return $this;
     }
 
-    /**
-     * @return Etat|null
-     */
-    public function getEtat(): ?Etat
-    {
-        return $this->etat;
-    }
-
-    /**
-     * @param Etat|null $etat
-     * @return AgentTutorat
-     */
-    public function setEtat(?Etat $etat): AgentTutorat
-    {
-        $this->etat = $etat;
-        return $this;
-    }
 }
