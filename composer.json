@@ -23,7 +23,7 @@
     "unicaen/aide": "^0",
     "ext-json": "*",
     "ext-gettext": "*",
-    "unicaen/indicateur": "^0",
+    "unicaen/indicateur": "^6.0",
     "unicaen/synchro": "^6.0",
     "unicaen/console": "^6.0",
 
