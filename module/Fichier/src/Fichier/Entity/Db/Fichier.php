@@ -3,9 +3,10 @@
 namespace Fichier\Entity\Db;
 
 
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Fichier {
+class Fichier implements  HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
     /** @var string */
