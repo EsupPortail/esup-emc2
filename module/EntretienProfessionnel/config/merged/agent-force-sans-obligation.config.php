@@ -161,6 +161,27 @@ return [
         ],
     ],
 
+    'navigation' => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'agent-force' => [
+                                'label' => "Agent·es forcé·es sans obligation d'entretien professionnel",
+                                'route' => 'entretien-professionnel/agent-force-sans-obligation',
+                                'resource' => PrivilegeController::getResourceId(AgentForceSansObligationController::class, 'index'),
+                                'order' => 3100,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+
     'service_manager' => [
         'factories' => [
             AgentForceSansObligationService::class => AgentForceSansObligationServiceFactory::class,
