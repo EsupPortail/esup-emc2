@@ -328,7 +328,7 @@ class Agent implements
     {
         /** @var AgentForceSansObligation $forcage */
         foreach ($this->forcesSansObligation as $forcage) {
-            if ($forcage->getCampagne() === $campagne) return true;
+            if ($forcage->estNonHistorise() && $forcage->getCampagne() === $campagne) return true;
         }
         return false;
     }
