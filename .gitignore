@@ -6,5 +6,6 @@ composer.lock
 vendor
 !/public/vendor
 /public/css/local.css
+/public/css/environnement.css
 /public/css/logos.css
 !public/unicaen/app/vendor

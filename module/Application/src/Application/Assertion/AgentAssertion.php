@@ -27,7 +27,6 @@ class AgentAssertion extends AbstractAssertion
 
     protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
-        $a = "Ah!";
         if (!$entity instanceof Agent) {
             return false;
         }
