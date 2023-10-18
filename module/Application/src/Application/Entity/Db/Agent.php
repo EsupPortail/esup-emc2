@@ -15,6 +15,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
@@ -68,6 +69,7 @@ class Agent implements
     private Collection $fichiers;       /** Fichier[] */
     private Collection $missionsSpecifiques; /** AgentMissionSpecifique[] */
     private Collection $structuresForcees;  /** StructureAgentForce  */
+    private Collection $forcesSansObligation;  /** StructureAgentForce  */
 
     private Collection $autorites;      /** AgentAutorite[] */
     private Collection $superieurs;     /** AgentSuperieur[] */
@@ -81,6 +83,7 @@ class Agent implements
         $this->echelons = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->structuresForcees = new ArrayCollection();
+        $this->forcesSansObligation = new ArrayCollection();
 
         $this->autorites = new ArrayCollection();
         $this->superieurs = new ArrayCollection();
@@ -317,6 +320,17 @@ class Agent implements
             $structures[$structuresForcee->getStructure()->getId()] = $structuresForcee->getStructure();
         }
         return $structures;
+    }
+
+    /** SANS OBLIGATION ***********************************************************************************************/
+
+    public function isForceSansObligation(Campagne $campagne): bool
+    {
+        /** @var AgentForceSansObligation $forcage */
+        foreach ($this->forcesSansObligation as $forcage) {
+            if ($forcage->getCampagne() === $campagne) return true;
+        }
+        return false;
     }
 
     /** FICHES POSTES *************************************************************************************************/

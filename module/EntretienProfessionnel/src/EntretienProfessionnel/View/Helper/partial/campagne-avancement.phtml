@@ -61,23 +61,25 @@ if ($nbTotal !== 0) {
 ?>
 
 <?php if ($mode === 'div') : ?>
-    <div class="progress">
-        <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-             title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioAgent); ?>%</div>
-        <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-             title="Entretiens en attente de validation de l'agent <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioAutorite); ?>%</div>
-        <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-             title="Entretiens en attente de validation de l'autorité hiérarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioSuperieur); ?>%</div>
-        <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-             title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioPlanifie); ?>%</div>
-        <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-             title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
-            <?php echo round($ratioSans); ?>%</div>
-    </div>
+    <?php if ($nbTotal !== 0) : ?>
+        <div class="progress">
+            <div class="progress-bar entretien-agent" role="progressbar" style="width: <?php echo $ratioAgent; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioAgent); ?>%</div>
+            <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en attente de validation de l'agent <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioAutorite); ?>%</div>
+            <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en attente de validation de l'autorité hiérarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioSuperieur); ?>%</div>
+            <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioPlanifie); ?>%</div>
+            <div class="progress-bar sans"   role="progressbar" style="width: <?php echo $ratioSans; ?>%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens non planifiés <?php echo $nbSans; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioSans); ?>%</div>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 <?php if ($mode === 'table') : ?>
     <table>
