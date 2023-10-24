@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Controller;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Form\AgentForceSansObligation\AgentForceSansObligationFormAwareTrait;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -15,12 +16,15 @@ class AgentForceSansObligationController extends AbstractActionController
 {
     use AgentForceSansObligationServiceAwareTrait;
     use AgentForceSansObligationFormAwareTrait;
+    use CampagneServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $agentsForcesSansObligation = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligation('id', 'ASC', true);
+        $campagnes = $this->getCampagneService()->getCampagnes();
         return new ViewModel([
             'agentsForcesSansObligation' => $agentsForcesSansObligation,
+            'campagnes' => $campagnes,
         ]);
     }
 

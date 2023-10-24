@@ -1,11 +1,14 @@
 <?php
 
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
+use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Privilege\AgentforcesansobligationPrivileges;
 
 /**
  * @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::indexAction()
  * @var AgentForceSansObligation[] $agentsForcesSansObligation
+ *
+ * @var Campagne[] $campagnes
  */
 
 $this->headTitle("Agent·es forcé·es sans obligation d'entretien professionnel");
@@ -21,6 +24,8 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
 <h1 class="page-header">
     Agent·es forcé·es sans obligation d'entretien professionnel
 </h1>
+
+<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'campagne' => null]); ?>
 
 <?php if ($canAjouter) : ?>
     <?php /** @see \EntretienProfessionnel\Controller\AgentForceSansObligationController::ajouterAction() */ ?>
