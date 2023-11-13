@@ -1,0 +1,89 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+
+/**
+ * @var Campagne[] $campagnes
+ * @var ?Campagne $campagne
+ */
+
+?>
+
+<div class="card card-default">
+    <div class="card-header">
+        <span class="icon icon-filtrer"></span>
+        Filtre des forçages
+    </div>
+    <div class="card-body">
+
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+            <div class="row">
+            <div class="col-md-4">
+                <label for="campagne">Campagne d'entretien professionnel: </label>
+                <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
+                    <option value=""> Toutes les campagnes </option>
+                    <?php foreach ($campagnes as $campagne_) : ?>
+                        <?php $texte = "data-content='".$campagne_->getAnnee()."  "; ?>
+                        <?php if ($campagne_->estEnCours()) : ?>
+                            <?php $texte .= '<span class="text-success"><span class="icon icon-checked"></span> En cours </span>'; ?>
+                        <?php else : ?>
+                            <?php $texte .= '<span class="danger"><span class="icon icon-unchecked"></span> Terminée </span>'; ?>
+                        <?php endif; ?>
+                        <?php $texte .= "'"; ?>
+                        <option value="<?php echo $campagne_->getId(); ?>" <?php if ($campagne_ === $campagne) echo " selected "; ?> <?php echo $texte; ?>>
+                            <?php echo $campagne_->getAnnee(); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="agent">Agent : </label>
+                <select id="agent" name="agent" class="agent">
+                    <option value=""> Tous les agents </option>
+                </select>
+            </div>
+            <!-- BOUTON -->
+            <div class="col-md-4">
+                <div class="pull-right">
+                    <button class="btn btn-primary action" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        R.A.Z.
+                    </button>
+
+                    <button class="btn btn-primary action" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = '?';
+    });
+
+    $('button#filter').click(function() {
+        let groupeId = $('select#campagne option:selected').val();
+        // let activiteId = $('select#activite option:selected').val();
+        // console.log( "activite=" + activiteId);
+
+        let query = "";
+        query += "&campagne=" + campagne;
+        // query += "&activite=" + activiteId;
+        window.location.href = '?'+ query;
+    });
+
+    //$('select#groupe option[value=<?php //echo $groupe; ?>//]').prop('selected', true);
+    //$('select#activite option[value=<?php //echo $actifId; ?>//]').prop('selected', true);
+    //console.log('<?php //echo $groupe; ?>//');
+    //console.log('<?php //echo $actifId; ?>//');
+
+</script>

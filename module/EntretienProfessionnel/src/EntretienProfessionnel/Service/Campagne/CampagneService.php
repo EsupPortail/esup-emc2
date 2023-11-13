@@ -303,6 +303,12 @@ class CampagneService
                 $facultatifs[] = $agent;
                 $ok = true;
             }
+            if (!$ok) {
+                if ($agent->isForceSansObligation($campagne)) {
+                    $facultatifs[] = $agent;
+                    $ok=true;
+                }
+            }
             $res = $this->getAgentService()->isValideEmploiType($agent, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
             if (!$ok && !$res) {
                 $facultatifs[] = $agent;

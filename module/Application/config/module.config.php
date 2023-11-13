@@ -365,7 +365,6 @@ return [
             '975_logos'                 => 'css/logos.css',
             '976_environnement'         => 'css/environnement.css',
             '977_app' => 'css/app.css',
-            '978_print' => 'css/print.css',
             '999_local' => 'css/local.css',
         ],
     ],

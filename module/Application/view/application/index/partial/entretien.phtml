@@ -15,7 +15,7 @@ $obligatoires = [];
 $facultatifs = [];
 $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
 foreach ($agents as $agent) {
-    if (!empty($agent->getAffectationsActifs($dateMinEnPoste))) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+    if (!empty($agent->getAffectationsActifs($dateMinEnPoste)) && !$agent->isForceSansObligation($campagne)) $obligatoires[] = $agent; else $facultatifs[] = $agent;
 }
 
 $finalises = [];

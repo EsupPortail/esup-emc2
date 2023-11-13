@@ -60,6 +60,7 @@
 
         <one-to-many target-entity="EntretienProfessionnel\Entity\Db\EntretienProfessionnel" mapped-by="agent" field="entretiens"/>
         <one-to-many target-entity="Structure\Entity\Db\StructureAgentForce" mapped-by="agent" field="structuresForcees"/>
+        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\AgentForceSansObligation" mapped-by="agent" field="forcesSansObligation"/>
 
         <many-to-many field="fichiers" target-entity="Fichier\Entity\Db\Fichier" inversed-by="fichier" fetch="LAZY">
             <join-table name="agent_fichier">
