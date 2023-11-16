@@ -46,7 +46,7 @@ RUN unzip -o /tmp/instantclient-basiclite-linux.x64-18.5.0.0.0dbru.zip -d /usr/l
     unzip -o /tmp/instantclient-sqlplus-linux.x64-18.5.0.0.0dbru.zip -d /usr/local/ && \
     ln -s /usr/local/instantclient_18_5 /usr/local/instantclient && \
     ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus
-RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8-3.0.1
+RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8
 RUN echo "extension=oci8.so" > ${PHP_CONF_DIR}/fpm/conf.d/30-php-oci8.ini
 RUN echo "extension=oci8.so" > ${PHP_CONF_DIR}/cli/conf.d/30-php-oci8.ini
 RUN echo "/usr/local/instantclient" > /etc/ld.so.conf.d/oracle-instantclient.conf
