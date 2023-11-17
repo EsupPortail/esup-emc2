@@ -1,0 +1,88 @@
+<?php
+
+use Doctrine\DBAL\Driver\PgSQL\Driver;
+use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+
+$env = getenv('APPLICATION_ENV') ?: 'production';
+
+return [
+
+    'doctrine' => [
+        'driver' => [
+            'orm_octopus' => [
+                'class' => MappingDriverChain::class,
+                'drivers' => [
+                    'Application\Entity\Db' => 'orm_octopus_xml_driver',
+                ],
+            ],
+            'orm_octopus_xml_driver' => [
+                'class' => XmlDriver::class,
+                'cache' => 'apc',
+                'paths' => [
+                    __DIR__ . '/../src/Application/Entity/Db/Mapping',
+                ],
+            ],
+        ],
+        'cache' => [
+            'apc' => [
+                'namespace' => 'PREECOG__' . __NAMESPACE__,
+            ],
+        ],
+        'connection' => [
+            // base de l'application
+            'orm_default' => [
+                'driverClass' => Driver::class,
+                'params' => [
+                    'host' => 'pgsql.mon-etablissement.fr',
+                    'port' => '5432',
+                    'charset' => 'utf8',
+                    'driverOptions' => [1002 => 'SET NAMES utf8'],
+                    'user' => 'USERNAME',
+                    'password' => 'PASSWORD',
+                    'dbname' => 'DB_NAME',
+                ],
+            ],
+            'orm_octopus' => [
+                'driverClass' => Driver::class, // Si PgSQL
+                // 'driverClass' => Doctrine\DBAL\Driver\OCI8\Driver::class, // Si oracle
+                'params' => [
+                    'host' => 'sirh.mon-etablissement.fr',
+                    'port' => '1234',
+                    'user' => 'USERNAME',
+                    'password' => 'PASSWORD',
+                    'service' => 'DB_NAME',
+                    'servicename' => 'DB_NAME',
+                    'charset' => 'AL32UTF8',
+                ],
+            ],
+        ],
+        'entitymanager' => [
+            'orm_default' => [
+                'connection' => 'orm_default',
+                'configuration' => 'orm_default',
+            ],
+            'orm_octopus' => [
+                'connection' => 'orm_octopus',
+                'configuration' => 'orm_octopus',
+            ],
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'metadata_cache' => 'array',
+                'query_cache' => 'array',
+                'result_cache' => 'array',
+                'hydration_cache' => 'array',
+                'generate_proxies' => true,
+            ],
+            'orm_octopus' => [
+                'metadata_cache' => 'array',
+                'query_cache' => 'array',
+                'result_cache' => 'array',
+                'hydration_cache' => 'array',
+                'generate_proxies' => true,
+                'driver' => 'orm_octopus',
+            ],
+        ],
+    ],
+];

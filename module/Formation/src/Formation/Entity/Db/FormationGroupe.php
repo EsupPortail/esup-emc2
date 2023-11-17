@@ -20,6 +20,7 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
     private ?int $id = -1;
     private ?string $libelle = null;
     private ?int $ordre = 0;
+    private ?Axe $axe = null;
     private Collection $formations;
     private ?string $source = null;
 
@@ -57,6 +58,16 @@ class FormationGroupe implements HistoriqueAwareInterface, HasDescriptionInterfa
     public function setOrdre(?int $ordre) : void
     {
         $this->ordre = $ordre;
+    }
+
+    public function getAxe(): ?Axe
+    {
+        return $this->axe;
+    }
+
+    public function setAxe(?Axe $axe): void
+    {
+        $this->axe = $axe;
     }
 
     /**
