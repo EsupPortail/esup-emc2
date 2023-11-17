@@ -14,6 +14,10 @@ use Formation\Entity\Db\FormationGroupe;
 <dl>
     <dt> Libellé </dt>
     <dd> <?php echo $groupe->getLibelle(); ?> </dd>
+    <?php if ($groupe->getAxe()) : ?>
+        <dt> Axe </dt>
+        <dd> <?php echo $groupe->getAxe()->getLibelle(); ?> </dd>
+    <?php endif; ?>
     <dt> Dernière modification </dt>
     <dd>
         <?php echo $groupe->getHistoModificateur()->getDisplayName(); ?>

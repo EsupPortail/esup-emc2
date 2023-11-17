@@ -41,6 +41,7 @@ $this->headTitle("Thèmes de formation");
     <thead>
     <tr>
         <th> Libellé </th>
+        <th> Axe </th>
         <th> Ordre </th>
         <th style="width: 10rem;"> #Formation </th>
         <th style="width: 14rem;"> Source </th>
@@ -57,6 +58,13 @@ $this->headTitle("Thèmes de formation");
                     <span class="icon icon-info" title="<?php echo $groupe->getDescription(); ?>"
                           data-bs-toggle="tooltip" data-bs-html="true">
                     </span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if ($groupe->getAxe() === null) : ?>
+                    <em> Aucun axe associé</em>
+                <?php else: ?>
+                    <?php echo $groupe->getAxe()->getLibelle(); ?>
                 <?php endif; ?>
             </td>
             <td> <!-- ORDRE -->

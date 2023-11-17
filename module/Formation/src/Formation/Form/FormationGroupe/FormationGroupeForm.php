@@ -3,14 +3,17 @@
 namespace Formation\Form\FormationGroupe;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
+use Formation\Service\Axe\AxeServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
+use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
 class FormationGroupeForm extends Form
 {
+    use AxeServiceAwareTrait;
 
     public function init(): void
     {
@@ -23,6 +26,21 @@ class FormationGroupeForm extends Form
             ],
             'attributes' => [
                 'id' => 'libelle',
+            ],
+        ]);
+        //axe
+        $this->add([
+            'type' => Select::class,
+            'name' => 'axe',
+            'options' => [
+                'label' => "Axe associé :",
+                'empty_option' => "Sélectionner un axe ...",
+                'value_options' => $this->getAxeService()->getAxesAsOptions(),
+            ],
+            'attributes' => [
+                'id' => 'axe',
+                'class'             => 'bootstrap-selectpicker show-tick',
+                'data-live-search'  => 'true',
             ],
         ]);
         //description
@@ -62,6 +80,7 @@ class FormationGroupeForm extends Form
         //input
         $this->setInputFilter((new Factory())->createInputFilter([
             'libelle' => ['required' => true,],
+            'axe' => ['required' => false,],
             'description' => ['required' => false,],
             'ordre' => ['required' => false,],
         ]));
