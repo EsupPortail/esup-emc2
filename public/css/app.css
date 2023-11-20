@@ -80,10 +80,10 @@ span.historise {
 }
 
 dt.historise {
-    text-decoration: line-through gray;
+    text-decoration: line-through grey;
 }
 dd.historise {
-    text-decoration: line-through gray;
+    text-decoration: line-through grey;
 }
 
 .result-historiser {
@@ -91,7 +91,7 @@ dd.historise {
 }
 
 .result-historiser label {
-    text-decoration: line-through gray;
+    text-decoration: line-through grey;
 }
 
 /** todoes et lettrines *************************************************************************************************/
@@ -203,11 +203,17 @@ small a {
     div#contenu-principal{
         min-width:1550px;
     }
+    header nav div#menu {
+        min-width: 1550px;
+    }
 }
 
 @media only screen and (min-width: 1700px) {
     div#contenu-principal{
         min-width:1650px;
+    }
+    header nav div#menu {
+        min-width: 1650px;
     }
 }
 
@@ -215,11 +221,17 @@ small a {
     div#contenu-principal{
         min-width:1700px;
     }
+    header nav div#menu {
+        min-width: 1700px;
+    }
 }
 
 @media only screen and (min-width: 1900px) {
     div#contenu-principal{
         min-width:1800px;
+    }
+    header nav div#menu {
+        min-width: 1800px;
     }
 }
 
