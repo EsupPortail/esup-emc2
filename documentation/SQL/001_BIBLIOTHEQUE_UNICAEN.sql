@@ -2,8 +2,30 @@
 -- Script avant version 4.1.2 ------------------------------------------------------------------------------------------
 -- Color scheme : Violet et 654D70  ------------------------------------------------------------------------------------
 
+
+
+
+-- TTTTTTTTTTTTTTTTTTTTTTT         AAA               BBBBBBBBBBBBBBBBB   LLLLLLLLLLL             EEEEEEEEEEEEEEEEEEEEEE
+-- T:::::::::::::::::::::T        A:::A              B::::::::::::::::B  L:::::::::L             E::::::::::::::::::::E
+-- T:::::::::::::::::::::T       A:::::A             B::::::BBBBBB:::::B L:::::::::L             E::::::::::::::::::::E
+-- T:::::TT:::::::TT:::::T      A:::::::A            BB:::::B     B:::::BLL:::::::LL             EE::::::EEEEEEEEE::::E
+-- TTTTTT  T:::::T  TTTTTT     A:::::::::A             B::::B     B:::::B  L:::::L                 E:::::E       EEEEEE
+--         T:::::T            A:::::A:::::A            B::::B     B:::::B  L:::::L                 E:::::E
+--         T:::::T           A:::::A A:::::A           B::::BBBBBB:::::B   L:::::L                 E::::::EEEEEEEEEE
+--         T:::::T          A:::::A   A:::::A          B:::::::::::::BB    L:::::L                 E:::::::::::::::E
+--         T:::::T         A:::::A     A:::::A         B::::BBBBBB:::::B   L:::::L                 E:::::::::::::::E
+--         T:::::T        A:::::AAAAAAAAA:::::A        B::::B     B:::::B  L:::::L                 E::::::EEEEEEEEEE
+--         T:::::T       A:::::::::::::::::::::A       B::::B     B:::::B  L:::::L                 E:::::E
+--         T:::::T      A:::::AAAAAAAAAAAAA:::::A      B::::B     B:::::B  L:::::L         LLLLLL  E:::::E       EEEEEE
+--       TT:::::::TT   A:::::A             A:::::A   BB:::::BBBBBB::::::BLL:::::::LLLLLLLLL:::::LEE::::::EEEEEEEE:::::E
+--       T:::::::::T  A:::::A               A:::::A  B:::::::::::::::::B L::::::::::::::::::::::LE::::::::::::::::::::E
+--       T:::::::::T A:::::A                 A:::::A B::::::::::::::::B  L::::::::::::::::::::::LE::::::::::::::::::::E
+--       TTTTTTTTTTTAAAAAAA                   AAAAAAABBBBBBBBBBBBBBBBB   LLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEE
+
+
+
 -- ---------------------------------------------------------------------------------------------------------------------
---  TABLE UNICAEN UTILISATEUR -----------------------------------------------------------------------------------------
+--  TABLE UNICAEN UTILISATEUR ------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
 create table unicaen_utilisateur_role
@@ -618,51 +640,62 @@ create table unicaen_indicateur_tableau_indicateur
 
 
 
+-- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
+-- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
+-- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
+-- II::::::IIN:::::::::N     N::::::NS:::::S     SSSSSSSEE::::::EEEEEEEEE::::ERR:::::R     R:::::RT:::::TT:::::::TT:::::T
+--   I::::I  N::::::::::N    N::::::NS:::::S              E:::::E       EEEEEE  R::::R     R:::::RTTTTTT  T:::::T  TTTTTT
+--   I::::I  N:::::::::::N   N::::::NS:::::S              E:::::E               R::::R     R:::::R        T:::::T
+--   I::::I  N:::::::N::::N  N::::::N S::::SSSS           E::::::EEEEEEEEEE     R::::RRRRRR:::::R         T:::::T
+--   I::::I  N::::::N N::::N N::::::N  SS::::::SSSSS      E:::::::::::::::E     R:::::::::::::RR          T:::::T
+--   I::::I  N::::::N  N::::N:::::::N    SSS::::::::SS    E:::::::::::::::E     R::::RRRRRR:::::R         T:::::T
+--   I::::I  N::::::N   N:::::::::::N       SSSSSS::::S   E::::::EEEEEEEEEE     R::::R     R:::::R        T:::::T
+--   I::::I  N::::::N    N::::::::::N            S:::::S  E:::::E               R::::R     R:::::R        T:::::T
+--   I::::I  N::::::N     N:::::::::N            S:::::S  E:::::E       EEEEEE  R::::R     R:::::R        T:::::T
+-- II::::::IIN::::::N      N::::::::NSSSSSSS     S:::::SEE::::::EEEEEEEE:::::ERR:::::R     R:::::R      TT:::::::TT
+-- I::::::::IN::::::N       N:::::::NS::::::SSSSSS:::::SE::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
+-- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
+-- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
 
 
 
 
+-- ---------------------------------------------------------------------------------------------------------------------
+--  INSERT ROLE ET UTILISATEUR PAR DEFAUT ------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
+INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, parent_id, ldap_filter, accessible_exterieur, description)
+VALUES
+    ('Administrateur·trice technique', 'Administrateur·trice technique', false, false, null, null, true, null),
+    ('Administrateur·trice fonctionnel·le', 'Administrateur·trice fonctionnel·le', false, false, null, null, true, null),
+    ('Observateur·trice', 'Observateur·trice', false, false, null, null, true, null)
+;
 
+INSERT INTO unicaen_utilisateur_user (id, username, display_name, email, password, state, password_reset_token, last_role_id)
+VALUES
+    (0, 'EMC2', 'EMC2', null, 'null', false, null, null)
+;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- PRIVILEGE -----------------------------------------------------------------------------------------------------------
-
--- UNICAEN - UTILISATEUR --------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN UTILISATEUR -------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('utilisateur', 'Gestion des utilisateurs', 20010, 'UnicaenUtilisateur\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'utilisateur_afficher', 'Rechercher/Afficher un utilisateur', 10 UNION
-    SELECT 'utilisateur_ajouter', 'Ajouter/Supprimer un utilisateur', 20 UNION
-    SELECT 'utilisateur_changerstatus', 'Changer le statut d''un d''utilisateur', 30 UNION
-    SELECT 'utilisateur_modifierrole', 'Modifier les rôles associés à un utilisateur', 40
+    SELECT 'utilisateur_afficher',      'Afficher un utilisateur',                      10 UNION
+    SELECT 'utilisateur_ajouter',       'Ajouter/Supprimer un utilisateur',             20 UNION
+    SELECT 'utilisateur_changerstatus', 'Changer le statut d''un d''utilisateur',       30 UNION
+    SELECT 'utilisateur_modifierrole',  'Modifier les rôles associés à un utilisateur', 40 UNION
+    SELECT 'utilisateur_rechercher',    'Rechercher',                                   100
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'utilisateur'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'utilisateur';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('role', 'Gestion des rôles', 20010, 'UnicaenUtilisateur\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'role_afficher', 'Afficher les rôles', 10 UNION
@@ -671,14 +704,14 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'role'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'role';
 
--- UNICAEN - PRIVILEGE ----------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN PRIVILEGE ---------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('privilege', 'Gestion des privilèges', 10000, 'UnicaenPrivilege\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'privilege_voir', 'Afficher les privilèges', 10 UNION
@@ -689,14 +722,15 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'privilege'
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'privilege'
 ;
 
--- UNICAEN - PARAMETRE ----------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN PARAMETRE ---------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('parametrecategorie', 'UnicaenParametre - Gestion des catégories de paramètres', 70000, 'UnicaenParametre\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'parametrecategorie_index', 'Affichage de l''index des paramètres', 10 UNION
@@ -707,12 +741,10 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametrecategorie'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametrecategorie';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('parametre', 'UnicaenParametre - Gestion des paramètres', 70001, 'UnicaenParametre\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'parametre_afficher', 'Afficher un paramètre', 10 UNION
@@ -723,14 +755,14 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametre'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'parametre';
 
--- UNICAEN - MAIL ---------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN MAIL --------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('mail', 'UnicaenMail - Gestion des mails', 9000, 'UnicaenMail\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'mail_index', 'Affichage de l''index', 10 UNION
@@ -741,14 +773,14 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'mail'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'mail';
 
--- UNICAEN - RENDERER -----------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN RENDERER ---------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('documenttemplate', 'UnicaenRenderer - Gestion des templates', 11020, 'UnicaenRenderer\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'documenttemplate_index', 'Afficher l''index des contenus', 1 UNION
@@ -759,12 +791,10 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documenttemplate'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documenttemplate';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('documentmacro', 'UnicaenRenderer - Gestion des macros', 11010, 'UnicaenRenderer\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'documentmacro_index', 'Afficher l''index des macros', 1 UNION
@@ -774,13 +804,10 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documentmacro'
-;
-
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documentmacro';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('documentcontenu', 'UnicaenRenderer - Gestion des contenus', 11030, 'UnicaenRenderer\Provider\Privilege');
-
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'documentcontenu_index', 'Accès à l''index des contenus', 10 UNION
@@ -789,62 +816,11 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documentcontenu'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'documentcontenu';
 
--- UNICAEN - VALIDATION ---------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('validationtype', 'Gestion des types de validations', 40010, 'UnicaenValidation\Provider\Privilege');
-
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'validationtype_afficher', 'Affichage des types de validations', 10 UNION
-    SELECT 'validationtype_modifier', 'Modifier un type de validation', 30 UNION
-    SELECT 'validationtype_historiser', 'Historiser/restaurer un type de validation', 40 UNION
-    SELECT 'validationtype_detruire', 'Détruire un type de validation', 50
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'validationtype'
-;
-
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('validationinstance', 'Gestion des instances de validations', 40000, 'UnicaenValidation\Provider\Privilege');
-
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'validationinstance_afficher', 'Affichage des instances de validations', 10 UNION
-    SELECT 'validationinstance_modifier', 'Modifier une instance de validation', 20 UNION
-    SELECT 'validationinstance_historiser', 'Historiser/restaurer une instance de validation', 40 UNION
-    SELECT 'validationinstance_detruire', 'Détruire une isntance de validation', 50
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'validationinstance'
-;
-
--- UNICAEN - GLOSSAIRE ----------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('definition', 'UnicaenGlossaire - Gestion des définitions', 60000, 'UnicaenGlossaire\Provider\Privilege');
-
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'definition_index', 'Afficher l''index des définitions', 10 UNION
-    SELECT 'definition_afficher', 'Afficher une définition', 20 UNION
-    SELECT 'definition_ajouter', 'Ajouter une définition', 30 UNION
-    SELECT 'definition_modifier', 'Modifier une définition', 40 UNION
-    SELECT 'definition_historiser', 'Historiser/Restaurer une définition', 50 UNION
-    SELECT 'definition_supprimer', 'Supprimer une définition', 60
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'definition'
-;
-
--- UNICAEN - ETAT ---------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN ETAT --------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('etat', 'UnicaenEtat - Gestion des états', 20000, 'UnicaenEtat\Provider\Privilege');
@@ -858,198 +834,42 @@ WITH d(code, lib, ordre) AS (
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'etat'
-;
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'etat' ;
 
--- UNICAEN - AUTOFORM -----------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('autoform', 'Gestion des formulaires', 1500, 'UnicaenAutoform\Provider\Privilege');
-
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'afficher-index', 'Affichage de l''index du module', 1 UNION
-    SELECT 'afficher-formulaire', 'Visualiser les formualaires', 2 UNION
-    SELECT 'creer-formulaire', 'Créer un formulaire', 3 UNION
-    SELECT 'modifier-formulaire', 'Modifier un formulaire', 4 UNION
-    SELECT 'historiser-formulaire', 'Historiser un formulaire', 5 UNION
-    SELECT 'detruire-formulaire', 'Détruire une formulaire', 6 UNION
-    SELECT 'creer-categorie', 'Créer une catégorie', 7 UNION
-    SELECT 'modifier-categorie', 'Modifier une catégorie', 8 UNION
-    SELECT 'historiser-categorie', 'Historiser une catégorie', 9 UNION
-    SELECT 'detruire-categorie', 'Détruire une catégorie', 10 UNION
-    SELECT 'creer-champ', 'Créer un champ', 11 UNION
-    SELECT 'modifier-champ', 'Modifier un champ', 12 UNION
-    SELECT 'historiser-champ', 'Historiser un champ', 13 UNION
-    SELECT 'detruire-champ', 'Détruire un champ', 14 UNION
-    SELECT 'afficher-validation', 'Afficher une validation', 40 UNION
-    SELECT 'creer-validation', 'Créer une validation', 41 UNION
-    SELECT 'modifier-validation', 'Modifier une validation', 42 UNION
-    SELECT 'historiser-validation', 'Historiser une validation', 43 UNION
-    SELECT 'detruire-validation', 'Détruire une validation', 44
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoform'
-;
-
--- EVENEMENT --------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN VALIDATION --------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('evenementetat', 'Gestion des événements - État', 99991, 'UnicaenEvenement\Provider\Privilege');
+VALUES ('validationtype', 'Gestion des types de validations', 40010, 'UnicaenValidation\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'etat_consultation', 'état - consultation', 10 UNION
-    SELECT 'etat_ajout', 'état - ajout', 20 UNION
-    SELECT 'etat_edition', 'état - édition', 30 UNION
-    SELECT 'etat_suppression', 'état - suppression', 40
+    SELECT 'validationtype_afficher', 'Affichage des types de validations', 10 UNION
+    SELECT 'validationtype_modifier', 'Modifier un type de validation', 30 UNION
+    SELECT 'validationtype_historiser', 'Historiser/restaurer un type de validation', 40 UNION
+    SELECT 'validationtype_detruire', 'Détruire un type de validation', 50
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementetat';
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'validationtype';
+
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('evenementinstance', 'Gestion des événements - Instance', 99993, 'UnicaenEvenement\Provider\Privilege');
+VALUES ('validationinstance', 'Gestion des instances de validations', 40000, 'UnicaenValidation\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'instance_consultation', 'instance - consultation', 10 UNION
-    SELECT 'instance_ajout', 'instance - ajout', 20 UNION
-    SELECT 'instance_edition', 'instance - édition', 30 UNION
-    SELECT 'instance_suppression', 'instance - suppression', 40 UNION
-    SELECT 'instance_traitement', 'instance - traitement', 100
+    SELECT 'validationinstance_afficher', 'Affichage des instances de validations', 10 UNION
+    SELECT 'validationinstance_modifier', 'Modifier une instance de validation', 20 UNION
+    SELECT 'validationinstance_historiser', 'Historiser/restaurer une instance de validation', 40 UNION
+    SELECT 'validationinstance_detruire', 'Détruire une isntance de validation', 50
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementinstance';
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'validationinstance';
 
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('evenementtype', 'Gestion des événements - Type', 99992, 'UnicaenEvenement\Provider\Privilege');
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'type_consultation', 'type - consultation', 10 UNION
-    SELECT 'type_ajout', 'type - ajout', 20 UNION
-    SELECT 'type_edition', 'type - édition', 30 UNION
-    SELECT 'type_suppression', 'type - suppression', 40
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
-
--- indicateur -----------------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('indicateur', 'Gestion des indicateurs', 99992, 'Indicateur\Provider\Privilege');
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'afficher-indicateur', 'Afficher un indicateur', 10 UNION
-    SELECT 'editer-indicateur', 'Modifier un indicateur', 20 UNION
-    SELECT 'detruire-indicateur', 'Supprimer un indicateur', 30
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'afficher-abonnement', 'Afficher un abonnement', 110 UNION
-    SELECT 'editer-abonnement', 'Modifier un abonnement', 120 UNION
-    SELECT 'detruire-abonnement', 'Supprimer un abonnement', 130
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
-
--- synchro ----------------------------------------------------------------------------------------------------
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('unicaen-db-import-import', 'DB Import - Import', 'UnicaenDbImport\Privilege', 99994);
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'lister', 'Lister les logs', 1 UNION
-    SELECT 'consulter', 'Consulter un log', 2 UNION
-    SELECT 'lancer', 'Lancer un import', 3
-
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-import';
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('unicaen-db-import-log', 'DB Import - Log', 'UnicaenDbImport\Privilege', 99995);
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'lister', 'Lister les logs', 1 UNION
-    SELECT 'consulter', 'Consulter un log', 2
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-log';
-
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('unicaen-db-import-observation', 'DB Import - Observation', 'UnicaenDbImport\Privilege', 99996);
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'lister', 'Lister les observations', 1 UNION
-    SELECT 'consulter-resultat', 'Consulter les résultats', 2
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
-         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-observation';
-
-INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('unicaen-db-import-synchro', 'DB Import - Synchro', 'UnicaenDbImport\Privilege', 99997);
-INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
-WITH d(code, lib, ordre) AS (
-    SELECT 'lister', 'Lister les synchro', 1 UNION
-    SELECT 'consulter', 'Consulter une synchro', 2 UNION
-    SELECT 'lancer', 'Lancer un synchro', 3
-
-)
-SELECT cp.id, d.code, d.lib, d.ordre
-FROM d
- JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaen-db-import-synchro';
-
--- UNICAEN - AIDE ----------------------------------------------------------------------------------------
-
-create table unicaen_aide_glossaire_definition
-(
-    id  serial constraint unicaen_glossaire_definition_pk primary key,
-    terme        varchar(1024)                                                                 not null,
-    definition   text                                                                          not null,
-    alternatives text,
-    historisee   boolean default false                                                         not null
-);
-create unique index unicaen_glossaire_definition_id_uindex on unicaen_aide_glossaire_definition (id);
-create unique index unicaen_glossaire_definition_terme_uindex on unicaen_aide_glossaire_definition (terme);
-
-create table unicaen_aide_faq_question
-(
-    id         serial
-        constraint unicaen_faq_question_pk
-            primary key,
-    question   varchar(4096) not null,
-    reponse    text          not null,
-    historisee boolean default false,
-    ordre      integer
-);
-
-create unique index unicaen_faq_question_id_uindex on unicaen_aide_faq_question (id);
-
-create table unicaen_aide_documentation_lien
-(
-    id          serial
-        constraint unicaen_aide_documentation_lien_pk
-            primary key,
-    texte       varchar(1024),
-    lien_texte  varchar(1024) not null,
-    lien_url    varchar(1024) not null,
-    description text,
-    ordre       integer,
-    historisee  boolean default false,
-    role_ids    varchar(4096)
-);
-
-create unique index unicaen_aide_documentation_lien_id_uindex on unicaen_aide_documentation_lien (id);
-
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN AIDE --------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('unicaenaideglossaire', 'UnicaenAide - Glossaire', 100300, 'UnicaenAide\Provider\Privilege');
@@ -1097,26 +917,152 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'unicaenaidedocumentation';
 
------------------------------------------------------------------------------------------------
--- INSERT -------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN AUTOFORM ----------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
--- ROLE et UTILISATEUR ------------------------------------------------------------------------
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('autoformindex', 'Gestion de l''index', 1500, 'UnicaenAutoform\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'index', 'Afficher le menu', 1
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoformindex';
 
-INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Administrateur·trice technique', 'Administrateur·trice technique', false);
-INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Administrateur·trice fonctionnel·le', 'Administrateur·trice fonctionnel·le', false);
-INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Directeur·trice des ressources humaines', 'Directeur·trice des ressources humaines', false);
-INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_auto) VALUES ('Observateur·trice', 'Observateur·trice', false);
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('autoformformulaire', 'Gestion des formulaires l''index', 1600, 'UnicaenAutoform\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formulaire_index', 'Accéder à l''index', 10 UNION
+    SELECT 'formulaire_afficher', 'Afficher', 20 UNION
+    SELECT 'formulaire_ajouter', 'Ajouter', 30 UNION
+    SELECT 'formulaire_modifier', 'Modifier', 40 UNION
+    SELECT 'formulaire_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'formulaire_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoformformulaire';
 
-INSERT INTO unicaen_utilisateur_user (id, username, display_name, email, password, state, password_reset_token, last_role_id) VALUES (0, 'emc2', 'EMC2', 'ne-pas-repondre@domain.fr', 'ldap', false, null, null);
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('autoformcategorie', 'Gestion des catégorie', 1600, 'UnicaenAutoform\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'categorief_index', 'Accéder à l''index', 10 UNION
+    SELECT 'categorief_afficher', 'Afficher', 20 UNION
+    SELECT 'categorief_ajouter', 'Ajouter', 30 UNION
+    SELECT 'categorief_modifier', 'Modifier', 40 UNION
+    SELECT 'categorief_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'categorief_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoformcategorie';
 
--- ETAT EVENT
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('autoformchamp', 'Gestion des catégorie', 1600, 'UnicaenAutoform\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'champ_index', 'Accéder à l''index', 10 UNION
+    SELECT 'champ_afficher', 'Afficher', 20 UNION
+    SELECT 'champ_ajouter', 'Ajouter', 30 UNION
+    SELECT 'champ_modifier', 'Modifier', 40 UNION
+    SELECT 'champ_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'champ_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'autoformchamp';
 
-INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (1, 'en_attente', 'En attente');
-INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (2, 'en_cours', 'En cours');
-INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (3, 'echec', 'Échec');
-INSERT INTO unicaen_evenement_etat (id, code, libelle) VALUES (4, 'succes', 'Succès');
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN EVENEMENT ---------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO source (id, code, libelle, importable) VALUES (1, 'OCTOPUS', 'OCTOPUS', true);
-INSERT INTO source (id, code, libelle, importable) VALUES (2, 'EMC2', 'EMC2', false);
-INSERT INTO source (id, code, libelle, importable) VALUES (3, 'LAGAF', 'LAGAF', false);
+INSERT INTO unicaen_evenement_etat (id, code, libelle)
+    VALUES (1, 'en_attente', 'En attente'),
+           (2, 'en_cours', 'En cours'),
+           (3, 'echec', 'Échec'),
+           (4, 'succes', 'Succès');
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('evenementetat', 'Gestion des événements - État', 99991, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'etat_consultation', 'état - consultation', 10 UNION
+    SELECT 'etat_ajout', 'état - ajout', 20 UNION
+    SELECT 'etat_edition', 'état - édition', 30 UNION
+    SELECT 'etat_suppression', 'état - suppression', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementetat';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('evenementinstance', 'Gestion des événements - Instance', 99993, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'instance_consultation', 'instance - consultation', 10 UNION
+    SELECT 'instance_ajout', 'instance - ajout', 20 UNION
+    SELECT 'instance_edition', 'instance - édition', 30 UNION
+    SELECT 'instance_suppression', 'instance - suppression', 40 UNION
+    SELECT 'instance_traitement', 'instance - traitement', 100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementinstance';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('evenementtype', 'Gestion des événements - Type', 99992, 'UnicaenEvenement\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'type_consultation', 'type - consultation', 10 UNION
+    SELECT 'type_ajout', 'type - ajout', 20 UNION
+    SELECT 'type_edition', 'type - édition', 30 UNION
+    SELECT 'type_suppression', 'type - suppression', 40
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PRIVILEGE - UNICAEN INDICATEUR --------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('indicateur', 'Gestion des indicateurs', 99992, 'UnicaenIndicateur\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'afficher-indicateur', 'Afficher un indicateur', 10 UNION
+    SELECT 'editer-indicateur', 'Modifier un indicateur', 20 UNION
+    SELECT 'detruire-indicateur', 'Supprimer un indicateur', 30
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('abonnement', 'Gestion des abonnements', 99992, 'UnicaenIndicateur\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'afficher-abonnement', 'Afficher un abonnement', 110 UNION
+    SELECT 'editer-abonnement', 'Modifier un abonnement', 120 UNION
+    SELECT 'detruire-abonnement', 'Supprimer un abonnement', 130
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'abonnement';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('tableaudebord', 'Gestion des tableau de bord', 99992, 'UnicaenIndicateur\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'editer_tableaudebord', 'Éditer un tableau de bord', 5 UNION
+    SELECT 'detruire_tableaudebord', 'Effacer un tableau de bord', 6 UNION
+    SELECT 'afficher_tableaudebord', 'Afficher un tableau de bord', 4
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'tableaudebord';
+
