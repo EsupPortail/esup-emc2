@@ -2,9 +2,6 @@
 -- Script avant version 4.1.2 ------------------------------------------------------------------------------------------
 -- Color scheme : Violet et 654D70  ------------------------------------------------------------------------------------
 
-
-
-
 -- TTTTTTTTTTTTTTTTTTTTTTT         AAA               BBBBBBBBBBBBBBBBB   LLLLLLLLLLL             EEEEEEEEEEEEEEEEEEEEEE
 -- T:::::::::::::::::::::T        A:::A              B::::::::::::::::B  L:::::::::L             E::::::::::::::::::::E
 -- T:::::::::::::::::::::T       A:::::A             B::::::BBBBBB:::::B L:::::::::L             E::::::::::::::::::::E
@@ -637,9 +634,6 @@ create table unicaen_indicateur_tableau_indicateur
         primary key (tableau_id, indicateur_id)
 );
 
-
-
-
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
 -- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
@@ -656,9 +650,6 @@ create table unicaen_indicateur_tableau_indicateur
 -- I::::::::IN::::::N       N:::::::NS::::::SSSSSS:::::SE::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
-
-
-
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --  INSERT ROLE ET UTILISATEUR PAR DEFAUT ------------------------------------------------------------------------------
