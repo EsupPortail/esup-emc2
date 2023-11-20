@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Axe implements HistoriqueAwareInterface, HasDescriptionInterface
+class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface
 {
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
@@ -19,11 +19,11 @@ class Axe implements HistoriqueAwareInterface, HasDescriptionInterface
     private ?int $id = -1;
     private ?string $libelle = null;
     private ?int $ordre = null;
-    private Collection $groupes;
+    private Collection $formations;
 
     public function __construct()
     {
-        $this->groupes = new ArrayCollection();
+        $this->formations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,10 +51,10 @@ class Axe implements HistoriqueAwareInterface, HasDescriptionInterface
         $this->ordre = $ordre;
     }
 
-    /** @return FormationGroupe[] */
-    public function getGroupes(): array
+    /** @return Formation[] */
+    public function getFormations(): array
     {
-        return $this->groupes->toArray();
+        return $this->formations->toArray();
     }
 
 }

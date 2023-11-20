@@ -54,6 +54,7 @@ class Formation implements HistoriqueAwareInterface,
     private Collection $missions;
     private Collection $instances;
     private Collection $abonnements;
+    private Collection $domaines;
     private Collection $plans;
 
     private ?string $rattachement = null;
@@ -64,6 +65,7 @@ class Formation implements HistoriqueAwareInterface,
         $this->instances = new ArrayCollection();
         $this->abonnements = new ArrayCollection();
         $this->plans = new ArrayCollection();
+        $this->domaines = new ArrayCollection();
     }
 
     public static function getAnnee(?DateTime $date = null) : ?int
@@ -270,6 +272,31 @@ class Formation implements HistoriqueAwareInterface,
     public function getAbonnements() : array
     {
         return $this->abonnements->toArray();
+    }
+
+    /** GESTION DES DOMAINES *************************************************************************/
+
+    /**
+     * @return Domaine[]
+     */
+    public function getDomaines(): array
+    {
+        return $this->domaines->toArray();
+    }
+
+    public function addDomaine(Domaine $domaine) : void
+    {
+        $this->domaines->add($domaine);
+    }
+
+    public function removeDomaine(Domaine  $domaine) : void
+    {
+        $this->domaines->removeElement($domaine);
+    }
+
+    public function hasDomaine(Domaine $domaine) : bool
+    {
+        return $this->domaines->contains($domaine);
     }
 
     /** GESTION DES PLANS DE PLAN DE FORMATION *******************************************************/

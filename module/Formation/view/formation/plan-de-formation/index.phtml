@@ -28,6 +28,12 @@ $canSupprimer = true;
         <span class="icon icon-ajouter"></span>
         Ajouter un plan de formation
     </a>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::importerDepuisCsvAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/importer', [],[], true); ?>"
+       class="btn btn-primary">
+        <span class="icon icon-csv"></span>
+        Compléter un plan de formation avec un csv
+    </a>
 <?php endif; ?>
 
 <table class="table table-condensed table-hover">

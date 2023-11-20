@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @see \Formation\Controller\PlanDeFormationController::importerDepuisCsvAction()
+ * @var string $title
+ * @var PlanDeFormationImportationForm $form
+ * @var string[] $error
+ * @var string[] $warning
+ * @var Agent[] $agents
+ * @var array $array
+ */
+
+use Application\Entity\Db\Agent;
+use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
+
+
+?>
+
+<?php echo $this->form($form); ?>
+
+<?php if (!empty($error)) : ?>
+    <div class="alert alert-danger">
+        <span class="icon icon-attention"></span>
+        <?php echo implode('<br>', $error); ?>
+    </div>
+<?php else : ?>
+
+    <?php if (!empty($warning)) : ?>
+        <div class="alert alert-warning">
+            <ul>
+                <?php foreach ($warning as $item) : ?>
+                    <li> <?php echo $item; ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($array)) : ?>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th> Axe </th>
+                <th> Thème </th>
+                <th> Formation </th>
+                <th> Domaine </th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($array as $line) : ?>
+                <tr>
+                    <td> <?php echo $line[0]; ?> </td>
+                    <td> <?php echo $line[1]; ?> </td>
+                    <td> <?php echo $line[2]; ?> </td>
+                    <td> <?php echo $line[3]; ?> </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+<?php endif; ?>

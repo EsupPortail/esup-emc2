@@ -112,4 +112,13 @@ class AxeService {
     }
 
     /** Facade ********************************************************************************************************/
+
+    public function createAxe(string $libelle): Axe
+    {
+        $axe = new Axe();
+        $axe->setLibelle($libelle);
+        $axe->setOrdre(Axe::MAX_ORDRE);
+        $this->create($axe);
+        return $axe;
+    }
 }

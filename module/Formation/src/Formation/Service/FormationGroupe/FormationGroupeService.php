@@ -7,6 +7,7 @@ use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -186,7 +187,7 @@ class FormationGroupeService
      * @param string|null $libelle
      * @return FormationGroupe|null
      */
-    public function getFormationGroupeByLibelle(?string $libelle) : ?FormationGroupe
+    public function getFormationGroupeByLibelle(?string $libelle, ?Axe $axe) : ?FormationGroupe
     {
         if ($libelle === null) return null;
 
@@ -194,10 +195,12 @@ class FormationGroupeService
             ->andWhere('groupe.libelle = :libelle')
             ->setParameter('libelle', $libelle)
         ;
+        if ($axe) $qb = $qb->andWhere('groupe.axe = :axe')->setParameter('axe', $axe);
+
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationGroupe partagent le même libellé [".$libelle."].");
+            throw new RuntimeException("Plusieurs FormationGroupe partagent le même libellé [".$libelle."].",0, $e);
         }
         return $result;
     }
@@ -211,4 +214,16 @@ class FormationGroupeService
         $result = $qb->getQuery()->getOneOrNullResult();
         return $result;
     }
+
+    /** Façade ********************************************************************************************/
+
+    public function createFormationGroupe(string $libelle, ?Axe $axe): FormationGroupe
+    {
+        $theme = new FormationGroupe();
+        $theme->setLibelle($libelle);
+        $theme->setAxe($axe);
+        $this->create($theme);
+        return $theme;
+    }
+
 }

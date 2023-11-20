@@ -8,6 +8,10 @@ use Formation\Form\PlanDeFormation\PlanDeFormationForm;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormFactory;
 use Formation\Form\PlanDeFormation\PlanDeFormationHydrator;
 use Formation\Form\PlanDeFormation\PlanDeFormationHydratorFactory;
+use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
+use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationFormFactory;
+use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationHydrator;
+use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationHydratorFactory;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationForm;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationFormFactory;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationHydrator;
@@ -73,7 +77,8 @@ return [
                     'action' => [
                         'gerer-formations',
                         'reprendre',
-                        'supprimer'
+                        'supprimer',
+                        'importer-depuis-csv',
                     ],
                     'privileges' => [
                         PlanformationPrivileges::PLANFORMATION_SUPPRIMER
@@ -210,6 +215,17 @@ return [
                             ],
                         ],
                     ],
+                    'importer' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            /** @see PlanDeFormationController::importerDepuisCscAction() */
+                            'route'    => '/importer-depuis-csv',
+                            'defaults' => [
+                                'controller' => PlanDeFormationController::class,
+                                'action'     => 'importer-depuis-csv',
+                            ],
+                        ],
+                    ],
 
                 ],
             ],
@@ -229,14 +245,16 @@ return [
     'form_elements' => [
         'factories' => [
             PlanDeFormationForm::class => PlanDeFormationFormFactory::class,
+            PlanDeFormationImportationForm::class => PlanDeFormationImportationFormFactory::class,
             SelectionPlanDeFormationForm::class => SelectionPlanDeFormationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             PlanDeFormationHydrator::class => PlanDeFormationHydratorFactory::class,
+            PlanDeFormationImportationHydrator::class => PlanDeFormationImportationHydratorFactory::class,
             SelectionPlanDeFormationHydrator::class => SelectionPlanDeFormationHydratorFactory::class,
         ],
-    ]
+    ],
 
 ];

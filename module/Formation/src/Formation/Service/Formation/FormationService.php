@@ -6,6 +6,7 @@ use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
@@ -103,6 +104,7 @@ class FormationService
         try {
             $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
                 ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+                ->addSelect('axe')->leftJoin('groupe.axe', 'axe')
                 ->addSelect('competence')->leftJoin('formation.competences', 'competence')
                 ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
                 ->addSelect('application')->leftJoin('formation.applications', 'application')
@@ -280,6 +282,24 @@ class FormationService
         return $formation;
     }
 
+    public function getFormationByLibelle(?string $libelle, ?FormationGroupe $theme = null, ?Axe $axe = null): ?Formation
+    {
+        if ($libelle === null) return null;
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formation.libelle = :libelle') ->setParameter('libelle', $libelle)
+        ;
+        if ($theme) $qb = $qb->andWhere('formation.groupe = :groupe')->setParameter('groupe', $theme);
+//        if ($axe) $qb = $qb->andWhere('groupe.axe = :axe')->setParameter('axe', $axe);
+
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".Formation::class."] partagent le même libellé [".$libelle."].",0, $e);
+        }
+        return $result;
+    }
+
     /** RECHERCHES ****************************************************************************************************/
 
     /**
@@ -360,6 +380,17 @@ class FormationService
             return strcmp($a['label'], $b['label']);
         });
         return $result;
+    }
+
+    /** FACADE *************************************************************************************/
+
+    public function createFormation(string $libelle, ?FormationGroupe $theme): Formation
+    {
+        $formation = new Formation();
+        $formation->setLibelle($libelle);
+        $formation->setGroupe($theme);
+        $this->create($formation);
+        return $formation;
     }
 
 }
