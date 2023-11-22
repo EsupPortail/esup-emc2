@@ -8,6 +8,7 @@ use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
+use Application\Service\AgentMobilite\AgentMobiliteService;
 use Application\Service\AgentPPP\AgentPPPService;
 use Application\Service\AgentQuotite\AgentQuotiteService;
 use Application\Service\AgentStageObservation\AgentStageObservationService;
@@ -79,6 +80,7 @@ class AgentControllerFactory
          * @var AgentAffectationService $agentAffectationService
          * @var AgentGradeService $agentGradeService
          * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
+         * @var AgentMobiliteService $agentMobiliteService
          * @var AgentQuotiteService $agentQuotiteService
          * @var AgentStatutService $agentStatutService
          * @var EntretienProfessionnelService $entretienProfessionnelService
@@ -91,6 +93,7 @@ class AgentControllerFactory
         $agentAffectationService = $container->get(AgentAffectationService::class);
         $agentGradeService = $container->get(AgentGradeService::class);
         $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
+        $agentMobiliteService = $container->get(AgentMobiliteService::class);
         $agentQuotiteService = $container->get(AgentQuotiteService::class);
         $agentStatutService = $container->get(AgentStatutService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
@@ -136,6 +139,7 @@ class AgentControllerFactory
         $controller->setAgentAffectationService($agentAffectationService);
         $controller->setAgentGradeService($agentGradeService);
         $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
+        $controller->setAgentMobiliteService($agentMobiliteService);
         $controller->setAgentQuotiteService($agentQuotiteService);
         $controller->setAgentStatutService($agentStatutService);
         $controller->setEntretienProfessionnelService($entretienProfessionnelService);

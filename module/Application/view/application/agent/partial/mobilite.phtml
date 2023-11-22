@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @var Agent $agent
+ * @var AgentMobilite[] $mobilites
+ */
+
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMobilite;
+use Application\Provider\Privilege\AgentmobilitePrivileges;
+
+$canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER));
+
+?>
+
+<h2> Déclaration de demande de mobilité </h2>
+
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Application\Controller\AgentMobiliteController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('agent/mobilite/ajouter', ['agent' => $agent->getId()], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon icon-ajouter">
+            Ajouter un statut de mobilité
+        </span>
+    </a>
+<?php endif; ?>
+
+
+<br>
+<br>
+
+<?php if (empty($mobilites)) : ?>
+    <em> Aucun mobilité de connue</em>
+<?php else: ?>
+    <?php foreach ($mobilites as $mobilite) : ?>
+        <div class="card">
+            <div class="card-header bg-default">
+                Statut de mobilité actif
+            </div>
+            <div class="card-body">
+                <dl>
+                    <dt> Type de mobilité  </dt>
+                    <dd> <?php echo $mobilite->getMobilite()->getLibelle(); ?> </dd>
+                    <dt> Date de demande ou de modification </dt>
+                    <dd>
+                        <?php  if ($mobilite->getHistoModification()) : ?>
+                            <?php echo $mobilite->getHistoModification()->format('d/m/Y à H:i'); ?>
+                        <?php else : ?>
+                            <?php echo $mobilite->getHistoCreation()->format('d/m/Y à H:i'); ?>
+                        <?php endif; ?>
+                    </dd>
+                </dl>
+
+                ACTION
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

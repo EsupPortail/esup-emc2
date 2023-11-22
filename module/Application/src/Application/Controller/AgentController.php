@@ -11,6 +11,7 @@ use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentGrade\AgentGradeServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
+use Application\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
 use Application\Service\AgentPPP\AgentPPPServiceAwareTrait;
 use Application\Service\AgentQuotite\AgentQuotiteServiceAwareTrait;
 use Application\Service\AgentStageObservation\AgentStageObservationServiceAwareTrait;
@@ -100,6 +101,8 @@ class AgentController extends AbstractActionController
     use AgentAccompagnementServiceAwareTrait;
     use AgentAccompagnementFormAwareTrait;
 
+    use AgentMobiliteServiceAwareTrait;
+
 
     public function indexAction(): ViewModel
     {
@@ -144,7 +147,7 @@ class AgentController extends AbstractActionController
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', 'INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet) ? $parametreIntranet->getValeur() : "Aucun lien vers l'intranet";
 
-        $mobilites = [];
+        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
 
         return new ViewModel([
             'title' => 'Afficher l\'agent',

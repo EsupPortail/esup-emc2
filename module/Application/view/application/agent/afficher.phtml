@@ -6,12 +6,14 @@ use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentEchelon;
 use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Entity\Db\AgentMobilite;
 use Application\Entity\Db\AgentPPP;
 use Application\Entity\Db\AgentQuotite;
 use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\FichePoste;
+use Application\Provider\Privilege\AgentmobilitePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
@@ -38,6 +40,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var AgentStageObservation[] $stages
  * @var AgentTutorat[] $tutorats
  * @var AgentAccompagnement[] $accompagnements
+ * @var AgentMobilite[] $mobilites
  *
  */
 
@@ -53,6 +56,7 @@ if ($agent !== null) {
     $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
     $canAfficherMission = $canVoir;
     $canCCC = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
+    $canMobilite = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER));
     $canPortfolio = $canCCC;
 
     $droits = [
@@ -127,6 +131,13 @@ if ($agent !== null) {
                 Tutorats et <br/> encadrements
             </button>
         <?php endif; ?>
+        <?php if ($canMobilite === true) : ?>
+            <button class="nav-link" id="mobilite-tab"
+                    data-bs-toggle="tab" data-bs-target="#mobilite"
+                    type="button" role="tab" aria-controls="mobilite" aria-selected="true">
+                Déclaration de  <br/> mobilités
+            </button>
+        <?php endif; ?>
     </div>
 
     <div>
@@ -188,6 +199,9 @@ if ($agent !== null) {
             </div>
             <div id="tutorat" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'accompagnements' => $accompagnements, 'droits' => $droits], []); ?>
+            </div>
+            <div id="mobilite" class="tab-pane " role="tabpanel">
+                <?php echo $this->partial('partial/mobilite', ['agent' => $agent, 'mobilites' => $mobilites], []); ?>
             </div>
         </div>
     </div>
