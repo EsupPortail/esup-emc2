@@ -144,6 +144,8 @@ class AgentController extends AbstractActionController
         $parametreIntranet = $this->getParametreService()->getParametreByCode('ENTRETIEN_PROFESSIONNEL', 'INTRANET_DOCUMENT');
         $lienIntranet = ($parametreIntranet) ? $parametreIntranet->getValeur() : "Aucun lien vers l'intranet";
 
+        $mobilites = [];
+
         return new ViewModel([
             'title' => 'Afficher l\'agent',
             'agent' => $agent,
@@ -166,6 +168,8 @@ class AgentController extends AbstractActionController
             'tutorats' => $this->getAgentTutoratService()->getAgentTutoratsByAgent($agent),
             'accompagnements' => $this->getAgentAccompagnementService()->getAgentAccompagnementsByAgent($agent),
             'intranet' => $lienIntranet,
+
+            'mobilites' => $mobilites,
         ]);
     }
 

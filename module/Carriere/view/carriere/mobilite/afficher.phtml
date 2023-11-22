@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @see \Carriere\Controller\MobiliteController::afficherAction();
+ * @var Mobilite $mobilite
+ */
+
+use Carriere\Entity\Db\Mobilite;
+
+?>
+
+<dl class="dl-horizontal">
+    <dt> Mobilite </dt>
+    <dd>[#<?php echo $mobilite->getCode(); ?>] <?php echo $mobilite->getLibelle(); ?></dd>
+    <?php if ($mobilite->getDescription()) : ?>
+        <dt> Description </dt>
+        <dd> <?php echo $mobilite->getDescription(); ?></dd>
+    <?php endif; ?>
+</dl>
+
