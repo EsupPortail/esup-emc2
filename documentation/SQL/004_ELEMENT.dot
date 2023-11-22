@@ -1,0 +1,31 @@
+digraph "element_application" {
+
+splines  = ortho;
+fontname = "Inconsolata";
+
+node [colorscheme = ylgnbu4];
+edge [colorscheme = dark28, dir = both];
+
+element_application            [shape = record, label = "{ element_application |  libelle : varchar(128)\l  description : varchar(2048)\l  url : varchar(128)\l  actif : boolean\l  groupe_id : integer\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_application_element    [shape = record, label = "{ element_application_element |  application_id : integer\l  commentaire : text\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l  validation_id : integer\l  niveau_id : integer\l  clef : boolean\l| id : integer\l }"];
+element_application_theme      [shape = record, label = "{ element_application_theme |  libelle : varchar(1024)\l  ordre : integer\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_competence             [shape = record, label = "{ element_competence |  libelle : varchar(256)\l  description : text\l  histo_creation : timestamp\l  type_id : integer\l  theme_id : integer\l  source : varchar(256)\l  id_source : varchar(256)\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l  referentiel_id : integer\l| id : integer\l }"];
+element_competence_element     [shape = record, label = "{ element_competence_element |  competence_id : integer\l  commentaire : text\l  validation_id : integer\l  niveau_id : integer\l  clef : boolean\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_competence_referentiel [shape = record, label = "{ element_competence_referentiel |  libelle_court  /* Est utilisé pour l'affichage du badge */ : varchar(64)\l  libelle_long : varchar(1024)\l  couleur  /* Est utilisée pour l'afficahge du badge */ : varchar(64)\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_competence_theme       [shape = record, label = "{ element_competence_theme |  libelle : varchar(256)\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_competence_type        [shape = record, label = "{ element_competence_type |  libelle : varchar(256)\l  ordre : integer\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+element_niveau                 [shape = record, label = "{ element_niveau |  type : varchar(256)\l  libelle : varchar(256)\l  niveau : integer\l  description : text\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l| id : integer\l }"];
+unicaen_validation_instance    [shape = record, label = "{ unicaen_validation_instance |  type_id : integer\l  entity_class : varchar(1024)\l  entity_id : varchar(64)\l  histo_creation : timestamp\l  histo_createur_id : integer\l  histo_modification : timestamp\l  histo_modificateur_id : integer\l  histo_destruction : timestamp\l  histo_destructeur_id : integer\l  justification : text\l  refus : boolean\l| id : integer\l }"];
+
+element_application            -> element_application_theme      [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "groupe_id:id", headlabel = ""];
+element_application_element    -> element_application            [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "application_id:id", headlabel = ""];
+element_application_element    -> element_niveau                 [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "niveau_id:id", headlabel = ""];
+element_application_element    -> unicaen_validation_instance    [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "validation_id:id", headlabel = ""];
+element_competence             -> element_competence_referentiel [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "referentiel_id:id", headlabel = ""];
+element_competence             -> element_competence_theme       [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "theme_id:id", headlabel = ""];
+element_competence             -> element_competence_type        [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "type_id:id", headlabel = ""];
+element_competence_element     -> element_competence             [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "competence_id:id", headlabel = ""];
+element_competence_element     -> element_niveau                 [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "niveau_id:id", headlabel = ""];
+element_competence_element     -> unicaen_validation_instance    [color = "#595959", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "validation_id:id", headlabel = ""];
+
+}
