@@ -463,14 +463,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     /** MACRO du CREF *************************************************************************************************/
 
     /** @noinspection PhpUnused */
-    public function toStringCREF_Champ($motsClefs) : string
+    public function toStringCREF_Champ($motsClefs) : ?string
     {
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampReponseByMotsClefs($mots);
     }
 
     /** @noinspection PhpUnused */
-    public function toStringCREF_Champs($motsClefs) : string
+    public function toStringCREF_Champs($motsClefs) : ?string
     {
         $mots = explode(";", $motsClefs);
         return $this->formationInstance->fetchChampsReponseByMotsClefs($mots);

@@ -10,6 +10,7 @@ use Element\Service\Application\ApplicationService;
 use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\Competence\CompetenceService;
 use Element\Service\CompetenceElement\CompetenceElementService;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielService;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionService;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionService;
 use FicheMetier\Service\FicheMetierMission\FicheMetierMissionService;
@@ -38,6 +39,7 @@ class FicheMetierServiceFactory {
          * @var ApplicationElementService $applicationElementService
          * @var CompetenceService $competenceService
          * @var CompetenceElementService $competenceElementService
+         * @var CompetenceReferentielService $competenceReferentielService
          * @var ConfigurationService $configurationService
          * @var DomaineService $domaineService
          * @var EtatInstanceService $etatInstanceService
@@ -55,6 +57,7 @@ class FicheMetierServiceFactory {
         $applicationElementService = $container->get(ApplicationElementService::class);
         $competenceService = $container->get(CompetenceService::class);
         $competenceElementService = $container->get(CompetenceElementService::class);
+        $competenceReferentielService = $container->get(CompetenceReferentielService::class);
         $configurationService = $container->get(ConfigurationService::class);
         $domaineService = $container->get(DomaineService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
@@ -80,6 +83,7 @@ class FicheMetierServiceFactory {
         $service->setApplicationElementService($applicationElementService);
         $service->setCompetenceService($competenceService);
         $service->setCompetenceElementService($competenceElementService);
+        $service->setCompetenceReferentielService($competenceReferentielService);
         $service->setConfigurationService($configurationService);
         $service->setDomaineService($domaineService);
         $service->setEtatInstanceService($etatInstanceService);

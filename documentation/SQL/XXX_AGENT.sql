@@ -1,1 +1,1 @@
-INSERT INTO public.unicaen_privilege_categorie (code, libelle, ordre, namespace) VALUES ('missionspecifiqueaffectation', 'Gestion des affectations de mission spécifique', 680, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace) VALUES ('missionspecifiqueaffectation', 'Gestion des affectations de mission spécifique', 680, 'Application\Provider\Privilege');

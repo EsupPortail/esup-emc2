@@ -118,6 +118,19 @@ class CompetenceReferentielService
         return $result;
     }
 
+    public function getCompetenceReferentielByCode(?string $code): ?CompetenceReferentiel
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('referentiel.libelleCourt = :code')
+            ->setParameter('code', $code);
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs CompetenceReferentiel partagent le même code [" . $code . "]", $e);
+        }
+        return $result;
+    }
+
     public function getRequestedCompetenceReferentiel(AbstractActionController $controller, string $paramName = 'competence-referentiel'): ?CompetenceReferentiel
     {
         $id = $controller->params()->fromRoute($paramName);

@@ -20,6 +20,7 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\ApplicationElement\ApplicationElementServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
 use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
+use Element\Service\CompetenceReferentiel\CompetenceReferentielServiceAwareTrait;
 use Element\Service\HasApplicationCollection\HasApplicationCollectionServiceAwareTrait;
 use Element\Service\HasCompetenceCollection\HasCompetenceCollectionServiceAwareTrait;
 use FicheMetier\Entity\Db\FicheMetier;
@@ -46,6 +47,7 @@ class FicheMetierService
     use ApplicationElementServiceAwareTrait;
     use CompetenceServiceAwareTrait;
     use CompetenceElementServiceAwareTrait;
+    use CompetenceReferentielServiceAwareTrait;
     use ConfigurationServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use EntityManagerAwareTrait;
@@ -529,13 +531,11 @@ class FicheMetierService
         $competences_index = array_search('COMPETENCES_ID', $array[0]);
         $competences_ids = explode(FicheMetierService::REFERENS_SEP, $array[1][$competences_index]);
 
-        $competences['Connaissances'] = [];
-        $competences['Opérationnelles'] = [];
-        $competences['Comportementales'] = [];
-        $competences['Manquantes'] = [];
+        $referens = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('REFERENS');
+        $competences = [];
         $competencesListe = [];
         foreach ($competences_ids as $competence_id) {
-            $competence = $this->getCompetenceService()->getCompetenceByIdSource('REFERENS 3', (int) $competence_id);
+            $competence = $this->getCompetenceService()->getCompetenceByRefentiel($referens, (int) $competence_id);
             if ($competence !== null) {
                 $competences[$competence->getType()->getLibelle()][$competence->getId()] = $competence;
                 $competencesListe[$competence->getId()] = $competence;
@@ -586,7 +586,7 @@ class FicheMetierService
         $this->getHasApplicationCollectionService()->updateApplications($fiche, ['applications' => $csvInfos['applications']]);
 //        $this->getSelectionApplicationHydrator()->hydrate(['applications' => $csvInfos['applications']], $fiche);
 
-        //COMPETENCE (invoker l'hydrator plutôt)(invoker l'hydrator plutôt)
+        //COMPETENCE (invoker l'hydrator plutôt)
         $this->getHasCompetenceCollectionService()->updateCompetences($fiche, ['competences' => $csvInfos['competencesListe']]);
 //        $this->getSelectionCompetenceHydrator()->hydrate(['competences' => $csvInfos['competencesListe']], $fiche);
         return $fiche;
@@ -630,11 +630,11 @@ class FicheMetierService
         }
 
         // tri
-        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
-            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
-                return $a->getLibelle() > $b->getLibelle();
-            });
-        }
+//        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
+//            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
+//                return $a->getLibelle() > $b->getLibelle();
+//            });
+//        }
         usort($csvInfos['applications'], function (Application $a, Application $b) {
             return $a->getLibelle() > $b->getLibelle();
         });

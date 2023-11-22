@@ -47,7 +47,7 @@ use Metier\Entity\Db\Metier;
 </div>
 
 
-<?php if ($mode !== null) : ?>
+<?php if (isset($mode)) : ?>
 
     <?php if ($metier !== null AND empty($competences['Manquantes'])) : ?>
         <a href=""
@@ -140,7 +140,13 @@ use Metier\Entity\Db\Metier;
         <h2><span class="icon competence"> Compétences </h2>
     </div>
     <div class="card-body">
-        <?php foreach (['Connaissances','Opérationnelles','Comportementales'] as $type) : ?>
+<!--        --><?php
+//            $types = [];
+//            foreach ($competences as $competence) {
+//                $types[$competence->getCompetence()->getType()->getLibelle()] = $competence->getCompetence()->getType();
+//            }
+//        ?>
+        <?php foreach ($competences as $type => $array) : ?>
             <?php if (! empty($competences[$type])) : ?>
                 <h3> <?php echo $type; ?> </h3>
                 <ul>

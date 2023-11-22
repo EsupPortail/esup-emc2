@@ -1,4 +1,4 @@
--- Date de MAJ 20/11/2023 ----------------------------------------------------------------------------------------------
+-- Date de MAJ 22/11/2023 ----------------------------------------------------------------------------------------------
 -- Script avant version 4.1.2 ------------------------------------------------------------------------------------------
 -- Color scheme : Violet et 654D70  ------------------------------------------------------------------------------------
 
@@ -633,6 +633,25 @@ create table unicaen_indicateur_tableau_indicateur
     constraint unicaen_indicateur_tableau_indicateur_pk
         primary key (tableau_id, indicateur_id)
 );
+
+create table unicaen_indicateur_abonnement
+(
+    id  serial not null
+        constraint abonnement_pk
+            primary key,
+    user_id       integer                                                                   not null
+        constraint indicateur_abonnement_user_id_fk
+            references unicaen_utilisateur_user
+            on delete cascade,
+    indicateur_id integer                                                                   not null
+        constraint indicateur_abonnement_indicateur_definition_id_fk
+            references unicaen_indicateur_indicateur
+            on delete cascade,
+    frequence     varchar(256),
+    dernier_envoi timestamp
+);
+create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
+
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T

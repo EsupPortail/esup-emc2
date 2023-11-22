@@ -102,7 +102,7 @@ create table fichemetier_fichetype
 );
 
 create unique index fichemetier_fichetype_id_uindex
-    on fichemetier_fichetype (id);
+    on fichemetier_fichetype_old (id);
 
 
 
