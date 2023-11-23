@@ -22,6 +22,15 @@ return [
                 [
                     'controller' => AgentMobiliteController::class,
                     'action' => [
+                        'index',
+                    ],
+                    'privileges' => [
+                        AgentMobilitePrivileges::AGENTMOBILITE_INDEX
+                    ],
+                ],
+                [
+                    'controller' => AgentMobiliteController::class,
+                    'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
@@ -74,9 +83,10 @@ return [
                             'route' => '/mobilite',
                             'defaults' => [
                                 'controller' => AgentMobiliteController::class,
+                                'action' => 'index'
                             ],
                         ],
-                        'may_terminate' => false,
+                        'may_terminate' => true,
                         'child_routes' => [
                             'ajouter' => [
                                 'type' => Segment::class,
@@ -127,6 +137,26 @@ return [
                                         'action' => 'supprimer'
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'agent-mobilite' => [
+                                'label'    => 'Gestion des statuts de mobilités des agents',
+                                'route'    => 'agent/mobilite',
+                                'resource' => PrivilegeController::getResourceId(AgentMobiliteController::class, 'index') ,
+                                'order'    => 100000,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],

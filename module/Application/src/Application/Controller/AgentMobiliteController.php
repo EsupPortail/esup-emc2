@@ -12,6 +12,15 @@ class AgentMobiliteController extends AgentController {
     use AgentMobiliteServiceAwareTrait;
     use AgentMobiliteFormAwareTrait;
 
+    public function indexAction(): ViewModel
+    {
+        $mobilites = $this->getAgentMobiliteService()->getAgentsMobilites();
+
+        return new ViewModel([
+            'mobilites' => $mobilites,
+        ]);
+    }
+
     public function ajouterAction() : ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
@@ -29,6 +38,7 @@ class AgentMobiliteController extends AgentController {
 
             if ($form->isValid()) {
                 //historiser les éventuelles ouvertes
+                $agent = $agentMobilite->getAgent();
                 $mobilites = $this->getAgentMobiliteService()->getAgentsMobilitesByAgent($agent);
                 foreach ($mobilites as $mobilite) $this->getAgentMobiliteService()->historise($mobilite);
                 // enregistrer la nouvelle
