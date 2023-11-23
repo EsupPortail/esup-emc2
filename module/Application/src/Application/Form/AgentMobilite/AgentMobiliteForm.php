@@ -22,7 +22,7 @@ class AgentMobiliteForm extends Form
     {
         //--agent déduiu de l'action
         //Cible
-        $cible = new SearchAndSelect('cible', ['label' => "Agent·e :"]);
+        $cible = new SearchAndSelect('agent', ['label' => "Agent·e :"]);
         $cible
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)

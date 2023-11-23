@@ -73,14 +73,28 @@ class AgentMobiliteController extends AgentController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction() : ViewModel
     {
         $agentMobilite = $this->getAgentMobiliteService()->getRequestedAgentMobilite($this);
         $this->getAgentMobiliteService()->historise($agentMobilite);
 
-        $retour = $this->params()->fromQuery('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('agent/afficher', ['agent' => $agentMobilite->getAgent()->getId()], ['fragment' => "mobilite"], true);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAgentMobiliteService()->historise($agentMobilite);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($agentMobilite !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Historisation du statut de mobilité pour l'agent·e " . $agentMobilite->getAgent()->getDenomination(),
+                'text' => "L'historisation supprimera votre statut. <br/>Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('agent/mobilite/historiser', ["agent-mobilite" => $agentMobilite->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction() : Response

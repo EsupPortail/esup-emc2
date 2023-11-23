@@ -26,7 +26,7 @@ class AgentMobiliteHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $agent = (isset($data['agent']) and isset($data['agent']['id']) and trim($data['agent']['id']) !== '') ? $this->getAgentService()->getAgent($data['agent']['id']) : null;
-        $mobilite = (isset($data['mobilite']) ) ? $this->getMobiliteService()->getMobilite($data['resultat']) : null;
+        $mobilite = (isset($data['mobilite']) ) ? $this->getMobiliteService()->getMobilite($data['mobilite']) : null;
         $commentaire = (isset($data['commentaire'])  and trim($data['commentaire']) !== '') ? trim($data['commentaire']) : null;
 
         /** @var AgentMobilite $object */

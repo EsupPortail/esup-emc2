@@ -10,6 +10,9 @@ use Application\Entity\Db\AgentMobilite;
 use Application\Provider\Privilege\AgentmobilitePrivileges;
 
 $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AJOUTER));
+$canModifier = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_MODIFIER));
+$canHistoriser = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_HISTORISER));
+$canSupprimer = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_SUPPRIMER));
 
 ?>
 
@@ -38,20 +41,67 @@ $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmobil
                 Statut de mobilité actif
             </div>
             <div class="card-body">
-                <dl>
-                    <dt> Type de mobilité  </dt>
-                    <dd> <?php echo $mobilite->getMobilite()->getLibelle(); ?> </dd>
-                    <dt> Date de demande ou de modification </dt>
-                    <dd>
-                        <?php  if ($mobilite->getHistoModification()) : ?>
-                            <?php echo $mobilite->getHistoModification()->format('d/m/Y à H:i'); ?>
-                        <?php else : ?>
-                            <?php echo $mobilite->getHistoCreation()->format('d/m/Y à H:i'); ?>
-                        <?php endif; ?>
-                    </dd>
-                </dl>
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl>
+                            <dt> Type de mobilité  </dt>
+                            <dd> <?php echo $mobilite->getMobilite()->getLibelle(); ?> </dd>
+                            <dt> Date de demande ou de modification </dt>
+                            <dd>
+                                <?php  if ($mobilite->getHistoModification()) : ?>
+                                    <?php echo $mobilite->getHistoModification()->format('d/m/Y à H:i'); ?>
+                                <?php else : ?>
+                                    <?php echo $mobilite->getHistoCreation()->format('d/m/Y à H:i'); ?>
+                                <?php endif; ?>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl>
+                            <dt> Commentaire associé au statut de mobilité </dt>
+                            <dd>
+                                <?php if ($mobilite->getCommentaire()): ?>
+                                    <?php echo $mobilite->getCommentaire(); ?>
+                                <?php else : ?>
+                                    <em> Aucun commentaire n'a été rédigé.</em>
+                                <?php endif; ?>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
 
-                ACTION
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \Application\Controller\AgentMobiliteController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('agent/mobilite/modifier', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
+                       class="btn btn-primary ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer"></span> Modifier le statut
+                    </a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($mobilite->estNonHistorise()) : ?>
+                        <?php /** @see \Application\Controller\AgentMobiliteController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('agent/mobilite/historiser', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
+                           class="btn btn-warning ajax-modal" data-event="modification">
+                            <span class="icon icon-historiser"></span> Historiser le statut
+                        </a>
+                    <?php else : ?>
+                        <?php /** @see \Application\Controller\AgentMobiliteController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('agent/mobilite/restaurer', ['agent-mobilite' => $mobilite->getId()],[], true); ?>"
+                           class="btn btn-primary">
+                            <span class="icon icon-restaurer"></span> Restaurer le statut
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($canSupprimer) : ?>
+                    <?php /** @see \Application\Controller\AgentMobiliteController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url('agent/mobilite/supprimer', ['agent-mobilite' => $mobilite->getId()], [], true); ?>"
+                       class="btn btn-danger ajax-modal" data-event="modification">
+                        <span class="icon icon-unchecked"></span> Supprimer le statut
+                    </a>
+                <?php endif; ?>
+
             </div>
         </div>
     <?php endforeach; ?>

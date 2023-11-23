@@ -118,13 +118,13 @@ return [
                                     ],
                                 ],
                             ],
-                            'detruire' => [
+                            'supprimer' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/detruire/:agent-mobilite',
+                                    'route' => '/supprimer/:agent-mobilite',
                                     'defaults' => [
-                                        /** @see AgentMobiliteController::supprimer() */
-                                        'action' => 'detruire'
+                                        /** @see AgentMobiliteController::supprimerAction() */
+                                        'action' => 'supprimer'
                                     ],
                                 ],
                             ],
