@@ -211,6 +211,32 @@ create table carriere_grade
 );
 
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TABLE - Mobilite ----------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table carriere_mobilite
+(
+    id                    serial not null
+        constraint carriere_mobilite_pk
+            primary key,
+    code                  varchar(64)                                                     not null,
+    libelle               varchar(1024)                                                   not null,
+    description           text,
+    histo_creation        timestamp default now()                                         not null,
+    histo_createur_id     integer   default 0                                             not null
+        constraint carriere_mobilite_type_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint carriere_mobilite_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint carriere_mobilite_unicaen_utilisateur_user_id_fk2
+            references unicaen_utilisateur_user
+);
+
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
 -- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
@@ -229,13 +255,18 @@ create table carriere_grade
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
 
 -- ---------------------------------------------------------------------------------------------------------------------
---  INSERT CATEGORIE PAR DEFAUT ----------------------------------------------------------------------------------------
+--  INSERT DEFAUT ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO carriere_categorie (code, libelle, histo_creation, histo_createur_id)
     VALUES ('A', 'La catégorie A', now(), 0),
            ('B', 'La catégorie B', now(), 0),
            ('C', 'La catégorie C', now(), 0);
+
+INSERT INTO carriere_mobilite (code, libelle, description)
+    VALUES ('RECHERCHE_PASSIVE', 'J''étudirai des propositions qui me seraient faites', null),
+           ('PAS_DE_DEMANDE', 'Je ne cherche ni étudie des mobilité', null),
+           ('RECHERCHE_ACTIVE', 'En recherche active', '<p>Je d&eacute;sire changer de structure</p>');
 
 --------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -------------------------------------------------------------------------------------------------
@@ -322,6 +353,21 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'grade';
 
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('mobilite', 'Gestion des types de mobilités', 'Carriere\Provider\Privilege', 640);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'mobilite_index', 'Accéder à l''index', 10 UNION
+    SELECT 'mobilite_afficher', 'Afficher', 20 UNION
+    SELECT 'mobilite_ajouter', 'Ajouter', 30 UNION
+    SELECT 'mobilite_modifier', 'Modifier', 40 UNION
+    SELECT 'mobilite_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'mobilite_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'mobilite';
 
 --------------------------------------------------------------------------------------------------------------
 -- PARAMS ----------------------------------------------------------------------------------------------------
