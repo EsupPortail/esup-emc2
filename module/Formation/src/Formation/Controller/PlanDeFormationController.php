@@ -264,11 +264,36 @@ class PlanDeFormationController extends AbstractActionController
         return $vm;
     }
 
+    public function viderAction() : ViewModel
+    {
+        $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getPlanDeFormationService()->vider($plan);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($plan !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Retrait des formations du plan de formation " . $plan->getAnnee(),
+                'text' => "Cette opération est sans retour en arrière. Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('plan-de-formation/vider', ["plan-de-formation" => $plan->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
     public function importerDepuisCsvAction(): ViewModel
     {
+        $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
+
         $form = $this->getPlanDeFormationImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('plan-de-formation/importer', ['mode' => 'preview', 'path' => null], [], true));
-
+        $form->bind($plan);
 
         $request = $this->getRequest();
         if ($request->isPost()) {

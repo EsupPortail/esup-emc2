@@ -79,6 +79,7 @@ return [
                         'reprendre',
                         'supprimer',
                         'importer-depuis-csv',
+                        'vider',
                     ],
                     'privileges' => [
                         PlanformationPrivileges::PLANFORMATION_SUPPRIMER
@@ -216,17 +217,26 @@ return [
                         ],
                     ],
                     'importer' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'options' => [
                             /** @see PlanDeFormationController::importerDepuisCscAction() */
-                            'route'    => '/importer-depuis-csv',
+                            'route'    => '/importer-depuis-csv[/:plan-de-formation]',
                             'defaults' => [
                                 'controller' => PlanDeFormationController::class,
                                 'action'     => 'importer-depuis-csv',
                             ],
                         ],
                     ],
-
+                    'vider' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/vider/:plan-de-formation',
+                            'defaults' => [
+                                /** @see PlanDeFormationController::viderAction() */
+                                'action'     => 'vider',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],

@@ -151,4 +151,13 @@ class PlanDeFormationService {
             }
         }
     }
+
+    public function vider(?PlanDeFormation $plan): void
+    {
+        $formations = $plan->getFormations();
+        foreach ($formations as $formation) {
+            $formation->removePlanDeFormation($plan);
+            $this->getFormationService()->update($formation);
+        }
+    }
 }

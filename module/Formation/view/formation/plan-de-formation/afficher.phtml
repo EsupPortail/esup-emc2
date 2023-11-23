@@ -41,6 +41,18 @@ $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(Planform
        class="btn btn-primary ajax-modal" data-event="modification">
         Gérer les formations
     </a>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::importerDepuisCsvAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/importer', ['plan-de-formation' => $plan->getId()],[], true); ?>"
+       class="btn btn-primary">
+        <span class="icon icon-csv"></span>
+        Compléter un plan de formation avec un csv
+    </a>
+    <?php /** @see \Formation\Controller\PlanDeFormationController::viderAction() */ ?>
+    <a href="<?php echo $this->url('plan-de-formation/vider', ['plan-de-formation' => $plan->getId()],[], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon icon-gommer"></span>
+        Vider le plan de formation
+    </a>
 <?php endif; ?>
 
 <?php if ($canIndex): ?>
