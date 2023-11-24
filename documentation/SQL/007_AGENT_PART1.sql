@@ -1,3 +1,29 @@
+-- Date de MAJ 23/11/2023 ----------------------------------------------------------------------------------------------
+-- Script avant version 4.1.2 ------------------------------------------------------------------------------------------
+-- Color scheme : BLue et 37495D  --------------------------------------------------------------------------------------
+
+-- TTTTTTTTTTTTTTTTTTTTTTT         AAA               BBBBBBBBBBBBBBBBB   LLLLLLLLLLL             EEEEEEEEEEEEEEEEEEEEEE
+-- T:::::::::::::::::::::T        A:::A              B::::::::::::::::B  L:::::::::L             E::::::::::::::::::::E
+-- T:::::::::::::::::::::T       A:::::A             B::::::BBBBBB:::::B L:::::::::L             E::::::::::::::::::::E
+-- T:::::TT:::::::TT:::::T      A:::::::A            BB:::::B     B:::::BLL:::::::LL             EE::::::EEEEEEEEE::::E
+-- TTTTTT  T:::::T  TTTTTT     A:::::::::A             B::::B     B:::::B  L:::::L                 E:::::E       EEEEEE
+--         T:::::T            A:::::A:::::A            B::::B     B:::::B  L:::::L                 E:::::E
+--         T:::::T           A:::::A A:::::A           B::::BBBBBB:::::B   L:::::L                 E::::::EEEEEEEEEE
+--         T:::::T          A:::::A   A:::::A          B:::::::::::::BB    L:::::L                 E:::::::::::::::E
+--         T:::::T         A:::::A     A:::::A         B::::BBBBBB:::::B   L:::::L                 E:::::::::::::::E
+--         T:::::T        A:::::AAAAAAAAA:::::A        B::::B     B:::::B  L:::::L                 E::::::EEEEEEEEEE
+--         T:::::T       A:::::::::::::::::::::A       B::::B     B:::::B  L:::::L                 E:::::E
+--         T:::::T      A:::::AAAAAAAAAAAAA:::::A      B::::B     B:::::B  L:::::L         LLLLLL  E:::::E       EEEEEE
+--       TT:::::::TT   A:::::A             A:::::A   BB:::::BBBBBB::::::BLL:::::::LLLLLLLLL:::::LEE::::::EEEEEEEE:::::E
+--       T:::::::::T  A:::::A               A:::::A  B:::::::::::::::::B L::::::::::::::::::::::LE::::::::::::::::::::E
+--       T:::::::::T A:::::A                 A:::::A B::::::::::::::::B  L::::::::::::::::::::::LE::::::::::::::::::::E
+--       TTTTTTTTTTTAAAAAAA                   AAAAAAABBBBBBBBBBBBBBBBB   LLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEE
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- Entité de base ------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
 create table agent
 (
     c_individu            varchar(40)                                                        not null
@@ -29,37 +55,9 @@ create table agent
     id_orig               varchar(100)
 );
 
-create table agent_missionspecifique
-(
-    id                    serial
-        constraint agent_missionspecifique_pk
-        primary key,
-    agent_id              varchar(40) not null,
-    mission_id            integer     not null
-        constraint agent_missionspecifique_mission_specifique_id_fk
-        references mission_specifique
-        on delete cascade,
-    structure_id          integer,
-    date_debut            timestamp,
-    date_fin              timestamp,
-    commentaire           varchar(2048),
-    decharge              double precision,
-    histo_creation        timestamp   not null,
-    histo_createur_id     integer     not null
-        constraint agent_missionspecifique_createur_fk
-        references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_modificateur_id integer
-        constraint agent_missionspecifique_modificateur_fk
-        references unicaen_utilisateur_user,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer
-        constraint agent_missionspecifique_destructeur_fk
-        references unicaen_utilisateur_user
-);
-
-create unique index agent_missionspecifique_id_uindex
-    on agent_missionspecifique (id);
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TABLE - Hiérarchie  -------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
 create table agent_hierarchie_superieur
 (
@@ -85,15 +83,8 @@ create table agent_hierarchie_superieur
         constraint agent_superieur_unicaen_utilisateur_user_id_fk2
         references unicaen_utilisateur_user
 );
-
-alter table agent_hierarchie_superieur
-    owner to ad_emc2_demo;
-
-create index agent_superieur_agent_id_index
-    on agent_hierarchie_superieur (agent_id);
-
-create index agent_superieur_superieur_id_index
-    on agent_hierarchie_superieur (superieur_id);
+create index agent_superieur_agent_id_index on agent_hierarchie_superieur (agent_id);
+create index agent_superieur_superieur_id_index on agent_hierarchie_superieur (superieur_id);
 
 create table agent_hierarchie_autorite
 (
@@ -119,57 +110,39 @@ create table agent_hierarchie_autorite
         constraint agent_autorite_unicaen_utilisateur_user_id_fk2
         references unicaen_utilisateur_user
 );
+create index agent_autorite_agent_id_index on agent_hierarchie_autorite (agent_id);
+create index agent_autorite_autorite_id_index on agent_hierarchie_autorite (autorite_id);
 
-alter table agent_hierarchie_autorite
-    owner to ad_emc2_demo;
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TABLE - Acquis ------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
-create index agent_autorite_agent_id_index
-    on agent_hierarchie_autorite (agent_id);
-
-create index agent_autorite_autorite_id_index
-    on agent_hierarchie_autorite (autorite_id);
-
-create table agent_fichier
-(
-    agent   varchar(40) not null,
-    fichier varchar(13) not null
-        constraint agent_fichier_fichier_fk
-        references fichier_fichier
-        on delete cascade,
-    constraint agent_fichier_pk
-        primary key (agent, fichier)
-);
-
-alter table agent_fichier
-    owner to ad_emc2_demo;
 
 create table agent_element_application
 (
     agent_id               varchar(40) not null
         constraint agent_application_agent_c_individu_fk
-        references agent
-        on delete cascade,
+            references agent
+            on delete cascade,
     application_element_id integer     not null
         constraint agent_application_application_element_id_fk
-        references element_application_element
-        on delete cascade,
+            references element_application_element
+            on delete cascade,
     constraint agent_application_pk
         primary key (agent_id, application_element_id)
 );
 
-alter table agent_element_application
-    owner to ad_emc2_demo;
 
 create table agent_element_competence
 (
     agent_id              varchar(40) not null
         constraint agent_competence_agent_c_individu_fk
-        references agent
-        on delete cascade,
+            references agent
+            on delete cascade,
     competence_element_id integer     not null
         constraint agent_competence_competence_element_id_fk
-        references element_competence_element
-        on delete cascade,
+            references element_competence_element
+            on delete cascade,
     constraint agent_competence_pk
         primary key (agent_id, competence_element_id)
 );
@@ -178,16 +151,49 @@ create table agent_element_formation
 (
     agent_id             varchar(40) not null
         constraint agent_formation_agent_c_individu_fk
-        references agent
-        on delete cascade,
+            references agent
+            on delete cascade,
     formation_element_id integer     not null
         constraint agent_formation_formation_element_id_fk
-        references formation_element
-        on delete cascade,
+            references formation_element
+            on delete cascade,
     constraint agent_formation_pk
         primary key (agent_id, formation_element_id)
 );
 
-alter table agent_element_formation
-    owner to ad_emc2_demo;
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TABLE - Autre -------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+create table agent_fichier
+(
+    agent   varchar(40) not null
+        constraint agent_fichier_agent_c_individu_fk
+            references agent
+            on delete set null,
+    fichier varchar(13) not null
+        constraint agent_fichier_fichier_fk
+            references fichier_fichier
+            on delete cascade,
+    constraint agent_fichier_pk
+        primary key (agent, fichier)
+);
+
+-- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
+-- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
+-- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
+-- II::::::IIN:::::::::N     N::::::NS:::::S     SSSSSSSEE::::::EEEEEEEEE::::ERR:::::R     R:::::RT:::::TT:::::::TT:::::T
+--   I::::I  N::::::::::N    N::::::NS:::::S              E:::::E       EEEEEE  R::::R     R:::::RTTTTTT  T:::::T  TTTTTT
+--   I::::I  N:::::::::::N   N::::::NS:::::S              E:::::E               R::::R     R:::::R        T:::::T
+--   I::::I  N:::::::N::::N  N::::::N S::::SSSS           E::::::EEEEEEEEEE     R::::RRRRRR:::::R         T:::::T
+--   I::::I  N::::::N N::::N N::::::N  SS::::::SSSSS      E:::::::::::::::E     R:::::::::::::RR          T:::::T
+--   I::::I  N::::::N  N::::N:::::::N    SSS::::::::SS    E:::::::::::::::E     R::::RRRRRR:::::R         T:::::T
+--   I::::I  N::::::N   N:::::::::::N       SSSSSS::::S   E::::::EEEEEEEEEE     R::::R     R:::::R        T:::::T
+--   I::::I  N::::::N    N::::::::::N            S:::::S  E:::::E               R::::R     R:::::R        T:::::T
+--   I::::I  N::::::N     N:::::::::N            S:::::S  E:::::E       EEEEEE  R::::R     R:::::R        T:::::T
+-- II::::::IIN::::::N      N::::::::NSSSSSSS     S:::::SEE::::::EEEEEEEE:::::ERR:::::R     R:::::R      TT:::::::TT
+-- I::::::::IN::::::N       N:::::::NS::::::SSSSSS:::::SE::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
+-- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
+-- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
+
 
