@@ -413,7 +413,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'competencetheme';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
-VALUES ('competencereferentiel', 'Gestion des référentiels de compétences', 70800, 'Element\Provider\Privilege');
+VALUES ('competencereferentiel', 'Gestion des référentiels de compétences', 'Element\Provider\Privilege', 70800);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'competencereferentiel_index', 'Accéder à l''index', 10 UNION

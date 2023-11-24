@@ -1,0 +1,49 @@
+<?php
+
+return [
+    'unicaen-auth' => [
+        'cas' => [
+            // laisser vide si pas de cas
+            'connection' => [
+                'default' => [
+                    'params' => [
+                        'hostname' => 'cas.XXXX.fr',
+                        'port'     => XXX,
+                        'version'  => "2.0",
+                        'uri'      => "",
+                        'debug'    => false,
+                    ],
+                ],
+            ],
+            'form_skip' => true,
+        ],
+        'local' => [
+            'order' => 2,
+            'enabled' => true,
+            'description' => "Utilisez ce formulaire si vous possédez un compte LDAP établissement ou un compte local dédié à l'application.",
+            'db' => [
+                // doit être activé pour que l'usurpation fonctionne (cf. Authentication/Storage/Db::read()) :-/
+                'enabled' => true,
+            ],
+            'ldap' => [
+                'enabled' => true,
+//de commenter en fonction de situation
+                    //'username' => 'supannaliaslogin',
+                    //'username' => 'uid',
+            ],
+        ],
+
+        'shib' => [
+            'order' => 3,
+            'enabled' => false,
+            'logout_url' => '/Shibboleth.sso/Logout?return=', // NB: '?return=' semble obligatoire!
+        ],
+
+        /**
+         * Identifiants de connexion autorisés à faire de l'usurpation d'identité.
+         * (NB: à réserver exclusivement aux tests.)
+         */
+        'usurpation_allowed_usernames' => [
+        ],
+    ],
+];
