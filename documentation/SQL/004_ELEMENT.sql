@@ -356,6 +356,7 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('applicationtheme', 'Gestion des thèmes d''application', 'Element\Provider\Privilege', 70200);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
+    SELECT 'applicationtheme_index', 'Acceder à l''index des thèmes d''application', 10 UNION
     SELECT 'applicationtheme_afficher', 'Afficher un thème d''application', 20 UNION
     SELECT 'applicationtheme_ajouter', 'Ajouter', 30 UNION
     SELECT 'applicationtheme_modifier', 'Modifier un thème d''application', 40 UNION

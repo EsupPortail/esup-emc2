@@ -342,37 +342,274 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
 -- Template ------------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_1-RESPONSABLE', null, 'mail', 'Validation de l''entretien professionnel pour la campagne VAR[CAMPAGNE#annee] de VAR[AGENT#denomination] par le responsable de l''entretien VAR[ENTRETIEN#Responsable]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee] a été validé par VAR[ENTRETIEN#responsable], vous êtes invité<span style="color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">·</span>e à en prendre connaissance et y apporter des observations si vous l\'estimez nécessaire.</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Vous pouvez dés à présent émettre, si besoin, des observations en lien avec :</p>
+-- PDF de l'entretien CREP et CREF
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('CREP - Compte rendu d''entretien professionnel', 'EntretienProfessionnel\Provider\Template', '<p>Compte-rendu de l''entretien professionnel d''un agent</p>', 'pdf', 'Entretien_professionnel_VAR[CAMPAGNE#annee]_VAR[AGENT#NomUsage]_VAR[AGENT#Prenom].pdf', e'<h1>Annexe C9 - Compte rendu de l\'entretien professionnel</h1>
+<p><strong>Année : VAR[CAMPAGNE#annee]</strong></p>
+<table style="width: 998.25px;">
+<tbody>
+<tr>
+<th style="width: 482px; text-align: center;"><strong>AGENT</strong></th>
+<th style="width: 465.25px; text-align: center;"><strong>SUPÉRIEUR·E HIÉRARCHIQUE DIRECT·E</strong></th>
+</tr>
+<tr>
+<td style="width: 482px;">
+<p>Nom d\'usage : VAR[AGENT#NomUsage]</p>
+<p>Nom de famille : VAR[AGENT#NomFamille]</p>
+<p>Prénom : VAR[AGENT#Prenom]</p>
+<p>Date de naissance: VAR[AGENT#DateNaissance]</p>
+<p>Corps-grade : VAR[AGENT#CorpsGrade]<strong><br /></strong></p>
+<p>Échelon : VAR[Agent#Echelon]</p>
+<p>Date de promotion dans l\'échelon : VAR[Agent#EchelonDate]</p>
+</td>
+<td style="width: 465.25px;">
+<p>Nom d\'usage : VAR[ENTRETIEN#ReponsableNomUsage]</p>
+<p>Nom de famille : VAR[ENTRETIEN#ReponsableNomFamille]</p>
+<p>Prénom : VAR[ENTRETIEN#ReponsablePrenom]</p>
+<p>Corps-grade : VAR[ENTRETIEN#ReponsableCorpsGrade]</p>
+<p>Intitulé de la fonction : VAR[ENTRETIEN#ReponsableIntitlePoste]VAR[ENTRETIEN#CREP_Champ|CREP;responsable_date]</p>
+<p>Structure : VAR[ENTRETIEN#ReponsableStructure]</p>
+<p>Date de l\'entretien professionnel : VAR[ENTRETIEN#date]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>1. Description du poste occupé par l\'agent</h2>
+<table style="width: 722px;">
+<tbody>
+<tr>
+<td style="width: 722px;">
+<p>Structure : VAR[AGENT#AffectationStructure]</p>
+<p>Intitulé du poste : VAR[AGENT#IntitulePoste]VAR[ENTRETIEN#CREP_Champ|CREP;agent_poste]</p>
+<p>Date d\'affectation : VAR[ENTRETIEN#CREP_Champ|CREP;affectation_date]</p>
+<p>Emploi type (cf. REME ou REFERENS) : VAR[AGENT#EmploiType] VAR[ENTRETIEN#CREP_Champ|CREP;emploi-type]</p>
+<p>Positionnement du poste dans le structure : VAR[AGENT#AffectationStructureFine]</p>
+<p>Quotité travaillée : VAR[AGENT#Quotite]</p>
+<p>Quotité d\'affectation : VAR[AGENT#QuotiteAffectation]</p>
+</td>
+</tr>
+<tr>
+<td style="width: 722px;">
+<p>Missions du postes :<br />VAR[AGENT#Missions]</p>
+</td>
+</tr>
+<tr>
+<td style="width: 722px;">
+<p>Missions du postes (compléments fournis dans l\'entretien professionnel) :</p>
+<p> VAR[ENTRETIEN#CREP_Champ|CREP;missions]</p>
+</td>
+</tr>
+<tr>
+<td style="width: 722px;">
+<p>Le cas échéant, fonctions d\'encadrement ou de conduite de projet :</p>
 <ul>
-<li style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">votre entretien professionnel et son déroulé ;</li>
-<li style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">vos perspectives d\'évolution professionnelle.</li>
+<li>l\'agent assume-t\'il des fonctions de conduite de projet ? VAR[ENTRETIEN#CREP_projet]</li>
+<li>l\'agent  assume-t\'il des fonctions d\'encadrements ? VAR[ENTRETIEN#CREP_encadrement]<br />Si oui préciser le nombre d\'agents et leur répartition par catégorie : VAR[ENTRETIEN#CREP_encadrementA] A - VAR[ENTRETIEN#CREP_encadrementB] B - VAR[ENTRETIEN#CREP_encadrementC] C</li>
 </ul>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre entretien professionnel est disponible sur l\'application VAR[EMC2#Nom] : VAR[URL#EntretienRenseigner].</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span style="text-decoration: underline;">Attention :</span> Vous disposez d\'un délai d\'une semaine pour émettre, si besoin, vos observations. <br />N\'oubliez pas de valider celles-ci.</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Pour rappel, l\'entretien professionnel est un moment privilégié d\'échange et de dialogue avec votre responsable hiérarchique direct.<br />Nous vous invitons, si besoin, à vous rapprocher de votre responsable hiérarchique direct avant d\'émettre vos observations.</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><br />Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null, 'EntretienProfessionnel\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_3-HIERARCHIE', '<p>Validation du responsable hierarchique</p>', 'mail', 'Validation de l''autorité hiérarchique de votre entretien professionnel VAR[CAMPAGNE#annee]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><span style="text-decoration: underline;">Objet :</span> validation de l\'autorité hiérarchique de votre entretien professionnel VAR[CAMPAGNE#annee]</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">L\'autorité hiérarchique vient de valider votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee].<br />Vous êtes invité-e à accuser réception de votre compte-rendu en cliquant dans l\'onglet validation de votre entretien : VAR[URL#EntretienRenseigner]<br />Cet accusé de réception clôturera votre entretien professionnel.</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null, 'EntretienProfessionnel\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_2-PAS_D_OBSERVATION', '<p>Mail envoyé au responsable hiérarchique après le dépassement du délai d''émission des observation</p>', 'mail', 'Ouverture de la validation de l''entretien professionnel de VAR[ENTRETIEN#Agent]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span style="text-decoration: underline;">Objet :</span> ouverture de la validation de l\'entretien professionnel de VAR[ENTRETIEN#Agent]</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
-<p>Vous pouvez maintenant valider l\'entretien professionnel de VAR[ENTRETIEN#Agent].<br />Vous pouvez consulter et valider cet entretien en suivant le lien : https://emc2.unicaen.fr/entretien-professionnel/acceder/VAR[ENTRETIEN#Id]</p>
-<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br /><br /></p>', null, 'EntretienProfessionnel\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('CAMPAGNE_DELEGUE', '<p>Courrier électronique envoyé vers les délégués lors de leur nomination</p>', 'mail', 'Nomination en tant que délégué·e pour la campagne d''entretien professionnel VAR[CAMPAGNE#annee]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>2. Évaluation de l\'année écoulée</h2>
+<h3>2.1 Rappel des objectifs d\'activités attendus fixés l\'année précédente</h3>
+<p>(merci d\'indiquer si des démarches ou moyens spécifiques ont été mis en œuvres pour atteindre ces objectifs)</p>
+<table style="width: 891px;">
+<tbody>
+<tr>
+<td style="width: 891px;">VAR[ENTRETIEN#CREP_Champ|CREP;2.1]</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 Événements survenus au cours de la période écoulée ayant entraîné un impact sur l\'activité</h3>
+<p>(nouvelles orientations, réorganisations, nouvelles méthodes, nouveaux outils, etc.) </p>
+<table style="width: 888px;">
+<tbody>
+<tr>
+<td style="width: 888px;">VAR[ENTRETIEN#CREP_Champ|CREP;2.2]</td>
+</tr>
+</tbody>
+</table>
+<h2>3. Valeur professionnelle et manière de servir du fonctionnaire</h2>
+<h3>3.1 Critères d\'appréciation</h3>
+<p>L’évaluateur retient, pour apprécier la valeur professionnelle des agents au cours de l\'entretien professionnel, les critères annexés à l’arrêté ministériel et qui sont adaptés à la nature des tâches qui leur sont confiées, au niveau de leurs responsabilités et au contexte professionnel. Pour les infirmiers et les médecins seules les parties 2, 3 et 4 doivent être renseignées en tenant compte des limites légales et règlementaires en matière de secret professionnel imposées à ces professionnels.</p>
+<p><strong>1. Les compétences professionnelles et technicité</strong></p>
+<p>Maîtrise technique ou expertise scientifique du domaine d\'activité, connaissance de l\'environnement professionnel et capacité à s\'y situer, qualité d\'expression écrite, qualité d\'expression orale, ...</p>
+<table style="width: 840px;">
+<tbody>
+<tr style="height: 14.7344px;">
+<td style="width: 840px; height: 14.7344px;">VAR[ENTRETIEN#CompetencesTechniques]</td>
+</tr>
+</tbody>
+</table>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.1old]</p>
+<p><strong>2. La contribution à l’activité du service</strong></p>
+<p>Capacité à partager l\'information, à transférer les connaissances et à rendre compte, capacité à s\'invertir dans des projets, sens du service public et conscience professionnelle, capacité à respecter l\'organisation collective du travail, ...</p>
+<table style="width: 560px;">
+<tbody>
+<tr>
+<td style="width: 560px;">VAR[ENTRETIEN#ActiviteService]</td>
+</tr>
+</tbody>
+</table>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.2old]</p>
+<p><strong>3. Les capacités professionnelles et relationnelles </strong></p>
+<p>Autonomie, discernement et sens des initiatives dans l\'exercice de ses attributions, capacité d\'adaptation, capacité à travailler en équipe, ...</p>
+<table style="width: 560px;">
+<tbody>
+<tr>
+<td style="width: 560px;">VAR[ENTRETIEN#CompetencesPersonnelles]</td>
+</tr>
+</tbody>
+</table>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.3old]</p>
+<p><strong>4. Le cas échéant, aptitude à l\'encadrement et/ou à la conduite de projets</strong></p>
+<p>Capacité d\'organisation et de pilotage, aptitude à la conduite de projets, capacité à déléguer, aptitude au dialogue, à la communication et à la négociation, ...</p>
+<table style="width: 560px;">
+<tbody>
+<tr>
+<td style="width: 560px;">VAR[ENTRETIEN#EncadrementConduite]</td>
+</tr>
+</tbody>
+</table>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;3.1.4old]</p>
+<h3>3.2 Appréciation générale sur la valeur professionnelle, la manière de servir et la réalisation des objectifs</h3>
+<table style="width: 764px;">
+<tbody>
+<tr>
+<td style="width: 413.297px;"><strong>Compétences professionnelles et technicité</strong></td>
+<td style="width: 352.703px;">VAR[ENTRETIEN#CREP_Champ|CREP;3.2.1]</td>
+</tr>
+<tr>
+<td style="width: 413.297px;"><strong>Contribution à l\'activité du service</strong></td>
+<td style="width: 352.703px;">VAR[ENTRETIEN#CREP_Champ|CREP;3.2.2]</td>
+</tr>
+<tr>
+<td style="width: 413.297px;"><strong>Capacités professionnelles et relationnelles</strong></td>
+<td style="width: 352.703px;">VAR[ENTRETIEN#CREP_Champ|CREP;3.2.3]</td>
+</tr>
+<tr>
+<td style="width: 413.297px;"><strong>Aptitude à l\'encadrement et/ou à la conduite de projet</strong></td>
+<td style="width: 352.703px;">VAR[ENTRETIEN#CREP_Champ|CREP;3.2.4]</td>
+</tr>
+</tbody>
+</table>
 <p> </p>
-<p><span style="text-decoration: underline;">Objet :</span> Nomination en tant que délégué·e pour la campagne d\'entretien professionnel VAR[CAMPAGNE#annee]</p>
-<p>Bonjour VAR[AGENT#denomination],</p>
-<p>Vous avez été nommé·e délégué·e pour la campagne d\'entretien professionnel VAR[CAMPAGNE#annee] pour la structure VAR[STRUCTURE#LIBELLE].<br />Vous serez informé par courrier électronique des entretiens professionnel dont vous aurez la charge.</p>
-<p>Vous pourrez trouver sous le lien suivant la circulaire d\'ouverture en date du VAR[CAMPAGNE#datecirculaire] ainsi que plusieurs documents pouvant vous aider à préparer votre entretien : http://intranet.unicaen.fr/services-/ressources-humaines/gestion-des-personnels/entretien-professionnel-540109.kjsp?RH=1574253529391</p>
-<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>
-<p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+<table style="width: 763px;">
+<tbody>
+<tr>
+<td style="width: 763px;">
+<h3>Réalisation des objectifs de l\'année écoulée</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;realisation]</p>
+</td>
+</tr>
+<tr>
+<td style="width: 763px;">
+<h3>Appréciation littérale</h3>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;appreciation]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>4. Acquis de l\'expérience professionnelle</h3>
+<p>Vous indiquerez également dans cette rubrique si l\'agent occupe des fonctions de formateur, de membre du jury, d\'assistant de prévention, mandat électif, ...</p>
+<table style="width: 755px;">
+<tbody>
+<tr>
+<td style="width: 745px;">
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;exppro_1]</p>
+<p>VAR[ENTRETIEN#CREP_Champ|CREP;exppro_2]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>5. Objectifs fixés pour la nouvelle année</h2>
+<h3>5.1 Objectifs d\'activités attendus</h3>
+<table style="width: 757px;">
+<tbody>
+<tr>
+<td style="width: 747px;">VAR[ENTRETIEN#CREP_Champ|CREP;5.1]</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 Démarche envisagée, et moyens à prévoir dont la formation, pour faciliter l\'atteinte des objectifs</h3>
+<table style="width: 755px;">
+<tbody>
+<tr>
+<td style="width: 745px;">VAR[ENTRETIEN#CREP_Champ|CREP;5.2]</td>
+</tr>
+</tbody>
+</table>
+<h2>6. Perspectives d\'évolution professionnelle</h2>
+<h3>6.1 Évolution des activités (préciser l\'échéance envisagée)</h3>
+<table style="width: 758px;">
+<tbody>
+<tr>
+<td style="width: 748px;">VAR[ENTRETIEN#CREP_Champ|CREP;6.1]</td>
+</tr>
+</tbody>
+</table>
+<h3>6.2 Évolution de carrière</h3>
+<p><strong>Attention</strong> : à compléter obligatoirement pour les agent ayant atteint le dernier échelon de leur grade depuis au moins trois ans au 31/12 de l\'année au titre de la présente évaluation, et lorsque la nomination à ce grade ne résulte pas d\'un avancement de grade ou d\'un accès à celui-ci par concours ou promotion interne.</p>
+<table style="width: 757px;">
+<tbody>
+<tr>
+<td style="width: 747px;">VAR[ENTRETIEN#CREP_Champ|CREP;6.2]</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Signature du supérieur·e hiérarchique direct·e</h2>
+<table style="width: 718px;">
+<tbody>
+<tr>
+<td style="width: 718px;">
+<p>Date de l\'entretien : VAR[ENTRETIEN#date]</p>
+<p>Date de transmission du compte rendu : </p>
+<p>Nom, qualité et signature du responsable hiérarchique :<br /><br /><br /><br />VAR[ENTRETIEN#VALIDATION_SUPERIEUR]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2> 8. Observations de l\'agent sur son évaluation</h2>
+<p>(dans un délai d\'une semaine à compter de la date de transmission du compte rendu)</p>
+<table style="width: 721px;">
+<tbody>
+<tr>
+<td style="width: 711px;">
+<p>Sur l\'entretien : VAR[ENTRETIEN#ObservationEntretien]</p>
+<p>Sur les perspectives de carrière et de mobilité : VAR[ENTRETIEN#ObservationPerspective]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>9. Signature de l\'autorité hiérarchique</h2>
+<table style="width: 720px;">
+<tbody>
+<tr>
+<td style="width: 720px;">
+<p>Date :</p>
+<p>Nom, qualité et signature de l\'autorité hiérarchique :<br /><br /></p>
+<p><br />VAR[ENTRETIEN#VALIDATION_AUTORITE]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>10. Signature de l\'agent</h2>
+<table style="width: 720px;">
+<tbody>
+<tr>
+<td style="width: 720px;">
+<p>Date :</p>
+<p>Nom, qualité et signature de l\'autorité hiérarchique :<br /><br /><br />VAR[ENTRETIEN#VALIDATION_AGENT]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3> Modalité de recours </h3>
+<ul>
+<li><strong>Recours spécifique (Article 6 du décret n° 2010-888 du 28 juillet 2010)</strong><br />L’agent peut saisir l’autorité hiérarchique d’une demande de révision de son compte rendu d’entretien professionnel. Ce recours hiérarchique doit être exercé dans le délai de 15 jours francs suivant la notification du compte rendu d’entretien professionnel. La réponse de l’autorité hiérarchique doit être notifiée dans un délai de 15 jours francs à compter de la date de réception de la demande de révision du compte rendu de l’entretien professionnel. A compter de la date de la notification de cette réponse l’agent peut saisir la commission administrative paritaire dans un délai d\'un mois. Le recours hiérarchique est le préalable obligatoire à la saisine de la CAP.</li>
+<li><strong>Recours de droit commun<br /></strong>L’agent qui souhaite contester son compte rendu d’entretien professionnel peut exercer un recours de droit commun devant le juge administratif dans les 2 mois suivant la notification du compte rendu de l’entretien professionnel, sans exercer de recours gracieux ou hiérarchique (et sans saisir la CAP) ou après avoir exercé un recours administratif de droit commun (gracieux ou hiérarchique). <br />Il peut enfin saisir le juge administratif à l’issue de la procédure spécifique définie par l’article 6 précité. Le délai de recours contentieux, suspendu durant cette procédure, repart à compter de la notification de la décision finale de l’administration faisant suite à l’avis rendu par la CAP.</li>
+</ul>
+<p><code></code></p>', 'body {font-size:9pt;} h1 {font-size: 14pt; color: #154360;} h2 {font-size:12pt; color:#154360;} h3 {font-size: 11pt; color: #154360;}table {border:1px solid black;border-collapse:collapse; width: 100%;} td {border:1px solid black;} th {border:1px solid black; color:#154360;}');
+
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('CREF - Compte rendu d''entretien de formation', '<p>..</p>', 'pdf', 'Entretien_formation_VAR[CAMPAGNE#annee]_VAR[AGENT#NomUsage]_VAR[AGENT#Prenom].pdf', e'<h1>Annexe C9 bis - Compte rendu d\'entretien de formation</h1>
 <p><strong>Année : VAR[CAMPAGNE#annee]</strong></p>
 <table style="width: 998.25px;">
@@ -616,14 +853,6 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <li>Le fonctionnaire est informé par son supérieur hiérarchique des suites données à son entretien de formation.</li>
 <li>Les refus opposés aux demandes de formation présentées à l\'occasion de l\'entretien de formation sont motivés.</li>
 </ul>', 'body {font-size:9pt;} h1 {font-size: 14pt; color: #154360;} h2 {font-size:12pt; color:#154360;} h3 {font-size: 11pt; color: #154360;}table {border:1px solid black;border-collapse:collapse; width: 100%;} td {border:1px solid black;} th {border:1px solid black; color:#154360;}', 'EntretienProfessionnel\Provider\Template');
-INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_2-OBSERVATION_TRANSMISSION', '<p>Transmission des observations aux responsable d''entretien professionnel</p>', 'mail', 'L''expression des observations de VAR[AGENT#Denomination] sur son entretien professionnel de la campagne VAR[CAMPAGNE#annee]', e'<p>VAR[AGENT#Denomination] vient de valider ses observations pour l\'entretien professionnel de la campagne VAR[CAMPAGNE#annee].</p>
-<p><span style="text-decoration: underline;">Observations sur l\'entretien professionnel</span></p>
-<p>VAR[ENTRETIEN#ObservationEntretien]</p>
-<p><span style="text-decoration: underline;">Observation sur les perspectives</span></p>
-<p>VAR[ENTRETIEN#ObservationPerspective]</p>
-<p> </p>
-<p>Cordialement,<br />EMC2</p>
-<p> </p>', null, 'EntretienProfessionnel\Provider\Template');
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('RAPPEL_ATTENTE_VALIDATION_AGENT', null, 'mail', 'Entretien·s professionnel·s en attente de votre validation', e'<p>Bonjour VAR[AGENT#Denomination],</p>
 <p>Vous êtes un·e agent de l\'Université de Caen Normandie et au moins un entretien professionnel de la campagne VAR[CAMPAGNE#annee] attend votre validation en tant qu\'Agent.<br />Veuillez vous connecter à l\'application EMC2 (VAR[URL#App]) afin de valider ceux-ci.</p>
 <p>Bonne journée,<br />L\'équipe EMC2</p>', null, 'EntretienProfessionnel\Provider\Template');
@@ -646,10 +875,107 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p>Pour gérer vos entretiens professionnels vous pouvez vous rendre dans EMC2.</p>
 <p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences</p>
 <p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+
+-- Mails d'ouverture de campagne
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('CAMPAGNE_OUVERTURE_BIATSS', 'EntretienProfessionnel\Provider\Template', '<p>Mail envoyé au personnel lors de l''ouverture d''une campagne d''entretien professionnel</p>', 'mail', 'Ouverture de la campagne d''entretien professionnel VAR[CAMPAGNE#annee]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p><span style="text-decoration: underline;">Objet :</span> ouverture de la campagne d\'entretien professionnel VAR[CAMPAGNE#annee] </p>
+<p>Bonjour,</p>
+<p>La campagne d\'entretien professionnel au titre de l\'année universitaire VAR[CAMPAGNE#annee] est ouverte, vous pourrez trouver sous le lien suivant la circulaire d\'ouverture en date du VAR[CAMPAGNE#datecirculaire] ainsi que plusieurs documents pouvant vous aider à préparer votre entretien : http://intranet.unicaen.fr/services-/ressources-humaines/gestion-des-personnels/entretien-professionnel-540109.kjsp?RH=1574253529391</p>
+<p>Vous recevrez prochainement une convocation par courrier électronique.</p>
+<p>Pour tout renseignement complémentaire, vous pouvez contacter votre responsable hiérarchique.</p>
+<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>
+<p> </p>', null);
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('CAMPAGNE_OUVERTURE_DAC', 'EntretienProfessionnel\Provider\Template', '<p>Mail envoyé au Directeur/Responsable de service lors de l''ouverture d''une campagne d''entretien professionnel</p>', 'mail', 'Ouverture de la campagne d''entretien professionnel VAR[CAMPAGNE#annee]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p><span style="text-decoration: underline;">Objet :</span> ouverture de la campagne d\'entretien professionnel VAR[CAMPAGNE#annee] </p>
+<p>Bonjour,</p>
+<p>La campagne d\'entretien professionnel au titre de l\'année universitaire VAR[CAMPAGNE#annee] est ouverte, vous pourrez trouver sous le lien suivant la circulaire d\'ouverture en date du VAR[CAMPAGNE#datecirculaire] ainsi que plusieurs documents pouvant vous aider à préparer les entretiens de vos agents : http://intranet.unicaen.fr/services-/ressources-humaines/gestion-des-personnels/entretien-professionnel-540109.kjsp?RH=1574253529391</p>
+<p>Le retour des comptes-rendus (CREP) est demandé pour le : VAR[CAMPAGNE#fin]</p>
+<p>La DRH reste à votre disposition pour toute demande de renseignement complémentaire.</p>
+<p>Cordialement<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>
+<p> </p>', null);
+
+-- Mail de convocation
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('ENTRETIEN_CONVOCATION_ACCEPTER', 'EntretienProfessionnel\Provider\Template', '<p>Mail de notification de l''acceptation de l''agent de son entretien professionnel à son responsable hiérarchique direct</p>', 'mail', 'Acceptation de l''entretien professionnel par VAR[AGENT#denomination]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span style="text-decoration: underline;">Objet :</span> acceptation de l\'entretien professionnel par VAR[AGENT#denomination]</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">VAR[AGENT#denomination] vient de prendre note et accepte l\'entretien professionnel pour la campagne VAR[CAMPAGNE#annee].</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Celui-ci se déroule le VAR[ENTRETIEN#date] dans VAR[ENTRETIEN#lieu].</p>
+<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null);
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('ENTRETIEN_CONVOCATION_ENVOI', 'EntretienProfessionnel\Provider\Template', '<p>Mail de convocation à une entretien professionnel d''un agent</p>', 'mail', 'Convocation à votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong><span style="font-size: 9.0pt; font-family: \'Calibri\',sans-serif; mso-bidi-font-family: \'Times New Roman\';">objet :    </span></strong><strong><span style="font-size: 9.0pt; font-family: \'Calibri\',sans-serif; mso-bidi-font-family: Arial;">Convocation à votre entretien professionnel VAR[CAMPAGNE#annee].</span></strong></p>
+<p class="MsoNormal" style="mso-margin-top-alt: auto; margin-bottom: .0001pt; text-align: justify; line-height: normal; tab-stops: 35.45pt;"><span style="font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">Réf. :       </span><span style="font-size: 9.0pt; font-family: \'Calibri\',sans-serif; mso-bidi-font-family: Arial;">- </span><span style="font-size: 8.0pt; mso-bidi-font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">Loi n°84-16 du 11 janvier 1984 modifiée portant dispositions statutaires à la fonction publique d’Etat</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 0cm 0cm .0001pt 35.45pt;"><span style="font-size: 8.0pt; mso-bidi-font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">- Décret n°2010-888 du 28/07/2010 modifié relatif aux conditions générales d’appréciation de la valeur professionnelle des fonctionnaires de l’Etat</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 0cm 0cm .0001pt 35.45pt;"><span style="font-size: 8.0pt; mso-bidi-font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">- Décret n°2011-2041 du 29 décembre 2011 modifiant le décret n° 2010-888 du 28 juillet 2010</span></p>
+<p class="MsoNormal" style="text-align: justify; text-indent: -.1pt; line-height: normal; margin: 0cm 0cm .0001pt 35.45pt;"><span style="font-size: 8.0pt; mso-bidi-font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">- Arrêté du 18 mars 2013 relatif aux modalités d’application à certains fonctionnaires relevant des ministres chargés de l’éducation nationale et de l’enseignement supérieur du décret n°2010-888 du 28 juillet 2010 relatif aux conditions générales de l’appréciation de la valeur professionnelle des fonctionnaires de l’Etat</span></p>
+<p class="MsoNormal" style="text-align: justify; line-height: normal; margin: 0cm 0cm .0001pt 35.45pt;"><span style="font-size: 8.0pt; mso-bidi-font-size: 9.0pt; font-family: \'Calibri Light\',sans-serif; mso-ascii-theme-font: major-latin; mso-hansi-theme-font: major-latin; mso-bidi-theme-font: major-latin;">- Circulaire interne du 25 mars 2019</span></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Le décret n°2011-2041 généralise le dispositif des entretiens professionnels. La circulaire du Président de l\'Université signée du VAR[CAMPAGNE#datecirculaire], vous informe des directives de la campagne pour les personnels de l\'AENES, de l\'ITRF et des bibliothèques pour l\'année VAR[CAMPAGNE#annee] ainsi que pour les agents non titulaires recrutés par contrat à durée déterminée de plus d\'un an comme le prévoit le décret n°2014-364.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre responsable hiérarchique vous recevra pour réaliser votre entretien professionnel<strong> le VAR[ENTRETIEN#date] à VAR[ENTRETIEN#lieu]</strong>.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre responsable hiérarchique vous invite à préparer votre entretien en consultant sous le lien suivant les documents : http://intranet.unicaen.fr/services-/ressources-humaines/gestion-des-personnels/entretien-professionnel-540109.kjsp?RH=1574253529391</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Si la date ne vous convient pas veuillez vous adresser à votre responsable d\'entretien professionnel ou à votre responsable de structure.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Merci d\'accuser réception de cette convocation en cliquant sur le lien suivant : VAR[URL#EntretienAccepter]<br />En cas d’empêchement, veuillez contacter votre supérieur·e hiérarchique direct·e.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null);
+
+-- Mail de validation de l'entretien
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_1-RESPONSABLE', null, 'mail', 'Validation de l''entretien professionnel pour la campagne VAR[CAMPAGNE#annee] de VAR[AGENT#denomination] par le responsable de l''entretien VAR[ENTRETIEN#Responsable]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee] a été validé par VAR[ENTRETIEN#responsable], vous êtes invité<span style="color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">·</span>e à en prendre connaissance et y apporter des observations si vous l\'estimez nécessaire.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Vous pouvez dés à présent émettre, si besoin, des observations en lien avec :</p>
+<ul>
+<li style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">votre entretien professionnel et son déroulé ;</li>
+<li style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">vos perspectives d\'évolution professionnelle.</li>
+</ul>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Votre entretien professionnel est disponible sur l\'application VAR[EMC2#Nom] : VAR[URL#EntretienRenseigner].</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span style="text-decoration: underline;">Attention :</span> Vous disposez d\'un délai d\'une semaine pour émettre, si besoin, vos observations. <br />N\'oubliez pas de valider celles-ci.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Pour rappel, l\'entretien professionnel est un moment privilégié d\'échange et de dialogue avec votre responsable hiérarchique direct.<br />Nous vous invitons, si besoin, à vous rapprocher de votre responsable hiérarchique direct avant d\'émettre vos observations.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><br />Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_2-OBSERVATION', '<p>Transmission des observations aux responsable d''entretien professionnel</p>', 'mail', 'L''expression des observations de VAR[AGENT#Denomination] sur son entretien professionnel de la campagne VAR[CAMPAGNE#annee]', e'<p>VAR[AGENT#Denomination] vient de valider ses observations pour l\'entretien professionnel de la campagne VAR[CAMPAGNE#annee].</p>
+<p><span style="text-decoration: underline;">Observations sur l\'entretien professionnel</span></p>
+<p>VAR[ENTRETIEN#ObservationEntretien]</p>
+<p><span style="text-decoration: underline;">Observation sur les perspectives</span></p>
+<p>VAR[ENTRETIEN#ObservationPerspective]</p>
+<p> </p>
+<p>Cordialement,<br />EMC2</p>
+<p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_2-PAS_D_OBSERVATION', '<p>Mail envoyé au responsable hiérarchique après le dépassement du délai d''émission des observation</p>', 'mail', 'Ouverture de la validation de l''entretien professionnel de VAR[ENTRETIEN#Agent]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><span style="text-decoration: underline;">Objet :</span> ouverture de la validation de l\'entretien professionnel de VAR[ENTRETIEN#Agent]</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
+<p>Vous pouvez maintenant valider l\'entretien professionnel de VAR[ENTRETIEN#Agent].<br />Vous pouvez consulter et valider cet entretien en suivant le lien : https://emc2.unicaen.fr/entretien-professionnel/acceder/VAR[ENTRETIEN#Id]</p>
+<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br /><br /></p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_3-HIERARCHIE', '<p>Validation du responsable hierarchique</p>', 'mail', 'Validation de l''autorité hiérarchique de votre entretien professionnel VAR[CAMPAGNE#annee]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px;"><span style="text-decoration: underline;">Objet :</span> validation de l\'autorité hiérarchique de votre entretien professionnel VAR[CAMPAGNE#annee]</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">L\'autorité hiérarchique vient de valider votre entretien professionnel pour la campagne VAR[CAMPAGNE#annee].<br />Vous êtes invité-e à accuser réception de votre compte-rendu en cliquant dans l\'onglet validation de votre entretien : VAR[URL#EntretienRenseigner]<br />Cet accusé de réception clôturera votre entretien professionnel.</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences <br />VAR[EMC2#Nom]</p>', null, 'EntretienProfessionnel\Provider\Template');
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_4-AGENT', null, 'mail', 'VAR[AGENT#Denomination] vient de valider son entretien professionnel', e'<p>Bonjour,</p>
 <p>VAR[AGENT#Denomination] vient de valider son entretien professionnel pour la campagne VAR[CAMPAGNE#annee].<br />Ceci, clôt son entretien professionnel.</p>
 <p>Bonne journée,<br />L\'application EMC2</p>
 <p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, namespace, description, document_type, document_sujet, document_corps, document_css) VALUES ('NOTIFICATION_RAPPEL_ENTRETIEN', null, '<p>Courrier envoyé à l''agent lui rappelant la date de son entretien professionnel</p>', 'mail', 'Rappel de votre entretien professionnel du VAR[ENTRETIEN#date] pour la campagne VAR[CAMPAGNE#annee]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>Direction des Ressources Humaines</strong></p>
+<p><span style="text-decoration: underline;">Objet :</span> rappel de votre entretien professionnel du VAR[ENTRETIEN#date] pour la campagne VAR[CAMPAGNE#annee]</p>
+<p> </p>
+<p>Bonjour,</p>
+<p>Vous avez été informé<span style="color: #4d5156; font-family: arial, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">·</span>e par votre supérieure hiérarchique direct des éléments concernant votre entretien professionnel :</p>
+<table style="width: 443px;">
+<tbody>
+<tr>
+<td style="width: 200.55px;">Date</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#date]</td>
+</tr>
+<tr>
+<td style="width: 200.55px;">Lieu</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#lieu]</td>
+</tr>
+<tr>
+<td style="width: 200.55px;">Responsable</td>
+<td style="width: 246.45px;">VAR[ENTRETIEN#responsable]</td>
+</tr>
+</tbody>
+</table>
+<p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences<br /><br /><br /></p>', 'table { border : 1px; }');
+
 
 ------------------------------------------------------------------------------------------------------------------------
 -- FORMULAIRE DE L'ENTRETIEN PROFESSIONNEL -----------------------------------------------------------------------------
