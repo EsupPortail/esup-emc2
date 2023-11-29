@@ -255,11 +255,11 @@ INSERT INTO unicaen_etat_categorie (code, libelle, icone, couleur, ordre)
 VALUES ('ENTRETIEN_PROFESSIONNEL', 'États associés aux entretiens professionnels', 'fas fa-briefcase', '#75507b', 200);
 INSERT INTO unicaen_etat_type(categorie_id, code, libelle, icone, couleur, ordre)
 WITH e(code, libelle, icone, couleur, ordre) AS (
-    SELECT 'ENTRETIEN_VALIDATION_HIERARCHIE', 'Validation de l''autorité hiérarchique', 3, 'fas fa-user-tie', '#ffae00', 9999,
-    SELECT 'ENTRETIEN_VALIDATION_AGENT', 'Validation de l&rsquo;agent', 3, 'far fa-check-square', '#44c200', 9999,
-    SELECT 'ENTRETIEN_ACCEPTATION', 'En attente confirmation de l&rsquo;agent', 3, 'fas fa-user-clock', '#b90b80', 9999,
-    SELECT 'ENTRETIEN_ACCEPTER', 'Entretien accepté par l&rsquo;agent', 3, 'fas fa-user-check', '#c100b5', 9999,
-    SELECT 'ENTRETIEN_VALIDATION_RESPONSABLE', 'Validation du responsable de l&rsquo;entretien professionnel', 3, 'fas fa-user', '#c75000', 9999,
+    SELECT 'ENTRETIEN_VALIDATION_HIERARCHIE', 'Validation de l''autorité hiérarchique', 3, 'fas fa-user-tie', '#ffae00', 9999 UNION
+    SELECT 'ENTRETIEN_VALIDATION_AGENT', 'Validation de l&rsquo;agent', 3, 'far fa-check-square', '#44c200', 9999 UNION
+    SELECT 'ENTRETIEN_ACCEPTATION', 'En attente confirmation de l&rsquo;agent', 3, 'fas fa-user-clock', '#b90b80', 9999 UNION
+    SELECT 'ENTRETIEN_ACCEPTER', 'Entretien accepté par l&rsquo;agent', 3, 'fas fa-user-check', '#c100b5', 9999 UNION
+    SELECT 'ENTRETIEN_VALIDATION_RESPONSABLE', 'Validation du responsable de l&rsquo;entretien professionnel', 3, 'fas fa-user', '#c75000', 9999 UNION
     SELECT 'ENTRETIEN_VALIDATION_OBSERVATION', 'Expression des observations faite', 3, 'far fa-comment-alt', '#ff6c0a', 9999
 )
 SELECT et.id, e.code, e.libelle, e.icone, e.couleur, e.ordre
