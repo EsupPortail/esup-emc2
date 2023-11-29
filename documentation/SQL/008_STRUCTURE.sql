@@ -210,12 +210,12 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('structure', 'Gestion des structures', 'Structure\Provider\Privilege', 200);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'mobilite_index', 'Accéder à l''index', 10 UNION
-    SELECT 'mobilite_afficher', 'Afficher', 20 UNION
-    SELECT 'mobilite_ajouter', 'Ajouter', 30 UNION
-    SELECT 'mobilite_modifier', 'Modifier', 40 UNION
-    SELECT 'mobilite_historiser', 'Historiser/Restaurer', 50 UNION
-    SELECT 'mobilite_supprimer', 'Supprimer', 60
+    SELECT 'structure_index', 'Accéder à l''index des structures', 0 UNION
+    SELECT 'structure_afficher', 'Afficher les structures', 10 UNION
+    SELECT 'structure_description', 'Édition de la description', 20 UNION
+    SELECT 'structure_gestionnaire', 'Gérer les gestionnaire', 30 UNION
+    SELECT 'structure_complement_agent', 'Ajouter des compléments à propos des agents', 40 UNION
+    SELECT 'structure_agent_force', 'Ajouter/Retirer des agents manuellements', 50
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

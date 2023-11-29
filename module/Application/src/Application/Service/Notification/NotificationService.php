@@ -12,7 +12,6 @@ use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
 
 class NotificationService
 {
@@ -54,36 +53,5 @@ class NotificationService
             $responsables
         );
         return $email;
-    }
-
-    /** Notifications liées aux validations de la fiche de poste ******************************************************/
-
-    public function triggerValidationResponsableFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
-    {
-        $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];
-        $UrlService = $this->getUrlService()->setVariables($vars);
-        $vars['UrlService'] = $UrlService;
-
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_RESPONSABLE, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailAgent($ficheposte), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
-        return $mail;
-    }
-
-    public function triggerValidationAgentFichePoste(FichePoste $ficheposte, ?ValidationInstance $validation): Mail
-    {
-
-        $vars = ['ficheposte' => $ficheposte, 'agent' => $ficheposte->getAgent(), 'validation' => $validation];
-        $UrlService = $this->getUrlService()->setVariables($vars);
-        $vars['UrlService'] = $UrlService;
-
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FICHE_POSTE_VALIDATION_AGENT, $vars);
-        $mail = $this->getMailService()->sendMail($this->getEmailResponsable($ficheposte), $rendu->getSujet(), $rendu->getCorps());
-        $mail->setMotsClefs([$ficheposte->generateTag(), $rendu->getTemplate()->generateTag()]);
-        $this->getMailService()->update($mail);
-
-        return $mail;
     }
 }

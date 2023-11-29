@@ -9,12 +9,3 @@ where m.code not in (select m.code
                         OR t.document_corps like \'%\' || m.code || \'%\'
                      group by m.code)', '2023-11-29 11:58:48.000000', 'mv_macros_non_utilisees', 'Libre', 'Administration');
 
-TRUNCATE TABLE unicaen_privilege_privilege_role_linker;
-INSERT INTO unicaen_privilege_privilege_role_linker (privilege_id, role_id)
-WITH d(privilege_id) AS (
-    SELECT id FROM unicaen_privilege_privilege
-)
-SELECT d.privilege_id, cp.id
-FROM d
-         JOIN unicaen_utilisateur_role cp ON cp.role_id = 'Administrateur·trice technique'
-;

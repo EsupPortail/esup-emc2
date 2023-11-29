@@ -7,7 +7,7 @@ use Application\Entity\Db\DomaineRepartition;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteApplicationRetiree;
 use Application\Entity\Db\FicheTypeExterne;
-use Application\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use Carriere\Entity\Db\NiveauEnveloppe;

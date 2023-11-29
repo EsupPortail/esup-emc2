@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider\Etat;
+namespace FichePoste\Provider\Etat;
 
 class FichePosteEtats {
 

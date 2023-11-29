@@ -3,6 +3,7 @@
 /**
  * @see \Application\Controller\VerificationController::indexAction()
  * @var string[] $modules
+ * @var string[] $bibliotheques
  * @var string $installation_path
  *
  * @var TemplateService $templateService
@@ -39,12 +40,24 @@ $this->headTitle("Vérification de l'installation");
 
 
 <ul class="nav">
+    Modules :
     <?php foreach ($modules as $module) : ?>
+
     <li class="nav-item">
         <a class="nav-link" href="#<?php echo $module;?>" aria-controls="<?php echo $module;?>">
             <?php echo $module;?>
         </a>
     </li>
+    <?php endforeach; ?>
+<!--</ul>-->
+<!--<ul class="nav">-->
+    Bibliothèques :
+    <?php foreach ($bibliotheques as $bibliotheque) : ?>
+        <li class="nav-item">
+            <a class="nav-link" href="#<?php echo $bibliotheque;?>" aria-controls="<?php echo $bibliotheque;?>">
+                <?php echo $bibliotheque;?>
+            </a>
+        </li>
     <?php endforeach; ?>
 </ul>
 
@@ -378,6 +391,52 @@ $this->headTitle("Vérification de l'installation");
     </div>
     <?php endif; ?>
 
+    </div>
+<?php endforeach; ?>
+<?php foreach ($bibliotheques as $bibliotheque) : ?>
+    <?php $namespace = "Unicaen".ucfirst($bibliotheque); ?>
+    <div id="<?php echo $bibliotheque;?>" class="tab-pane" >
+        <h2> Vérification de la bibliotheque <em><?php echo $bibliotheque; ?></em></h2>
+
+    <!-- PRIVILEGE ---------------------------------------------------------------------------------------------------->
+    <?php $exist =  (file_exists($installation_path . '/vendor/unicaen/' . $bibliotheque . '/src/'. $namespace . '/Provider/Privilege')); ?>
+    <?php if (!$exist) : ?>
+        <div class="alert alert-info">
+            <span class="icon icon-information"></span>
+            Aucun répertoire Privilège >>> Pas de privilège associé au module
+        </div>
+    <?php else : ?>
+    <div class="card bg-default">
+        <div class="card-header">
+            Privilèges
+        </div>
+        <div class="card-body">
+            <?php
+            $filenames = array_diff(scandir($installation_path . '/vendor/unicaen/' . $bibliotheque . '/src/'.$namespace . '/Provider/Privilege'), ['.', '..']);
+            foreach ($filenames as $filename) {
+                $res = explode('.', $filename);
+                $path = $namespace ."\\Provider\\Privilege\\".$res[0];
+                if (!class_exists($path)) {
+                    echo "<strong><span class='icon icon-unchecked text-danger'></span> la classe [".$path."] n'est pas déclarée.</strong><br>";
+                } else {
+                    echo "<strong><span class='icon icon-checked text-success'></span> la classe [".$path."] est bien déclarée.</strong><br/>";
+                    $oClass = new ReflectionClass ($path);
+                    $privileges = $oClass->getConstants();
+                    foreach ($privileges as $privilege) {
+                        $bool = ($privilegeService->findByFullCode($privilege) !== null);
+                        if ($bool === true) {
+                            echo "<span class='icon icon-checked text-success'></span> le privilège  [" . $privilege . "] est bien déclarée";
+                        } else {
+                            echo "<span class='icon icon-unchecked text-danger'></span> le privilège [" . $privilege . "] n'est pas déclarée";
+                        }
+                        echo "<br/>";
+                    }
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <?php endif; ?>
     </div>
 <?php endforeach; ?>
 </div>

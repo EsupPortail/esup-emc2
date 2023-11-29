@@ -2,7 +2,7 @@
 
 namespace Application\Entity\Db;
 
-use Application\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\Collection;
 use Element\Entity\Db\Interfaces\HasApplicationCollectionInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Provider\Validation;
+namespace FichePoste\Provider\Validation;
 
 class FichePosteValidations {
 

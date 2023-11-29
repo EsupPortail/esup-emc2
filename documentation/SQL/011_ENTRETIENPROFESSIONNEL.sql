@@ -866,6 +866,20 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'sursis';
 
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('agentforcesansobligation', 'Gestion des agent·es forcé·es sans obligation d''entretien professionnel', 'EntretienProfessionnel\Provider\Privilege', 5000);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'agentforcesansobligation_index', 'Accéder à l''index', 10 UNION
+    SELECT 'agentforcesansobligation_afficher', 'Afficher', 20 UNION
+    SELECT 'agentforcesansobligation_ajouter', 'Ajouter', 30 UNION
+    SELECT 'agentforcesansobligation_modifier', 'Modifier', 40 UNION
+    SELECT 'agentforcesansobligation_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'agentforcesansobligation_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agentforcesansobligation';
 
 
 

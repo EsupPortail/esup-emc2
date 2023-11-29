@@ -2,7 +2,7 @@
 
 namespace Application\View\Helper;
 
-use Application\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Entity\Db\FichePoste;
 

@@ -8,7 +8,7 @@ use Application\Entity\Db\FichePoste;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Form\HasDescription\HasDescriptionFormAwareTrait;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
-use Application\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;

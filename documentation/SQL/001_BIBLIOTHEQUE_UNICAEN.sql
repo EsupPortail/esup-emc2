@@ -717,7 +717,8 @@ INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, par
 VALUES
     ('Administrateur·trice technique', 'Administrateur·trice technique', false, false, null, null, true, null),
     ('Administrateur·trice fonctionnel·le', 'Administrateur·trice fonctionnel·le', false, false, null, null, true, null),
-    ('Observateur·trice', 'Observateur·trice', false, false, null, null, true, null)
+    ('Observateur·trice', 'Observateur·trice', false, false, null, null, true, null),
+    ('Directeur·trice des ressources humaines', 'Directeur·trice des ressources humaines', false, false, null, null, true, null)
 ;
 
 INSERT INTO unicaen_utilisateur_user (id, username, display_name, email, password, state, password_reset_token, last_role_id)
@@ -1083,9 +1084,9 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('indicateur', 'Gestion des indicateurs', 99992, 'UnicaenIndicateur\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'afficher-indicateur', 'Afficher un indicateur', 10 UNION
-    SELECT 'editer-indicateur', 'Modifier un indicateur', 20 UNION
-    SELECT 'detruire-indicateur', 'Supprimer un indicateur', 30
+    SELECT 'afficher_indicateur', 'Afficher un indicateur', 10 UNION
+    SELECT 'editer_indicateur', 'Modifier un indicateur', 20 UNION
+    SELECT 'detruire_indicateur', 'Supprimer un indicateur', 30
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
@@ -1095,9 +1096,9 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('abonnement', 'Gestion des abonnements', 99992, 'UnicaenIndicateur\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'afficher-abonnement', 'Afficher un abonnement', 110 UNION
-    SELECT 'editer-abonnement', 'Modifier un abonnement', 120 UNION
-    SELECT 'detruire-abonnement', 'Supprimer un abonnement', 130
+    SELECT 'afficher_abonnement', 'Afficher un abonnement', 110 UNION
+    SELECT 'editer_abonnement', 'Modifier un abonnement', 120 UNION
+    SELECT 'detruire_abonnement', 'Supprimer un abonnement', 130
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
@@ -1114,6 +1115,23 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'tableaudebord';
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- PARAMETRE -----------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('GLOBAL', 'Paramètres globaux', 1, null);
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES,
+                                        ORDRE)
+WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
+    SELECT 'CODE_UNIV', 'Code de l''établissement porteur principal', '<p>Sert notamment pour l''affichage des status</p>', 'String',  1000 UNION
+    SELECT 'INSTALL_PATH', 'Chemin d''installation (utiliser pour vérification)', null, 'String', 1000 UNION
+    SELECT 'EMAIL_ASSISTANCE', 'Adresse électronique de l''assistance', null, 'String', 100
+)
+SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES,  d.ORDRE
+FROM d
+         JOIN unicaen_parametre_categorie cp ON cp.CODE = 'GLOBAL';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE GENERAUX ---------------------------------------------------------------------------------------------------

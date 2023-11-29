@@ -4,7 +4,7 @@ namespace Application\Assertion;
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Etat\FichePosteEtats;
+use FichePoste\Provider\Etat\FichePosteEtats;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;

@@ -28,10 +28,12 @@ class VerificationController extends AbstractActionController {
 
     public function indexAction() : ViewModel
     {
-        $modules = ['Application', 'Carriere', 'Element', 'EntretienProfessionnel', 'Formation', 'Metier', 'Structure'];
+        $modules = ['Application', 'Carriere', 'Element', 'EntretienProfessionnel', 'FichePoste', 'Formation', 'Metier', 'Structure'];
+        $bibliotheques = ['indicateur', 'etat', 'validation', 'renderer','autoform', 'evenement', 'mail', 'parametre', 'authentification', 'utilisateur', 'privilege'];
 
         return new ViewModel([
             'modules' => $modules,
+            'bibliotheques' => $bibliotheques,
             'installation_path' => $this->getParametreService()->getParametreByCode(GlobalParametres::TYPE, GlobalParametres::INSTALL_PATH)->getValeur(),
             'templateService' => $this->getTemplateService(),
             'privilegeService' => $this->getPrivilegeService(),
