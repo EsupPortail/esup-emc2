@@ -255,12 +255,12 @@ INSERT INTO unicaen_etat_categorie (code, libelle, icone, couleur, ordre)
 VALUES ('ENTRETIEN_PROFESSIONNEL', 'États associés aux entretiens professionnels', 'fas fa-briefcase', '#75507b', 200);
 INSERT INTO unicaen_etat_type(categorie_id, code, libelle, icone, couleur, ordre)
 WITH e(code, libelle, icone, couleur, ordre) AS (
-    SELECT 'ENTRETIEN_VALIDATION_HIERARCHIE', 'Validation de l''autorité hiérarchique', 3, 'fas fa-user-tie', '#ffae00', 9999 UNION
-    SELECT 'ENTRETIEN_VALIDATION_AGENT', 'Validation de l&rsquo;agent', 3, 'far fa-check-square', '#44c200', 9999 UNION
-    SELECT 'ENTRETIEN_ACCEPTATION', 'En attente confirmation de l&rsquo;agent', 3, 'fas fa-user-clock', '#b90b80', 9999 UNION
-    SELECT 'ENTRETIEN_ACCEPTER', 'Entretien accepté par l&rsquo;agent', 3, 'fas fa-user-check', '#c100b5', 9999 UNION
-    SELECT 'ENTRETIEN_VALIDATION_RESPONSABLE', 'Validation du responsable de l&rsquo;entretien professionnel', 3, 'fas fa-user', '#c75000', 9999 UNION
-    SELECT 'ENTRETIEN_VALIDATION_OBSERVATION', 'Expression des observations faite', 3, 'far fa-comment-alt', '#ff6c0a', 9999
+    SELECT 'ENTRETIEN_VALIDATION_HIERARCHIE', 'Validation de l''autorité hiérarchique', 'fas fa-user-tie', '#ffae00', 9999 UNION
+    SELECT 'ENTRETIEN_VALIDATION_AGENT', 'Validation de l&rsquo;agent', 'far fa-check-square', '#44c200', 9999 UNION
+    SELECT 'ENTRETIEN_ACCEPTATION', 'En attente confirmation de l&rsquo;agent',  'fas fa-user-clock', '#b90b80', 9999 UNION
+    SELECT 'ENTRETIEN_ACCEPTER', 'Entretien accepté par l&rsquo;agent',  'fas fa-user-check', '#c100b5', 9999 UNION
+    SELECT 'ENTRETIEN_VALIDATION_RESPONSABLE', 'Validation du responsable de l&rsquo;entretien professionnel', 'fas fa-user', '#c75000', 9999 UNION
+    SELECT 'ENTRETIEN_VALIDATION_OBSERVATION', 'Expression des observations faite', 'far fa-comment-alt', '#ff6c0a', 9999
 )
 SELECT et.id, e.code, e.libelle, e.icone, e.couleur, e.ordre
 FROM e
@@ -282,7 +282,7 @@ INSERT INTO unicaen_validation_type (code, libelle, refusable) VALUES
 
 INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
 VALUES ('ENTRETIEN_PROFESSIONNEL', 'Paramètres liés aux entretiens professionnels', 10, null);
-INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE)
+INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'MAIL_LISTE_DAC', 'Adresse électronique de la liste de liste de diffusion pour les DAC', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien professionnel</p>', 'String', 10 UNION
     SELECT 'MAIL_LISTE_BIATS', 'Adresse électronique de la liste de diffusion pour le personnel', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien profesionnel</p>', 'String', 11 UNION
@@ -720,7 +720,7 @@ INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, 
 INSERT INTO unicaen_autoform_champ (id, categorie, code, libelle, texte, ordre, element, balise, options, mots_clefs) VALUES (1006, 3, '1_3_5d13796aafdec', 'Les capacités professionnelles et relationnelles', 'Autonomie, discernement et sens des initiatives dans l''exercice de ses attributions, capacité d''adaptation, capacité à travailler en équipe, etc.', 4, 'Entity Multiple', null, 'EntretienProfessionnel\Entity\Db\CriterePersonnelle', 'CREP;3.1.3;');
 
 -- CREF ----------------------------------------------------------------------------------------------------------------
-INSERT INTO unicaen_autoform_formulaire (libelle, code, description) VALUES ('Compte-Rendu d''Entretien de formation (CREF)', 'CREF', 'Formulaire lié à l''entretien professionnel partie CREF ');
+INSERT INTO unicaen_autoform_formulaire (id, libelle, code, description) VALUES (2,'Compte-Rendu d''Entretien de formation (CREF)', 'CREF', 'Formulaire lié à l''entretien professionnel partie CREF ');
 INSERT INTO unicaen_autoform_categorie (id, code, libelle, mots_clefs, ordre, formulaire) VALUES (23, '2_62289f96346ec', 'Informations complémentaires', null, 1, 2);
 INSERT INTO unicaen_autoform_categorie (id, code, libelle, mots_clefs, ordre, formulaire) VALUES (15, '2_60744315c477c', 'Activités de transfert de compétences ou d''accompagnement des agents', null, 2, 2);
 INSERT INTO unicaen_autoform_categorie (id, code, libelle, mots_clefs, ordre, formulaire) VALUES (21, '2_6218b5ee5b3e5', 'Bilan des formations suivies sur la période écoulée', 'CREF;Bilan', 3, 2);

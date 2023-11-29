@@ -148,16 +148,16 @@ create unique index structure_agent_force_id_uindex on structure_agent_force (id
 
 
 -- TODO retirer car fonctionnalité supprimée
-create table structure_ficheposte
-(
-    structure_id  integer not null,
-    ficheposte_id integer not null
-        constraint structure_ficheposte_fiche_poste_id_fk
-            references ficheposte
-            on delete cascade,
-    constraint structure_ficheposte_pk
-        primary key (structure_id, ficheposte_id)
-);
+-- create table structure_ficheposte
+-- (
+--     structure_id  integer not null,
+--     ficheposte_id integer not null
+--         constraint structure_ficheposte_fiche_poste_id_fk
+--             references ficheposte
+--             on delete cascade,
+--     constraint structure_ficheposte_pk
+--         primary key (structure_id, ficheposte_id)
+-- );
 
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
@@ -176,6 +176,15 @@ create table structure_ficheposte
 -- I::::::::IN::::::N       N:::::::NS::::::SSSSSS:::::SE::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- ROLE ----------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, parent_id, ldap_filter, accessible_exterieur, description) VALUES
+    ('Responsable de structure', 'Responsable de structure', false, true, null, null, true, null),
+    ('Gestionnaire de structure', 'Gestionnaire de structure', false, true, null, null, true, null);
 
 
 -- ---------------------------------------------------------------------------------------------------------------------

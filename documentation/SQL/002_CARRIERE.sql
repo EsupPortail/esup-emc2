@@ -355,7 +355,7 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'grade';
 
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('mobilite', 'Gestion des types de mobilités', 'Carriere\Provider\Privilege', 640);
+VALUES ('mobilite', 'Gestion des types de mobilités', 640, 'Carriere\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'mobilite_index', 'Accéder à l''index', 10 UNION

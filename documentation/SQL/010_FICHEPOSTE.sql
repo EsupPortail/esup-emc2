@@ -163,7 +163,6 @@ create table ficheposte_activitedescription_retiree
         constraint fadr_destructeur_id
         references unicaen_utilisateur_user
 );
-alter table ficheposte_activitedescription_retiree owner to ad_emc2_demo;
 
 create table ficheposte_application_retiree
 (

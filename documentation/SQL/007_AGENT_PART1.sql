@@ -147,19 +147,19 @@ create table agent_element_competence
         primary key (agent_id, competence_element_id)
 );
 
-create table agent_element_formation
-(
-    agent_id             varchar(40) not null
-        constraint agent_formation_agent_c_individu_fk
-            references agent
-            on delete cascade,
-    formation_element_id integer     not null
-        constraint agent_formation_formation_element_id_fk
-            references formation_element
-            on delete cascade,
-    constraint agent_formation_pk
-        primary key (agent_id, formation_element_id)
-);
+-- create table agent_element_formation
+-- (
+--     agent_id             varchar(40) not null
+--         constraint agent_formation_agent_c_individu_fk
+--             references agent
+--             on delete cascade,
+--     formation_element_id integer     not null
+--         constraint agent_formation_formation_element_id_fk
+--             references formation_element
+--             on delete cascade,
+--     constraint agent_formation_pk
+--         primary key (agent_id, formation_element_id)
+-- );
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TABLE - Autre -------------------------------------------------------------------------------------------------------
@@ -196,4 +196,9 @@ create table agent_fichier
 -- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- ROLES ---------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
 
+INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, parent_id, ldap_filter, accessible_exterieur, description)
+VALUES ('Agent', 'Agent', true, true, null, null, true, null);

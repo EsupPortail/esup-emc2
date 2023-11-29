@@ -656,27 +656,19 @@ create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
 -- UNICAEN FICHIER -----------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-create table fichier_fichier
+create table public.fichier_nature
 (
-    id                    varchar(13)  not null
-        constraint fichier_fichier_pk
+    id          serial
+        constraint fichier_nature_pk
             primary key,
-    nom_original          varchar(256) not null,
-    nom_stockage          varchar(256) not null,
-    nature                integer      not null,
-    histo_creation        timestamp    not null,
-    histo_createur_id     integer      not null,
-    histo_modification    timestamp    not null,
-    histo_modificateur_id integer      not null,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer,
-    type_mime             varchar(256) not null,
-    taille                varchar(256)
+    code        varchar(64)  not null,
+    libelle     varchar(256) not null,
+    description varchar(2048)
 );
-create unique index fichier_fichier_id_uindex on fichier_fichier (id);
-create unique index fichier_fichier_nom_stockage_uindex on fichier_fichier (nom_stockage);
+create unique index fichier_nature_code_uindex on public.fichier_nature (code);
+create unique index fichier_nature_id_uindex on public.fichier_nature (id);
 
-create table fichier_fichier
+create table public.fichier_fichier
 (
     id                    varchar(13)  not null
         constraint fichier_fichier_pk
@@ -685,7 +677,7 @@ create table fichier_fichier
     nom_stockage          varchar(256) not null,
     nature                integer      not null
         constraint fichier_fichier_fichier_nature_id_fk
-            references fichier_nature,
+            references public.fichier_nature,
     histo_creation        timestamp    not null,
     histo_createur_id     integer      not null,
     histo_modification    timestamp    not null,
@@ -695,8 +687,10 @@ create table fichier_fichier
     type_mime             varchar(256) not null,
     taille                varchar(256)
 );
-create unique index fichier_nature_code_uindex on fichier_nature (code);
-create unique index fichier_nature_id_uindex on fichier_nature (id);
+create unique index fichier_fichier_id_uindex on public.fichier_fichier (id);
+create unique index fichier_fichier_nom_stockage_uindex on public.fichier_fichier (nom_stockage);
+
+
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
@@ -1121,3 +1115,9 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'tableaudebord';
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- TEMPLATE GENERAUX ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('EMC2_ACCUEIL', '<p>Texte de la page d''accueil</p>', 'texte', 'Instance de démonstration de EMC2', e'<p>Instance de démonstration de EMC2.</p>
+<p><em>Ce texte est template modifiable dans la partie Administration &gt; Template.</em></p>', null, 'Application\Provider\Template');
