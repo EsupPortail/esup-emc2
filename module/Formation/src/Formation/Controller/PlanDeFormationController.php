@@ -290,6 +290,7 @@ class PlanDeFormationController extends AbstractActionController
     public function importerDepuisCsvAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
+        if ($plan === null) $plan = new PlanDeFormation();
 
         $form = $this->getPlanDeFormationImportationForm();
         $form->setAttribute('action', $this->url()->fromRoute('plan-de-formation/importer', ['mode' => 'preview', 'path' => null], [], true));
