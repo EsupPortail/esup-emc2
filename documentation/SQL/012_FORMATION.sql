@@ -1255,6 +1255,41 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p> </p>', null);
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- MACROS --------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+-- Macro portant sur les inscriptions
+INSERT INTO public.unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('INSCRIPTION#justificationResponsable', '<p>Retourne la motivation du responsable</p>', 'inscription', 'getJustificationResponsable'),
+    ('INSCRIPTION#justificationRefus', '<p>Retourne la motivation de la désinscription ou du refus</p>', 'inscription', 'getJustificationRefus'),
+    ('INSCRIPTION#justificationAgent', '<p>Retourne la motivation de l agent</p>', 'inscription', 'getJustificationAgent'),
+    ('INSCRIPTION#duree', '<p>Affiche la durée de présence de l inscrit</p>', 'inscription', 'getDureePresence');
+
+-- Macro portant sur les actions de formation
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('FORMATION#Libelle', '<p>Retourne le libell&eacute; de la formation</p>', 'formation', 'toStringLibelle');
+
+-- Macro portant sur les sessions
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('SESSION#seances', '', 'session', 'getListeJournees'),
+    ('SESSION#periode', 'retourne la période sous la forme <em>DEBUT au FIN</em>', 'session', 'getPeriode'),
+    ('SESSION#lieu', '', 'session', 'getLieuString'),
+    ('SESSION#libelle', 'retourne le libellé de la session', 'session', 'getInstanceLibelle'),
+    ('SESSION#identification', 'retourne l identifiant unique de la session sous la forme <em>ACTION/SESSION</em>', 'session', 'getInstanceCode'),
+    ('SESSION#formateurs', 'retourne la liste des formateurs sous la forme d un tableau', 'session', 'getListeFormateurs'),
+    ('SESSION#duree', 'retourne la durée en heure de la session', 'session', 'getDuree');
+
+-- Macro portant sur les inscrits -- TODO REGROUPER AVEC INSCRIPTION
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('FORMATION_INSCRIT#TEMPS_PRESENCE', '<p>Dur&eacute;e de pr&eacute;sence d''un agent inscrit &agrave; une action de formation.</p>', 'inscrit', 'getDureePresence'),
+    ('FORMATION_INSCRIT#Complement', null, 'inscrit', 'getComplement');
+
+-- Macro d'affichage d'URL
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('URL#FormationInstanceAfficher', '<p>Retourne l''URL pour accéder à l''affichage d''une instance de formation</p>', 'UrlService', 'getUrlFormationInstanceAfficher');
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
