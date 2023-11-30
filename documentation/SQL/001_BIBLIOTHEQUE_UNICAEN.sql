@@ -1040,10 +1040,10 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('evenementetat', 'Gestion des événements - État', 99991, 'UnicaenEvenement\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'etat_consultation', 'état - consultation', 10 UNION
-    SELECT 'etat_ajout', 'état - ajout', 20 UNION
-    SELECT 'etat_edition', 'état - édition', 30 UNION
-    SELECT 'etat_suppression', 'état - suppression', 40
+    SELECT 'etat_voir', 'état - consultation', 10 UNION
+    SELECT 'etat_ajouter', 'état - ajout', 20 UNION
+    SELECT 'etat_modifier', 'état - édition', 30 UNION
+    SELECT 'etat_supprimer', 'état - suppression', 40
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

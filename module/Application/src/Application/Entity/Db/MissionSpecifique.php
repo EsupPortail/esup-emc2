@@ -2,119 +2,113 @@
 
 namespace Application\Entity\Db;
 
-use Application\Entity\Db\MacroContent\MissionSpecifiqueMacroTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class MissionSpecifique implements HistoriqueAwareInterface {
+class MissionSpecifique implements HistoriqueAwareInterface
+{
     use HistoriqueAwareTrait;
-    use MissionSpecifiqueMacroTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var string */
-    private $libelle;
-    /** @var MissionSpecifiqueTheme */
-    private $theme;
-    /** @var MissionSpecifiqueType */
-    private $type;
-    /** @var string */
-    private $description;
-    /** @var ArrayCollection */
-    private $affectations;
+    private ?int $id = null;
+    private ?string $libelle = null;
+    private ?MissionSpecifiqueTheme $theme = null;
+    private ?MissionSpecifiqueType $type = null;
+    private ?string $description = null;
+    private Collection $affectations;
 
     public function __construct()
     {
         $this->affectations = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getLibelle() : ?string
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    /**
-     * @param string|null $libelle
-     * @return MissionSpecifique
-     */
-    public function setLibelle(?string $libelle) : MissionSpecifique
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
-        return $this;
     }
 
-    /**
-     * @return MissionSpecifiqueTheme
-     */
-    public function getTheme() : ?MissionSpecifiqueTheme
+    public function getTheme(): ?MissionSpecifiqueTheme
     {
         return $this->theme;
     }
 
-    /**
-     * @param MissionSpecifiqueTheme|null $theme
-     * @return MissionSpecifique
-     */
-    public function setTheme(?MissionSpecifiqueTheme $theme) : MissionSpecifique
+    public function setTheme(?MissionSpecifiqueTheme $theme): void
     {
         $this->theme = $theme;
-        return $this;
     }
 
-    /**
-     * @return MissionSpecifiqueType
-     */
-    public function getType() : ?MissionSpecifiqueType
+    public function getType(): ?MissionSpecifiqueType
     {
         return $this->type;
     }
 
-    /**
-     * @param MissionSpecifiqueType|null $type
-     * @return MissionSpecifique
-     */
-    public function setType(?MissionSpecifiqueType $type) : MissionSpecifique
+    public function setType(?MissionSpecifiqueType $type): void
     {
         $this->type = $type;
-        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string|null $description
-     * @return MissionSpecifique
-     */
-    public function setDescription(?string $description): MissionSpecifique
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-        return $this;
     }
 
-    /**
-     * @return AgentMissionSpecifique[]
-     */
-    public function getAffectations() : array
+    /** @return AgentMissionSpecifique[] */
+    public function getAffectations(): array
     {
         return $this->affectations->toArray();
     }
 
+    /** MACROS ********************************************************************************************************/
+
+    /** @noinspection PhpUnsued */
+    public function toStringLibelle(): string
+    {
+        if ($this->getLibelle() === null) {
+            return "Aucun libellé fourni pour cette mission spécifique";
+        }
+        return $this->getLibelle();
+    }
+
+    /** @noinspection PhpUnsued */
+    public function toStringDescription(): string
+    {
+        if ($this->getDescription() === null) {
+            return "Aucune description fournie pour cette mission spécifique";
+        }
+        return $this->getDescription();
+    }
+
+    /** @noinspection PhpUnsued */
+    public function toStringTheme(): string
+    {
+        if ($this->getTheme() === null || $this->getTheme()->getLibelle() === null) {
+            return "Aucun thème fourni pour cette mission spécifique";
+        }
+        return $this->getTheme()->getLibelle();
+    }
+
+    /** @noinspection PhpUnsued */
+    public function toStringType(): string
+    {
+        if ($this->getType() === null || $this->getType()->getLibelle() === null) {
+            return "Aucun type fourni pour cette mission spécifique";
+        }
+        return $this->getType()->getLibelle();
+    }
 }

@@ -16,8 +16,6 @@ use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Provider\Event\EvenementProvider as FormationEvenementProvider;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
-use Structure\Event\InfoStructure\InfoStructureEvent;
-use Structure\Provider\Event\EvenementProvider as StructureEvenementProvider;
 use UnicaenEvenement\Entity\Db\Type;
 use UnicaenEvenement\Service\EvenementCollection\EvenementCollectionService;
 
@@ -41,9 +39,6 @@ return [
             EntretienProfessionnelEvenementProvider::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR => RappelCampagneAvancementSuperieurService::class,
             EntretienProfessionnelEvenementProvider::RAPPEL_ENTRETIEN_PROFESSIONNEL => RappelEntretienProfessionnelService::class,
             EntretienProfessionnelEvenementProvider::RAPPEL_PAS_OBSERVATION_ENTRETIEN_PROFESSIONNEL => RappelPasObservationService::class,
-
-            StructureEvenementProvider::INFO_STRUCTURE => InfoStructureEvent::class,
-
         ],
 
         'icone' => [

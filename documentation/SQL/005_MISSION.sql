@@ -281,7 +281,7 @@ VALUES ('missionspecifiquetype', 'Gestion des types de mission spécifique', 670
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifiquetype_index', 'Gestion - Affichage de l''index des types de mission specifique', 100 UNION
-    SELECT 'missionspecifiquetypee_afficher', 'Gestion - Afficher un type de mission spécifique', 110 UNION
+    SELECT 'missionspecifiquetype_afficher', 'Gestion - Afficher un type de mission spécifique', 110 UNION
     SELECT 'missionspecifiquetype_ajouter', 'Gestion - Ajouter un type de mission spécifique', 120 UNION
     SELECT 'missionspecifiquetype_modifier', 'Gestion - Modifier un type de mission spécifique', 130 UNION
     SELECT 'missionspecifiquetype_historiser', 'Gestion - Historiser/restaurer un type de mission spécifique', 140 UNION
@@ -290,3 +290,30 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiquetype';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('activite', 'Gestion des missions principales', 625, 'Application\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'activite_index', 'Accéder à l''index des missions principales', 0 UNION
+    SELECT 'activite_afficher', 'Afficher une mission principale', 10 UNION
+    SELECT 'activite_ajouter', 'Ajouter une mission principale', 20 UNION
+    SELECT 'activite_modifier', 'Modifier une mission principale ', 30 UNION
+    SELECT 'activite_historiser', 'Historiser/restaurer une mission principale', 40 UNION
+    SELECT 'activite_detruire', 'Détruire une activité', 50
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'activite';
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- MACRO ---------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+-- MACRO des missions spécifiques
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('MISSIONSPECIFIQUE#Type', '<p>Retourne le type de la mission spécifique</p>', 'missionspecifique', 'toStringType'),
+    ('MISSIONSPECIFIQUE#Theme', '<p>Retourne le thème d''une mission spécifique</p>', 'missionspecifique', 'toStringTheme'),
+    ('MISSIONSPECIFIQUE#Description', '<p>Retourne le descriptif d''une mission spécifique</p>', 'missionspecifique', 'toStringDescription'),
+    ('MISSIONSPECIFIQUE#Libelle', '<p>Retourne le libellé d''une mission spécifique</p>', 'missionspecifique', 'toStringLibelle');

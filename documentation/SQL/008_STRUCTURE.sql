@@ -186,7 +186,6 @@ INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, par
     ('Responsable de structure', 'Responsable de structure', false, true, null, null, true, null),
     ('Gestionnaire de structure', 'Gestionnaire de structure', false, true, null, null, true, null);
 
-
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -200,7 +199,7 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE) AS (
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.VALEUR, d.ORDRE
 FROM d
-JOIN unicaen_parametre_categorie cp ON cp.CODE = 'CARRIERE';
+JOIN unicaen_parametre_categorie cp ON cp.CODE = 'STRUCTURE';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGES ----------------------------------------------------------------------------------------------------------

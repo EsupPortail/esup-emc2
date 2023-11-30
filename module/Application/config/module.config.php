@@ -15,8 +15,6 @@ use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Application\Provider\Privilege\MissionspecifiquePrivileges;
-use Application\Provider\Privilege\SynchroPrivileges;
-use Application\Provider\Privilege\ValidationPrivileges;
 use Application\Provider\Role\RoleProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;
@@ -54,10 +52,8 @@ return [
                     ],
                     'privileges' => [
                         AutoformindexPrivileges::INDEX,
-                        SynchroPrivileges::SYNCHRO_AFFICHER,
                         UtilisateurPrivileges::UTILISATEUR_AFFICHER,
                         RolePrivileges::ROLE_AFFICHER,
-                        ValidationPrivileges::AFFICHER,
                         ValidationtypePrivileges::VALIDATIONTYPE_AFFICHER,
                         PrivilegePrivileges::PRIVILEGE_VOIR,
                         ConfigurationPrivileges::CONFIGURATION_AFFICHER,
