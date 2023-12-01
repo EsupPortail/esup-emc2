@@ -187,7 +187,7 @@ class FormationGroupeService
      * @param string|null $libelle
      * @return FormationGroupe|null
      */
-    public function getFormationGroupeByLibelle(?string $libelle, ?Axe $axe) : ?FormationGroupe
+    public function getFormationGroupeByLibelle(?string $libelle, ?Axe $axe = null) : ?FormationGroupe
     {
         if ($libelle === null) return null;
 
