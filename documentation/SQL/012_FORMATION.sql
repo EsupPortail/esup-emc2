@@ -218,6 +218,7 @@ create table formation_axe
     libelle               varchar(1024)           not null,
     description           text,
     ordre                 integer   default 9999  not null,
+    couleur               varchar(64),
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
         constraint formation_axe_unicaen_utilisateur_user_id_fk

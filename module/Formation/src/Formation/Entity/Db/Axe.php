@@ -19,6 +19,7 @@ class Axe implements HistoriqueAwareInterface, HasDescriptionInterface
     private ?int $id = -1;
     private ?string $libelle = null;
     private ?int $ordre = null;
+    private ?string $couleur = null;
     private Collection $groupes;
 
     public function __construct()
@@ -49,6 +50,16 @@ class Axe implements HistoriqueAwareInterface, HasDescriptionInterface
     public function setOrdre(?int $ordre): void
     {
         $this->ordre = $ordre;
+    }
+
+    public function getCouleur(): ?string
+    {
+        return ($this->couleur)??"gray";
+    }
+
+    public function setCouleur(?string $couleur): void
+    {
+        $this->couleur = $couleur;
     }
 
     /** @return FormationGroupe[] */

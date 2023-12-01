@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
@@ -54,16 +55,27 @@ class PlanDeFormationController extends AbstractActionController
         $formations = $planDeFormation->getFormations();
         $sansgroupe = new FormationGroupe();
         $sansgroupe->setLibelle("Formations sans groupe");
+        $sansaxe = new Axe();
+        $sansaxe->setLibelle("Thème de formation sans axe");
 
         $groupes = [];
         $formationsArrayByGroupe = [];
+        $groupesArrayByAxe = [];
         foreach ($formations as $formation) {
-            if ($formation->getGroupe()) {
-                $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
-                $formationsArrayByGroupe[$formation->getGroupe()->getId()][] = $formation;
+            $groupe = $formation->getGroupe();
+            if ($groupe !== null) {
+                $groupes[$formation->getGroupe()->getId()] = $groupe;
+                $formationsArrayByGroupe[$groupe->getId()][] = $formation;
+                $axe = $groupe->getAxe();
+                if ($axe !== null) {
+                    $axes[$axe->getId()] = $axe;
+                    $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
+                }
             } else {
+                $axes[-1] = $sansaxe;
                 $groupes[-1] = $sansgroupe;
                 $formationsArrayByGroupe[-1][] = $formation;
+                $groupesArrayByAxe[-1][-1] = $sansgroupe;
             }
         }
 
@@ -81,6 +93,8 @@ class PlanDeFormationController extends AbstractActionController
             'planDeFormation' => $planDeFormation,
             'formations' => $formations,
             'groupes' => $groupes,
+            'axes' => $axes,
+            'groupesArrayByAxe' => $groupesArrayByAxe,
             'formationsArrayByGroupe' => $formationsArrayByGroupe,
             'sessionsArrayByFormation' => $sessionsArrayByFormation,
             'abonnements' => $abonnements,
@@ -90,21 +104,33 @@ class PlanDeFormationController extends AbstractActionController
     public function afficherAction(): ViewModel
     {
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
-
         $formations = $plan->getFormations();
 
+        $axes = [];
+
         $sansgroupe = new FormationGroupe();
-        $sansgroupe->setLibelle("Formations sans groupe");
+        $sansgroupe->setLibelle("Formations sans thème");
+        $sansaxe = new Axe();
+        $sansaxe->setLibelle("Thème de formation sans axe");
 
         $groupes = [];
         $formationsArrayByGroupe = [];
+        $groupesArrayByAxe = [];
         foreach ($formations as $formation) {
-            if ($formation->getGroupe()) {
-                $groupes[$formation->getGroupe()->getId()] = $formation->getGroupe();
-                $formationsArrayByGroupe[$formation->getGroupe()->getId()][] = $formation;
+            $groupe = $formation->getGroupe();
+            if ($groupe !== null) {
+                $groupes[$formation->getGroupe()->getId()] = $groupe;
+                $formationsArrayByGroupe[$groupe->getId()][] = $formation;
+                $axe = $groupe->getAxe();
+                if ($axe !== null) {
+                    $axes[$axe->getId()] = $axe;
+                    $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
+                }
             } else {
+                $axes[-1] = $sansaxe;
                 $groupes[-1] = $sansgroupe;
                 $formationsArrayByGroupe[-1][] = $formation;
+                $groupesArrayByAxe[-1][-1] = $sansgroupe;
             }
         }
 
@@ -118,6 +144,8 @@ class PlanDeFormationController extends AbstractActionController
             'plan' => $plan,
             'formations' => $formations,
             'groupes' => $groupes,
+            'axes' => $axes,
+            'groupesArrayByAxe' => $groupesArrayByAxe,
             'formationsArrayByGroupe' => $formationsArrayByGroupe,
             'sessionsArrayByFormation' => $sessionsArrayByFormation,
         ]);

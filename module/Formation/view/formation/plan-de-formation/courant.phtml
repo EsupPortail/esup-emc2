@@ -1,5 +1,6 @@
 <?php
 
+use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationGroupe;
@@ -10,6 +11,8 @@ use Formation\Provider\Privilege\FormationabonnementPrivileges;
  * @see \Formation\Controller\PlanDeFormationController::courantAction()
  * @var PlanDeFormation $planDeFormation
  * @var FormationGroupe[] $groupes
+ * @var Axe[] $axes
+ * @var FormationGroupe[] $groupesArrayByAxe @desc $axeId => FormationGroupe[]
  * @var Formation[] $formationsArrayByGroupe @desc $groupeId => Formation[]
  * @var Formation[] $sessionsArrayByFormation @desc $formationId => FormationInstance[]
  * @var Formation[] $formations
@@ -60,7 +63,11 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
         Lister mes abonnements
     </a>
 
-    <?php foreach ($groupes as $groupe) : ?>
+
+    <?php foreach ($axes as $axe) : ?>
+    <span class="axe" style="border-color: <?php echo $axe->getCouleur(); ?>"><?php echo $axe->getLibelle(); ?></span>
+    <ul>
+        <?php foreach ($groupesArrayByAxe[$axe->getId()] as $groupe) : ?>
         <ul>
             <li>
                 <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
@@ -111,6 +118,8 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                 </ul>
             </li>
         </ul>
+        <?php endforeach; ?>
+    </ul>
     <?php endforeach; ?>
 <?php endif; ?>
 
@@ -122,3 +131,16 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
         });
     });
 </script>
+
+
+<style>
+    span.axe {
+        border-left: 1rem solid;
+        border-bottom: 0.1rem solid;
+        display: block;
+        margin-bottom: 0.25rem;
+        padding-left: 1rem;
+        font-weight: bold;
+        font-size: large;
+    }
+</style>

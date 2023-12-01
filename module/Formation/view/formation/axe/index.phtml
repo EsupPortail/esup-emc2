@@ -51,6 +51,7 @@ $this->headTitle("Axes de formation");
         <tr id="<?php echo $axe->getId(); ?>" class="<?php if ($axe->estHistorise()) echo "historise"; ?>">
 
             <td> <!-- LIBELLE -->
+                <span class="badge" style="background: <?php echo $axe->getCouleur(); ?>">&nbsp;</span>
                 <?php echo $axe->getLibelle(); ?>
                 <?php if ($axe->getDescription() !== null) : ?>
                     <span class="icon icon-info" title="<?php echo $axe->getDescription(); ?>"

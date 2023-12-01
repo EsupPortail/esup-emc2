@@ -9,6 +9,7 @@
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
         <field name="description"   column="description"    type="string"       length="9999"  />
         <field name="ordre"         column="ordre"          type="integer"   />
+        <field name="couleur"       column="couleur"        type="string"       length="64"   />
 
        <one-to-many target-entity="Formation\Entity\Db\FormationGroupe" mapped-by="axe" field="groupes"/>
 

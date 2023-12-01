@@ -4,6 +4,7 @@ namespace Formation\Form\Axe;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Color;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -44,6 +45,17 @@ class AxeForm extends Form
                 'id' => 'ordre',
             ],
         ]);
+        //couleur
+        $this->add([
+            'type' => Color::class,
+            'name' => 'couleur',
+            'options' => [
+                'label' => "Couleur :",
+            ],
+            'attributes' => [
+                'id' => 'couleur',
+            ],
+        ]);
         //bouton
         $this->add([
             'type' => Button::class,
@@ -64,6 +76,7 @@ class AxeForm extends Form
             'libelle' => ['required' => true,],
             'description' => ['required' => false,],
             'ordre' => ['required' => false,],
+            'couleur' => ['required' => false,],
         ]));
     }
 }
