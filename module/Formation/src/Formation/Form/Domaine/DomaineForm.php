@@ -4,6 +4,7 @@ namespace Formation\Form\Domaine;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Color;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
@@ -42,6 +43,17 @@ class DomaineForm extends Form
             ],
             'attributes' => [
                 'id' => 'ordre',
+            ],
+        ]);
+        //couleur
+        $this->add([
+            'type' => Color::class,
+            'name' => 'couleur',
+            'options' => [
+                'label' => "Couleur :",
+            ],
+            'attributes' => [
+                'id' => 'couleur',
             ],
         ]);
         //bouton

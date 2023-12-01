@@ -79,9 +79,13 @@ usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();
                 <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
                 (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
                 <ul>
+                    <?php /** @var Formation $formation */ ?>
                     <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
                         <li>
                             <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                            <?php foreach ($formation->getDomaines() as $domaine) : ?>
+                                <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>" title="<?php echo $domaine->getLibelle(); ?>">&nbsp;</span>
+                            <?php endforeach; ?>
                             (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
                         </li>
                     <?php endforeach; ?>

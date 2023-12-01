@@ -51,6 +51,7 @@ $this->headTitle("Domaines de formation");
         <tr id="<?php echo $domaine->getId(); ?>" class="<?php if ($domaine->estHistorise()) echo "historise"; ?>">
 
             <td> <!-- LIBELLE -->
+                <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>">&nbsp;</span>
                 <?php echo $domaine->getLibelle(); ?>
                 <?php if ($domaine->getDescription() !== null) : ?>
                     <span class="icon icon-info" title="<?php echo $domaine->getDescription(); ?>"

@@ -9,7 +9,7 @@
         <field name="libelle"       column="libelle"        type="string"       length="256"   />
         <field name="description"   column="description"    type="string"       length="9999"  />
         <field name="ordre"         column="ordre"          type="integer"   />
-
+        <field name="couleur"       column="couleur"        type="string"       length="64"   />
 
         <many-to-many field="formations" target-entity="Formation\Entity\Db\Formation">
             <join-table name="formation_formation_domaine">
