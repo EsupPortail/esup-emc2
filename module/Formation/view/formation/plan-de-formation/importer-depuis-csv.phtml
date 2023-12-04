@@ -16,6 +16,13 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
 
 ?>
 
+<div class="alert alert-info">
+    <span class="icon icon-information"></span>
+    Attention les axes, thèmes, actions et domaines sont identifiant grâce à la première ligne du fichier.
+    Assurez vous d'avoir correctement rempli cette première ligne avec les termes <code>Axe</code>, <code>Theme</code>, <code>Action</code> et <code>Domaine</code>.
+
+</div>
+
 <?php echo $this->form($form); ?>
 
 <?php if (!empty($error)) : ?>
