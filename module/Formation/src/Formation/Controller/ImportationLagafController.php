@@ -503,7 +503,7 @@ class ImportationLagafController extends AbstractActionController
             if ($id === null or $st_nstagiaire == $id) {
 
                 //            $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscritBySource(null, $st_instance . "-" . $st_nstagiaire);
-                if ($agent !== null and $instance !== null and $inscrits[$st_iscrit_id] === null) {
+                if ($agent !== null and $instance !== null and !isset($inscrits[$st_iscrit_id])) {
                     $inscription = new FormationInstanceInscrit();
                     $inscription->setInstance($instance);
                     $inscription->setAgent($agent);
