@@ -335,11 +335,7 @@ class PlanDeFormationController extends AbstractActionController
             $plan = $this->getPlanDeFormationService()->getPlanDeFormation($data['plan-de-formation']);
 
 
-            //TODO detecter column
-            $axeColumn = 0;
-            $themeColumn = 1;
-            $formationColumn = 2;
-            $domaineColumn = 3;
+
 
             $nouveauxAxes = [];
             $nouveauxThemes = [];
@@ -359,6 +355,19 @@ class PlanDeFormationController extends AbstractActionController
                 while ($content = fgetcsv($handle, 0, ";")) {
                     $array[] = $content;
                 }
+
+                $header = $array[0];
+                //TODO detecter column
+                $axeColumn = array_search("Axe", $header);
+                $themeColumn = array_search("Theme", $header);
+                $formationColumn = array_search("Action", $header);
+                $domaineColumn = array_search("Domaine", $header);
+
+                if ($axeColumn === false) $error[] = "La colonne [Axe] n'a pas été trouvée dans le fichier csv !";
+                if ($themeColumn === false) $error[] = "La colonne [Theme] n'a pas été trouvée dans le fichier csv !";
+                if ($formationColumn === false) $error[] = "La colonne [Action] n'a pas été trouvée dans le fichier csv !";
+                if ($domaineColumn === false) $error[] = "La colonne [Domaine] n'a pas été trouvée dans le fichier csv !";
+
                 $array = array_slice($array, 1);
                 $axes = [];
                 $themes = [];

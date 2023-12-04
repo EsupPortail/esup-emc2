@@ -318,17 +318,22 @@ class ImportationLagafController extends AbstractActionController
                 foreach ($plages as $plage) {
                     $plage_id = $action_id . "-" . $session_id . "-" . $seance_id . "-" . $plage[$position_plage_id];
 
-                    if (isset($dictionnaireP[$plage_id])) {
+                    if (!isset($dictionnaireP[$plage_id])) {
                         $seance = new Seance();
                         $seance->setSource($this->sourceLagaf);
                         $seance->setIdSource($plage_id);
                         $aaa = DateTime::createFromFormat('m/d/y H:i:s', $date);
                         if (!$aaa instanceof DateTime) throw new RuntimeException("Pb de date : " . $date);
                         $seance->setJour($aaa);
-                        $arrayDebut = explode(":", explode(" ", $plage[$position_debut])[1]);
-                        $arrayFin = explode(":", explode(" ", $plage[$position_fin])[1]);
-                        $seance->setDebut($arrayDebut[0] . ":" . $arrayDebut[1]);
-                        $seance->setFin($arrayFin[0] . ":" . $arrayFin[1]);
+
+                        $arrayDebut = null; $arrayFin = null;
+                        $debut = explode(" ", $plage[$position_debut]);
+                        if (isset($debut[1])) $arrayDebut = explode(":",$debut[1]);
+                        $fin = explode(" ", $plage[$position_fin]);
+                        if (isset($fin[1])) $arrayFin = explode(":",$fin[1]);
+                        if ($arrayDebut) $seance->setDebut($arrayDebut[0] . ":" . $arrayDebut[1]);
+                        if ($arrayFin) $seance->setFin($arrayFin[0] . ":" . $arrayFin[1]);
+
                         $seance->setInstance($dictionnaireS[$action_id . "-" . $session_id]);
                         $seance->setType("SEANCE");
                         $seance->setLieu("Import LAGAF");
