@@ -142,7 +142,6 @@ class FormationInstanceService
     public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
     {
         $qb = $this->createQueryBuilder()
-            ->join('Finstance.source', 'source')->addSelect('source')
             ->orderBy('Finstance.' . $champ, $ordre);
 
         $result = $qb->getQuery()->getResult();

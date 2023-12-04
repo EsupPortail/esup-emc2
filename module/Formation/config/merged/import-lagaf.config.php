@@ -54,6 +54,7 @@ return [
                         'options' => [
                             'route' => '/importation-lagaf',
                             'defaults' => [
+                                /**  @see ImportationLagafController::indexAction() **/
                                 'controller' => ImportationLagafController::class,
                                 'action' => 'index',
                             ]

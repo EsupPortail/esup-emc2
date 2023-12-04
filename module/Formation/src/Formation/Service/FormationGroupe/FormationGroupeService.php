@@ -166,16 +166,11 @@ class FormationGroupeService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs FormationGroupe paratagent le même id [" . $id . "]");
+            throw new RuntimeException("Plusieurs FormationGroupe paratagent le même id [" . $id . "]",0,$e);
         }
         return $result;
     }
 
-    /**
-     * @param AbstractActionController $controller
-     * @param string $param
-     * @return FormationGroupe
-     */
     public function getRequestedFormationGroupe(AbstractActionController $controller, string  $param = 'formation-groupe') : ?FormationGroupe
     {
         $id = $controller->params()->fromRoute($param);
@@ -183,10 +178,6 @@ class FormationGroupeService
         return $result;
     }
 
-    /**
-     * @param string|null $libelle
-     * @return FormationGroupe|null
-     */
     public function getFormationGroupeByLibelle(?string $libelle, ?Axe $axe = null) : ?FormationGroupe
     {
         if ($libelle === null) return null;
@@ -207,11 +198,18 @@ class FormationGroupeService
 
     public function getFormationGroupeBySource(string $source, $id) : ? FormationGroupe
     {
-        $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
-            ->andWhere('groupe.source = :source')->setParameter('source', $source)
-            ->andWhere('groupe.idSource = :id')->setParameter('id', $id)
-        ;
-        $result = $qb->getQuery()->getOneOrNullResult();
+        try {
+            $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
+                ->andWhere('groupe.source = :source')->setParameter('source', $source)
+                ->andWhere('groupe.idSource = :id')->setParameter('id', $id);
+        } catch (NotSupported $e) {
+            throw new RuntimeException("Un problème est survenu lors de la creation du querybuilder",0,$e);
+        }
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs FormationGroupe partagent la même source [".$source."|".$id."].",0, $e);
+        }
         return $result;
     }
 

@@ -225,7 +225,7 @@ class ImportationLagafController extends AbstractActionController
 
             $idOrig = $st_action_id . "-" . $st_session_id;
             if ($dictionnaireA[$st_action_id] !== null) {
-                if ($dictionnaireS[$idOrig] === null) {
+                if (!isset($dictionnaireS[$idOrig])) {
                     $instance = new FormationInstance();
                     $instance->setFormation($dictionnaireA[$st_action_id]);
                     $instance->setComplement($st_responsable);
