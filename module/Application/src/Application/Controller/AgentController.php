@@ -23,7 +23,6 @@ use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
-use Element\Entity\Db\ApplicationElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
 use Element\Form\CompetenceElement\CompetenceElementFormAwareTrait;
 use Element\Form\SelectionApplication\SelectionApplicationFormAwareTrait;
@@ -268,13 +267,11 @@ class AgentController extends AbstractActionController
             if ($data["reponse"] === "oui") {
                 $validation = new ValidationInstance();
                 $validation->setType($validationType);
-                $validation->setEntity($entity);
                 $this->getValidationInstanceService()->create($validation);
             }
             if ($data["reponse"] === "non") {
                 $validation = new ValidationInstance();
                 $validation->setType($validationType);
-                $validation->setEntity($entity);
                 $validation->setRefus(true);
                 $this->getValidationInstanceService()->create($validation);
             }

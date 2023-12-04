@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @var Mobilite[] $mobilites
+ * @var ?Agent $agent
+ * @var ?Mobilite $mobilite
+ * @var ?Structure $structure
+ */
+
+use Application\Entity\Db\Agent;
+use Carriere\Entity\Db\Mobilite;
+use Structure\Entity\Db\Structure;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+?>
+
+<div class="card">
+    <div class="card-header bg-default">
+        Filtre des demandes de mobilité
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="activite"> Agent : </label>
+                            <?php
+                            /** @see  \Application\Controller\AgentController::rechercherAction() */
+                            $agentF = new SearchAndSelect('agent');
+                            $agentF
+                                ->setAutocompleteSource($this->url('agent/rechercher'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'agent',
+                                    'placeholder' => "Sélectionner un·e agent·e",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($agentF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="activite"> Structure : </label>
+                            <?php
+                            /** @see  \Structure\Controller\StructureController::rechercherAction() */
+                            $structureF = new SearchAndSelect('structure');
+                            $structureF
+                                ->setAutocompleteSource($this->url('structure/rechercher'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'structure',
+                                    'placeholder' => "Sélectionner une structure",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($structureF); ?>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="mobilite">Type de mobilité</label>
+                            <select id="mobilite" name="mobilite" data-live-search="true">
+                                <option>Tous les type de mobilités</option>
+                                <?php foreach($mobilites as $mobilite_): ?>
+                                    <option value="<?php echo $mobilite_->getId();?>"
+                                    >
+                                        <?php echo $mobilite_->getLibelle();?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <br>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        R.A.Z.
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        <?php if ($structure !== null) :?>
+            $('input[name="structure[id]"]').val("<?php echo $structure->getId(); ?>");
+            $('input[name="structure[label]"]').val("<?php echo $structure->getLibelleLong(); ?>");
+        <?php endif; ?>
+        <?php if ($agent !== null) :?>
+            $('input[name="agent[id]"]').val("<?php echo $agent->getId(); ?>");
+            $('input[name="agent[label]"]').val("<?php echo $agent->getDenomination(); ?>");
+        <?php endif; ?>
+        <?php if ($mobilite !== null) :?>
+            $('select#mobilite option[value=<?php echo $mobilite->getId(); ?>]').prop('selected', true);
+        <?php endif; ?>
+        $('select').selectpicker();
+    });
+
+    $('button#clear').on("click",function(e) {
+        e.preventDefault();
+        window.location.href = 'mobilite';
+    });
+
+</script>

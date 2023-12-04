@@ -4,20 +4,48 @@ namespace Application\Controller;
 
 use Application\Entity\Db\AgentMobilite;
 use Application\Form\AgentMobilite\AgentMobiliteFormAwareTrait;
+use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMobilite\AgentMobiliteServiceAwareTrait;
+use Carriere\Service\Mobilite\MobiliteServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\View\Model\ViewModel;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 
 class AgentMobiliteController extends AgentController {
+    use AgentServiceAwareTrait;
     use AgentMobiliteServiceAwareTrait;
+    use MobiliteServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use AgentMobiliteFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $mobilites = $this->getAgentMobiliteService()->getAgentsMobilites();
+        $types = $this->getMobiliteService()->getMobilites();
+
+        $agent = null;
+        if ($agentArray = $this->params()->fromQuery('agent')) {
+            $agent = $this->getAgentService()->getAgent($agentArray['id']);
+        }
+        $structure = null;
+        if ($structureArray = $this->params()->fromQuery('structure')) {
+            $structure = $this->getStructureService()->getStructure($structureArray['id']);
+        }
+        $mobilite = null;
+        if ($mobiliteId = $this->params()->fromQuery('mobilite')) {
+            $mobilite = $this->getMobiliteService()->getMobilite((int) $mobiliteId);
+        }
+
+        if ($agent) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($agent) { return $a->getAgent() === $agent;});
+        if ($structure) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($structure) { return !empty($a->getAgent()->getAffectationsActifs(null, [$structure])); });
+        if ($mobilite) $mobilites = array_filter($mobilites, function (AgentMobilite $a) use ($mobilite) { return $a->getMobilite() === $mobilite;});
 
         return new ViewModel([
             'mobilites' => $mobilites,
+            'types' => $types,
+            'agent' => $agent,
+            'structure' => $structure,
+            'mobilite' => $mobilite,
         ]);
     }
 

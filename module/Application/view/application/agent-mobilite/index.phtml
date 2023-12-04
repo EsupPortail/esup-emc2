@@ -2,11 +2,19 @@
 
 /**
  * @see \Application\Controller\AgentMobiliteController::indexAction()
- * @var \Application\Entity\Db\AgentMobilite[] $mobilites
+ * @var AgentMobilite[] $mobilites
+ * @var ?Agent $agent
+ * @var ?Mobilite $mobilite
+ * @var ?Structure $structure
+ * @var Mobilite[] $types
  */
 
+use Application\Entity\Db\Agent;
+use Application\Entity\Db\AgentMobilite;
 use Application\Provider\Privilege\AgentmobilitePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
+use Carriere\Entity\Db\Mobilite;
+use Structure\Entity\Db\Structure;
 
 $this->headTitle("Gestion des statuts de mobilité des agent·es");
 
@@ -16,6 +24,8 @@ $canAjouter = $this->isAllowed(AgentmobilitePrivileges::getResourceId(Agentmobil
 <h1 class="page-header">
     Gestion des statuts de mobilité des agent·es
 </h1>
+
+<?php echo $this->partial('partial/filtre', ['mobilites' => $types, 'agent' => $agent, 'mobilite' => $mobilite,  'structure' => $structure]); ?>
 
 <?php if ($canAjouter): ?>
     <a href="<?php echo $this->url('agent/mobilite/ajouter', [], [], true); ?>"

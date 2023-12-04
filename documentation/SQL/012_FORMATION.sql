@@ -758,6 +758,32 @@ create table formation_formation_domaine
         primary key (formation_id, domaine_id)
 );
 
+create table agent_element_formation
+(
+    agent_id             varchar(40) not null
+        constraint agent_formation_agent_c_individu_fk
+            references public.agent
+            on delete cascade,
+    formation_element_id integer     not null
+        constraint agent_formation_formation_element_id_fk
+            references public.formation_element
+            on delete cascade,
+    constraint agent_formation_pk
+        primary key (agent_id, formation_element_id)
+);
+
+create table lagaf_stagiaire
+(
+    id         serial
+        constraint lagaf_stagiaire_pk
+            primary key,
+    nom        varchar(255),
+    prenom     varchar(255),
+    annee      integer,
+    harp_id    varchar(255),
+    octopus_id varchar(255),
+    nstagiaire integer
+);
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
