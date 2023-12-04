@@ -318,7 +318,7 @@ class ImportationLagafController extends AbstractActionController
                 foreach ($plages as $plage) {
                     $plage_id = $action_id . "-" . $session_id . "-" . $seance_id . "-" . $plage[$position_plage_id];
 
-                    if ($dictionnaireP[$plage_id] === null) {
+                    if (isset($dictionnaireP[$plage_id])) {
                         $seance = new Seance();
                         $seance->setSource($this->sourceLagaf);
                         $seance->setIdSource($plage_id);

@@ -66,7 +66,7 @@ return [
                                 'options' => [
                                     'route' => '/action[/:id]',
                                     'defaults' => [
-                                        'controller' => ImportationLagafController::class,
+                                        /**  @see ImportationLagafController::actionAction() **/
                                         'action' => 'action',
                                     ]
                                 ],
@@ -76,7 +76,7 @@ return [
                                 'options' => [
                                     'route' => '/theme[/:id]',
                                     'defaults' => [
-                                        'controller' => ImportationLagafController::class,
+                                        /**  @see ImportationLagafController::themeAction() **/
                                         'action' => 'theme',
                                     ]
                                 ],
@@ -86,7 +86,7 @@ return [
                                 'options' => [
                                     'route' => '/session[/:id]',
                                     'defaults' => [
-                                        'controller' => ImportationLagafController::class,
+                                        /**  @see ImportationLagafController::sessionAction() **/
                                         'action' => 'session',
                                     ]
                                 ],
@@ -96,7 +96,7 @@ return [
                                 'options' => [
                                     'route' => '/seance[/:id]',
                                     'defaults' => [
-                                        'controller' => ImportationLagafController::class,
+                                        /**  @see ImportationLagafController::seanceAction() **/
                                         'action' => 'seance',
                                     ]
                                 ],
@@ -106,7 +106,7 @@ return [
                                 'options' => [
                                     'route' => '/stagiaire[/:id]',
                                     'defaults' => [
-                                        'controller' => ImportationLagafController::class,
+                                        /**  @see ImportationLagafController::stagiaireAction() **/
                                         'action' => 'stagiaire',
                                     ]
                                 ],
