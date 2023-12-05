@@ -218,7 +218,7 @@ class FichePosteController extends AbstractActionController
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
         if ($fiche === null) $fiche = $this->getFichePosteService()->getLastFichePoste();
 
-        if ($fiche->getEtatActif()->getType()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [], true);
+        if ($fiche->getEtatActif() && $fiche->getEtatActif()->getType()->getCode() === FichePosteEtats::ETAT_CODE_SIGNEE) return $this->redirect()->toRoute('fiche-poste/afficher', ['structure' => $structure, 'fiche-poste' => $fiche->getId()], [], true);
         $agent = $fiche->getAgent();
 
         $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
@@ -645,7 +645,7 @@ class FichePosteController extends AbstractActionController
         }
 
         return new ViewModel([
-            'title' => "Sélection des formations pour la fiche de poste",
+            'title' => "Sélection des compétences pour la fiche de poste",
             'ficheposte' => $ficheposte,
             'competences' => $competences,
         ]);

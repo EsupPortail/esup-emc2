@@ -38,7 +38,8 @@ $date = new DateTime();
 <table class="table table-condensed datatable">
     <thead>
     <tr>
-        <th> Agent & Affectation </th>
+        <th data-type="string"> Agent </th>
+        <th>Affectation </th>
         <th> Fiches de poste </th>
     </tr>
     </thead>
@@ -46,8 +47,10 @@ $date = new DateTime();
     <?php foreach ($agents as $agent) : ?>
         <?php if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent(); ?>
         <tr>
+            <td data-order="<?php echo $agent->getDenomination(); ?>">
+                <?php echo $agent->getDenomination(true); ?>
+            </td>
             <td>
-                <strong><?php echo $agent->getDenomination(); ?></strong> <br/>
                 <?php
                     $affectation = $agent->getAffectationPrincipale();
                     $structure_ = ($affectation !== null)?$affectation->getStructure():null;

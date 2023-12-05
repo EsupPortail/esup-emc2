@@ -84,13 +84,17 @@ $canFichePosteValiderAgent = $this->isAllowed($fiche, FichePostePrivileges::FICH
     <div class="col-md-6">
         <?php if ($fiche->getAgent() !== null) : ?>
             <h2>État de la fiche de poste</h2>
-            <?php $etattype = $fiche->getEtatActif()->getType(); ?>
-            <?php echo $this->etattype($etattype); ?>
-            <?php if ($etattype === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
-                Validité : <?php echo ($fiche->getFinValidite()) ? $fiche->getFinValidite()->format('d/m/Y') : "En cours"; ?>
-            <?php else : ?>
-                La fiche de poste n'est pas encore visée par l'agent·e.
-            <?php endif; ?>
+            <?php if ($fiche->getEtatActif()) : ?>
+                <?php $etattype = $fiche->getEtatActif()->getType(); ?>
+                <?php echo $this->etattype($etattype); ?>
+                <?php if ($etattype === FichePosteEtats::ETAT_CODE_SIGNEE) : ?>
+                    Validité : <?php echo ($fiche->getFinValidite()) ? $fiche->getFinValidite()->format('d/m/Y') : "En cours"; ?>
+                <?php else : ?>
+                    La fiche de poste n'est pas encore visée par l'agent·e.
+                <?php endif; ?>
+                <?php else : ?>
+                    Pas d'état pour cette fiche
+                <?php endif; ?>
 
             <br/>
             <?php if ($canFichePosteModifierEtat) : ?>
