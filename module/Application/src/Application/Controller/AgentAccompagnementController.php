@@ -10,17 +10,19 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenEtat\Form\EtatFieldset\EtatFieldset;
 use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 
-class AgentAccompagnementController extends AbstractActionController {
+class AgentAccompagnementController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
     use AgentAccompagnementServiceAwareTrait;
     use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use AgentAccompagnementFormAwareTrait;
 
-    public function ajouterAction() : ViewModel
+    public function ajouterAction(): ViewModel
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
 
@@ -33,7 +35,10 @@ class AgentAccompagnementController extends AbstractActionController {
 
         $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('ACCOMPAGNEMENT');
         $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
-        $form->get('etat')->resetEtats($types);
+
+        /** @var EtatFieldset $selectEtat */
+        $selectEtat = $form->get('etat');
+        $selectEtat->resetEtats($types);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -53,7 +58,7 @@ class AgentAccompagnementController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction() : ViewModel
+    public function modifierAction(): ViewModel
     {
         $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
 
@@ -63,7 +68,9 @@ class AgentAccompagnementController extends AbstractActionController {
 
         $categorie = $this->getEtatCategorieService()->getEtatCategorieByCode('ACCOMPAGNEMENT');
         $types = $this->getEtatTypeService()->getEtatsTypesByCategorie($categorie);
-        $form->get('etat')->resetEtats($types);
+        /** @var EtatFieldset $selectEtat */
+        $selectEtat = $form->get('etat');
+        $selectEtat->resetEtats($types);
 
 
         $request = $this->getRequest();
@@ -84,7 +91,7 @@ class AgentAccompagnementController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction(): Response
     {
         $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
         $retour = $this->params()->fromQuery('retour');
@@ -95,7 +102,7 @@ class AgentAccompagnementController extends AbstractActionController {
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
     }
 
-    public function restaurerAction() : Response
+    public function restaurerAction(): Response
     {
         $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
         $retour = $this->params()->fromQuery('retour');
@@ -106,7 +113,7 @@ class AgentAccompagnementController extends AbstractActionController {
         return $this->redirect()->toRoute('agent/afficher', ['agent' => $accompagnement->getAgent()->getId()], ['fragment' => 'tutorat'], true);
     }
 
-    public function detruireAction() : ViewModel
+    public function detruireAction(): ViewModel
     {
         $accompagnement = $this->getAgentAccompagnementService()->getRequestedAgentAccompagnement($this);
 

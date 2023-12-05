@@ -4,25 +4,16 @@ namespace Application\Service\Agent;
 
 trait AgentServiceAwareTrait {
 
-    /** @var AgentService */
-    private $agentService;
+    private ?AgentService $agentService = null;
 
-    /**
-     * @return AgentService
-     */
-    public function getAgentService()
+    public function getAgentService(): AgentService
     {
         return $this->agentService;
     }
 
-    /**
-     * @param AgentService $agentService
-     * @return AgentService
-     */
-    public function setAgentService($agentService)
+    public function setAgentService(AgentService $agentService): void
     {
         $this->agentService = $agentService;
-        return $this->agentService;
     }
 
 }

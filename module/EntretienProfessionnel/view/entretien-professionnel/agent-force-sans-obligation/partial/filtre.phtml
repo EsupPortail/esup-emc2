@@ -1,10 +1,13 @@
 <?php
 
+use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenApp\Form\Element\SearchAndSelect;
 
 /**
  * @var Campagne[] $campagnes
  * @var ?Campagne $campagne
+ * @var ?Agent $agent
  */
 
 ?>
@@ -19,7 +22,7 @@ use EntretienProfessionnel\Entity\Db\Campagne;
         <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
             <div class="row">
             <div class="col-md-4">
-                <label for="campagne">Campagne d'entretien professionnel: </label>
+                <label for="campagne">Campagne d'entretien professionnel: </label><br>
                 <select id="campagne" name="campagne" class="selectpicker" data-live-search="true">
                     <option value=""> Toutes les campagnes </option>
                     <?php foreach ($campagnes as $campagne_) : ?>
@@ -37,10 +40,19 @@ use EntretienProfessionnel\Entity\Db\Campagne;
                 </select>
             </div>
             <div class="col-md-4">
-                <label for="agent">Agent : </label>
-                <select id="agent" name="agent" class="agent">
-                    <option value=""> Tous les agents </option>
-                </select>
+                <label for="activite"> Agent : </label>
+                <?php
+                /** @see  \Application\Controller\AgentController::rechercherAction() */
+                $agentF = new SearchAndSelect('agent');
+                $agentF
+                    ->setAutocompleteSource($this->url('agent/rechercher'))
+                    ->setSelectionRequired(true)
+                    ->setAttributes([
+                        'id' => 'agent',
+                        'placeholder' => "Sélectionner un·e agent·e",
+                    ]);
+                ?>
+                <?php echo $this->formControlGroup($agentF); ?>
             </div>
             <!-- BOUTON -->
             <div class="col-md-4">
@@ -56,9 +68,9 @@ use EntretienProfessionnel\Entity\Db\Campagne;
                     </button>
                 </div>
             </div>
-            </div>
         </form>
     </div>
+</div>
 </div>
 
 <script>
@@ -66,24 +78,29 @@ use EntretienProfessionnel\Entity\Db\Campagne;
         e.preventDefault();
     });
 
-    $('button#clear').click(function() {
+    $('button#clear').on("click",function(e) {
+        e.preventDefault();
         window.location.href = '?';
     });
 
     $('button#filter').click(function() {
-        let groupeId = $('select#campagne option:selected').val();
+        // let groupeId = $('select#campagne option:selected').val();
         // let activiteId = $('select#activite option:selected').val();
         // console.log( "activite=" + activiteId);
 
+        let campagneId = $('select#campagne option:selected').val();
+        let agentId = $('input[name="agent[id]"]').val();
+
         let query = "";
-        query += "&campagne=" + campagne;
-        // query += "&activite=" + activiteId;
+        query += "&campagne=" + campagneId;
+        query += "&agent=" + agentId;
         window.location.href = '?'+ query;
     });
 
-    //$('select#groupe option[value=<?php //echo $groupe; ?>//]').prop('selected', true);
-    //$('select#activite option[value=<?php //echo $actifId; ?>//]').prop('selected', true);
-    //console.log('<?php //echo $groupe; ?>//');
-    //console.log('<?php //echo $actifId; ?>//');
-
+    $(function() {
+        <?php if ($agent !== null) :?>
+            $('input[name="agent[id]"]').val("<?php echo $agent->getId(); ?>");
+            $('input[name="agent[label]"]').val("<?php echo $agent->getDenomination(); ?>");
+        <?php endif; ?>
+    });
 </script>

@@ -15,8 +15,6 @@ class AgentAccompagnementControllerFactory
 {
 
     /**
-     * @param ContainerInterface $container
-     * @return AgentAccompagnementController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

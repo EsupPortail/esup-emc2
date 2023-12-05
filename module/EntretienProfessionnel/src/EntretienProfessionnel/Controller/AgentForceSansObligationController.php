@@ -2,6 +2,7 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Service\Agent\AgentServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Form\AgentForceSansObligation\AgentForceSansObligationFormAwareTrait;
 use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
@@ -16,15 +17,28 @@ class AgentForceSansObligationController extends AbstractActionController
 {
     use AgentForceSansObligationServiceAwareTrait;
     use AgentForceSansObligationFormAwareTrait;
+    use AgentServiceAwareTrait;
     use CampagneServiceAwareTrait;
 
     public function indexAction(): ViewModel
     {
         $agentsForcesSansObligation = $this->getAgentForceSansObligationService()->getAgentsForcesSansObligation('id', 'ASC', true);
         $campagnes = $this->getCampagneService()->getCampagnes();
+
+        $campagne = $this->getCampagneService()->getCampagne((int) $this->params()->fromQuery('campagne'));
+        if ($campagne) $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($campagne) { return $a->getCampagne() === $campagne;});
+        $agent = null;
+        if ($agentArray = $this->params()->fromQuery('agent')) {
+            $agent = $this->getAgentService()->getAgent($agentArray);
+        }
+        if ($agent) $agentsForcesSansObligation = array_filter($agentsForcesSansObligation, function (AgentForceSansObligation $a) use ($agent) { return $a->getAgent() === $agent;});
+
         return new ViewModel([
             'agentsForcesSansObligation' => $agentsForcesSansObligation,
             'campagnes' => $campagnes,
+
+            'agent' => $agent,
+            'campagne' => $campagne,
         ]);
     }
 
