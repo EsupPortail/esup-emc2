@@ -46,7 +46,7 @@ class FicheTypeExterne {
         $this->fichePoste = $fichePoste;
     }
 
-    public function getFicheType(): FicheMetier
+    public function getFicheType(): ?FicheMetier
     {
         return $this->ficheType;
     }

@@ -160,10 +160,7 @@ class AjouterFicheMetierForm extends Form {
 
     }
 
-    /**
-     * @param Agent $agent
-     */
-    public function reinitWithAgent(Agent $agent)
+    public function reinitWithAgent(Agent $agent): void
     {
 //        var_dump($agent->getNiveauEnveloppe()->getBorneInferieure()->getNiveau() .":".$agent->getNiveauEnveloppe()->getBorneSuperieure()->getNiveau());
 
@@ -175,7 +172,7 @@ class AjouterFicheMetierForm extends Form {
         $fiches = array_filter($fiches, function (FicheMetier $a) use ($agent) {
             return (
                 $a->estNonHistorise() AND
-                $a->getEtat()->getType()->getCode() === FicheMetierEtats::ETAT_VALIDE AND
+                $a->isEtatActif(FicheMetierEtats::ETAT_VALIDE) AND
                 ($a->getMetier()->getNiveaux() !== null AND NiveauEnveloppe::isCompatible($a->getMetier()->getNiveaux(), $agent->getNiveauEnveloppe())));
         });
 

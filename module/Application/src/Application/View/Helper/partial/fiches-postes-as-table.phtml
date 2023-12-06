@@ -203,7 +203,11 @@ if ($retour)    $query['retour'] = $retour;
 
                 <?php if ($displays['etat']) : ?>
                     <td>
-                            <?php echo $this->etattype($etats[$etat]); ?>
+                            <?php if (isset($etats[$etat])) : ?>
+                                <?php echo $this->etattype($etats[$etat]); ?>
+                            <?php else : ?>
+                                État inconnu
+                            <?php endif; ?>
                     </td>
                 <?php endif; ?>
 

@@ -2,7 +2,6 @@
 
 namespace Carriere\Service\Grade;
 
-use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Grade;
 use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
@@ -11,7 +10,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
-class GradeService {
+class GradeService
+{
     use EntityManagerAwareTrait;
 
     /** GESTION DES ENITIES *******************************************************************************************/
@@ -19,74 +19,71 @@ class GradeService {
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder() : QueryBuilder
+    public function createQueryBuilder(): QueryBuilder
     {
         try {
             $qb = $this->getEntityManager()->getRepository(Grade::class)->createQueryBuilder('grade')
                 ->andWhere('grade.deleted_on IS NULL');
         } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [".Grade::class."]",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de  [" . Grade::class . "]", 0, $e);
         }
         return $qb;
     }
 
-    public function decorateWithAgent(QueryBuilder $qb) : QueryBuilder
+    public function decorateWithAgent(QueryBuilder $qb): QueryBuilder
     {
         $qb = $qb
             ->join('grade.agentGrades', 'agentGrade')->addSelect('agentGrade')
-            ->join('agentGrade.agent','agent')->addSelect('agent')
+            ->join('agentGrade.agent', 'agent')->addSelect('agent')
             ->andWhere('agent.deleted_on IS NULL')
-            ->andWhere('agentGrade.deleted_on IS NULL')
-        ;
+            ->andWhere('agentGrade.deleted_on IS NULL');
         return $qb;
     }
 
     /** @return Grade[] */
-    public function getGrades(string $champ = 'libelleLong', string $ordre ='ASC', bool $avecAgent = true, bool $avecHisto=false) : array
+    public function getGrades(string $champ = 'libelleLong', string $ordre = 'ASC', bool $avecAgent = true, bool $avecHisto = false): array
     {
         $qb = $this->createQueryBuilder()
-            ->orderBy('grade.' . $champ, $ordre)
-        ;
+            ->orderBy('grade.' . $champ, $ordre);
         if ($avecAgent) {
             $qb = $this->decorateWithAgent($qb);
-            $qb = HasPeriodeTrait::decorateWithActif($qb,'agentGrade');
+            $qb = Grade::decorateWithActif($qb, 'agentGrade');
         }
         if ($avecHisto === false) {
-            $qb = HasPeriodeTrait::decorateWithActif($qb, 'grade');
+            $qb = Grade::decorateWithActif($qb, 'grade');
         }
 
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
-    public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre ='ASC') : array
+    public function getGradesAsOptions(string $champ = 'libelleLong', string $ordre = 'ASC'): array
     {
         $grades = $this->getGrades($champ, $ordre);
 
         $array = [];
         foreach ($grades as $grade) {
-            $array[$grade->getId()] = $grade->getLibelleCourt() . " - ". $grade->getLibelleLong();
+            $array[$grade->getId()] = $grade->getLibelleCourt() . " - " . $grade->getLibelleLong();
         }
         return $array;
     }
 
-    public function getGrade(int $id, bool $avecAgent = true) : ?Grade
+    public function getGrade(int $id, bool $avecAgent = true): ?Grade
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('grade.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
         if ($avecAgent) $qb = $this->decorateWithAgent($qb);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs grades partagent le même identifiant [".$id."]",0,$e);
+            throw new RuntimeException("Plusieurs grades partagent le même identifiant [" . $id . "]", 0, $e);
         }
         return $result;
     }
 
-    public function getRequestedGrade(AbstractActionController $controller, string $param = "grade") : ?Grade
+    public function getRequestedGrade(AbstractActionController $controller, string $param = "grade"): ?Grade
     {
         $id = $controller->params()->fromRoute($param);
         $grade = $this->getGrade($id);
