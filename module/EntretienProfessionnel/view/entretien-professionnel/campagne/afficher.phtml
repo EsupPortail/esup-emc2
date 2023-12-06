@@ -43,8 +43,8 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
     </div>
 </div>
 
-<div class="card card-info">
-    <div class="card-header">
+<div class="card">
+    <div class="card-header card-info">
         Informations générales à propos de la campagne
     </div>
     <div class="card-body">
@@ -83,16 +83,13 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
     </div>
 </div>
 
-<div class="card card-info">
-    <div class="card-header">
+<div class="card">
+    <div class="card-header card-info">
         Complétion de la campagne
     </div>
     <div class="card-body">
         <h2>Agents éligibles pour un entretien </h2>
 
-        <div class="alert alert-warning">
-            Attention le comptage des agents est qu'une estimation et le calcul est long. <span class="todo">REWORK</span>
-        </div>
         <div class="row">
             <div class="col-md-8">
                 <dl class="row">
@@ -103,6 +100,13 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                 </dl>
             </div>
             <div class="col-md-4">
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
+                   class="btn btn-secondary"
+                >
+                    <span class="icon icon-csv"></span>
+                    Extraction de la campagne
+                </a>
 <!--                <a href=""-->
 <!--                   class="btn btn-primary disabled"-->
 <!--               >-->
@@ -121,27 +125,30 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
 
         <h2> Entretiens de la campagne </h2>
 
-        <div class="row">
-            <div class="col-md-8">
-                <dl class="row">
-                    <dt class="col-md-5"> Attente validation responsable : </dt>
-                    <dd class="col-md-7"> <?php echo count($entretiensResponsable); ?></dd>
-                    <dt class="col-md-5"> Attente validation autorité : </dt>
-                    <dd class="col-md-7"> <?php echo count($entretiensAutorite); ?></dd>
-                    <dt class="col-md-5"> Attente validation agent : </dt>
-                    <dd class="col-md-7"> <?php echo count($entretiensAgent); ?></dd>
-                    <dt class="col-md-5"> Entretiens complets : </dt>
-                    <dd class="col-md-7"> <?php echo count($entretiensCompletes); ?></dd>
-                </dl>
-            </div>
-            <div class="col-md-4">
-                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::extraireAction() */ ?>
-                <a href="<?php echo $this->url('entretien-professionnel/campagne/extraire', ['campagne' => $campagne->getId()], [], true); ?>"
-                   class="btn btn-secondary"
-                >
-                    <span class="icon icon-csv"></span>
-                    Extraction de la campagne
-                </a>
+        <?php $listes = []; ?>
+        <?php foreach ($entretiens as $agent => $array): ?>
+            <?php
+                $nb = count($array);
+                if ($nb === 1) $listes[] = current($array);
+            ?>
+        <?php endforeach; ?>
+        <?php echo $this->campagneAvancement($listes,$agents); ?>
+
+<!--        <div class="row">-->
+<!--            <div class="col-md-8">-->
+<!--                <dl class="row">-->
+<!--                    <dt class="col-md-5"> Attente validation responsable : </dt>-->
+<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensResponsable); ?><!--</dd>-->
+<!--                    <dt class="col-md-5"> Attente validation autorité : </dt>-->
+<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensAutorite); ?><!--</dd>-->
+<!--                    <dt class="col-md-5"> Attente validation agent : </dt>-->
+<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensAgent); ?><!--</dd>-->
+<!--                    <dt class="col-md-5"> Entretiens complets : </dt>-->
+<!--                    <dd class="col-md-7"> --><?php //echo count($entretiensCompletes); ?><!--</dd>-->
+<!--                </dl>-->
+<!--            </div>-->
+<!--            <div class="col-md-4">-->
+
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationSuperieurAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-superieur', ['campagne' => $campagne->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
@@ -150,7 +157,6 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     <span class="icon icon-notifier"></span>
                     Notifier les responsables
                 </a>
-                <br/>
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAutoriteAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-autorite', ['campagne' => $campagne->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
@@ -159,7 +165,6 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     <span class="icon icon-notifier"></span>
                     Notifier les autorités
                 </a>
-                <br/>
                 <?php /** @see \EntretienProfessionnel\Controller\CampagneController::demanderValidationAgentAction();  */ ?>
                 <a href="<?php echo $this->url('entretien-professionnel/campagne/demander-validation-agent', ['campagne' => $campagne->getId()], [], true); ?>"
                    class="btn btn-primary ajax-modal <?php if (!$campagne->estEnCours()) echo " disabled "; ?>"
@@ -169,6 +174,6 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     Notifier les agents
                 </a>
             </div>
-        </div>
-    </div>
+<!--        </div>-->
+<!--    </div>-->
 </div>

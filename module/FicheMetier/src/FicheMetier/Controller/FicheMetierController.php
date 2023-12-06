@@ -215,7 +215,7 @@ class FicheMetierController extends AbstractActionController {
                     if ($csvInfos['metier'] !== null and empty($csvInfos['competences']['Manquantes'])) {
                         $fiche = $this->getFicheMetierService()->importFromCsvArray($csvInfos);
 
-                        /** @see \Application\Controller\FicheMetierController::afficherAction() */
+                        /** @see FicheMetierController::afficherAction() */
                         return $this->redirect()->toRoute('fiche-metier/afficher', ['fiche-metier' => $fiche->getId()], [], true);
                     }
                 }

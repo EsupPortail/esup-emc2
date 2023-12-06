@@ -14,7 +14,7 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 $mode = 'div';
 if (isset($options['mode'])) $mode = $options['mode'];
 
-$validerSuperieur = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
+$validerSuperieur = []; $validerObservation = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
 foreach ($entretiens as $entretien) {
     if ($entretien->getEtatActif() === null) {
         $encours[] = $entretien;
@@ -22,8 +22,9 @@ foreach ($entretiens as $entretien) {
     } else {
         switch ($entretien->getEtatActif()->getType()->getCode()) {
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+                $validerObservation[] = $entretien;
+                break;
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
-
                 $validerSuperieur[] = $entretien;
                 break;
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
@@ -44,18 +45,20 @@ foreach ($agents as $agent) {
 
 $nbValiderAgent = count($validerAgent);
 $nbValiderAutorite = count($validerAutorite);
+$nbValiderObservation = count($validerObservation);
 $nbValiderSuperieur = count($validerSuperieur);
 $nbEncours = count($encours);
 $nbSans = count($sans);
-$nbTotal =  $nbValiderAgent + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
+$nbTotal =  $nbValiderAgent +  $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
 
-$ratioAgent = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";
+$ratioAgent = "NC"; $ratioObservation = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";
 if ($nbTotal !== 0) {
     $ratioAgent = $nbValiderAgent / $nbTotal * 100;
     $ratioAutorite = $nbValiderAutorite / $nbTotal * 100;
     $ratioSuperieur = $nbValiderSuperieur / $nbTotal * 100;
+    $ratioObservation = $nbValiderObservation / $nbTotal * 100;
     $ratioPlanifie = count($encours) / $nbTotal * 100;
-    $ratioSans = 100 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie);
+    $ratioSans = 100 - ($ratioAgent + $ratioAutorite + $ratioSuperieur + $ratioPlanifie + $ratioObservation);
 }
 
 ?>
@@ -69,6 +72,9 @@ if ($nbTotal !== 0) {
             <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens en attente de validation de l'agent <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioAutorite); ?>%</div>
+            <div class="progress-bar entretien-observation" role="progressbar" style="width: <?php echo $ratioObservation; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                 title="Entretiens en attente de validation de l'agent <?php echo $nbValiderObservation; ?>/<?php echo $nbTotal; ?>">
+                <?php echo round($ratioObservation); ?>%</div>
             <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens en attente de validation de l'autorité hiérarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioSuperieur); ?>%</div>
@@ -107,6 +113,7 @@ if ($nbTotal !== 0) {
 <div style="margin:0.25rem;">
     <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien complétés <br/>
     <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'agent <br/>
+    <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente des observation <br/>
     <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'autorité hiérarchique <br/>
     <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien planifié <br/>
     <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien non planifié <br/>
@@ -122,11 +129,14 @@ if ($nbTotal !== 0) {
     .entretien-superieur {
         background-color: #ffcc01;
     }
+    .entretien-observation {
+        background-color: rgb(183,182,12);
+    }
     .entretien-autorite {
-        background-color: #9dc500;
+        background-color: rgb(110,161,23);
     }
     .entretien-agent {
-        background-color: #009600;
+        background-color: rgb(34,139,34);
     }
 
     span.legende {
