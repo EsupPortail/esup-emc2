@@ -6,12 +6,17 @@ use Application\Controller\AgentController;
 use Interop\Container\ContainerInterface;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SelectionAgentFormFactory {
 
-    public function __invoke(ContainerInterface $container) {
-
-
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): SelectionAgentForm
+    {
         /** @var SelectionAgentHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(SelectionAgentHydrator::class);
 
