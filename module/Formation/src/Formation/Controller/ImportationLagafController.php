@@ -396,7 +396,7 @@ class ImportationLagafController extends AbstractActionController
             /** @var Agent $agent */
             $agent = null;
             $agent = $this->getStagiaireService()->getAgentService()->getAgentByIdentification($st_prenom, $st_nom);
-            if ($agent) $stagiaire->setOctopusId($agent->getId());
+            if ($agent) $stagiaire->setOctopusId((string) $agent->getId());
             $this->getStagiaireService()->create($stagiaire);
             $stagiaires[] = $stagiaire;
 
