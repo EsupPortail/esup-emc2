@@ -99,7 +99,8 @@ class Agent implements
 
     /** Accesseur en lecteur de l'identification (importer de la base source) ********************/
 
-    public function getId() : ?int
+    /** Todo remettre un type une fois l'identifiant stabilisé (URN:string ? UCN: int) **/
+    public function getId()
     {
         return $this->id;
     }
