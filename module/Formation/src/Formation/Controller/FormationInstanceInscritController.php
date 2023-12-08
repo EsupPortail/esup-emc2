@@ -118,9 +118,9 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit = new FormationInstanceInscrit();
         $inscrit->setInstance($session);
 
-        $form = $this->getSelectionAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
-        $form->bind($inscrit);
+//        $form = $this->getSelectionAgentForm();
+//        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
+//        $form->bind($inscrit);
 
 //        /** @see  StagiaireExterneController::rechercherAction */
 //        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
@@ -157,7 +157,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'un·e stagiaire externe pour la session de formation",
-            'form' => $form,
+//            'form' => $form,
         ]);
         return $vm;
     }

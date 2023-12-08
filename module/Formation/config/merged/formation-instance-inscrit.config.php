@@ -18,8 +18,6 @@ use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 
-$annee = '2023';
-
 return [
     'bjyauthorize' => [
         'guards' => [
@@ -192,7 +190,6 @@ return [
                     ],
                 ],
             ],
-
             'inscription-formation' => [
                 'type'  => Literal::class,
                 'options' => [
