@@ -44,6 +44,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     private Collection $journees;
     private Collection $inscrits;
+    private Collection $externes;
     private Collection $formateurs;
 
     private ?SessionParametre $parametre = null;
@@ -54,7 +55,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->etats = new ArrayCollection();
         $this->journees = new ArrayCollection();
         $this->inscrits = new ArrayCollection();
+        $this->externes = new ArrayCollection();
+
         $this->formateurs = new ArrayCollection();
+
     }
     /**
      * @return string
@@ -393,6 +397,25 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         foreach ($this->inscrits as $inscrit) {
             if ($inscrit->getAgent() === $agent) return true;
+        }
+        return false;
+    }
+
+    /** @return InscriptionExterne[] */
+    public function getInscriptionsExternes(): array
+    {
+        return $this->externes->toArray();
+    }
+
+    /**
+     * @param StagiaireExterne $stagiaire
+     * @return bool
+     */
+    public function hasStagiaireExterne(StagiaireExterne $stagiaire) :  bool
+    {
+        /** @var InscriptionExterne $externe */
+        foreach ($this->externes as $externe) {
+            if ($externe->getStagiaire() === $stagiaire) return true;
         }
         return false;
     }

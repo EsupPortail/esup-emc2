@@ -12,6 +12,7 @@ use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\InscriptionExterne;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\MailTemplates;
@@ -155,7 +156,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerPrevention(FormationInstanceInscrit $inscription) : ?Mail
+    public function triggerPrevention(FormationInstanceInscrit|InscriptionExterne $inscription) : ?Mail
     {
         $instance = $inscription->getInstance();
         if (!$instance->isMailActive()) return null;

@@ -14,6 +14,8 @@ use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
+use Formation\Service\InscriptionExterne\InscriptionExterneService;
+use Formation\Service\InscriptionExterne\InscriptionExterneServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -27,10 +29,13 @@ return [
                     'action' => [
                         'afficher-agent',
                         'ajouter-agent',
-                        'ajouter-stagiaire-externe',
                         'historiser-agent',
                         'restaurer-agent',
                         'supprimer-agent',
+                        'ajouter-stagiaire-externe',
+                        'historiser-stagiaire-externe',
+                        'restaurer-stagiaire-externe',
+                        'supprimer-stagiaire-externe',
                         'envoyer-liste-principale',
                         'envoyer-liste-complementaire',
                         'classer-inscription',
@@ -262,17 +267,6 @@ return [
                             ],
                         ],
                     ],
-                    'ajouter-stagiaire-externe' => [
-                        'type'  => Segment::class,
-                        'options' => [
-                            'route'    => '/ajouter-stagiaire-externe/:session',
-                            'defaults' => [
-                                /** @see FormationInstanceInscritController::ajouterStagiaireExterneAction() */
-                                'controller' => FormationInstanceInscritController::class,
-                                'action'     => 'ajouter-stagiaire-externe',
-                            ],
-                        ],
-                    ],
                     'ajouter-agent' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -323,6 +317,47 @@ return [
                             ],
                         ],
                     ],
+                    'ajouter-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-stagiaire-externe/:session',
+                            'defaults' => [
+                                /** @see FormationInstanceInscritController::ajouterStagiaireExterneAction() */
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'ajouter-stagiaire-externe',
+                            ],
+                        ],
+                    ],
+                    'historiser-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/historiser-stagiaire-externe/:inscription-externe',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'historiser-stagiaire-externe',
+                            ],
+                        ],
+                    ],
+                    'restaurer-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/restaurer-stagiaire-externe/:inscription-externe',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'restaurer-stagiaire-externe',
+                            ],
+                        ],
+                    ],
+                    'supprimer-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/supprimer-stagiaire-externe/:inscription-externe',
+                            'defaults' => [
+                                'controller' => FormationInstanceInscritController::class,
+                                'action'     => 'supprimer-stagiaire-externe',
+                            ],
+                        ],
+                    ],
                     'envoyer-liste-principale' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -361,6 +396,7 @@ return [
     'service_manager' => [
         'factories' => [
             FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
+            InscriptionExterneService::class => InscriptionExterneServiceFactory::class,
         ],
     ],
     'controllers'     => [

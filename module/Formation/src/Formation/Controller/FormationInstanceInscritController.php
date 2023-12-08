@@ -16,7 +16,9 @@ use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\InscriptionExterne\InscriptionExterneServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -35,15 +37,17 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class FormationInstanceInscritController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
-    use DemandeExterneServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionExterneServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use StagiaireExterneServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use InscriptionFormAwareTrait;
@@ -108,59 +112,7 @@ class FormationInstanceInscritController extends AbstractActionController
         return $vm;
     }
 
-    public function ajouterStagiaireExterneAction() : ViewModel
-    {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
-
-        $inscrit = new FormationInstanceInscrit();
-        $inscrit->setInstance($session);
-
-        $form = $this->getSelectionAgentForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
-        $form->bind($inscrit);
-
-        /** @see  StagiaireExterneController::rechercherAction */
-        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
-        /** @var SearchAndSelect $sas */
-        $sas = $form->get('agent');
-        $sas->setLabel("Recherche d'un·e stagiaire externe *:");
-        $sas->setAttribute('placeholder', "Dénomination du stagiaire externe ...");
-        $sas->setAutocompleteSource($urlLarge);
-
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//            $data = $request->getPost();
-//            $form->setData($data);
-//
-//            if ($form->isValid()) {
-//                if (!$instance->hasAgent($inscrit->getAgent())) {
-//                    $inscrit->setListe($instance->getListeDisponible());
-//                    $inscrit->setSource(HasSourceInterface::SOURCE_EMC2);
-//                    $this->getFormationInstanceInscritService()->create($inscrit);
-//                    $this->getEtatInstanceService()->setEtatActif($inscrit,InscriptionEtats::ETAT_VALIDER_DRH);
-//                    $this->getFormationInstanceInscritService()->update($inscrit);
-//
-//                    $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
-//                    $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
-//
-//                    if ($instance->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) $this->getNotificationService()->triggerPrevention($inscrit);
-//
-//                } else {
-//                    $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
-//                }
-//            }
-//        }
-
-        $vm = new ViewModel();
-        $vm->setTemplate('default/default-form');
-        $vm->setVariables([
-            'title' => "Ajout d'un·e stagiaire externe pour la session de formation",
-            'form' => $form,
-        ]);
-        return $vm;
-    }
-
-        public function historiserAgentAction() : Response
+    public function historiserAgentAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         $inscrit->setListe(null);
@@ -206,6 +158,91 @@ class FormationInstanceInscritController extends AbstractActionController
         }
         return $vm;
     }
+
+    public function ajouterStagiaireExterneAction() : ViewModel
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+
+        // TODO formulaire dédié...
+//        $inscrit = new InscriptionExterne();
+//        $inscrit->setSession($session);
+
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
+
+        /** @see  StagiaireExterneController::rechercherAction */
+        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
+        /** @var SearchAndSelect $sas */
+        $sas = $form->get('agent');
+        $sas->setLabel("Recherche d'un·e stagiaire externe *:");
+        $sas->setAttribute('placeholder', "Dénomination du stagiaire externe ...");
+        $sas->setAutocompleteSource($urlLarge);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+
+            if (isset($data['agent']) && isset($data['agent']['id'])) {
+                $stagiaire = $this->getStagiaireExterneService()->getStagiaireExterne($data['agent']['id']);
+                $description = (isset($data['description']))?$data['description']:null;
+                if (!$session->hasStagiaireExterne($stagiaire)) {
+                    $inscrit = $this->getInscriptionExterneService()->createWith($session, $stagiaire,$description);
+                    $this->flashMessenger()->addSuccessMessage("Le stagiaire externe <strong>" . $stagiaire->getDenomination() . "</strong> vient d'être ajouté&middot;e.");
+                    if ($session->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) $this->getNotificationService()->triggerPrevention($inscrit);
+                }
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un·e stagiaire externe pour la session de formation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function historiserStagiaireExterneAction() : Response
+    {
+        $inscrit = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
+        $this->getInscriptionExterneService()->historise($inscrit);
+
+        $this->flashMessenger()->addSuccessMessage("Le stagiaire externe <strong>" . $inscrit->getStagiaire()->getDenomination() . "</strong> vient d'être retiré&middot;e des listes.");
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getSession()->getId()], [], true);
+    }
+
+    public function restaurerStagiaireExterneAction() : Response
+    {
+        $inscrit = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
+        $this->getInscriptionExterneService()->restore($inscrit);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $inscrit->getSession()->getId()], [], true);
+    }
+
+    public function supprimerStagiaireExterneAction() : ViewModel
+    {
+        $inscrit = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getInscriptionExterneService()->delete($inscrit);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/confirmation');
+        if ($inscrit !== null) {
+            $vm->setVariables([
+                'title' => "Suppression de l'inscription de [" . $inscrit->getStagiaire()->getDenomination() . "]",
+                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-instance/supprimer-stagiaire-externe', ["inscrit" => $inscrit->getId()], [], true),
+            ]);
+        }
+        return $vm;
+    }
+
 
     public function envoyerListePrincipaleAction() : Response
     {
