@@ -8,6 +8,7 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\StagiaireExterne;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class StagiaireExterneService {
     use ProvidesObjectManager;
@@ -95,6 +96,54 @@ class StagiaireExterneService {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs [".StagiaireExterne::class."] le même login [".$login."]", 0, $e);
+        }
+        return $result;
+    }
+
+    /** Gestion pour les rôles automatiques */
+
+    public function getUsersInStagiaireExterne() : array
+    {
+        $qb = $this->getObjectManager()->getRepository(StagiaireExterne::class)->createQueryBuilder('stagiaireexterne')
+            ->join('stagiaireexterne.utilisateur', 'utilisateur')
+            ->orderBy('stagiaireexterne.nom, stagiaireexterne.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        $users = [];
+        /** @var StagiaireExterne $item */
+        foreach ($result as $item) {
+            $users[] = $item->getUtilisateur();
+        }
+        return $users;
+    }
+
+    public function getStagiaireExterneByUser(?User $user) : ?StagiaireExterne
+    {
+        if ($user === null) return null;
+
+        //en utilisant l'id
+        $qb = $this->getObjectManager()->getRepository(StagiaireExterne::class)->createQueryBuilder('stagiaireexterne')
+            ->andWhere('stagiaireexterne.utilisateur = :user')
+            ->setParameter('user', $user)
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".StagiaireExterne::class."] liés au même User [Id:".$user->getId()." Username:".$user->getUsername()."]", $e);
+        }
+        if ($result !== null) return $result;
+
+        //en utilisant l'username si echec
+        $qb = $this->getObjectManager()->getRepository(StagiaireExterne::class)->createQueryBuilder('stagiaireexterne')
+            ->andWhere('stagiaireexterne.login = :username')
+            ->andWhere('stagiaireexterne.histoDestruction IS NULL')
+            ->setParameter('username', $user->getUsername())
+        ;
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs [".StagiaireExterne::class."] liés au même Username [".$user->getUsername()."]", $e);
         }
         return $result;
     }

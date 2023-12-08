@@ -14,6 +14,8 @@ use Formation\Event\InscriptionCloture\InscriptionClotureEvent;
 use Formation\Event\InscriptionCloture\InscriptionClotureEventFactory;
 use Formation\Event\SessionCloture\SessionClotureEvent;
 use Formation\Event\SessionCloture\SessionClotureEventFactory;
+use Formation\Provider\IdentityProvider;
+use Formation\Provider\IdentityProviderFactory;
 use Formation\Service\Evenement\NotificationFormationsOuvertesService;
 use Formation\Service\Evenement\NotificationFormationsOuvertesServiceFactory;
 use Formation\Service\Evenement\RappelAgentAvantFormationService;
@@ -190,6 +192,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            IdentityProvider::class => IdentityProviderFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 

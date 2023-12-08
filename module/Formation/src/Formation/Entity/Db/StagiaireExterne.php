@@ -5,6 +5,7 @@ namespace Formation\Entity\Db;
 use DateTime;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class StagiaireExterne implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
@@ -18,6 +19,7 @@ class StagiaireExterne implements HistoriqueAwareInterface {
     private ?string $structure = null;
     private ?string $email = null;
     private ?string $login = null;
+    private ?User $utilisateur = null;
 
     public function getId(): ?int
     {
@@ -92,6 +94,16 @@ class StagiaireExterne implements HistoriqueAwareInterface {
     public function setLogin(?string $login): void
     {
         $this->login = $login;
+    }
+
+    public function getUtilisateur(): ?User
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?User $utilisateur): void
+    {
+        $this->utilisateur = $utilisateur;
     }
 
     public function getDenomination(): string
