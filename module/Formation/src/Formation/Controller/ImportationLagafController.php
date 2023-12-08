@@ -28,6 +28,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ImportationLagafController extends AbstractActionController
 {
@@ -40,6 +41,7 @@ class ImportationLagafController extends AbstractActionController
     use FormationInstanceFraisServiceAwareTrait;
     use PresenceAwareTrait;
     use StagiaireServiceAwareTrait;
+    use UserServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;
 
     public string $sourceLagaf;
@@ -423,7 +425,7 @@ class ImportationLagafController extends AbstractActionController
     public function inscriptionAction(): ViewModel
     {
         $id = $this->params()->fromRoute('id');
-
+        $emc2 = $this->getUserService()->getRepo()->find(0);
         $report = "";
         $inscriptions = [];
         $problemes = [];
@@ -510,6 +512,8 @@ class ImportationLagafController extends AbstractActionController
                     $inscription->setListe("principale");
                     $inscription->setSource($this->sourceLagaf);
                     $inscription->setIdSource($st_iscrit_id);
+                    $inscription->setHistoCreation(new DateTime()); $inscription->setHistoModification(new DateTime());
+                    $inscription->setHistoCreateur($emc2); $inscription->setHistoModificateur($emc2);
                     $this->getFormationInstanceInscritService()->create($inscription);
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                     $this->getFormationInstanceInscritService()->update($inscription);
