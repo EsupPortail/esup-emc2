@@ -49,9 +49,6 @@ class FormationInstanceInscritController extends AbstractActionController
     use InscriptionFormAwareTrait;
     use SelectionAgentFormAwareTrait;
 
-
-
-
     public function afficherAgentAction() : ViewModel
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
@@ -118,16 +115,17 @@ class FormationInstanceInscritController extends AbstractActionController
         $inscrit = new FormationInstanceInscrit();
         $inscrit->setInstance($session);
 
-//        $form = $this->getSelectionAgentForm();
-//        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
-//        $form->bind($inscrit);
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
+        $form->bind($inscrit);
 
-//        /** @see  StagiaireExterneController::rechercherAction */
-//        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
-//        /** @var SearchAndSelect $sas */
-//        $sas = $form->get('agent');
-//        $sas->setLabel("Recherche d'un·e stagiaire externe");
-//        $sas->setAutocompleteSource($urlLarge);
+        /** @see  StagiaireExterneController::rechercherAction */
+        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
+        /** @var SearchAndSelect $sas */
+        $sas = $form->get('agent');
+        $sas->setLabel("Recherche d'un·e stagiaire externe *:");
+        $sas->setAttribute('placeholder', "Dénomination du stagiaire externe ...");
+        $sas->setAutocompleteSource($urlLarge);
 
 //        $request = $this->getRequest();
 //        if ($request->isPost()) {
@@ -157,7 +155,7 @@ class FormationInstanceInscritController extends AbstractActionController
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
             'title' => "Ajout d'un·e stagiaire externe pour la session de formation",
-//            'form' => $form,
+            'form' => $form,
         ]);
         return $vm;
     }

@@ -268,6 +268,7 @@ return [
                             'route'    => '/ajouter-stagiaire-externe/:session',
                             'defaults' => [
                                 /** @see FormationInstanceInscritController::ajouterStagiaireExterneAction() */
+                                'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'ajouter-stagiaire-externe',
                             ],
                         ],
