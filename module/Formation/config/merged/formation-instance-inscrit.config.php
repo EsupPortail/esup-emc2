@@ -29,6 +29,7 @@ return [
                     'action' => [
                         'afficher-agent',
                         'ajouter-agent',
+                        'ajouter-stagiaire-externe',
                         'historiser-agent',
                         'restaurer-agent',
                         'supprimer-agent',
@@ -261,6 +262,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceInscritController::class,
                                 'action'     => 'refuser-drh',
+                            ],
+                        ],
+                    ],
+                    'ajouter-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/ajouter-stagiaire-externe/:session',
+                            'defaults' => [
+                                /** @see FormationInstanceInscritController::ajouterStagiaireExterneAction() */
+                                'action'     => 'ajouter-stagiaire-externe',
                             ],
                         ],
                     ],

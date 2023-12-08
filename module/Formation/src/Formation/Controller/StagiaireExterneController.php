@@ -7,6 +7,7 @@ use Formation\Form\StagiaireExterne\StagiaireExterneFormAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class StagiaireExterneController extends AbstractActionController
@@ -14,6 +15,8 @@ class StagiaireExterneController extends AbstractActionController
     use StagiaireExterneServiceAwareTrait;
     use StagiaireExterneFormAwareTrait;
 
+    /** CRUD **********************************************************************************************************/
+    
     public function indexAction(): ViewModel
     {
         $stagiaires = $this->getStagiaireExterneService()->getStagiaireExternes('nom', 'ASC', true);
@@ -144,4 +147,15 @@ class StagiaireExterneController extends AbstractActionController
         return $vm;
     }
 
+    /** RECHERCHE *****************************************************************************************************/
+
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $stagiaires = $this->getStagiaireExterneService()->getStagiairesExternesByTerm($term);
+            $result = $this->getStagiaireExterneService()->formatStagiaireExterneJSON($stagiaires);
+            return new JsonModel($result);
+        }
+        exit;
+    }
 }

@@ -74,6 +74,15 @@ return [
                         StagiaireexternePrivileges::STAGIAIREEXTERNE_SUPPRIMER,
                     ],
                 ],
+                [
+                    'controller' => StagiaireExterneController::class,
+                    'action' => [
+                        'rechercher',
+                    ],
+                    'privileges' => [
+                        StagiaireexternePrivileges::STAGIAIREEXTERNE_RECHERCHER,
+                    ],
+                ],
             ],
         ],
     ],
@@ -169,6 +178,16 @@ return [
                             'defaults' => [
                                 /** @see StagiaireExterneController::supprimerAction() */
                                 'action' => 'supprimer',
+                            ],
+                        ],
+                    ],
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see StagiaireExterneController::rechercherAction() */
+                                'action' => 'rechercher',
                             ],
                         ],
                     ],

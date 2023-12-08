@@ -111,6 +111,57 @@ class FormationInstanceInscritController extends AbstractActionController
         return $vm;
     }
 
+    public function ajouterStagiaireExterneAction() : ViewModel
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+
+        $inscrit = new FormationInstanceInscrit();
+        $inscrit->setInstance($session);
+
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/ajouter-stagiaire-externe', ['session' => $session->getId()], [], true));
+        $form->bind($inscrit);
+
+//        /** @see  StagiaireExterneController::rechercherAction */
+//        $urlLarge = $this->url()->fromRoute('stagiaire-externe/rechercher', [], [], true);
+//        /** @var SearchAndSelect $sas */
+//        $sas = $form->get('agent');
+//        $sas->setLabel("Recherche d'un·e stagiaire externe");
+//        $sas->setAutocompleteSource($urlLarge);
+
+//        $request = $this->getRequest();
+//        if ($request->isPost()) {
+//            $data = $request->getPost();
+//            $form->setData($data);
+//
+//            if ($form->isValid()) {
+//                if (!$instance->hasAgent($inscrit->getAgent())) {
+//                    $inscrit->setListe($instance->getListeDisponible());
+//                    $inscrit->setSource(HasSourceInterface::SOURCE_EMC2);
+//                    $this->getFormationInstanceInscritService()->create($inscrit);
+//                    $this->getEtatInstanceService()->setEtatActif($inscrit,InscriptionEtats::ETAT_VALIDER_DRH);
+//                    $this->getFormationInstanceInscritService()->update($inscrit);
+//
+//                    $texte = ($instance->getListeDisponible() === FormationInstanceInscrit::PRINCIPALE) ? "principale" : "complémentaire";
+//                    $this->flashMessenger()->addSuccessMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> vient d'être ajouté&middot;e en <strong>liste " . $texte . "</strong>.");
+//
+//                    if ($instance->getFormation()->getRattachement() === Formation::RATTACHEMENT_PREVENTION) $this->getNotificationService()->triggerPrevention($inscrit);
+//
+//                } else {
+//                    $this->flashMessenger()->addErrorMessage("L'agent <strong>" . $inscrit->getAgent()->getDenomination() . "</strong> est déjà inscrit&middot;e à l'instance de formation.");
+//                }
+//            }
+//        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => "Ajout d'un·e stagiaire externe pour la session de formation",
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
         public function historiserAgentAction() : Response
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);

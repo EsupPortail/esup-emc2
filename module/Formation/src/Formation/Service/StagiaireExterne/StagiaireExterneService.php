@@ -2,6 +2,7 @@
 
 namespace Formation\Service\StagiaireExterne;
 
+use Application\Entity\Db\Agent;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -145,6 +146,36 @@ class StagiaireExterneService {
         } catch (NonUniqueResultException $e) {
             throw new RuntimeException("Plusieurs [".StagiaireExterne::class."] liés au même Username [".$user->getUsername()."]", $e);
         }
+        return $result;
+    }
+
+    /** @return StagiaireExterne[] */
+    public function getStagiairesExternesByTerm(?string $term): array
+    {
+        $qb = $this->getObjectManager()->getRepository(StagiaireExterne::class)->createQueryBuilder('stagiaireexterne')
+            ->andWhere("LOWER(CONCAT(stagiaireexterne.nom, ' ', stagiaireexterne.prenom)) like :search OR LOWER(CONCAT(stagiaireexterne.prenom, ' ', stagiaireexterne.nom)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+            ->orderBy('stagiaireexterne.nom, stagiaireexterne.prenom', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function formatStagiaireExterneJSON(array $stagiaires): array
+    {
+        $result = [];
+        /** @var StagiaireExterne[] $stagiaires */
+        foreach ($stagiaires as $stagiaire) {
+            $extra = ($stagiaire->getStructure()) ?? "Aucune structure connue";
+            $result[] = array(
+                'id' => $stagiaire->getId(),
+                'label' => $stagiaire->getDenomination(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
         return $result;
     }
 

@@ -12,4 +12,5 @@ class StagiaireexternePrivileges extends Privileges
     const STAGIAIREEXTERNE_MODIFIER = 'stagiaireexterne-stagiaireexterne_modifier';
     const STAGIAIREEXTERNE_HISTORISER = 'stagiaireexterne-stagiaireexterne_historiser';
     const STAGIAIREEXTERNE_SUPPRIMER = 'stagiaireexterne-stagiaireexterne_supprimer';
+    const STAGIAIREEXTERNE_RECHERCHER = 'stagiaireexterne-stagiaireexterne_rechercher';
 }
