@@ -17,6 +17,7 @@ use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Url\UrlServiceAwareTrait;
+use RuntimeException;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -249,29 +250,47 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerConvocation(FormationInstanceInscrit $inscrit) : ?Mail
+    public function triggerConvocation(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
     {
-        $instance = $inscrit->getInstance();
+        $instance = null;
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
+        if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;
+
+        $agent = null;
+        if ($inscrit instanceof FormationInstanceInscrit) $agent = $inscrit->getAgent();
+        if ($inscrit instanceof InscriptionExterne) $agent = $inscrit->getStagiaire();
+        if ($agent === null) throw new RuntimeException("Aucune personne d'identifié·e pour cette inscription");
 
         $vars = [
             'session' => $instance,
-            'agent' => $inscrit->getAgent(),
+            'agent' => $agent,
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService()
         ];
+
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_CONVOCATION, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
     }
 
-    public function triggerDemandeRetour(FormationInstanceInscrit $inscrit) : ?Mail
+    public function triggerDemandeRetour(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
     {
-        $instance = $inscrit->getInstance();
-        if (!$instance->isMailActive() OR !$instance->isEnqueteActive()) return null;
+        $instance = null;
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
+        if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
+        if (!$instance->isMailActive()) return null;
+
+        $agent = null;
+        if ($inscrit instanceof FormationInstanceInscrit) $agent = $inscrit->getAgent();
+        if ($inscrit instanceof InscriptionExterne) $agent = $inscrit->getStagiaire();
+        if ($agent === null) throw new RuntimeException("Aucune personne d'identifié·e pour cette inscription");
+
 
         $vars = [
             'session' => $instance,
@@ -287,10 +306,18 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerSessionAnnulee(FormationInstanceInscrit $inscrit) : ?Mail
+    public function triggerSessionAnnulee(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
     {
-        $instance = $inscrit->getInstance();
+        $instance = null;
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
+        if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;
+
+        $agent = null;
+        if ($inscrit instanceof FormationInstanceInscrit) $agent = $inscrit->getAgent();
+        if ($inscrit instanceof InscriptionExterne) $agent = $inscrit->getStagiaire();
+        if ($agent === null) throw new RuntimeException("Aucune personne d'identifié·e pour cette inscription");
 
         $vars = [
             'session' => $instance,
@@ -326,9 +353,8 @@ class NotificationService {
 
     /** Mails de rappel ***********************************************************************************************/
 
-    public function triggerRappelAgentAvantFormation(FormationInstance $instance) : array
+    public function triggerRappelAgentAvantFormation(FormationInstance $instance) : ?array
     {
-        if (!$instance->isMailActive()) return [];
         $vars = [
             'session' => $instance,
             'UrlService' => $this->getUrlService(),
@@ -339,6 +365,13 @@ class NotificationService {
         $mails = [];
         foreach ($liste as $inscrit) {
             $agent = $inscrit->getAgent();
+            $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+            $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag(), $agent->generateTag() ]);
+            $this->getMailService()->update($mail);
+            $mails[] = $mail;
+        }
+        foreach ($instance->getInscriptionsExternes() as $inscrit) {
+            $agent = $inscrit->getStagiaire();
             $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
             $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag(), $agent->generateTag() ]);
             $this->getMailService()->update($mail);

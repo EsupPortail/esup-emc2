@@ -328,8 +328,12 @@ class FormationInstanceService
     {
         $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_FORMATION_CONVOCATION);
         $this->update($instance);
+        // Enovyer convocation aux agents en liste principale
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $this->getNotificationService()->triggerConvocation($inscrit);
+           if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
+        }
+        foreach ($instance->getInscriptionsExternes() as $inscrit) {
+            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
     }
@@ -355,6 +359,9 @@ class FormationInstanceService
         $this->update($instance);
 
         foreach ($instance->getListePrincipale() as $inscrit) {
+            $this->getNotificationService()->triggerDemandeRetour($inscrit);
+        }
+        foreach ($instance->getInscriptionsExternes() as $inscrit) {
             $this->getNotificationService()->triggerDemandeRetour($inscrit);
         }
         return $instance;
@@ -385,6 +392,9 @@ class FormationInstanceService
             $formation = $inscrit->getInstance()->getFormation();
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+        }
+        foreach ($instance->getInscriptionsExternes() as $inscrit) {
+            $this->getNotificationService()->triggerSessionAnnulee($inscrit);
         }
         return $instance;
     }

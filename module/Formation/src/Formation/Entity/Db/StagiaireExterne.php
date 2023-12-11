@@ -111,4 +111,9 @@ class StagiaireExterne implements HistoriqueAwareInterface {
         return $this->getPrenom().' '.$this->getNom();
     }
 
+    public function generateTag(): string
+    {
+        return "STAGIARE_" . $this->getId();
+    }
+
 }
