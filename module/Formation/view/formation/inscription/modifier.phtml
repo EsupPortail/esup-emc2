@@ -1,0 +1,42 @@
+<?php
+
+use Formation\Form\Inscription\InscriptionForm;
+
+/**
+ * @see \Formation\Controller\InscriptionController::ajouterAction()
+ * @see \Formation\Controller\InscriptionController::modifierAction()
+ * @var InscriptionForm $form
+ */
+
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('session')); ?>
+<?php echo $this->formControlGroup($form->get('type')); ?>
+
+<div id="agent-div">
+    <?php echo $this->formControlGroup($form->get('agent')); ?>
+</div>
+<div id="stagaire-div">
+    <?php echo $this->formControlGroup($form->get('stagiaire')); ?>
+</div>
+<?php echo $this->formControlGroup($form->get('valider')); ?>
+<?php echo $this->form()->closeTag(); ?>
+<script>
+    function toggleSaS() {
+        let isStagiaire = $('input[type=radio][value=stagiaire]').prop("checked");
+        // alert("Is stagaire ? " + isStagiaire);
+        $('div#agent-div').hide();
+        $('div#stagaire-div').hide();
+        if (isStagiaire) {
+            $('div#stagaire-div').show();
+        } else {
+            $('div#agent-div').show();
+        }
+    };
+
+    $(function() {
+        toggleSaS();
+        $('input[type=radio]').on("change", toggleSaS);
+    });
+</script>

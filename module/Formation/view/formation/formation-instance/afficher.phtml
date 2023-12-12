@@ -3,7 +3,7 @@
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
@@ -21,12 +21,11 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
 
 $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
-$canInformation     = (!$estAnnulee AND $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
-$canAfficherMail    = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
-$canReEnvoyerMail   = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
+$canInformation = (!$estAnnulee and $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
+$canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
+$canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
 
-$canAnnuler         = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
-
+$canAnnuler = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
 
 
 $retour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
@@ -35,19 +34,21 @@ $retour = $this->url('formation-instance/afficher', ['formation-instance' => $in
 $formation = $instance->getFormation();
 /** @var Seance[] $journees */
 $journees = $instance->getJournees();
-/** @var FormationInstanceInscrit[] $inscrits */
-$inscrits = $instance->getInscrits();
+/** @var Inscription[] $inscriptions */
+$inscriptions = $instance->getInscriptions();
 /** @var Formateur[] $formateurs */
 $formateurs = $instance->getFormateurs();
-usort($formateurs, function (Formateur $a, Formateur $b){ return ($a->getNom()." ".$a->getPrenom()) > ($b->getNom()." ".$b->getPrenom());});
+usort($formateurs, function (Formateur $a, Formateur $b) {
+    return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
+});
 
-$this->headTitle("Formation Instance: #".$instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
+$this->headTitle("Formation Instance: #" . $instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
 
-$canFormateurModifier   = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR)));
-$canJourneeModifier     = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE)));
-$canPresenceAfficher    = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
-$canPresenceModifier    = (!$estAnnulee AND $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER)));
-$canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
+$canFormateurModifier = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR)));
+$canJourneeModifier = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE)));
+$canPresenceAfficher = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
+$canPresenceModifier = (!$estAnnulee and $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER)));
+$canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 
 ?>
 
@@ -63,14 +64,14 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php echo $this->formationInformations($formation); ?>
         </div>
         <div class="col-md-3">
-            <a      <?php /** @see FormationController::editerAction() */ ?>
+            <a <?php /** @see FormationController::editerAction() */ ?>
                     href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon icon-retour"></span>
                 Retour à l'action formation
             </a>
             <br/>
-            <a      <?php /** @see FormationController::indexAction() */ ?>
+            <a <?php /** @see FormationController::indexAction() */ ?>
                     href="<?php echo $this->url('formation', [], [], true); ?>"
                     class="btn btn-info action">
                 <span class="icon icon-retour"></span>
@@ -79,7 +80,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php if ($canGererInscription) : ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_CREATION_EN_COURS) && $instance->hasJournee())  : ?>
                     <br/>
-                    <a      <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::ouvrirInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/ouvrir-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Ouvrir les inscriptions
@@ -87,7 +88,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_OUVERTE)) : ?>
                     <br/>
-                    <a      <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::fermerInscriptionAction() */ ?>
                             href="<?php echo $this->url('formation-instance/fermer-inscription', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Fermer les inscriptions
@@ -95,7 +96,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_INSCRIPTION_FERMEE)) : ?>
                     <br/>
-                    <a      <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::envoyerConvocationAction() */ ?>
                             href="<?php echo $this->url('formation-instance/envoyer-convocation', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Convoquer les inscrits
@@ -103,7 +104,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION)) : ?>
                     <br/>
-                    <a      <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::demanderRetourAction() */ ?>
                             href="<?php echo $this->url('formation-instance/demander-retour', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Demander les retours
@@ -111,7 +112,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
-                    <a      <?php /** @see FormationInstanceController::cloturerAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Clotûrer la session
@@ -120,7 +121,7 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php endif; ?>
             <!-- todo privilege assicié -->
             <?php if ($canGererInscription) : ?>
-                <a      <?php /** @see FormationInstanceController::changerEtatAction() */ ?>
+                <a <?php /** @see FormationInstanceController::changerEtatAction() */ ?>
                         href="<?php echo $this->url('formation-instance/changer-etat', ['formation-instance' => $instance->getId()], [], true); ?>"
                         class="btn btn-primary action ajax-modal" data-event="modification">
                     Changer l'état
@@ -129,13 +130,13 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php if ($canAnnuler) : ?>
                 <br/>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) : ?>
-                    <a      <?php /** @see FormationInstanceController::annulerAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::annulerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-danger action">
                         Annuler la session
                     </a>
                 <?php else : ?>
-                    <a      <?php /** @see FormationInstanceController::reouvrirAction() */ ?>
+                    <a <?php /** @see FormationInstanceController::reouvrirAction() */ ?>
                             href="<?php echo $this->url('formation-instance/reouvrir', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-primary action">
                         Remettre la session en édition
@@ -191,8 +192,8 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                             <?php /** @see FormationInstancePresenceController::renseignerPresencesAction() */ ?>
                             <a href="<?php echo $this->url('formation-instance/renseigner-presences', ['formation-instance' => $instance->getId()], [], true); ?>"
                                class="btn btn-primary action">
-                                <span class="icon icon-checked" ></span>
-                                <?php echo ($canPresenceModifier)?"Renseigner":"Voir"; ?> les présences
+                                <span class="icon icon-checked"></span>
+                                <?php echo ($canPresenceModifier) ? "Renseigner" : "Voir"; ?> les présences
                             </a>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -203,12 +204,19 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <div class="row">
                 <div class="col-md-9">
                     <dl class="row">
-                        <dt class="col-md-6"> Envoi des courriers électronique <span class="icon icon-information text-info" title="Envoi des mails vers les agents (convocations, rappels, ...)"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($instance->isMailActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
-                        <dt class="col-md-6"> Création des événements <span class="icon icon-information text-info" title="Active la gestion automatique de la session (clotûre automatique, convocation automatique, ...)"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($instance->isEvenementActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
-                        <dt class="col-md-6"> Demande du formulaire de retour  <span class="icon icon-information text-info" title="Proposition de l'enquête et exige sa complétion pour avoir l'attestation"></span></dt>
-                        <dd class="col-md-6"> <?php echo  ($instance->isEnqueteActive())?      "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>":"<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
+                        <dt class="col-md-6"> Envoi des courriers électronique <span
+                                    class="icon icon-information text-info"
+                                    title="Envoi des mails vers les agents (convocations, rappels, ...)"></span></dt>
+                        <dd class="col-md-6"> <?php echo ($instance->isMailActive()) ? "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>" : "<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
+                        <dt class="col-md-6"> Création des événements <span class="icon icon-information text-info"
+                                                                            title="Active la gestion automatique de la session (clotûre automatique, convocation automatique, ...)"></span>
+                        </dt>
+                        <dd class="col-md-6"> <?php echo ($instance->isEvenementActive()) ? "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>" : "<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
+                        <dt class="col-md-6"> Demande du formulaire de retour <span
+                                    class="icon icon-information text-info"
+                                    title="Proposition de l'enquête et exige sa complétion pour avoir l'attestation"></span>
+                        </dt>
+                        <dd class="col-md-6"> <?php echo ($instance->isEnqueteActive()) ? "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>" : "<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
                     </dl>
                 </div>
                 <div class="col-md-3">
@@ -226,10 +234,10 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 </div>
                 <div class="col-md-3">
                     <?php if ($canFormateurModifier) : ?>
-                        <?php /** @see FormateurController::ajouterFormateurAction() */?>
-                        <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()],[], true); ?>"
+                        <?php /** @see FormateurController::ajouterFormateurAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()], [], true); ?>"
                            class="action btn btn-primary ajax-modal" data-event="modification"
-                       >
+                        >
                             <span class="icon icon-ajouter"></span>
                             Ajouter un formateur
                         </a>
@@ -237,60 +245,60 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 </div>
             </div>
             <?php if (empty($formateurs)) : ?>
-            <div class="alert alert-warning">
-                <strong>
-                    <span class="icon icon-attention"></span>
-                    Aucun formateur de déclaré pour cette formation.
-                </strong>
-                <br/>
-                Sans formateur la formation ne pourra être ouverte.
-            </div>
-        <?php else : ?>
-            <table id="formateurs" class="table table-condensed">
-            <thead>
-            <tr>
-                <th> Dénomination </th>
-                <th> Structure de rattachement </th>
-                <th> Action </th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($formateurs as $formateur) : ?>
-                <tr class="<?php echo ($formateur->estHistorise())?"historise":""; ?>">
-                    <td> <?php echo $formateur->getDenomination(); ?> </td>
-                    <td> <?php echo ($formateur->getAttachement())?:"Non renseigné"; ?> </td>
-                    <td>
-                        <?php if ($canFormateurModifier) : ?>
-                            <a  <?php /** @see FormateurController::modifierFormateurAction() */ ?>
-                                href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                                title="Modifier les informations du formateur"
-                            >
-                                <span class="icon icon-editer"></span></a>
-                            <?php if ($formateur->estNonHistorise()) : ?>
-                                <a      <?php /** @see FormateurController::historiserFormateurAction() */ ?>
-                                        href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                                        title="Supprimer le formateur"
-                                >
-                                <span class="icon icon-historiser"></span></a>
-                            <?php else : ?>
-                                <a      <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
-                                        href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()],[], true); ?>">
-                                    <span class="icon icon-restaurer"></span></a>
-                            <?php endif; ?>
-                            <a      <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
-                                    href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()],[], true); ?>"
-                               class="ajax-modal" data-event="modification"
-                                title="Supprimer définitivement le formateur"
-                            >
-                                <span class="icon icon-unchecked text-danger"></span></a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table><br/>
-        <?php endif; ?>
+                <div class="alert alert-warning">
+                    <strong>
+                        <span class="icon icon-attention"></span>
+                        Aucun formateur de déclaré pour cette formation.
+                    </strong>
+                    <br/>
+                    Sans formateur la formation ne pourra être ouverte.
+                </div>
+            <?php else : ?>
+                <table id="formateurs" class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Dénomination</th>
+                        <th> Structure de rattachement</th>
+                        <th> Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($formateurs as $formateur) : ?>
+                        <tr class="<?php echo ($formateur->estHistorise()) ? "historise" : ""; ?>">
+                            <td> <?php echo $formateur->getDenomination(); ?> </td>
+                            <td> <?php echo ($formateur->getAttachement()) ?: "Non renseigné"; ?> </td>
+                            <td>
+                                <?php if ($canFormateurModifier) : ?>
+                                    <a <?php /** @see FormateurController::modifierFormateurAction() */ ?>
+                                            href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="modification"
+                                            title="Modifier les informations du formateur"
+                                    >
+                                        <span class="icon icon-editer"></span></a>
+                                    <?php if ($formateur->estNonHistorise()) : ?>
+                                        <a <?php /** @see FormateurController::historiserFormateurAction() */ ?>
+                                                href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
+                                                title="Supprimer le formateur"
+                                        >
+                                            <span class="icon icon-historiser"></span></a>
+                                    <?php else : ?>
+                                        <a <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
+                                                href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()], [], true); ?>">
+                                            <span class="icon icon-restaurer"></span></a>
+                                    <?php endif; ?>
+                                    <a <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
+                                            href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
+                                            class="ajax-modal" data-event="modification"
+                                            title="Supprimer définitivement le formateur"
+                                    >
+                                        <span class="icon icon-unchecked text-danger"></span></a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table><br/>
+            <?php endif; ?>
 
             <div class="row">
                 <div class="col-md-9">
@@ -299,9 +307,9 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                     </h2>
 
                     <dl class="row">
-                        <dt class="col-md-3">Première séance </dt>
+                        <dt class="col-md-3">Première séance</dt>
                         <dd class="col-md-9"><?php echo $instance->getDebut(); ?></dd>
-                        <dt class="col-md-3">Dernière séance </dt>
+                        <dt class="col-md-3">Dernière séance</dt>
                         <dd class="col-md-9"><?php echo $instance->getFin(); ?></dd>
                         <dt class="col-md-3">Durée de la formation</dt>
                         <dd class="col-md-9"><?php echo $instance->getDuree(); ?></dd>
@@ -310,16 +318,16 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 </div>
                 <div class="col-md-3">
                     <?php if ($canJourneeModifier): ?>
-                        <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */?>
-                        <a      href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                class="btn btn-primary action ajax-modal" data-event="modification">
+                        <?php /** @see FormationInstanceJourneeController::ajouterJourneeAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/ajouter-journee', ['formation-instance' => $instance->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon icon-ajouter"></span>
                             Ajouter une séance
                         </a>
-                    <br/>
-                        <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */?>
-                        <a      href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
-                                class="btn btn-primary action" target="_blank">
+                        <br/>
+                        <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
+                           class="btn btn-primary action" target="_blank">
                             <span class="icon icon-pdf"></span>
                             Exporter les émargements
                         </a>
@@ -329,76 +337,76 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
                 </div>
             </div>
             <?php if (empty($journees)) : ?>
-            <div class="alert alert-warning">
-                <strong>
-                    <span class="icon icon-attention"></span>
-                    Aucune séance ou volume horaire de déclaré pour cette formation.
-                </strong>
-                <br/>
-                Sans séance ou volume horaire la formation ne pourra être ouverte.
-            </div>
-        <?php else : ?>
-            <table id="journees" class="table table-condensed">
-        <thead>
-            <tr>
-                <th> Type </th>
-                <th> Jour </th>
-                <th> Début </th>
-                <th> Fin </th>
-                <th> Salle </th>
-                <th style="width:13rem;"> Action </th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($journees as $journee) : ?>
-            <tr <?php if ($journee->estHistorise()) echo " class='historise' "; ?>>
-                <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
-                    <td> Séance de formation </td>
-                    <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> </td>
-                    <td> <?php echo $journee->getDebut(); ?> </td>
-                    <td> <?php echo $journee->getFin(); ?> </td>
-                <?php endif; ?>
-                <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
-                    <td> Volume horaire </td>
-                    <td> <?php echo $journee->getVolume(); ?> heures </td>
-                    <td> <?php echo ($journee->getVolumeDebut())?$journee->getVolumeDebut()->format('d/m/Y'):"N.C."; ?> </td>
-                    <td> <?php echo ($journee->getVolumeFin())?$journee->getVolumeFin()->format('d/m/Y'):"N.C."; ?> </td>
-                <?php endif; ?>
-                <td> <?php echo $journee->getLieu(); ?></td>
-                <td>
-                    <?php if ($canJourneeModifier) : ?>
-                        <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */?>
-                        <a      href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
-                                title="Exporter l'émargement de la séance de formation" target="_blank">
-                            <span class="icon icon-pdf"></span><span class="lettrine">E</span></a>
-                        <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */?>
-                        <a      href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                                title="Modifier l'émargement de la séance de formation">
-                            <span class="icon icon-editer"></span></a>
-                        <?php if ($journee->estNonHistorise()) : ?>
-                            <?php /** @see FormationInstanceJourneeController::historiserJourneeAction() */?>
-                            <a      href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    title="Supprimer l'émargement de la séance de formation">
-                                <span class="icon icon-historiser"></span></a>
-                        <?php else : ?>
-                            <?php /** @see FormationInstanceJourneeController::restaurerJourneeAction() */?>
-                            <a      href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                    title="Restaurer l'émargement de la séance de formation">
-                                <span class="icon icon-restaurer"></span></a>
-                        <?php endif; ?>
-                        <?php /** @see FormationInstanceJourneeController::supprimerJourneeAction() */?>
-                        <a      href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
-                                class="ajax-modal" data-event="modification"
-                                title="Supprimer définitivement l'émargement de la séance de formation">
-                            <span class="icon icon-unchecked text-danger"></span></a>
-                    <?php endif; ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table><br/>
-        <?php endif; ?>
+                <div class="alert alert-warning">
+                    <strong>
+                        <span class="icon icon-attention"></span>
+                        Aucune séance ou volume horaire de déclaré pour cette formation.
+                    </strong>
+                    <br/>
+                    Sans séance ou volume horaire la formation ne pourra être ouverte.
+                </div>
+            <?php else : ?>
+                <table id="journees" class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th> Type</th>
+                        <th> Jour</th>
+                        <th> Début</th>
+                        <th> Fin</th>
+                        <th> Salle</th>
+                        <th style="width:13rem;"> Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($journees as $journee) : ?>
+                        <tr <?php if ($journee->estHistorise()) echo " class='historise' "; ?>>
+                            <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                                <td> Séance de formation</td>
+                                <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> </td>
+                                <td> <?php echo $journee->getDebut(); ?> </td>
+                                <td> <?php echo $journee->getFin(); ?> </td>
+                            <?php endif; ?>
+                            <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
+                                <td> Volume horaire</td>
+                                <td> <?php echo $journee->getVolume(); ?> heures</td>
+                                <td> <?php echo ($journee->getVolumeDebut()) ? $journee->getVolumeDebut()->format('d/m/Y') : "N.C."; ?> </td>
+                                <td> <?php echo ($journee->getVolumeFin()) ? $journee->getVolumeFin()->format('d/m/Y') : "N.C."; ?> </td>
+                            <?php endif; ?>
+                            <td> <?php echo $journee->getLieu(); ?></td>
+                            <td>
+                                <?php if ($canJourneeModifier) : ?>
+                                    <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */ ?>
+                                    <a href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
+                                       title="Exporter l'émargement de la séance de formation" target="_blank">
+                                        <span class="icon icon-pdf"></span><span class="lettrine">E</span></a>
+                                    <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */ ?>
+                                    <a href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                       class="ajax-modal" data-event="modification"
+                                       title="Modifier l'émargement de la séance de formation">
+                                        <span class="icon icon-editer"></span></a>
+                                    <?php if ($journee->estNonHistorise()) : ?>
+                                        <?php /** @see FormationInstanceJourneeController::historiserJourneeAction() */ ?>
+                                        <a href="<?php echo $this->url('formation-instance/historiser-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                           title="Supprimer l'émargement de la séance de formation">
+                                            <span class="icon icon-historiser"></span></a>
+                                    <?php else : ?>
+                                        <?php /** @see FormationInstanceJourneeController::restaurerJourneeAction() */ ?>
+                                        <a href="<?php echo $this->url('formation-instance/restaurer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                           title="Restaurer l'émargement de la séance de formation">
+                                            <span class="icon icon-restaurer"></span></a>
+                                    <?php endif; ?>
+                                    <?php /** @see FormationInstanceJourneeController::supprimerJourneeAction() */ ?>
+                                    <a href="<?php echo $this->url('formation-instance/supprimer-journee', ['journee' => $journee->getId()], [], true); ?>"
+                                       class="ajax-modal" data-event="modification"
+                                       title="Supprimer définitivement l'émargement de la séance de formation">
+                                        <span class="icon icon-unchecked text-danger"></span></a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table><br/>
+            <?php endif; ?>
         </div>
 
         <div id="inscriptions" class="tab-pane">
@@ -418,38 +426,38 @@ $canGererInscription    = (!$estAnnulee AND $this->isAllowed(FormationinstancePr
             <?php echo $this->partial('formation/formation-instance-presence/renseigner-presences', ['instance' => $instance, 'presences' => $presences, 'titre' => false], [], true); ?>
         </div>
 
-</div>
+    </div>
 
 
-<script>
-    $(function () {
-        let hash = $(location).attr('hash');
-        let name = hash.substring(1);
-        if (name === undefined || name === "") name = "information";
+    <script>
+        $(function () {
+            let hash = $(location).attr('hash');
+            let name = hash.substring(1);
+            if (name === undefined || name === "") name = "information";
 
-        $('button').removeClass('active');
-        $('button#' + name + '-tab').addClass('active');
-        $('div.tab-pane').hide().removeClass('active');
-        $('div#' + name).show().addClass('active');
-
-        //$('#' + name + '-tab').tab("show");
-        $('button.nav-link').on('click', function (e) {
-            let anchor = $(this).attr('aria-controls');
-            $('div.tab-pane').hide().removeClass('active');
-            $('div#' + anchor).show().addClass('active');
             $('button').removeClass('active');
-            $('button#' + anchor + '-tab').addClass('active');
-            // console.log(anchor);
-            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#" + anchor);
-        });
-    });
+            $('button#' + name + '-tab').addClass('active');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + name).show().addClass('active');
 
-    $(function () {
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            tinyMCE.editors=[];
-            window.location.reload();
+            //$('#' + name + '-tab').tab("show");
+            $('button.nav-link').on('click', function (e) {
+                let anchor = $(this).attr('aria-controls');
+                $('div.tab-pane').hide().removeClass('active');
+                $('div#' + anchor).show().addClass('active');
+                $('button').removeClass('active');
+                $('button#' + anchor + '-tab').addClass('active');
+                // console.log(anchor);
+                e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+                history.replaceState(null, null, "#" + anchor);
+            });
         });
-    });
-</script>
+
+        $(function () {
+            $("body").on("modification", function (event) {
+                event.div.modal('hide');
+                tinyMCE.editors = [];
+                window.location.reload();
+            });
+        });
+    </script>

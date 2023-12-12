@@ -3,6 +3,8 @@
 namespace Formation\Entity\Db;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -20,6 +22,13 @@ class StagiaireExterne implements HistoriqueAwareInterface {
     private ?string $email = null;
     private ?string $login = null;
     private ?User $utilisateur = null;
+
+    private Collection $inscriptions;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +113,12 @@ class StagiaireExterne implements HistoriqueAwareInterface {
     public function setUtilisateur(?User $utilisateur): void
     {
         $this->utilisateur = $utilisateur;
+    }
+
+    /** @return Inscription[] */
+    public function getInscriptions(): array
+    {
+        return $this->inscriptions->toArray();
     }
 
     public function getDenomination(): string

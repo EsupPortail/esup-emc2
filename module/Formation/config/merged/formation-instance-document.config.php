@@ -16,6 +16,7 @@ return [
                     'controller' => FormationInstanceDocumentController::class,
                     'action' => [
                         'generer-convocation',
+                        'generer-convocation-stagiaire-externe',
                     ],
                     'privileges' => [
                         FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_CONVOCATION
@@ -25,6 +26,7 @@ return [
                     'controller' => FormationInstanceDocumentController::class,
                     'action' => [
                         'generer-attestation',
+                        'generer-attestation-stagiaire-externe',
                     ],
                     'privileges' => [
                         FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_ATTESTATION
@@ -67,6 +69,16 @@ return [
                             ],
                         ],
                     ],
+                    'generer-convocation-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-convocation-stagiaire-externe/:inscription-externe',
+                            'defaults' => [
+                                'controller' => FormationInstanceDocumentController::class,
+                                'action'     => 'generer-convocation-stagiaire-externe',
+                            ],
+                        ],
+                    ],
                     'generer-attestation' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -75,6 +87,17 @@ return [
                                 /** @see FormationInstanceDocumentController::genererAttestationAction() */
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-attestation',
+                            ],
+                        ],
+                    ],
+                    'generer-attestation-stagiaire-externe' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/generer-attestation-stagiaire-externe/:inscription-externe',
+                            'defaults' => [
+                                /** @see FormationInstanceDocumentController::genererAttestationStagiaireExterneAction() */
+                                'controller' => FormationInstanceDocumentController::class,
+                                'action'     => 'generer-attestation-stagiaire-externe',
                             ],
                         ],
                     ],

@@ -433,7 +433,6 @@ class FormationInstanceService
         return $inscription;
     }
 
-
     /**
      * @return FormationInstance[]
      * @attention se base sur l'etat !
@@ -460,6 +459,38 @@ class FormationInstanceService
             ->andWhere('formation.affichage = :true')->setParameter('true', true);
         $result = $qb->getQuery()->getResult();
 
+        return $result;
+    }
+
+    /**
+     * @return FormationInstance[]
+     */
+    public function getSessionByTerm(mixed $term): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = $qb->andWhere("LOWER(formation.libelle) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function formatSessionJSON(array $sessions): array
+    {
+        $result = [];
+        /** @var FormationInstance[] $sessions */
+        foreach ($sessions as $session) {
+            $formation = $session->getFormation();
+            $groupe = $formation->getGroupe();
+            $result[] = array(
+                'id' => $session->getId(),
+                'label' => ($groupe?$groupe->getLibelle():"Acucun groupe") . " > ". $session->getFormation()->getLibelle(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $session->getPeriode() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
         return $result;
     }
 }

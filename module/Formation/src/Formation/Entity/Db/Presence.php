@@ -21,6 +21,7 @@ class Presence implements HistoriqueAwareInterface, HasSourceInterface
     private int $id = -1;
     private ?Seance $journee = null;
     private ?FormationInstanceInscrit $inscrit = null;
+    private ?Inscription $inscription = null;
     private ?string $presenceType = null;
     private string $statut = self::PRESENCE_NON_RENSEIGNEE;
     private ?string $commentaire = null;

@@ -46,6 +46,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private Collection $inscrits;
     private Collection $externes;
     private Collection $formateurs;
+    private Collection $inscriptions;
 
     private ?SessionParametre $parametre = null;
 
@@ -56,6 +57,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->journees = new ArrayCollection();
         $this->inscrits = new ArrayCollection();
         $this->externes = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
 
         $this->formateurs = new ArrayCollection();
 
@@ -313,69 +315,65 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** INSCRIT *******************************************************************************************************/
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
-    public function getInscrits() : array
+    public function getInscriptions() : array
     {
-        return $this->inscrits->toArray();
+        return $this->inscriptions->toArray();
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getListePrincipale() : array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
             return ($a->getListe() === FormationInstanceInscrit::PRINCIPALE AND $a->estNonHistorise());
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getListeComplementaire() : array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
             return ($a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE AND $a->estNonHistorise());
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getHistoCreation() > $b->getHistoCreation();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getListeHistorisee() : array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
             return $a->estHistorise();
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
     public function isListePrincipaleComplete() : bool
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::PRINCIPALE;
-        });
-        return (count($array) >= $this->getNbPlacePrincipale());
+        $liste = $this->getListePrincipale();
+        return (count($liste) >= $this->getNbPlacePrincipale());
     }
 
     public function isListeComplementaireComplete() : bool
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE;
-        });
-        return (count($array) >= $this->getNbPlaceComplementaire());
+        $liste = $this->getListeComplementaire();
+        return (count($liste) >= $this->getNbPlaceComplementaire());
     }
 
     /**
@@ -389,33 +387,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $liste;
     }
 
-    /**
-     * @param Agent $agent
-     * @return bool
-     */
-    public function hasAgent(Agent $agent) :  bool
+    public function hasIndividu(Agent|StagiaireExterne $individu) :  bool
     {
-        foreach ($this->inscrits as $inscrit) {
-            if ($inscrit->getAgent() === $agent) return true;
-        }
-        return false;
-    }
-
-    /** @return InscriptionExterne[] */
-    public function getInscriptionsExternes(): array
-    {
-        return $this->externes->toArray();
-    }
-
-    /**
-     * @param StagiaireExterne $stagiaire
-     * @return bool
-     */
-    public function hasStagiaireExterne(StagiaireExterne $stagiaire) :  bool
-    {
-        /** @var InscriptionExterne $externe */
-        foreach ($this->externes as $externe) {
-            if ($externe->getStagiaire() === $stagiaire) return true;
+        $isStagiaire = ($individu instanceof StagiaireExterne);
+        $isAgent = ($individu instanceof Agent);
+        /** @var Inscription $inscription */
+        foreach ($this->inscriptions as $inscription) {
+            if ($isStagiaire && $individu === $inscription->getStagiaire()) return true;
+            if ($isAgent && $individu === $inscription->getAgent()) return true;
         }
         return false;
     }

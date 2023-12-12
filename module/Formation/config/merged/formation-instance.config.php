@@ -35,6 +35,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'afficher',
+                        'rechercher',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
@@ -149,6 +150,16 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see FormationInstanceController::rechercherAction() */
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
                     'ajouter-avec-formulaire' => [
                         'type'  => Literal::class,
                         'options' => [

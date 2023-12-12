@@ -13,6 +13,7 @@ use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\InscriptionExterne\InscriptionExterneServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use JetBrains\PhpStorm\NoReturn;
@@ -28,6 +29,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionExterneServiceAwareTrait;
     use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
     use SeanceServiceAwareTrait;
@@ -103,6 +105,30 @@ class FormationInstanceDocumentController extends AbstractActionController
     /**
      * @throws MpdfException
      */
+    public function genererConvocationStagiaireExterneAction() : ?string
+    {
+        $inscription = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
+
+        $vars = [
+            'agent' => $inscription->getStagiaire(),
+            'formation' => $inscription->getSession()->getFormation(),
+            'session' => $inscription->getSession(),
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
+        $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+    }
+
+    /**
+     * @throws MpdfException
+     */
     public function genererAttestationAction() : ?string
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
@@ -113,6 +139,32 @@ class FormationInstanceDocumentController extends AbstractActionController
             'inscription' => $inscrit,
             'formation' => $inscrit->getInstance()->getFormation(),
             'session' => $inscrit->getInstance(),
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
+        $exporter = new PdfExporter();
+        $exporter->setRenderer($this->renderer);
+        $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setFooterScript('/application/document/pdf/pied-vide');
+        $exporter->addBodyHtml($rendu->getCorps());
+        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+    }
+
+    /**
+     * @throws MpdfException
+     */
+    public function genererAttestationStagiaireExterneAction() : ?string
+    {
+        $inscription = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
+
+        $vars = [
+            'type' => '',
+            'agent' => $inscription->getStagiaire(),
+            'inscription' => $inscription,
+            'formation' => $inscription->getSession()->getFormation(),
+            'session' => $inscription->getSession(),
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];

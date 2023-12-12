@@ -19,6 +19,8 @@
             <join-column name="utilisateur_id" referenced-column-name="ID"/>
         </many-to-one>
 
+        <one-to-many field="inscriptions"  target-entity="Formation\Entity\Db\Inscription"   mapped-by="stagiaire" />
+
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

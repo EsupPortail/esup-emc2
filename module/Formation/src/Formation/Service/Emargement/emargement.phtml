@@ -5,9 +5,11 @@
  */
 
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\InscriptionExterne;
 use Formation\Entity\Db\Seance;
 
 $inscrits = $journee->getInstance()->getListePrincipale();
+$externes = array_filter($journee->getInstance()->getInscriptionsExternes(), function (InscriptionExterne $a) { return $a->estNonHistorise(); });
 $formation = $journee->getInstance()->getFormation();
 ?>
 
@@ -30,6 +32,7 @@ $formation = $journee->getInstance()->getFormation();
 
 <br/>
 
+<h3> Inscriptions internes </h3>
 <table class="emargement">
     <?php /** @var FormationInstanceInscrit $inscrit */ ?>
     <?php foreach ($inscrits as $inscrit) : ?>
@@ -37,6 +40,22 @@ $formation = $journee->getInstance()->getFormation();
             <td>
                 <strong> <?php echo $inscrit->getAgent()->getDenomination(); ?> </strong> <br/>
                 <?php echo ($inscrit->getAgent()->getAffectationPrincipale() !== null)?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"N.C."; ?>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+<h3> Inscriptions externes </h3>
+<table class="emargement">
+    <?php /** @var InscriptionExterne $inscrit */ ?>
+    <?php foreach ($externes as $inscrit) : ?>
+        <tr>
+            <td>
+                <strong> <?php echo $inscrit->getStagiaire()->getDenomination(); ?> </strong> <br/>
+                <?php echo ($inscrit->getStagiaire()->getStructure() !== null)?$inscrit->getStagiaire()->getStructure():"N.C."; ?>
             </td>
             <td>
                 &nbsp;

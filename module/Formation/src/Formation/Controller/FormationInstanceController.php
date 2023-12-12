@@ -13,6 +13,7 @@ use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -262,5 +263,15 @@ class FormationInstanceController extends AbstractActionController
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
             'instance' => $instance,
         ]);
+    }
+
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $sessions = $this->getFormationInstanceService()->getSessionByTerm($term);
+            $result = $this->getFormationInstanceService()->formatSessionJSON($sessions);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

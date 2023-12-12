@@ -28,10 +28,11 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many field="journees"   target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
-        <one-to-many field="inscrits"   target-entity="Formation\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
-        <one-to-many field="externes"   target-entity="Formation\Entity\Db\InscriptionExterne"    mapped-by="session"/>
-        <one-to-many field="formateurs" target-entity="Formation\Entity\Db\Formateur"    mapped-by="instance"/>
+        <one-to-many field="journees"       target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
+        <one-to-many field="inscrits"       target-entity="Formation\Entity\Db\FormationInstanceInscrit"    mapped-by="instance"/>
+        <one-to-many field="externes"       target-entity="Formation\Entity\Db\InscriptionExterne"    mapped-by="session"/>
+        <one-to-many field="inscriptions"   target-entity="Formation\Entity\Db\Inscription"    mapped-by="session"/>
+        <one-to-many field="formateurs"     target-entity="Formation\Entity\Db\Formateur"    mapped-by="instance"/>
 
         <field name="coutHt"                type="float"     column="cout_ht"                  nullable="true"/>
         <field name="coutTtc"               type="float"     column="cout_ttc"                 nullable="true"/>
