@@ -11,11 +11,11 @@ use Formation\Entity\Db\Formation;
 use Formation\Provider\Privilege\FormationgroupePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 
+$noAction = isset($options['no-action']) && $options['no-action'] === true;
+$canAfficherActionFormation = !$noAction && $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAfficherGroupeFormation = !$noAction && $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER));
 
-$canAfficherActionFormation = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
-$canAfficherGroupeFormation = $this->isAllowed(FormationgroupePrivileges::getResourceId(FormationgroupePrivileges::FORMATIONGROUPE_AFFICHER));
-
-$canModifierPlans = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$canModifierPlans = !$noAction && $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
 ?>
 
 <?php if ($mode === 'liste') : ?>
@@ -31,7 +31,7 @@ $canModifierPlans = $this->isAllowed(FormationPrivileges::getResourceId(Formatio
             <?php endif; ?>
         </dd>
         <?php if ($formation->getGroupe() !== null) : ?>
-            <dt class="col-md-3"> Groupe </dt>
+            <dt class="col-md-3"> Thème </dt>
             <dd class="col-md-9">
                 <?php if ($canAfficherGroupeFormation) : ?>
                     <a href="<?php echo $this->url("formation-groupe/afficher", ['formation-groupe' => $formation->getGroupe()->getId()], [], true); ?>" title="Accéder au groupe de formation">
@@ -40,6 +40,22 @@ $canModifierPlans = $this->isAllowed(FormationPrivileges::getResourceId(Formatio
                 <?php else : ?>
                     <?php echo $formation->getGroupe()->getLibelle(); ?>
                 <?php endif; ?>
+            </dd>
+            <?php if ($formation->getGroupe()->getAxe()) : ?>
+                <dt class="col-md-3"> Axe de formation </dt>
+                <dd class="col-md-9">
+                    <?php echo $formation->getGroupe()->getAxe()->getLibelle(); ?>
+                </dd>
+            <?php endif; ?>
+        <?php endif; ?>
+        <?php if (!empty($formation->getDomaines())) : ?>
+            <dt class="col-md-3"> Domaines associés </dt>
+            <dd class="col-md-9">
+                <ul>
+                    <?php foreach($formation->getDomaines() as $domaine) : ?>
+                        <li> <?php echo $domaine->getLibelle(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
             </dd>
         <?php endif; ?>
         <?php if ($formation->getLien() !== null AND trim ($formation->getLien()) !== "") : ?>

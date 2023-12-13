@@ -6,6 +6,7 @@ use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
  * @see \Formation\Controller\PlanDeFormationController::courantAction()
@@ -26,7 +27,7 @@ $canListerParFormation = $this->isAllowed(FormationabonnementPrivileges::getReso
 $canGererAbonnement = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_GERER));
 $canAbonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_ABONNER));
 $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_DESABONNER));
-
+$canAfficherAction = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 ?>
 
 <h1 class="page-header">
@@ -75,7 +76,14 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
                 <ul>
                     <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
                         <li>
-                            <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                            <?php if ($canAfficherAction) : ?>
+                                <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
+                                <a href="<?php echo $this->url("formation/afficher", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
+                                    <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                                </a>
+                            <?php else : ?>
+                                <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                            <?php endif; ?>
                             (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
 
                             <?php

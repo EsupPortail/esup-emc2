@@ -1,0 +1,14 @@
+<?php
+
+use Formation\Entity\Db\Formation;
+
+/**
+ * @see \Formation\Controller\FormationController::afficherAction()
+ * @var Formation $formation
+ */
+
+?>
+
+<h2> Description de la formation </h2>
+
+<?php echo $this->formationInformations($formation, 'liste', ['no-action' => true]); ?>

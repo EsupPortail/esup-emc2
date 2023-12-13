@@ -86,8 +86,8 @@ usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();
                     <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
                         <li>
                             <?php if ($canAfficherAction) : ?>
-                                <?php /** @see \Formation\Controller\FormationController::editerAction() */ ?>
-                                <a href="<?php echo $this->url("formation/editer", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
+                                <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
+                                <a href="<?php echo $this->url("formation/afficher", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
                                     <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
                                 </a>
                             <?php else : ?>

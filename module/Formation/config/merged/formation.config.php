@@ -27,10 +27,9 @@ use Formation\Service\FormationElement\FormationElementServiceFactory;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceFactory;
 use Formation\View\Helper\FormationInformationsViewHelper;
-use UnicaenPrivilege\Guard\PrivilegeController;
-use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -67,6 +66,15 @@ return [
                     ],
                     'privileges' => [
                         FormationPrivileges::FORMATION_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FormationController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        FormationPrivileges::FORMATION_AFFICHER,
                     ],
                 ],
                 [
@@ -109,7 +117,7 @@ return [
         ],
     ],
 
-    'navigation'      => [
+    'navigation' => [
         'formation' => [
             'home' => [
                 'pages' => [
@@ -143,148 +151,158 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'formation' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/formation',
+                    'route' => '/formation',
                     'defaults' => [
                         'controller' => FormationController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
-                    'ajouter' => [
-                        'type'  => Literal::class,
+                    'afficher' => [
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter',
+                            'route' => '/afficher/:formation',
+                            'defaults' => [
+                                /** @see FormationController::afficherAction() */
+                                'action' => 'afficher',
+                            ],
+                        ],
+                    ],
+                    'ajouter' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/ajouter',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'ajouter',
+                                'action' => 'ajouter',
                             ],
                         ],
                     ],
                     'editer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/editer/:formation',
+                            'route' => '/editer/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'editer',
+                                'action' => 'editer',
                             ],
                         ],
                     ],
                     'modifier-formation-informations' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-formation-informations/:formation',
+                            'route' => '/modifier-formation-informations/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'modifier-formation-informations',
+                                'action' => 'modifier-formation-informations',
                             ],
                         ],
                     ],
                     'ajouter-application-element' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-application-element/:formation',
+                            'route' => '/ajouter-application-element/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'ajouter-application-element',
+                                'action' => 'ajouter-application-element',
                             ],
                         ],
                     ],
                     'ajouter-competence-element' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-competence-element/:formation',
+                            'route' => '/ajouter-competence-element/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'ajouter-competence-element',
+                                'action' => 'ajouter-competence-element',
                             ],
                         ],
                     ],
                     'ajouter-plan-de-formation' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-plan-de-formation/:formation',
+                            'route' => '/ajouter-plan-de-formation/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'ajouter-plan-de-formation',
+                                'action' => 'ajouter-plan-de-formation',
                             ],
                         ],
                     ],
                     'retirer-plan-de-formation' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/retirer-plan-de-formation/:formation/:plan-de-formation',
+                            'route' => '/retirer-plan-de-formation/:formation/:plan-de-formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'retirer-plan-de-formation',
+                                'action' => 'retirer-plan-de-formation',
                             ],
                         ],
                     ],
                     'historiser' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser/:formation',
+                            'route' => '/historiser/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'historiser',
+                                'action' => 'historiser',
                             ],
                         ],
                     ],
                     'restaurer' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer/:formation',
+                            'route' => '/restaurer/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'restaurer',
+                                'action' => 'restaurer',
                             ],
                         ],
                     ],
                     'detruire' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/detruire/:formation',
+                            'route' => '/detruire/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'detruire',
+                                'action' => 'detruire',
                             ],
                         ],
                     ],
                     'dedoublonner' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/dedoublonner/:formation',
+                            'route' => '/dedoublonner/:formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'dedoublonner',
+                                'action' => 'dedoublonner',
                             ],
                         ],
                     ],
                     'rechercher-formation' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/rechercher-formation',
+                            'route' => '/rechercher-formation',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'rechercher-formation',
+                                'action' => 'rechercher-formation',
                             ],
                         ],
                     ],
                     'rechercher-formateur' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'may_terminate' => true,
                         'options' => [
-                            'route'    => '/rechercher-formateur',
+                            'route' => '/rechercher-formateur',
                             'defaults' => [
                                 'controller' => FormationController::class,
-                                'action'     => 'rechercher-formateur',
+                                'action' => 'rechercher-formateur',
                             ],
                         ],
                     ],
@@ -301,7 +319,7 @@ return [
             HasFormationCollectionService::class => HasFormationCollectionServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             FormationController::class => FormationControllerFactory::class,
         ],
