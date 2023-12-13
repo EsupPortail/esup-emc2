@@ -362,11 +362,19 @@ class PlanDeFormationController extends AbstractActionController
                 $themeColumn = array_search("Theme", $header);
                 $formationColumn = array_search("Action", $header);
                 $domaineColumn = array_search("Domaine", $header);
+                $descriptionColumn = array_search("Description", $header);
+                $objectifColumn = array_search("Objectif", $header);
+                $programmeColumn = array_search("Programme", $header);
+                $modaliteColumn = array_search("Modalite", $header);
 
                 if ($axeColumn === false) $error[] = "La colonne [Axe] n'a pas été trouvée dans le fichier csv !";
                 if ($themeColumn === false) $error[] = "La colonne [Theme] n'a pas été trouvée dans le fichier csv !";
                 if ($formationColumn === false) $error[] = "La colonne [Action] n'a pas été trouvée dans le fichier csv !";
                 if ($domaineColumn === false) $error[] = "La colonne [Domaine] n'a pas été trouvée dans le fichier csv !";
+                if ($descriptionColumn === false) $error[] = "La colonne [Description] n'a pas été trouvée dans le fichier csv !";
+                if ($objectifColumn === false) $error[] = "La colonne [Objectif] n'a pas été trouvée dans le fichier csv !";
+                if ($programmeColumn === false) $error[] = "La colonne [Programme] n'a pas été trouvée dans le fichier csv !";
+                if ($modaliteColumn === false) $error[] = "La colonne [Modalite] n'a pas été trouvée dans le fichier csv !";
 
                 $array = array_slice($array, 1);
                 $axes = [];
@@ -410,6 +418,10 @@ class PlanDeFormationController extends AbstractActionController
                         } else {
                             $domaines[$domaineLibelle] = $domaine;
                         }
+                    }
+
+                    if (!in_array($line[$modaliteColumn], ['Présentiel', 'Distanciel', 'Mixte'])) {
+                        $error[] = "Modalité [".$line[$modaliteColumn]."] non reconnue !";
                     }
                 }
 
@@ -455,6 +467,18 @@ class PlanDeFormationController extends AbstractActionController
                             $formation->addDomaine($domaine);
                             $this->getFormationService()->update($formation);
                         }
+
+                        $description = $line[$descriptionColumn];
+                        $objectif = $line[$descriptionColumn];
+                        $programme = $line[$programmeColumn];
+                        $modalite = $line[$modaliteColumn];
+
+                        $formation->setDescription($description);
+                        $formation->setObjectifs($objectif);
+                        $formation->setProgramme($programme);
+                        $formation->setType($modalite);
+                        $this->getFormationService()->update($formation);
+
 
                         if (!$formation->hasPlanDeFormation($plan)) {
                             $formation->addPlanDeForamtion($plan);

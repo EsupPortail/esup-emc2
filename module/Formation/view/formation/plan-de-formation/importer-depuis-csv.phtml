@@ -19,7 +19,9 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
 <div class="alert alert-info">
     <span class="icon icon-information"></span>
     Attention les axes, thèmes, actions et domaines sont identifiant grâce à la première ligne du fichier.
-    Assurez vous d'avoir correctement rempli cette première ligne avec les termes <code>Axe</code>, <code>Theme</code>, <code>Action</code> et <code>Domaine</code>.
+    Assurez vous d'avoir correctement rempli cette première ligne avec les termes :
+    <code>Axe</code>, <code>Theme</code>, <code>Action</code>, <code>Domaine</code>, <code>Description</code>, <code>Objectif</code>, <code>Programme</code> et <code>Modalite</code>.
+    Les valeurs pour la colonne <code>Modalite</code> sont <code>Présentiel</code>, <code>Distanciel</code> ou <code>Mixte</code>.
 
 </div>
 
@@ -50,7 +52,10 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
                 <th> Thème </th>
                 <th> Domaine </th>
                 <th> Action </th>
-                <th> Complèment </th>
+                <th> Description </th>
+                <th> Objectif </th>
+                <th> Programme </th>
+                <th> Modalité </th>
             </tr>
             </thead>
             <tbody>
@@ -60,6 +65,10 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
                     <td> <?php echo $line[1]; ?> </td>
                     <td> <?php echo $line[2]; ?> </td>
                     <td> <?php echo $line[3]; ?> </td>
+                    <td> <?php echo $line[4]; ?> </td>
+                    <td> <?php echo $line[5]; ?> </td>
+                    <td> <?php echo $line[6]; ?> </td>
+                    <td> <?php echo $line[7]; ?> </td>
                     <td>  </td>
                 </tr>
             <?php endforeach; ?>

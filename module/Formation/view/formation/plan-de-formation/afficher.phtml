@@ -15,11 +15,14 @@ use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Provider\Privilege\PlanformationPrivileges;
 
 $canIndex = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_INDEX));
 $canAjouterFormation = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
 $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
+
+$canAfficherAction = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 
 usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();});
 ?>
@@ -82,7 +85,14 @@ usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();
                     <?php /** @var Formation $formation */ ?>
                     <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
                         <li>
-                            <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                            <?php if ($canAfficherAction) : ?>
+                                <?php /** @see \Formation\Controller\FormationController::editerAction() */ ?>
+                                <a href="<?php echo $this->url("formation/editer", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
+                                    <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                                </a>
+                            <?php else : ?>
+                                <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                            <?php endif; ?>
                             <?php foreach ($formation->getDomaines() as $domaine) : ?>
                                 <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>" title="<?php echo $domaine->getLibelle(); ?>">&nbsp;</span>
                             <?php endforeach; ?>
