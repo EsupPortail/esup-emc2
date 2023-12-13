@@ -37,7 +37,7 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
     private ?Agent $agent = null;
     private ?string $liste = null;
     private Collection $presences;
-    private ?FormationInstanceFrais $frais = null;
+    private ?InscriptionFrais $frais = null;
     private ?string $complement = null;
     private ?DateTime $validationEnquete = null;
     private Collection $reponsesEnquete;
@@ -87,12 +87,12 @@ class FormationInstanceInscrit implements HistoriqueAwareInterface, HasAgentInte
         $this->liste = $liste;
     }
 
-    public function getFrais(): ?FormationInstanceFrais
+    public function getFrais(): ?InscriptionFrais
     {
         return $this->frais;
     }
 
-    public function setFrais(?FormationInstanceFrais $frais): void
+    public function setFrais(?InscriptionFrais $frais): void
     {
         $this->frais = $frais;
     }

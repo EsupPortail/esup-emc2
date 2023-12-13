@@ -8,7 +8,7 @@ use Formation\Form\Inscription\InscriptionForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\InscriptionExterne\InscriptionExterneService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\StagiaireExterne\StagiaireExterneService;
 use Interop\Container\ContainerInterface;
@@ -39,7 +39,7 @@ class FormationInstanceInscritControllerFactory
          * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
          * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var InscriptionExterneService $inscriptionExterneService
+         * @var InscriptionService $inscriptionService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -53,7 +53,7 @@ class FormationInstanceInscritControllerFactory
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $inscriptionExterneService = $container->get(InscriptionExterneService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -75,7 +75,7 @@ class FormationInstanceInscritControllerFactory
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setInscriptionExterneService($inscriptionExterneService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);

@@ -8,7 +8,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\InscriptionFrais;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\LAGAFStagiaire;
 use Formation\Entity\Db\Presence;
@@ -526,7 +526,7 @@ class ImportationLagafController extends AbstractActionController
                     $st_fhebergement = trim($data[$position_FHebergement]);
 
                     if ($st_frepas !== "" or $st_ftransport !== "" or $st_fhebergement !== "") {
-                        $frais = new FormationInstanceFrais();
+                        $frais = new InscriptionFrais();
                         if ($st_frepas !== "") $frais->setFraisRepas($st_frepas);
                         if ($st_ftransport !== "") $frais->setFraisTransport($st_ftransport);
                         if ($st_fhebergement !== "") $frais->setFraisHebergement($st_fhebergement);
@@ -659,7 +659,7 @@ class ImportationLagafController extends AbstractActionController
         foreach ($formations as $formation) {
             if ($formation->getSource() === $this->sourceLagaf) {
                 foreach ($formation->getInstances() as $instance) {
-                    foreach ($instance->getInscrits() as $inscrit) {
+                    foreach ($instance->getInscriptions() as $inscrit) {
                         $agent = $inscrit->getAgent();
                         if (!$agent->hasFormation($formation)) {
                             $formationElement = new FormationElement();

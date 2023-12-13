@@ -3,7 +3,7 @@
 namespace Formation\Service\FormationInstanceFrais;
 
 use Doctrine\ORM\Exception\ORMException;
-use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\InscriptionFrais;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
@@ -14,10 +14,10 @@ class FormationInstanceFraisService
     /** GESTION DES ENTITES **********************************************************************************/
 
     /**
-     * @param FormationInstanceFrais $frais
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $frais
+     * @return InscriptionFrais
      */
-    public function create(FormationInstanceFrais $frais) : FormationInstanceFrais
+    public function create(InscriptionFrais $frais) : InscriptionFrais
     {
         try {
             $this->getEntityManager()->persist($frais);
@@ -29,10 +29,10 @@ class FormationInstanceFraisService
     }
 
     /**
-     * @param FormationInstanceFrais $frais
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $frais
+     * @return InscriptionFrais
      */
-    public function update(FormationInstanceFrais $frais) : FormationInstanceFrais
+    public function update(InscriptionFrais $frais) : InscriptionFrais
     {
         try {
             $this->getEntityManager()->flush($frais);
@@ -43,10 +43,10 @@ class FormationInstanceFraisService
     }
 
     /**
-     * @param FormationInstanceFrais $frais
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $frais
+     * @return InscriptionFrais
      */
-    public function historise(FormationInstanceFrais $frais) : FormationInstanceFrais
+    public function historise(InscriptionFrais $frais) : InscriptionFrais
     {
         try {
             $frais->historiser();
@@ -58,10 +58,10 @@ class FormationInstanceFraisService
     }
 
     /**
-     * @param FormationInstanceFrais $frais
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $frais
+     * @return InscriptionFrais
      */
-    public function restore(FormationInstanceFrais $frais) : FormationInstanceFrais
+    public function restore(InscriptionFrais $frais) : InscriptionFrais
     {
         try {
             $frais->dehistoriser();
@@ -73,10 +73,10 @@ class FormationInstanceFraisService
     }
 
     /**
-     * @param FormationInstanceFrais $frais
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $frais
+     * @return InscriptionFrais
      */
-    public function delete(FormationInstanceFrais $frais) : FormationInstanceFrais
+    public function delete(InscriptionFrais $frais) : InscriptionFrais
     {
         try {
             $this->getEntityManager()->remove($frais);

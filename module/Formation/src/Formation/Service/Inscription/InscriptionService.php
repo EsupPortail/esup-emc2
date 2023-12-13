@@ -5,9 +5,13 @@ namespace Formation\Service\Inscription;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Etat\SessionEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class InscriptionService {
     use ProvidesObjectManager;
@@ -91,6 +95,25 @@ class InscriptionService {
         return $result;
     }
 
+    public function getInscriptionByUser(UserInterface $user): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agent.login = :login OR stagiaire.login = :login')
+            ->setParameter('login', $user->getUsername())
+            ->andWhere('inscription.histoDestruction IS NULL')
+            ->leftJoin('session.formation', 'formation')->addSelect('formation')
+            ->orderBy('formation.libelle', 'ASC')
+        ;
+
+        $qb = $qb
+            ->leftJoin('session.etats', 'etat')->addSelect('etat')
+            ->leftJoin('etat.type', 'etype')->addSelect('etype')
+            ->andWhere('etat.histoDestruction IS NULL')
+            ->andWhere('etype.code <> :code')->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
     /** FACADE ********************************************************************************************************/
 
 

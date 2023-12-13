@@ -2,7 +2,7 @@
 
 namespace Formation\Controller;
 
-use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\InscriptionFrais;
 use Formation\Form\FormationInstanceFrais\FormationInstanceFraisFormAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
@@ -23,7 +23,7 @@ class FormationInstanceFraisController extends AbstractActionController
     {
         $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
         if ($inscrit->getFrais() === null) {
-            $frais = new FormationInstanceFrais();
+            $frais = new InscriptionFrais();
             $frais->setInscrit($inscrit);
             $this->getFormationInstanceFraisService()->create($frais);
         }

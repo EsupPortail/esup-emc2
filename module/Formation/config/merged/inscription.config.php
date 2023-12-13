@@ -12,6 +12,7 @@ use Formation\Form\Justificatif\JustificatifForm;
 use Formation\Form\Justificatif\JustificatifFormFactory;
 use Formation\Form\Justificatif\JustificatifHydrator;
 use Formation\Form\Justificatif\JustificatifHydratorFactory;
+use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
@@ -44,6 +45,30 @@ return [
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
+                    ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'valider-responsable',
+                        'refuser-responsable',
+                    ],
+                    'privileges' => [
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_SUPERIEURE,
+                    ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'valider-drh',
+                        'refuser-drh',
+                        'classer',
+                        'envoyer-liste-principale',
+                        'envoyer-liste-complementaire',
+                        'retirer-liste',
+                    ],
+                    'privileges' => [
+                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_GESTIONNAIRE,
                     ],
                 ],
             ],
@@ -123,6 +148,88 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::supprimerAction() */
                                         'action'     => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            /** Validation ****************************************************************************/
+                            'valider-responsable' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/valider-responsable/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::validerResponsableAction() */
+                                        'action'     => 'valider-responsable',
+                                    ],
+                                ],
+                            ],
+                            'refuser-responsable' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/refuser-responsable/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::refuserResponsablehAction() */
+                                        'action'     => 'refuser-responsable',
+                                    ],
+                                ],
+                            ],
+                            'valider-drh' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/valider-drh/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::validerDrhAction() */
+                                        'action'     => 'valider-drh',
+                                    ],
+                                ],
+                            ],
+                            'refuser-drh' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/refuser-drh/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::refuserDrhAction() */
+                                        'action'     => 'refuser-drh',
+                                    ],
+                                ],
+                            ],
+                            /** Classement ****************************************************************************/
+                            'envoyer-liste-principale' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/envoyer-liste-principale/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerListePrincipaleAction() */
+                                        'action'     => 'envoyer-liste-principale',
+                                    ],
+                                ],
+                            ],
+                            'envoyer-liste-complementaire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/envoyer-liste-complementaire/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerListeComplementaireAction() */
+                                        'action'     => 'envoyer-liste-complementaire',
+                                    ],
+                                ],
+                            ],
+                            'retirer-liste' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/retirer-liste/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::retirerListeAction() */
+                                        'action'     => 'retirer-liste',
+                                    ],
+                                ],
+                            ],
+                            'classer' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/classer/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::classerAction() */
+                                        'action'     => 'classer',
                                     ],
                                 ],
                             ],

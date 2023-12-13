@@ -325,7 +325,6 @@ class FormationInstanceInscritService
             return $a->getId();
         }, $agents);
         $qb = $this->createQueryBuilder()
-            ->leftJoin('inscrit.agent', 'agent')->addSelect('agent')
             ->andWhere('agent.id in (:agentIds)')->setParameter('agentIds', $agentIds);
         return $qb->getQuery()->getResult();
     }

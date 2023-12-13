@@ -5,8 +5,7 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\InscriptionExterne\InscriptionExterneService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Seance\SeanceService;
 use Formation\Service\Url\UrlService;
 use Interop\Container\ContainerInterface;
@@ -29,8 +28,7 @@ class FormationInstanceDocumentControllerFactory
         /**
          * @var AgentService $agentService
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var InscriptionExterneService $inscriptionExterneService
+         * @var InscriptionService $inscriptionService
          * @var MacroService $macroService
          * @var RenduService $renduService
          * @var SeanceService $seanceService
@@ -38,8 +36,7 @@ class FormationInstanceDocumentControllerFactory
          */
         $agentService = $container->get(AgentService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $inscriptionExterneService = $container->get(InscriptionExterneService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $macroService = $container->get(MacroService::class);
         $renduService = $container->get(RenduService::class);
         $seanceService = $container->get(SeanceService::class);
@@ -52,8 +49,7 @@ class FormationInstanceDocumentControllerFactory
         $controller = new FormationInstanceDocumentController();
         $controller->setAgentService($agentService);
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setInscriptionExterneService($inscriptionExterneService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setMacroService($macroService);
         $controller->setRenduService($renduService);
         $controller->setSeanceService($seanceService);

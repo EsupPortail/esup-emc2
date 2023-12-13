@@ -59,11 +59,11 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                     <span class="icon icon-voir nope"></span>
                 <?php endif; ?>
                 <?php if ($canValider) : ?>
-                    <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <?php  /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
                         <span class="icon icon-ok text-success"></span></a>
-                    <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserDrhAction() */ ?>
-                    <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
+                    <?php  /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/refuser-drh', ['inscription' => $demande->getId()], [], true); ?>" class="ajax-modal" data-event="modification">
                         <span class="icon icon-ko text-danger"></span></a>
                 <?php else: ?>
                     <span class="icon icon-ok nope"></span>

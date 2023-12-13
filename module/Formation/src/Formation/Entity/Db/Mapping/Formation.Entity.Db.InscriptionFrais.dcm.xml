@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping>
-    <entity name="Formation\Entity\Db\FormationInstanceFrais" table="formation_instance_frais">
+    <entity name="Formation\Entity\Db\InscriptionFrais" table="formation_inscription_frais">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
-        <one-to-one target-entity="Formation\Entity\Db\FormationInstanceInscrit"  field="inscrit">
-            <join-column name="inscrit_id" referenced-column-name="id"/>
+        <one-to-one target-entity="Formation\Entity\Db\Inscription"  field="inscription">
+            <join-column name="inscription_id" referenced-column-name="id"/>
         </one-to-one>
 
         <field name="fraisRepas"        column="frais_repas"            type="float"                nullable="true"/>

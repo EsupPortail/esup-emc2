@@ -101,7 +101,7 @@ class PresenceController extends AbstractActionController
         $mode = $this->params()->fromRoute('mode');
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
-        foreach ($instance->getInscrits() as $inscrit) {
+        foreach ($instance->getInscriptions() as $inscrit) {
             $journees = $instance->getJournees();
             /** @var  Presence $presence */
             foreach ($journees as $journee) {

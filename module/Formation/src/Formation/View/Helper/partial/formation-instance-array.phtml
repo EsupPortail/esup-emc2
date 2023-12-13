@@ -61,7 +61,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
             <td> <?php echo ($instance->getFin())?:"???"; ?></td>
             <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
             <td>
-                <?php if ($instance->getInscrits()) : ?>
+                <?php if ($instance->getInscriptions()) : ?>
                     Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>
                     <?php if ($instance->isListePrincipaleComplete()) : ?>
                         <span class="label label-success"> Complète</span>

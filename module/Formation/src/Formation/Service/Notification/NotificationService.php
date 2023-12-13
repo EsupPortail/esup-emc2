@@ -12,6 +12,7 @@ use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationAbonnement;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\InscriptionExterne;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Role\FormationRoles;
@@ -19,6 +20,7 @@ use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use RuntimeException;
 use UnicaenMail\Entity\Db\Mail;
+use UnicaenMail\Exception\NotFoundConfigException;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -79,9 +81,9 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerResponsableValidation(FormationInstanceInscrit $inscription) : ?Mail
+    public function triggerResponsableValidation(Inscription $inscription) : ?Mail
     {
-        $instance = $inscription->getInstance();
+        $instance = $inscription->getSession();
         if (!$instance->isMailActive()) return null;
 
         $agent = $inscription->getAgent();
@@ -91,7 +93,7 @@ class NotificationService {
         $email .= $agent->getEmail();
 
         $urlService = $this->getUrlService();
-        $urlService->setVariables(['instance' => $inscription->getInstance(),]);
+        $urlService->setVariables(['instance' => $inscription->getSession(),]);
 
         $vars = [
             'agent' => $agent,
@@ -109,9 +111,9 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerResponsableRefus(FormationInstanceInscrit $inscription) : ?Mail
+    public function triggerResponsableRefus(Inscription $inscription) : ?Mail
     {
-        $instance = $inscription->getInstance();
+        $instance = $inscription->getSession();
         if (!$instance->isMailActive()) return null;
         $agent = $inscription->getAgent();
 
@@ -135,47 +137,55 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerDrhValidation(FormationInstanceInscrit $inscription) : ?Mail
+    public function triggerDrhValidation(Inscription $inscription) : ?Mail
     {
-        $instance = $inscription->getInstance();
-        if (!$instance->isMailActive()) return null;
-        $agent = $inscription->getAgent();
+        $session = $inscription->getSession();
+        if (!$session->isMailActive()) return null;
+        $individu = $inscription->getIndividu();
 
         $vars = [
-            'agent' => $agent,
-            'session' => $instance,
+            'individu' => $individu,
+            'session' => $session,
             'inscription' => $inscription,
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_VALIDATION, $vars);
 
-        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        try {
+            $mail = $this->getMailService()->sendMail($individu->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        } catch (NotFoundConfigException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'envoi de la notification",0,$e);
+        }
+        $mail->setMotsClefs([$session->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
     }
 
-    public function triggerPrevention(FormationInstanceInscrit|InscriptionExterne $inscription) : ?Mail
+    public function triggerPrevention(Inscription $inscription) : ?Mail
     {
-        $instance = $inscription->getInstance();
-        if (!$instance->isMailActive()) return null;
-        $agent = $inscription->getAgent();
+        $session = $inscription->getSession();
+        if (!$session->isMailActive()) return null;
+        $individu = $inscription->getIndividu();
 
         $email = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE,FormationParametres::MAIL_PREVENTION_FORMATION)->getValeur();
 
         $vars = [
-            'agent' => $agent,
-            'session' => $instance,
+            'individu' => $individu,
+            'session' => $session,
             'inscription' => $inscription,
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_PREVENTION, $vars);
 
-        $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        try {
+            $mail = $this->getMailService()->sendMail($email, $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        } catch (NotFoundConfigException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'envoi de la notification",0,$e);
+        }
+        $mail->setMotsClefs([$session->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
@@ -183,37 +193,42 @@ class NotificationService {
 
 
 
-    public function triggerDrhRefus(FormationInstanceInscrit $inscription) : ?Mail
+    public function triggerDrhRefus(Inscription $inscription) : ?Mail
     {
-        $instance = $inscription->getInstance();
-        if (!$instance->isMailActive()) return null;
-        $agent = $inscription->getAgent();
+        $session = $inscription->getSession();
+        if (!$session->isMailActive()) return null;
+        $individu = $inscription->getIndividu();
+
 
         $vars = [
-            'agent' => $agent,
-            'session' => $instance,
+            'individu' => $individu,
+            'session' => $session,
             'inscription' => $inscription,
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::FORMATION_INSCRIPTION_DRH_REFUS, $vars);
 
-        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
-        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        try {
+            $mail = $this->getMailService()->sendMail($individu->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        } catch (NotFoundConfigException $e) {
+            throw new RuntimeException("Un problème s'est produit lors de l'envoi de la notification",0,$e);
+        }
+        $mail->setMotsClefs([$session->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
         return $mail;
     }
 
 
-    public function triggerListePrincipale(FormationInstanceInscrit $inscrit) : ?Mail
+    public function triggerListePrincipale(Inscription $inscrit) : ?Mail
     {
-        $instance = $inscrit->getInstance();
+        $instance = $inscrit->getSession();
         if (!$instance->isMailActive()) return null;
-        $agent = $inscrit->getAgent();
+        $agent = $inscrit->getIndividu();
 
         $vars = [
-            'agent' => $agent,
+            'agent' => $individu,
             'session' => $instance,
             'inscription' => $inscrit,
             'MacroService' => $this->getMacroService(),
@@ -228,9 +243,31 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerListeComplementaire(FormationInstanceInscrit $inscrit) : ?Mail
+    public function triggerListeComplementaire(Inscription $inscrit) : ?Mail
     {
-        $instance = $inscrit->getInstance();
+        $instance = $inscrit->getSession();
+        if (!$instance->isMailActive()) return null;
+        $individu = $inscrit->getIndividu();
+
+        $vars = [
+            'agent' => $individu,
+            'session' => $instance,
+            'inscription' => $inscrit,
+            'MacroService' => $this->getMacroService(),
+            'UrlService' => $this->getUrlService(),
+        ];
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_COMPLEMENTAIRE, $vars);
+        $mail = $this->getMailService()->sendMail($individu->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+
+        return $mail;
+    }
+
+    public function triggerRetraitListe(Inscription $inscrit) : ?Mail
+    {
+        $instance = $inscrit->getSession();
         if (!$instance->isMailActive()) return null;
         $agent = $inscrit->getAgent();
 

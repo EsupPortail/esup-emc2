@@ -2,14 +2,14 @@
 
 namespace Formation\Form\FormationInstanceFrais;
 
-use Formation\Entity\Db\FormationInstanceFrais;
+use Formation\Entity\Db\InscriptionFrais;
 use Laminas\Hydrator\HydratorInterface;
 
 class FormationInstanceFraisHydrator implements HydratorInterface
 {
 
     /**
-     * @param FormationInstanceFrais $object
+     * @param InscriptionFrais $object
      * @return array
      */
     public function extract($object): array
@@ -24,8 +24,8 @@ class FormationInstanceFraisHydrator implements HydratorInterface
 
     /**
      * @param array $data
-     * @param FormationInstanceFrais $object
-     * @return FormationInstanceFrais
+     * @param InscriptionFrais $object
+     * @return InscriptionFrais
      */
     public function hydrate(array $data, $object): object
     {

@@ -7,13 +7,13 @@ use Application\Entity\Db\Traits\HasSourceTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FormationInstanceFrais implements HistoriqueAwareInterface, HasSourceInterface
+class InscriptionFrais implements HistoriqueAwareInterface, HasSourceInterface
 {
     use HistoriqueAwareTrait;
     use HasSourceTrait;
 
     private ?int $id = null;
-    private ?FormationInstanceInscrit $inscrit = null;
+    private ?Inscription $inscription = null;
     private ?float $fraisRepas = null;
     private ?float $fraisHebergement = null;
     private ?float  $fraisTransport = null;
@@ -23,14 +23,14 @@ class FormationInstanceFrais implements HistoriqueAwareInterface, HasSourceInter
         return $this->id;
     }
 
-    public function getInscrit(): ?FormationInstanceInscrit
+    public function getInscription(): ?Inscription
     {
-        return $this->inscrit;
+        return $this->inscription;
     }
 
-    public function setInscrit(?FormationInstanceInscrit $inscrit): void
+    public function setInscrit(?FormationInstanceInscrit $inscription): void
     {
-        $this->inscrit = $inscrit;
+        $this->inscription = $inscription;
     }
 
     public function getFraisRepas(): ?float

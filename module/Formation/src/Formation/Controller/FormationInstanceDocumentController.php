@@ -12,8 +12,7 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Template\PdfTemplates;
 use Formation\Service\Emargement\EmargementPdfExporter;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
-use Formation\Service\InscriptionExterne\InscriptionExterneServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use JetBrains\PhpStorm\NoReturn;
@@ -28,8 +27,7 @@ class FormationInstanceDocumentController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
-    use InscriptionExterneServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use MacroServiceAwareTrait;
     use RenduServiceAwareTrait;
     use SeanceServiceAwareTrait;
@@ -81,36 +79,12 @@ class FormationInstanceDocumentController extends AbstractActionController
     /**
      * @throws MpdfException
      */
-    public function genererConvocationAction() : ?string
+    public function genererConvocationAction(): ?string
     {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         $vars = [
-            'agent' => $inscrit->getAgent(),
-            'formation' => $inscrit->getInstance()->getFormation(),
-            'session' => $inscrit->getInstance(),
-            'MacroService' => $this->getMacroService(),
-            'UrlService' => $this->getUrlService(),
-        ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_CONVOCATION, $vars);
-        $exporter = new PdfExporter();
-        $exporter->setRenderer($this->renderer);
-        $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
-        $exporter->setFooterScript('/application/document/pdf/pied-vide');
-        $exporter->addBodyHtml($rendu->getCorps());
-        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
-    }
-
-    /**
-     * @throws MpdfException
-     */
-    public function genererConvocationStagiaireExterneAction() : ?string
-    {
-        $inscription = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
-
-        $vars = [
-            'agent' => $inscription->getStagiaire(),
+            'agent' => $inscription->getIndividu(),
             'formation' => $inscription->getSession()->getFormation(),
             'session' => $inscription->getSession(),
             'MacroService' => $this->getMacroService(),
@@ -129,39 +103,13 @@ class FormationInstanceDocumentController extends AbstractActionController
     /**
      * @throws MpdfException
      */
-    public function genererAttestationAction() : ?string
+    public function genererAttestationAction(): ?string
     {
-        $inscrit = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         $vars = [
             'type' => '',
-            'agent' => $inscrit->getAgent(),
-            'inscription' => $inscrit,
-            'formation' => $inscrit->getInstance()->getFormation(),
-            'session' => $inscrit->getInstance(),
-            'MacroService' => $this->getMacroService(),
-            'UrlService' => $this->getUrlService(),
-        ];
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
-        $exporter = new PdfExporter();
-        $exporter->setRenderer($this->renderer);
-        $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
-        $exporter->setFooterScript('/application/document/pdf/pied-vide');
-        $exporter->addBodyHtml($rendu->getCorps());
-        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
-    }
-
-    /**
-     * @throws MpdfException
-     */
-    public function genererAttestationStagiaireExterneAction() : ?string
-    {
-        $inscription = $this->getInscriptionExterneService()->getRequestedInscriptionExterne($this);
-
-        $vars = [
-            'type' => '',
-            'agent' => $inscription->getStagiaire(),
+            'agent' => $inscription->getAgent(),
             'inscription' => $inscription,
             'formation' => $inscription->getSession()->getFormation(),
             'session' => $inscription->getSession(),
@@ -178,13 +126,14 @@ class FormationInstanceDocumentController extends AbstractActionController
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
     }
 
+
     /**
      * @throws MpdfException
      */
-    public function genererHistoriqueAction() : ?string
+    public function genererHistoriqueAction(): ?string
     {
         $agent = $this->getAgentService()->getRequestedAgent($this);
-        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
+        $inscriptions = $this->getInscriptionService()->getFormationsBySuivies($agent);
 
 
         $array = [];
@@ -197,9 +146,11 @@ class FormationInstanceDocumentController extends AbstractActionController
 
         $texte = "";
         foreach ($array as $annee => $inscriptions) {
-            usort($inscriptions, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getInstance()->getDebut(true) > $b->getInstance()->getDebut(true);});
+            usort($inscriptions, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
+                return $a->getInstance()->getDebut(true) > $b->getInstance()->getDebut(true);
+            });
             $texte .= "<div>";
-            $texte .= "<h3>Formations pour l'année ".$annee."/" . ($annee+1)."</h3>";
+            $texte .= "<h3>Formations pour l'année " . $annee . "/" . ($annee + 1) . "</h3>";
             $texte .= "<ul>";
             foreach ($inscriptions as $inscription) {
                 $dureeSuivie = $inscription->getDureePresence();
@@ -227,7 +178,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
-        $exporter->getMpdf()->SetMargins(0,0,50);
+        $exporter->getMpdf()->SetMargins(0, 0, 50);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($corps);
         return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);

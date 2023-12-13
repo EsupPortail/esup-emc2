@@ -34,7 +34,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
 
 //    TODO ...
 //    private Collection $presences;
-//    private ?FormationInstanceFrais $frais = null;
+    private ?InscriptionFrais $frais = null;
 
     private string $source;
     private string $idSource;

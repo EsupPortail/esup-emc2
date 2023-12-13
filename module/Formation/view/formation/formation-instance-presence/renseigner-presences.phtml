@@ -8,15 +8,15 @@
  */
 
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 
 /** @var Seance[] $journees */
 $journees = $instance->getJournees();
-/** @var FormationInstanceInscrit[] $inscrits */
-$inscrits = $instance->getListePrincipale();
+/** @var Inscription[] $inscriptions */
+$inscriptions = $instance->getListePrincipale();
 
 $canPresenceModifier = /** $instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS) &&**/
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));
@@ -73,22 +73,25 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             <tr>
                 <td class="separateur">
                     <?php if ($canPresenceModifier) : ?>
-                    <span class="all_all_toggle icon icon-question" id="NON_RENSEIGNEE|<?php echo $instance->getId(); ?>"
-                          data-bs-toggle="tooltip" data-bs-html="true" style="color:cadetblue;"
-                          title="Passer à non renseigné toutes les présences">
+                        <span class="all_all_toggle icon icon-question"
+                              id="NON_RENSEIGNEE|<?php echo $instance->getId(); ?>"
+                              data-bs-toggle="tooltip" data-bs-html="true" style="color:cadetblue;"
+                              title="Passer à non renseigné toutes les présences">
                     </span>
-                    <span class="all_all_toggle icon icon-checked" id="PRESENCE|<?php echo $instance->getId(); ?>"
-                          data-bs-toggle="tooltip" data-bs-html="true" style="color:darkgreen;"
-                          title="Passer à présent toutes les présences">
+                        <span class="all_all_toggle icon icon-checked" id="PRESENCE|<?php echo $instance->getId(); ?>"
+                              data-bs-toggle="tooltip" data-bs-html="true" style="color:darkgreen;"
+                              title="Passer à présent toutes les présences">
                     </span>
-                    <span class="all_all_toggle icon icon-unchecked" id="ABSENCE_JUSTIFIEE|<?php echo $instance->getId(); ?>"
-                          data-bs-toggle="tooltip" data-bs-html="true" style="color:#ff7979;"
-                          title="Passer à absence justifiée toutes les présences">
+                        <span class="all_all_toggle icon icon-unchecked"
+                              id="ABSENCE_JUSTIFIEE|<?php echo $instance->getId(); ?>"
+                              data-bs-toggle="tooltip" data-bs-html="true" style="color:#ff7979;"
+                              title="Passer à absence justifiée toutes les présences">
                                 <span class="small-lettrine-xxx">J</span>
                     </span>
-                    <span class="all_all_toggle icon icon-unchecked" id="ABSENCE_NON_JUSTIFIEE|<?php echo $instance->getId(); ?>"
-                          data-bs-toggle="tooltip" data-bs-html="true"  style="color:darkred;"
-                          title="Passer à absence non justifiée toutes les présences">
+                        <span class="all_all_toggle icon icon-unchecked"
+                              id="ABSENCE_NON_JUSTIFIEE|<?php echo $instance->getId(); ?>"
+                              data-bs-toggle="tooltip" data-bs-html="true" style="color:darkred;"
+                              title="Passer à absence non justifiée toutes les présences">
                                 <span class="small-lettrine-xxx">NJ</span>
                     </span>
                     <?php endif; ?>
@@ -102,33 +105,33 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                     <?php endif; ?>
                 <?php endforeach; ?>
             </tr>
-            <?php foreach ($inscrits as $inscrit) : ?>
+            <?php foreach ($inscriptions as $inscrit) : ?>
                 <tr>
                     <td class="inscrit">
                         <div style="float:left;">
-                            <strong><?php echo $inscrit->getAgent()->getDenomination(); ?></strong> <br/>
-                            <?php echo ($inscrit->getAgent()->getAffectationPrincipale()) ? $inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleCourt() : "Non renseigné"; ?>
+                            <strong><?php echo $inscrit->getStagiaireDenomination(); ?></strong> <br/>
+                            <?php echo $inscrit->getStagiaireStructure() ?>
                         </div>
                         <div style="float:right;" style="padding-right: 1rem;">
                             <?php if ($canPresenceModifier) : ?>
                                 <span class="all_toggle icon icon-question"
                                       id="NON_RENSEIGNEE|<?php echo $inscrit->getId(); ?>"
                                       data-bs-toggle="tooltip" data-bs-html="true"
-                                      title="Passer à non renseigné toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                                      title="Passer à non renseigné toutes les journées de <span class='highlight agent'><?php echo $inscrit->getStagiaireDenomination(); ?></span>"></span>
                                 <span class="all_toggle icon icon-checked"
                                       id="PRESENCE|<?php echo $inscrit->getId(); ?>"
                                       data-bs-toggle="tooltip" data-bs-html="true"
-                                      title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"></span>
+                                      title="Passer à présent toutes les journées de <span class='highlight agent'><?php echo $inscrit->getStagiaireDenomination(); ?></span>"></span>
                                 <span class="all_toggle icon icon-unchecked"
                                       id="ABSENCE_JUSTIFIEE|<?php echo $inscrit->getId(); ?>"
                                       data-bs-toggle="tooltip" data-bs-html="true"
-                                      title="Passer à absence justifiée toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>">
+                                      title="Passer à absence justifiée toutes les journées de <span class='highlight agent'><?php echo $inscrit->getStagiaireDenomination(); ?></span>">
                                     <span class="small-lettrine-xxx">J</span>
                                 </span>
                                 <span class="all_toggle icon icon-unchecked"
                                       id="ABSENCE_NON_JUSTIFIEE|<?php echo $inscrit->getId(); ?>"
                                       data-bs-toggle="tooltip" data-bs-html="true"
-                                      title="Passer à absence non justifiée toutes les journées de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>">
+                                      title="Passer à absence non justifiée toutes les journées de <span class='highlight agent'><?php echo $inscrit->getStagiaireDenomination(); ?></span>">
                                     <span class="small-lettrine-xxx">NJ</span>
                                 </span>
                             <?php endif; ?>
@@ -305,21 +308,21 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
                 url: url,
                 beforeSend:
                     function () {
-                        $('td.reponse').each(function() {
+                        $('td.reponse').each(function () {
                             let id = $(this).attr('id');
                             document.getElementById(id).innerHTML = "<i class='fas fa-hourglass' style='color:#1b6d85;'></i>";
                         });
                     },
                 success:
                     function (retour) {
-                         console.log("RETOUR:"+retour);
+                        console.log("RETOUR:" + retour);
                         // window.location.reload();
                         let texte = "";
                         if (retour === 'NON_RENSEIGNEE') texte = "<span class='icon icon-question' style='color:cadetblue;' title='Non renseignée'></span>";
                         if (retour === 'PRESENCE') texte = "<span class='icon icon-checked' style='color:darkgreen;' title='Présent·e'></span>";
                         if (retour === 'ABSENCE_NON_JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:darkred;' title='Absence non justifiée'></span><span class='small-lettrine'>NJ</span>";
                         if (retour === 'ABSENCE_JUSTIFIEE') texte = "<span class='icon icon-unchecked' style='color:#ff7979;' title='Absence justifiée'></span><span class='small-lettrine'>J</span>";
-                        $('td.reponse').each(function() {
+                        $('td.reponse').each(function () {
                             let id = $(this).attr('id');
                             document.getElementById(id).innerHTML = texte;
                         });

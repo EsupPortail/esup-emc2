@@ -663,8 +663,8 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getPlaceDisponible(string $liste) : int
     {
         $inscriptions = array_filter(
-            $this->getInscrits(),
-            function(FormationInstanceInscrit $a)  use ($liste) { return $a->estNonHistorise() AND $a->getListe() === $liste;
+            $this->getInscriptions(),
+            function(Inscription $a)  use ($liste) { return $a->estNonHistorise() AND $a->getListe() === $liste;
         });
         return count($inscriptions);
     }

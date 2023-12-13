@@ -13,6 +13,7 @@ use Formation\Controller\FormationInstanceController;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
@@ -361,9 +362,6 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerDemandeRetour($inscrit);
         }
-        foreach ($instance->getInscriptionsExternes() as $inscrit) {
-            $this->getNotificationService()->triggerDemandeRetour($inscrit);
-        }
         return $instance;
     }
 
@@ -386,15 +384,12 @@ class FormationInstanceService
     {
         $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_SESSION_ANNULEE);
         $this->update($instance);
-        foreach ($instance->getInscrits() as $inscrit) {
+        foreach ($instance->getInscriptions() as $inscrit) {
             $this->getNotificationService()->triggerSessionAnnulee($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
+            $formation = $inscrit->getSession()->getFormation();
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
-        }
-        foreach ($instance->getInscriptionsExternes() as $inscrit) {
-            $this->getNotificationService()->triggerSessionAnnulee($inscrit);
         }
         return $instance;
     }
@@ -411,9 +406,9 @@ class FormationInstanceService
     }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
-    public function classerInscription(FormationInstanceInscrit $inscription): FormationInstanceInscrit
+    public function classerInscription(Inscription $inscription): Inscription
     {
-        $session = $inscription->getInstance();
+        $session = $inscription->getSession();
         $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
         try {
             if ($session->getNbPlacePrincipale() > $placePrincipale) {
