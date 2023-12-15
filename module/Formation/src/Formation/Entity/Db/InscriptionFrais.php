@@ -28,7 +28,7 @@ class InscriptionFrais implements HistoriqueAwareInterface, HasSourceInterface
         return $this->inscription;
     }
 
-    public function setInscrit(?FormationInstanceInscrit $inscription): void
+    public function setInscrit(?Inscription $inscription): void
     {
         $this->inscription = $inscription;
     }
@@ -38,7 +38,7 @@ class InscriptionFrais implements HistoriqueAwareInterface, HasSourceInterface
         return $this->fraisRepas;
     }
 
-    public function setFraisRepas(float $fraisRepas): void
+    public function setFraisRepas(?float $fraisRepas): void
     {
         $this->fraisRepas = $fraisRepas;
     }
@@ -48,7 +48,7 @@ class InscriptionFrais implements HistoriqueAwareInterface, HasSourceInterface
         return $this->fraisHebergement;
     }
 
-    public function setFraisHebergement(float $fraisHebergement): void
+    public function setFraisHebergement(?float $fraisHebergement): void
     {
         $this->fraisHebergement = $fraisHebergement;
     }
@@ -58,7 +58,7 @@ class InscriptionFrais implements HistoriqueAwareInterface, HasSourceInterface
         return $this->fraisTransport;
     }
 
-    public function setFraisTransport(float $fraisTransport): void
+    public function setFraisTransport(?float $fraisTransport): void
     {
         $this->fraisTransport = $fraisTransport;
     }

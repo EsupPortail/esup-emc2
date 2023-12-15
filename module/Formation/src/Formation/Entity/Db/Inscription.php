@@ -3,9 +3,12 @@
 namespace Formation\Entity\Db;
 
 use Application\Entity\Db\Agent;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Exception;
+use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -32,8 +35,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?DateTime $validationEnquete = null;
     private Collection $reponsesEnquete;
 
-//    TODO ...
-//    private Collection $presences;
+    private Collection $presences;
     private ?InscriptionFrais $frais = null;
 
     private string $source;
@@ -42,6 +44,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     public function __construct()
     {
         $this->etats = new ArrayCollection();
+        $this->presences = new ArrayCollection();
         $this->validations = new ArrayCollection();
         $this->reponsesEnquete = new ArrayCollection();
     }
@@ -160,6 +163,10 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     {
         $this->idSource = $idSource;
     }
+    public function getFrais(): ?InscriptionFrais
+    {
+        return $this->frais;
+    }
 
     /** PREDICATS ET RACCOURCIS ***************************************************************************************/
 
@@ -205,5 +212,39 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
             return "Aucune structure de connue";
         }
         return "Aucun·e stagiaire de trouvé·e pour l'inscription #".$this->getId();
+    }
+
+    /**  @noinspection PhpUnused */
+    public function getDureePresence() : string
+    {
+        $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
+        /** @var Presence[] $presences */
+        $presences = array_filter($this->presences->toArray(), function (Presence $a) {
+            return $a->estNonHistorise() and $a->isPresent();
+        });
+        foreach ($presences as $presence) {
+            $journee = $presence->getJournee();
+            if ($journee->getType() === Seance::TYPE_SEANCE) {
+                $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
+                $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
+                $duree = $debut->diff($fin);
+                $sum->add($duree);
+            }
+            if ($journee->getType() === Seance::TYPE_VOLUME) {
+                $volume = $journee->getVolume();
+                try {
+                    $temp = new DateInterval('PT' . $volume . 'H');
+                } catch (Exception $e) {
+                    throw new RuntimeException("Unproblème est survenu lors de la création de l'intervale avec [PT".$volume."H]",0,$e);
+                }
+                $sum->add($temp);
+            }
+        }
+
+        $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
+        $heures = ($result->d * 24 + $result->h);
+        $minutes = ($result->i);
+        $text = $heures . " heures " . (($minutes !== 0) ? ($minutes . " minutes") : "");
+        return $text;
     }
 }

@@ -19,7 +19,7 @@ $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats:
 
 $canAfficherIndividu    = true;
 $canInscritModifier     = (!$estAnnulee && $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
-$canFraisAfficher       = false; //$this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
+$canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
 $canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
 
 $urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['fragment' => 'inscriptions'], true);
@@ -200,12 +200,14 @@ $inscriptions = $instance->getInscriptions()
                     <?php if ($canFraisAfficher) : ?>
                         <?php if ($canFraisModifier) : ?>
                             <br>
-                            <?php /** @see FormationInstanceFraisController::renseignerFraisAction() */?>
-                            <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            <?php /** @see \Formation\Controller\InscriptionController::renseignerFraisAction() */?>
+                            <a href="<?php echo $this->url('formation/inscription/renseigner-frais', ['inscription' => $inscription->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                             >
                         <?php endif; ?>
-                        <span class="icon icon-euro" data-bs-toggle="tooltip" data-bs-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span><br/><?php echo ($inscription->getFrais())?$inscription->getFrais()->afficheFrais():"Aucun"; ?>"></span>
+                        <span data-bs-toggle="tooltip" data-bs-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span><br/><?php echo ($inscription->getFrais())?$inscription->getFrais()->afficheFrais():"Aucun"; ?>">
+                            <span class="icon icon-euro"></span>
+                        Frais</span>
                         <?php if ($canFraisModifier) : ?>
                             </a>
                         <?php endif; ?>

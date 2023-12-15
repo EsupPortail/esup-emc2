@@ -6,7 +6,7 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
+use Formation\Service\InscriptionFrais\FormationInstanceFraisService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Formation\Service\Presence\PresenceService;

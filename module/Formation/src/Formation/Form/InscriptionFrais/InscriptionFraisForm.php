@@ -1,6 +1,6 @@
 <?php
 
-namespace Formation\Form\FormationInstanceFrais;
+namespace Formation\Form\InscriptionFrais;
 
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Text;
@@ -8,7 +8,7 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Regex;
 
-class FormationInstanceFraisForm extends Form
+class InscriptionFraisForm extends Form
 {
 
     public function init(): void

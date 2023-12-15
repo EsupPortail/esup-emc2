@@ -1,11 +1,11 @@
 <?php
 
-namespace Formation\Form\FormationInstanceFrais;
+namespace Formation\Form\InscriptionFrais;
 
 use Formation\Entity\Db\InscriptionFrais;
 use Laminas\Hydrator\HydratorInterface;
 
-class FormationInstanceFraisHydrator implements HydratorInterface
+class InscriptionFraisHydrator implements HydratorInterface
 {
 
     /**
@@ -29,9 +29,9 @@ class FormationInstanceFraisHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object): object
     {
-        $repas = $data['repas'] ?? null;
-        $hebergement = $data['hebergement'] ?? null;
-        $transport = $data['transport'] ?? null;
+        $repas = (isset($data['repas']) && trim ($data['repas'] !== '')) ? trim($data['repas']):null;
+        $hebergement = (isset($data['hebergement']) && trim ($data['hebergement'] !== '')) ? trim($data['hebergement']):null;
+        $transport = (isset($data['transport']) && trim ($data['transport'] !== '')) ? trim($data['transport']):null;
 
         $object->setFraisRepas($repas);
         $object->setFraisHebergement($hebergement);

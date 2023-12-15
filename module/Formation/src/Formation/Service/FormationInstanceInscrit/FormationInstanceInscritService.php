@@ -112,7 +112,6 @@ class FormationInstanceInscritService
                 ->addSelect('agent')->leftjoin('inscrit.agent', 'agent')
                 ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
                 ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-                ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
                 ->addSelect('finstance')->leftjoin('inscrit.instance', 'finstance')
                 ->addSelect('formation')->leftjoin('finstance.formation', 'formation')
                 ->addSelect('journee')->leftjoin('finstance.journees', 'journee')

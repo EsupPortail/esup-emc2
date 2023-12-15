@@ -125,14 +125,14 @@ class FormationInstanceService
             $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
                 ->addSelect('formation')->join('Finstance.formation', 'formation')
                 ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-                ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
-                ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
-                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+                ->addSelect('inscription')->leftJoin('Finstance.inscriptions', 'inscription')
+////                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+////                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+////                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
                 ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
                 ->addSelect('etype')->leftjoin('etat.type', 'etype')
-                ->andWhere('etat.histoDestruction IS NULL');
+                ->andWhere('etat.histoDestruction IS NULL')
+            ;
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problem est survenu lors de la création du QueryBuilder de [".FormationInstanceController::class."]",0,$e);
         }
@@ -297,14 +297,14 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerListePrincipale($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
+            $formation = $inscrit->getSession()->getFormation();
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
             $this->getNotificationService()->triggerListeComplementaire($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
+            $formation = $inscrit->getSession()->getFormation();
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
         }
@@ -332,9 +332,6 @@ class FormationInstanceService
         // Enovyer convocation aux agents en liste principale
         foreach ($instance->getListePrincipale() as $inscrit) {
            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
-        }
-        foreach ($instance->getInscriptionsExternes() as $inscrit) {
-            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
     }

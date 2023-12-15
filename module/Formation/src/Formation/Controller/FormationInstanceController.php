@@ -84,7 +84,7 @@ class FormationInstanceController extends AbstractActionController
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
-            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscrit()->getId()] = $presence;
+            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscription()->getId()] = $presence;
         }
 
         return new ViewModel([

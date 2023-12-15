@@ -18,7 +18,7 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceFrais\FormationInstanceFraisServiceAwareTrait;
+use Formation\Service\InscriptionFrais\FormationInstanceFraisServiceAwareTrait;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
@@ -626,7 +626,7 @@ class ImportationLagafController extends AbstractActionController
                     if (!isset($olds[$st_journee . "-" . $st_inscrit])) {
                         $presence = new Presence();
                         $presence->setJournee($journee);
-                        $presence->setInscrit($inscrit);
+                        $presence->setInscription($inscrit);
                         $presence->setStatut($data[$position_presence] === Presence::PRESENCE_PRESENCE);
                         $presence->setSource($this->sourceLagaf);
                         $presence->setIdSource($st_journee . "-" . $st_inscrit);

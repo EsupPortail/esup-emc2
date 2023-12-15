@@ -5,11 +5,14 @@ namespace Formation\Controller;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\InscriptionFrais;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
+use Formation\Form\InscriptionFrais\InscriptionFraisFormAwareTrait;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Source\Sources;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
+use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -26,6 +29,10 @@ class InscriptionController extends AbstractActionController
     use EtatInstanceServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use NotificationServiceAwareTrait;
+
+    use InscriptionFraisServiceAwareTrait;
+    use InscriptionFraisFormAwareTrait;
+
 
     /** CRUD ******************************************************************************************************** */
 
@@ -372,6 +379,40 @@ class InscriptionController extends AbstractActionController
 
         $session = $inscription->getSession();
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => 'inscriptions'], true);
+    }
+
+    /** FRAIS  ********************************************************************************************************/
+
+    public function renseignerFraisAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        if ($inscription->getFrais() === null) {
+            $frais = new InscriptionFrais();
+            $frais->setInscrit($inscription);
+            $this->getInscriptionFraisService()->create($frais);
+        }
+        $frais = $inscription->getFrais();
+
+        $form = $this->getInscriptionFraisForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/renseigner-frais', ['inscription' => $inscription->getId()], [], true));
+        $form->bind($frais);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getInscriptionFraisService()->update($frais);
+            }
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('default/default-form');
+        $vm->setVariables([
+            'title' => "Saisie des frais de " . $inscription->getStagiaireDenomination(),
+            'form' => $form,
+        ]);
+        return $vm;
     }
 
 }

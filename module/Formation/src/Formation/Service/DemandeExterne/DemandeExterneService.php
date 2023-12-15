@@ -373,7 +373,7 @@ class DemandeExterneService
             //presence true
             $presence = new Presence();
             $presence->setJournee($seance);
-            $presence->setInscrit($inscription);
+            $presence->setInscription($inscription);
             $presence->setStatut(Presence::PRESENCE_PRESENCE);
             $presence->setPresenceType("stage externe");
             //source ... todo
@@ -393,7 +393,7 @@ class DemandeExterneService
             //presence false
             $presence = new Presence();
             $presence->setJournee($seance);
-            $presence->setInscrit($inscription);
+            $presence->setInscription($inscription);
             $presence->setStatut(Presence::PRESENCE_ABSENCE_JUSTIFIEE);
             $presence->setPresenceType("stage externe");
             //source ... todo

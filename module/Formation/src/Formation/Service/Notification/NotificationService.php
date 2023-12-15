@@ -287,10 +287,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerConvocation(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
+    public function triggerConvocation(Inscription $inscrit) : ?Mail
     {
         $instance = null;
-        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getSession();
         if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
         if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;
@@ -315,10 +315,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerDemandeRetour(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
+    public function triggerDemandeRetour(Inscription $inscrit) : ?Mail
     {
         $instance = null;
-        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getSession();
         if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
         if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;
@@ -343,10 +343,10 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerSessionAnnulee(FormationInstanceInscrit|InscriptionExterne $inscrit) : ?Mail
+    public function triggerSessionAnnulee(Inscription $inscrit) : ?Mail
     {
         $instance = null;
-        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getInstance();
+        if ($instance instanceof FormationInstanceInscrit) $instance = $inscrit->getSession();
         if ($inscrit instanceof InscriptionExterne) $instance = $inscrit->getSession();
         if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;

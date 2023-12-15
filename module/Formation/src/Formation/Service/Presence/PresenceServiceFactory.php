@@ -24,7 +24,7 @@ class PresenceServiceFactory
 
         /** @var PresenceService $service */
         $service = new PresenceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

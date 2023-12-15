@@ -5,8 +5,10 @@ namespace Formation\Service\Presence;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Presence;
 use UnicaenApp\Exception\RuntimeException;
@@ -15,7 +17,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 
 class PresenceService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -25,12 +27,8 @@ class PresenceService
      */
     public function create(Presence $presence) : Presence
     {
-        try {
-            $this->getEntityManager()->persist($presence);
-            $this->getEntityManager()->flush($presence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($presence);
+        $this->getObjectManager()->flush($presence);
         return $presence;
     }
 
@@ -40,11 +38,7 @@ class PresenceService
      */
     public function update(Presence $presence) : Presence
     {
-        try {
-            $this->getEntityManager()->flush($presence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($presence);
         return $presence;
     }
 
@@ -54,12 +48,8 @@ class PresenceService
      */
     public function historise(Presence $presence) : Presence
     {
-        try {
-            $presence->historiser();
-            $this->getEntityManager()->flush($presence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $presence->historiser();
+        $this->getObjectManager()->flush($presence);
         return $presence;
     }
 
@@ -69,12 +59,8 @@ class PresenceService
      */
     public function restore(Presence $presence) : Presence
     {
-        try {
-            $presence->dehistoriser();
-            $this->getEntityManager()->flush($presence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $presence->dehistoriser();
+        $this->getObjectManager()->flush($presence);
         return $presence;
     }
 
@@ -82,14 +68,10 @@ class PresenceService
      * @param Presence $presence
      * @return Presence
      */
-    public function deleteFromTrait(Presence $presence) : Presence
+    public function delete(Presence $presence) : Presence
     {
-        try {
-            $this->getEntityManager()->remove($presence);
-            $this->getEntityManager()->flush($presence);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($presence);
+        $this->getObjectManager()->flush($presence);
         return $presence;
     }
 
@@ -100,13 +82,12 @@ class PresenceService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Presence::class)->createQueryBuilder('presence')
+        $qb = $this->getObjectManager()->getRepository(Presence::class)->createQueryBuilder('presence')
             ->addSelect('journee')->join('presence.journee', 'journee')
             ->addSelect('finstance')->join('journee.instance', 'finstance')
             ->addSelect('formation')->join('finstance.formation', 'formation')
-            ->addSelect('inscrit')->join('presence.inscrit', 'inscrit')
-            ->addSelect('agent')->join('inscrit.agent', 'agent');
-
+            ->addSelect('inscription')->join('presence.inscription', 'inscription')
+        ;
         return $qb;
     }
 
@@ -123,7 +104,7 @@ class PresenceService
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Presence partagent le même id [" . $id . "].");
+            throw new RuntimeException("Plusieurs Presence partagent le même id [" . $id . "].",0,$e);
         }
         return $result;
     }
@@ -139,24 +120,19 @@ class PresenceService
         return $this->getPresence($id);
     }
 
-    /**
-     * @param Seance $journee
-     * @param FormationInstanceInscrit $inscrit
-     * @return Presence|null
-     */
-    public function getPresenceByJourneeAndInscrit(Seance $journee, FormationInstanceInscrit $inscrit) : ?Presence
+    public function getPresenceByJourneeAndInscription(Seance $journee, Inscription $inscription) : ?Presence
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('presence.journee = :journee')
-            ->andWhere('presence.inscrit = :inscrit')
+            ->andWhere('presence.inscription = :inscription')
             ->setParameter('journee', $journee)
-            ->setParameter('inscrit', $inscrit)
+            ->setParameter('inscription', $inscription)
             ->andWhere('presence.histoDestruction IS NULL');
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs Presence (non historisées) partagent la même journée [" . $journee->getId() . "] et le même inscrit [" . $inscrit->getId() . "]");
+            throw new RuntimeException("Plusieurs Presence (non historisées) partagent la même journée [" . $journee->getId() . "] et le même inscrit [" . $inscription->getId() . "]",0,$e);
         }
         return $result;
     }
@@ -180,7 +156,7 @@ class PresenceService
      */
     public function getPresences() : array
     {
-        $qb = $this->getEntityManager()->getRepository(Presence::class)->createQueryBuilder('presence');
+        $qb = $this->getObjectManager()->getRepository(Presence::class)->createQueryBuilder('presence');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

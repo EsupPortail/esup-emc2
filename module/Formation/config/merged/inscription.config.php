@@ -2,12 +2,17 @@
 
 namespace Formation;
 
+use Formation\Controller\FormationController;
 use Formation\Controller\InscriptionController;
 use Formation\Controller\InscriptionControllerFactory;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\Inscription\InscriptionFormFactory;
 use Formation\Form\Inscription\InscriptionHydrator;
 use Formation\Form\Inscription\InscriptionHydratorFactory;
+use Formation\Form\InscriptionFrais\InscriptionFraisForm;
+use Formation\Form\InscriptionFrais\InscriptionFraisFormFactory;
+use Formation\Form\InscriptionFrais\InscriptionFraisHydrator;
+use Formation\Form\InscriptionFrais\InscriptionFraisHydratorFactory;
 use Formation\Form\Justificatif\JustificatifForm;
 use Formation\Form\Justificatif\JustificatifFormFactory;
 use Formation\Form\Justificatif\JustificatifHydrator;
@@ -16,6 +21,8 @@ use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
+use Formation\Service\InscriptionFrais\InscriptionFraisService;
+use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -42,6 +49,7 @@ return [
                         'historiser',
                         'restaurer',
                         'supprimer',
+                        'renseigner-frais',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -78,13 +86,21 @@ return [
     'router'          => [
         'routes' => [
             'formation' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/formation',
+                    'defaults' => [
+                        'controller' => FormationController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
                 'child_routes' => [
                     'inscription' => [
                         'type'  => Literal::class,
                         'options' => [
                             'route'    => '/inscription',
                             'defaults' => [
-                                /** @see InscriptionController::indexAction() */
                                 'controller' => InscriptionController::class,
                                 'action'     => 'index',
                             ],
@@ -233,6 +249,18 @@ return [
                                     ],
                                 ],
                             ],
+                            /** autre * */
+                            'renseigner-frais' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/renseigner-frais/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::renseignerFraisAction() */
+                                        'controller' => InscriptionController::class,
+                                        'action'     => 'renseigner-frais',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -242,7 +270,8 @@ return [
 
     'service_manager' => [
         'factories' => [
-            InscriptionService::class => InscriptionServiceFactory::class
+            InscriptionService::class => InscriptionServiceFactory::class,
+            InscriptionFraisService::class => InscriptionFraisServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -253,6 +282,7 @@ return [
     'form_elements' => [
         'factories' => [
             InscriptionForm::class => InscriptionFormFactory::class,
+            InscriptionFraisForm::class => InscriptionFraisFormFactory::class,
             JustificatifForm::class => JustificatifFormFactory::class,
         ],
     ],
@@ -260,6 +290,7 @@ return [
         'factories' => [
             InscriptionHydrator::class => InscriptionHydratorFactory::class,
             JustificatifHydrator::class => JustificatifHydratorFactory::class,
+            InscriptionFraisHydrator::class => InscriptionFraisHydratorFactory::class,
         ],
     ]
 
