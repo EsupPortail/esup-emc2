@@ -21,6 +21,9 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     use HasEtatsTrait;
     use HasValidationsTrait;
 
+    const PRINCIPALE = 'principale';
+    const COMPLEMENTAIRE = 'complementaire';
+
     private ?int $id = null;
     private ?Agent $agent = null;
     private ?StagiaireExterne $stagiaire = null;
@@ -166,6 +169,16 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     public function getFrais(): ?InscriptionFrais
     {
         return $this->frais;
+    }
+
+    /** Enquete *******************************************************************************************************/
+
+    /** @return EnqueteReponse[] */
+    public function getReponsesEnquete(): array
+    {
+        $responses = $this->reponsesEnquete->toArray();
+        $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
+        return $responses;
     }
 
     /** PREDICATS ET RACCOURCIS ***************************************************************************************/

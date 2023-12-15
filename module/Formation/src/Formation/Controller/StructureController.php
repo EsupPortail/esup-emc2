@@ -8,7 +8,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use DateTime;
 use Formation\Entity\Db\Formation;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Structure\Entity\Db\StructureAgentForce;
@@ -19,7 +19,7 @@ class StructureController extends AbstractActionController
 {
     use AgentServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     public function indexAction(): ViewModel
@@ -60,8 +60,8 @@ class StructureController extends AbstractActionController
         //formations
         $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
         $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsNonValidees = $this->getInscriptionService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
+        $inscriptionsValidees = $this->getInscriptionService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -116,12 +116,12 @@ class StructureController extends AbstractActionController
         $allAgents = array_merge($agents, $agentsForces);
 
         $header = ['Dénomination', 'Statuts', 'Affectation', 'Formation', 'Période', 'Volume suivi', 'Volume dispensé'];
-        $formations = $this->getFormationInstanceInscritService()->getFormationsByAgents($allAgents);
+        $formations = $this->getInscriptionService()->getInscriptionsByAgents($allAgents);
 
         $result = [];
         foreach ($formations as $formation) {
             $agent = $formation->getAgent();
-            $session = $formation->getInstance();
+            $session = $formation->getSession();
             $action = $session->getFormation();
             $result[] = [
                 'Dénomination' => $agent->getDenomination(),

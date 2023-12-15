@@ -3,7 +3,7 @@
 
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureResponsable;
 
@@ -16,8 +16,8 @@ use Structure\Entity\Db\StructureResponsable;
  * @var StructureResponsable[] $gestionnaires
  * @var Agent[] $agents
  *
- * @var FormationInstanceInscrit[] $inscriptionsNonValidees
- * @var FormationInstanceInscrit[] $inscriptionsValidees
+ * @var Inscription[] $inscriptionsNonValidees
+ * @var Inscription[] $inscriptionsValidees
  * @var DemandeExterne[] $demandesNonValidees
  * @var DemandeExterne[] $demandesValidees
  *
@@ -25,12 +25,11 @@ use Structure\Entity\Db\StructureResponsable;
 
 $this->headTitle("Structure : " . $structure->getLibelleLong());
 
-$now = new DateTime();
-
 $nbAgent = count($agents);
 
 $filles = $structure->getEnfants();
-$filles = array_filter($filles, function (Structure $a) use ($now) {
+$filles = array_filter($filles, function (Structure $a) {
+    $now = new DateTime();
     $fermeture = $a->getFermetureOW() ?? $a->getFermeture();
     return ($a->getDeleted() === null AND ($fermeture === null OR $fermeture > $now));  });
 ?>
@@ -110,7 +109,7 @@ $filles = array_filter($filles, function (Structure $a) use ($now) {
 
 <script>
     $(function() {
-        $('select#structure-selecteur').change(function() {
+        $('select#structure-selecteur').on("change",function() {
             let id = $('select#structure-selecteur option:selected').val();
             if (id !== "" && id !== "<?php echo $structure->getId(); ?>") {
                 let url = window.location.href;

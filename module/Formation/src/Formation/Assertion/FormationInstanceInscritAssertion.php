@@ -4,7 +4,7 @@ namespace Formation\Assertion;
 
 use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
@@ -19,7 +19,7 @@ class FormationInstanceInscritAssertion extends AbstractAssertion
 
     protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
     {
-        if (!$entity instanceof FormationInstanceInscrit) {
+        if (!$entity instanceof Inscription) {
             return false;
         }
 

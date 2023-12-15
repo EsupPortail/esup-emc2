@@ -132,7 +132,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $chemin = $this->getLibelleCourt();
 
         $parent = "";
-        if ($this->getParent()) $parent = $this->getParent()->computeChemin();
+        if ($this->getParent() && $this->getParent() !== $this) $parent = $this->getParent()->computeChemin();
 
         if ($parent !== "") $chemin = $parent . " > " . $chemin;
         return $chemin;

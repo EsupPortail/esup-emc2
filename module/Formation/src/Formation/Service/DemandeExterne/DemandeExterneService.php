@@ -14,6 +14,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\DemandeExterneEtats;
@@ -22,7 +23,7 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -44,7 +45,7 @@ class DemandeExterneService
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use SeanceServiceAwareTrait;
     use PresenceAwareTrait;
 
@@ -345,14 +346,14 @@ class DemandeExterneService
         $this->getFormationInstanceService()->update($session);
 
         //inscription
-        $inscription = new FormationInstanceInscrit();
+        $inscription = new Inscription();
         $inscription->setAgent($demande->getAgent());
-        $inscription->setInstance($session);
-        $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+        $inscription->setSession($session);
+        $inscription->setListe(Inscription::PRINCIPALE);
         $inscription->setSource(HasSourceInterface::SOURCE_EMC2);
-        $this->getFormationInstanceInscritService()->create($inscription);
+        $this->getInscriptionService()->create($inscription);
         $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
-        $this->getFormationInstanceInscritService()->update($inscription);
+        $this->getInscriptionService()->update($inscription);
 
         $absence = $volume - $suivi;
 

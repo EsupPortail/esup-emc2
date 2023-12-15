@@ -1,14 +1,14 @@
 <?php
 
-namespace Formation\Form\Justificatif;
+namespace Formation\Form\Justification;
 
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Laminas\Hydrator\HydratorInterface;
 
-class JustificatifHydrator implements HydratorInterface
+class JustificationHydrator implements HydratorInterface
 {
     /**
      * @param $object
@@ -42,7 +42,7 @@ class JustificatifHydrator implements HydratorInterface
     /**
      * @param array $data
      * @param $object
-     * @return FormationInstanceInscrit
+     * @return Inscription
      */
     public function hydrate(array $data, object $object): object
     {

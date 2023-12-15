@@ -38,7 +38,6 @@ class FormationInstanceInscritControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var InscriptionService $inscriptionService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -52,7 +51,6 @@ class FormationInstanceInscritControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $inscriptionService = $container->get(InscriptionService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -74,7 +72,6 @@ class FormationInstanceInscritControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setInscriptionService($inscriptionService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);

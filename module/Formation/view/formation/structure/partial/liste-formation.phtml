@@ -2,10 +2,10 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 
 /**
- * @var FormationInstanceInscrit[] $inscriptions
+ * @var Inscription[] $inscriptions
  * @var DemandeExterne[] $demandes
  */
 
@@ -15,9 +15,9 @@ foreach ($inscriptions as $inscription) {
 }
 usort($dictionnaryInscriptions,
     function ($a, $b) {
-        /** @var FormationInstanceInscrit[] $a */
-        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
-        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        /** @var Inscription[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
         return $aaa > $bbb;
     }
 );
@@ -29,32 +29,31 @@ foreach ($demandes as $demande) {
 usort($dictionnaryDemandes,
     function ($a, $b) {
         /** @var DemandeExterne[] $a */
-        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
-        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
         return $aaa > $bbb;
     }
 );
 ?>
 
 
-<h2> Liste des formations des agents <?php echo Formation::getAnnee(); ?>/<?php echo Formation::getAnnee()+1; ?> </h2>
+<h2> Liste des formations des agents <?php echo Formation::getAnnee(); ?>/<?php echo Formation::getAnnee() + 1; ?> </h2>
 
 <div class="row">
     <div class="col-md-6">
         <h3>Formations du plan de formation</h3>
 
-        <?php /** @var FormationInstanceInscrit[] $ds */ ?>
+        <?php /** @var Inscription[] $ds */ ?>
         <ul>
             <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
-                <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
                 <li>
                     <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
                     <?php foreach ($ds as $d) : ?>
                         <br/>
                         <?php echo $this->etatisntance($d->getEtatActif()); ?>
-                        <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
-                        (<?php echo $d->getInstance()->getPeriode(); ?>)
+                        <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
+                        (<?php echo $d->getSession()->getPeriode(); ?>)
                     <?php endforeach; ?>
                 </li>
             <?php endforeach; ?>
@@ -66,19 +65,21 @@ usort($dictionnaryDemandes,
 
         <?php /** @var DemandeExterne[] $ds */ ?>
         <ul>
-        <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
-            <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) { return $a->getDebut() > $b->getDebut(); }); ?>
-            <li>
-            <?php echo $ds[0]->getAgent()->getDenomination(); ?>
+            <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
+                <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) {
+                    return $a->getDebut() > $b->getDebut();
+                }); ?>
+                <li>
+                    <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
-                <?php foreach ($ds as $d) : ?>
-                    <br/>
+                    <?php foreach ($ds as $d) : ?>
+                        <br/>
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getLibelle(); ?>
                         (<?php echo $d->getPeriodeAsString(); ?>)
-                <?php endforeach; ?>
-            </li>
-        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
         </ul>
 
     </div>

@@ -13,19 +13,19 @@ use Formation\Form\InscriptionFrais\InscriptionFraisForm;
 use Formation\Form\InscriptionFrais\InscriptionFraisFormFactory;
 use Formation\Form\InscriptionFrais\InscriptionFraisHydrator;
 use Formation\Form\InscriptionFrais\InscriptionFraisHydratorFactory;
-use Formation\Form\Justificatif\JustificatifForm;
-use Formation\Form\Justificatif\JustificatifFormFactory;
-use Formation\Form\Justificatif\JustificatifHydrator;
-use Formation\Form\Justificatif\JustificatifHydratorFactory;
+use Formation\Form\Justification\JustificationForm;
+use Formation\Form\Justification\JustificationFormFactory;
+use Formation\Form\Justification\JustificationHydrator;
+use Formation\Form\Justification\JustificationHydratorFactory;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Inscription\InscriptionServiceFactory;
 use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceFactory;
-use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
     'bjyauthorize' => [
@@ -79,185 +79,215 @@ return [
                         FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_GESTIONNAIRE,
                     ],
                 ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'inscription',
+                        'desinscription',
+                    ],
+                    'roles' => [
+                        'Agent',
+                        'Stagiaire externe',
+                    ],
+                ],
             ],
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
             'formation' => [
-                'type'  => Literal::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/formation',
+                    'route' => '/formation',
                     'defaults' => [
                         'controller' => FormationController::class,
-                        'action'     => 'index',
+                        'action' => 'index',
                     ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
                     'inscription' => [
-                        'type'  => Literal::class,
+                        'type' => Literal::class,
                         'options' => [
-                            'route'    => '/inscription',
+                            'route' => '/inscription',
                             'defaults' => [
                                 'controller' => InscriptionController::class,
-                                'action'     => 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
                             'afficher' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/afficher/:inscription',
+                                    'route' => '/afficher/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::afficherAction() */
-                                        'action'     => 'afficher',
+                                        'action' => 'afficher',
                                     ],
                                 ],
                             ],
                             'ajouter' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/ajouter[/:session]',
+                                    'route' => '/ajouter[/:session]',
                                     'defaults' => [
                                         /** @see InscriptionController::afficherAction() */
-                                        'action'     => 'ajouter',
+                                        'action' => 'ajouter',
                                     ],
                                 ],
                             ],
                             'modifier' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/modifier/:inscription',
+                                    'route' => '/modifier/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::modifierAction() */
-                                        'action'     => 'modifier',
+                                        'action' => 'modifier',
                                     ],
                                 ],
                             ],
                             'historiser' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/historiser/:inscription',
+                                    'route' => '/historiser/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::historiserAction() */
-                                        'action'     => 'historiser',
+                                        'action' => 'historiser',
                                     ],
                                 ],
                             ],
                             'restaurer' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/restaurer/:inscription',
+                                    'route' => '/restaurer/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::restaurerAction() */
-                                        'action'     => 'restaurer',
+                                        'action' => 'restaurer',
                                     ],
                                 ],
                             ],
                             'supprimer' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/supprimer/:inscription',
+                                    'route' => '/supprimer/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::supprimerAction() */
-                                        'action'     => 'supprimer',
+                                        'action' => 'supprimer',
                                     ],
                                 ],
                             ],
                             /** Validation ****************************************************************************/
                             'valider-responsable' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/valider-responsable/:inscription',
+                                    'route' => '/valider-responsable/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::validerResponsableAction() */
-                                        'action'     => 'valider-responsable',
+                                        'action' => 'valider-responsable',
                                     ],
                                 ],
                             ],
                             'refuser-responsable' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/refuser-responsable/:inscription',
+                                    'route' => '/refuser-responsable/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::refuserResponsablehAction() */
-                                        'action'     => 'refuser-responsable',
+                                        'action' => 'refuser-responsable',
                                     ],
                                 ],
                             ],
                             'valider-drh' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/valider-drh/:inscription',
+                                    'route' => '/valider-drh/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::validerDrhAction() */
-                                        'action'     => 'valider-drh',
+                                        'action' => 'valider-drh',
                                     ],
                                 ],
                             ],
                             'refuser-drh' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/refuser-drh/:inscription',
+                                    'route' => '/refuser-drh/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::refuserDrhAction() */
-                                        'action'     => 'refuser-drh',
+                                        'action' => 'refuser-drh',
                                     ],
                                 ],
                             ],
                             /** Classement ****************************************************************************/
                             'envoyer-liste-principale' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/envoyer-liste-principale/:inscription',
+                                    'route' => '/envoyer-liste-principale/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::envoyerListePrincipaleAction() */
-                                        'action'     => 'envoyer-liste-principale',
+                                        'action' => 'envoyer-liste-principale',
                                     ],
                                 ],
                             ],
                             'envoyer-liste-complementaire' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/envoyer-liste-complementaire/:inscription',
+                                    'route' => '/envoyer-liste-complementaire/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::envoyerListeComplementaireAction() */
-                                        'action'     => 'envoyer-liste-complementaire',
+                                        'action' => 'envoyer-liste-complementaire',
                                     ],
                                 ],
                             ],
                             'retirer-liste' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/retirer-liste/:inscription',
+                                    'route' => '/retirer-liste/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::retirerListeAction() */
-                                        'action'     => 'retirer-liste',
+                                        'action' => 'retirer-liste',
                                     ],
                                 ],
                             ],
                             'classer' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/classer/:inscription',
+                                    'route' => '/classer/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::classerAction() */
-                                        'action'     => 'classer',
+                                        'action' => 'classer',
                                     ],
                                 ],
                             ],
                             /** autre * */
                             'renseigner-frais' => [
-                                'type'  => Segment::class,
+                                'type' => Segment::class,
                                 'options' => [
-                                    'route'    => '/renseigner-frais/:inscription',
+                                    'route' => '/renseigner-frais/:inscription',
                                     'defaults' => [
                                         /** @see InscriptionController::renseignerFraisAction() */
                                         'controller' => InscriptionController::class,
-                                        'action'     => 'renseigner-frais',
+                                        'action' => 'renseigner-frais',
+                                    ],
+                                ],
+                            ],
+                            /** Partie Agent **/
+                            'creer-inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/creer-inscription/:formation-instance/:agent',
+                                    'defaults' => [
+                                        'action' => 'inscription',
+                                    ],
+                                ],
+                            ],
+                            'annuler-inscription' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/annuler-inscription/:inscription',
+                                    'defaults' => [
+                                        'action' => 'desinscription',
                                     ],
                                 ],
                             ],
@@ -274,7 +304,7 @@ return [
             InscriptionFraisService::class => InscriptionFraisServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             InscriptionController::class => InscriptionControllerFactory::class,
         ],
@@ -283,13 +313,13 @@ return [
         'factories' => [
             InscriptionForm::class => InscriptionFormFactory::class,
             InscriptionFraisForm::class => InscriptionFraisFormFactory::class,
-            JustificatifForm::class => JustificatifFormFactory::class,
+            JustificationForm::class => JustificationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             InscriptionHydrator::class => InscriptionHydratorFactory::class,
-            JustificatifHydrator::class => JustificatifHydratorFactory::class,
+            JustificationHydrator::class => JustificationHydratorFactory::class,
             InscriptionFraisHydrator::class => InscriptionFraisHydratorFactory::class,
         ],
     ]

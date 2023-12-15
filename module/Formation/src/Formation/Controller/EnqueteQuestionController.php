@@ -14,7 +14,7 @@ use Formation\Service\EnqueteCategorie\EnqueteCategorieServiceAwareTrait;
 use Formation\Service\EnqueteQuestion\EnqueteQuestionServiceAwareTrait;
 use Formation\Service\EnqueteReponse\EnqueteReponseServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -26,17 +26,17 @@ class EnqueteQuestionController extends AbstractActionController
     use EnqueteCategorieServiceAwareTrait;
     use EnqueteQuestionServiceAwareTrait;
     use EnqueteReponseServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use EnqueteCategorieFormAwareTrait;
     use EnqueteQuestionFormAwareTrait;
     use EnqueteReponseFormAwareTrait;
+    use InscriptionServiceAwareTrait;
 
     /** ENQUETE *******************************************************************************************************/
 
     public function afficherResultatsAction(): ViewModel
     {
-        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
+        $session = $this->getInscriptionService()->getRequestedInscription($this);
 
         $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
         $questions = array_filter($questions, function (EnqueteQuestion $a) {
@@ -300,7 +300,7 @@ class EnqueteQuestionController extends AbstractActionController
 
     public function repondreQuestionsAction(): ViewModel
     {
-        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         /** @var EnqueteQuestion[] $questions */
         $questions = $this->getEnqueteQuestionService()->getEnqueteQuestions();
@@ -359,14 +359,14 @@ class EnqueteQuestionController extends AbstractActionController
 
     public function validerQuestionsAction(): ViewModel
     {
-        $inscription = $this->getFormationInstanceInscritService()->getRequestedFormationInstanceInscrit($this);
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             if ($data["reponse"] === "oui") {
                 $inscription->setValidationEnquete(new DateTime());
-                $this->getFormationInstanceInscritService()->update($inscription);
+                $this->getInscriptionService()->update($inscription);
             }
             exit();
         }

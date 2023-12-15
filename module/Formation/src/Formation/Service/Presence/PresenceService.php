@@ -3,16 +3,13 @@
 namespace Formation\Service\Presence;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Entity\Db\Presence;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class PresenceService

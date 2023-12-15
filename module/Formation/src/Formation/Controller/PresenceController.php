@@ -4,7 +4,6 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Presence;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;

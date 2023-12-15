@@ -5,7 +5,6 @@ namespace Formation\Controller;
 use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Presence\PresenceService;
 use Interop\Container\ContainerInterface;
@@ -32,7 +31,6 @@ class FormationInstanceControllerFactory
          * @var EtatTypeService $etatTypeService
          * @var FormationService $formationService
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -42,7 +40,6 @@ class FormationInstanceControllerFactory
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -59,7 +56,6 @@ class FormationInstanceControllerFactory
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);

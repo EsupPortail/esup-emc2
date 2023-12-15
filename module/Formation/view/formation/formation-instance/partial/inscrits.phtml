@@ -222,13 +222,13 @@ $inscriptions = $instance->getInscriptions()
                     <?php endif; ?>
                     <?php if ($inscription->estNonHistorise()) : ?>
                         <br>
-                        <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
+                        <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
                         <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], [], true); ?>"
                             data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
                         >
                             <span class="icon icon-historiser"></span> Historiser</a>
                     <?php endif; ?>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAgentAction() */?>
                     <br>
                     <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
@@ -303,7 +303,7 @@ $inscriptions = $instance->getInscriptions()
                             <span class="icon icon-historiser"></span> Historiser</a>
                     <?php endif; ?>
                     <br>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAgentAction() */?>
                     <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                         data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."

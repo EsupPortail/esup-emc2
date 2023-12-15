@@ -406,16 +406,16 @@ class FormationInstanceService
     public function classerInscription(Inscription $inscription): Inscription
     {
         $session = $inscription->getSession();
-        $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
+        $placePrincipale = $session->getPlaceDisponible(Inscription::PRINCIPALE);
         try {
             if ($session->getNbPlacePrincipale() > $placePrincipale) {
-                $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+                $inscription->setListe(Inscription::PRINCIPALE);
                 $this->getEntityManager()->flush($inscription);
                 return $inscription;
             }
-            $placeComplementaire = $session->getPlaceDisponible(FormationInstanceInscrit::COMPLEMENTAIRE);
+            $placeComplementaire = $session->getPlaceDisponible(Inscription::COMPLEMENTAIRE);
             if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
-                $inscription->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
+                $inscription->setListe(Inscription::COMPLEMENTAIRE);
                 $this->getEntityManager()->flush($inscription);
                 return $inscription;
             }

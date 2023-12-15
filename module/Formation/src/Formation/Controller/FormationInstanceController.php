@@ -6,7 +6,6 @@ use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
 use Laminas\Http\Request;
@@ -27,7 +26,6 @@ class FormationInstanceController extends AbstractActionController
     use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;

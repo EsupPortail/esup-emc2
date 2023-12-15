@@ -6,11 +6,7 @@ use Formation\Controller\FormationInstanceInscritController;
 use Formation\Controller\FormationInstanceInscritControllerFactory;
 use Formation\Controller\PlanDeFormationController;
 use Formation\Controller\ProjetPersonnelController;
-use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceFactory;
-use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -29,10 +25,6 @@ return [
                 [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
-                        'inscription-formation',
-                        'inscription',
-                        'desinscription',
-
                         'formations',
                         'inscriptions',
                         'inscription-interne',
@@ -40,26 +32,6 @@ return [
                     ],
                     'roles' => [
                         'Agent',
-                    ],
-                ],
-                [
-                    'controller' => FormationInstanceInscritController::class,
-                    'action' => [
-                        'valider-responsable',
-                        'refuser-responsable',
-                    ],
-                    'privileges' => [
-                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_SUPERIEURE,
-                    ],
-                ],
-                [
-                    'controller' => FormationInstanceInscritController::class,
-                    'action' => [
-                        'valider-drh',
-                        'refuser-drh',
-                    ],
-                    'privileges' => [
-                        FormationinstanceinscritPrivileges::INSCRIPTION_VALIDER_GESTIONNAIRE,
                     ],
                 ],
             ],
@@ -177,66 +149,21 @@ return [
                     ],
                 ],
             ],
-            'inscription-formation' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/inscription-formation',
-                    'defaults' => [
-                        'controller' => FormationInstanceInscritController::class,
-                        'action' => 'inscription-formation',
-                    ],
-                ],
-            ],
-            'formation-instance' => [
-                'child_routes' => [
-                    'inscription' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/inscription/:formation-instance/:agent',
-                            'defaults' => [
-                                'controller' => FormationInstanceInscritController::class,
-                                'action' => 'inscription',
-                            ],
-                        ],
-                    ],
-                    'desinscription' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/desinscription/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceInscritController::class,
-                                'action' => 'desinscription',
-                            ],
-                        ],
-                    ],
-                    'valider-responsable' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/valider-responsable/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceInscritController::class,
-                                'action' => 'valider-responsable',
-                            ],
-                        ],
-                    ],
-                    'refuser-responsable' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/refuser-responsable/:inscrit',
-                            'defaults' => [
-                                'controller' => FormationInstanceInscritController::class,
-                                'action' => 'refuser-responsable',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+//            'inscription-formation' => [
+//                'type' => Literal::class,
+//                'options' => [
+//                    'route' => '/inscription-formation',
+//                    'defaults' => [
+//                        'controller' => FormationInstanceInscritController::class,
+//                        'action' => 'inscription-formation',
+//                    ],
+//                ],
+//            ],
         ],
     ],
 
     'service_manager' => [
         'factories' => [
-            FormationInstanceInscritService::class => FormationInstanceInscritServiceFactory::class,
         ],
     ],
     'controllers' => [

@@ -2,11 +2,10 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Role\RoleProvider as AppRoleProvider;
-use Application\Entity\Db\Agent;
 use Application\Provider\Template\TexteTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
@@ -16,8 +15,10 @@ use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Structure\Controller\StructureController;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
@@ -30,8 +31,6 @@ use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Service\Role\RoleServiceAwareTrait;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
@@ -48,10 +47,10 @@ class IndexController extends AbstractActionController
 
     use FichePosteServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
 
-    public function indexAction() : ViewModel|Response
+    public function indexAction(): ViewModel|Response
     {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
         $texte = $rendu->getCorps();
@@ -98,36 +97,42 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function indexRessourcesAction() : ViewModel
+    public function indexRessourcesAction(): ViewModel
     {
         return new ViewModel();
     }
 
-    public function indexGestionAction() : ViewModel
+    public function indexGestionAction(): ViewModel
     {
         return new ViewModel();
     }
 
-    public function indexAdministrationAction() : ViewModel
+    public function indexAdministrationAction(): ViewModel
     {
         return new ViewModel();
     }
 
-    public function indexSuperieurAction() : ViewModel
+    public function indexSuperieurAction(): ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); },$this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
+        $agents = array_map(function (AgentSuperieur $a) {
+            return $a->getAgent();
+        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($agent));
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
-        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
+        usort($agents, function (Agent $a, Agent $b) {
+            return $a->getNomUsuel() . " " . $a->getPrenom() > $b->getNomUsuel() . " " . $b->getPrenom();
+        });
 
         /** Campagne d'entretien professionnel ************************************************************************/
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() > $b->getDateDebut();
+        });
 
         /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
@@ -137,10 +142,10 @@ class IndexController extends AbstractActionController
 
         /** Récupération des fiches de postes *************************************************************************/
         $fichesDePoste = [];
-        foreach ($agents as $agent) {
-            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
-            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-            $fichesDePoste[$agent->getId()] = $fiches;
+        foreach ($agents as $agent_) {
+            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
+            $fichesDePoste[$agent_->getId()] = $fiches;
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
@@ -156,22 +161,28 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function indexAutoriteAction() : ViewModel
+    public function indexAutoriteAction(): ViewModel
     {
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); },$this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
+        $agents = array_map(function (AgentAutorite $a) {
+            return $a->getAgent();
+        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
 
-        usort($agents, function (Agent $a, Agent $b) { return $a->getNomUsuel()." ".$a->getPrenom() > $b->getNomUsuel()." ".$b->getPrenom();});
+        usort($agents, function (Agent $a, Agent $b) {
+            return $a->getNomUsuel() . " " . $a->getPrenom() > $b->getNomUsuel() . " " . $b->getPrenom();
+        });
 
         /** Campagne d'entretien professionnel ************************************************************************/
-        $last =  $this->getCampagneService()->getLastCampagne();
-        $campagnes =  $this->getCampagneService()->getCampagnesActives();
+        $last = $this->getCampagneService()->getLastCampagne();
+        $campagnes = $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) {
+            return $a->getDateDebut() > $b->getDateDebut();
+        });
 
         /** Récuperation des eps **************************************************************************************/
         $entretiens = [];
@@ -181,10 +192,10 @@ class IndexController extends AbstractActionController
 
         /** Récupération des fiches de postes *************************************************************************/
         $fichesDePoste = [];
-        foreach ($agents as $agent) {
-            if ($agent instanceof StructureAgentForce) $agent = $agent->getAgent();
-            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent);
-            $fichesDePoste[$agent->getId()] = $fiches;
+        foreach ($agents as $agent_) {
+            if ($agent_ instanceof StructureAgentForce) $agent_ = $agent_->getAgent();
+            $fiches = $this->getFichePosteService()->getFichesPostesByAgent($agent_);
+            $fichesDePoste[$agent_->getId()] = $fiches;
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
@@ -199,7 +210,7 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function infosAction() : ViewModel
+    public function infosAction(): ViewModel
     {
         return new ViewModel();
     }

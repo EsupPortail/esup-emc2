@@ -9,7 +9,7 @@ use Application\Service\AgentGrade\AgentGradeService;
 use Application\Service\AgentStatut\AgentStatutService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Inscription\InscriptionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -32,7 +32,7 @@ class AgentControllerFactory
          * @var AgentStatutService $statutService
          * @var AgentSuperieurService $agentSuperieurService
          * @var DemandeExterneService $demandeExterneService
-         * @var FormationInstanceInscritService $inscriptionService
+         * @var InscriptionService $inscriptionService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
@@ -42,7 +42,7 @@ class AgentControllerFactory
         $gradeService = $container->get(AgentGradeService::class);
         $statutService = $container->get(AgentStatutService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
-        $inscriptionService = $container->get(FormationInstanceInscritService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $userService = $container->get(UserService::class);
 
         $controller = new AgentController();
@@ -53,7 +53,7 @@ class AgentControllerFactory
         $controller->setAgentGradeService($gradeService);
         $controller->setAgentStatutService($statutService);
         $controller->setDemandeExterneService($demandeExterneService);
-        $controller->setFormationInstanceInscritService($inscriptionService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setUserService($userService);
 
         return $controller;

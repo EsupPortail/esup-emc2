@@ -9,7 +9,6 @@ use Application\Service\FichePoste\FichePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -20,7 +19,8 @@ use UnicaenRenderer\Service\Rendu\RenduService;
 use UnicaenUtilisateur\Service\Role\RoleService;
 use UnicaenUtilisateur\Service\User\UserService;
 
-class IndexControllerFactory {
+class IndexControllerFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -28,7 +28,7 @@ class IndexControllerFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : IndexController
+    public function __invoke(ContainerInterface $container): IndexController
     {
         /**
          * @var AgentService $agentService
@@ -45,7 +45,6 @@ class IndexControllerFactory {
          *
          * @var FichePosteService $fichePosteService
          * @var EntretienProfessionnelService $entretienProfessionelService
-         * @var FormationInstanceInscritService $formationInstanceinscritService
          * @var DemandeExterneService $demandeExterneService
          *
          */
@@ -62,7 +61,6 @@ class IndexControllerFactory {
 
         $fichePosteService = $container->get(FichePosteService::class);
         $entretienProfessionelService = $container->get(EntretienProfessionnelService::class);
-        $formationInstanceinscritService = $container->get(FormationInstanceInscritService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
 
         /** @var IndexController $controller */
@@ -81,7 +79,6 @@ class IndexControllerFactory {
 
         $controller->setFichePosteService($fichePosteService);
         $controller->setEntretienProfessionnelService($entretienProfessionelService);
-        $controller->setFormationInstanceInscritService($formationInstanceinscritService);
         $controller->setDemandeExterneService($demandeExterneService);
         return $controller;
     }

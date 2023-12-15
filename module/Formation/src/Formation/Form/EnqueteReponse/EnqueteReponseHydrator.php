@@ -7,17 +7,13 @@ namespace Formation\Form\EnqueteReponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\EnqueteQuestion;
 use Formation\Entity\Db\EnqueteReponse;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class EnqueteReponseHydrator implements HydratorInterface {
     use EntityManagerAwareTrait;
 
-    /**
-     * @param object|ArrayCollection $object
-     * @return array
-     */
     public function extract(object $object) : array
     {
         $data = [];
@@ -32,12 +28,7 @@ class EnqueteReponseHydrator implements HydratorInterface {
 
     }
 
-    /**
-     * @param array $data
-     * @param FormationInstanceInscrit $object
-     * @return FormationInstanceInscrit
-     */
-    public function hydrate(array $data, $object): object
+    public function hydrate(array $data, object $object): object
     {
         foreach($object as $item) {
             [$question, $reponse] = $item;

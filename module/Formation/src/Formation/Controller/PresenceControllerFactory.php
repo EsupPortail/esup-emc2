@@ -3,7 +3,6 @@
 namespace Formation\Controller;
 
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;

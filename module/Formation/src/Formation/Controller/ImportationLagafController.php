@@ -8,8 +8,8 @@ use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\InscriptionFrais;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\LAGAFStagiaire;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
@@ -18,9 +18,9 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\InscriptionFrais\FormationInstanceFraisServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
+use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
@@ -37,8 +37,8 @@ class ImportationLagafController extends AbstractActionController
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use SeanceServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
-    use FormationInstanceFraisServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
+    use InscriptionFraisServiceAwareTrait;
     use PresenceAwareTrait;
     use StagiaireServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -328,11 +328,12 @@ class ImportationLagafController extends AbstractActionController
                         if (!$aaa instanceof DateTime) throw new RuntimeException("Pb de date : " . $date);
                         $seance->setJour($aaa);
 
-                        $arrayDebut = null; $arrayFin = null;
+                        $arrayDebut = null;
+                        $arrayFin = null;
                         $debut = explode(" ", $plage[$position_debut]);
-                        if (isset($debut[1])) $arrayDebut = explode(":",$debut[1]);
+                        if (isset($debut[1])) $arrayDebut = explode(":", $debut[1]);
                         $fin = explode(" ", $plage[$position_fin]);
-                        if (isset($fin[1])) $arrayFin = explode(":",$fin[1]);
+                        if (isset($fin[1])) $arrayFin = explode(":", $fin[1]);
                         if ($arrayDebut) $seance->setDebut($arrayDebut[0] . ":" . $arrayDebut[1]);
                         if ($arrayFin) $seance->setFin($arrayFin[0] . ":" . $arrayFin[1]);
 
@@ -476,11 +477,11 @@ class ImportationLagafController extends AbstractActionController
         $lagaf = $this->sourceLagaf;
 
         if ($id) {
-            $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsByInscrit(current($agents));
+            $inscrits_tmp = $this->getInscriptionService()->getInscriptionsByAgent(current($agents));
         } else {
-            $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
+            $inscrits_tmp = $this->getInscriptionService()->getInscriptions();
         }
-        $inscrits_tmp = array_filter($inscrits_tmp, function (FormationInstanceInscrit $a) use ($lagaf) {
+        $inscrits_tmp = array_filter($inscrits_tmp, function (Inscription $a) use ($lagaf) {
             return $a->getSource() === $lagaf;
         });
         $inscrits = [];
@@ -506,19 +507,20 @@ class ImportationLagafController extends AbstractActionController
 
             if ($id === null or $st_nstagiaire == $id) {
 
-                //            $inscrit = $this->getFormationInstanceInscritService()->getFormationInstanceInscritBySource(null, $st_instance . "-" . $st_nstagiaire);
                 if ($agent !== null and $instance !== null and !isset($inscrits[$st_iscrit_id])) {
-                    $inscription = new FormationInstanceInscrit();
-                    $inscription->setInstance($instance);
+                    $inscription = new Inscription();
+                    $inscription->setSession($instance);
                     $inscription->setAgent($agent);
                     $inscription->setListe("principale");
                     $inscription->setSource($this->sourceLagaf);
                     $inscription->setIdSource($st_iscrit_id);
-                    $inscription->setHistoCreation(new DateTime()); $inscription->setHistoModification(new DateTime());
-                    $inscription->setHistoCreateur($emc2); $inscription->setHistoModificateur($emc2);
-                    $this->getFormationInstanceInscritService()->create($inscription);
+                    $inscription->setHistoCreation(new DateTime());
+                    $inscription->setHistoModification(new DateTime());
+                    $inscription->setHistoCreateur($emc2);
+                    $inscription->setHistoModificateur($emc2);
+                    $this->getInscriptionService()->create($inscription);
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
-                    $this->getFormationInstanceInscritService()->update($inscription);
+                    $this->getInscriptionService()->update($inscription);
                     $inscriptions[] = $inscription;
 
                     $st_frepas = trim($data[$position_FRepas]);
@@ -533,7 +535,7 @@ class ImportationLagafController extends AbstractActionController
                         $frais->setInscrit($inscription);
                         $frais->setSource($this->sourceLagaf);
                         $frais->setIdSource($st_instance . "-" . $st_nstagiaire);
-                        $this->getFormationInstanceFraisService()->create($frais);
+                        $this->getInscriptionFraisService()->create($frais);
                     }
 
                     if ($id !== null) {
@@ -590,7 +592,7 @@ class ImportationLagafController extends AbstractActionController
                 $journees[$journee->getIdSource()] = $journee;
             }
         }
-        $inscrits_tmp = $this->getFormationInstanceInscritService()->getFormationsInstancesInscrits();
+        $inscrits_tmp = $this->getInscriptionService()->getInscriptions();
         $inscrits = [];
         foreach ($inscrits_tmp as $inscrit) {
             if ($inscrit->getSource() === $this->sourceLagaf) {

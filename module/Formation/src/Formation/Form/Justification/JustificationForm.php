@@ -1,13 +1,13 @@
 <?php
 
-namespace Formation\Form\Justificatif;
+namespace Formation\Form\Justification;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
-class JustificatifForm extends Form {
+class JustificationForm extends Form {
 
 
     public function init(): void
