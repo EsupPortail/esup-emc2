@@ -8,7 +8,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -127,11 +126,11 @@ class InscriptionService
             ->leftJoin('session.formation', 'formation')->addSelect('formation')
             ->orderBy('formation.libelle', 'ASC');
 
-        $qb = $qb
-            ->leftJoin('session.etats', 'etat')->addSelect('etat')
-            ->leftJoin('etat.type', 'etype')->addSelect('etype')
-            ->andWhere('etat.histoDestruction IS NULL')
-            ->andWhere('etype.code <> :code')->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE);
+//        $qb = $qb
+//            ->leftJoin('session.etats', 'etat')->addSelect('etat')
+//            ->leftJoin('etat.type', 'etype')->addSelect('etype')
+//            ->andWhere('etat.histoDestruction IS NULL')
+//            ->andWhere('etype.code <> :code')->setParameter('code', SessionEtats::ETAT_CLOTURE_INSTANCE);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -162,7 +161,7 @@ class InscriptionService
     /**
      * @param Agent[] $agents
      * @param int|null $annee
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getInscriptionsValideesByAgents(array $agents, ?int $annee): array
     {
@@ -174,7 +173,7 @@ class InscriptionService
     /**
      * @param Agent[] $agents
      * @param int|null $annee
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getInscriptionsNonValideesByAgents(array $agents, ?int $annee): array
     {
@@ -187,7 +186,7 @@ class InscriptionService
      * @param Agent[] $agents
      * @param EtatType[] $etats
      * @param int|null $annee
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
     public function getInscriptionsByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
     {
@@ -196,15 +195,17 @@ class InscriptionService
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
         $qb = $this->createQueryBuilder()
-            ->andWhere('inscrit.histoDestruction IS NULL')
-            ->andWhere('inscritetattype.code in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('inscription.histoDestruction IS NULL')
+            ->andWhere('session.histoDestruction IS NULL')
             ->andWhere('agent in (:agents)')->setParameter('agents', $agents)
-            ->andWhere('finstance.histoDestruction IS NULL');
+        ;
+
+        $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', $etats);
 
         $result = $qb->getQuery()->getResult();
-        $result = array_filter($result, function (FormationInstanceInscrit $a) use ($debut, $fin) {
-            $sessionDebut = DateTime::createFromFormat('d/m/Y', $a->getInstance()->getDebut());
-            $sessionFin = DateTime::createFromFormat('d/m/Y', $a->getInstance()->getFin());
+        $result = array_filter($result, function (Inscription $a) use ($debut, $fin) {
+            $sessionDebut = DateTime::createFromFormat('d/m/Y', $a->getSession()->getDebut());
+            $sessionFin = DateTime::createFromFormat('d/m/Y', $a->getSession()->getFin());
             return ($sessionDebut >= $debut && $sessionFin <= $fin);
         });
         return $result;
@@ -212,18 +213,21 @@ class InscriptionService
 
     public function getInscriptionsWithFiltre(array $params)
     {
-        $qb = $this->createQueryBuilder()->orderBy('inscrit.histoCreation', 'asc');
+        $qb = $this->createQueryBuilder()->orderBy('inscription.histoCreation', 'asc');
 
-        if (isset($params['etat'])) $qb = $qb->andWhere('inscritetat.type = :etat')->setParameter('etat', $params['etat']);
+        if (isset($params['etat'])) {
+            $qb = Inscription::decorateWithEtatsCodes($qb, 'inscription', [$params['etat']]);
+        }
         if (isset($params['historise'])) {
-            if ($params['historise'] === '1') $qb = $qb->andWhere('inscrit.histoDestruction IS NOT NULL');
-            if ($params['historise'] === '0') $qb = $qb->andWhere('inscrit.histoDestruction IS NULL');
+            if ($params['historise'] === '1') $qb = $qb->andWhere('inscription.histoDestruction IS NOT NULL');
+            if ($params['historise'] === '0') $qb = $qb->andWhere('inscription.histoDestruction IS NULL');
         }
         if (isset($params['annee']) and $params['annee'] !== '') {
             $annee = (int)$params['annee'];
             $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
             $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
             $qb = $qb
+                ->leftJoin('session.journees', 'journee')->addSelect('journee')
                 ->andWhere('journee.jour >= :debut')->setParameter('debut', $debut)
                 ->andWhere('journee.jour <= :fin')->setParameter('fin', $fin);
         }

@@ -2,12 +2,12 @@
 
 /**
  * @var Agent $agent
- * @var Formation[] $formations
+ * @var Inscription[] $formations
  */
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
-use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
 
@@ -35,7 +35,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
     <?php foreach ($formations as $inscription) : ?>
         <div class="row formation-inscription">
             <div class="col-md-7 description">
-                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
+                <?php echo $this->formationInstanceInformations($inscription->getSession(), 'bloc'); ?>
                 <br/>
                 <br/>
             </div>
@@ -46,7 +46,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                         Formation gérée par <?php echo $inscription->getSource(); ?>
                     </div>
                 <?php else : ?>
-                    <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
+                    <?php if ($inscription->getSession()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
                         <div class="alert alert-warning">
                             <span class="icon icon-information"></span>
                             Enquête non remplie

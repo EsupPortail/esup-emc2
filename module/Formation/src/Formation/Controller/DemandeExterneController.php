@@ -358,7 +358,7 @@ class DemandeExterneController extends AbstractActionController {
     public function parapheurAction() : ViewModel
     {
         $paramsInternes = [
-            'etat' => $this->getEtatTypeService()->getEtatTypeByCode(InscriptionEtats::ETAT_VALIDER_RESPONSABLE),
+            'etat' => InscriptionEtats::ETAT_VALIDER_RESPONSABLE,
             'historise' => '0',
             'annee' => Formation::getAnnee(),
         ];

@@ -177,7 +177,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $instance = $inscription->getSession();
 
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/valider-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
 
@@ -213,7 +213,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $instance = $inscription->getSession();
 
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
 
@@ -250,7 +250,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $session = $inscription->getSession();
 
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
 
@@ -285,7 +285,7 @@ class InscriptionController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
         $instance = $inscription->getSession();
 
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-drh', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
 

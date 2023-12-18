@@ -114,6 +114,7 @@ return [
                 'options' => [
                     'route' => '/mes-formations[/:agent]',
                     'defaults' => [
+                        /** @see FormationInstanceInscritController::formationsAction() */
                         'controller' => FormationInstanceInscritController::class,
                         'action' => 'formations',
                     ],

@@ -12,7 +12,6 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Controller\FormationInstanceController;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
@@ -298,15 +297,19 @@ class FormationInstanceService
             $this->getNotificationService()->triggerListePrincipale($inscrit);
             $agent = $inscrit->getAgent();
             $formation = $inscrit->getSession()->getFormation();
-            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-            if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
+            if ($inscrit->isInterne()) {
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
+            }
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
             $this->getNotificationService()->triggerListeComplementaire($inscrit);
             $agent = $inscrit->getAgent();
             $formation = $inscrit->getSession()->getFormation();
-            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-            if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+            if ($inscrit->isInterne()) {
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+            }
         }
 
         $debut = $instance->getDebut();

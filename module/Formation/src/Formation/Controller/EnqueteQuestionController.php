@@ -50,7 +50,7 @@ class EnqueteQuestionController extends AbstractActionController
 
         //todo exploiter le filtre pour réduire
         if ($session) $reponses = array_filter($reponses, function (EnqueteReponse $r) use ($session) {
-            return $r->getInscription()->getInstance() === $session;
+            return $r->getInscription()->getSession() === $session;
         });
         //todo fin
 

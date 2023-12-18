@@ -12,13 +12,13 @@ use Formation\Provider\Etat\SessionEtats;
 
 $formationValidees = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->getInstance()->estPrete() and $inscription->getListe() === Inscription::PRINCIPALE) $formationValidees[] = $inscription;
+    if ($inscription->getSession()->estPrete() and $inscription->getListe() === Inscription::PRINCIPALE) $formationValidees[] = $inscription;
 }
 
 $formationsAttentes = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->getInstance()->estPrete() and $inscription->getListe() !== Inscription::PRINCIPALE) $formationsAttentes[] = $inscription;
-    if ($inscription->getInstance()->estPreparation()) $formationsAttentes[] = $inscription;
+    if ($inscription->getSession()->estPrete() and $inscription->getListe() !== Inscription::PRINCIPALE) $formationsAttentes[] = $inscription;
+    if ($inscription->getSession()->estPreparation()) $formationsAttentes[] = $inscription;
 }
 
 ?>
@@ -31,7 +31,7 @@ foreach ($inscriptions as $inscription) {
 <?php else : ?>
     <?php foreach ($formationValidees as $inscription) : ?>
         <?php
-        $instance = $inscription->getInstance();
+        $instance = $inscription->getSession();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
         ?>
         <div class="row formation-inscription">
@@ -73,7 +73,7 @@ foreach ($inscriptions as $inscription) {
 <?php else : ?>
     <?php foreach ($formationsAttentes as $inscription) : ?>
         <?php
-        $instance = $inscription->getInstance();
+        $instance = $inscription->getSession();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
         ?>
         <div class="row formation-inscription">
@@ -85,7 +85,7 @@ foreach ($inscriptions as $inscription) {
                         <a
                             <?php /** @see \Formation\Controller\InscriptionController::desinscriptionAction() */?>
                                 href="
-        <?php echo $this->url('formation/inscription/desinscription', ['inscription' => $inscription->getId()], [], true); ?>"
+        <?php echo $this->url('formation/inscription/annuler-inscription', ['inscription' => $inscription->getId()], [], true); ?>"
                                 class="btn btn-danger action ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-unchecked"> J'annule mon inscription </span>

@@ -1,12 +1,12 @@
 <?php
 
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
 /**
  * @see \Formation\Controller\DemandeExterneController::parapheurAction()
- * @var FormationInstanceInscrit[] $demandesInternes
+ * @var Inscription[] $demandesInternes
  * @var DemandeExterne[] $demandesExternes
  */
 
@@ -33,7 +33,7 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 <table class="table table-condensed table-hover">
     <thead>
     <tr>
-        <th class="agent"> Agent             </th>
+        <th class="agent"> Agent </th>
         <th class="formation"> Formation </th>
         <th> Type </th>
         <th class="etat"> État </th>
@@ -44,15 +44,15 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
     <?php foreach ($demandesInternes as $demande) : ?>
         <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
             <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
-            <td> <?php echo $demande->getInstance()->getFormation()->getLibelle(); ?> </td>
-            <td> <?php echo $demande->getInstance()->getType(); ?> </td>
+            <td> <?php echo $demande->getSession()->getFormation()->getLibelle(); ?> </td>
+            <td> <?php echo $demande->getSession()->getType(); ?> </td>
             <td> <?php
                 echo $this->etatinstance($demande->getEtatActif());
                 ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
-                    <?php /** @see \Formation\Controller\FormationInstanceInscritController::afficherAgentAction() */ ?>
-                    <a href="<?php echo $this->url('formation-instance/afficher-agent', ['inscrit' => $demande->getId()], [], true); ?>"
+                    <?php /** @see \Formation\Controller\AgentController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('formation/agent', ['agent' => $demande->getAgent()->getId()], [], true); ?>"
                        class="ajax-modal">
                         <span class="icon icon-voir"></span></a>
                 <?php else : ?>
@@ -71,31 +71,21 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
                     <?php if ($demande->estNonHistorise()) : ?>
-                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::historiserAgentAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $demande->getId()], [], true); ?>"
-                           title="Supprimer la demande externe"
+                        <?php /** @see \Formation\Controller\InscriptionController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $demande->getId()], [], true); ?>"
+                           title="Supprimer la demande d'inscription"
                         >
                             <span class="icon icon-historiser"></span></a>
                     <?php else : ?>
-                        <?php /** @see \Formation\Controller\FormationInstanceInscritController::restaurerAgentAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/restaurer-agent', ["inscrit" => $demande->getId()], [], true); ?>"
-                           title="Restaurer la demande externe"
+                        <?php /** @see \Formation\Controller\InscriptionController::restaurerAgentAction() */ ?>
+                        <a href="<?php echo $this->url('formation/inscription/restaurer', ["inscription" => $demande->getId()], [], true); ?>"
+                           title="Restaurer la demande d'inscription"
                         >
                             <span class="icon icon-restaurer"></span></a>
                     <?php endif; ?>
                 <?php else : ?>
                     <span class="icon icon-historiser nope"></span>
                 <?php endif; ?>
-<!--                --><?php //if ($canSupprimer) : ?>
-<!--                    --><?php ///** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?><!--"-->
-<!--                       class="ajax-modal" data-event="modification"-->
-<!--                       title="Supprimer définitivement la demande externe"-->
-<!--                    >-->
-<!--                        <span class="icon icon-unchecked text-danger"></span></a>-->
-<!--                --><?php //else : ?>
-<!--                    <span class="icon icon-unchecked nope"></span>-->
-<!--                --><?php //endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -165,16 +155,6 @@ $canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
                 <?php else : ?>
                     <span class="icon icon-historiser nope"></span>
                 <?php endif; ?>
-<!--                --><?php //if ($canSupprimer) : ?>
-<!--                    --><?php ///** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
-<!--                    <a href="--><?php //echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?><!--"-->
-<!--                       class="ajax-modal" data-event="modification"-->
-<!--                       title="Supprimer définitivement la demande externe"-->
-<!--                    >-->
-<!--                        <span class="icon icon-unchecked text-danger"></span></a>-->
-<!--                --><?php //else : ?>
-<!--                    <span class="icon icon-unchecked nope"></span>-->
-<!--                --><?php //endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

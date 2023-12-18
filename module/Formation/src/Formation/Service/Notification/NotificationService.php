@@ -222,7 +222,7 @@ class NotificationService {
         ];
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_LISTE_PRINCIPALE, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail = $this->getMailService()->sendMail($inscrit->getIndividu()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
@@ -275,8 +275,7 @@ class NotificationService {
 
     public function triggerConvocation(Inscription $inscrit) : ?Mail
     {
-        $instance = null;
-        if ($instance instanceof Inscription) $instance = $inscrit->getSession();
+        $instance = $inscrit->getSession();
         if ($instance === null) throw new RuntimeException("Aucune session d'identifié pour cette inscription");
         if (!$instance->isMailActive()) return null;
 
@@ -315,7 +314,7 @@ class NotificationService {
             'UrlService' => $this->getUrlService()
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_DEMANDE_RETOUR, $vars);
-        $mail = $this->getMailService()->sendMail($inscrit->getAgent()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail = $this->getMailService()->sendMail($inscrit->getIndividu()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 
