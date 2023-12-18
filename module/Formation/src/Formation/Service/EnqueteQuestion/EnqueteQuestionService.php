@@ -6,13 +6,14 @@ use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\EnqueteQuestion;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class EnqueteQuestionService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -22,12 +23,8 @@ class EnqueteQuestionService {
      */
     public function create(EnqueteQuestion $question) : EnqueteQuestion
     {
-        try {
-            $this->getEntityManager()->persist($question);
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteQuestion]",0, $e);
-        }
+        $this->getObjectManager()->persist($question);
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -37,11 +34,7 @@ class EnqueteQuestionService {
      */
     public function update(EnqueteQuestion $question) : EnqueteQuestion
     {
-        try {
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteQuestion]",0, $e);
-        }
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -51,12 +44,8 @@ class EnqueteQuestionService {
      */
     public function historise(EnqueteQuestion $question) : EnqueteQuestion
     {
-        try {
-            $question->historiser();
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteQuestion]",0, $e);
-        }
+        $question->historiser();
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -66,12 +55,8 @@ class EnqueteQuestionService {
      */
     public function restore(EnqueteQuestion $question) : EnqueteQuestion
     {
-        try {
-            $question->dehistoriser();
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteQuestion]",0, $e);
-        }
+        $question->dehistoriser();
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -81,12 +66,8 @@ class EnqueteQuestionService {
      */
     public function delete(EnqueteQuestion $question) : EnqueteQuestion
     {
-        try {
-            $this->getEntityManager()->remove($question);
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteQuestion]",0, $e);
-        }
+        $this->getObjectManager()->remove($question);
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -94,11 +75,7 @@ class EnqueteQuestionService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->createQueryBuilder('question');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".EnqueteQuestion::class."]",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(EnqueteQuestion::class)->createQueryBuilder('question');
         return $qb;
     }
 

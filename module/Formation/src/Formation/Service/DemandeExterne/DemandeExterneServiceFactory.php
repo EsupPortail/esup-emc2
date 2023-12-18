@@ -57,7 +57,7 @@ class DemandeExterneServiceFactory
         $validationTypeService = $container->get(ValidationTypeService::class);
 
         $service = new DemandeExterneService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setEtatTypeService($etatTypeService);
         $service->setFormationService($formationService);

@@ -153,7 +153,6 @@ class FichePosteService {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);
         }
 
-        $qb = FichePoste::decorateWithEtats($qb, 'fiche');
         return $qb;
     }
 
@@ -226,11 +225,9 @@ class FichePosteService {
             ->setParameter('agent', $agent)
             ->andWhere('fiche.histoCreation <= :date')
             ->andWhere('fiche.histoDestruction IS NULL OR fiche.histoDestruction >= :date')
-            ->andWhere('type.code = :OK AND type.code = :SIGNEE')
             ->setParameter('date', $date)
-            ->setParameter('OK', FichePosteEtats::ETAT_CODE_OK)
-            ->setParameter('SIGNEE', FichePosteEtats::ETAT_CODE_SIGNEE)
             ;
+        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_OK, FichePosteEtats::ETAT_CODE_SIGNEE]);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch(NonUniqueResultException $e) {
@@ -874,9 +871,9 @@ EOS;
         $qb = $this->createQueryBuilder()
             ->andWhere('fiche.finValidite IS NULL')
             ->andWhere('fiche.agent =  :agent')
-            ->andWhere('etat.code = :SIGNE')
             ->setParameter('agent', $agent)
-            ->setParameter('SIGNE', FichePosteEtats::ETAT_CODE_SIGNEE);
+        ;
+        $qb = FichePoste::decorateWithEtatsCodes($qb, 'fiche', [FichePosteEtats::ETAT_CODE_SIGNEE]);
         $result = $qb->getQuery()->getResult();
         return $result;
 

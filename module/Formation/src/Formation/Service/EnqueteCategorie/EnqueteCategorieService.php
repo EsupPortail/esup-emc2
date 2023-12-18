@@ -2,17 +2,15 @@
 
 namespace Formation\Service\EnqueteCategorie;
 
-use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\EnqueteCategorie;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class EnqueteCategorieService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -23,12 +21,8 @@ class EnqueteCategorieService {
      */
     public function create(EnqueteCategorie $question) : EnqueteCategorie
     {
-        try {
-            $this->getEntityManager()->persist($question);
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteCategorie]",0, $e);
-        }
+        $this->getObjectManager()->persist($question);
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -38,11 +32,7 @@ class EnqueteCategorieService {
      */
     public function update(EnqueteCategorie $question) : EnqueteCategorie
     {
-        try {
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteCategorie]",0, $e);
-        }
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -52,12 +42,8 @@ class EnqueteCategorieService {
      */
     public function historise(EnqueteCategorie $question) : EnqueteCategorie
     {
-        try {
-            $question->historiser();
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteCategorie]",0, $e);
-        }
+        $question->historiser();
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -67,12 +53,8 @@ class EnqueteCategorieService {
      */
     public function restore(EnqueteCategorie $question) : EnqueteCategorie
     {
-        try {
-            $question->dehistoriser();
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteCategorie]",0, $e);
-        }
+        $question->dehistoriser();
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -82,12 +64,8 @@ class EnqueteCategorieService {
      */
     public function delete(EnqueteCategorie $question) : EnqueteCategorie
     {
-        try {
-            $this->getEntityManager()->remove($question);
-            $this->getEntityManager()->flush($question);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survnue en base pour une entité [EnqueteCategorie]",0, $e);
-        }
+        $this->getObjectManager()->remove($question);
+        $this->getObjectManager()->flush($question);
         return $question;
     }
 
@@ -95,11 +73,7 @@ class EnqueteCategorieService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->createQueryBuilder('categorie');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilde de [".EnqueteCategorie::class."]",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(EnqueteCategorie::class)->createQueryBuilder('categorie');
         return $qb;
     }
 
@@ -145,12 +119,10 @@ class EnqueteCategorieService {
 
     }
 
-    /** FACADE ********************************************************************************************************/
-
     public function getCategoriesAsOptions() : array
     {
         /** @var EnqueteCategorie $categories */
-        $categories = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->findAll();
+        $categories = $this->getObjectManager()->getRepository(EnqueteCategorie::class)->findAll();
         $options = [];
         foreach ($categories as $categorie) {
             $options[$categorie->getId()] = $categorie->getLibelle();
@@ -158,5 +130,6 @@ class EnqueteCategorieService {
         return $options;
     }
 
+    /** FACADE ********************************************************************************************************/
 
 }

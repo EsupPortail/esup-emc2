@@ -23,7 +23,7 @@ class AbonnementServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new AbonnementService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

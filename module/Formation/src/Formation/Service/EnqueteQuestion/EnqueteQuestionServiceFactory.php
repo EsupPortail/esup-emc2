@@ -23,7 +23,7 @@ class EnqueteQuestionServiceFactory {
         $entitymanager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new EnqueteQuestionService();
-        $service->setEntityManager($entitymanager);
+        $service->setObjectManager($entitymanager);
         return $service;
     }
 }

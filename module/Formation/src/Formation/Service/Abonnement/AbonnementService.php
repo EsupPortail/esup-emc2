@@ -4,74 +4,51 @@ namespace Formation\Service\Abonnement;
 
 use Application\Entity\Db\Agent;
 use DateTime;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationAbonnement;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
-use UnicaenIndicateur\Entity\Db\Abonnement;
 
 class AbonnementService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** Gestion des entités ***************************************************************/
 
     public function create(FormationAbonnement $abonnement): FormationAbonnement
     {
-        try {
-            $this->getEntityManager()->persist($abonnement);
-            $this->getEntityManager()->flush($abonnement);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-        }
+        $this->getObjectManager()->persist($abonnement);
+        $this->getObjectManager()->flush($abonnement);
         return $abonnement;
     }
 
     public function update(FormationAbonnement $abonnement): FormationAbonnement
     {
-        try {
-            $this->getEntityManager()->flush($abonnement);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-        }
+        $this->getObjectManager()->flush($abonnement);
         return $abonnement;
     }
 
     public function historise(FormationAbonnement $abonnement): FormationAbonnement
     {
-        try {
-            $abonnement->historiser();
-            $this->getEntityManager()->flush($abonnement);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-        }
+        $abonnement->historiser();
+        $this->getObjectManager()->flush($abonnement);
         return $abonnement;
     }
 
     public function restore(FormationAbonnement $abonnement): FormationAbonnement
     {
-        try {
-            $abonnement->dehistoriser();
-            $this->getEntityManager()->flush($abonnement);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-        }
+        $abonnement->dehistoriser();
+        $this->getObjectManager()->flush($abonnement);
         return $abonnement;
     }
 
     public function delete(FormationAbonnement $abonnement): FormationAbonnement
     {
-        try {
-            $this->getEntityManager()->remove($abonnement);
-            $this->getEntityManager()->flush($abonnement);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée", 0, $e);
-        }
+        $this->getObjectManager()->remove($abonnement);
+        $this->getObjectManager()->flush($abonnement);
         return $abonnement;
     }
 
@@ -79,13 +56,10 @@ class AbonnementService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(FormationAbonnement::class)->createQueryBuilder('abonnement')
-                ->join('abonnement.agent', 'agent')->addSelect('agent')
-                ->join('abonnement.formation', 'formation')->addSelect('formation');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".Abonnement::class."]", 0 ,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(FormationAbonnement::class)->createQueryBuilder('abonnement')
+            ->join('abonnement.agent', 'agent')->addSelect('agent')
+            ->join('abonnement.formation', 'formation')->addSelect('formation')
+        ;
         return $qb;
     }
 

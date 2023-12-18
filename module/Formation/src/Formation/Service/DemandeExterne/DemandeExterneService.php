@@ -5,15 +5,13 @@ namespace Formation\Service\DemandeExterne;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateTime;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Presence;
 use Formation\Entity\Db\Seance;
@@ -30,7 +28,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -39,7 +36,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
 class DemandeExterneService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
@@ -57,55 +54,35 @@ class DemandeExterneService
 
     public function create(DemandeExterne $demande): DemandeExterne
     {
-        try {
-            $this->getEntityManager()->persist($demande);
-            $this->getEntityManager()->flush($demande);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en BD.", 0, $e);
-        }
+        $this->getObjectManager()->persist($demande);
+        $this->getObjectManager()->flush($demande);
         return $demande;
     }
 
     public function update(DemandeExterne $demande): DemandeExterne
     {
-        try {
-            $this->getEntityManager()->flush($demande);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en BD.", 0, $e);
-        }
+        $this->getObjectManager()->flush($demande);
         return $demande;
     }
 
     public function historise(DemandeExterne $demande): DemandeExterne
     {
-        try {
-            $demande->historiser();
-            $this->getEntityManager()->flush($demande);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en BD.", 0, $e);
-        }
+        $demande->historiser();
+        $this->getObjectManager()->flush($demande);
         return $demande;
     }
 
     public function restore(DemandeExterne $demande): DemandeExterne
     {
-        try {
-            $demande->dehistoriser();
-            $this->getEntityManager()->flush($demande);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en BD.", 0, $e);
-        }
+        $demande->dehistoriser();
+        $this->getObjectManager()->flush($demande);
         return $demande;
     }
 
     public function delete(DemandeExterne $demande): DemandeExterne
     {
-        try {
-            $this->getEntityManager()->remove($demande);
-            $this->getEntityManager()->flush($demande);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue en BD.", 0, $e);
-        }
+        $this->getObjectManager()->remove($demande);
+        $this->getObjectManager()->flush($demande);
         return $demande;
     }
 
@@ -113,16 +90,12 @@ class DemandeExterneService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
-                ->join('demande.agent', 'agent')->addSelect('agent')
-                ->join('demande.etats', 'etat')->addSelect('etat')
-                ->join('etat.type', 'type')->addSelect('type')
-                ->andWhere('etat.histoDestruction IS NULL')
-                ;
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . DemandeExterne::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(DemandeExterne::class)->createQueryBuilder('demande')
+            ->join('demande.agent', 'agent')->addSelect('agent')
+            ->join('demande.etats', 'etat')->addSelect('etat')
+            ->join('etat.type', 'type')->addSelect('type')
+            ->andWhere('etat.histoDestruction IS NULL')
+            ;
         return $qb;
     }
 
@@ -204,8 +177,6 @@ class DemandeExterneService
         return $result;
     }
 
-    /** FACADE ********************************************************************************************************/
-
     /**
      * @param Structure $structure
      * @param bool $avecStructuresFilles
@@ -255,7 +226,7 @@ class DemandeExterneService
             ->andWhere('demande.agent in (:agents)')->setParameter('agents', $agents)
             ->andWhere('demande.histoCreation >= :debut')->setParameter('debut', $debut)
             ->andWhere('demande.histoCreation <= :fin')->setParameter('fin', $fin);
-        /** @var FormationInstanceInscrit[] $result */
+        /** @var Inscription[] $result */
         $result = $qb->getQuery()->getResult();
 
         $inscriptions = [];
@@ -306,6 +277,55 @@ class DemandeExterneService
         }
         return $organismes;
     }
+
+    /**
+     * @param Agent[] $agents
+     * @param EtatType[] $etats
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
+    {
+        if ($annee === null) Formation::getAnnee();
+        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
+        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('demande.histoDestruction IS NULL')
+            ->andWhere('type.code in (:etats)')->setParameter('etats', $etats)
+            ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
+            ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
+            ->andWhere('agent in (:agents)')->setParameter('agents', $agents);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesValideesByAgents(array $agents, ?int $annee): array
+    {
+        $etats = [DemandeExterneEtats::ETAT_VALIDATION_DRH, DemandeExterneEtats::ETAT_REJETEE, DemandeExterneEtats::ETAT_TERMINEE];
+        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
+        return $result;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param int|null $annee
+     * @return DemandeExterne[]
+     */
+    public function getDemandesExternesNonValideesByAgents(array $agents, ?int $annee): array
+    {
+        $etats = [DemandeExterneEtats::ETAT_VALIDATION_AGENT, DemandeExterneEtats::ETAT_VALIDATION_RESP];
+        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
+        return $result;
+    }
+
+    /** FACADE ********************************************************************************************************/
 
     public function transformer(?DemandeExterne $demande, string $libelle, float $volume, float $suivi): FormationInstance
     {
@@ -404,50 +424,5 @@ class DemandeExterneService
         return $session;
     }
 
-    /**
-     * @param Agent[] $agents
-     * @param EtatType[] $etats
-     * @param int|null $annee
-     * @return DemandeExterne[]
-     */
-    public function getDemandesExternesValideesByAgentsAndEtats(array $agents, array $etats, ?int $annee): array
-    {
-        if ($annee === null) Formation::getAnnee();
-        $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annee);
-        $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . ($annee + 1));
 
-        $qb = $this->createQueryBuilder()
-            ->andWhere('demande.histoDestruction IS NULL')
-            ->andWhere('type.code in (:etats)')->setParameter('etats', $etats)
-            ->andWhere('demande.debut > :debut')->setParameter('debut', $debut)
-            ->andWhere('demande.debut < :fin')->setParameter('fin', $fin)
-            ->andWhere('agent in (:agents)')->setParameter('agents', $agents);
-
-        $result = $qb->getQuery()->getResult();
-        return $result;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param int|null $annee
-     * @return DemandeExterne[]
-     */
-    public function getDemandesExternesValideesByAgents(array $agents, ?int $annee): array
-    {
-        $etats = [DemandeExterneEtats::ETAT_VALIDATION_DRH, DemandeExterneEtats::ETAT_REJETEE, DemandeExterneEtats::ETAT_TERMINEE];
-        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
-        return $result;
-    }
-
-    /**
-     * @param Agent[] $agents
-     * @param int|null $annee
-     * @return DemandeExterne[]
-     */
-    public function getDemandesExternesNonValideesByAgents(array $agents, ?int $annee): array
-    {
-        $etats = [DemandeExterneEtats::ETAT_VALIDATION_AGENT, DemandeExterneEtats::ETAT_VALIDATION_RESP];
-        $result = $this->getDemandesExternesValideesByAgentsAndEtats($agents, $etats, $annee);
-        return $result;
-    }
 }
