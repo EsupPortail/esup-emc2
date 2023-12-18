@@ -466,53 +466,53 @@ create table formation_instance
 create unique index formation_instance_id_uindex
     on formation_instance (id);
 
-create table formation_instance_inscrit
+create table formation_inscription
 (
     id                        serial
-        constraint formation_instance_inscrit_pk
-        primary key,
-    instance_id               integer     not null
-        constraint formation_instance_inscrit_formation_instance_id_fk
-        references formation_instance
-        on delete cascade,
-    agent_id                  varchar(40) not null
-        constraint formation_instance_inscrit_agent_c_individu_fk
-        references agent
-        on delete cascade,
+        constraint formation_inscription_pk
+            primary key,
+    agent_id                  varchar(40)
+        constraint formation_inscription_agent_c_individu_fk
+            references agent
+            on delete cascade,
+    stagiaire_id              integer
+        constraint formation_inscription_formation_stagiaire_externe_id_fk
+            references formation_stagiaire_externe,
+    session_id                integer                 not null
+        constraint formation_inscription_formation_instance_id_fk
+            references formation_instance
+            on delete cascade,
     liste                     varchar(64),
-    source_id                 varchar(128),
-    id_source                 varchar(100),
-    histo_creation            timestamp   not null,
-    histo_createur_id         integer     not null
-        constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_1
-        references unicaen_utilisateur_user,
-    histo_modification        timestamp,
-    histo_modificateur_id     integer
-        constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_destruction         timestamp,
-    histo_destructeur_id      integer
-        constraint formation_instance_inscrit_unicaen_utilisateur_user_id_fk_3
-        references unicaen_utilisateur_user,
     justification_agent       text,
     justification_responsable text,
+    justification_drh         text,
     justification_refus       text,
-    validation_enquete        timestamp
+    validation_enquete        timestamp,
+    source_id                 varchar(128),
+    id_source                 varchar(100),
+    histo_creation            timestamp default now() not null,
+    histo_createur_id         integer   default 0     not null
+        constraint formation_inscription_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification        timestamp,
+    histo_modificateur_id     integer
+        constraint formation_inscription_unicaen_utilisateur_user_id_fk2
+            references unicaen_utilisateur_user,
+    histo_destruction         timestamp,
+    histo_destructeur_id      integer
+        constraint formation_inscription_unicaen_utilisateur_user_id_fk3
+            references unicaen_utilisateur_user
 );
 
-
-create unique index formation_instance_inscrit_id_uindex
-    on formation_instance_inscrit (id);
-
-create table formation_instance_frais
+create table formation_inscription_frais
 (
     id                    serial
-        constraint formation_instance_frais_pk
-        primary key,
-    inscrit_id            integer   not null
-        constraint formation_instance_frais_formation_instance_inscrit_id_fk
-        references formation_instance_inscrit
-        on delete cascade,
+        constraint formation_inscription_frais_pk
+            primary key,
+    inscription_id        integer   not null
+        constraint formation_inscription_frais_formation_inscription_id_fk
+            references formation_inscription
+            on delete cascade,
     frais_repas           double precision default 0,
     frais_hebergement     double precision default 0,
     frais_transport       double precision default 0,
@@ -520,18 +520,17 @@ create table formation_instance_frais
     source_id             varchar(128),
     id_source             varchar(64),
     histo_createur_id     integer   not null
-        constraint formation_instance_frais_user_id_fk
-        references unicaen_utilisateur_user,
+        constraint formation_inscription_frais_user_id_fk
+            references unicaen_utilisateur_user,
     histo_modification    timestamp,
     histo_modificateur_id integer
-        constraint formation_instance_frais_user_id_fk_2
-        references unicaen_utilisateur_user,
+        constraint formation_inscription_frais_user_id_fk_2
+            references unicaen_utilisateur_user,
     histo_destruction     timestamp,
     histo_destructeur_id  integer
-        constraint formation_instance_frais_user_id_fk_3
-        references unicaen_utilisateur_user
+        constraint formation_inscription_frais_user_id_fk_3
+            references unicaen_utilisateur_user
 );
-
 
 create unique index formation_instance_frais_id_uindex
     on formation_instance_frais (id);
@@ -612,69 +611,61 @@ create table formation_presence
 (
     id                    serial
         constraint formation_instance_presence_pk
-        primary key,
+            primary key,
     journee_id            integer                                                  not null
         constraint formation_instance_presence_formation_instance_journee_id_fk
-        references formation_seance
-        on delete cascade,
-    inscrit_id            integer                                                  not null
-        constraint formation_instance_presence_formation_instance_inscrit_id_fk
-        references formation_instance_inscrit
-        on delete cascade,
+            references formation_seance
+            on delete cascade,
+    inscrit_id            integer,
     presence_type         varchar(256)                                             not null,
     commentaire           text,
     histo_creation        timestamp                                                not null,
     histo_createur_id     integer                                                  not null
         constraint formation_instance_presence_user_id_fk
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     histo_modification    timestamp,
     histo_modificateur_id integer
         constraint formation_instance_presence_user_id_fk_2
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     histo_destruction     timestamp,
     histo_destructeur_id  integer
         constraint formation_instance_presence_user_id_fk_3
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     source_id             varchar(128),
     id_source             varchar(256),
-    statut                varchar(256) default 'NON RENSEIGNEE'::character varying not null
+    statut                varchar(256) default 'NON RENSEIGNEE'::character varying not null,
+    inscription_id        integer                                                  not null
+        constraint formation_presence_formation_inscription_id_fk
+            references formation_inscription
+            on delete cascade
 );
-
-
-create unique index formation_instance_presence_id_uindex
-    on formation_presence (id);
+create unique index formation_instance_presence_id_uindex on formation_presence (id);
 
 create table formation_enquete_reponse
 (
     id                    serial
         primary key,
-    inscription_id        integer   not null
-        constraint formation_enquete_reponse_inscription_id_fk
-        references formation_instance_inscrit
-        on delete cascade,
+    inscription_id        integer   not null,
     question_id           integer   not null
         constraint formation_enquete_reponse_question_id_fk
-        references formation_enquete_question
-        on delete cascade,
+            references formation_enquete_question
+            on delete cascade,
     niveau                integer   not null,
     description           text,
     histo_createur_id     integer   not null
         constraint formation_enquete_reponse_utilisateur_id_fk_1
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     histo_creation        timestamp not null,
     histo_modificateur_id integer
         constraint formation_enquete_reponse_utilisateur_id_fk_2
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     histo_modification    timestamp,
     histo_destructeur_id  integer
         constraint formation_enquete_reponse_utilisateur_id_fk_3
-        references unicaen_utilisateur_user,
+            references unicaen_utilisateur_user,
     histo_destruction     timestamp
 );
-
-
-create unique index formation_enquete_reponse_id_uindex
-    on formation_enquete_reponse (id);
+create unique index formation_enquete_reponse_id_uindex on formation_enquete_reponse (id);
 
 create table formation_action_plan
 (
@@ -708,18 +699,10 @@ create table formation_session_etat
 
 create table formation_inscription_etat
 (
-    inscription_id integer not null
-        constraint formation_inscription_etat_inscription_id_fk
-        references formation_instance_inscrit
-        on delete cascade,
-    etat_id        integer not null
-        constraint formation_inscription_etat_etat_id_fk
-        references unicaen_etat_instance
-        on delete cascade,
-    constraint formation_inscription_etat_pk
-        primary key (inscription_id, etat_id)
+    inscription_id          integer         not null constraint inscription_etat_inscription_id_fk references formation_inscription on delete cascade,
+    etat_id                 integer         not null constraint inscription_etat_etat_id_fk references unicaen_etat_instance on delete cascade,
+    constraint formation_inscription_etat_pk_ primary key (inscription_id, etat_id)
 );
-
 
 create table formation_domaine
 (
@@ -729,6 +712,7 @@ create table formation_domaine
     libelle               varchar(1024)           not null,
     description           text,
     ordre                 integer   default 9999  not null,
+    couleur               varchar(64),
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
         constraint formation_domaine_unicaen_utilisateur_user_id_fk
