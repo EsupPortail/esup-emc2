@@ -15,7 +15,7 @@ use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
+use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
@@ -29,7 +29,7 @@ class AgentController extends AbstractActionController
     use AgentStatutServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
+    use InscriptionServiceAwareTrait;
     use UserServiceAwareTrait;
 
 
@@ -60,8 +60,8 @@ class AgentController extends AbstractActionController
             return $a->getAutorite();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
-        $formations = $this->getFormationInstanceInscritService()->getFormationsBySuivies($agent);
-        $inscriptions = $this->getFormationInstanceInscritService()->getFormationsByInscrit($agent);
+        $formations =  $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        $inscriptions = $this->getInscriptionService()->getInscriptionsByAgent($agent);
 
         $demandes = $this->getDemandeExterneService()->getDemandesExternesByAgent($agent);
         $demandes = array_filter($demandes, function (DemandeExterne $d) {
@@ -101,8 +101,8 @@ class AgentController extends AbstractActionController
             return $a->getAgent();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($agent));
 
-        $inscriptionsValidees = $this->getFormationInstanceInscritService()->getInscriptionsValideesByAgents($agents, null);
-        $inscriptionsNonValidees = $this->getFormationInstanceInscritService()->getInscriptionsNonValideesByAgents($agents, null);
+        $inscriptionsValidees = $this->getInscriptionService()->getInscriptionsValideesByAgents($agents, null);
+        $inscriptionsNonValidees = $this->getInscriptionService()->getInscriptionsNonValideesByAgents($agents, null);
         $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($agents, Formation::getAnnee());
         $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($agents, Formation::getAnnee());
 

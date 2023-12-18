@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 use Formation\Controller\FormationInstanceController;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
@@ -124,14 +124,14 @@ class FormationInstanceService
             $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
                 ->addSelect('formation')->join('Finstance.formation', 'formation')
                 ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-                ->addSelect('inscrit')->leftJoin('Finstance.inscrits', 'inscrit')
-                ->addSelect('frais')->leftJoin('inscrit.frais', 'frais')
-                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
-                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
-                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
+                ->addSelect('inscription')->leftJoin('Finstance.inscriptions', 'inscription')
+////                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
+////                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
+////                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
                 ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
                 ->addSelect('etype')->leftjoin('etat.type', 'etype')
-                ->andWhere('etat.histoDestruction IS NULL');
+                ->andWhere('etat.histoDestruction IS NULL')
+            ;
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problem est survenu lors de la création du QueryBuilder de [".FormationInstanceController::class."]",0,$e);
         }
@@ -296,16 +296,20 @@ class FormationInstanceService
         foreach ($instance->getListePrincipale() as $inscrit) {
             $this->getNotificationService()->triggerListePrincipale($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
-            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-            if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
+            $formation = $inscrit->getSession()->getFormation();
+            if ($inscrit->isInterne()) {
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement !== null) $this->getAbonnementService()->retirerAbonnement($agent, $formation);
+            }
         }
         foreach ($instance->getListeComplementaire() as $inscrit) {
             $this->getNotificationService()->triggerListeComplementaire($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
-            $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
-            if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+            $formation = $inscrit->getSession()->getFormation();
+            if ($inscrit->isInterne()) {
+                $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
+                if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
+            }
         }
 
         $debut = $instance->getDebut();
@@ -328,8 +332,9 @@ class FormationInstanceService
     {
         $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_FORMATION_CONVOCATION);
         $this->update($instance);
+        // Enovyer convocation aux agents en liste principale
         foreach ($instance->getListePrincipale() as $inscrit) {
-            $this->getNotificationService()->triggerConvocation($inscrit);
+           if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
     }
@@ -379,10 +384,10 @@ class FormationInstanceService
     {
         $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_SESSION_ANNULEE);
         $this->update($instance);
-        foreach ($instance->getInscrits() as $inscrit) {
+        foreach ($instance->getInscriptions() as $inscrit) {
             $this->getNotificationService()->triggerSessionAnnulee($inscrit);
             $agent = $inscrit->getAgent();
-            $formation = $inscrit->getInstance()->getFormation();
+            $formation = $inscrit->getSession()->getFormation();
             $abonnement = $this->getAbonnementService()->getAbonnementByAgentAndFormation($agent, $formation);
             if ($abonnement === null) $this->getAbonnementService()->ajouterAbonnement($agent, $formation);
         }
@@ -401,19 +406,19 @@ class FormationInstanceService
     }
     /** Fonction de classement des inscriptions ***********************************************************************/
 
-    public function classerInscription(FormationInstanceInscrit $inscription): FormationInstanceInscrit
+    public function classerInscription(Inscription $inscription): Inscription
     {
-        $session = $inscription->getInstance();
-        $placePrincipale = $session->getPlaceDisponible(FormationInstanceInscrit::PRINCIPALE);
+        $session = $inscription->getSession();
+        $placePrincipale = $session->getPlaceDisponible(Inscription::PRINCIPALE);
         try {
             if ($session->getNbPlacePrincipale() > $placePrincipale) {
-                $inscription->setListe(FormationInstanceInscrit::PRINCIPALE);
+                $inscription->setListe(Inscription::PRINCIPALE);
                 $this->getEntityManager()->flush($inscription);
                 return $inscription;
             }
-            $placeComplementaire = $session->getPlaceDisponible(FormationInstanceInscrit::COMPLEMENTAIRE);
+            $placeComplementaire = $session->getPlaceDisponible(Inscription::COMPLEMENTAIRE);
             if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
-                $inscription->setListe(FormationInstanceInscrit::COMPLEMENTAIRE);
+                $inscription->setListe(Inscription::COMPLEMENTAIRE);
                 $this->getEntityManager()->flush($inscription);
                 return $inscription;
             }
@@ -422,7 +427,6 @@ class FormationInstanceService
         }
         return $inscription;
     }
-
 
     /**
      * @return FormationInstance[]
@@ -450,6 +454,38 @@ class FormationInstanceService
             ->andWhere('formation.affichage = :true')->setParameter('true', true);
         $result = $qb->getQuery()->getResult();
 
+        return $result;
+    }
+
+    /**
+     * @return FormationInstance[]
+     */
+    public function getSessionByTerm(mixed $term): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = $qb->andWhere("LOWER(formation.libelle) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function formatSessionJSON(array $sessions): array
+    {
+        $result = [];
+        /** @var FormationInstance[] $sessions */
+        foreach ($sessions as $session) {
+            $formation = $session->getFormation();
+            $groupe = $formation->getGroupe();
+            $result[] = array(
+                'id' => $session->getId(),
+                'label' => ($groupe?$groupe->getLibelle():"Acucun groupe") . " > ". $session->getFormation()->getLibelle(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $session->getPeriode() . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
         return $result;
     }
 }

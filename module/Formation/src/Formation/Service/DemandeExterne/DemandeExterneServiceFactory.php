@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
 use Psr\Container\ContainerExceptionInterface;
@@ -36,7 +36,7 @@ class DemandeExterneServiceFactory
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
+         * @var InscriptionService $inscriptionService
          * @var SeanceService $seanceService
          * @var PresenceService $presenceService
          * @var StructureService $structureService
@@ -49,7 +49,7 @@ class DemandeExterneServiceFactory
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $presenceService = $container->get(PresenceService::class);
         $seanceService = $container->get(SeanceService::class);
         $structureService = $container->get(StructureService::class);
@@ -63,7 +63,7 @@ class DemandeExterneServiceFactory
         $service->setFormationService($formationService);
         $service->setFormationInstanceService($formationInstanceService);
         $service->setFormationGroupeService($formationGroupeService);
-        $service->setFormationInstanceInscritService($formationInstanceInscritService);
+        $service->setInscriptionService($inscriptionService);
         $service->setPresenceService($presenceService);
         $service->setSeanceService($seanceService);
         $service->setStructureService($structureService);

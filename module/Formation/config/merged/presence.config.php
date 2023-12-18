@@ -55,7 +55,7 @@ return [
                     'toggle-presence' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/toggle-presence/:journee/:inscrit',
+                            'route'    => '/toggle-presence/:journee/:inscription',
                             'defaults' => [
                                 /** @see PresenceController::togglePresenceAction() */
                                 'controller' => PresenceController::class,
@@ -66,7 +66,7 @@ return [
                     'toggle-presences' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/toggle-presences/:mode/:inscrit',
+                            'route'    => '/toggle-presences/:mode/:inscription',
                             'defaults' => [
                                 /** @see PresenceController::togglePresencesAction() */
                                 'controller' => PresenceController::class,

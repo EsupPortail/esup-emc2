@@ -2,70 +2,54 @@
 
 namespace Formation\Form\Inscription;
 
-use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\FormationInstanceInscrit;
-use Formation\Provider\Etat\DemandeExterneEtats;
-use Formation\Provider\Etat\InscriptionEtats;
+use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Entity\Db\Inscription;
+use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class InscriptionHydrator implements HydratorInterface
 {
-    /**
-     * @param FormationInstanceInscrit|DemandeExterne $object
-     * @return array
-     */
+    use AgentServiceAwareTrait;
+    use FormationInstanceServiceAwareTrait;
+    use StagiaireExterneServiceAwareTrait;
+
     public function extract(object $object): array
     {
-        $description = null;
-        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
-        switch ($etattype) {
-            case null :
-            case InscriptionEtats::ETAT_DEMANDE :
-                $description = $object->getJustificationAgent();
-                break;
-            case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
-            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                $description = $object->getJustificationResponsable();
-                break;
-            case InscriptionEtats::ETAT_REFUSER :
-            case DemandeExterneEtats::ETAT_REJETEE :
-                $description = $object->getJustificationRefus();
-                break;
-        }
-
+        /** @var Inscription $object */
         $data = [
-            'description' => $description,
+            'session' => ($object->getSession()) ? ['id' => $object->getSession()->getId(), 'label' => $object->getSession()->getFormation()->getLibelle()] : null,
+            'type' => ($object->getStagiaire() !== null) ? 'stagiaire' : 'agent',
+            'agent' => ($object->getAgent()) ? ['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()] : null,
+            'stagiaire' => ($object->getStagiaire()) ? ['id' => $object->getStagiaire()->getId(), 'label' => $object->getStagiaire()->getDenomination()] : null,
         ];
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param FormationInstanceInscrit|DemandeExterne $object
-     * @return FormationInstanceInscrit
-     */
+    /** @return Inscription */
     public function hydrate(array $data, object $object): object
     {
-        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) AND trim($data['HasDescription']['description']) !== '')?trim($data['HasDescription']['description']):null;
+        /** @var Inscription $object */
+        $session = (isset($data['session']) && $data['session']['id'] !== '') ? $this->getFormationInstanceService()->getFormationInstance((int)$data['session']['id']) : null;
+        $type = $data['type'] ?? null;
+        $agent = (isset($data['agent']) && $data['agent']['id'] !== '') ? $this->getAgentService()->getAgent($data['agent']['id']) : null;
+        $stagiaire = (isset($data['stagiaire']) && $data['stagiaire']['id'] !== '') ? $this->getStagiaireExterneService()->getStagiaireExterne($data['stagiaire']['id']) : null;
 
-        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
-        switch ($etattype) {
-            case null :
-            case InscriptionEtats::ETAT_DEMANDE :
-                //note deplacer dans le controller : malin ?
-//                $object->setJustificationAgent($description);
+        $object->setSession($session);
+        switch ($type) {
+            case 'agent' :
+                $object->setAgent($agent);
+                $object->setStagiaire(null);
                 break;
-            case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
-            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                //note deplacer dans le controller : malin ?
-//                $object->setJustificationResponsable($description);
+            case 'stagiaire' :
+                $object->setAgent(null);
+                $object->setStagiaire($stagiaire);
                 break;
-            case InscriptionEtats::ETAT_REFUSER :
-            case DemandeExterneEtats::ETAT_REJETEE :
-                $object->setJustificationRefus($description);
+            default :
+                $object->setAgent(null);
+                $object->setStagiaire(null);
                 break;
         }
-
         return $object;
     }
 

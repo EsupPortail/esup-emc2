@@ -8,7 +8,9 @@ use Formation\Form\Inscription\InscriptionForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Notification\NotificationService;
+use Formation\Service\StagiaireExterne\StagiaireExterneService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -36,11 +38,12 @@ class FormationInstanceInscritControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
+         * @var InscriptionService $inscriptionService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var RenduService $renduService
+         * @var StagiaireExterneService $stagiaireExterneService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
@@ -48,11 +51,12 @@ class FormationInstanceInscritControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $renduService = $container->get(RenduService::class);
+        $stagiaireExterneService = $container->get(StagiaireExterneService::class);
         $userService = $container->get(UserService::class);
 
         /**
@@ -68,11 +72,12 @@ class FormationInstanceInscritControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setRenduService($renduService);
+        $controller->setStagiaireExterneService($stagiaireExterneService);
         $controller->setUserService($userService);
         $controller->setInscriptionForm($inscriptionForm);
         $controller->setSelectionAgentForm($selectionAgentForm);

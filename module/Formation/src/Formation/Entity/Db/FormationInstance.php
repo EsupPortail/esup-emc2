@@ -38,13 +38,15 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private int $nbPlaceComplementaire = -1;
     private ?string $lieu = null;
     private ?string $type = null;
-    private ?float $coutHt  = null;
+    private ?float $coutHt = null;
     private ?float $coutTtc = null;
     private bool $affichage = true;
 
     private Collection $journees;
     private Collection $inscrits;
+    private Collection $externes;
     private Collection $formateurs;
+    private Collection $inscriptions;
 
     private ?SessionParametre $parametre = null;
 
@@ -54,12 +56,17 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->etats = new ArrayCollection();
         $this->journees = new ArrayCollection();
         $this->inscrits = new ArrayCollection();
+        $this->externes = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
+
         $this->formateurs = new ArrayCollection();
+
     }
+
     /**
      * @return string
      */
-    public function generateTag()  : string
+    public function generateTag(): string
     {
         return 'FormationInstance_' . $this->getId();
     }
@@ -67,7 +74,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -75,7 +82,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return Formation
      */
-    public function getFormation() : Formation
+    public function getFormation(): Formation
     {
         return $this->formation;
     }
@@ -84,7 +91,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      * @param Formation|null $formation
      * @return FormationInstance
      */
-    public function setFormation(?Formation $formation) : FormationInstance
+    public function setFormation(?Formation $formation): FormationInstance
     {
         $this->formation = $formation;
         return $this;
@@ -93,7 +100,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return string|null
      */
-    public function getComplement() : ?string
+    public function getComplement(): ?string
     {
         return $this->complement;
     }
@@ -102,7 +109,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      * @param string|null $complement
      * @return FormationInstance
      */
-    public function setComplement(?string $complement) : FormationInstance
+    public function setComplement(?string $complement): FormationInstance
     {
         $this->complement = $complement;
         return $this;
@@ -113,7 +120,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return int
      */
-    public function getNbPlacePrincipale() : int
+    public function getNbPlacePrincipale(): int
     {
         return $this->nbPlacePrincipale;
     }
@@ -122,7 +129,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      * @param int $nbPlacePrincipale
      * @return FormationInstance
      */
-    public function setNbPlacePrincipale(int $nbPlacePrincipale) : FormationInstance
+    public function setNbPlacePrincipale(int $nbPlacePrincipale): FormationInstance
     {
         $this->nbPlacePrincipale = $nbPlacePrincipale;
         return $this;
@@ -131,7 +138,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return int
      */
-    public function getNbPlaceComplementaire() : int
+    public function getNbPlaceComplementaire(): int
     {
         return $this->nbPlaceComplementaire;
     }
@@ -140,7 +147,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      * @param int $nbPlaceComplementaire
      * @return FormationInstance
      */
-    public function setNbPlaceComplementaire(int $nbPlaceComplementaire) : FormationInstance
+    public function setNbPlaceComplementaire(int $nbPlaceComplementaire): FormationInstance
     {
         $this->nbPlaceComplementaire = $nbPlaceComplementaire;
         return $this;
@@ -187,7 +194,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
      */
     public function isAutoInscription(): bool
     {
-        return ($this->autoInscription)?:false;
+        return ($this->autoInscription) ?: false;
     }
 
     /**
@@ -234,7 +241,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return array|null
      */
-    public function getJournees() : ?array
+    public function getJournees(): ?array
     {
         if (!isset($this->journees)) return null;
         return $this->journees->toArray();
@@ -264,7 +271,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $minimum = $split[2] . "/" . $split[1] . "/" . $split[0];
         }
         if ($datetime === true) {
-            return ($minimum)?DateTime::createFromFormat('d/m/Y', $minimum):null;
+            return ($minimum) ? DateTime::createFromFormat('d/m/Y', $minimum) : null;
         }
         return $minimum;
     }
@@ -293,12 +300,12 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $maximum = $split[2] . "/" . $split[1] . "/" . $split[0];
         }
         if ($datetime === true) {
-            return ($maximum)?DateTime::createFromFormat('d/m/Y', $maximum):null;
+            return ($maximum) ? DateTime::createFromFormat('d/m/Y', $maximum) : null;
         }
         return $maximum;
     }
 
-    public function hasJournee() : bool
+    public function hasJournee(): bool
     {
         /** @var Seance $journee */
         foreach ($this->journees as $journee) {
@@ -309,90 +316,86 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** INSCRIT *******************************************************************************************************/
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
-    public function getInscrits() : array
+    public function getInscriptions(): array
     {
-        return $this->inscrits->toArray();
+        return $this->inscriptions->toArray();
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
-    public function getListePrincipale() : array
+    public function getListePrincipale(): array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return ($a->getListe() === FormationInstanceInscrit::PRINCIPALE AND $a->estNonHistorise());
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
+            return ($a->getListe() === Inscription::PRINCIPALE and $a->estNonHistorise());
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
-    public function getListeComplementaire() : array
+    public function getListeComplementaire(): array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return ($a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE AND $a->estNonHistorise());
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
+            return ($a->getListe() === Inscription::COMPLEMENTAIRE and $a->estNonHistorise());
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getHistoCreation() > $b->getHistoCreation();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
     /**
-     * @return FormationInstanceInscrit[]
+     * @return Inscription[]
      */
-    public function getListeHistorisee() : array
+    public function getListeHistorisee(): array
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
+        $array = array_filter($this->inscriptions->toArray(), function (Inscription $a) {
             return $a->estHistorise();
         });
-        usort($array, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
-            return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();
+        usort($array, function (Inscription $a, Inscription $b) {
+            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
         });
         return $array;
     }
 
-    public function isListePrincipaleComplete() : bool
+    public function isListePrincipaleComplete(): bool
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::PRINCIPALE;
-        });
-        return (count($array) >= $this->getNbPlacePrincipale());
+        $liste = $this->getListePrincipale();
+        return (count($liste) >= $this->getNbPlacePrincipale());
     }
 
-    public function isListeComplementaireComplete() : bool
+    public function isListeComplementaireComplete(): bool
     {
-        $array = array_filter($this->inscrits->toArray(), function (FormationInstanceInscrit $a) {
-            return $a->getListe() === FormationInstanceInscrit::COMPLEMENTAIRE;
-        });
-        return (count($array) >= $this->getNbPlaceComplementaire());
+        $liste = $this->getListeComplementaire();
+        return (count($liste) >= $this->getNbPlaceComplementaire());
     }
 
     /**
      * @return string|null
      */
-    public function getListeDisponible() : ?string
+    public function getListeDisponible(): ?string
     {
         $liste = null;
-        if ($liste === null and !$this->isListePrincipaleComplete()) $liste = FormationInstanceInscrit::PRINCIPALE;
-        if ($liste === null and !$this->isListeComplementaireComplete()) $liste = FormationInstanceInscrit::COMPLEMENTAIRE;
+        if ($liste === null and !$this->isListePrincipaleComplete()) $liste = Inscription::PRINCIPALE;
+        if ($liste === null and !$this->isListeComplementaireComplete()) $liste = Inscription::COMPLEMENTAIRE;
         return $liste;
     }
 
-    /**
-     * @param Agent $agent
-     * @return bool
-     */
-    public function hasAgent(Agent $agent) :  bool
+    public function hasIndividu(Agent|StagiaireExterne $individu): bool
     {
-        foreach ($this->inscrits as $inscrit) {
-            if ($inscrit->getAgent() === $agent) return true;
+        $isStagiaire = ($individu instanceof StagiaireExterne);
+        $isAgent = ($individu instanceof Agent);
+        /** @var Inscription $inscription */
+        foreach ($this->inscriptions as $inscription) {
+            if ($isStagiaire && $individu === $inscription->getStagiaire()) return true;
+            if ($isAgent && $individu === $inscription->getAgent()) return true;
         }
         return false;
     }
@@ -443,19 +446,19 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->parametre = $parametre;
     }
 
-    public function isMailActive() : bool
+    public function isMailActive(): bool
     {
         if ($this->parametre === null) return true;
         return $this->parametre->isMailActive();
     }
 
-    public function isEvenementActive() : bool
+    public function isEvenementActive(): bool
     {
         if ($this->parametre === null) return true;
         return $this->parametre->isEvenementActive();
     }
 
-    public function isEnqueteActive() : bool
+    public function isEnqueteActive(): bool
     {
         if ($this->parametre === null) return true;
         return $this->parametre->isEnqueteActive();
@@ -463,9 +466,9 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
 
     /** PREDICAT D'ETAT *********************************************************************************************/
 
-    public function estPreparation() : bool
+    public function estPreparation(): bool
     {
-        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
+        $etatCode = $this->getEtatActif() ? $this->getEtatActif()->getType()->getCode() : null;
         return (
             $etatCode === SessionEtats::ETAT_CREATION_EN_COURS ||
             $etatCode === SessionEtats::ETAT_INSCRIPTION_OUVERTE ||
@@ -473,17 +476,17 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         );
     }
 
-    public function estPrete() : bool
+    public function estPrete(): bool
     {
-        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
+        $etatCode = $this->getEtatActif() ? $this->getEtatActif()->getType()->getCode() : null;
         return (
             $etatCode === SessionEtats::ETAT_FORMATION_CONVOCATION
         );
     }
 
-    public function estRealisee() : bool
+    public function estRealisee(): bool
     {
-        $etatCode = $this->getEtatActif()?$this->getEtatActif()->getType()->getCode():null;
+        $etatCode = $this->getEtatActif() ? $this->getEtatActif()->getType()->getCode() : null;
         return (
             $etatCode === SessionEtats::ETAT_ATTENTE_RETOURS ||
             $etatCode === SessionEtats::ETAT_CLOTURE_INSTANCE
@@ -494,25 +497,25 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** Fonctions pour les macros **********************************************************************************/
 
     /** @noinspection PhpUnused */
-    public function getInstanceLibelle() : string
+    public function getInstanceLibelle(): string
     {
         return $this->getFormation()->getLibelle();
     }
 
     /** @noinspection PhpUnused */
-    public function getLieuString() : string
+    public function getLieuString(): string
     {
-        return ($this->getLieu())?" à ".$this->getLieu():"";
+        return ($this->getLieu()) ? " à " . $this->getLieu() : "";
     }
 
     /** @noinspection PhpUnused */
-    public function getInstanceCode() : string
+    public function getInstanceCode(): string
     {
         return $this->getFormation()->getId() . "/" . $this->getId();
     }
 
     /** @noinspection PhpUnused */
-    public function getListeFormateurs() : string
+    public function getListeFormateurs(): string
     {
         /** @var Formateur[] $formateurs */
         $formateurs = $this->getFormateurs();
@@ -520,7 +523,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
         });
 
-        $text  = "<table style='width:100%;'>";
+        $text = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
@@ -541,13 +544,13 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /** @noinspection PhpUnused */
-    public function getListeJournees() : string
+    public function getListeJournees(): string
     {
         /** @var Seance[] $journees */
         $journees = $this->getJournees();
         //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a > $b;});
 
-        $text  = "<table style='width:100%;'>";
+        $text = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Date  </th>";
@@ -559,15 +562,15 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $text .= "<tbody>";
         foreach ($journees as $journee) {
             $text .= "<tr>";
-                if ($journee->getType() === Seance::TYPE_SEANCE) {
-                    $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
-                    $text .= "<td>" . $journee->getDebut() . "</td>";
-                    $text .= "<td>" . $journee->getFin() . "</td>";
-                }
-                if ($journee->getType() === Seance::TYPE_VOLUME) {
-                    $text .="<td colspan='2'>Volume horaire</td>";
-                    $text .="<td>" .$journee->getVolume(). " heures </td>";
-                }
+            if ($journee->getType() === Seance::TYPE_SEANCE) {
+                $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
+                $text .= "<td>" . $journee->getDebut() . "</td>";
+                $text .= "<td>" . $journee->getFin() . "</td>";
+            }
+            if ($journee->getType() === Seance::TYPE_VOLUME) {
+                $text .= "<td colspan='2'>Volume horaire</td>";
+                $text .= "<td>" . $journee->getVolume() . " heures </td>";
+            }
             $text .= "<td>" . $journee->getLieu() . "</td>";
             $text .= "</tr>";
         }
@@ -578,7 +581,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /** @noinspection PhpUnused */
-    public function getPeriode() : string
+    public function getPeriode(): string
     {
         if ($this->getDebut() === null or $this->getFin() === null) return "formation sans date";
         if ($this->getDebut() === $this->getFin()) return $this->getDebut();
@@ -586,18 +589,18 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /** @noinspection PhpUnused */
-    public function getListeComplementaireAgents() : string
+    public function getListeComplementaireAgents(): string
     {
-        /** @var FormationInstanceInscrit[] $inscrits */
+        /** @var Inscription[] $inscrits */
         $inscrits = $this->getListeComplementaire();
-        $inscrits = array_filter($inscrits, function (FormationInstanceInscrit $a) {
+        $inscrits = array_filter($inscrits, function (Inscription $a) {
             return $a->estNonHistorise();
         });
-        usort($inscrits, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) {
+        usort($inscrits, function (Inscription $a, Inscription $b) {
             return ($a->getAgent()->getNomUsuel() . " " . $a->getAgent()->getPrenom()) > ($b->getAgent()->getNomUsuel() . " " . $b->getAgent()->getPrenom());
         });
 
-        $text  = "<table style='width:100%;'>";
+        $text = "<table style='width:100%;'>";
         $text .= "<thead>";
         $text .= "<tr style='border-bottom:1px solid black;'>";
         $text .= "<th>Dénomination  </th>";
@@ -620,7 +623,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     }
 
     /** @noinspection PhpUnused */
-    public function getDuree() : string
+    public function getDuree(): string
     {
         $sum = DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00');
         /** @var Seance[] $journees */
@@ -631,7 +634,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             if ($journee->getType() === Seance::TYPE_SEANCE) {
                 $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
                 $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-                if ($debut instanceof DateTime AND $fin instanceof DateTime) {
+                if ($debut instanceof DateTime and $fin instanceof DateTime) {
                     $duree = $debut->diff($fin);
                     $sum->add($duree);
                 }
@@ -642,7 +645,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
                     try {
                         $temp = new DateInterval('PT' . $volume . 'H');
                     } catch (Exception $e) {
-                        throw new RuntimeException("Une erreur est survenue lors de la création de l'interval",0,$e);
+                        throw new RuntimeException("Une erreur est survenue lors de la création de l'interval", 0, $e);
                     }
                     $sum->add($temp);
                 }
@@ -653,17 +656,18 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $result = $sum->diff(DateTime::createFromFormat('d/m/Y H:i', '01/01/1970 00:00'));
         $heures = ($result->d * 24 + $result->h);
         $minutes = ($result->i);
-        $text = $heures . " heures" . (($minutes !== 0) ? (" ".$minutes . " minutes") : "");
+        $text = $heures . " heures" . (($minutes !== 0) ? (" " . $minutes . " minutes") : "");
         return $text;
     }
 
     /** @noinspection PhpUnused */
-    public function getPlaceDisponible(string $liste) : int
+    public function getPlaceDisponible(string $liste): int
     {
         $inscriptions = array_filter(
-            $this->getInscrits(),
-            function(FormationInstanceInscrit $a)  use ($liste) { return $a->estNonHistorise() AND $a->getListe() === $liste;
-        });
+            $this->getInscriptions(),
+            function (Inscription $a) use ($liste) {
+                return $a->estNonHistorise() and $a->getListe() === $liste;
+            });
         return count($inscriptions);
     }
 }

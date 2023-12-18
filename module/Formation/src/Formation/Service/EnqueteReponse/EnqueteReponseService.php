@@ -7,7 +7,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
 use Formation\Entity\Db\EnqueteReponse;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
@@ -127,11 +127,8 @@ class EnqueteReponseService {
         return $categorie;
     }
 
-    /**
-     * @param FormationInstanceInscrit $inscription
-     * @return EnqueteReponse[]
-     */
-    public function findEnqueteReponseByInscription(FormationInstanceInscrit $inscription) : array
+    /** @return EnqueteReponse[] */
+    public function findEnqueteReponseByInscription(Inscription $inscription) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('reponse.inscription = :inscription')->setParameter('inscription', $inscription);

@@ -3,7 +3,7 @@
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::inscriptionInterneAction()
  * @var FormationInstance[] $instances
- * @var FormationInstanceInscrit[] $inscriptions
+ * @var Inscription[] $inscriptions
  * @var Agent $agent
  */
 
@@ -11,7 +11,7 @@ $canInscrire = true; //todo !!!!
 
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\FormationInstance;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 
 $this->headTitle("M'inscrire à une formation du plan de formation");
 
@@ -35,7 +35,9 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
 <?php foreach ($instances as $instance) : ?>
     <?php
     $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
-    $dejaInscrit = !empty(array_filter($inscriptions, function (FormationInstanceInscrit $a) use ($instance) { return $a->estNonHistorise() AND $a->getInstance() === $instance;}));
+    $dejaInscrit = !empty(array_filter($inscriptions, function (Inscription $a) use ($instance) {
+        return $a->estNonHistorise() and $a->getSession() === $instance;
+    }));
     ?>
     <div class="row formation-instance">
         <div class="col-md-8 description">
@@ -49,8 +51,10 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
                     <span class="alert alert-danger">Action de formation complète.</span>
                 <?php else: ?>
                     <?php if ($canInscrire) : ?>
-                        <?php /**  @see \Formation\Controller\FormationInstanceInscritController::inscriptionAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true); ?>"
+                        <?php /**  @see \Formation\Controller\InscriptionController::inscriptionAction() */ ?>
+                        <a href="<?php echo $this->url('formation/inscription/creer-inscription', [
+                            'formation-instance' => $instance->getId(),
+                            'agent' => $agent->getId()], [], true); ?>"
                            class="btn btn-primary action ajax-modal" data-event="modification">
                             <span class="icon inscription-ouverture"> Je m'inscris</span>
                         </a>
@@ -62,25 +66,25 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
 <?php endforeach; ?>
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            tinyMCE.editors=[];
+            tinyMCE.editors = [];
             window.location.reload();
         });
     });
 
-    $(document).ready(function() {
-        $('.datatable').DataTable( {
-            sorting:false,
-            paging:false,
+    $(document).ready(function () {
+        $('.datatable').DataTable({
+            sorting: false,
+            paging: false,
             language: {
                 url: '/localisation/fr_FR.json'
             }
-        } );
-    } );
+        });
+    });
 
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
         let name = hash.substring(1);
         if (name === undefined || name === "") name = "instances";
@@ -90,7 +94,7 @@ $this->headTitle("M'inscrire à une formation du plan de formation");
         $('.nav a').click(function (e) {
             let anchor = $(this).attr('aria-controls');
             e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
+            history.replaceState(null, null, "#" + anchor);
             $(this).tab('show');
         });
 

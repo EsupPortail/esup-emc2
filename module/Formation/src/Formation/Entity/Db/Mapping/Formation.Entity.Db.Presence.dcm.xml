@@ -9,9 +9,10 @@
         <many-to-one target-entity="Formation\Entity\Db\Seance"  field="journee">
             <join-column name="journee_id" referenced-column-name="id"/>
         </many-to-one>
-        <many-to-one target-entity="Formation\Entity\Db\FormationInstanceInscrit"  field="inscrit">
-            <join-column name="inscrit_id" referenced-column-name="id"/>
+        <many-to-one target-entity="Formation\Entity\Db\Inscription"  field="inscription">
+            <join-column name="inscription_id" referenced-column-name="id"/>
         </many-to-one>
+
 
         <field name="presenceType"      column="presence_type"   type="string"  length="256"    nullable="false"/>
         <field name="statut"            column="statut"          type="string"  length="256"    nullable="false"/>

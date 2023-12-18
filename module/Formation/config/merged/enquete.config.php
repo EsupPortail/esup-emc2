@@ -277,7 +277,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/repondre-questions/:inscrit',
+                                    'route'    => '/repondre-questions/:inscription',
                                     'defaults' => [
                                         'controller' => EnqueteQuestionController::class,
                                         'action'     => 'repondre-questions',
@@ -288,7 +288,7 @@ return [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/valider-questions/:inscrit',
+                                    'route'    => '/valider-questions/:inscription',
                                     'defaults' => [
                                         'controller' => EnqueteQuestionController::class,
                                         'action'     => 'valider-questions',

@@ -19,7 +19,7 @@ class EnqueteReponse implements HistoriqueAwareInterface {
     ];
 
     private ?int $id = -1;
-    private ?FormationInstanceInscrit $inscription = null;
+    protected ?Inscription $inscription = null;
     private ?EnqueteQuestion $question = null;
     private ?int $niveau = null;
     private ?string $description = null;
@@ -29,12 +29,12 @@ class EnqueteReponse implements HistoriqueAwareInterface {
         return $this->id;
     }
 
-    public function getInscription(): FormationInstanceInscrit
+    public function getInscription(): Inscription
     {
         return $this->inscription;
     }
 
-    public function setInscription(FormationInstanceInscrit $inscription): void
+    public function setInscription(Inscription $inscription): void
     {
         $this->inscription = $inscription;
     }

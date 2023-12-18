@@ -4,7 +4,6 @@
  * @var Seance $journee
  */
 
-use Formation\Entity\Db\FormationInstanceInscrit;
 use Formation\Entity\Db\Seance;
 
 $inscrits = $journee->getInstance()->getListePrincipale();
@@ -21,7 +20,14 @@ $formation = $journee->getInstance()->getFormation();
         <td> <?php echo $formation->getLibelle(); ?> </td>
     </tr><tr>
         <th style="width:8rem; text-align:left; "> Date </th>
-        <td> <?php echo $journee->getJour()->format('d/m/Y'); ?> de <?php echo $journee->getDebut(); ?> à <?php echo $journee->getFin(); ?> </td>
+
+        <td>
+            <?php if ($journee->getType() === Seance::TYPE_SEANCE) : ?>
+                <?php echo $journee->getJour()->format('d/m/Y'); ?> de <?php echo $journee->getDebut(); ?> à <?php echo $journee->getFin(); ?>
+            <?php else : ?>
+                <?php echo $journee->getVolumeDebut()->format('d/m/Y'); ?> au <?php echo $journee->getVolumeFin()->format('d/m/Y'); ?>
+            <?php endif; ?>
+        </td>
     </tr><tr>
         <th style="width:8rem; text-align:left; ">Lieu </th>
         <td><?php echo $journee->getLieu(); ?></td>
@@ -30,13 +36,14 @@ $formation = $journee->getInstance()->getFormation();
 
 <br/>
 
+<h3> Inscriptions </h3>
 <table class="emargement">
     <?php /** @var FormationInstanceInscrit $inscrit */ ?>
     <?php foreach ($inscrits as $inscrit) : ?>
         <tr>
             <td>
-                <strong> <?php echo $inscrit->getAgent()->getDenomination(); ?> </strong> <br/>
-                <?php echo ($inscrit->getAgent()->getAffectationPrincipale() !== null)?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"N.C."; ?>
+                <strong> <?php echo $inscrit->getStagiaireDenomination(); ?> </strong> <br/>
+                <?php echo $inscrit->getStagiaireStructure()?>
             </td>
             <td>
                 &nbsp;

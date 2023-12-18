@@ -1,0 +1,57 @@
+<?php
+
+use Formation\Entity\Db\StagiaireExterne;
+use Formation\Provider\Privilege\StagiaireexternePrivileges;
+
+/**
+ * @see \Formation\Controller\StagiaireExterneController::afficherAction()
+ * @var StagiaireExterne $stagiaire
+ */
+
+$this->headTitle("Affichage de ".$stagiaire->getDenomination());
+
+$canAfficher = $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_AFFICHER));
+$canAjouter = $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_AJOUTER));
+$canModifier = $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_MODIFIER));
+$canHistoriser = $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_HISTORISER));
+$canSupprimer = $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_SUPPRIMER));
+?>
+
+<h1 class="page-header">
+    Affichage de <?php echo $stagiaire->getDenomination(); ?>
+</h1>
+
+<dl class="row">
+    <dt class="col-md-4"> Prénom </dt>
+    <dd class="col-md-8"> <?php echo $stagiaire->getPrenom(); ?> </dd>
+    <dt class="col-md-4"> Nom </dt>
+    <dd class="col-md-8"> <?php echo $stagiaire->getNom(); ?> </dd>
+    <?php if ($stagiaire->getDateNaissance()) :?>
+        <dt class="col-md-4"> Date de naissance </dt>
+        <dd class="col-md-8"> <?php echo $stagiaire->getDateNaissance()->format('d/m/Y'); ?> </dd>
+    <?php endif; ?>
+    <?php if ($stagiaire->getSexe()) :?>
+        <dt class="col-md-4"> Sexe </dt>
+        <dd class="col-md-8"> <?php echo $stagiaire->getSexe(); ?> </dd>
+    <?php endif; ?>
+    <dt class="col-md-4"> Structure </dt>
+    <dd class="col-md-8">
+        <?php if ($stagiaire->getStructure()) : ?>
+            <?php echo $stagiaire->getStructure(); ?>
+        <?php else: ?>
+            <em> Aucune structure connue </em>
+        <?php endif; ?>
+    </dd>
+    <dt class="col-md-4"> Adresse électronique </dt>
+    <dd class="col-md-8">
+        <?php echo $stagiaire->getEmail(); ?>
+    </dd>
+    <dt class="col-md-4"> Compte utilisateur </dt>
+    <dd class="col-md-8">
+        <?php if ($stagiaire->getLogin()) : ?>
+            <?php echo $stagiaire->getLogin(); ?>
+        <?php else: ?>
+            <em> Aucun compte utilisateur </em>
+        <?php endif; ?>
+    </dd>
+</dl>

@@ -48,6 +48,11 @@
     content: "\f063";
 }
 
+.icon.icon-users:before,
+.icon.icon-utilisateurs:before {
+    content: "\f0c0";
+}
+
 .icon.icon-user:before,
 .icon.icon-utilisateur:before {
     content: "\f007";

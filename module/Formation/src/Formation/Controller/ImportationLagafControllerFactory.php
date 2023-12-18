@@ -3,12 +3,12 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
+use Formation\Entity\Db\InscriptionFrais;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceFrais\FormationInstanceFraisService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
 use Formation\Service\Stagiaire\StagiaireService;
@@ -35,8 +35,6 @@ class ImportationLagafControllerFactory
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
          * @var SeanceService $seanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
-         * @var FormationInstanceFraisService $formationInstanceFraisService
          * @var PresenceService $presenceService
          * @var HasFormationCollectionService $hasFormationCollectionService
          * @var StagiaireService $stagiaireService
@@ -47,8 +45,8 @@ class ImportationLagafControllerFactory
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $seanceService = $container->get(SeanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
-        $formationInstanceFraisService = $container->get(FormationInstanceFraisService::class);
+        $formationInstanceInscritService = $container->get(InscriptionService::class);
+        $formationInstanceFraisService = $container->get(InscriptionFrais::class);
         $presenceService = $container->get(PresenceService::class);
         $hasFormationCollectionService = $container->get(HasFormationCollectionService::class);
         $stagiaireService = $container->get(StagiaireService::class);
@@ -60,8 +58,8 @@ class ImportationLagafControllerFactory
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setSeanceService($seanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
-        $controller->setFormationInstanceFraisService($formationInstanceFraisService);
+        $controller->setInscriptionService($formationInstanceInscritService);
+        $controller->setInscriptionFraisService($formationInstanceFraisService);
         $controller->setPresenceService($presenceService);
         $controller->setHasFormationCollectionService($hasFormationCollectionService);
         $controller->setStagiaireService($stagiaireService);

@@ -2,14 +2,14 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Provider\Privilege\FormationinstanceinscritPrivileges;
 
 /**
- * @var FormationInstanceInscrit[] $inscriptions
+ * @var Inscription[] $inscriptions
  * @var DemandeExterne[] $demandes
  */
 
@@ -18,8 +18,8 @@ $canValiderResponsable = $this->isAllowed(FormationinstanceinscritPrivileges::ge
 $array = [];
 foreach ($inscriptions as $inscription) {
     if ($inscription->estNonHistorise()) {
-        $formation = $inscription->getInstance()->getFormation();
-        $instance = $inscription->getInstance();
+        $formation = $inscription->getSession()->getFormation();
+        $instance = $inscription->getSession();
         $array[$formation->getId()]["formation"] = $formation;
         $array[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
         $array[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
@@ -28,9 +28,9 @@ foreach ($inscriptions as $inscription) {
 
 $attentes = [];
 foreach ($inscriptions as $inscription) {
-    if ($inscription->estNonHistorise() AND $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) {
-        $formation = $inscription->getInstance()->getFormation();
-        $instance = $inscription->getInstance();
+    if ($inscription->estNonHistorise() and $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) {
+        $formation = $inscription->getSession()->getFormation();
+        $instance = $inscription->getSession();
         $attentes[$formation->getId()]["formation"] = $formation;
         $attentes[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
         $attentes[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
@@ -43,9 +43,9 @@ foreach ($inscriptions as $inscription) {
 }
 usort($dictionnaryInscriptions,
     function ($a, $b) {
-        /** @var FormationInstanceInscrit[] $a */
-        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
-        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        /** @var Inscription[] $a */
+        $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
         return $aaa > $bbb;
     }
 );
@@ -57,21 +57,22 @@ foreach ($demandes as $demande) {
 usort($dictionnaryDemandes,
     function ($a, $b) {
         /** @var DemandeExterne[] $a */
-        $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
-        $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
+        $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
+        $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
         return $aaa > $bbb;
     }
 );
 ?>
 
-<h2> Demandes des formations en attente de validations <?php echo Formation::getAnnee(); ?>/<?php echo Formation::getAnnee()+1; ?> </h2>
+<h2> Demandes des formations en attente de validations <?php echo Formation::getAnnee(); ?>
+    /<?php echo Formation::getAnnee() + 1; ?> </h2>
 
 
 <div class="row">
     <div class="col-md-6">
         <h3> Formations du plan de formation </h3>
 
-        <?php /** @var FormationInstanceInscrit[] $ds */ ?>
+        <?php /** @var Inscription[] $ds */ ?>
         <ul>
             <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
                 <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
@@ -81,15 +82,19 @@ usort($dictionnaryDemandes,
                     <?php foreach ($ds as $d) : ?>
                         <br/>
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
-                        <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
-                        (<?php echo $d->getInstance()->getPeriode(); ?>)
+                        <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
+                        (<?php echo $d->getSession()->getPeriode(); ?>)
                         <br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <?php if ($canValiderResponsable && $d->isEtatActif(InscriptionEtats::ETAT_DEMANDE) ) : ?>
-                            <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/valider-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
-                            <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation-instance/refuser-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
+                        <?php if ($canValiderResponsable && $d->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::validerResponsableAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/valider-responsable', ['inscription' => $d->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"> <span
+                                        class="icon icon-checked text-success">Valider</span></a>
+                            <?php /** @see \Formation\Controller\InscriptionController::refuserResponsableAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/refuser-responsable', ['inscription' => $d->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"> <span
+                                        class="icon icon-unchecked text-danger">Refuser</span></a>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </li>
@@ -103,7 +108,9 @@ usort($dictionnaryDemandes,
         <?php /** @var DemandeExterne[] $ds */ ?>
         <ul>
             <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
-                <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+                <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) {
+                    return $a->getDebut() > $b->getDebut();
+                }); ?>
                 <li>
                     <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
@@ -113,18 +120,23 @@ usort($dictionnaryDemandes,
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
                         <?php echo $d->getLibelle(); ?>
                         (<?php echo $d->getPeriodeAsString(); ?>)
-                    <br>
+                        <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <?php if ($canDemandeAfficher ) : ?>
-                            <?php  /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                            <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $d->getId()], [], true); ?>" class="ajax-modal"> <span class="icon icon-voir"></span>Afficher</a>
+                        <?php if ($canDemandeAfficher) : ?>
+                            <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
+                            <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $d->getId()], [], true); ?>"
+                               class="ajax-modal"> <span class="icon icon-voir"></span>Afficher</a>
                         <?php endif; ?>
                         <?php if ($d->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_AGENT)) : ?>
-                            <?php if ($canValiderResponsable ) : ?>
-                                <?php  /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
-                                <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
-                                <?php  /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
-                                <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
+                            <?php if ($canValiderResponsable) : ?>
+                                <?php /** @see \Formation\Controller\DemandeExterneController::validerResponsableAction() */ ?>
+                                <a href="<?php echo $this->url('formation/demande-externe/valider-responsable', ["demande-externe" => $d->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"> <span
+                                            class="icon icon-checked text-success">Valider</span></a>
+                                <?php /** @see \Formation\Controller\DemandeExterneController::refuserResponsableAction() */ ?>
+                                <a href="<?php echo $this->url('formation/demande-externe/refuser-responsable', ["demande-externe" => $d->getId()], [], true); ?>"
+                                   class="ajax-modal" data-event="modification"> <span
+                                            class="icon icon-unchecked text-danger">Refuser</span></a>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>

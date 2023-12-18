@@ -5,6 +5,7 @@ namespace Formation\Controller;
 use Application\Service\Agent\AgentService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Inscription\InscriptionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,17 +25,17 @@ class StructureControllerFactory
         /**
          * @var AgentService $agentService
          * @var DemandeExterneService $demandeExterneService
-         * @var FormationInstanceInscritService $instanceService
+         * @var InscriptionService $inscriptionService
          * @var StructureService $structureService
          */
         $agentService = $container->get(AgentService::class);
         $demandeExterneService = $container->get(DemandeExterneService::class);
-        $instanceService = $container->get(FormationInstanceInscritService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $structureService = $container->get(StructureService::class);
 
         $controller = new StructureController();
         $controller->setAgentService($agentService);
-        $controller->setFormationInstanceInscritService($instanceService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setDemandeExterneService($demandeExterneService);
         $controller->setStructureService($structureService);
         return $controller;

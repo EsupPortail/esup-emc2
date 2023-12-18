@@ -60,7 +60,7 @@ return [
                     'generer-convocation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/generer-convocation/:inscrit',
+                            'route'    => '/generer-convocation/:inscription',
                             'defaults' => [
                                 'controller' => FormationInstanceDocumentController::class,
                                 'action'     => 'generer-convocation',
@@ -70,7 +70,7 @@ return [
                     'generer-attestation' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/generer-attestation/:inscrit',
+                            'route'    => '/generer-attestation/:inscription',
                             'defaults' => [
                                 /** @see FormationInstanceDocumentController::genererAttestationAction() */
                                 'controller' => FormationInstanceDocumentController::class,

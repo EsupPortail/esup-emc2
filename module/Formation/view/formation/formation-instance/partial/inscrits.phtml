@@ -17,24 +17,26 @@ $historises = $instance->getListeHistorisee();
 
 $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
+$canAfficherIndividu    = true;
 $canInscritModifier     = (!$estAnnulee && $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
 $canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
 
+$urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['fragment' => 'inscriptions'], true);
 ?>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-6">
         <h2> Inscription·s </h2>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
         <?php if ($canInscritModifier AND (count($principales) < $instance->getNbPlacePrincipale() OR count($complementaires) < $instance->getNbPlaceComplementaire())) : ?>
-            <a      <?php /**  @see FormationInstanceInscritController::ajouterAgentAction() */ ?>
-                href="<?php echo $this->url('formation-instance/ajouter-agent', ['formation-instance' => $instance->getId()], [], true); ?>"
+            <a <?php /**  @see \Formation\Controller\InscriptionController::ajouterAction() */ ?>
+                href="<?php echo $this->url('formation/inscription/ajouter', ['session' => $instance->getId()], [], true); ?>"
                 class="btn btn-primary action ajax-modal" data-event="modification">
                 <span class="icon icon-ajouter"></span>
-                Ajouter un agent
+                Ajouter un·e inscription
             </a>
         <?php endif; ?>
     </div>
@@ -47,7 +49,7 @@ $canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(Formationinstancefr
 $liste = $instance->getListeDisponible();
 $principaleComplete = $instance->isListePrincipaleComplete();
 $complementaireComplete = $instance->isListeComplementaireComplete();
-$inscriptions = $instance->getInscrits();
+$inscriptions = $instance->getInscriptions()
 ?>
 
 <table id="agents" class="datatable table table-condensed">
@@ -57,50 +59,75 @@ $inscriptions = $instance->getInscrits();
         <th> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Date de demande </th>
+        <th style="width:6rem;"> Liste </th>
         <th style="width:13rem;"> État </th>
-        <th style="width:15rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($inscriptions as $inscrit) : ?>
-        <?php if ($inscrit->estNonHistorise()) : ?>
-        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+    <?php foreach ($inscriptions as $inscription) : ?>
+        <?php if ($inscription->estNonHistorise()) : ?>
+        <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
             <td>
-                <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                <?php echo $inscription->getStagiaireDenomination(); ?>
             </td>
-            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
-            <td> <?php echo $inscrit->getHistoCreation()->format('d/m/Y'); ?> </td>
-            <td> <?php echo $this->etatinstance($inscrit->getEtatActif()); ?> </td>
+            <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
+            <td>
+                <?php if ($inscription->isInterne()) : ?>
+                    <?php echo $inscription->getAgent()->getStatutToString(); ?>
+                <?php endif; ?>
+                <?php if ($inscription->isExterne()) : ?>
+                    Stagiaire Externe
+                <?php endif; ?>
+            </td>
+            <td> <?php echo $inscription->getHistoCreation()->format('d/m/Y'); ?> </td>
+            <td> <?php echo $inscription->getListe()??"Aucune"; ?> </td>
+            <td> <?php echo $this->etatinstance($inscription->getEtatActif()); ?> </td>
             <td class="action">
-                    <?php if ($canInscritModifier && $inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
-                        <?php  /** @see \Formation\Controller\FormationInstanceInscritController::validerDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/valider-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
-                        <?php  /** @see \Formation\Controller\FormationInstanceInscritController::refuserDrhAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/refuser-drh', ['inscrit' => $inscrit->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger"> Refuser</span>  </a>
+
+                <?php if ($canAfficherIndividu) : ?>
+                    <?php if ($inscription->isInterne()) : ?>
+                        <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
                     <?php endif; ?>
-                    <?php if ($inscrit->getEtatActif() && !$inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
-                        <em>  Inscription non validée </em>
+                    <?php if ($inscription->isExterne()) : ?>
+                        <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
                     <?php endif; ?>
-                    <?php if ($inscrit->getEtatActif()&& $inscrit->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && $inscrit->getListe() === null) :?>
-                        <?php  /** @see \Formation\Controller\FormationInstanceInscritController::classerInscriptionAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/classer-inscription', ['inscrit' => $inscrit->getId()], [], true); ?>"> <span class="icon icon-synchroniser" title="Classer l'inscription"></span></a>
-                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($canInscritModifier && $inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
+                    <?php  /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
+                    <?php  /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/refuser-drh', ['inscription' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger"> Refuser</span>  </a>
+                <?php endif; ?>
+
+                <?php if ($inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_DRH) && $inscription->getListe() === null) :?>
+                    <br>
+                    <?php  /** @see \Formation\Controller\InscriptionController::classerAction() */ ?>
+                    <a href="<?php echo $this->url('formation/inscription/classer', ['inscription' => $inscription->getId()], [], true); ?>">
+                        <span class="icon icon-sort" title="Classer l'inscription"></span> Classer</a>
+                <?php endif; ?>
 
                     <br>
-                    <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation"
+                    <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
                     >
                         <span class="icon icon-historiser"></span>
                         Historiser
                     </a>
 
                     <br>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAction() */?>
+                    <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."
                     >
                         <span class="text-danger">
                             <span class="icon icon-unchecked"></span>
@@ -128,67 +155,93 @@ $inscriptions = $instance->getInscrits();
         <th> Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
-        <th style="width:15rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($principales as $inscrit) : ?>
-        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
-            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
-            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
+    <?php foreach ($principales as $inscription) : ?>
+        <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
+            <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
+                <?php if ($inscription->isInterne()) : ?>
+                    <?php echo $inscription->getAgent()->getStatutToString(); ?>
+                <?php endif; ?>
+                <?php if ($inscription->isExterne()) : ?>
+                    Stagiaire Externe
+                <?php endif; ?>
+            </td>
+            <td class="action">
                 <?php if ($canInscritModifier) : ?>
-                    <?php /** @see AgentController::afficherAction() */?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
-                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
-                    >
-                        <span class="icon icon-user"></span></a>
+                    <?php if ($inscription->isInterne()) : ?>
+                        <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
+                    <?php endif; ?>
+                    <?php if ($inscription->isExterne()) : ?>
+                        <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
+                    <?php endif; ?>
+                    <br>
                     <?php /** @see FormationInstanceDocumentController::genererConvocationAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
                         data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
-                        <span class="icon icon-pdf"></span><span class="lettrine">C</span></a>
+                        <span class="icon icon-pdf"></span>
+                        Convocation
+                    </a>
+                    <br>
                     <?php /** @see FormationInstanceDocumentController::genererAttestationAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                         data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation">
-                        <span class="icon icon-pdf"></span><span class="lettrine">A</span></a>
+                        <span class="icon icon-pdf"></span>Attestation</a>
                     <?php if ($canFraisAfficher) : ?>
                         <?php if ($canFraisModifier) : ?>
-                            <?php /** @see FormationInstanceFraisController::renseignerFraisAction() */?>
-                            <a href="<?php echo $this->url('formation-instance/renseigner-frais', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                            <br>
+                            <?php /** @see \Formation\Controller\InscriptionController::renseignerFraisAction() */?>
+                            <a href="<?php echo $this->url('formation/inscription/renseigner-frais', ['inscription' => $inscription->getId()], [], true); ?>"
                             class="ajax-modal" data-event="modification"
                             >
                         <?php endif; ?>
-                        <span class="icon icon-euro" data-bs-toggle="tooltip" data-bs-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span><br/><?php echo ($inscrit->getFrais())?$inscrit->getFrais()->afficheFrais():"Aucun"; ?>"></span>
+                        <span data-bs-toggle="tooltip" data-bs-html="true" title="Frais de missions pour <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span><br/><?php echo ($inscription->getFrais())?$inscription->getFrais()->afficheFrais():"Aucun"; ?>">
+                            <span class="icon icon-euro"></span>
+                        Frais</span>
                         <?php if ($canFraisModifier) : ?>
                             </a>
                         <?php endif; ?>
                     <?php endif; ?>
                     <?php if (! $complementaireComplete) : ?>
-                        <?php /** @see FormationInstanceInscritController::envoyerListeComplementaireAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/envoyer-liste-complementaire', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste complémentaire."
+                        <br>
+                        <?php /** @see \Formation\Controller\InscriptionController::envoyerListeComplementaireAction() */?>
+                        <a  href="<?php echo $this->url('formation/inscription/envoyer-liste-complementaire', ['inscription' => $inscription->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> en liste complémentaire."
                         >
-                            <span class="icon icon-descendre"></span></a>
+                            <span class="icon icon-descendre"></span> Liste comp.</a>
                     <?php endif; ?>
-                    <?php if ($inscrit->estNonHistorise()) : ?>
-                        <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation"
+                    <?php if ($inscription->estNonHistorise()) : ?>
+                        <br>
+                        <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
+                        <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation"
                         >
-                            <span class="icon icon-historiser"></span></a>
+                            <span class="icon icon-historiser"></span> Historiser</a>
                     <?php endif; ?>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAgentAction() */?>
+                    <br>
+                    <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."
                     >
-                        <span class="icon icon-unchecked"></span></a>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span> Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
-    </tbody>
 </table><br/>
 
 <h4>
@@ -204,42 +257,62 @@ $inscriptions = $instance->getInscrits();
         <th > Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
-        <th style="width:13rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($complementaires as $inscrit) : ?>
-        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
-            <td> <?php echo $inscrit->getAgent()->getDenomination(); ?> </td>
-            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
+    <?php foreach ($complementaires as $inscription) : ?>
+        <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
+            <td> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
+            <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
+                <?php if ($inscription->isInterne()) : ?>
+                    <?php echo $inscription->getAgent()->getStatutToString(); ?>
+                <?php endif; ?>
+                <?php if ($inscription->isExterne()) : ?>
+                    Stagiaire Externe
+                <?php endif; ?>
+            </td>
+            <td class="action">
                 <?php if ($canInscritModifier) : ?>
-                    <?php /** @see AgentController::afficherAction() */?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
-                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
-                    >
-                        <span class="icon icon-user"></span></a>
-                    <span class="icon icon-pdf"></span>
-                    <?php if ($inscrit->estNonHistorise()) : ?>
-                        <?php /** @see FormationInstanceInscritController::historiserAgentAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/historiser-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation">
-                            <span class="icon icon-historiser"></span></a>
+                    <?php if ($inscription->isInterne()) : ?>
+                        <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
+                    <?php endif; ?>
+                    <?php if ($inscription->isExterne()) : ?>
+                        <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
                     <?php endif; ?>
                     <?php if (! $principaleComplete) : ?>
-                        <?php /** @see FormationInstanceInscritController::envoyerListePrincipaleAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/envoyer-liste-principale', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> en liste principale."
+                        <br/>
+                        <?php /** @see \Formation\Controller\InscriptionController::envoyerListePrincipaleAction() */?>
+                        <a  href="<?php echo $this->url('formation/inscription/envoyer-liste-principale', ['inscription' => $inscription->getId()], [], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Déplacer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> en liste principale."
                         >
-                            <span class="icon icon-monter"></span></a>
+                            <span class="icon icon-monter"></span> Liste princ.</a>
                     <?php endif; ?>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <br>
+                    <?php if ($inscription->estNonHistorise()) : ?>
+                        <?php /** @see \Formation\Controller\InscriptionController::historiserAction() */?>
+                        <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()],  ['query' => ['retour' => $urlRetour] ], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Retirer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation">
+                            <span class="icon icon-historiser"></span> Historiser</a>
+                    <?php endif; ?>
+                    <br>
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAgentAction() */?>
+                    <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."
                     >
-                        <span class="icon icon-unchecked"></span></a>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                            </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -248,7 +321,7 @@ $inscriptions = $instance->getInscrits();
 </table><br/>
 
 <h4>
-    Agents historisés
+    Stagiaire·s historisé·es
     (<?php echo count($historises); ?>)
 </h4>
 
@@ -258,38 +331,57 @@ $inscriptions = $instance->getInscrits();
         <th style="width:50rem;"> Dénomination </th>
         <th> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
-        <th style="width:13rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($historises as $inscrit) : ?>
-        <tr <?php if ($inscrit->estHistorise()) echo " class='historise' "; ?>>
+    <?php foreach ($historises as $inscription) : ?>
+        <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
             <td>
-                <?php echo $inscrit->getAgent()->getDenomination(); ?>
+                <?php echo $inscription->getStagiaireDenomination(); ?>
             </td>
-            <td> <?php echo ($inscrit->getAgent()->getAffectationPrincipale())?$inscrit->getAgent()->getAffectationPrincipale()->getStructure()->getLibelleLong():"???"; ?> </td>
-            <td> <?php echo $inscrit->getAgent()->getStatutToString(); ?> </td>
+            <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
+                <?php if ($inscription->isInterne()) : ?>
+                    <?php echo $inscription->getAgent()->getStatutToString(); ?>
+                <?php endif; ?>
+                <?php if ($inscription->isExterne()) : ?>
+                    Stagiaire Externe
+                <?php endif; ?>
+            </td>
+            <td class="action">
                 <?php if ($canInscritModifier) : ?>
-                    <?php /** @see AgentController::afficherAction() */?>
-                    <a href="<?php echo $this->url('agent/afficher', ['agent' => $inscrit->getAgent()->getId()], [], true); ?>"
-                       data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span>"
-                    >
-                        <span class="icon icon-user"></span></a>
-                    <span class="icon icon-pdf"></span>
-                    <?php if ($liste !== null) : ?>
-                        <?php /** @see FormationInstanceInscritController::restaurerAgentAction() */?>
-                        <a  href="<?php echo $this->url('formation-instance/restaurer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
-                            data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> dans la formation."
+                    <?php if ($inscription->isInterne()) : ?>
+                        <a href="<?php echo $this->url('formation/agent', ['agent' => $inscription->getAgent()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
                         >
-                            <span class="icon icon-restaurer"></span></a>
+                            <span class="icon icon-user"></span> Afficher </a>
                     <?php endif; ?>
-                    <?php /** @see FormationInstanceInscritController::supprimerAgentAction() */?>
-                    <a  href="<?php echo $this->url('formation-instance/supprimer-agent', ['inscrit' => $inscrit->getId()], [], true); ?>"
+                    <?php if ($inscription->isExterne()) : ?>
+                        <a href="<?php echo $this->url('stagiaire-externe/afficher', ['stagiaire-externe' => $inscription->getStagiaire()->getId()], [], true); ?>"
+                           data-bs-toggle="tooltip" data-bs-html="true" title="Afficher la fiche de <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span>"
+                        >
+                            <span class="icon icon-user"></span> Afficher </a>
+                    <?php endif; ?>
+
+                    <?php if ($liste !== null) : ?>
+                        <br>
+                        <?php /** @see \Formation\Controller\InscriptionController::restaurerAction() */?>
+                        <a  href="<?php echo $this->url('formation/inscription/restaurer', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
+                            data-bs-toggle="tooltip" data-bs-html="true" title="Restaurer <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> dans la formation."
+                        >
+                            <span class="icon icon-restaurer"></span> Restaurer</a>
+                    <?php endif; ?>
+                    <?php /** @see \Formation\Controller\InscriptionController::supprimerAction() */?>
+                    <br>
+                    <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
-                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscrit->getAgent()->getDenomination(); ?></span> de la formation."
+                        data-bs-toggle="tooltip" data-bs-html="true" title="Retirer définitivement <span class='highlight agent'><?php echo $inscription->getStagiaireDenomination(); ?></span> de la formation."
                     >
-                        <span class="icon icon-unchecked"></span></a>
+                            <span class="text-danger">
+                            <span class="icon icon-unchecked"></span> Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

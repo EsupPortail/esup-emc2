@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Provider\Template\TextTemplates;
+use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
@@ -15,6 +16,7 @@ class IndexController extends AbstractActionController
 
     use AgentServiceAwareTrait;
     use RenduServiceAwareTrait;
+    use StagiaireExterneServiceAwareTrait;
     use UserServiceAwareTrait;
 
 
@@ -32,7 +34,16 @@ class IndexController extends AbstractActionController
                 $this->redirect()->toRoute('home');
             }
         }
+        $stagiaire = $this->getStagiaireExterneService()->getStagiaireExterneByUser($connectedUser);
+        if ($stagiaire !== null && $stagiaire->getUtilisateur() === null) {
+            $previous = $stagiaire->getUtilisateur();
+            $stagiaire->setUtilisateur($connectedUser);
+            $this->getStagiaireExterneService()->update($stagiaire);
 
+            if ($connectedUser !== $previous) {
+                $this->redirect()->toRoute('home');
+            }
+        }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::MES_FORMATIONS_ACCUEIL, [], false);
 
         return new ViewModel([

@@ -2,7 +2,7 @@
 
 /**
  * @see \Formation\Controller\FormationInstanceInscritController::formationsAction()
- * @var FormationInstanceInscrit[] $formations
+ * @var Inscription[] $formations
  * @var Agent $agent
  * @var string|null $mailcontact
  */
@@ -10,10 +10,11 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
-$realisees  = array_filter($formations, function (FormationInstanceInscrit $a) { return $a->getInstance()->estRealisee();} );
-usort($realisees, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getInstance()->getDebut(true) < $b->getInstance()->getDebut(true); });
+$realisees  = array_filter($formations, function (Inscription $a) { return $a->getSession()->estRealisee();} );
+usort($realisees, function (Inscription $a, Inscription $b) { return $a->getSession()->getDebut(true) < $b->getSession()->getDebut(true); });
 
 $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
 
@@ -43,7 +44,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
     <?php foreach ($realisees as $inscription) : ?>
         <div class="row formation-inscription">
             <div class="col-md-7 description">
-                <?php echo $this->formationInstanceInformations($inscription->getInstance(), 'bloc'); ?>
+                <?php echo $this->formationInstanceInformations($inscription->getSession(), 'bloc'); ?>
                 <br/>
                 <br/>
             </div>
@@ -59,10 +60,10 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
 <!--                        --><?php //endif; ?>
                     </div>
                 <?php else : ?>
-                    <?php if ($inscription->getInstance()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
+                    <?php if ($inscription->getSession()->isEnqueteActive() AND $inscription->getValidationEnquete() === null) : ?>
                     <a
                         <?php /** @see \Formation\Controller\EnqueteQuestionController::repondreQuestionsAction() */?>
-                            href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            href="<?php echo $this->url('formation/enquete/repondre-questions', ['inscription' => $inscription->getId()], [], true); ?>"
                             class="btn btn-primary action <?php if ($inscription->getValidationEnquete() !== null) echo " disabled "; ?>"
                     >
                         <span class="icon icon-editer"> Je complète l'enquête</span>
@@ -70,7 +71,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                     <br/>
                     <a
                         <?php /** @see \Formation\Controller\EnqueteQuestionController::validerQuestionsAction() */?>
-                            href="<?php echo $this->url('formation/enquete/valider-questions', ['inscrit' => $inscription->getId()], [], true); ?>"
+                            href="<?php echo $this->url('formation/enquete/valider-questions', ['inscription' => $inscription->getId()], [], true); ?>"
                             class="btn btn-primary ajax-modal action <?php if (empty($inscription->getReponsesEnquete())) echo " disabled "; ?>"
                             data-event="modification"
                     >
@@ -81,7 +82,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <?php else : ?>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                        href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                        href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                         class="btn btn-primary action <?php //if ($inscription->getValidationEnquete() === null) echo " disabled "; ?>"
                 >
                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>

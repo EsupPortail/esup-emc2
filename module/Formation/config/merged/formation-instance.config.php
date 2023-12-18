@@ -35,6 +35,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'afficher',
+                        'rechercher',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
@@ -123,7 +124,7 @@ return [
                     'gestion-formation' => [
                         'pages' => [
                             'session_' => [
-                                'label'    => 'Session en cours',
+                                'label'    => 'Sessions en cours',
                                 'route'    => 'formation-instance',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
                                 'order'    => 230,
@@ -149,6 +150,16 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'rechercher' => [
+                        'type'  => Literal::class,
+                        'options' => [
+                            'route'    => '/rechercher',
+                            'defaults' => [
+                                /** @see FormationInstanceController::rechercherAction() */
+                                'action'     => 'rechercher',
+                            ],
+                        ],
+                    ],
                     'ajouter-avec-formulaire' => [
                         'type'  => Literal::class,
                         'options' => [

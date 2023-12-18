@@ -3,7 +3,7 @@
 namespace Formation\Controller;
 
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
+use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
 use Interop\Container\ContainerInterface;
@@ -23,18 +23,18 @@ class PresenceControllerFactory
     {
         /**
          * @var FormationInstanceService $formationInstanceService
-         * @var FormationInstanceInscritService $formationInstanceInscritService
+         * @var InscriptionService $inscriptionService
          * @var PresenceService $presenceService
          * @var SeanceService $seanceService
          */
         $formationInstanceService = $container->get(FormationInstanceService::class);
-        $formationInstanceInscritService = $container->get(FormationInstanceInscritService::class);
+        $inscriptionService = $container->get(InscriptionService::class);
         $presenceService = $container->get(PresenceService::class);
         $seanceService = $container->get(SeanceService::class);
 
         $controller = new PresenceController();
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceInscritService($formationInstanceInscritService);
+        $controller->setInscriptionService($inscriptionService);
         $controller->setPresenceService($presenceService);
         $controller->setSeanceService($seanceService);
         return $controller;

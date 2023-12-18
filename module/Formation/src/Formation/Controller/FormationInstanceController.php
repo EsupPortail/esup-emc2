@@ -6,13 +6,13 @@ use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Presence\PresenceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -26,7 +26,6 @@ class FormationInstanceController extends AbstractActionController
     use EtatTypeServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
-    use FormationInstanceInscritServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -83,7 +82,7 @@ class FormationInstanceController extends AbstractActionController
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
-            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscrit()->getId()] = $presence;
+            $dictionnaire[$presence->getJournee()->getId()][$presence->getInscription()->getId()] = $presence;
         }
 
         return new ViewModel([
@@ -262,5 +261,15 @@ class FormationInstanceController extends AbstractActionController
             'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
             'instance' => $instance,
         ]);
+    }
+
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $sessions = $this->getFormationInstanceService()->getSessionByTerm($term);
+            $result = $this->getFormationInstanceService()->formatSessionJSON($sessions);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }
