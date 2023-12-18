@@ -607,6 +607,43 @@ create table formation_formateur
 create unique index formation_instance_formateur_id_uindex
     on formation_formateur (id);
 
+create table formation_stagiaire_externe
+(
+    id                    serial                  not null
+        constraint formation_stagiaire_externe_pk
+            primary key,
+    prenom                varchar(1024)           not null,
+    nom                   varchar(1024)           not null,
+    date_naissance        timestamp,
+    sexe                  varchar(1),
+    structure             varchar(1024),
+    email                 varchar(1024)           not null,
+    login                 varchar(1024),
+    utilisateur_id        integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk4
+            references unicaen_utilisateur_user,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk2
+            references unicaen_utilisateur_user
+);
+
+alter table formation_stagiaire_externe
+    add utilisateur_id integer;
+
+alter table formation_stagiaire_externe
+    add constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk4
+        foreign key (utilisateur_id) references unicaen_utilisateur_user;
+
+
 create table formation_presence
 (
     id                    serial
@@ -793,7 +830,9 @@ create table lagaf_stagiaire
 
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur, description) VALUES
     ('Formateur·trice', 'Formateur·trice', false, null, null, false, true, null),
-    ('Gestionnaire de formation', 'Gestionnaire de formation', false, null, null, false, true, null);
+    ('Gestionnaire de formation', 'Gestionnaire de formation', false, null, null, false, true, null),
+    ('Stagiaire externe', 'Stagiaire externe', false, null, null, true, true, 'Stagiaire qui n''est pas un·e agent·e connu·e ')
+;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- ETAT ----------------------------------------------------------------------------------------------------------------
@@ -1551,6 +1590,23 @@ WITH d(code, lib, ordre) AS (
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstanceinscrit';
+
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('stagiaireexterne', 'Gestion des stagiaires externes', 'Formation\Provider\Privilege', 100402);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'stagiaireexterne_index', 'Accéder à l''index', 10 UNION
+    SELECT 'stagiaireexterne_afficher', 'Afficher', 20 UNION
+    SELECT 'stagiaireexterne_ajouter', 'Ajouter', 30 UNION
+    SELECT 'stagiaireexterne_modifier', 'Modifier', 40 UNION
+    SELECT 'stagiaireexterne_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'stagiaireexterne_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'stagiaireexterne';
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- EVENEMENT -----------------------------------------------------------------------------------------------------------
