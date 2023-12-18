@@ -272,7 +272,8 @@ create table unicaen_etat_instance
     histo_destruction     timestamp,
     histo_destructeur_id  integer
         references unicaen_utilisateur_user,
-    complement            text
+    complement            text,
+    infos                 text
 );
 create unique index unicaen_etat_instance_id_index on unicaen_etat_instance (id);
 
