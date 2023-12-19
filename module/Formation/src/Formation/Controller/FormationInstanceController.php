@@ -7,7 +7,7 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
-use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -29,7 +29,7 @@ class FormationInstanceController extends AbstractActionController
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
-    use PresenceAwareTrait;
+    use PresenceServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
 
     public function indexAction(): ViewModel

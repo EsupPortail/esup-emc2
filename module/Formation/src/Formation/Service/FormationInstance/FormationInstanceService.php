@@ -5,11 +5,9 @@ namespace Formation\Service\FormationInstance;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
-use Formation\Controller\FormationInstanceController;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
@@ -21,14 +19,13 @@ use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class FormationInstanceService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use EtatTypeServiceAwareTrait;
     use EtatInstanceServiceAwareTrait;
     use AbonnementServiceAwareTrait;
@@ -45,12 +42,8 @@ class FormationInstanceService
      */
     public function create(FormationInstance $instance): FormationInstance
     {
-        try {
-            $this->getEntityManager()->persist($instance);
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($instance);
+        $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
@@ -60,11 +53,7 @@ class FormationInstanceService
      */
     public function update(FormationInstance $instance): FormationInstance
     {
-        try {
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
@@ -74,12 +63,8 @@ class FormationInstanceService
      */
     public function historise(FormationInstance $instance): FormationInstance
     {
-        try {
-            $instance->historiser();
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $instance->historiser();
+        $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
@@ -89,12 +74,8 @@ class FormationInstanceService
      */
     public function restore(FormationInstance $instance): FormationInstance
     {
-        try {
-            $instance->dehistoriser();
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $instance->dehistoriser();
+        $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
@@ -104,12 +85,8 @@ class FormationInstanceService
      */
     public function delete(FormationInstance $instance): FormationInstance
     {
-        try {
-            $this->getEntityManager()->remove($instance);
-            $this->getEntityManager()->flush($instance);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($instance);
+        $this->getObjectManager()->flush($instance);
         return $instance;
     }
 
@@ -120,21 +97,16 @@ class FormationInstanceService
      */
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
-                ->addSelect('formation')->join('Finstance.formation', 'formation')
-                ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
-                ->addSelect('inscription')->leftJoin('Finstance.inscriptions', 'inscription')
+        $qb = $this->getObjectManager()->getRepository(FormationInstance::class)->createQueryBuilder('Finstance')
+            ->addSelect('formation')->join('Finstance.formation', 'formation')
+            ->addSelect('journee')->leftJoin('Finstance.journees', 'journee')
+            ->addSelect('inscription')->leftJoin('Finstance.inscriptions', 'inscription')
 ////                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
 ////                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
 ////                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-                ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
-                ->addSelect('etype')->leftjoin('etat.type', 'etype')
-                ->andWhere('etat.histoDestruction IS NULL')
-            ;
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problem est survenu lors de la création du QueryBuilder de [".FormationInstanceController::class."]",0,$e);
-        }
+            ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
+            ->addSelect('etype')->leftjoin('etat.type', 'etype')
+            ->andWhere('etat.histoDestruction IS NULL');
         return $qb;
     }
 
@@ -152,8 +124,7 @@ class FormationInstanceService
     public function getFormationsInstancesByFormation(Formation $formation): array
     {
         $qb = $this->createQueryBuilder()
-            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
-        ;
+            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId());
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -176,8 +147,7 @@ class FormationInstanceService
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . $annees[1]);
 
         $qb = $this->createQueryBuilder()
-            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId())
-        ;
+            ->andWhere('formation.id = :id')->setParameter('id', $formation->getId());
 
         $result = $qb->getQuery()->getResult();
         $trueR = [];
@@ -258,7 +228,7 @@ class FormationInstanceService
 
     public function recreation(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CREATION_EN_COURS);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
 
         return $instance;
@@ -271,7 +241,7 @@ class FormationInstanceService
      */
     public function ouvrirInscription(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_INSCRIPTION_OUVERTE);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_INSCRIPTION_OUVERTE);
         $this->update($instance);
 
 
@@ -290,7 +260,7 @@ class FormationInstanceService
      */
     public function fermerInscription(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_INSCRIPTION_FERMEE);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_INSCRIPTION_FERMEE);
         $this->update($instance);
 
         foreach ($instance->getListePrincipale() as $inscrit) {
@@ -318,7 +288,7 @@ class FormationInstanceService
             $dateRappel->sub(new DateInterval('P4D'));
             $this->getRappelAgentAvantFormationService()->creer($instance, $dateRappel);
         } else {
-           throw new RuntimeException("Aucun événement/rappel ne peut être créé sans au moins une séance de planifiée",0);
+            throw new RuntimeException("Aucun événement/rappel ne peut être créé sans au moins une séance de planifiée", 0);
         }
 
         return $instance;
@@ -330,11 +300,11 @@ class FormationInstanceService
      */
     public function envoyerConvocation(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_FORMATION_CONVOCATION);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_FORMATION_CONVOCATION);
         $this->update($instance);
         // Enovyer convocation aux agents en liste principale
         foreach ($instance->getListePrincipale() as $inscrit) {
-           if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
+            if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
         }
         return $instance;
     }
@@ -356,7 +326,7 @@ class FormationInstanceService
      */
     public function demanderRetour(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_ATTENTE_RETOURS);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_ATTENTE_RETOURS);
         $this->update($instance);
 
         foreach ($instance->getListePrincipale() as $inscrit) {
@@ -371,7 +341,7 @@ class FormationInstanceService
      */
     public function cloturer(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CLOTURE_INSTANCE);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CLOTURE_INSTANCE);
         $this->update($instance);
         return $instance;
     }
@@ -382,7 +352,7 @@ class FormationInstanceService
      */
     public function annuler(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_SESSION_ANNULEE);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_SESSION_ANNULEE);
         $this->update($instance);
         foreach ($instance->getInscriptions() as $inscrit) {
             $this->getNotificationService()->triggerSessionAnnulee($inscrit);
@@ -400,30 +370,27 @@ class FormationInstanceService
      */
     public function reouvrir(FormationInstance $instance): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance,SessionEtats::ETAT_CREATION_EN_COURS);
+        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_CREATION_EN_COURS);
         $this->update($instance);
         return $instance;
     }
+
     /** Fonction de classement des inscriptions ***********************************************************************/
 
     public function classerInscription(Inscription $inscription): Inscription
     {
         $session = $inscription->getSession();
         $placePrincipale = $session->getPlaceDisponible(Inscription::PRINCIPALE);
-        try {
-            if ($session->getNbPlacePrincipale() > $placePrincipale) {
-                $inscription->setListe(Inscription::PRINCIPALE);
-                $this->getEntityManager()->flush($inscription);
-                return $inscription;
-            }
-            $placeComplementaire = $session->getPlaceDisponible(Inscription::COMPLEMENTAIRE);
-            if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
-                $inscription->setListe(Inscription::COMPLEMENTAIRE);
-                $this->getEntityManager()->flush($inscription);
-                return $inscription;
-            }
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée.",0,$e);
+        if ($session->getNbPlacePrincipale() > $placePrincipale) {
+            $inscription->setListe(Inscription::PRINCIPALE);
+            $this->getObjectManager()->flush($inscription);
+            return $inscription;
+        }
+        $placeComplementaire = $session->getPlaceDisponible(Inscription::COMPLEMENTAIRE);
+        if ($session->getNbPlaceComplementaire() > $placeComplementaire) {
+            $inscription->setListe(Inscription::COMPLEMENTAIRE);
+            $this->getObjectManager()->flush($inscription);
+            return $inscription;
         }
         return $inscription;
     }
@@ -464,7 +431,7 @@ class FormationInstanceService
     {
         $qb = $this->createQueryBuilder();
         $qb = $qb->andWhere("LOWER(formation.libelle) like :search")
-            ->setParameter('search', '%'.strtolower($term).'%');
+            ->setParameter('search', '%' . strtolower($term) . '%');
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -479,7 +446,7 @@ class FormationInstanceService
             $groupe = $formation->getGroupe();
             $result[] = array(
                 'id' => $session->getId(),
-                'label' => ($groupe?$groupe->getLibelle():"Acucun groupe") . " > ". $session->getFormation()->getLibelle(),
+                'label' => ($groupe ? $groupe->getLibelle() : "Acucun groupe") . " > " . $session->getFormation()->getLibelle(),
                 'extra' => "<span class='badge' style='background-color: slategray;'>" . $session->getPeriode() . "</span>",
             );
         }

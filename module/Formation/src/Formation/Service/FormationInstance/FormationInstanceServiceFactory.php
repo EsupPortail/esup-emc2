@@ -22,7 +22,7 @@ class FormationInstanceServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : FormationInstanceService
+    public function __invoke(ContainerInterface $container): FormationInstanceService
     {
         /**
          * @var EntityManager $entityManager
@@ -45,7 +45,7 @@ class FormationInstanceServiceFactory
          * @var FormationInstanceService $service
          */
         $service = new FormationInstanceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAbonnementService($abonnementService);
         $service->setEtatInstanceService($etatInstanceService);
         $service->setEtatTypeService($etatTypeService);

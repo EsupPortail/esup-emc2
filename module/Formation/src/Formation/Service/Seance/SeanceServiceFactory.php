@@ -16,7 +16,7 @@ class SeanceServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : SeanceService
+    public function __invoke(ContainerInterface $container): SeanceService
     {
         /**
          * @var EntityManager $entityManager
@@ -25,7 +25,7 @@ class SeanceServiceFactory
 
         /** @var SeanceService $service */
         $service = new SeanceService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

@@ -8,7 +8,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PlanDeFormationServiceFactory {
+class PlanDeFormationServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -16,7 +17,7 @@ class PlanDeFormationServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PlanDeFormationService
+    public function __invoke(ContainerInterface $container): PlanDeFormationService
     {
         /**
          * @var EntityManager $entityManager
@@ -26,7 +27,7 @@ class PlanDeFormationServiceFactory {
         $formationService = $container->get(FormationService::class);
 
         $service = new PlanDeFormationService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setFormationService($formationService);
         return $service;
     }

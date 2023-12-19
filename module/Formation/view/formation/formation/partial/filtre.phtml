@@ -22,7 +22,7 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
                 <div class="col-md-3">
                     <label for="groupe">Thème de formation : </label>
                     <select id="groupe" name="groupe" class="selectpicker" data-live-search="true">
-                        <option value=""> Tous les groupes </option>
+                        <option value=""> Tous les thèmes </option>
                         <?php foreach ($groupes as $id => $libelle) : ?>
                         <option value="<?php echo $id; ?>"> <?php echo $libelle['label']; ?> </option>
                         <?php endforeach; ?>

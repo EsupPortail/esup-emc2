@@ -3,39 +3,30 @@
 namespace Formation\Service\PlanDeFormation;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class PlanDeFormationService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use FormationServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
     public function create(PlanDeFormation $plan) : PlanDeFormation
     {
-        try {
-            $this->getEntityManager()->persist($plan);
-            $this->getEntityManager()->flush($plan);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD",0,$e);
-        }
+        $this->getObjectManager()->persist($plan);
+        $this->getObjectManager()->flush($plan);
         return $plan;
     }
 
     public function update(PlanDeFormation $plan) : PlanDeFormation
     {
-        try {
-            $this->getEntityManager()->flush($plan);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD",0,$e);
-        }
+        $this->getObjectManager()->flush($plan);
         return $plan;
     }
 
@@ -43,7 +34,7 @@ class PlanDeFormationService {
 //    {
 //        $plan->historiser();
 //        try {
-//            $this->getEntityManager()->flush($plan);
+//            $this->getObjectManager()->flush($plan);
 //        } catch (ORMException $e) {
 //            throw new RuntimeException("Un problème est survenu en BD",0,$e);
 //        }
@@ -54,7 +45,7 @@ class PlanDeFormationService {
 //    {
 //        $plan->dehistoriser();
 //        try {
-//            $this->getEntityManager()->flush($plan);
+//            $this->getObjectManager()->flush($plan);
 //        } catch (ORMException $e) {
 //            throw new RuntimeException("Un problème est survenu en BD",0,$e);
 //        }
@@ -63,12 +54,8 @@ class PlanDeFormationService {
 
     public function delete(PlanDeFormation $plan) : PlanDeFormation
     {
-        try {
-            $this->getEntityManager()->remove($plan);
-            $this->getEntityManager()->flush($plan);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en BD",0,$e);
-        }
+        $this->getObjectManager()->remove($plan);
+        $this->getObjectManager()->flush($plan);
         return $plan;
     }
 
@@ -76,7 +63,7 @@ class PlanDeFormationService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(PlanDeFormation::class)->createQueryBuilder('plan')
+        $qb = $this->getObjectManager()->getRepository(PlanDeFormation::class)->createQueryBuilder('plan')
             ->leftjoin('plan.formations', 'formation')->addSelect('formation')
             ->leftjoin('formation.groupe', 'groupe')->addSelect('groupe')
             ->andWhere('formation.histoDestruction IS NULL');
@@ -141,6 +128,8 @@ class PlanDeFormationService {
         }
         return $options;
     }
+
+    /** FACADE ********************************************************************************************************/
 
     public function transferer(PlanDeFormation $toRecopy, PlanDeFormation $planDeFormation) : void
     {

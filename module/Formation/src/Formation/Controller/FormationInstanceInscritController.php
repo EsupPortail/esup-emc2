@@ -2,14 +2,11 @@
 
 namespace Formation\Controller;
 
-use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\DemandeExterne;
-use Formation\Entity\Db\Inscription;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
-use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
@@ -87,13 +84,21 @@ class FormationInstanceInscritController extends AbstractActionController
     {
         $utilisateur = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($utilisateur);
+        $stagiaire = null;
+        $inscriptions = null;
 
-        $formations = $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        if ($agent !== null) $inscriptions = $this->getInscriptionService()->getInscriptionsByAgent($agent);
+        else {
+            $stagiaire = $this->getStagiaireExterneService()->getStagiaireExterneByUser($utilisateur);
+            if ($stagiaire) $inscriptions = $this->getInscriptionService()->getInscriptionbyStagiaire($stagiaire);
+        }
+
         $mail = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::MAIL_DRH_FORMATION);
 
         return new ViewModel([
             'agent' => $agent,
-            'formations' => $formations,
+            'stagiaire' => $stagiaire,
+            'inscriptions' => $inscriptions,
             'mailcontact' => ($mail) ? $mail->getValeur() : null,
         ]);
     }

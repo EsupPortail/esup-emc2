@@ -3,13 +3,11 @@
 namespace Formation\Service\HasFormationCollection;
 
 use DateTime;
-use Doctrine\ORM\Exception\ORMException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\FormationElement;
 use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
@@ -17,7 +15,7 @@ class HasFormationCollectionService
 {
     use FormationServiceAwareTrait;
     use FormationElementServiceAwareTrait;
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use UserServiceAwareTrait;
 
     /**
@@ -34,11 +32,7 @@ class HasFormationCollectionService
             $object->setHistoModificateur($user);
         }
 
-        try {
-            $this->getEntityManager()->flush($object);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($object);
         return $object;
     }
 

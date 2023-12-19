@@ -15,7 +15,7 @@ class SessionParametreServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : SessionParametreService
+    public function __invoke(ContainerInterface $container): SessionParametreService
     {
         /**
          * @var EntityManager $entityManager
@@ -23,7 +23,7 @@ class SessionParametreServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new SessionParametreService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

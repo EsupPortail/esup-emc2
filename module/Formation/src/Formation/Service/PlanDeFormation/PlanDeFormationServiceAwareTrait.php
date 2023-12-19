@@ -2,7 +2,8 @@
 
 namespace Formation\Service\PlanDeFormation;
 
-trait PlanDeFormationServiceAwareTrait {
+trait PlanDeFormationServiceAwareTrait
+{
 
     private PlanDeFormationService $planDeFormationService;
 

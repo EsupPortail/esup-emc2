@@ -47,13 +47,12 @@ class AgentAffectation implements HasPeriodeInterface {
 
     public function getTemoin(string $temoin) : bool
     {
-        switch ($temoin) {
-            case 'principale' : return $this->isPrincipale();
-            case 'hierarchique' : return $this->isHierarchique();
-            case 'fonctionnelle' : return $this->isFonctionnelle();
-            default :
-                throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0);
-        }
+        return match ($temoin) {
+            'principale' => $this->isPrincipale(),
+            'hierarchique' => $this->isHierarchique(),
+            'fonctionnelle' => $this->isFonctionnelle(),
+            default => throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0),
+        };
     }
 
     public function isPrincipale() : bool

@@ -2,7 +2,8 @@
 
 namespace Formation\Service\HasFormationCollection;
 
-trait HasFormationCollectionServiceAwareTrait {
+trait HasFormationCollectionServiceAwareTrait
+{
 
     private HasFormationCollectionService $hasFormationCollectionService;
 

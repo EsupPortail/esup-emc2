@@ -5,7 +5,7 @@ namespace Formation\Controller;
 use Formation\Entity\Db\Presence;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
-use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -14,7 +14,7 @@ class PresenceController extends AbstractActionController
 {
     use FormationInstanceServiceAwareTrait;
     use InscriptionServiceAwareTrait;
-    use PresenceAwareTrait;
+    use PresenceServiceAwareTrait;
     use SeanceServiceAwareTrait;
 
 

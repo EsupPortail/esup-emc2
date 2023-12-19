@@ -7,12 +7,12 @@ trait FormationInstanceServiceAwareTrait
 
     private FormationInstanceService $formationInstanceService;
 
-    public function getFormationInstanceService() : FormationInstanceService
+    public function getFormationInstanceService(): FormationInstanceService
     {
         return $this->formationInstanceService;
     }
 
-    public function setFormationInstanceService(FormationInstanceService $service) : void
+    public function setFormationInstanceService(FormationInstanceService $service): void
     {
         $this->formationInstanceService = $service;
     }

@@ -26,6 +26,14 @@ return [
                     'controller' => FormationInstanceInscritController::class,
                     'action' => [
                         'formations',
+                    ],
+                    'roles' => [
+                        'Agent', 'Stagiaire externe'
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceInscritController::class,
+                    'action' => [
                         'inscriptions',
                         'inscription-interne',
                         'inscription-externe',

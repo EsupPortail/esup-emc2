@@ -2,7 +2,8 @@
 
 namespace Formation\Service\SessionParametre;
 
-trait SessionParametreServiceAwareTrait {
+trait SessionParametreServiceAwareTrait
+{
 
     private SessionParametreService $sessionParametreService;
 

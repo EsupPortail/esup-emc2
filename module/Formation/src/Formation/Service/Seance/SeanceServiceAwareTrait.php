@@ -8,12 +8,12 @@ trait SeanceServiceAwareTrait
 
     private SeanceService $seanceService;
 
-    public function getSeanceService() : SeanceService
+    public function getSeanceService(): SeanceService
     {
         return $this->seanceService;
     }
 
-    public function setSeanceService(SeanceService $seanceService) : void
+    public function setSeanceService(SeanceService $seanceService): void
     {
         $this->seanceService = $seanceService;
     }

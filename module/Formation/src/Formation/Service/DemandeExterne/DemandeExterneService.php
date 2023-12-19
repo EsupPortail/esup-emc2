@@ -22,7 +22,7 @@ use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
-use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Structure\Entity\Db\Structure;
@@ -44,7 +44,7 @@ class DemandeExterneService
     use FormationInstanceServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use SeanceServiceAwareTrait;
-    use PresenceAwareTrait;
+    use PresenceServiceAwareTrait;
 
     use StructureServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
@@ -94,8 +94,7 @@ class DemandeExterneService
             ->join('demande.agent', 'agent')->addSelect('agent')
             ->join('demande.etats', 'etat')->addSelect('etat')
             ->join('etat.type', 'type')->addSelect('type')
-            ->andWhere('etat.histoDestruction IS NULL')
-            ;
+            ->andWhere('etat.histoDestruction IS NULL');
         return $qb;
     }
 

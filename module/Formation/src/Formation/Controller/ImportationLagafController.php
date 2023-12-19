@@ -21,7 +21,7 @@ use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\HasFormationCollection\HasFormationCollectionServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
-use Formation\Service\Presence\PresenceAwareTrait;
+use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Formation\Service\Seance\SeanceServiceAwareTrait;
 use Formation\Service\Stagiaire\StagiaireServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -39,7 +39,7 @@ class ImportationLagafController extends AbstractActionController
     use SeanceServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use InscriptionFraisServiceAwareTrait;
-    use PresenceAwareTrait;
+    use PresenceServiceAwareTrait;
     use StagiaireServiceAwareTrait;
     use UserServiceAwareTrait;
     use HasFormationCollectionServiceAwareTrait;

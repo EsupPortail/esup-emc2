@@ -15,7 +15,7 @@ class PresenceServiceFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : PresenceService
+    public function __invoke(ContainerInterface $container): PresenceService
     {
         /**
          * @var EntityManager $entityManager

@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
+use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -236,6 +237,18 @@ class InscriptionService
         return $result;
     }
 
+    /** @return Inscription[] */
+    public function getInscriptionbyStagiaire(StagiaireExterne $stagiaire, bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('inscription.stagiaire = :stagiaire')->setParameter('stagiaire', $stagiaire)
+        ;
+        if (!$withHisto) $qb = $qb->andWhere('inscription.histoDestruction IS NULL');
+
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 
     /** FACADE ********************************************************************************************************/
 
