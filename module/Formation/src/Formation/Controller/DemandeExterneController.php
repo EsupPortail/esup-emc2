@@ -14,6 +14,7 @@ use Formation\Form\DemandeExterne\DemandeExterneFormAwareTrait;
 use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -414,7 +415,7 @@ class DemandeExterneController extends AbstractActionController {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
 
         $fichier = new Fichier();
-        $devisNature = $this->getNatureService()->getNatureByCode('DEMANDEEXTERNE_DEVIS');
+        $devisNature = $this->getNatureService()->getNatureByCode(FichierNature::DEMANDEEXTERNE_DEVIS);
         $fichier->setNature($devisNature);
         $form = $this->getUploadForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true));

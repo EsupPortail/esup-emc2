@@ -78,6 +78,7 @@ return [
                 'options' => [
                     'route'    => '/download-fichier/:fichier',
                     'defaults' => [
+                        /** @see FichierController::downloadAction() */
                         'controller' => FichierController::class,
                         'action'     => 'download',
                     ],

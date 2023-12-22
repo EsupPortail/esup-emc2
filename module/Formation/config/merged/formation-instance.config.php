@@ -4,6 +4,7 @@ namespace Formation;
 
 use Formation\Controller\FormationInstanceController;
 use Formation\Controller\FormationInstanceControllerFactory;
+use Formation\Controller\InscriptionController;
 use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Form\FormationInstance\FormationInstanceFormFactory;
 use Formation\Form\FormationInstance\FormationInstanceHydrator;
@@ -128,6 +129,13 @@ return [
                                 'route'    => 'formation-instance',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
                                 'order'    => 230,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                            'isncription_' => [
+                                'label'    => 'Inscriptions',
+                                'route'    => 'formation/inscription',
+                                'resource' => PrivilegeController::getResourceId(InscriptionController::class, 'index') ,
+                                'order'    => 240,
                                 'icon' => 'fas fa-angle-right',
                             ],
                         ],

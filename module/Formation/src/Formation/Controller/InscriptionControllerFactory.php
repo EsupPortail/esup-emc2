@@ -3,6 +3,9 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
+use Fichier\Form\Upload\UploadForm;
+use Fichier\Service\Fichier\FichierService;
+use Fichier\Service\Nature\NatureService;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\InscriptionFrais\InscriptionFraisForm;
 use Formation\Form\Justification\JustificationForm;
@@ -29,40 +32,50 @@ class InscriptionControllerFactory {
         /**
          * @var AgentService $agentService
          * @var EtatInstanceService $etatInstanceService
+         * @var FichierService $fichierService
          * @var FormationInstanceService $formationInstanceService
          * @var InscriptionService $inscriptionService
+         * @var NatureService $natureService
          * @var NotificationService $notificationService
          * @var UserService $userService
-         * @var InscriptionForm $inscriptionForm
          */
         $agentService = $container->get(AgentService::class);
         $etatInstanceService = $container->get(EtatInstanceService::class);
+        $fichierService = $container->get(FichierService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $inscriptionService = $container->get(InscriptionService::class);
+        $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
-        $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
+
         $userService = $container->get(UserService::class);
         /**
+         * @var InscriptionForm $inscriptionForm
          * @var InscriptionFraisService $inscriptionFraisService
          * @var InscriptionFraisForm $inscriptionFraisForm
+         * @var JustificationForm $justificatifForm
+         * @var UploadForm $uploadForm
          */
+        $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
         $inscriptionFraisService = $container->get(InscriptionFraisService::class);
         $inscriptionFraisForm = $container->get('FormElementManager')->get(InscriptionFraisForm::class);
         $justificatifForm = $container->get('FormElementManager')->get(JustificationForm::class);
+        $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
         $controller = new InscriptionController();
         $controller->setAgentService($agentService);
         $controller->setEtatInstanceService($etatInstanceService);
+        $controller->setFichierService($fichierService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setInscriptionService($inscriptionService);
+        $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
-        $controller->setInscriptionForm($inscriptionForm);
-        $controller->setInscriptionForm($inscriptionForm);
         $controller->setUserService($userService);
 
+        $controller->setInscriptionForm($inscriptionForm);
         $controller->setInscriptionFraisService($inscriptionFraisService);
         $controller->setInscriptionFraisForm($inscriptionFraisForm);
         $controller->setJustificationForm($justificatifForm);
+        $controller->setUploadForm($uploadForm);
 
         return $controller;
     }

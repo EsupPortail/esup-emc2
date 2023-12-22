@@ -1,6 +1,9 @@
 <?php
 
 use Formation\Entity\Db\Inscription;
+use Formation\Provider\Privilege\FormationagentPrivileges;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
+use Formation\Provider\Privilege\StagiaireexternePrivileges;
 
 /**
  * @see \Formation\Controller\InscriptionController::indexAction()
@@ -9,11 +12,14 @@ use Formation\Entity\Db\Inscription;
 
 $this->headTitle("Inscriptions aux formations");
 
-$canVoirIndividu = true;
-$canVoirSession = true;
-$canModifier = true;
-$canHistoriser = true;
-$canSupprimer = true;
+$canVoirIndividu = $this->isAllowed(FormationagentPrivileges::getResourceId(FormationagentPrivileges::FORMATIONAGENT_INDEX)) || $this->isAllowed(StagiaireexternePrivileges::getResourceId(StagiaireexternePrivileges::STAGIAIREEXTERNE_AFFICHER));
+$canVoirSession = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER));
+$canModifier = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
+$canHistoriser = $canModifier;
+$canSupprimer = $canModifier;
+$canTeleverserAttestation = $canModifier;
+$canTelechargerAttestation = $canModifier;
+$canSupprimerAttestation = $canModifier;
 
 ?>
 
@@ -32,6 +38,7 @@ $canSupprimer = true;
         <tr>
             <th> Session de formation </th>
             <th> Stagiaire </th>
+            <th> Documents </th>
             <th> État </th>
             <th class="action"> Action </th>
         </tr>
@@ -59,7 +66,47 @@ $canSupprimer = true;
                             Agent
                         <?php endif; ?>
                     </td>
+                    <td class="action">
+                        <?php if ($canTeleverserAttestation) : ?>
+                            <?php /** @see \Formation\Controller\InscriptionController::televerserAttestationAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/televerser-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon icon-televerser"></span> Téléverser un document
+                            </a>
+                        <?php endif; ?>
+                        <ul>
+                            <?php foreach ($inscription->getFichiers() as $attestation) : ?>
+                                <li>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <strong><?php echo $attestation->getNature()->getLibelle(); ?></strong><br>
+                                            <?php echo $attestation->getNomOriginal(); ?>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php if ($canTelechargerAttestation) : ?>
+                                                <?php /** @see \Formation\Controller\InscriptionController::telechargerAttestationAction() */ ?>
+                                                <a href="<?php echo $this->url('formation/inscription/telecharger-attestation', ['inscription' => $inscription->getId(), 'attestation' => $attestation->getId()], [], true); ?>">
+                                                    <span class="icon icon-televerser"></span> Télécharger
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canSupprimerAttestation) : ?>
+                                                <br>
+                                                <?php /** @see \Formation\Controller\InscriptionController::supprimerAttestationAction() */ ?>
+                                                <a href="<?php echo $this->url('formation/inscription/supprimer-attestation', ['inscription' => $inscription->getId(), 'attestation' => $attestation->getId()], [], true); ?>">
+                                                    <span class="text-danger">
+                                                        <span class="icon icon-unchecked"></span> Supprimer
+                                                    </span>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </td>
                     <td>
+                        <?php echo $this->etatinstance($inscription->getEtatActif()); ?>
                     </td>
                     <td class="action">
                         <?php if ($canVoirIndividu) : ?>

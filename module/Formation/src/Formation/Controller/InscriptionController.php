@@ -4,6 +4,11 @@ namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Fichier\Controller\FichierController;
+use Fichier\Entity\Db\Fichier;
+use Fichier\Form\Upload\UploadFormAwareTrait;
+use Fichier\Service\Fichier\FichierServiceAwareTrait;
+use Fichier\Service\Nature\NatureServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\InscriptionFrais;
@@ -11,11 +16,13 @@ use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Form\InscriptionFrais\InscriptionFraisFormAwareTrait;
 use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\InscriptionEtats;
+use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Source\Sources;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
+use Laminas\Form\Element\Select;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -31,13 +38,16 @@ class InscriptionController extends AbstractActionController
     use InscriptionServiceAwareTrait;
     use InscriptionFormAwareTrait;
     use EtatInstanceServiceAwareTrait;
+    use FichierServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
+    use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use UserServiceAwareTrait;
 
     use InscriptionFraisServiceAwareTrait;
     use InscriptionFraisFormAwareTrait;
     use JustificationFormAwareTrait;
+    use UploadFormAwareTrait;
 
 
     /** CRUD ******************************************************************************************************** */
@@ -418,6 +428,85 @@ class InscriptionController extends AbstractActionController
             'title' => "Saisie des frais de " . $inscription->getStagiaireDenomination(),
             'form' => $form,
         ]);
+        return $vm;
+    }
+
+    /** FICHIERS ASSOCIES *********************************************************************************************/
+
+    public function televerserAttestationAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+
+        $fichier = new Fichier();
+        $nature = $this->getNatureService()->getNatureByCode(FichierNature::INSCRIPTION_ATTESTATION);
+        $fichier->setNature($nature);
+        $form = $this->getUploadForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/televerser-attestation', ['inscription' => $inscription->getId()], [], true));
+        /** @var Select $select */
+        $select = $form->get('nature');
+        $select->setValueOptions([$nature->getId() => $nature->getLibelle()]);
+        $form->bind($fichier);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $files = $request->getFiles();
+            $file = $files['fichier'];
+
+            if ($file['name'] != '') {
+                $nature = $this->getNatureService()->getNature($data['nature']);
+                $fichier = $this->getFichierService()->createFichierFromUpload($file, $nature);
+                $inscription->addFichier($fichier);
+                $this->getInscriptionService()->update($inscription);
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('formation/default/default-form');
+        $vm->setVariables([
+            'title' => 'Téléverserment d\'un fichier',
+            'form' => $form,
+        ]);
+        return $vm;
+    }
+
+    public function telechargerAttestationAction(): ViewModel|Response
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'attestation');
+
+        if ($inscription->hasFichier($fichier)) {
+            /** @see FichierController::downloadAction() */
+            return $this->redirect()->toRoute('download-fichier', ['fichier' => $fichier->getId()]);
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Impossible de télécharger l'attestation",
+            'reponse' => "L'attestation est incohérente avec l'inscription",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
+
+    public function supprimerAttestationAction(): ViewModel|Response
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $fichier = $this->getFichierService()->getRequestedFichier($this, 'attestation');
+
+        if ($inscription->hasFichier($fichier)) {
+            $this->getFichierService()->delete($fichier);
+
+            $retour = $this->params()->fromQuery('retour');
+            if ($retour) return $this->redirect()->toUrl($retour);
+            return $this->redirect()->toRoute('formation/inscription');
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Impossible de supprimer l'attestation",
+            'reponse' => "L'attestation est incohérente avec l'inscription",
+        ]);
+        $vm->setTemplate('default/reponse');
         return $vm;
     }
 

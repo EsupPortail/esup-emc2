@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
+use Fichier\Entity\Db\Fichier;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
@@ -40,6 +41,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
 
     private Collection $presences;
     private ?InscriptionFrais $frais = null;
+    private Collection $fichiers;
 
     private string $source;
     private string $idSource;
@@ -50,6 +52,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $this->presences = new ArrayCollection();
         $this->validations = new ArrayCollection();
         $this->reponsesEnquete = new ArrayCollection();
+        $this->fichiers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,6 +169,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     {
         $this->idSource = $idSource;
     }
+
     public function getFrais(): ?InscriptionFrais
     {
         return $this->frais;
@@ -179,6 +183,43 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
         $responses = $this->reponsesEnquete->toArray();
         $responses = array_filter($responses, function (EnqueteReponse $a) { return $a->estNonHistorise(); });
         return $responses;
+    }
+
+    /** Gestion des fichiers  *****************************************************************************************/
+    // TODO trait et interface ?
+
+    /** @return Fichier[] */
+    public function getFichiers(): array
+    {
+        return $this->fichiers->toArray();
+    }
+
+    public function addFichier(Fichier $fichier): void
+    {
+        $this->fichiers->add($fichier);
+    }
+
+    public function removeFichier(Fichier $fichier): void
+    {
+        $this->fichiers->removeElement($fichier);
+    }
+
+    public function hasFichier(Fichier $fichier): bool
+    {
+        return $this->fichiers->contains($fichier);
+    }
+
+    /** @return Fichier[] */
+    public function getFichiersByNatureCode(string $code): array
+    {
+        $result = [];
+        /** @var Fichier $fichier */
+        foreach ($this->fichiers as $fichier) {
+            if ($fichier->estNonHistorise() && $fichier->getNature()->getCode() === $code) {
+                $result[] = $fichier;
+            }
+        }
+        return $result;
     }
 
     /** PREDICATS ET RACCOURCIS ***************************************************************************************/

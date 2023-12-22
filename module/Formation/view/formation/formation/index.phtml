@@ -43,55 +43,88 @@ $this->headTitle("Actions de formation");
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-<table class="datatable table-condensed table-hover" id="formations" style="width:100%;">
+<table class="table table-condensed datatable" id="formations">
     <thead>
         <tr>
             <th class="col-md-6 nosort"> Libellé </th>
-            <th class="col-md-3 nosort" style="min-width:10rem;"> Groupe </th>
+            <th class="col-md-3 nosort" style="min-width:10rem;"> Contexte </th>
             <th class="col-md-2 nosort" style="min-width:10rem;"> Source </th>
-            <th class="col-md-1 nosort" style="min-width:10rem;"> Action </th>
+            <th class="action"> Action </th>
         </tr>
     </thead>
     <tbody>
     <?php foreach($formations as $formation) : ?>
         <tr id="<?php echo $formation->getId(); ?>"  class="<?php if ($formation->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $formation->getLibelle(); ?> </td>
-            <td> <?php echo ($formation->getGroupe())?$formation->getGroupe()->getLibelle():"Sans groupe ..."; ?> </td>
+            <td>
+                <strong>Axe :</strong>
+                <?php if ($formation->getGroupe() !== null && $formation->getGroupe()->getAxe() !== null) : ?>
+                    <?php echo $formation->getGroupe()->getAxe()->getLibelle(); ?>
+                <?php else: ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun axe pour cette action
+                    </span>
+                <?php endif; ?>
+                <br>
+                <strong>Thème :</strong>
+                <?php if ($formation->getGroupe() !== null) : ?>
+                    <?php echo $formation->getGroupe()->getLibelle(); ?>
+                <?php else: ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun thème pour cette formation
+                    </span>
+                <?php endif; ?>
+
+            </td>
             <td>
                 <span class="badge source <?php echo $formation->getSource(); ?>">
                     <?php echo $formation->getSource(); ?>  <?php echo ($formation->getIdSource())?:$formation->getId(); ?>
                 </span>
             </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
                     <a
                         <?php /** @see FormationController::editerAction() */ ?>
                         href="<?php echo $this->url('formation/editer', ['formation' => $formation->getId()], [], true); ?>"
                     >
-                        <span class="icon icon-voir" title="Afficher la formation"></span></a>
+                        <span class="icon icon-voir" title="Afficher la formation"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
+                    <br>
                     <?php if ($formation->estNonHistorise()) : ?>
                         <a
                             <?php /** @see FormationController::historiserAction() */ ?>
                             href="<?php echo $this->url('formation/historiser', ['formation' => $formation->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-historiser" title="Historiser la formation"></span></a>
+                            <span class="icon icon-historiser" title="Historiser la formation"></span>
+                            Historiser
+                        </a>
                     <?php else : ?>
                         <a
                             <?php /** @see FormationController::restaurerAction() */ ?>
                             href="<?php echo $this->url('formation/restaurer', ['formation' => $formation->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-restaurer" title="Restaurer la formation"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer la formation"></span>
+                            Restaurer
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canDetruire AND $formation->estHistorise()) : ?>
+                    <br>
                     <a
                         <?php /** @see FormationController::detruireAction() */ ?>
                         href="<?php echo $this->url('formation/detruire', ['formation' => $formation->getId()], [], true); ?>"
                         class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-unchecked text-danger" title="Supprimer la formation"></span></a>
+                        <span class=" text-danger">
+                            <span class="icon icon-unchecked" title="Supprimer la formation"></span>
+                            Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -100,8 +133,8 @@ $this->headTitle("Actions de formation");
 </table>
 
 <script>
-    $(document).ready(function() {
-        let table = $('#formations').DataTable({
+    $(function() {
+         $('#formations').DataTable({
             "pageLength": 25,
             "sorting": false,
             "columnDefs": [
@@ -115,11 +148,7 @@ $this->headTitle("Actions de formation");
             },
         } );
     } );
-</script>
 
-
-
-<script>
     $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');

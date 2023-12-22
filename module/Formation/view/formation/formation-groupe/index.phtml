@@ -53,7 +53,14 @@ $this->headTitle("Thèmes de formation");
         <tr id="<?php echo $groupe->getId(); ?>"  class="<?php if ($groupe->estHistorise()) echo "historise"; ?>">
 
             <td> <!-- LIBELLE -->
-                <?php echo $groupe->getLibelle(); ?>
+                <?php if ($groupe->getLibelle()) : ?>
+                    <?php echo $groupe->getLibelle(); ?>
+                <?php else :?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun libellé pour ce thème
+                    </span>
+                <?php endif; ?>
                 <?php if ($groupe->getDescription() !== null) : ?>
                     <span class="icon icon-info" title="<?php echo $groupe->getDescription(); ?>"
                           data-bs-toggle="tooltip" data-bs-html="true">
@@ -62,7 +69,10 @@ $this->headTitle("Thèmes de formation");
             </td>
             <td>
                 <?php if ($groupe->getAxe() === null) : ?>
-                    <em> Aucun axe associé</em>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun axe pour ce thème
+                    </span>
                 <?php else: ?>
                     <?php echo $groupe->getAxe()->getLibelle(); ?>
                 <?php endif; ?>

@@ -12,6 +12,7 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\StagiaireExterne;
+use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
 $realisees  = array_filter($inscriptions, function (Inscription $a) { return $a->getSession()->estRealisee();} );
@@ -50,7 +51,22 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <br/>
             </div>
             <div class="col-md-5">
-                <?php if ($inscription->getSource() !== HasSourceInterface::SOURCE_EMC2) : ?>
+                <!-- Si une attstation est déposée alors elle surplante le mécanisme de base -->
+                <?php $attestations = $inscription->getFichiersByNatureCode(FichierNature::INSCRIPTION_ATTESTATION); ?>
+                <?php if (!empty($attestations)) : ?>
+                    <ul>
+                    <?php foreach ($attestations as $attestation) : ?>
+                        <li>
+                            <?php /** @see \Formation\Controller\InscriptionController::telechargerAttestationAction() */ ?>
+                            <a href="<?php echo $this->url('formation/inscription/telecharger-attestation', ['inscription' => $inscription->getId(), 'attestation' => $attestation->getId()], [], true); ?>">
+                                <span class="icon icon-telecharger"></span>
+                                <?php echo $attestation->getNomOriginal(); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php else : ?>
+                    <?php if ($inscription->getSource() !== HasSourceInterface::SOURCE_EMC2) : ?>
                     <div class="alert alert-warning">
                         <span class="icon icon-information"></span>
                             Formation gérée par <?php echo $inscription->getSource(); ?>, mes-formations ne peut pas vous fournir d'attestation.
@@ -88,6 +104,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 >
                     <span class="icon icon-pdf"> Je télécharge mon attestation</span>
                 </a>
+                <?php endif; ?>
                 <?php endif; ?>
                 <?php endif; ?>
             </div>

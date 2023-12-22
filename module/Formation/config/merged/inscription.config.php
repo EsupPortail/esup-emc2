@@ -90,6 +90,25 @@ return [
                         'Stagiaire externe',
                     ],
                 ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'telecharger-attestation',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
+                        'televerser-attestation',
+                        'supprimer-attestation',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
+                    ],
+                ],
             ],
         ],
     ],
@@ -175,6 +194,37 @@ return [
                                     'defaults' => [
                                         /** @see InscriptionController::supprimerAction() */
                                         'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            /** Attestation ***************************************************************************/
+                            'televerser-attestation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/televerser-attestation/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::televerserAttestationAction() */
+                                        'action' => 'televerser-attestation',
+                                    ],
+                                ],
+                            ],
+                            'telecharger-attestation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/telecharger-attestation/:inscription/:attestation',
+                                    'defaults' => [
+                                        /** @see InscriptionController::telechargerAttestationAction() */
+                                        'action' => 'telecharger-attestation',
+                                    ],
+                                ],
+                            ],
+                            'supprimer-attestation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/supprimer-attestation/:inscription/:attestation',
+                                    'defaults' => [
+                                        /** @see InscriptionController::supprimerAttestationAction() */
+                                        'action' => 'supprimer-attestation',
                                     ],
                                 ],
                             ],
