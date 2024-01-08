@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Structure\StructureService;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
@@ -29,6 +30,7 @@ class EntretienProfessionnelServiceFactory
          * @var ConfigurationService $configurationService
          * @var FormulaireInstanceService $formulaireInstanceService
          * @var ParametreService $parametreService
+         * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          */
@@ -37,6 +39,7 @@ class EntretienProfessionnelServiceFactory
         $configurationService = $container->get(ConfigurationService::class);
         $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
         $parametreService = $container->get(ParametreService::class);
+        $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
 
@@ -46,6 +49,7 @@ class EntretienProfessionnelServiceFactory
         $service->setConfigurationService($configurationService);
         $service->setFormulaireInstanceService($formulaireInstanceService);
         $service->setParametreService($parametreService);
+        $service->setStructureService($structureService);
         $service->setValidationInstanceService($validationInstanceService);
         $service->setValidationTypeService($validationTypeService);
 

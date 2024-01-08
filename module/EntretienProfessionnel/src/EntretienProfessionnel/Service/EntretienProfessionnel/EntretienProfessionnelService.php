@@ -16,6 +16,7 @@ use Exception;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Ramsey\Uuid\Uuid;
 use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
@@ -31,6 +32,7 @@ class EntretienProfessionnelService
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
+    use StructureServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
     use ValidationTypeServiceAwareTrait;
 
@@ -405,15 +407,18 @@ class EntretienProfessionnelService
         if (isset($params['etat']) and $params['etat'] !== "") {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $params['etat']);
         }
-        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
-            $qb = $qb
-                ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
-                ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
-                ->andWhere('structure.id = :structure')->setParameter('structure', $params['structure-filtre']['id'])
-                ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= entretien.dateEntretien')
-                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
-                ->andWhere('affectation.id IS NOT NULL');
-        }
+        // NOTE Changement provoqué par la gestion des structures "mères"
+//        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
+//            $qb = $qb
+//                ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
+//                ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
+//                ->andWhere('structure.id = :structure')->setParameter('structure', $params['structure-filtre']['id'])
+//                ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut <= entretien.dateEntretien')
+//                ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
+//                ->andWhere('affectation.id IS NOT NULL');
+//        }
+
+
         if (isset($params['agent-filtre']) and $params['agent-filtre']['id'] !== "") {
             $qb = $qb->andWhere('agent.id = :id')->setParameter('id', $params['agent-filtre']['id']);
         }
@@ -422,6 +427,27 @@ class EntretienProfessionnelService
         }
 
         $result = $qb->getQuery()->getResult();
+
+        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "")
+        {
+            $structure = $this->getStructureService()->getStructure($params['structure-filtre']['id']);
+            // NOTE Changement provoqué par la gestion des structures "mères"
+            $entretiens = [];
+            /** @var EntretienProfessionnel $item */
+            foreach ($result as $item) {
+                $agent = $item->getAgent();
+                $affectations = $agent->getAffectations($item->getDateEntretien());
+                //todo filtrer les affectations ?
+                foreach ($affectations as $affectation) {
+                    if ($affectation->getStructure()->isCompatible($structure)) {
+                        $entretiens[] = $item;
+                        break;
+                    }
+                }
+            }
+            $result = $entretiens;
+        }
+
         return $result;
     }
 

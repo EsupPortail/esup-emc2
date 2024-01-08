@@ -203,6 +203,14 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $this->repriseResumeMere = $repriseResumeMere;
     }
 
+
+    public function isCompatible(?Structure $structure): bool
+    {
+        if ($this === $structure) return true;
+        if ($this->getParent() && $this->getParent() !== $this) return $this->getParent()->isCompatible($structure);
+        return false;
+    }
+
     /** AGENTS FORCES *************************************************************************************************/
 
     /**
@@ -319,4 +327,5 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         $texte .= "</ul>";
         return $texte;
     }
+
 }

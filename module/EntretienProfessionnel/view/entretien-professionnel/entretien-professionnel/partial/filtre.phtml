@@ -32,10 +32,13 @@ use UnicaenEtat\Entity\Db\EtatType;
                     <div class="row">
                         <div class="col-md-4">
                             <?php
-                            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherStructureAction() */
+                            /** @see \Structure\Controller\StructureController::rechercherAction() */
                             $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
                             $structureF
-                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
+                                /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::rechercherStructureAction() */
+//                                ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
+                                /** @see \Structure\Controller\StructureController::rechercherAction() */
+                                ->setAutocompleteSource($this->url('structure/rechercher'))
                                 ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'structure-filtre',
