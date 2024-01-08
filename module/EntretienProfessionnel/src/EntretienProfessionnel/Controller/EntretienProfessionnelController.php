@@ -2,8 +2,11 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use Application\Controller\IndexController;
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
+use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
@@ -28,6 +31,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Structure\Controller\StructureController;
+use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
@@ -165,7 +170,7 @@ class EntretienProfessionnelController extends AbstractActionController
         $form->init();
         $form->bind($entretien);
 
-        if ($agent !== null) {
+        if (isset($agent)) {
             $element = $form->get('agent');
             $element->setAttribute('readonly', true);
         }
@@ -540,4 +545,39 @@ class EntretienProfessionnelController extends AbstractActionController
         return $vm;
     }
 
+    public function retourListeAction(): Response
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $campagne = $entretien->getCampagne();
+        $role = $this->getUserService()->getConnectedRole();
+        $user = $this->getUserService()->getConnectedUser();
+
+        switch($role->getRoleId()) {
+            case AppRoleProvider::ADMIN_TECH :
+            case AppRoleProvider::ADMIN_FONC :
+            case AppRoleProvider::DRH:
+            case AppRoleProvider::OBSERVATEUR :
+                /** @see EntretienProfessionnelController::indexAction() */
+                return $this->redirect()->toRoute('entretien-professionnel', [], ['query' => ['campagne' => $campagne->getId()]], true);
+            case StructureRoleProvider::RESPONSABLE:
+                $structure = current($this->getStructureService()->getStructuresByResponsable($user));
+                /** @see CampagneController::structureAction() */
+                return $this->redirect()->toRoute('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], true);
+            case StructureRoleProvider::GESTIONNAIRE:
+                $structure = current($this->getStructureService()->getStructuresByGestionnaire($user));
+                /** @see CampagneController::structureAction() */
+                return $this->redirect()->toRoute('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()], true);
+            case  Agent::ROLE_SUPERIEURE :
+                /** @see IndexController::indexSuperieurAction() */
+                return $this->redirect()->toRoute('index-superieur', [], ["fragment" => "entretien_". $campagne->getId()], true);
+            case  Agent::ROLE_AUTORITE :
+                /** @see IndexController::indexAutoriteAction() */
+                return $this->redirect()->toRoute('index-autorite', [], ["fragment" => "entretien_". $campagne->getId()], true);
+            case  Agent::ROLE_AGENT :
+                /** @see EntretienProfessionnelController::indexAgentAction() */
+                return $this->redirect()->toRoute('entretien-professionnel/index-agent', [], [], true);
+            default:
+                throw new RuntimeException("Rôle [".$role->getRoleId()."] non prévu");
+        }
+    }
 }

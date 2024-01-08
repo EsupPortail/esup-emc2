@@ -21,7 +21,6 @@ use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
-use UnicaenValidation\Entity\Db\ValidationInstance;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 
@@ -108,8 +107,7 @@ class EntretienProfessionnelService
                 ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
                 ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
                 ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
-                ->addSelect('vtype')->leftjoin('validation.type', 'vtype')
-;
+                ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . EntretienProfessionnel::class . "]", 0, $e);
         }
@@ -404,10 +402,10 @@ class EntretienProfessionnelService
         if ($params['campagne'] !== null and $params['campagne'] !== "") {
             $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
         }
-        if ($params['etat'] !== null and $params['etat'] !== "") {
+        if (isset($params['etat']) and $params['etat'] !== "") {
             $qb = $qb->andWhere('etype.id = :etat')->setParameter('etat', $params['etat']);
         }
-        if ($params['structure-filtre'] !== null and $params['structure-filtre']['id'] !== "") {
+        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
             $qb = $qb
                 ->leftJoin('agent.affectations', 'affectation')->addSelect('affectation')
                 ->leftJoin('affectation.structure', 'structure')->addSelect('structure')
@@ -416,10 +414,10 @@ class EntretienProfessionnelService
                 ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin >= entretien.dateEntretien')
                 ->andWhere('affectation.id IS NOT NULL');
         }
-        if ($params['agent-filtre'] !== null and $params['agent-filtre']['id'] !== "") {
+        if (isset($params['agent-filtre']) and $params['agent-filtre']['id'] !== "") {
             $qb = $qb->andWhere('agent.id = :id')->setParameter('id', $params['agent-filtre']['id']);
         }
-        if ($params['responsable-filtre'] !== null and $params['responsable-filtre']['id'] !== "") {
+        if (isset($params['responsable-filtre']) and $params['responsable-filtre']['id'] !== "") {
             $qb = $qb->andWhere('responsable.id = :id')->setParameter('id', $params['responsable-filtre']['id']);
         }
 

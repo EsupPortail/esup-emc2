@@ -63,19 +63,25 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 <span style="visibility: hidden;">Entretien professionnel #<?php echo $entretien->getId(); ?></span>
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <h1 class="page-header">
             Entretien professionnel <?php echo $entretien->getCampagne()->getAnnee(); ?> <br/>
             <?php echo $agent->getPrenom(); ?>
             <?php echo $agent->getNomUsuel(); ?>
         </h1>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
     <?php $isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser; ?>
     <?php if ($isAgent AND (
         $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
         $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) )) : ?>
     <?php else : ?>
+        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::retourListeAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/retour-liste', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+            class="btn btn-secondary">
+            <span class="icon icon-retour"></span>
+            Retour à la liste des entretiens
+        </a>
         <?php if ($canExporterEP) : ?>
             <div class="pull-right">
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::exporterCrepAction() */?>

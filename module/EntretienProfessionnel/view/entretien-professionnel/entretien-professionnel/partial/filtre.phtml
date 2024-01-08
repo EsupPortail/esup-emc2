@@ -2,10 +2,10 @@
 
 use EntretienProfessionnel\Entity\Db\Campagne;
 use UnicaenApp\Form\Element\SearchAndSelect;
-use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
+use UnicaenEtat\Entity\Db\EtatType;
 
 /**
- * @var UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat[] $etats;
+ * @var EtatType[] $etats ;
  * @var Campagne[] $campagnes
  *
  * @var array $params
@@ -36,7 +36,7 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                             $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
                             $structureF
                                 ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-structure'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'structure-filtre',
                                     'placeholder' => "Nom de la structure ...",
@@ -50,7 +50,7 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                             $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
                             $agentF
                                 ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-agent'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'agent-filtre',
                                     'placeholder' => "Nom de l'agent ...",
@@ -65,7 +65,7 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                             $agentF = new SearchAndSelect('responsable-filtre', ['label' => "Responsable :"]);
                             $agentF
                                 ->setAutocompleteSource($this->url('entretien-professionnel/rechercher-responsable'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'responsable-filtre',
                                     'placeholder' => "Nom du resposable ...",
@@ -75,9 +75,10 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                         </div>
                         <div class="col-md-4">
                             <label for="campagne">Campagne :</label>
-                            <select id="campagne" name="campagne" class="form-control selectpicker show-tick" data-live-search="false">
-                                <option value=""> Toutes les campagnes </option>
-                                <?php foreach($campagnes as $campagne) : ?>
+                            <select id="campagne" name="campagne" class="form-control selectpicker show-tick"
+                                    data-live-search="false">
+                                <option value=""> Toutes les campagnes</option>
+                                <?php foreach ($campagnes as $campagne) : ?>
                                     <option value="<?php echo $campagne->getId(); ?>">
                                         <?php echo $campagne->getAnnee(); ?>
                                     </option>
@@ -85,19 +86,20 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                             </select>
                         </div>
                         <div class="col-md-4">
-                        <label for="etat">État :</label>
-                        <select id="etat" name="etat" class="form-control selectpicker show-tick" data-live-search="false">
-                            <option value=""> Tous les états </option>
-                            <?php foreach($etats as $etat) : ?>
-                                <option
-                                        value="<?php echo $etat->getId(); ?>"
-                                        data-content='<?php  echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
-                                >
-                                    <?php echo $etat->getLibelle(); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                            <label for="etat">État :</label>
+                            <select id="etat" name="etat" class="form-control selectpicker show-tick"
+                                    data-live-search="false">
+                                <option value=""> Tous les états</option>
+                                <?php foreach ($etats as $etat) : ?>
+                                    <option
+                                            value="<?php echo $etat->getId(); ?>"
+                                            data-content='<?php echo $this->etattype($etat); ?> <?php echo str_replace("'", "", $etat->getLibelle()); ?>'
+                                    >
+                                        <?php echo $etat->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -109,21 +111,14 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
                         <span class="icon icon-filtrer"></span>
                         Filtrer
                     </button>
-                    </div>
                 </div>
+            </div>
         </form>
     </div>
 </div>
 
 
 <style>
-    div.filter {
-        background-color: white;
-        padding: 0.5rem;
-        margin: 0.5rem;
-        border-radius: 5px;
-    }
-
     div.filter label {
         margin-left: .25em;
     }
@@ -131,31 +126,30 @@ use UnicaenEtat\src\UnicaenEtat\Entity\Db\Etat;
 
 <script>
 
-    $('button#clear').click(function(e) {
+    $('button#clear').on("click",function (e) {
         e.preventDefault();
         window.location.href = 'entretien-professionnel?';
     });
 
-
-    <?php if ($params['structure-filtre'] !== null) :?>
+    <?php if (isset($params['structure-filtre'])) :?>
         $('input[name="structure-filtre[label]"]').val("<?php echo trim($params['structure-filtre']['label']); ?>");
         $('input[name="structure-filtre[id]"]').val("<?php echo $params['structure-filtre']['id']; ?>");
     <?php endif; ?>
 
-    <?php if ($params['agent-filtre'] !== null) :?>
+    <?php if (isset($params['agent-filtre'])) :?>
         $('input[name="agent-filtre[label]"]').val("<?php echo trim($params['agent-filtre']['label']); ?>");
         $('input[name="agent-filtre[id]"]').val("<?php echo $params['agent-filtre']['id']; ?>");
     <?php endif; ?>
 
-    <?php if ($params['responsable-filtre'] !== null) :?>
+    <?php if (isset($params['responsable-filtre'])) :?>
         $('input[name="responsable-filtre[label]"]').val("<?php echo trim($params['responsable-filtre']['label']); ?>");
         $('input[name="responsable-filtre[id]"]').val("<?php echo $params['responsable-filtre']['id']; ?>");
     <?php endif; ?>
 
-    <?php if ($params['campagne'] !== null) : ?>
+    <?php if (isset($params['campagne'])  && $params['campagne'] !== '') : ?>
         $('select#campagne option[value=<?php echo $params['campagne']; ?>]').prop('selected', true);
     <?php endif; ?>
-    <?php if ($params['etat'] !== null) : ?>
+    <?php if (isset($params['etat']) && $params['etat'] !== '') : ?>
         $('select#etat option[value=<?php echo $params['etat']; ?>]').prop('selected', true);
     <?php endif; ?>
 </script>

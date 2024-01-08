@@ -72,11 +72,28 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
             <div class="col-md-6">
                 <dl class="row">
                     <dt class="col-md-4"> Date de la circulaire </dt>
-                    <dd class="col-md-8"> <?php echo $campagne->getDateCirculaire()->format('d/m/y'); ?></dd>
+                    <dd class="col-md-8">
+                        <?php if ($campagne->getDateCirculaire()): ?>
+                            <?php echo $campagne->getDateCirculaire()->format('d/m/y'); ?>
+                        <?php else : ?>
+                            -
+                        <?php endif; ?>
+                    </dd>
                     <dt class="col-md-4"> Date de début </dt>
-                    <dd class="col-md-8"> <?php echo $campagne->getDateDebut()->format('d/m/y'); ?></dd>
+                    <dd class="col-md-8">
+                        <?php if ($campagne->getDateDebut()): ?>
+                            <?php echo $campagne->getDateDebut()->format('d/m/y'); ?></dd>
+                        <?php else : ?>
+                            -
+                        <?php endif; ?>
                     <dt class="col-md-4"> Date de fin </dt>
-                    <dd class="col-md-8"> <?php echo $campagne->getDateFin()->format('d/m/y'); ?></dd>
+                    <dd class="col-md-8">
+                        <?php if ($campagne->getDateFin()) : ?>
+                            <?php echo $campagne->getDateFin()->format('d/m/y'); ?>
+                        <?php else : ?>
+                            -
+                        <?php endif; ?>
+                    </dd>
                 </dl>
             </div>
         </div>

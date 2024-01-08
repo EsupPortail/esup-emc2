@@ -389,7 +389,7 @@ EOS;
                 AND (!$responsable->isDeleted())
             ) return true;
         }
-        if ($structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
+        if ($structure->getParent() && $structure !== $structure->getParent()) return $this->isResponsable($structure->getParent(), $agent);
         return false;
     }
 

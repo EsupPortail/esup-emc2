@@ -54,6 +54,7 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'action',
+                        'retour-liste'
                     ],
                 ],
                 [
@@ -168,6 +169,17 @@ return [
                     ],
                 ],
                 'child_routes' => [
+                    'retour-liste' => [
+                        'type'  => Segment::class,
+                        'may_terminate' => true,
+                        'options' => [
+                            'route'    => '/retour-liste/:entretien-professionnel',
+                            'defaults' => [
+                                /** @see EntretienProfessionnelController::retourListeAction() */
+                                'action'     => 'retour-liste',
+                            ],
+                        ],
+                    ],
                     'index-delegue' => [
                         'type'  => Literal::class,
                         'may_terminate' => true,
