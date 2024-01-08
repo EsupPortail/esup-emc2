@@ -1592,7 +1592,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formationinstanceinscrit';
 
 
-INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('stagiaireexterne', 'Gestion des stagiaires externes', 'Formation\Provider\Privilege', 100402);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
