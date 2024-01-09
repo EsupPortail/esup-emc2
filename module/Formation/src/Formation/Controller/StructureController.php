@@ -46,22 +46,28 @@ class StructureController extends AbstractActionController
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
         if (!empty($selecteur) and $structure === null) $structure = $selecteur[0];
 
-        $structures = $this->getStructureService()->getStructuresFilles($structure);
-        $structures[] = $structure;
+        if ($structure !== null) {
+            $structures = $this->getStructureService()->getStructuresFilles($structure);
+            $structures[] = $structure;
 
-        /** Récupération des agents et postes liés aux structures */
-        $agents = $this->getAgentService()->getAgentsByStructures($structures);
-        $agentsForces = $this->getStructureService()->getAgentsForces($structure);
-        $agentsForces = array_map(function (StructureAgentForce $a) {
-            return $a->getAgent();
-        }, $agentsForces);
-        $allAgents = array_merge($agents, $agentsForces);
+            /** Récupération des agents et postes liés aux structures */
+            $agents = $this->getAgentService()->getAgentsByStructures($structures);
+            $agentsForces = $this->getStructureService()->getAgentsForces($structure);
+            $agentsForces = array_map(function (StructureAgentForce $a) {
+                return $a->getAgent();
+            }, $agentsForces);
+            $allAgents = array_merge($agents, $agentsForces);
 
-        //formations
-        $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
-        $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsNonValidees = $this->getInscriptionService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
-        $inscriptionsValidees = $this->getInscriptionService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
+            //formations
+            $demandesNonValidees = $this->getDemandeExterneService()->getDemandesExternesNonValideesByAgents($allAgents, Formation::getAnnee());
+            $demandesValidees = $this->getDemandeExterneService()->getDemandesExternesValideesByAgents($allAgents, Formation::getAnnee());
+            $inscriptionsNonValidees = $this->getInscriptionService()->getInscriptionsNonValideesByAgents($allAgents, Formation::getAnnee());
+            $inscriptionsValidees = $this->getInscriptionService()->getInscriptionsValideesByAgents($allAgents, Formation::getAnnee());
+        } else {
+            $allAgents = [];
+            $demandesNonValidees = []; $demandesValidees = [];
+            $inscriptionsNonValidees = []; $inscriptionsValidees = [];
+        }
 
         return new ViewModel([
             'selecteur' => $selecteur,
