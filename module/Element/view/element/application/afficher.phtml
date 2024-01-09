@@ -3,9 +3,16 @@
 /**
  * @see \Element\Controller\ApplicationController::afficherAction()
  * @var Application $application
+ * @var Agent[] $agents
+ * @var FicheMetier[] $fichesmetiers
  */
+
+use Application\Entity\Db\Agent;
 use Element\Entity\Db\Application;
+use FicheMetier\Entity\Db\FicheMetier;
+
 ?>
+<h2> Informations </h2>
 
 <dl class="row">
     <dt class="col-md-4"> Identifiant</dt>
@@ -31,3 +38,19 @@ use Element\Entity\Db\Application;
         <dd class="col-md-8"> <?php echo $application->getDescription(); ?> </dd>
     <?php endif; ?>
 </dl>
+
+<h2> Agents ayant en acquis l'application </h2>
+
+<ul>
+<?php foreach($agents as $agent): ?>
+    <li> <?php echo $agent->getDenomination(true); ?> </li>
+<?php endforeach; ?>
+</ul>
+
+<h2> Fiches métiers ayant en acquis l'application </h2>
+
+<ul>
+    <?php foreach($fichesmetiers as $fichemetier): ?>
+        <li> <?php echo $fichemetier->getIntitule(); ?> </li>
+    <?php endforeach; ?>
+</ul>

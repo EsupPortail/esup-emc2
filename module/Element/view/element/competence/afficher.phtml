@@ -6,8 +6,10 @@
  * @var Mission[] $missions
  * @var Competence $competence
  * @var FicheMetier[] $fiches
+ * @var Agent[] $agents
  */
 
+use Application\Entity\Db\Agent;
 use Element\Entity\Db\Competence;
 use FicheMetier\Entity\Db\FicheMetier;
 use FicheMetier\Entity\Db\Mission;
@@ -48,3 +50,11 @@ use FicheMetier\Entity\Db\Mission;
         </ul>
     </dd>
 </dl>
+
+<h2>  Agents ayant en acquis la compétence </h2>
+
+<ul>
+    <?php foreach($agents as $agent): ?>
+        <li> <?php echo $agent->getDenomination(true); ?> </li>
+    <?php endforeach; ?>
+</ul>

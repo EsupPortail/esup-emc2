@@ -164,9 +164,14 @@ class ApplicationController  extends AbstractActionController {
     {
         $application = $this->getApplicationService()->getRequestedApplication($this, 'id');
 
+        $agents = $this->getApplicationElementService()->getAgentsHavingApplicationFromAgent($application);
+        $fichesmetiers = $this->getApplicationElementService()->getFicheMetierHavingApplication($application);
+
         return new ViewModel([
             'title' => "Description de l'application",
             'application' => $application,
+            'agents' => $agents,
+            'fichesmetiers' => $fichesmetiers,
         ]);
     }
 

@@ -2,70 +2,53 @@
 
 namespace Element\Service\ApplicationElement;
 
+use Application\Entity\Db\Agent;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use Element\Entity\Db\Application;
 use Element\Entity\Db\ApplicationElement;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use FicheMetier\Entity\Db\FicheMetier;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class ApplicationElementService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     
     /** Gestion des entites ***************************************************************************************/
 
     public function create(ApplicationElement $element) : ApplicationElement
     {
-        try {
-            $this->getEntityManager()->persist($element);
-            $this->getEntityManager()->flush($element);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($element);
+        $this->getObjectManager()->flush($element);
         return $element;
     }
 
     public function update(ApplicationElement $element) : ApplicationElement
     {
-        try {
-            $this->getEntityManager()->flush($element);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($element);
         return $element;
     }
 
     public function historise(ApplicationElement $element) : ApplicationElement
     {
-        try {
-            $element->historiser();
-            $this->getEntityManager()->flush($element);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $element->historiser();
+        $this->getObjectManager()->flush($element);
         return $element;
     }
 
     public function restore(ApplicationElement $element) : ApplicationElement
     {
-        try {
-            $element->dehistoriser();
-            $this->getEntityManager()->flush($element);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $element->dehistoriser();
+        $this->getObjectManager()->flush($element);
         return $element;
     }
 
     public function delete(ApplicationElement $element) : ApplicationElement
     {
-        try {
-            $this->getEntityManager()->remove($element);
-            $this->getEntityManager()->flush($element);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($element);
+        $this->getObjectManager()->flush($element);
         return $element;
     }
 
@@ -73,7 +56,7 @@ class ApplicationElementService {
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(ApplicationElement::class)->createQueryBuilder('applicationelement')
+        $qb = $this->getObjectManager()->getRepository(ApplicationElement::class)->createQueryBuilder('applicationelement')
             ->addSelect('application')->join('applicationelement.application', 'application')
 ;
         return $qb;
@@ -88,7 +71,7 @@ class ApplicationElementService {
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs ApplicationElement partagent le même id [".$id."]");
+            throw new RuntimeException("Plusieurs ApplicationElement partagent le même id [".$id."]", 0 , $e);
         }
         return $result;
     }
@@ -99,4 +82,27 @@ class ApplicationElementService {
         return $this->getApplicationElement($id);
     }
 
+    /** FACADE ********************************************************************************************************/
+
+    /** @return Agent[] */
+    public function getAgentsHavingApplicationFromAgent(Application $application): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder("agent")
+            ->join('agent.applications', 'applicationelement')->addSelect('applicationelement')
+            ->andWhere('applicationelement.application = :application')->setParameter('application', $application)
+            ->andWhere('applicationelement.histoDestruction IS NULL')
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
+    /** @return FicheMetier[] */
+    public function getFicheMetierHavingApplication(Application $application): array
+    {
+        $qb = $this->getObjectManager()->getRepository(FicheMetier::class)->createQueryBuilder("fichemetier")
+            ->join('fichemetier.applications', 'applicationelement')->addSelect('applicationelement')
+            ->andWhere('applicationelement.application = :application')->setParameter('application', $application)
+            ->andWhere('applicationelement.histoDestruction IS NULL')
+        ;
+        return $qb->getQuery()->getResult();
+    }
 }

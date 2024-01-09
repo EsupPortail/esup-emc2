@@ -52,11 +52,13 @@ class CompetenceController extends AbstractActionController
     public function afficherAction() : ViewModel
     {
         $competence = $this->getCompetenceService()->getRequestedCompetence($this);
+        $agents = $this->getCompetenceElementService()->getAgentsHavinCompetenceFromAgent($competence);
         $missions = $this->getMissionPrincipaleService()->getMissionsHavingCompetence($competence);
         $fiches = $this->getFicheMetierService()->getFichesMetiersByCompetence($competence);
         return new ViewModel([
             'title' => "Affiche d'une compétence",
             'competence' => $competence,
+            'agents' => $agents,
             'missions' => $missions,
             'fiches' => $fiches,
         ]);

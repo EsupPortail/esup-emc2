@@ -39,7 +39,7 @@ use Formation\Entity\Db\Formation;
                 $class = 'raison formation';
                 break;
             case $raison instanceof Agent :
-                $text = "Liée à l'agent <span class='highlight formation'>" . $raison->getDenomination() . "</span>";
+                $text = "Liée à l'agent <span class='highlight agent'>" . $raison->getDenomination(true) . "</span>";
                 $label = "Agent";
                 $class = 'agent';
                 break;
@@ -51,7 +51,7 @@ use Formation\Entity\Db\Formation;
 
         }
         ?>
-        <span class="raison <?php echo $class; ?>" title="<?php echo $text; ?>" ><?php echo $label; ?></span>
+        <span data-bs-toggle='tooltip' data-bs-html='true' class="raison <?php echo $class; ?>" title="<?php echo $text; ?>" ><?php echo $label; ?></span>
     <?php endforeach;?>
 <?php endif; ?>
 

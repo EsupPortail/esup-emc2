@@ -7,7 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ApplicationElementServiceFactory {
+class ApplicationElementServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -15,7 +16,7 @@ class ApplicationElementServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : ApplicationElementService
+    public function __invoke(ContainerInterface $container): ApplicationElementService
     {
         /**
          * @var EntityManager $entityManager
@@ -23,7 +24,7 @@ class ApplicationElementServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new ApplicationElementService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }
