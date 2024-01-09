@@ -46,7 +46,9 @@ return [
                     'action' => [
                         'changer-niveau',
                         'ajouter-application-element',
+                        'modifier-application-element',
                         'ajouter-competence-element',
+                        'modifier-competence-element',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_ELEMENT_MODIFIER,
@@ -114,6 +116,16 @@ return [
                         ],
                         'may_terminate' => true,
                     ],
+                    'modifier-application-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-application-element/:application-element',
+                            'defaults' => [
+                                /** @see ElementController::modifierApplicationElementAction() */
+                                'action'     => 'modifier-application-element',
+                            ],
+                        ],
+                    ],
                     'ajouter-competence-element' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -124,6 +136,16 @@ return [
                             ],
                         ],
                         'may_terminate' => true,
+                    ],
+                    'modifier-competence-element' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/modifier-competence-element/:competence-element',
+                            'defaults' => [
+                                /** @see ElementController::modifierCompetenceElementAction() */
+                                'action'     => 'modifier-competence-element',
+                            ],
+                        ],
                     ],
                 ],
             ],

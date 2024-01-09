@@ -339,4 +339,62 @@ class ElementController extends AbstractActionController
         }
         exit();
     }
+
+    public function modifierApplicationElementAction(): ViewModel
+    {
+        $applicationElement = $this->getApplicationElementService()->getRequestedApplicationElement($this);
+
+        $form = $this->getApplicationElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('element_/modifier-application-element', ['application-element' => $applicationElement->getId()], [], true));
+        $form->bind($applicationElement);
+        $form->masquerClef();
+        $form->bloquerApplication();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $data['application'] = $applicationElement->getApplication()->getId();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getApplicationElementService()->update($applicationElement);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Modification de l'application",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    public function modifierCompetenceElementAction(): ViewModel
+    {
+        $compentenceElement = $this->getCompetenceElementService()->getRequestedCompetenceElement($this);
+
+        $form = $this->getCompetenceElementForm();
+        $form->setAttribute('action', $this->url()->fromRoute('element_/modifier-competence-element', ['competence-element' => $compentenceElement->getId()], [], true));
+        $form->bind($compentenceElement);
+        $form->masquerClef();
+        $form->bloquerCompetence();
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $data['competence'] = $compentenceElement->getCompetence()->getId();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getCompetenceElementService()->update($compentenceElement);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => 'Modification de la compétence',
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
 }

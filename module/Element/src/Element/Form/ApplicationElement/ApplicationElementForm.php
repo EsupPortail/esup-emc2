@@ -7,6 +7,7 @@ use Element\Service\Application\ApplicationServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Checkbox;
 use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 
@@ -51,6 +52,21 @@ class ApplicationElementForm extends Form {
                 'data-live-search'  => 'true',
             ],
         ]);
+        //precision
+        $this->add([
+            'name' => 'precision',
+            'type' => Textarea::class,
+            'options' => [
+                'label' => 'Précision  : ',
+                'label_attributes' => [
+                    'class' => 'control-label',
+                ],
+            ],
+            'attributes' => [
+                'id'                => 'precision',
+                'class'             => 'tinymce type2',
+            ],
+        ]);
         $this->add([
             'type' => Checkbox::class,
             'name' => 'clef',
@@ -81,11 +97,17 @@ class ApplicationElementForm extends Form {
             'application'   => [ 'required' => true, ],
             'niveau'        => [ 'required' => false, ],
             'clef'        => [ 'required' => false, ],
+            'precision'          => [ 'required' => false, ],
         ]));
     }
 
     public function masquerClef(): void
     {
         $this->remove('clef');
+    }
+
+    public function bloquerApplication(): void
+    {
+        $this->get('application')->setAttribute('disabled', true);
     }
 }

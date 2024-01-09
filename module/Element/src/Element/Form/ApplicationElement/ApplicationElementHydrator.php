@@ -21,6 +21,7 @@ class ApplicationElementHydrator implements HydratorInterface {
             'application'   => ($object->getApplication())?$object->getApplication()->getId():null,
             'niveau'       => ($object->getNiveauMaitrise())?$object->getNiveauMaitrise()->getId():null,
             'clef'       => ($object->isClef()),
+            'precision'    => $object->getCommentaire(),
         ];
         return $data;
     }
@@ -34,9 +35,11 @@ class ApplicationElementHydrator implements HydratorInterface {
     {
         $application = isset($data['application'])?$this->getApplicationService()->getApplication($data['application']):null;
         $niveau = (isset($data['niveau']) AND $data['niveau'] !== '')?$this->getNiveauService()->getMaitriseNiveau($data['niveau']):null;
+        $precision =  (isset($data['precision']) AND trim($data['precision']) !== '')?trim($data['precision']):null;
 
         $object->setApplication($application);
         $object->setNiveauMaitrise($niveau);
+        $object->setCommentaire($precision);
 
         if (isset($data['clef'])) {
             $object->setClef($data['clef']);

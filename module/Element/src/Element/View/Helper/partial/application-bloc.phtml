@@ -34,6 +34,8 @@ use Formation\Provider\Privilege\FormationPrivileges;
  *  ]
  */
 
+$isAcquis = (isset($options['acquis']) && $options['acquis'] === true);
+
 //var_dump($options);
 $canAcquisAfficher = false;
 $canAcquisModifier = false;
@@ -135,16 +137,23 @@ ksort($groupes);
             $entite = $element['entite'];
             $application = $entite;
             $isClef = false;
+            $old = null;
             if ($application instanceof ApplicationElement) {
                 $isClef = $application->isClef();
+                $old = $application;
                 $application = $entite->getApplication();
+
             }
             ?>
             <tr>
-                <td >
+                <td>
                     <?php echo $application->getLibelle(); ?>
                     <?php if ($displayRaison) : ?>
                         <?php echo $this->raisons($element['raison']); ?>
+                    <?php endif; ?>
+                    <?php if ($old && $old->getCommentaire()) : ?>
+                        <br>
+                        <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
                     <?php endif; ?>
                 </td>
                 <td class="niveau">
@@ -175,11 +184,19 @@ ksort($groupes);
 <!--                                <span class="icon icon-voir"></span></a>-->
 <!--                        --><?php //endif; ?>
                         <?php if ($canModifier) : ?>
-                            <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
-                                    href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
-                                    class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
-                                    title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
-                                <span class="icon icon-editer"></span></a>
+                            <?php if (!$isAcquis) : ?>
+                                <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
+                                        href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_APPLICATION, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
+                                        class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
+                                        title="Modifier le niveau de l'application <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
+                                    <span class="icon icon-editer"></span></a>
+                            <?php else : ?>
+                                <a  <?php /** @see \Application\Controller\ElementController::modifierApplicationElementAction() */ ?>
+                                        href="<?php echo $this->url("element_/modifier-application-element", ['application-element' => $entite->getId()], [], true); ?>"
+                                        class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
+                                        title="Modifier l'acquis <span class='highlight application'><?php echo $application->getLibelle(); ?></span>">
+                                    <span class="icon icon-editer"></span></a>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <?php if ($canSupprimer) : ?>
                             <a
@@ -217,3 +234,9 @@ ksort($groupes);
         <?php endforeach; ?>
     </table>
 </div>
+
+<style>
+    div.listing table {
+        width:100%;
+    }
+</style>

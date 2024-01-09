@@ -31,7 +31,7 @@ use Formation\Entity\Db\Formation;
             case $raison instanceof Mission :
                 $text = "Obtenue grâce à la mission [" . $raison->getLibelle()."]";
                 $label = "Mission";
-                $class = 'activite';
+                $class = 'mission';
                 break;
             case $raison instanceof Formation :
                 $text = "Obtenue grâce à la formation <span class='highlight formation'>" . $raison->getLibelle() . "</span>";
@@ -51,6 +51,39 @@ use Formation\Entity\Db\Formation;
 
         }
         ?>
-        <span class="<?php echo $class; ?>" title="<?php echo $text; ?>" ><?php echo $label; ?></span>
+        <span class="raison <?php echo $class; ?>" title="<?php echo $text; ?>" ><?php echo $label; ?></span>
     <?php endforeach;?>
 <?php endif; ?>
+
+<style>
+    span.raison {
+        font-variant-position: super;
+        font-weight: bold;
+    }
+
+    span.raison.agent {
+        color: darkgoldenrod;
+    }
+
+    span.raison.fiche-metier {
+        color: purple;
+    }
+
+    span.raison.activite {
+        color: darkslateblue;
+    }
+
+    span.raison.mission {
+        color: darkred;
+    }
+
+    span.raison.formation {
+        color: darkgreen;
+    }
+
+    span.raison.inconnue {
+        color: gray;
+    }
+</style>
+
+
