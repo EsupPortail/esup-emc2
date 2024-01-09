@@ -108,42 +108,28 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
 ?>
 
-<ul class="nav">
-    <li class="nav-item">
-        <a class="nav-link" href="#formulaire" aria-controls="formulaire">
-            Compte-rendu <br/> d'entretien professionnel
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#formations" aria-controls="formations">
-            Compte-rendu <br/> d'entretien de formation &nbsp;
-        </a>
-    </li>
-<!--        --><?php //if ($displayParcours === true) : ?>
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link" href="#parcours" aria-controls="parcours" role="tab" data-toggle="tabz">-->
-<!--                    Parcours de <br/> formation et <br/> logiciels metiers-->
-<!--                </a>-->
-<!--            </li>-->
-<!--        --><?php //endif; ?>
-<!--        --><?php //if ($displayAcquis === true) : ?>
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link" href="#acquis" aria-controls="acquis" role="tab" data-toggle="tabz">-->
-<!--                Acquis de <br/> l'agent <br/> &nbsp;-->
-<!--            </a>-->
-<!--        </li>-->
-<!--        --><?php //endif ?>
-    <li class="nav-item">
-        <a class="nav-link" href="#validation" aria-controls="validation">
-            Observations et <br/> validations <span class="badge" style="margin-left:1rem;"><?php echo $step; ?>/4</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#mails" aria-controls="mails">
-            Mails <br/> &nbsp;
-        </a>
-    </li>
-</ul>
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="formulaire-tab"
+            data-bs-toggle="tab" data-bs-target="#formulaire"
+            type="button" role="tab" aria-controls="formulaire" aria-selected="true">
+        Compte-rendu <br/> d'entretien professionnel
+    </button>
+    <button class="nav-link" id="formations-tab"
+            data-bs-toggle="tab" data-bs-target="#formations"
+            type="button" role="tab" aria-controls="formations" aria-selected="true">
+        Compte-rendu <br/> d'entretien de formation
+    </button>
+    <button class="nav-link" id="validation-tab"
+            data-bs-toggle="tab" data-bs-target="#validation"
+            type="button" role="tab" aria-controls="validation" aria-selected="true">
+        Observations et <br/> validations <span class="badge" style="margin-left:1rem;"><?php echo $step; ?>/4</span>
+    </button>
+    <button class="nav-link" id="mails-tab"
+            data-bs-toggle="tab" data-bs-target="#mails"
+            type="button" role="tab" aria-controls="mails" aria-selected="true">
+        Mails <br/> &nbsp;
+    </button>
+</div>
 
 
     <div class="tab-content">
@@ -192,7 +178,35 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 </style>
 
 <script>
-    $(document).ready(function() {
+    $(function () {
+        let hash = $(location).attr('hash');
+        let name = hash.substring(1);
+        if (name === undefined || name === "") name = "formulaire";
+
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
+
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
+            let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#" + anchor);
+        });
+    });
+
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+
         $('.datatable').DataTable( {
             // sorting: false,
             // paging: false,
@@ -200,26 +214,6 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
                 url: '/localisation/fr_FR.json'
             }
         } );
-    } );
-
-    $(function() {
-        let hash = $(location).attr('hash');
-        let name = hash.substring(1);
-        if (name === undefined || name === "") name = "formulaire";
-
-        $('a[aria-controls=' + name + ']').tab('show');
-
-        $('.nav a').click(function (e) {
-            let anchor = $(this).attr('aria-controls');
-            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
-            history.replaceState(null, null, "#"+anchor);
-            $(this).tab('show');
-        });
-
-        $("body").on("modification", function (event) {
-            event.div.modal('hide');
-            window.location.reload();
-        });
     });
 </script>
 
