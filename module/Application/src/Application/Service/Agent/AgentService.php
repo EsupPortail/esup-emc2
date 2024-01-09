@@ -173,7 +173,7 @@ class AgentService {
     {
         $params = ["term" => $term];
         $sql = <<<EOS
-select a.id
+select a.c_individu as id
 from agent a
 where unaccent(LOWER(CONCAT(a.prenom, ' ', a.nom_usage))) like unaccent('%' || :term || '%') OR unaccent(LOWER(CONCAT(a.nom_usage, ' ', a.prenom))) like unaccent('%' || :term || '%')
 EOS;
