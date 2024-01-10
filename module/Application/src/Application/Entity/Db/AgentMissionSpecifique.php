@@ -5,6 +5,7 @@ namespace Application\Entity\Db;
 use Application\Entity\Db\Interfaces\HasPeriodeInterface;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Application\Entity\HasAgentInterface;
+use MissionSpecifique\Entity\Db\MissionSpecifique;
 use Structure\Entity\Db\Structure;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
@@ -13,100 +14,60 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterf
     use HasPeriodeTrait;
     use HistoriqueAwareTrait;
 
-    /** @var integer */
-    private $id;
-    /** @var Agent */
-    private $agent;
-    /** @var MissionSpecifique */
-    private $mission;
-    /** @var Structure */
-    private $structure;
-    /** @var float */
-    private $decharge;
+    private ?int $id = null;
+    private ?Agent $agent = null;
+    private ?MissionSpecifique $mission = null;
+    private ?Structure $structure = null;
+    private ?float $decharge = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Agent|null
-     */
     public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @param Agent|null $agent
-     * @return AgentMissionSpecifique
-     */
-    public function setAgent(?Agent $agent) : AgentMissionSpecifique
+    public function setAgent(?Agent $agent) : void
     {
         $this->agent = $agent;
-        return $this;
     }
 
-    /**
-     * @return MissionSpecifique|null
-     */
     public function getMission() : ?MissionSpecifique
     {
         return $this->mission;
     }
 
-    /**
-     * @param MissionSpecifique|null $mission
-     * @return AgentMissionSpecifique
-     */
-    public function setMission(?MissionSpecifique $mission) : AgentMissionSpecifique
+    public function setMission(?MissionSpecifique $mission) : void
     {
         $this->mission = $mission;
-        return $this;
     }
 
-    /**
-     * @return Structure|null
-     */
     public function getStructure() : ?Structure
     {
         return $this->structure;
     }
 
-    /**
-     * @param Structure|null $structure
-     * @return AgentMissionSpecifique
-     */
-    public function setStructure(?Structure $structure) : AgentMissionSpecifique
+    public function setStructure(?Structure $structure) : void
     {
         $this->structure = $structure;
-        return $this;
     }
 
-    /**
-     * @return float|null
-     */
     public function getDecharge() : ?float
     {
         return $this->decharge;
     }
 
-    /**
-     * @param float|null $decharge
-     * @return AgentMissionSpecifique
-     */
-    public function setDecharge(?float $decharge) : AgentMissionSpecifique
+    public function setDecharge(?float $decharge) : void
     {
         $this->decharge = $decharge;
-        return $this;
     }
 
     /** FONCTIONS DEDIEES AUX AFFICHAGES **************************************************************/
 
-    public function getPeriode()
+    public function getPeriode(): string
     {
         $texte  = "";
         if ($this->getDateDebut() !== null AND $this->getDateFin() !== null) {
@@ -124,7 +85,7 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterf
         return "sur une période non déterminée";
     }
 
-    public function getDechargeTexte()
+    public function getDechargeTexte(): string
     {
         if ($this->getDecharge() === null) {
             return "0";

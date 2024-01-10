@@ -8,7 +8,7 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
-use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenPdf\Exporter\PdfExporter;
@@ -29,9 +29,9 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
     public function indexAction() : ViewModel
     {
         $fromQueries  = $this->params()->fromQuery();
-        $agentId      = $fromQueries['agent'];
-        $structureId  = $fromQueries['structure'];
-        $missionId    = $fromQueries['mission'];
+        $agentId      = $fromQueries['agent']??'';
+        $structureId  = $fromQueries['structure']??'';
+        $missionId    = $fromQueries['mission']??'';
         $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
         $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
         $mission      = ($missionId !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($missionId):null;
@@ -60,7 +60,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    public function ajouterAction()
+    public function ajouterAction(): ViewModel
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);

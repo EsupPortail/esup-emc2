@@ -42,6 +42,7 @@ $modules = [
     'Unicaen\Console',
     'UnicaenSynchro',
 
+    'MissionSpecifique',
     'Structure',
     'EntretienProfessionnel',
     'Carriere',

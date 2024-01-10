@@ -247,7 +247,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionprincipale';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('missionspecifique', 'Gestion des missions spécifiques', 650, 'Application\Provider\Privilege');
+VALUES ('missionspecifique', 'Gestion des missions spécifiques', 650, 'MissionSpecifique\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifique_index', 'Gestion - Affichage de l''index des missions specifiques', 100 UNION
@@ -262,7 +262,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifique';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('missionspecifiquetheme', 'Gestion des thèmes de mission spécifique', 660, 'Application\Provider\Privilege');
+VALUES ('missionspecifiquetheme', 'Gestion des thèmes de mission spécifique', 660, 'MissionSpecifique\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifiquetheme_index', 'Gestion - Affichage de l''index des thèmes de mission specifique', 100 UNION
@@ -277,7 +277,7 @@ FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'missionspecifiquetheme';
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('missionspecifiquetype', 'Gestion des types de mission spécifique', 670, 'Application\Provider\Privilege');
+VALUES ('missionspecifiquetype', 'Gestion des types de mission spécifique', 670, 'MissionSpecifique\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifiquetype_index', 'Gestion - Affichage de l''index des types de mission specifique', 100 UNION

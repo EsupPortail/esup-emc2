@@ -49,8 +49,13 @@ use Application\Entity\Db\AgentMissionSpecifique;
         <dl>
             <dt>Dernière modification </dt>
             <dd>
-                <?php echo $affectation->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
-                <?php echo $affectation->getHistoModificateur()->getDisplayName(); ?>
+                <?php if ($affectation->getHistoModification()) : ?>
+                    <?php echo $affectation->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
+                    <?php echo $affectation->getHistoModificateur()->getDisplayName(); ?>
+                <?php else : ?>
+                    <?php echo $affectation->getHistoCreation()->format('d/m/Y à H:i:s'); ?> <br/>
+                    <?php echo $affectation->getHistoCreateur()->getDisplayName(); ?>
+                <?php endif; ?>
             </dd>
         </dl>
 

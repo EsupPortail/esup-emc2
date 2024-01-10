@@ -13,7 +13,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Entity\Db\MissionSpecifique;
+use MissionSpecifique\Entity\Db\MissionSpecifique;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Structure\Entity\Db\Structure;
@@ -22,7 +22,7 @@ $this->headTitle("Affectations de missions spécifiques");
 
 $canVoir        = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
 $canLettre      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
-$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AJOUTER));
+$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
 $canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
 $canhistoriser  = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
 $canDetruire    = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
@@ -41,7 +41,6 @@ $query = ['retour' => $this->url(null,[],
 
 <div class="main">
 
-    <div class="row">
         <?php if ($canAjouter) : ?>
             <?php /** @see MissionSpecifiqueAffecterController::ajouterAction */ ?>
             <a href="<?php
@@ -55,7 +54,6 @@ $query = ['retour' => $this->url(null,[],
                 Ajouter une mission spécifique
             </a>
         <?php endif; ?>
-    </div>
 
     <?php if ($affectations === null OR empty($affectations)) : ?>
         Aucune affectations de trouvés.

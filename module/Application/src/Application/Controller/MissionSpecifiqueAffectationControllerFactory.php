@@ -5,16 +5,18 @@ namespace Application\Controller;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
-use Application\Service\MissionSpecifique\MissionSpecifiqueService;
-use Interop\Container\ContainerInterface;
+use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class MissionSpecifiqueAffectationControllerFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return MissionSpecifiqueAffectationController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : MissionSpecifiqueAffectationController
     {
@@ -36,7 +38,6 @@ class MissionSpecifiqueAffectationControllerFactory {
          */
         $agentMissionSpecifiqueForm = $container->get('FormElementManager')->get(AgentMissionSpecifiqueForm::class);
 
-        /** @var MissionSpecifiqueAffectationController $controller */
         $controller = new MissionSpecifiqueAffectationController();
 
         $controller->setAgentService($agentService);

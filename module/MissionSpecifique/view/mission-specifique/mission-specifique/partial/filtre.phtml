@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @var MissionSpecifiqueTheme[] $themes
+ * @var MissionSpecifiqueType[] $types
+ * @var array $params
+ */
+
+use MissionSpecifique\Entity\Db\MissionSpecifiqueTheme;
+use MissionSpecifique\Entity\Db\MissionSpecifiqueType;
+
+?>
+
+
+<div class="card panel-default">
+    <div class="card-header">
+        <span class="icon icon-filtrer"></span> Filtre des missions spécifiques
+    </div>
+    <div class="card-body">
+        <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <!-- Type -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="type">Type de missions :</label>
+                        <select id="type" name="type" class="selectpicker">
+                            <option value=""> Tous les types </option>
+                            <?php foreach($types as $type) : ?>
+                                <option
+                                        value="<?php echo $type->getId(); ?>"
+                                        <?php if ($type->getId() == $params['type']) echo " selected "; ?>
+                                >
+                                    <?php echo $type->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- Theme -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="theme">Thème de la mission :</label>
+                        <select id="theme" name="theme" class="selectpicker">
+                            <option value=""> Tous les thèmes </option>
+                            <?php foreach($themes as $theme) : ?>
+                                <option
+                                        value="<?php echo $theme->getId(); ?>"
+                                    <?php if ($theme->getId() == $params['theme']) echo " selected "; ?>
+                                >
+                                    <?php echo $theme->getLibelle(); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+                <!-- BOUTON -->
+                <div class="col-md-3">
+                    <br/>
+                    <div class="pull-right">
+                        <button class="btn btn-primary" id="clear">
+                            <span class="icon effacer"></span>
+                        </button>
+
+                        <button class="btn btn-primary" id="filter" style="width:20rem;">
+                            <span class="icon icon-filtrer"></span>
+                            Filtrer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $("form#filtre").submit(function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = 'mission-specifique?&type=&theme=';
+    });
+
+    $('button#filter').click(function() {
+        let typeId = $('select#type option:selected').val();
+        let themeId = $('select#theme option:selected').val();
+        console.log( "etat=" + typeId + " | " + "domaine=" + themeId);
+
+        let query = "";
+        query += "&type=" + typeId;
+        query += "&theme=" + themeId;
+        window.location.href = 'mission-specifique?'+ query;
+    });
+</script>

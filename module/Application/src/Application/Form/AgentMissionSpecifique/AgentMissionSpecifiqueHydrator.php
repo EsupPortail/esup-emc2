@@ -5,7 +5,7 @@ namespace Application\Form\AgentMissionSpecifique;
 use Application\Entity\Db\AgentMissionSpecifique;
 use Application\Form\HasPeriode\HasPeriodeFieldset;
 use Application\Service\Agent\AgentServiceAwareTrait;
-use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use DateTime;
 use Laminas\Hydrator\HydratorInterface;
 use Structure\Service\Structure\StructureServiceAwareTrait;

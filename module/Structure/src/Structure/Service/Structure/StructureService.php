@@ -113,13 +113,14 @@ class StructureService
      * @param Structure[] $structures
      * @return Structure[]
      */
-    public function getStructuresByTerm(string $term, array $structures = null) : array
+    public function getStructuresByTerm(string $term, array $structures = null, bool $histo=false) : array
     {
         $qb = $this->getEntityManager()->getRepository(Structure::class)->createQueryBuilder('structure')
             ->andWhere('LOWER(structure.libelleLong) like :search OR LOWER(structure.libelleCourt) like :search')
             ->setParameter('search', '%'.strtolower($term).'%')
             ->andWhere('structure.fermeture IS NULL')
         ;
+        if (!$histo) $qb = $qb->andWhere('structure.deleted_on IS NULL');
 
         if ($structures !== null) {
             $qb = $qb->andWhere('structure IN (:structures)')

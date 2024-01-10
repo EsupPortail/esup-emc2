@@ -14,7 +14,7 @@ use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;
 use Application\Provider\Privilege\FichePostePrivileges;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
-use Application\Provider\Privilege\MissionspecifiquePrivileges;
+use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use Application\Provider\Role\RoleProvider;
 use Application\Service\Evenement\SynchroOctopusService;
 use Application\Service\Evenement\SynchroOctopusServiceFactory;

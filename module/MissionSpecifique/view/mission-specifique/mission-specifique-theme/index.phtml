@@ -1,0 +1,117 @@
+<?php
+
+use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
+use Missionspecifique\Provider\Privilege\MissionspecifiquethemePrivileges;
+use Missionspecifique\Provider\Privilege\MissionspecifiquetypePrivileges;
+use MissionSpecifique\Entity\Db\MissionSpecifiqueTheme;
+
+/**
+ * @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::indexAction()
+ * @var MissionSpecifiqueTheme[] $themes
+ */
+
+$this->headTitle("Liste des thèmes de mission spécifique");
+
+$canIndexMissionSpecifique = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX));
+$canIndexMissionSpecifiqueType = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_INDEX));
+
+$canAfficher = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_AFFICHER));
+$canAjouter = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_MODIFIER));
+$canModifier = $canAjouter;
+$canHistoriser = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_HISTORISER));
+$canEffacer = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_DETRUIRE));
+
+?>
+
+<div class="row">
+    <div class="col-md-9">
+        <h1 class="page-header">
+            Liste des thèmes de mission spécifique
+        </h1>
+
+        <?php if ($canAjouter) : ?>
+            <a href="<?php echo $this->url('mission-specifique-theme/ajouter', [], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                <span class="icon icon-ajouter"></span>
+                Ajouter un thème de mission
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="col-md-3">
+        <?php if ($canIndexMissionSpecifique) : ?>
+            <a href="<?php echo $this->url("mission-specifique"); ?>" class="btn btn-primary">
+                <span class="icon icon-listing"></span>
+                Accéder aux missions
+            </a>
+        <?php endif; ?>
+        <?php if ($canIndexMissionSpecifiqueType) : ?>
+            <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-primary">
+                <span class="icon icon-listing"></span>
+                Accéder aux types
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<br/>
+
+<table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th> Libellé</th>
+        <th> #Missions</th>
+        <th style="width:10rem;"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($themes as $theme) : ?>
+        <tr class="<?php if ($theme->estHistorise()) echo " historise "; ?>">
+            <td> <?php echo $theme->getLibelle(); ?> </td>
+            <td> <?php echo count($theme->getMissions()); ?> </td>
+            <td>
+                <?php if ($canAfficher) : ?>
+                    <a href="<?php echo $this->url('mission-specifique-theme/afficher', ['theme' => $theme->getId()], [], true); ?>"
+                       class="ajax-modal"
+                    >
+                        <span class="icon icon-voir" title="Afficher le thème de mission spécifique"></span></a>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <a href="<?php echo $this->url('mission-specifique-theme/modifier', ['theme' => $theme->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-editer" title="Modifier le thème de mission spécifique"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($theme->estNonHistorise()) : ?>
+                        <a href="<?php echo $this->url('mission-specifique-theme/historiser', ['theme' => $theme->getId()], [], true); ?>"
+                        >
+                            <span class="icon icon-historiser" title="Historiser le thème de mission spécifique"></span></a>
+                    <?php else : ?>
+                        <a href="<?php echo $this->url('mission-specifique-theme/restaurer', ['theme' => $theme->getId()], [], true); ?>"
+                        >
+                            <span class="icon icon-restaurer"
+                                  title="Restaurer le thème de mission spécifique"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canEffacer) : ?>
+                    <a href="<?php echo $this->url('mission-specifique-theme/detruire', ['theme' => $theme->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="icon icon-unchecked" title="Supprimer le thème de mission spécifique"></span></a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+
+<script>
+    $(function () {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            tinyMCE.editors = [];
+            window.location.reload();
+        });
+    });
+</script>

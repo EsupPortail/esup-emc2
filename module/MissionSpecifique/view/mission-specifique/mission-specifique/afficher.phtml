@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @see \MissionSpecifique\Controller\MissionSpecifiqueController::afficherAction()
+ * @var MissionSpecifique $mission
+ */
+
+use MissionSpecifique\Entity\Db\MissionSpecifique;
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Libellé </dt>
+            <dd> <?php echo $mission->getLibelle(); ?> </dd>
+            <dt> Type </dt>
+            <dd> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"Aucun"; ?> </dd>
+            <dt> Thème </dt>
+            <dd> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"Aucun"; ?> </dd>
+            <dt>
+                Liste des Agents
+
+            </dt>
+            <dd>
+                Nombre d'agents : <?php echo count($mission->getAffectations()); ?>
+                <ul>
+                    <?php foreach($mission->getAffectations() as $affectation) : ?>
+                        <li> <?php echo $affectation->getAgent()->getDenomination(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt>Description</dt>
+            <dd>
+                <?php if ($mission->getDescription() !== null) : ?>
+                    <?php echo $mission->getDescription(); ?>
+                <?php else : ?>
+                    Aucune description
+                <?php endif; ?>
+            </dd>
+        </dl>
+        <dl>
+            <dt> Dernière modification </dt>
+            <dd>
+                <?php echo $mission->getHistoModification()->format('d/m/Y à H:i:s'); ?> <br/>
+                <?php echo $mission->getHistoModificateur()->getDisplayName(); ?>
+            </dd>
+        </dl>
+
+        <?php if ($mission->estHistorise()) : ?>
+            <dl>
+                <dt> Historisé </dt>
+                <dd>
+                    <?php echo $mission->getHistoDestruction()->format('d/m/Y à H:i:s'); ?> <br/>
+                    <?php echo $mission->getHistoDestructeur()->getDisplayName(); ?>
+                </dd>
+            </dl>
+        <?php endif; ?>
+    </div>
+</div>
+

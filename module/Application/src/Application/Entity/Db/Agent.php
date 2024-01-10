@@ -437,9 +437,6 @@ class Agent implements
 
     /**  MISSIONS SPECIFIQUES *****************************************************************************************/
 
-    /**
-     * @return MissionSpecifique[]
-     */
     /** @return AgentMissionSpecifique[] */
     public function getMissionsSpecifiques() : array
     {

@@ -10,7 +10,7 @@
             <join-column name="agent_id" referenced-column-name="c_individu"/>
         </many-to-one>
 
-        <many-to-one target-entity="Application\Entity\Db\MissionSpecifique"  field="mission">
+        <many-to-one target-entity="MissionSpecifique\Entity\Db\MissionSpecifique"  field="mission">
             <join-column name="mission_id" referenced-column-name="id"/>
         </many-to-one>
 

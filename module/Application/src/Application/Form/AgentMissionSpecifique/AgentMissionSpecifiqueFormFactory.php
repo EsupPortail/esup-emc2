@@ -3,14 +3,22 @@
 namespace Application\Form\AgentMissionSpecifique;
 
 use Application\Controller\AgentController;
-use Application\Service\MissionSpecifique\MissionSpecifiqueService;
-use Interop\Container\ContainerInterface;
 use Laminas\View\Helper\Url;
 use Laminas\View\HelperPluginManager;
+use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class AgentMissionSpecifiqueFormFactory {
+class AgentMissionSpecifiqueFormFactory
+{
 
-    public function __invoke(ContainerInterface $container) {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container): AgentMissionSpecifiqueForm
+    {
 
         /**
          * @var MissionSpecifiqueService $missionSpecifiqueService
@@ -25,9 +33,9 @@ class AgentMissionSpecifiqueFormFactory {
         /** @var Url $urlManager */
         $urlManager = $pluginManager->get('Url');
         /** @see AgentController::rechercherAction() */
-        $urlAgent =  $urlManager->__invoke('agent/rechercher', [], [], true);
+        $urlAgent = $urlManager->__invoke('agent/rechercher', [], [], true);
         /** @see StructureController::rechercherAction() */
-        $urlStructure =  $urlManager->__invoke('structure/rechercher', [], [], true);
+        $urlStructure = $urlManager->__invoke('structure/rechercher', [], [], true);
 
         /** @var AgentMissionSpecifiqueForm $form */
         $form = new AgentMissionSpecifiqueForm();

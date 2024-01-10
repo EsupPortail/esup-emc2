@@ -3,7 +3,7 @@
 namespace Application\Form\AgentMissionSpecifique;
 
 use Application\Form\HasPeriode\HasPeriodeFieldset;
-use Application\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Number;
