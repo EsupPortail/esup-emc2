@@ -6,10 +6,9 @@ use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\Configuration\ConfigurationServiceAwareTrait;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use Exception;
@@ -18,7 +17,6 @@ use Ramsey\Uuid\Uuid;
 use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -28,7 +26,7 @@ use UnicaenValidation\Service\ValidationType\ValidationTypeServiceAwareTrait;
 class EntretienProfessionnelService
 {
     use AgentServiceAwareTrait;
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use ConfigurationServiceAwareTrait;
     use FormulaireInstanceServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -42,56 +40,36 @@ class EntretienProfessionnelService
 
     public function create(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->persist($entretien);
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($entretien);
+        $this->getObjectManager()->flush($entretien);
         $this->generateToken($entretien);
         return $entretien;
     }
 
     public function update(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($entretien);
         return $entretien;
     }
 
     public function historise(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        try {
-            $entretien->historiser();
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $entretien->historiser();
+        $this->getObjectManager()->flush($entretien);
         return $entretien;
     }
 
     public function restore(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        try {
-            $entretien->dehistoriser();
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $entretien->dehistoriser();
+        $this->getObjectManager()->flush($entretien);
         return $entretien;
     }
 
     public function delete(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
-        try {
-            $this->getEntityManager()->remove($entretien);
-            $this->getEntityManager()->flush($entretien);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($entretien);
+        $this->getObjectManager()->flush($entretien);
         return $entretien;
     }
 
@@ -99,20 +77,16 @@ class EntretienProfessionnelService
 
     public function createQueryBuilder(bool $withAffectation = true): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-                ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
-                ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
-                ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
-                ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
-                ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
-                ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
-                ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
-                ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
-                ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . EntretienProfessionnel::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
+            ->addSelect('fichesa')->leftjoin('agent.fiches', 'fichesa')
+            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+            ->addSelect('astructure')->leftjoin('affectation.structure', 'astructure')
+            ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
+            ->addSelect('fichesr')->leftjoin('responsable.fiches', 'fichesr')
+            ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
+            ->addSelect('validation')->leftjoin('entretien.validations', 'validation')
+            ->addSelect('vtype')->leftjoin('validation.type', 'vtype');
 
         $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
         if ($withAffectation) $qb = AgentAffectation::decorateWithActif($qb, 'affectation');
@@ -320,10 +294,9 @@ class EntretienProfessionnelService
     public function getEntretiensProfessionnelsByResponsableAndCampagne(Agent $responsable, ?Campagne $campagne = null, bool $histo = false, bool $withAffectation = true): array
     {
         $qb = $this->createQueryBuilder($withAffectation)
-            ->andWhere('entretien.responsable = :responsable')->setParameter('responsable', $responsable)
-        ;
+            ->andWhere('entretien.responsable = :responsable')->setParameter('responsable', $responsable);
         if (!$histo) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
-        if ($campagne != null) $qb =  $qb->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne);
+        if ($campagne != null) $qb = $qb->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne);
 
         return $qb->getQuery()->getResult();
     }
@@ -402,16 +375,12 @@ class EntretienProfessionnelService
      */
     public function getEntretiensProfessionnelsWithFiltre(array $params): array
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-                ->join('entretien.agent', 'agent')->addSelect('agent')
-                ->join('entretien.responsable', 'responsable')->addSelect('responsable')
-                ->join('entretien.campagne', 'campagne')->addSelect('campagne')
-                ->join('entretien.etats', 'etat')->addSelect('etat')
-                ->join('etat.type', 'etype')->addSelect('etype');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survnu lors de la création du QueryBuilder [" . EntretienProfessionnel::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->join('entretien.agent', 'agent')->addSelect('agent')
+            ->join('entretien.responsable', 'responsable')->addSelect('responsable')
+            ->join('entretien.campagne', 'campagne')->addSelect('campagne')
+            ->join('entretien.etats', 'etat')->addSelect('etat')
+            ->join('etat.type', 'etype')->addSelect('etype');
 
         if ($params['campagne'] !== null and $params['campagne'] !== "") {
             $qb = $qb->andWhere('campagne.id = :campagne')->setParameter('campagne', $params['campagne']);
@@ -440,8 +409,7 @@ class EntretienProfessionnelService
 
         $result = $qb->getQuery()->getResult();
 
-        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "")
-        {
+        if (isset($params['structure-filtre']) and $params['structure-filtre']['id'] !== "") {
             $structure = $this->getStructureService()->getStructure($params['structure-filtre']['id']);
             // NOTE Changement provoqué par la gestion des structures "mères"
             $entretiens = [];
@@ -492,9 +460,10 @@ class EntretienProfessionnelService
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
-      foreach ($result as $entretien) {
-          $dictionnaire[$entretien->getAgent()->getId()] = $entretien;
-      }
+        $dictionnaire = [];
+        foreach ($result as $entretien) {
+            $dictionnaire[$entretien->getAgent()->getId()] = $entretien;
+        }
         return $dictionnaire;
     }
 

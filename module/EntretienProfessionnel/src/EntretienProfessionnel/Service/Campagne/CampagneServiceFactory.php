@@ -10,7 +10,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenParametre\Service\Parametre\ParametreService;
 
-class CampagneServiceFactory {
+class CampagneServiceFactory
+{
 
     /**
      * @param ContainerInterface $container
@@ -18,7 +19,7 @@ class CampagneServiceFactory {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : CampagneService
+    public function __invoke(ContainerInterface $container): CampagneService
     {
         /**
          * @var EntityManager $entityManager
@@ -32,7 +33,7 @@ class CampagneServiceFactory {
         $parametreService = $container->get(ParametreService::class);
 
         $service = new CampagneService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         $service->setEtatTypeService($etatTypeService);
         $service->setParametreService($parametreService);

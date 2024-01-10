@@ -44,7 +44,7 @@ class EntretienProfessionnelServiceFactory
         $validationTypeService = $container->get(ValidationTypeService::class);
 
         $service = new EntretienProfessionnelService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         $service->setConfigurationService($configurationService);
         $service->setFormulaireInstanceService($formulaireInstanceService);

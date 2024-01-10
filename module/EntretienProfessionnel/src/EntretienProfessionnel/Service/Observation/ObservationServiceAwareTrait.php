@@ -2,24 +2,17 @@
 
 namespace EntretienProfessionnel\Service\Observation;
 
-trait ObservationServiceAwareTrait {
+trait ObservationServiceAwareTrait
+{
 
-    /** @var ObservationService */
-    private $observationService;
+    private ObservationService $observationService;
 
-    /**
-     * @return ObservationService
-     */
-    public function getObservationService() : ObservationService
+    public function getObservationService(): ObservationService
     {
         return $this->observationService;
     }
 
-    /**
-     * @param ObservationService $observationService
-     * @return ObservationService
-     */
-    public function setObservationService(ObservationService $observationService) : ObservationService
+    public function setObservationService(ObservationService $observationService): ObservationService
     {
         $this->observationService = $observationService;
         return $this->observationService;

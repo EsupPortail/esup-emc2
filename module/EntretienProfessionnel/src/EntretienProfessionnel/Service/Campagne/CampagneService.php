@@ -6,23 +6,21 @@ use Application\Entity\Db\Agent;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 
 class CampagneService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use AgentServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -31,55 +29,35 @@ class CampagneService
 
     public function create(Campagne $campagne): Campagne
     {
-        try {
-            $this->getEntityManager()->persist($campagne);
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($campagne);
+        $this->getObjectManager()->flush($campagne);
         return $campagne;
     }
 
     public function update(Campagne $campagne): Campagne
     {
-        try {
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($campagne);
         return $campagne;
     }
 
     public function historise(Campagne $campagne): Campagne
     {
-        try {
-            $campagne->historiser();
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $campagne->historiser();
+        $this->getObjectManager()->flush($campagne);
         return $campagne;
     }
 
     public function restore(Campagne $campagne): Campagne
     {
-        try {
-            $campagne->dehistoriser();
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $campagne->dehistoriser();
+        $this->getObjectManager()->flush($campagne);
         return $campagne;
     }
 
     public function delete(Campagne $campagne): Campagne
     {
-        try {
-            $this->getEntityManager()->remove($campagne);
-            $this->getEntityManager()->flush($campagne);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($campagne);
+        $this->getObjectManager()->flush($campagne);
         return $campagne;
     }
 
@@ -87,15 +65,10 @@ class CampagneService
 
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
-                ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
-                ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
+        $qb = $this->getObjectManager()->getRepository(Campagne::class)->createQueryBuilder('campagne')
+            ->addSelect('precede')->leftJoin('campagne.precede', 'precede')
+            ->addSelect('entretien')->leftJoin('campagne.entretiens', 'entretien');
 //            $qb = EntretienProfessionnel::decorateWithEtats($qb, "entretien");
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Campagne::class . "]", 0, $e);
-        }
-
         return $qb;
     }
 
@@ -173,13 +146,9 @@ class CampagneService
      */
     public function getEntretiensByCampagneAndEtats(Campagne $campagne, array $etats): array
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-                ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
-                ->andWhere('entretien.histoDestruction IS NULL');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un probleme est sruvenu lors de la création du QueryBuilder",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->andWhere('entretien.campagne in (:campagne)')->setParameter('campagne', $campagne)
+            ->andWhere('entretien.histoDestruction IS NULL');
         $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien', $etats);
         $result = $qb->getQuery()->getResult();
 
@@ -306,7 +275,7 @@ class CampagneService
             if (!$ok) {
                 if ($agent->isForceSansObligation($campagne)) {
                     $facultatifs[] = $agent;
-                    $ok=true;
+                    $ok = true;
                 }
             }
             $res = $this->getAgentService()->isValideEmploiType($agent, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);

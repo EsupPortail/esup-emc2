@@ -2,16 +2,15 @@
 
 namespace EntretienProfessionnel\Service\Observation;
 
-use Doctrine\ORM\Exception\ORMException;
-use EntretienProfessionnel\Entity\Db\Observation;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
-use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\Observation;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenApp\Exception\RuntimeException;
 
 class ObservationService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -21,12 +20,8 @@ class ObservationService {
      */
     public function create(Observation $observation) : Observation
     {
-        try {
-            $this->getEntityManager()->persist($observation);
-            $this->getEntityManager()->flush($observation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($observation);
+        $this->getObjectManager()->flush($observation);
         return $observation;
     }
 
@@ -36,11 +31,7 @@ class ObservationService {
      */
     public function update(Observation $observation) : Observation
     {
-        try {
-            $this->getEntityManager()->flush($observation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($observation);
         return $observation;
     }
 
@@ -50,12 +41,8 @@ class ObservationService {
      */
     public function historise(Observation $observation) : Observation
     {
-        try {
-            $observation->historiser();
-            $this->getEntityManager()->flush($observation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $observation->historiser();
+        $this->getObjectManager()->flush($observation);
         return $observation;
     }
 
@@ -65,12 +52,8 @@ class ObservationService {
      */
     public function restore(Observation $observation) : Observation
     {
-        try {
-            $observation->dehistoriser();
-            $this->getEntityManager()->flush($observation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $observation->dehistoriser();
+        $this->getObjectManager()->flush($observation);
         return $observation;
     }
 
@@ -80,12 +63,8 @@ class ObservationService {
      */
     public function delete(Observation $observation) : Observation
     {
-        try {
-            $this->getEntityManager()->remove($observation);
-            $this->getEntityManager()->flush($observation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($observation);
+        $this->getObjectManager()->flush($observation);
         return $observation;
     }
 
@@ -96,7 +75,7 @@ class ObservationService {
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(Observation::class)->createQueryBuilder('observation')
+        $qb = $this->getObjectManager()->getRepository(Observation::class)->createQueryBuilder('observation')
             ->addSelect('entretien')->join('observation.entretien','entretien')
             ;
         return $qb;
