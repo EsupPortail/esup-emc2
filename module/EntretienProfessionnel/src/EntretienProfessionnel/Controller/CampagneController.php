@@ -374,8 +374,8 @@ class CampagneController extends AbstractActionController {
             $temoins = explode(";",$temoins);
         } else $temoins = [];
         $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut(), $temoins);
-        $agentsAll = $this->getAgentService()->filtrerWithStatutTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
-        $agentsAll = $this->getAgentService()->filtrerWithAffectationTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
+        $agentsAll = $this->getAgentService()->filtrerWithStatutTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agentsAll = $this->getAgentService()->filtrerWithAffectationTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut(), $structures);
 
         /** Filtrage des agents (seuls les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
         $agents = [];
