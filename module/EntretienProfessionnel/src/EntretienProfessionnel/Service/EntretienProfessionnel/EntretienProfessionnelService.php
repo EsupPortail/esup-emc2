@@ -316,6 +316,18 @@ class EntretienProfessionnelService
         return $result;
     }
 
+    /** @return EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByResponsableAndCampagne(Agent $responsable, ?Campagne $campagne = null, bool $histo = false, bool $withAffectation = true): array
+    {
+        $qb = $this->createQueryBuilder($withAffectation)
+            ->andWhere('entretien.responsable = :responsable')->setParameter('responsable', $responsable)
+        ;
+        if (!$histo) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
+        if ($campagne != null) $qb =  $qb->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /** FONCTIONS UTILITAIRES *****************************************************************************************/
 
     /**
@@ -452,11 +464,11 @@ class EntretienProfessionnelService
     }
 
     /** @return EntretienProfessionnel[] @desc [agentId => entretien] */
-    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false): array
+    public function getEntretienProfessionnelByCampagneAndAgents(?Campagne $campagne, array $agents, bool $histo = false, bool $withAffectation = true): array
     {
         if ($campagne === null) return [];
 
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder($withAffectation)
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.agent in (:agents)')->setParameter('agents', $agents);
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
@@ -469,5 +481,22 @@ class EntretienProfessionnelService
         }
         return $dictionnaire;
     }
+
+    public function getEntretiensProfessionnelsByCampagne(?Campagne $campagne, bool $histo = false, bool $withAffectation = true): array
+    {
+        if ($campagne === null) return [];
+
+//        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+        $qb = $this->createQueryBuilder($withAffectation)
+            ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne);
+        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+      foreach ($result as $entretien) {
+          $dictionnaire[$entretien->getAgent()->getId()] = $entretien;
+      }
+        return $dictionnaire;
+    }
+
 
 }

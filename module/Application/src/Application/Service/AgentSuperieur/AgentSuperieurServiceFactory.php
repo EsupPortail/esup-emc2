@@ -27,7 +27,7 @@ class AgentSuperieurServiceFactory
         $agentService = $container->get(AgentService::class);
 
         $service = new AgentSuperieurService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         return $service;
     }

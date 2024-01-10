@@ -23,12 +23,11 @@ use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
-use UnicaenParametre\Exception\ParametreMalTypeException;
-use UnicaenParametre\Exception\ParametreNotFoundException;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
-class NotificationService {
+class NotificationService
+{
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
@@ -49,12 +48,12 @@ class NotificationService {
      * @param EntretienProfessionnel|null $entretienProfessionnel
      * @return string[]
      */
-    public function getEmailAgent(?EntretienProfessionnel $entretienProfessionnel) : array
+    public function getEmailAgent(?EntretienProfessionnel $entretienProfessionnel): array
     {
         $emails = [];
         if ($entretienProfessionnel !== null) {
             $agent = $entretienProfessionnel->getAgent();
-            if ($agent AND $agent->getEmail()) $emails[] = $agent->getEmail();
+            if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
         return $emails;
     }
@@ -64,12 +63,12 @@ class NotificationService {
      * @param EntretienProfessionnel|null $entretienProfessionnel
      * @return string[]
      */
-    public function getEmailResponsable(?EntretienProfessionnel $entretienProfessionnel) : array
+    public function getEmailResponsable(?EntretienProfessionnel $entretienProfessionnel): array
     {
         $emails = [];
         if ($entretienProfessionnel !== null) {
             $agent = $entretienProfessionnel->getResponsable();
-            if ($agent AND $agent->getEmail()) $emails[] = $agent->getEmail();
+            if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
         return $emails;
     }
@@ -79,10 +78,10 @@ class NotificationService {
      * @param EntretienProfessionnel|null $entretienProfessionnel
      * @return string[]
      */
-    public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
+    public function getEmailSuperieursHierarchiques(?EntretienProfessionnel $entretienProfessionnel): array
     {
         $agent = $entretienProfessionnel->getAgent();
-        $superieurs =  $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
+        $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
 
         $emails = [];
         foreach ($superieurs as $superieur) {
@@ -96,7 +95,7 @@ class NotificationService {
      * @param EntretienProfessionnel|null $entretienProfessionnel
      * @return string[]
      */
-    public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel) : array
+    public function getEmailAutoritesHierarchiques(?EntretienProfessionnel $entretienProfessionnel): array
     {
         $agent = $entretienProfessionnel->getAgent();
         $autorites = $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent);
@@ -110,14 +109,14 @@ class NotificationService {
 
     /** Notifications liées à une campagne d'entretiens professionnels ************************************************/
 
-    public function triggerCampagneOuvertureDirections(Campagne $campagne) : Mail
+    public function triggerCampagneOuvertureDirections(Campagne $campagne): Mail
     {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         try {
             $mail_DAC = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::MAIL_LISTE_DAC);
         } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre", 0, $e);
         }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_DAC, $vars);
         $mailDac = $this->getMailService()->sendMail($mail_DAC, $rendu->getSujet(), $rendu->getCorps());
@@ -127,14 +126,14 @@ class NotificationService {
         return $mailDac;
     }
 
-    public function triggerCampagneOuverturePersonnels(Campagne $campagne) : Mail
+    public function triggerCampagneOuverturePersonnels(Campagne $campagne): Mail
     {
         $vars = ['campagne' => $campagne, 'UrlService' => $this->getUrlService()];
 
         try {
             $mail_BIATS = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::MAIL_LISTE_BIATS);
         } catch (Exception $e) {
-            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre",0,$e);
+            throw new RuntimeException("Un problème est survenu lors de la récupération d'un paramètre", 0, $e);
         }
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::CAMPAGNE_OUVERTURE_BIATSS, $vars);
         $mailBiats = $this->getMailService()->sendMail($mail_BIATS, $rendu->getSujet(), $rendu->getCorps());
@@ -146,7 +145,7 @@ class NotificationService {
 
     /** Notifications liées à la convation à un entretien *************************************************************/
 
-    public function triggerConvocationDemande(EntretienProfessionnel $entretien) : Mail
+    public function triggerConvocationDemande(EntretienProfessionnel $entretien): Mail
     {
         $vars = ['entretien' => $entretien, 'campagne' => $entretien->getCampagne()];
         $url = $this->getUrlService();
@@ -161,7 +160,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerConvocationAcceptation(EntretienProfessionnel $entretien) : Mail
+    public function triggerConvocationAcceptation(EntretienProfessionnel $entretien): Mail
     {
         $vars = [
             'entretien' => $entretien,
@@ -179,7 +178,7 @@ class NotificationService {
 
     /** Notifications liées aux validations de l'entretien professionnel d'un agent ************************************/
 
-    public function triggerValidationResponsableEntretien(EntretienProfessionnel $entretien) : Mail
+    public function triggerValidationResponsableEntretien(EntretienProfessionnel $entretien): Mail
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
@@ -191,7 +190,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerObservations(EntretienProfessionnel $entretien) : Mail
+    public function triggerObservations(EntretienProfessionnel $entretien): Mail
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
@@ -215,7 +214,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerPasObservations(EntretienProfessionnel $entretien) : Mail
+    public function triggerPasObservations(EntretienProfessionnel $entretien): Mail
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
@@ -227,7 +226,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien) : Mail
+    public function triggerValidationResponsableHierarchique(EntretienProfessionnel $entretien): Mail
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
@@ -239,7 +238,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerValidationAgent(EntretienProfessionnel $entretien) : Mail
+    public function triggerValidationAgent(EntretienProfessionnel $entretien): Mail
     {
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['agent' => $entretien->getAgent(), 'campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'UrlService' => $this->getUrlService()];
@@ -251,7 +250,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerRappelEntretien(?EntretienProfessionnel $entretien) : Mail
+    public function triggerRappelEntretien(?EntretienProfessionnel $entretien): Mail
     {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ENTRETIEN_AGENT, $vars);
@@ -262,9 +261,11 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur) : Mail
+    public function triggerRappelCampagneSuperieur(Campagne $campagne, Agent $superieur): Mail
     {
-        $agents = array_map(function (AgentSuperieur $a) { return $a->getAgent(); }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
+        $agents = array_map(function (AgentSuperieur $a) {
+            return $a->getAgent();
+        }, $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur));
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
 
         $vh = new CampagneAvancementViewHelper();
@@ -280,14 +281,16 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_SUPERIEUR, $vars);
         $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
-        $mail->setMotsClefs(["CAMPAGNE_" .$campagne->getId(), "CAMPAGNE_AVANCEMENT" , "DATE_". (new DateTime())->format('d/m/Y')]);
+        $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
         $this->getMailService()->update($mail);
         return $mail;
     }
 
-    public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite) : Mail
+    public function triggerRappelCampagneAutorite(Campagne $campagne, Agent $autorite): Mail
     {
-        $agents = array_map(function (AgentAutorite $a) { return $a->getAgent(); }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
+        $agents = array_map(function (AgentAutorite $a) {
+            return $a->getAgent();
+        }, $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite));
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
 
         $vh = new CampagneAvancementViewHelper();
@@ -303,23 +306,24 @@ class NotificationService {
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_CAMPAGNE_AVANCEMENT_AUTORITE, $vars);
         $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), str_replace("###A REMPLACER###", $texte, $rendu->getCorps()));
-        $mail->setMotsClefs(["CAMPAGNE_" .$campagne->getId(), "CAMPAGNE_AVANCEMENT" , "DATE_". (new DateTime())->format('d/m/Y')]);
+        $mail->setMotsClefs(["CAMPAGNE_" . $campagne->getId(), "CAMPAGNE_AVANCEMENT", "DATE_" . (new DateTime())->format('d/m/Y')]);
         $this->getMailService()->update($mail);
         return $mail;
     }
 
     /** Notifications associées à la demande de validation (en retard) d'entretiens profesionnels *****/
 
-    public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens) : Mail
+    public function triggerRappelValidationSuperieur(Agent $superieur, Campagne $campagne, array $entretiens): Mail
     {
         $vars = ['campagne' => $campagne, 'agent' => $superieur, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_SUPERIEUR, $vars);
 
-        $texte  = "<ul>";
-        foreach ($entretiens as $entretien) $texte .= "<li>".$entretien->getAgent()->getDenomination()."</li>";
+        $texte = "<ul>";
+        foreach ($entretiens as $entretien) $texte .= "<li>" . $entretien->getAgent()->getDenomination() . "</li>";
         $texte .= "</ul>";
 
-        $corps = $rendu->getCorps(); $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
+        $corps = $rendu->getCorps();
+        $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
         $mail = $this->getMailService()->sendMail($superieur->getEmail(), $rendu->getSujet(), $corps);
         $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -327,16 +331,17 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerRappelValidationAutorite(Agent $autorite, Campagne $campagne, array $entretiens) : Mail
+    public function triggerRappelValidationAutorite(Agent $autorite, Campagne $campagne, array $entretiens): Mail
     {
         $vars = ['campagne' => $campagne, 'agent' => $autorite, 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AUTORITE, $vars);
 
-        $texte  = "<ul>";
-        foreach ($entretiens as $entretien) $texte .= "<li>".$entretien->getAgent()->getDenomination()."</li>";
+        $texte = "<ul>";
+        foreach ($entretiens as $entretien) $texte .= "<li>" . $entretien->getAgent()->getDenomination() . "</li>";
         $texte .= "</ul>";
 
-        $corps = $rendu->getCorps(); $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
+        $corps = $rendu->getCorps();
+        $corps = str_replace('###SERA REMPLACÉ###', $texte, $corps);
         $mail = $this->getMailService()->sendMail($autorite->getEmail(), $rendu->getSujet(), $corps);
         $mail->setMotsClefs([$campagne->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
@@ -344,7 +349,7 @@ class NotificationService {
         return $mail;
     }
 
-    public function triggerRappelValidationAgent(?EntretienProfessionnel $entretien) : Mail
+    public function triggerRappelValidationAgent(?EntretienProfessionnel $entretien): Mail
     {
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::RAPPEL_ATTENTE_VALIDATION_AGENT, $vars);

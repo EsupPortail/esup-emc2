@@ -135,9 +135,15 @@ class IndexController extends AbstractActionController
         });
 
         /** Récuperation des eps **************************************************************************************/
-        $entretiens = [];
+        $entretiens = []; $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
-            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+
+            $agentsS = $this->getAgentSuperieurService()->getAgentsWithSuperieur($agent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agentsS = $this->getAgentService()->filtrerWithStatutTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+            $agentsS = $this->getAgentService()->filtrerWithAffectationTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
+
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsS, false, false);
+            $agentsByCampagne[$campagne->getId()] = $agentsS;
         }
 
         /** Récupération des fiches de postes *************************************************************************/
@@ -155,6 +161,7 @@ class IndexController extends AbstractActionController
 
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
+            'agentsByCampagne' => $agentsByCampagne,
 
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,
@@ -185,9 +192,14 @@ class IndexController extends AbstractActionController
         });
 
         /** Récuperation des eps **************************************************************************************/
-        $entretiens = [];
+        $entretiens = []; $agentsByCampagne = [];
         foreach ($campagnes as $campagne) {
-            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
+            $agentsS = $this->getAgentAutoriteService()->getAgentsWithAutorite($agent, $campagne->getDateDebut(), $campagne->getDateFin());
+            $agentsS = $this->getAgentService()->filtrerWithStatutTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+            $agentsS = $this->getAgentService()->filtrerWithAffectationTemoin($agentsS, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
+
+            $entretiens[$campagne->getId()] = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agentsS);
+            $agentsByCampagne[$campagne->getId()] = $agentsS;
         }
 
         /** Récupération des fiches de postes *************************************************************************/

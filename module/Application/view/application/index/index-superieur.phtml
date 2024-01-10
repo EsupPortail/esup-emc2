@@ -6,6 +6,7 @@
  * @var Agent[] $agents
  * @var Campagne[] $campagnes
  * @var EntretienProfessionnel[] $entretiens
+ * @var Agent[] $agentsByCampagne
  * @var array $fichesDePoste
  * @var array $fichesDePostePdf
  */
@@ -53,7 +54,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
     </div>
     <?php foreach ($campagnes as $campagne) : ?>
         <div id="entretien_<?php echo $campagne->getId(); ?>" class="tab-pane " role="tabpanel">
-            <?php echo $this->partial('partial/entretien', ['campagne' => $campagne, 'agents' => $agents, 'entretiens' => $entretiens[$campagne->getId()]], [], true); ?>
+            <?php echo $this->partial('partial/entretien', ['campagne' => $campagne, 'agents' => $agentsByCampagne[$campagne->getId()], 'entretiens' => $entretiens[$campagne->getId()]], [], true); ?>
         </div>
     <?php endforeach; ?>
 </div>

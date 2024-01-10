@@ -5,72 +5,53 @@ namespace Application\Service\AgentSuperieur;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenUtilisateur\Entity\Db\User;
 
 class AgentSuperieurService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use AgentServiceAwareTrait;
 
     /** GESTION DE L'ENTITE *******************************************************************************************/
 
     public function create(AgentSuperieur $agentSuperieur) : AgentSuperieur
     {
-        try {
-            $this->getEntityManager()->persist($agentSuperieur);
-            $this->getEntityManager()->flush($agentSuperieur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->persist($agentSuperieur);
+        $this->getObjectManager()->flush($agentSuperieur);
         return $agentSuperieur;
     }
 
     public function update(AgentSuperieur $agentSuperieur) : AgentSuperieur
     {
-        try {
-            $this->getEntityManager()->flush($agentSuperieur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->flush($agentSuperieur);
         return $agentSuperieur;
     }
 
     public function historise(AgentSuperieur $agentSuperieur) : AgentSuperieur
     {
-        try {
-            $agentSuperieur->historiser();
-            $this->getEntityManager()->flush($agentSuperieur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $agentSuperieur->historiser();
+        $this->getObjectManager()->flush($agentSuperieur);
         return $agentSuperieur;
     }
 
     public function restore(AgentSuperieur $agentSuperieur) : AgentSuperieur
     {
-        try {
-            $agentSuperieur->dehistoriser();
-            $this->getEntityManager()->flush($agentSuperieur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $agentSuperieur->dehistoriser();
+        $this->getObjectManager()->flush($agentSuperieur);
         return $agentSuperieur;
     }
 
     public function delete(AgentSuperieur $agentSuperieur) : AgentSuperieur
     {
-        try {
-            $this->getEntityManager()->remove($agentSuperieur);
-            $this->getEntityManager()->flush($agentSuperieur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenu en base de donnée",0,$e);
-        }
+        $this->getObjectManager()->remove($agentSuperieur);
+        $this->getObjectManager()->flush($agentSuperieur);
         return $agentSuperieur;
     }
 
@@ -78,7 +59,7 @@ class AgentSuperieurService
 
     public function createQueryBuilder() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('agentsuperieur')
+        $qb = $this->getObjectManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('agentsuperieur')
             ->join('agentsuperieur.agent', 'agent')->addSelect('agent')
             ->join('agentsuperieur.superieur', 'superieur')->addSelect('superieur')
         ;
@@ -137,6 +118,24 @@ class AgentSuperieurService
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** @return Agent[] */
+    public function getAgentsWithSuperieur(Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+            ->andWhere('agentsuperieur.histoCreation IS NULL OR agentsuperieur.histoCreation < :fin')->setParameter('fin', $dateFin)
+            ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction > :debut')->setParameter('debut', $dateDebut);
+
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
     }
 
     /** FACADE ********************************************************************************************************/

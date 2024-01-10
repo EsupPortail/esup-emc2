@@ -5,6 +5,7 @@ namespace Application\Service\AgentAutorite;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
@@ -144,6 +145,24 @@ class AgentAutoriteService
 
         $result = $qb->getQuery()->getResult();
         return $result;
+    }
+
+    /** @return Agent[] */
+    public function getAgentsWithAutorite(Agent $autorite, DateTime $dateDebut = null, DateTime $dateFin = null): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
+            ->andWhere('agentautorite.histoCreation IS NULL OR agentautorite.histoCreation < :fin')->setParameter('fin', $dateFin)
+            ->andWhere('agentautorite.histoDestruction IS NULL OR agentautorite.histoDestruction > :debut')->setParameter('debut', $dateDebut);
+
+        $result = $qb->getQuery()->getResult();
+
+        $agents = [];
+        foreach ($result as $item) {
+            $agent = $item->getAgent();
+            $agents[$agent->getId()] = $agent;
+        }
+        return $agents;
     }
 
     /** FACADE ********************************************************************************************************/

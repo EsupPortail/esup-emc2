@@ -7,6 +7,8 @@ use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateInterval;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -32,11 +34,14 @@ use Structure\Provider\Parametre\StructureParametres;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 
 class CampagneController extends AbstractActionController {
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use NotificationServiceAwareTrait;
@@ -44,6 +49,8 @@ class CampagneController extends AbstractActionController {
     use RappelCampagneAvancementAutoriteServiceAwareTrait;
     use RappelCampagneAvancementSuperieurServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
+    
     use CampagneFormAwareTrait;
 
     public function indexAction() : ViewModel
@@ -431,5 +438,69 @@ class CampagneController extends AbstractActionController {
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
         ]);
+    }
+
+    public function superieurAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $responsable = $this->getAgentService()->getRequestedAgent($this);
+
+        if ($responsable === null) {
+            $user = $this->getUserService()->getConnectedUser();
+            $responsable = $this->getAgentService()->getAgentByUser($user);
+        }
+        if ($responsable === null) {
+            throw new RuntimeException("EntretienController::superieurAction() > Aucun responsable de fourni.");
+        }
+        
+        $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($responsable, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
+
+        //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
+        $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+        $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($responsable, $campagne, false, false);
+
+        $entretiens = [];
+        foreach ($entretiensR as $entretien) { $entretiens[$entretien->getAgent()->getId()] = $entretien; }
+        foreach ($entretiensS as $entretien) { $entretiens[$entretien->getAgent()->getId()] = $entretien; }
+
+        $vm = new ViewModel([
+            'campagne' => $campagne,
+            'agent' => $responsable,
+            'agents' => $agents,
+            'entretiens' => $entretiens,
+        ]);
+        $vm->setTemplate('entretien-professionnel/campagne/entretien');
+        return $vm;
+    }
+
+    public function autoriteAction() : ViewModel
+    {
+        $campagne = $this->getCampagneService()->getRequestedCampagne($this);
+        $responsable = $this->getAgentService()->getRequestedAgent($this);
+
+        if ($responsable === null) {
+            $user = $this->getUserService()->getConnectedUser();
+            $responsable = $this->getAgentService()->getAgentByUser($user);
+        }
+        if ($responsable === null) {
+            throw new RuntimeException("EntretienController::superieurAction() > Aucun responsable de fourni.");
+        }
+
+        $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($responsable, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
+
+        $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
+
+        $vm = new ViewModel([
+            'campagne' => $campagne,
+            'agent' => $responsable,
+            'agents' => $agents,
+            'entretiens' => $entretiens,
+        ]);
+        $vm->setTemplate('entretien-professionnel/campagne/entretien');
+        return $vm;
     }
 }

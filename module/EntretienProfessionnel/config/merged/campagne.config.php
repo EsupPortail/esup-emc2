@@ -9,6 +9,7 @@ use EntretienProfessionnel\Form\Campagne\CampagneFormFactory;
 use EntretienProfessionnel\Form\Campagne\CampagneHydrator;
 use EntretienProfessionnel\Form\Campagne\CampagneHydratorFactory;
 use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceFactory;
 use EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper;
@@ -41,6 +42,16 @@ return [
                     'privileges' => [
 //                        CampagnePrivileges::CAMPAGNE_AFFICHER_STRUCTURE,
                         StructurePrivileges::STRUCTURE_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => CampagneController::class,
+                    'action' => [
+                        'superieur',
+                        'autorite',
+                    ],
+                    'privileges' => [
+                        EntretienproPrivileges::ENTRETIENPRO_AFFICHER
                     ],
                 ],
                 [
@@ -169,6 +180,28 @@ return [
                                         /** @see CampagneController::structureAction() */
                                         'controller' => CampagneController::class,
                                         'action'     => 'structure',
+                                    ],
+                                ],
+                            ],
+                            'superieur' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/superieur/:campagne[/:agent]',
+                                    'defaults' => [
+                                        /** @see CampagneController::superieurAction() */
+                                        'action'     => 'superieur',
+                                    ],
+                                ],
+                            ],
+                            'autorite' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/autorite/:campagne[/:agent]',
+                                    'defaults' => [
+                                        /** @see CampagneController::autoriteAction() */
+                                        'action'     => 'autorite',
                                     ],
                                 ],
                             ],
