@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Form\SelectionAgent\SelectionAgentForm;
 use Application\Service\Agent\AgentService;
 use Fichier\Form\Upload\UploadForm;
 use Fichier\Service\Fichier\FichierService;
@@ -52,11 +53,13 @@ class DemandeExterneControllerFactory
          * @var DemandeExterneForm $demandeExterneForm
          * @var Demande2FormationForm $demande2formationForm
          * @var InscriptionForm $inscriptionForm
+         * @var SelectionAgentForm $selectionAgentForm
          * @var UploadForm $uploadForm
          */
         $demandeExterneForm = $container->get('FormElementManager')->get(DemandeExterneForm::class);
         $demande2formationForm = $container->get('FormElementManager')->get(Demande2FormationForm::class);
         $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
+        $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
 
@@ -73,6 +76,7 @@ class DemandeExterneControllerFactory
         $controller->setDemandeExterneForm($demandeExterneForm);
         $controller->setDemande2formationForm($demande2formationForm);
         $controller->setInscriptionForm($inscriptionForm);
+        $controller->setSelectionAgentForm($selectionAgentForm);
         $controller->setUploadForm($uploadForm);
 
         return $controller;

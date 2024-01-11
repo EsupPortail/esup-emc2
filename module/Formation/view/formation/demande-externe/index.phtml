@@ -28,6 +28,13 @@ $canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 
 <?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params], [], true); ?>
 
+<?php /** @see \Formation\Controller\DemandeExterneController::creerPourAgentAction() */ ?>
+<a href="<?php echo $this->url('formation/demande-externe/creer-pour-agent', [], [], true); ?>"
+    class="btn btn-primary">
+    <span class="icon icon-ajouter"></span>
+    Ajouter pour un agent
+</a>
+
 <table class="table table-condensed table-hover">
     <thead>
         <tr>

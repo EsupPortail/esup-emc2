@@ -2,6 +2,7 @@
 
 namespace Formation\Controller;
 
+use Application\Form\SelectionAgent\SelectionAgentFormAwareTrait;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Fichier\Entity\Db\Fichier;
 use Fichier\Form\Upload\UploadFormAwareTrait;
@@ -43,6 +44,7 @@ class DemandeExterneController extends AbstractActionController {
 
     use DemandeExterneFormAwareTrait;
     use Demande2FormationFormAwareTrait;
+    use SelectionAgentFormAwareTrait;
     use UploadFormAwareTrait;
     use InscriptionFormAwareTrait;
 
@@ -78,6 +80,29 @@ class DemandeExterneController extends AbstractActionController {
             "demande" => $demande,
             "agent" => $agent,
         ]);
+    }
+
+    public function creerPourAgentAction(): ViewModel|Response
+    {
+        $form = $this->getSelectionAgentForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/creer-pour-agent', [], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            $data = $request->getPost();
+            $agentId = $data['agent']['id'];
+            $agent = $this->getAgentService()->getAgent($agentId);
+
+            if ($agent) return $this->redirect()->toRoute('formation/demande-externe/ajouter', ['agent' => $agent->getId()] ,[], true);
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner un agent",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
     }
 
     public function ajouterAction() : ViewModel

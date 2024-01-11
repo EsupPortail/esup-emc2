@@ -121,7 +121,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     <?php if (isset($params['etat'])) :?>
     $('select#etat option[value=<?php echo $params['etat']->getId(); ?>]').prop('selected', true);
     <?php endif; ?>
-
-    $('select#annee option[value=<?php echo $params['annee']; ?>]').prop('selected', true);
-    $('select#historise option[value=<?php echo $params['historise']; ?>]').prop('selected', true);
+    <?php if (isset($params['annee'])) :?>
+        $('select#annee option[value=<?php echo $params['annee']; ?>]').prop('selected', true);
+    <?php endif; ?>
+    <?php if (isset($params['historise'])) :?>
+        $('select#historise option[value=<?php echo $params['historise']; ?>]').prop('selected', true);
+    <?php endif; ?>
 </script>

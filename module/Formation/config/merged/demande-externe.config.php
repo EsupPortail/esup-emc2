@@ -87,6 +87,7 @@ return [
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
+                        'creer-pour-agent',
                         'modifier',
                         'ajouter-devis',
                         'retirer-devis',
@@ -225,6 +226,16 @@ return [
                                     'defaults' => [
                                         'controller' => DemandeExterneController::class,
                                         'action' => 'parapheur'
+                                    ],
+                                ],
+                            ],
+                            'creer-pour-agent' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/creer-pour-agent',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'creer-pour-agent'
                                     ],
                                 ],
                             ],
