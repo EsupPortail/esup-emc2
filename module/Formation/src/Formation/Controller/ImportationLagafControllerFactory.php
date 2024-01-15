@@ -3,12 +3,12 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
-use Formation\Entity\Db\InscriptionFrais;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\HasFormationCollection\HasFormationCollectionService;
 use Formation\Service\Inscription\InscriptionService;
+use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\Presence\PresenceService;
 use Formation\Service\Seance\SeanceService;
 use Formation\Service\Stagiaire\StagiaireService;
@@ -46,7 +46,7 @@ class ImportationLagafControllerFactory
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $seanceService = $container->get(SeanceService::class);
         $formationInstanceInscritService = $container->get(InscriptionService::class);
-        $formationInstanceFraisService = $container->get(InscriptionFrais::class);
+        $formationInstanceFraisService = $container->get(InscriptionFraisService::class);
         $presenceService = $container->get(PresenceService::class);
         $hasFormationCollectionService = $container->get(HasFormationCollectionService::class);
         $stagiaireService = $container->get(StagiaireService::class);

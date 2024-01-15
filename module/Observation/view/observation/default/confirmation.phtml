@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @var string $title
+ * @var string $text
+ * @var string $warning
+ * @var string $action
+ */
+
+?>
+
+<?php if (isset($warning)) : ?>
+    <div class="alert alert-warning">
+        <p class="lead">
+            <?php echo $warning; ?>
+        </p>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($text)) : ?>
+    <p class="lead">
+        <?php echo $text; ?>
+    </p>
+<?php endif; ?>
+
+<table>
+    <tr><td>
+<form method="post" action="<?php echo $action; ?>">
+    <input type="hidden" name="reponse" value="oui">
+    <input type="submit" name="oui" class="btn btn-success action" value="Oui, je suis sûr&middot;e">
+</form>
+        </td><td>
+<form method="post" action="<?php echo $action; ?>">
+    <input type="hidden" name="reponse" value="non">
+    <input type="submit" id="non" name="non" class="btn btn-danger action"  value="Non, je ne veux pas">
+</form>
+        </td></tr>
+</table>
+
+<script>
+    $(function() {
+        $("input#non").click(function(e){
+            $('div.modal').modal('hide');
+            e.preventDefault(e);
+        });
+    });
+</script>
+

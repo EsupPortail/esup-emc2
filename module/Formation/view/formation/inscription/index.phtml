@@ -27,6 +27,8 @@ $canSupprimerAttestation = $canModifier;
     Inscriptions aux formations
 </h1>
 
+<?php echo $this->partial('partial/filtre.phtml'); ?>
+
 <?php /** @see \Formation\Controller\InscriptionController::ajouterAction() */ ?>
 <a href="<?php echo $this->url('formation/inscription/ajouter', [], [], true); ?>"
    class="btn btn-primary ajax-modal" data-event="modification">
