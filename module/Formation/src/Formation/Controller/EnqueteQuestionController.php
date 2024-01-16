@@ -331,7 +331,7 @@ class EnqueteQuestionController extends AbstractActionController
         }
 
         $form = $this->getEnqueteReponseForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/enquete/repondre-questions', ['isncription' => $inscription->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/enquete/repondre-questions', ['inscription' => $inscription->getId()], [], true));
         $form->bind($enquete);
 
         $request = $this->getRequest();

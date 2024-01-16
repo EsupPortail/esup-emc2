@@ -36,7 +36,7 @@ class InscriptionForm extends Form {
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'value_options' => [
                     'agent' => "Agent",
-                    'stagiaire' => "Stagiaire",
+                    'stagiaire' => "Stagiaire externe",
                 ],
             ],
             'attributes' => [
@@ -44,7 +44,7 @@ class InscriptionForm extends Form {
             ],
         ]);
         // agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent associé·e à l'isncription * :"]);
+        $agent = new SearchAndSelect('agent', ['label' => "Agent associé·e à l'inscription * :"]);
         $agent
             ->setAutocompleteSource($this->agentUrl)
             ->setSelectionRequired(true)
@@ -54,7 +54,7 @@ class InscriptionForm extends Form {
             ]);
         $this->add($agent);
         // stagiaire
-        $agent = new SearchAndSelect('stagiaire', ['label' => "Stagiaire associé·e à l'isncription * :"]);
+        $agent = new SearchAndSelect('stagiaire', ['label' => "Stagiaire associé·e à l'inscription * :"]);
         $agent
             ->setAutocompleteSource($this->stagiaireUrl)
             ->setSelectionRequired(true)

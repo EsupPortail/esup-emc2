@@ -256,7 +256,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     {
         if ($this->isInterne()) {
             $affectation = $this->getAgent()->getAffectationPrincipale($this->getSession()->getDebut(true));
-            $structure = $affectation->getStructure();
+            $structure = ($affectation)?$affectation->getStructure():null;
             if ($structure) return $structure->getLibelleLong();
             return "Aucune structure de connue";
         }
