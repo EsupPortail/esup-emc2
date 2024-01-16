@@ -1,24 +1,24 @@
 <?php
 
-namespace Observation\Service\Observation;
+namespace Observation\Service\ObservationInstance;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ObservationServiceFactory {
+class ObservationInstanceServiceFactory {
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container): ObservationService
+    public function __invoke(ContainerInterface $container): ObservationInstanceService
     {
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
-        $service = new ObservationService();
+        $service = new ObservationInstanceService();
         $service->setObjectManager($entityManager);
         return $service;
     }

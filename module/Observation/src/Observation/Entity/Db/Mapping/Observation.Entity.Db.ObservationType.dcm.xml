@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Observation\Entity\Db\ObservationType" table="observation_observation_type">
+    <entity name="Observation\Entity\Db\ObservationType" table="unicaen_observation_observation_type">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
@@ -10,7 +10,7 @@
         <field name="libelle"           type="string" length="1024"      column="libelle"               nullable="false"/>
         <field name="categorie"         type="string" length="1024"      column="categorie"             nullable="true"/>
 
-        <one-to-many target-entity="Observation\Entity\Db\Observation" mapped-by="type" field="observations"/>
+        <one-to-many target-entity="Observation\Entity\Db\ObservationInstance" mapped-by="type" field="observations"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

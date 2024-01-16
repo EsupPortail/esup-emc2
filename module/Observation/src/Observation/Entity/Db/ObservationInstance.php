@@ -8,7 +8,7 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class Observation implements HistoriqueAwareInterface, HasValidationsInterface
+class ObservationInstance implements HistoriqueAwareInterface, HasValidationsInterface
 {
     use HistoriqueAwareTrait;
     use HasValidationsTrait;

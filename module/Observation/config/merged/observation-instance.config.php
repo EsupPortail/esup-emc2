@@ -4,15 +4,15 @@ namespace MissionSpecifique;
 
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
-use Observation\Controller\ObservationTypeController;
-use Observation\Controller\ObservationTypeControllerFactory;
-use Observation\Form\ObservationType\ObservationTypeForm;
-use Observation\Form\ObservationType\ObservationTypeFormFactory;
-use Observation\Form\ObservationType\ObservationTypeHydrator;
-use Observation\Form\ObservationType\ObservationTypeHydratorFactory;
-use Observation\Provider\Privilege\ObservationtypePrivileges;
-use Observation\Service\ObservationType\ObservationTypeService;
-use Observation\Service\ObservationType\ObservationTypeServiceFactory;
+use Observation\Controller\ObservationInstanceController;
+use Observation\Controller\ObservationInstanceControllerFactory;
+use Observation\Form\ObservationInstance\ObservationInstanceForm;
+use Observation\Form\ObservationInstance\ObservationInstanceFormFactory;
+use Observation\Form\ObservationInstance\ObservationInstanceHydrator;
+use Observation\Form\ObservationInstance\ObservationInstanceHydratorFactory;
+use Observation\Provider\Privilege\ObservationinstancePrivileges;
+use Observation\Service\ObservationInstance\ObservationInstanceService;
+use Observation\Service\ObservationInstance\ObservationInstanceServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -20,100 +20,81 @@ return [
         'guards' => [
             PrivilegeController::class => [
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'index',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_INDEX,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_INDEX,
                     ],
                 ],
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'afficher',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_AFFICHER,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_AFFICHER,
                     ],
                 ],
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'ajouter',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_AJOUTER,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_AJOUTER,
                     ],
                 ],
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'modifier',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_MODIFIER,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_MODIFIER,
                     ],
                 ],
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'historiser',
                         'restaurer',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_HISTORISER,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_HISTORISER,
                     ],
                 ],
                 [
-                    'controller' => ObservationTypeController::class,
+                    'controller' => ObservationInstanceController::class,
                     'action' => [
                         'supprimer',
                     ],
                     'privileges' => [
-                        ObservationtypePrivileges::OBSERVATIONTYPE_SUPPRIMER,
+                        ObservationinstancePrivileges::OBSERVATIONINSTANCE_SUPPRIMER,
                     ],
                 ],
             ],
         ],
     ],
 
-    'navigation' => [
-        'default' => [
-            'home' => [
-                'pages' => [
-                    'administration' => [
-                        'pages' => [
-                            'observation' => [
-                                'label' => "Observations",
-                                'route' => 'observation/otype',
-                                'resource' => PrivilegeController::getResourceId(ObservationTypeController::class, 'index'),
-                                'order' => 1000,
-                                'icon' => 'fas fa-angle-right',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
 
-    'router' => [
+    'router'          => [
         'routes' => [
             'observation' => [
-                'type' => Literal::class,
+                'type'  => Literal::class,
                 'options' => [
-                    'route' => '/observation',
+                    'route'    => '/observation',
                 ],
                 'may_terminate' => false,
                 'child_routes' => [
-                    'otype' => [
+                    'instance' => [
                         'type' => Literal::class,
                         'options' => [
-                            'route' => '/type',
+                            'route' => '/instance',
                             'defaults' => [
-                                /** @see ObservationTypeController::indexAction() */
-                                'controller' => ObservationTypeController::class,
+                                /** @see ObservationInstanceController::indexAction() */
+                                'controller' => ObservationInstanceController::class,
                                 'action' => 'index',
                             ],
                         ],
@@ -122,9 +103,9 @@ return [
                             'afficher' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/afficher/:observation-type',
+                                    'route'    => '/afficher/:observation-instance',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::afficherAction() */
+                                        /** @see ObservationInstanceController::afficherAction() */
                                         'action'     => 'afficher',
                                     ],
                                 ],
@@ -134,7 +115,7 @@ return [
                                 'options' => [
                                     'route'    => '/ajouter',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::ajouterAction() */
+                                        /** @see ObservationInstanceController::ajouterAction() */
                                         'action'     => 'ajouter',
                                     ],
                                 ],
@@ -142,9 +123,9 @@ return [
                             'modifier' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/modifier/:observation-type',
+                                    'route'    => '/modifier/:observation-instance',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::modifierAction() */
+                                        /** @see ObservationInstanceController::modifierAction() */
                                         'action'     => 'modifier',
                                     ],
                                 ],
@@ -152,9 +133,9 @@ return [
                             'historiser' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/historiser/:observation-type',
+                                    'route'    => '/historiser/:observation-instance',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::historiserAction() */
+                                        /** @see ObservationInstanceController::historiserAction() */
                                         'action'     => 'historiser',
                                     ],
                                 ],
@@ -162,9 +143,9 @@ return [
                             'restaurer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/restaurer/:observation-type',
+                                    'route'    => '/restaurer/:observation-instance',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::restaurerAction() */
+                                        /** @see ObservationInstanceController::restaurerAction() */
                                         'action'     => 'restaurer',
                                     ],
                                 ],
@@ -172,9 +153,9 @@ return [
                             'supprimer' => [
                                 'type'  => Segment::class,
                                 'options' => [
-                                    'route'    => '/supprimer/:observation-type',
+                                    'route'    => '/supprimer/:observation-instance',
                                     'defaults' => [
-                                        /** @see ObservationTypeController::supprimerAction() */
+                                        /** @see ObservationInstanceController::supprimerAction() */
                                         'action'     => 'supprimer',
                                     ],
                                 ],
@@ -188,23 +169,23 @@ return [
 
     'service_manager' => [
         'factories' => [
-            ObservationTypeService::class => ObservationTypeServiceFactory::class,
+            ObservationInstanceService::class => ObservationInstanceServiceFactory::class,
         ],
     ],
-    'controllers' => [
+    'controllers'     => [
         'factories' => [
-            ObservationTypeController::class => ObservationTypeControllerFactory::class,
+            ObservationInstanceController::class => ObservationInstanceControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'factories' => [
-            ObservationTypeForm::class => ObservationTypeFormFactory::class,
+            ObservationInstanceForm::class => ObservationInstanceFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            ObservationTypeHydrator::class => ObservationTypeHydratorFactory::class,
+            ObservationInstanceHydrator::class => ObservationInstanceHydratorFactory::class,
         ],
-    ]
+    ],
 
 ];

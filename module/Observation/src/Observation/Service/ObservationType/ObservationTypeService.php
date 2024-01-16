@@ -95,7 +95,10 @@ class ObservationTypeService {
         $result = $this->getObservationsTypes($champ, $ordre, $histo);
         $options = [];
         foreach ($result as $item) {
-            $options[$item->getId()] = $item->getLibelle();
+            $label  = ($item->getCategorie())??"Sans catégorie";
+            $label .= " > ";
+            $label .= $item->getLibelle();
+            $options[$item->getId()] = $label;
         }
         return $options;
     }

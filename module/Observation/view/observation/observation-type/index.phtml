@@ -1,6 +1,7 @@
 <?php
 
 use Observation\Entity\Db\ObservationType;
+use Observation\Provider\Privilege\ObservationinstancePrivileges;
 use Observation\Provider\Privilege\ObservationtypePrivileges;
 
 /**
@@ -18,11 +19,27 @@ $canModifier = $this->isAllowed(ObservationtypePrivileges::getResourceId(Observa
 $canHistoriser = $this->isAllowed(ObservationtypePrivileges::getResourceId(ObservationtypePrivileges::OBSERVATIONTYPE_HISTORISER));
 $canSupprimer = $this->isAllowed(ObservationtypePrivileges::getResourceId(ObservationtypePrivileges::OBSERVATIONTYPE_SUPPRIMER));
 
+
+$canIndexInstance = $this->isAllowed(ObservationinstancePrivileges::getResourceId(ObservationinstancePrivileges::OBSERVATIONINSTANCE_INDEX));
 ?>
 
-<h1 class="page-header">
-    Types d'observation
-</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">
+            Types d'observation
+        </h1>
+    </div>
+    <div class="col-md-4">
+        <?php if ($canIndexInstance) : ?>
+            <a href="<?php echo $this->url('observation/instance', [], [], true); ?>"
+               class="btn btn-secondary"
+            >
+                <span class="icon icon-listing"></span>
+                Instances d'observation
+
+            </a>
+        <?php endif; ?>
+    </div>
 
 <div class='filtes'>
     <?php echo $this->partial('partial/filtre.phtml'); ?>
