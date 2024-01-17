@@ -17,7 +17,7 @@
     "unicaen/mail": "^6",
     "unicaen/parametre": "^6",
     "unicaen/bjy-authorize": "^6.1",
-    "unicaen/ldap": "7",
+    "unicaen/ldap": "^7",
     "unicaen/evenement": "^6",
     "unicaen/autoform": "^6",
     "unicaen/aide": "^0",
