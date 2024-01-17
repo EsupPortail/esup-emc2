@@ -2,16 +2,15 @@
 
 namespace Formation\Entity\Db\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationElement;
-use Doctrine\Common\Collections\ArrayCollection;
 
 trait HasFormationCollectionTrait {
 
-    /** @var ArrayCollection */
-    private $formations;
+    private Collection $formations;
 
-    public function getFormationCollection()
+    public function getFormationCollection(): Collection
     {
         return $this->formations;
     }
@@ -30,7 +29,7 @@ trait HasFormationCollectionTrait {
         return $formations;
     }
 
-    public function getFormationDictionnaire()
+    public function getFormationDictionnaire(): array
     {
         $dictionnaire = [];
         foreach ($this->formations as $formationElement) {
@@ -43,12 +42,28 @@ trait HasFormationCollectionTrait {
         return $dictionnaire;
     }
 
-    public function hasFormation(Formation $formation) : ?FormationElement
+    public function getFormations(): Collection
+    {
+        return $this->formations;
+    }
+
+    public function hasFormation(Formation $formation) : bool
     {
         /** @var FormationElement $formationElement */
         foreach ($this->formations as $formationElement) {
-            if ($formationElement->estNonHistorise() AND $formationElement->getFormation() === $formation) return $formationElement;
+            if ($formationElement instanceof FormationElement) $formation_ = $formationElement->getFormation(); else $formation_ = $formationElement;
+            if ($formationElement->estNonHistorise() AND $formation_ === $formation) return true;
         }
-        return null;
+        return false;
+    }
+
+    public function addFormation(Formation $formation): void
+    {
+        $this->formations->add($formation);
+    }
+
+    public function removeFormation(Formation $formation): void
+    {
+        $this->formations->removeElement($formation);
     }
 }

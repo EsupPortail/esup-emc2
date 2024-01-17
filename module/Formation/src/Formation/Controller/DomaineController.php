@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Domaine;
 use Formation\Form\Domaine\DomaineFormAwareTrait;
+use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Formation\Service\Domaine\DomaineServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -12,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 class DomaineController extends AbstractActionController {
     use DomaineServiceAwareTrait;
     use DomaineFormAwareTrait;
+    use SelectionFormationFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -126,4 +128,32 @@ class DomaineController extends AbstractActionController {
         }
         return $vm;
     }
+
+    public function gererFormationsAction(): ViewModel
+    {
+        $domaine = $this->getDomaineService()->getRequestedDomaine($this);
+        $form = $this->getSelectionFormationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-domaine/gerer-formations', ['domaine' => $domaine->getId()], [], true));
+        $form->bind($domaine);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+
+                /** note  : les domaines ne prote pas vraiment les formations ... */
+                $this->getDomaineService()->update($domaine);
+                exit();
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Gérer les formations associé aux domaines [".$domaine->getLibelle()."]",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation/selection-formation-form');
+        return $vm;
+    }
+
 }

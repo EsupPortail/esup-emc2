@@ -76,7 +76,8 @@ $this->headTitle("Domaines de formation");
                 <?php if ($canAfficher) : ?>
                     <a <?php /** @see \Formation\Controller\DomaineController::afficherAction() */ ?>
                             href="<?php echo $this->url('formation-domaine/afficher', ['domaine' => $domaine->getId()], [], true); ?>"
-                            class="ajax-modal">
+                    >
+<!--                            class="ajax-modal"-->
                         <span class="icon icon-voir" title="Afficher le domaine"></span>
                         Afficher
                     </a>

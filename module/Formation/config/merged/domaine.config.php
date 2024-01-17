@@ -50,6 +50,7 @@ return [
                     'controller' => DomaineController::class,
                     'action' => [
                         'modifier',
+                        'gerer-formations',
                     ],
                     'privileges' => [
                         FormationdomainePrivileges::FORMATIONDOMAINE_MODIFIER,
@@ -139,6 +140,16 @@ return [
                             'defaults' => [
                                 /** @see DomaineController::modifierAction() */
                                 'action'     => 'modifier',
+                            ],
+                        ],
+                    ],
+                    'gerer-formations' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/gerer-formations/:domaine',
+                            'defaults' => [
+                                /** @see DomaineController::gererFormationsAction() */
+                                'action'     => 'gerer-formations',
                             ],
                         ],
                     ],

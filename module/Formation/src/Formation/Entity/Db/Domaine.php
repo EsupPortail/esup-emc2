@@ -6,13 +6,16 @@ use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
+use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface
+class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface, HasFormationCollectionInterface
 {
     use HistoriqueAwareTrait;
     use HasDescriptionTrait;
+    use HasFormationCollectionTrait;
 
     const MAX_ORDRE = 9999;
 
@@ -20,7 +23,7 @@ class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface
     private ?string $libelle = null;
     private ?int $ordre = null;
     private ?string $couleur = null;
-    private Collection $formations;
+//    private Collection $formations;
 
     public function __construct()
     {
@@ -62,10 +65,10 @@ class Domaine implements HistoriqueAwareInterface, HasDescriptionInterface
         $this->couleur = $couleur;
     }
 
-    /** @return Formation[] */
-    public function getFormations(): array
-    {
-        return $this->formations->toArray();
-    }
+//    /** @return Formation[] */
+//    public function getFormations(): array
+//    {
+//        return $this->formations->toArray();
+//    }
 
 }

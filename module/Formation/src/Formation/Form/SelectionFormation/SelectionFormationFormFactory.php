@@ -28,7 +28,6 @@ class SelectionFormationFormFactory
          */
         $hydrator = $container->get('HydratorManager')->get(SelectionFormationHydrator::class);
 
-        /** @var SelectionFormationForm $form */
         $form = new SelectionFormationForm();
         $form->setHydrator($hydrator);
         $form->setFormationService($formationService);

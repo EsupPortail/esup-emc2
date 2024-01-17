@@ -83,6 +83,8 @@ class InscriptionController extends AbstractActionController
                     $this->getInscriptionService()->create($inscription);
                     $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_VALIDER_DRH);
                     $this->getInscriptionService()->update($inscription);
+
+                    $this->getFormationInstanceService()->classerInscription($inscription);
                 }
             }
             exit();
@@ -118,7 +120,7 @@ class InscriptionController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Modificaiton de l'inscription",
+            'title' => "Modification de l'inscription",
             'form' => $form,
         ]);
         $vm->setTemplate('formation/inscription/modifier');
