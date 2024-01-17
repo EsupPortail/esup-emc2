@@ -691,7 +691,68 @@ create table public.fichier_fichier
 create unique index fichier_fichier_id_uindex on public.fichier_fichier (id);
 create unique index fichier_fichier_nom_stockage_uindex on public.fichier_fichier (nom_stockage);
 
+-- UNICAEN OBSERVATION -----------------------------
 
+create table unicaen_observation_observation_type
+(
+    id                    serial                  not null
+        constraint unicaen_observation_observation_type_pk
+            primary key,
+    code                  varchar(256)            not null
+        constraint unicaen_observation_observation_type_pk_2
+            unique,
+    libelle               varchar(1024)           not null,
+    categorie             varchar(1024),
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint uot_unicaen_utilisateur_user_id_fk_1
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint uot_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint uot_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
+create table unicaen_observation_observation_instance
+(
+    id          serial  not null
+        constraint unicaen_observation_observation_instance_pk
+            primary key,
+    type_id     integer not null
+        constraint uoi_observation_type_id_fk
+            references unicaen_observation_observation_type,
+    observation text    not null,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint uoi_unicaen_utilisateur_user_id_fk_1
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint uoi_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint uoi_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
+create table unicaen_observation_observation_validation
+(
+    observation_instance_id integer not null
+        constraint uov_observation_observation_id_fk
+            references unicaen_observation_observation_instance
+            on delete cascade,
+    validation_id  integer
+        constraint uov_unicaen_validation_instance_id_fk
+            references unicaen_validation_instance
+            on delete cascade,
+    constraint uov_observation_validation_pk
+        primary key (observation_instance_id, validation_id)
+);
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T

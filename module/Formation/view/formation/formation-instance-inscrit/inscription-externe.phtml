@@ -61,7 +61,7 @@ $canAjouterDemande      = $this->isAllowed(DemandeexternePrivileges::getResource
 
 <?php foreach($demandes as $demande) : ?>
     <?php
-    $url = $this->url('inscription-formation', [], ['force_canonical' => true, 'fragment' => 'demandes'], true);
+    $url = $this->url('inscription-externe', [], ['force_canonical' => true, 'fragment' => 'demandes'], true);
     echo $this->demandeExterne($demande, ['retour' => $url]);
     ?>
 <?php endforeach; ?>
