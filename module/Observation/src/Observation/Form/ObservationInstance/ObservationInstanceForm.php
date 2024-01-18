@@ -66,4 +66,9 @@ class ObservationInstanceForm extends Form
             'observation'               => [ 'required' => true,  ],
         ]));
     }
+
+    public function cacherType(): void
+    {
+        $this->get('observationtype')->setAttribute('class', 'hidden');
+    }
 }

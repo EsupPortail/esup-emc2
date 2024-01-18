@@ -2,16 +2,20 @@
 
 namespace Observation\Controller;
 
+use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Observation\Entity\Db\ObservationInstance;
 use Observation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
+use Observation\Provider\Validation\ObservationValidations;
 use Observation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
+use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 class ObservationInstanceController extends AbstractActionController
 {
     use ObservationInstanceServiceAwareTrait;
+    use ValidationInstanceServiceAwareTrait;
     use ObservationInstanceFormAwareTrait;
 
     public function indexAction(): ViewModel
@@ -40,6 +44,8 @@ class ObservationInstanceController extends AbstractActionController
         $form = $this->getObservationInstanceForm();
         $form->setAttribute('action', $this->url()->fromRoute('observation/instance/ajouter', [], [], true));
         $form->bind($observation);
+
+        $form->cacherType();
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -89,7 +95,7 @@ class ObservationInstanceController extends AbstractActionController
         $observation = $this->getObservationInstanceService()->getRequestedObservationInstance($this);
         $this->getObservationInstanceService()->historise($observation);
 
-        $retour = $this->params()->fromRoute('retour');
+        $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('observation/instance');
     }
@@ -99,7 +105,7 @@ class ObservationInstanceController extends AbstractActionController
         $observation = $this->getObservationInstanceService()->getRequestedObservationInstance($this);
         $this->getObservationInstanceService()->restore($observation);
 
-        $retour = $this->params()->fromRoute('retour');
+        $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
         return $this->redirect()->toRoute('observation/instance');
     }
@@ -124,6 +130,39 @@ class ObservationInstanceController extends AbstractActionController
                 'action' => $this->url()->fromRoute('observation/instance/supprimer', ["observation" => $observation->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    public function validerAction(): ViewModel
+    {
+        $observation = $this->getObservationInstanceService()->getRequestedObservationInstance($this);
+
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $validation = $observation->getValidationActiveByTypeCode(ObservationValidations::OBSERVATION_VALIDEE);
+            if ($validation === null) {
+                if ($data["reponse"] === "oui") {
+                    $this->getValidationInstanceService()->setValidationActive($observation, ObservationValidations::OBSERVATION_VALIDEE);
+                    $this->getObservationInstanceService()->update($observation);
+                }
+//                if ($data["reponse"] === "non") {
+//                    $this->getValidationInstanceService()->setValidationActive($ficheposte, $type, 'Refus');
+//                    $this->getFichePosteService()->update($ficheposte);
+//                }
+            }
+            exit();
+        }
+
+        $vm = new ViewModel();
+        $vm->setTemplate('unicaen-validation/validation-instance/validation-modal');
+        $vm->setVariables([
+            'title' => "Validation de l'obsevation",
+            'text' => "La validation de l'observation figera celle-ci. Êtes-vous de vouloir valider cette validation ?",
+            'action' => $this->url()->fromRoute('observation/instance/valider', ['observation-instance' => $observation->getId()], [], true),
+            'refus' => false,
+        ]);
         return $vm;
     }
 

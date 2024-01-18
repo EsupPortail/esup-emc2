@@ -50,6 +50,10 @@ use Laminas\Form\Form;
     $('select').selectpicker();
 
     $('input#agent[id]').hide()
+
+    <?php if (isset($js)): ?>
+        <?php echo $js; ?>
+    <?php endif; ?>
 </script>
 
 <style>

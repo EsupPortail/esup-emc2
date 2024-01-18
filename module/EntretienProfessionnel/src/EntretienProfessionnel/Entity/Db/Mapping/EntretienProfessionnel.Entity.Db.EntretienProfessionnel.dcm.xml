@@ -52,7 +52,16 @@
             </join-table>
         </many-to-many>
 
-        <one-to-many target-entity="EntretienProfessionnel\Entity\Db\Observation"   mapped-by="entretien" field="observations"/>
+        <many-to-many field="observations" target-entity="Observation\Entity\Db\ObservationInstance">
+            <join-table name="entretienprofessionnel_observation">
+                <join-columns>
+                    <join-column name="entretien_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="observation_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

@@ -4,13 +4,7 @@ namespace EntretienProfessionnel;
 
 use EntretienProfessionnel\Controller\ObservationController;
 use EntretienProfessionnel\Controller\ObservationControllerFactory;
-use EntretienProfessionnel\Form\Observation\ObservationForm;
-use EntretienProfessionnel\Form\Observation\ObservationFormFactory;
-use EntretienProfessionnel\Form\Observation\ObservationHydrator;
-use EntretienProfessionnel\Form\Observation\ObservationHydratorFactory;
 use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
-use EntretienProfessionnel\Service\Observation\ObservationService;
-use EntretienProfessionnel\Service\Observation\ObservationServiceFactory;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -23,6 +17,8 @@ return [
                     'controller' => ObservationController::class,
                     'action' => [
                         'ajouter',
+                        'ajouter-agent',
+                        'ajouter-autorite',
                     ],
                     'privileges' => [
                         ObservationPrivileges::OBSERVATION_AJOUTER,
@@ -71,6 +67,48 @@ return [
                             'route'    => '/observation',
                         ],
                         'child_routes' => [
+                            'agent' => [
+                                'type'  => Literal::class,
+                                'may_terminate' => false,
+                                'options' => [
+                                    'route'    => '/agent',
+                                ],
+                                'child_routes' => [
+                                    'ajouter' => [
+                                        'type'  => Segment::class,
+                                        'may_terminate' => true,
+                                        'options' => [
+                                            'route'    => '/ajouter/:entretien-professionnel/:type',
+                                            'defaults' => [
+                                                /** @see ObservationController::ajouterAgentAction() */
+                                                'controller' => ObservationController::class,
+                                                'action'     => 'ajouter-agent',
+                                            ],
+                                        ],
+                                    ],
+                                ]
+                            ],
+                            'autorite' => [
+                                'type'  => Literal::class,
+                                'may_terminate' => false,
+                                'options' => [
+                                    'route'    => '/autorite',
+                                ],
+                                'child_routes' => [
+                                    'ajouter' => [
+                                        'type'  => Segment::class,
+                                        'may_terminate' => true,
+                                        'options' => [
+                                            'route'    => '/ajouter/:entretien-professionnel',
+                                            'defaults' => [
+                                                /** @see ObservationController::ajouterAutoriteAction() */
+                                                'controller' => ObservationController::class,
+                                                'action'     => 'ajouter-autorite',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
@@ -140,7 +178,6 @@ return [
 
     'service_manager' => [
         'factories' => [
-            ObservationService::class => ObservationServiceFactory::class,
         ],
     ],
     'controllers'     => [
@@ -150,12 +187,10 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            ObservationForm::class => ObservationFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
-            ObservationHydrator::class => ObservationHydratorFactory::class,
         ],
     ]
 

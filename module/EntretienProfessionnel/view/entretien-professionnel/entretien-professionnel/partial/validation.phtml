@@ -12,6 +12,7 @@
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 
@@ -47,6 +48,12 @@ foreach ($grades as $grade) {
 }
 if (!$inhibition) $autorites = array_filter($agent->getAutorites(), function(AgentAutorite $a) use ($responsable) { return $a->getAutorite() !== $responsable; });
 else $autorites = $agent->getAutorites();
+
+
+$observationEntretien = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN);
+$observationPerspective = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE);
+$observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AUTORITE);
+
 ?>
 
 <h2 class="page-header-tab"> Validations </h2>
@@ -125,7 +132,7 @@ else $autorites = $agent->getAutorites();
             Ces observations sont facultatives et l'agent peut exprimer le fait de ne pas vouloir faire d'observation.
             <br/><br/>
             <strong><span class="icon icon-information"></span> L'expression d'observations et leur validation n'est possible que durant les 8 jours suivants la validation de l'entretien professionnel par son responsable
-                (<?php echo $entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"); ?>).
+                (c'est-à-dire le <?php echo $entretien->getMaxSaisiObservation()->format("d/m/Y à H:i"); ?>).
             </strong>
         </div>
     <?php endif; ?>
@@ -138,36 +145,31 @@ else $autorites = $agent->getAutorites();
             </strong>
         </div>
     <?php endif; ?>
-    <?php echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
+<!--    --><?php //echo $this->partial('partial/observation.phtml', ['entretien' => $entretien, 'observation' => $entretien->getObservationActive(), 'droits' => $droits, 'source' => 'renseignerAction']); ?>
 
-    <?php if ($validationObservation !== null) : ?>
-        <div class="alert alert-success">
-            <strong>Observations validées</strong>
-            <dl class="row">
-                <dt class="col-md-4"> Validateur </dt>
-                <dd class="col-md-8"> <?php echo $validationObservation->getHistoModificateur()->getDisplayName(); ?> </dd>
-                <dt class="col-md-4"> Date </dt>
-                <dd class="col-md-8"> <?php echo $validationObservation->getHistoModification()->format('d/m/y à H:i:s'); ?> </dd>
-            </dl>
-        </div>
-        <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
-            <?php if ($validationObservation !== null) : ?>
-                <div class="pull-right">
-                    <a
-                        <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
-                            href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationObservation->getId()], [], true); ?>"
-                            class="btn btn-danger action"
-                    >
-                        <span class="icon icon-unchecked"></span>
-                        Révoquer la validation
-                    </a>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
-    <?php else :?>
+    <?php if ($observationEntretien === null) : ?>
+        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification">
+            Ajouter une observation à propos de l'entretien
+        </a>
+    <?php else : ?>
+        <?php echo $this->observationinstance($observationEntretien); ?>
+    <?php endif; ?>
+
+    <?php if ($observationPerspective === null) : ?>
+        <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+        <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification">
+            Ajouter une observation à propos des perspectives
+        </a>
+    <?php else : ?>
+        <?php echo $this->observationinstance($observationPerspective); ?>
+    <?php endif; ?>
+
     <?php if ($step >= 1) : ?>
         <?php if ($canValiderObservation AND $validationHierarchie === null) : ?>
-            <?php if ($entretien->getObservationActive()) : ?>
+            <?php if ($observationEntretien || $observationPerspective) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
@@ -175,7 +177,7 @@ else $autorites = $agent->getAutorites();
                         data-event="modification"
                 >
                     <span class="icon icon-checked"></span>
-                    Valider les observations
+                    Je clôs la phase d'émission d'observations
                 </a>
             <?php else : ?>
                 <a
@@ -189,7 +191,6 @@ else $autorites = $agent->getAutorites();
                     </a>
             <?php endif; ?>
         <?php endif; ?>
-    <?php endif; ?>
     <?php endif; ?>
 </div>
 
@@ -224,6 +225,16 @@ else $autorites = $agent->getAutorites();
             </strong>
         </div>
     <?php endif; ?>
+
+    <?php if ($observationAutorite === null) : ?>
+        <a href="<?php echo $this->url('entretien-professionnel/observation/autorite/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+           class="btn btn-primary ajax-modal" data-event="modification">
+            Ajouter une observation
+        </a>
+    <?php else : ?>
+        <?php echo $this->observationinstance($observationAutorite); ?>
+    <?php endif; ?>
+
 
     <?php if ($validationHierarchie !== null) : ?>
         <div class="alert alert-success">

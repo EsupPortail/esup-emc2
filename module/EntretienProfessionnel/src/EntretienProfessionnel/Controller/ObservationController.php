@@ -2,115 +2,99 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use EntretienProfessionnel\Entity\Db\Observation;
-use EntretienProfessionnel\Form\Observation\ObservationFormAwareTrait;
+use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
-use EntretienProfessionnel\Service\Observation\ObservationServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Observation\Entity\Db\ObservationInstance;
+use Observation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
+use Observation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
+use Observation\Service\ObservationType\ObservationTypeServiceAwareTrait;
+use RuntimeException;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 class ObservationController extends AbstractActionController {
     use EntretienProfessionnelServiceAwareTrait;
-    use ObservationServiceAwareTrait;
+    use ObservationInstanceServiceAwareTrait;
+    use ObservationTypeServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
-    use ObservationFormAwareTrait;
+    use ObservationInstanceFormAwareTrait;
 
-    public function ajouterAction() : ViewModel
+
+    public function ajouterAgentAction(): ViewModel
     {
         $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
-        $observation = new Observation();
-        $observation->setEntretien($entretien);
+        $type = $this->params()->fromRoute('type');
 
-        $form = $this->getObservationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
+        $observationType = null;
+        if (in_array($type, [EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN, EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE])) {
+            $observationType = $this->getObservationTypeService()->getObservationTypeByCode($type);
+        }
+        if ($observationType === null) throw new RuntimeException("Type de validation non valide.");
+
+        $observation = new ObservationInstance();
+        $observation->setType($observationType);
+        $form = $this->getObservationInstanceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => $type], [], true));
         $form->bind($observation);
+        $form->cacherType();
 
-        /** @var Request $request */
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getObservationService()->create($observation);
+                $this->getObservationInstanceService()->create($observation);
+                $entretien->addObservation($observation);
+                $this->getEntretienProfessionnelService()->update($entretien);
+                exit();
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('entretien-professionnel/entretien-professionnel/observation-form');
-        $vm->setVariables([
-            'title' => "Ajout d'une observation",
+        $vm = new ViewModel([
+            'title' => "Ajout d'une observation sur l'entretien professionnel (en tant qu'agent)",
             'form' => $form,
+            'js' => " $('.hidden').parent().hide()",
         ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
-    public function modifierAction() : ViewModel
-    {
-        $observation = $this->getObservationService()->getRequestedObservation($this);
+    /** Observation Autorite ******************************************************************************************/
 
-        $form = $this->getObservationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/modifier', ['observation' => $observation->getId()], [], true));
+    public function ajouterAutoriteAction(): ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+
+        $observationType = $this->getObservationTypeService()->getObservationTypeByCode(EntretienProfessionnelObservations::OBSERVATION_AUTORITE);
+
+        $observation = new ObservationInstance();
+        $observation->setType($observationType);
+        $form = $this->getObservationInstanceForm();
+        $form->setAttribute('action', $this->url()->fromRoute('entretien-professionnel/observation/autorite/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true));
+        $form->cacherType();
         $form->bind($observation);
 
-        /** @var Request $request */
+
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $this->getObservationService()->update($observation);
+                $this->getObservationInstanceService()->create($observation);
+                $entretien->addObservation($observation);
+                $this->getEntretienProfessionnelService()->update($entretien);
+                exit();
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('entretien-professionnel/entretien-professionnel/observation-form');
-        $vm->setVariables([
-            'title' => "Modification d'une observation",
+        $vm = new ViewModel([
+            'title' => "Ajout d'une observation sur l'entretien professionnel (en tant qu'autorité hiérarchique)",
             'form' => $form,
+            'js' => " $('.hidden').parent().hide()",
         ]);
-        return $vm;
-    }
-
-    public function historiserAction() : Response
-    {
-        $observation = $this->getObservationService()->getRequestedObservation($this);
-        $this->getObservationService()->historise($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
-    }
-
-    public function restaurerAction() : Response
-    {
-        $observation = $this->getObservationService()->getRequestedObservation($this);
-        $this->getObservationService()->restore($observation);
-        return $this->redirect()->toRoute('entretien-professionnel/acceder', ['entretien-professionnel' => $observation->getEntretien()->getId()], ['fragment' => 'avis'], true);
-    }
-
-    public function supprimerAction() : ViewModel
-    {
-        $observation = $this->getObservationService()->getRequestedObservation($this);
-
-        /** @var Request $request */
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            if ($data["reponse"] === "oui") {
-                $this->getObservationService()->delete($observation);
-            }
-            exit();
-        }
-
-        $vm = new ViewModel();
-        if ($observation !== null) {
-            $vm->setTemplate('application/default/confirmation');
-            $vm->setVariables([
-                'title' => "Suppression de l'observation",
-                'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
-                'action' => $this->url()->fromRoute('entretien-professionnel/observation/supprimer', ["observation" => $observation->getId()], [], true),
-            ]);
-        }
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 }

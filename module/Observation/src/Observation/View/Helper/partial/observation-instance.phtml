@@ -1,0 +1,137 @@
+<?php
+
+use Observation\Entity\Db\ObservationInstance;
+use Observation\Provider\Validation\ObservationValidations;
+
+/**
+ * @see \Observation\View\Helper\ObservationInstanceViewHelper
+ * @var ObservationInstance $observation
+ * @var array $options
+ */
+
+$type = $observation->getType();
+$validation = $observation->getValidationActiveByTypeCode(ObservationValidations::OBSERVATION_VALIDEE);
+$url = $this->url(null,[],[], true);
+
+?>
+
+<?php echo $url; ?>
+
+<div class="card">
+    <div class="card-header bg-default">
+        <?php if ($type->getCategorie()): ?>
+            <?php echo $type->getCategorie(); ?> >
+        <?php endif; ?>
+        <?php echo $type->getLibelle(); ?>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-9">
+                <p class="historisation">
+                Dernière modification par
+                <?php if ($observation->getHistoModification()) : ?>
+                    <?php echo $observation->getHistoModificateur()->getDisplayName(); ?> le <?php echo $observation->getHistoModification()->format('d/m/Y à H:i'); ?>
+                <?php else : ?>
+                    <?php echo $observation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $observation->getHistoCreation()->format('d/m/Y à H:i'); ?>
+                <?php endif; ?>
+                </p>
+                <div class="observation">
+                    <?php echo $observation->getObservation(); ?>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <?php /** @see \Observation\Controller\ObservationInstanceController::modifierAction() */ ?>
+                <a href="<?php echo $this->url('observation/instance/modifier', ['observation-instance' => $observation->getId()], [], true); ?>"
+                   class="btn btn-primary ajax-modal" data-event="modification">
+                    <span class="icon icon-modifier"></span>
+                    Modifier l'observation
+                </a>
+                <?php if ($observation->estNonHistorise()) : ?>
+                    <?php /** @see \Observation\Controller\ObservationInstanceController::historiserAction() */ ?>
+                    <a href="<?php echo $this->url('observation/instance/historiser', ['observation-instance' => $observation->getId()], ['query' => ['retour' => $url]], true); ?>"
+                       class="btn btn-primary">
+                        <span class="icon icon-historiser"></span>
+                        Historiser l'observation
+                    </a>
+                <?php else : ?>
+                    <?php /** @see \Observation\Controller\ObservationInstanceController::restaurerAction() */ ?>
+                    <a href="<?php echo $this->url('observation/instance/restaurer', ['observation-instance' => $observation->getId()], ['query' => ['retour' => $url]], true); ?>"
+                       class="btn btn-primary">
+                        <span class="icon icon-restaurer"></span>
+                        Restaurer l'observation
+                    </a>
+                <?php endif; ?>
+                <a href="<?php echo $this->url('observation/instance/supprimer', ['observation-instance' => $observation->getId()], [], true); ?>"
+                   class="btn btn-danger ajax-modal" data-event="modification">
+                    <span class="icon icon-unchecked"></span>
+                    Supprimer l'observation
+                </a>
+            </div>
+        </div>
+
+        <div class="validation">
+            <?php if ($validation === null) : ?>
+                <?php /** @see \Observation\Controller\ObservationInstanceController::validerAction() */ ?>
+                <a href="<?php echo $this->url('observation/instance/valider', ['observation-instance' => $observation->getId()], [], true); ?>"
+                   class="btn btn-success ajax-modal" data-event="modification">
+                    <span class="icon icon-checked"></span>
+                    Valider l'observation
+                </a>
+            <?php else : ?>
+            <div class="row">
+                <div class="col-md-9">
+                    <p class="validation">
+                        Validation effectée par <?php echo $validation->getHistoCreateur()->getDisplayName(); ?> le <?php echo $validation->getHistoCreation()->format('d/m/Y à H:i'); ?>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <?php /** @see \UnicaenValidation\Controller\ValidationInstanceController::historiserAction() */ ?>
+                    <a href="<?php echo $this->url('validation/instance/historiser', ['validation' => $validation->getId()], ['query' => ['retour' => $url]], true); ?>" class="btn btn-danger">
+                        <span class="icon icon-unchecked"></span>
+                        Révoquer la validation
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<style>
+    p.historisation {
+        margin: 1rem 0.5rem;
+        padding: 0.25rem;
+        background: #f0f0f0;
+        font-style: italic;
+        border-radius: 0.25rem;
+    }
+
+    div.validation {
+        margin: 1rem 0.5rem;
+    }
+
+    p.validation {
+        margin-top: 0.25rem;
+        padding: 0.25rem;
+        background: #b3cbb3;
+        font-style: italic;
+        border-radius: 0.25rem;
+    }
+
+    div.observation {
+        margin: 1rem 0.5rem;
+        padding: 0.25rem;
+        font-style: italic;
+        border-left: solid 1px lightgray;
+    }
+</style>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

@@ -12,6 +12,8 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Observation\Entity\Interface\HasObservationsInterface;
+use Observation\Entity\Trait\HasObservationsTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
@@ -21,10 +23,12 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 use UnicaenValidation\Entity\HasValidationsInterface;
 use UnicaenValidation\Entity\HasValidationsTrait;
 
-class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface, HasEtatsInterface, HasValidationsInterface {
+class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterface, HasAgentInterface,
+    HasEtatsInterface, HasValidationsInterface, HasObservationsInterface {
     use HistoriqueAwareTrait;
     use HasEtatsTrait;
     use HasValidationsTrait;
+    use HasObservationsTrait;
 
     const FORMULAIRE_CREP                   = 'CREP';
     const FORMULAIRE_CREF                   = 'CREF';
@@ -52,7 +56,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?FormulaireInstance $formulaireInstance = null;
     private ?FormulaireInstance $formationInstance = null;
 
-    private Collection $observations;
     private Collection $sursis;
 
     private ?string $token = null;
@@ -150,34 +153,34 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** OBSERVATIONS **************************************************************************************************/
 
-    public function getObservations() : array
-    {
-        return $this->observations->toArray();
-    }
-
-    public function hasObservation(?Observation $observation) : bool
-    {
-        return $this->observations->contains($observation);
-    }
-
-    public function addObservation(?Observation $observation) : EntretienProfessionnel
-    {
-        if ($this->hasObservation($observation)) $this->observations->add($observation);
-        return $this;
-    }
-
-    public function removeObservation(?Observation $observation) : EntretienProfessionnel
-    {
-        $this->observations->removeElement($observation);
-        return $this;
-    }
-
-    public function setObservations(array $observations) : EntretienProfessionnel
-    {
-        $this->observations->clear();
-        foreach ($observations as $observation) $this->addObservation($observation);
-        return $this;
-    }
+//    public function getObservations() : array
+//    {
+//        return $this->observations->toArray();
+//    }
+//
+//    public function hasObservation(?Observation $observation) : bool
+//    {
+//        return $this->observations->contains($observation);
+//    }
+//
+//    public function addObservation(?Observation $observation) : EntretienProfessionnel
+//    {
+//        if ($this->hasObservation($observation)) $this->observations->add($observation);
+//        return $this;
+//    }
+//
+//    public function removeObservation(?Observation $observation) : EntretienProfessionnel
+//    {
+//        $this->observations->removeElement($observation);
+//        return $this;
+//    }
+//
+//    public function setObservations(array $observations) : EntretienProfessionnel
+//    {
+//        $this->observations->clear();
+//        foreach ($observations as $observation) $this->addObservation($observation);
+//        return $this;
+//    }
 
     public function getObservationActive() : ?Observation
     {

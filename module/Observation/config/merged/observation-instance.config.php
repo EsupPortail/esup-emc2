@@ -13,6 +13,7 @@ use Observation\Form\ObservationInstance\ObservationInstanceHydratorFactory;
 use Observation\Provider\Privilege\ObservationinstancePrivileges;
 use Observation\Service\ObservationInstance\ObservationInstanceService;
 use Observation\Service\ObservationInstance\ObservationInstanceServiceFactory;
+use Observation\View\Helper\ObservationInstanceViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
 return [
@@ -50,6 +51,7 @@ return [
                     'controller' => ObservationInstanceController::class,
                     'action' => [
                         'modifier',
+                        'valider',
                     ],
                     'privileges' => [
                         ObservationinstancePrivileges::OBSERVATIONINSTANCE_MODIFIER,
@@ -160,6 +162,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'valider' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/valider/:observation-instance',
+                                    'defaults' => [
+                                        /** @see ObservationInstanceController::validerAction() */
+                                        'action'     => 'valider',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -185,6 +197,11 @@ return [
     'hydrators' => [
         'factories' => [
             ObservationInstanceHydrator::class => ObservationInstanceHydratorFactory::class,
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'observationinstance' => ObservationInstanceViewHelper::class,
         ],
     ],
 
