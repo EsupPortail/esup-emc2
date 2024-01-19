@@ -29,7 +29,8 @@
 
     "unicaen/utilisateur-ldap-adapter" : "^2.0",
     "unicaen/etat": "^6.0",
-    "unicaen/validation": "^6.1"
+    "unicaen/validation": "^6.1",
+    "unicaen/observation": "^0.0"
   },
   "require-dev": {
     "laminas/laminas-developer-tools": ">=1.0"

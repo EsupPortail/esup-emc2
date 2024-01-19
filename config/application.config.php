@@ -41,8 +41,8 @@ $modules = [
     'UnicaenIndicateur',
     'Unicaen\Console',
     'UnicaenSynchro',
+    'UnicaenObservation',
 
-    'Observation',
     'MissionSpecifique',
     'Structure',
     'EntretienProfessionnel',

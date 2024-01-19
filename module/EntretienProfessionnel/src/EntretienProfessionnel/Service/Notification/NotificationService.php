@@ -11,6 +11,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Template\MailTemplates;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -195,7 +196,8 @@ class NotificationService
         $this->getUrlService()->setVariables(['entretien' => $entretien]);
         $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent(), 'UrlService' => $this->getUrlService()];
 
-        if ($entretien->getObservationActive() !== null) {
+        if ($entretien->hasObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN)
+            || $entretien->hasObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE)) {
             $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::ENTRETIEN_VALIDATION_2_OBSERVATION, $vars);
             $mail = $this->getMailService()->sendMail($this->getEmailAutoritesHierarchiques($entretien), $rendu->getSujet(), $rendu->getCorps());
             $mail->setMotsClefs([$entretien->generateTag(), $rendu->getTemplate()->generateTag()]);

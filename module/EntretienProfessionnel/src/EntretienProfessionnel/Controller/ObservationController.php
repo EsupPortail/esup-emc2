@@ -6,10 +6,10 @@ use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservatio
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Observation\Entity\Db\ObservationInstance;
-use Observation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
-use Observation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
-use Observation\Service\ObservationType\ObservationTypeServiceAwareTrait;
+use UnicaenObservation\Entity\Db\ObservationInstance;
+use UnicaenObservation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
+use UnicaenObservation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
+use UnicaenObservation\Service\ObservationType\ObservationTypeServiceAwareTrait;
 use RuntimeException;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 

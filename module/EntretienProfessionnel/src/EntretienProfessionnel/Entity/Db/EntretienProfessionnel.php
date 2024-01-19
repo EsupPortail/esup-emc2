@@ -9,11 +9,12 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use Observation\Entity\Interface\HasObservationsInterface;
-use Observation\Entity\Trait\HasObservationsTrait;
+use UnicaenObservation\Entity\Interface\HasObservationsInterface;
+use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
@@ -396,15 +397,15 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     /** @noinspection PhpUnused */
     public function toStringObservationEntretien() : string {
-        $observation = $this->getObservationActive();
-        if ($observation AND $observation->getObservationAgentEntretien()) return $observation->getObservationAgentEntretien();
+        $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN);
+        if ($observation) return $observation->getObservation();
         return "Aucune observation";
     }
 
     /** @noinspection PhpUnused */
     public function toStringObservationPerspective() : string {
-        $observation = $this->getObservationActive();
-        if ($observation AND $observation->getObservationAgentPerspective()) return $observation->getObservationAgentPerspective();
+        $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE);
+        if ($observation) return $observation->getObservation();
         return "Aucune observation";
     }
 
