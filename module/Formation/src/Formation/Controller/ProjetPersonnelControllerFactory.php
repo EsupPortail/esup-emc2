@@ -6,6 +6,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenRenderer\Service\Rendu\RenduService;
 
 class ProjetPersonnelControllerFactory
 {
@@ -20,11 +21,14 @@ class ProjetPersonnelControllerFactory
     {
         /**
          * @var ParametreService $parametreService
+         * @var RenduService $renduService
          */
         $parametreService = $container->get(ParametreService::class);
+        $renduService = $container->get(RenduService::class);
 
         $controller = new ProjetPersonnelController();
         $controller->setParametreService($parametreService);
+        $controller->setRenduService($renduService);
 
         return $controller;
     }
