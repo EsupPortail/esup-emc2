@@ -48,7 +48,7 @@ class RappelAgentAvantFormationService extends EvenementService
         try {
             /** @var FormationInstance|null $instance */
             $instance = $this->getEntityManager()->getRepository(FormationInstance::class)->find($parametres['instance']);
-            $this->getNotificationService()->triggerRappelAgentAvantFormation($instance);
+            if ($instance !== null) $this->getNotificationService()->triggerRappelAgentAvantFormation($instance);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());
             $this->update($evenement);

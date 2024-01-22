@@ -54,6 +54,11 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
         $parametres = json_decode($evenement->getParametres(), true);
         $campagne = $this->getCampagneService()->getCampagne($parametres['campagne']);
 
+        if ($campagne === null) {
+            $evenement->setLog("Campagne #". $parametres['campagne'] . " non trouvée.");
+            return Etat::ECHEC;
+        }
+
         $message = "";
 
         // AUTORITES
@@ -64,7 +69,7 @@ class RappelCampagneAvancementAutoriteService extends EvenementService {
             foreach ($autorites as $autorite) $dictionnaire[$autorite->getAutorite()->getId()] = $autorite;
             foreach ($dictionnaire as $autorite) {
                 $completed = true;
-                $agents = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite);
+                $agents = $this->getAgentAutoriteService()->getAgentsAutoritesByAutorite($autorite->getAutorite());
                 foreach ($agents as $agent) {
                     $ep = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent->getAgent(), $campagne);
                     if ($ep === null || !$ep->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {

@@ -6,8 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Referentiel\Service\Synchronisation\SynchronisationService;
 use UnicaenEvenement\Service\Type\TypeService;
+use UnicaenSynchro\Service\Synchronisation\SynchronisationService;
 
 class SynchroOctopusServiceFactory {
 

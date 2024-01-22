@@ -54,6 +54,12 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
         $parametres = json_decode($evenement->getParametres(), true);
         $campagne = $this->getCampagneService()->getCampagne($parametres['campagne']);
 
+        if ($campagne === null) {
+            $evenement->setLog("Campagne #". $parametres['campagne'] . " non trouvée.");
+            return Etat::ECHEC;
+        }
+
+
         $message = "";
 
         // SUPERIEURS
@@ -64,7 +70,7 @@ class RappelCampagneAvancementSuperieurService extends EvenementService {
             foreach ($superieurs as $superieur) $dictionnaire[$superieur->getSuperieur()->getId()] = $superieur;
             foreach ($dictionnaire as $superieur) {
                 $completed = true;
-                $agents = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur);
+                $agents = $this->getAgentSuperieurService()->getAgentsSuperieursBySuperieur($superieur->getSuperieur());
                 foreach ($agents as $agent) {
                     $ep = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByAgentAndCampagne($agent->getAgent(), $campagne);
                     if ($ep === null || !$ep->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT)) {

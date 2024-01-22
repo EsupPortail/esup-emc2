@@ -5,10 +5,10 @@ namespace Application\Service\Evenement;
 use Application\Provider\EvenementProvider;
 use DateTime;
 use Exception;
-use Referentiel\Service\Synchronisation\SynchronisationServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
+use UnicaenSynchro\Service\Synchronisation\SynchronisationServiceAwareTrait;
 
 class SynchroOctopusService extends EvenementService {
     use SynchronisationServiceAwareTrait;
@@ -34,7 +34,7 @@ class SynchroOctopusService extends EvenementService {
     {
         $log = "";
         try {
-            $jobs = $this->getSynchronisationService()->configs;
+            $jobs = $this->getSynchronisationService()->getConfigs();
             foreach ($jobs as $name => $job) {
                 $texte =  $this->getSynchronisationService()->synchronise($name);
                 $log .= $texte;
