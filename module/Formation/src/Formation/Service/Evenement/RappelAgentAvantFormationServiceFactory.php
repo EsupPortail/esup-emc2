@@ -33,7 +33,7 @@ class RappelAgentAvantFormationServiceFactory {
 
         $service = new RappelAgentAvantFormationService();
 
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setEtatEvenementService($etatService);
         $service->setNotificationService($notificationService);
         $service->setTypeService($typeService);

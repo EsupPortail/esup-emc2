@@ -29,7 +29,7 @@ class SynchroOctopusServiceFactory {
 
         $service = new SynchroOctopusService();
 
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setSynchronisationService($synchroService);
         $service->setTypeService($typeService);
         return $service;

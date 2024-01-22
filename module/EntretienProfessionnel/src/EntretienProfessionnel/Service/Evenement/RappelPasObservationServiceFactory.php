@@ -6,6 +6,8 @@ use Doctrine\ORM\EntityManager;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEvenement\Service\Etat\EtatService;
 use UnicaenEvenement\Service\Type\TypeService;
 
@@ -14,6 +16,8 @@ class RappelPasObservationServiceFactory {
     /**
      * @param ContainerInterface $container
      * @return RappelPasObservationService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : RappelPasObservationService
     {
@@ -32,7 +36,7 @@ class RappelPasObservationServiceFactory {
 
         $service = new RappelPasObservationService();
 
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setEntretienProfessionnelService($entretienProfessionnelService);
         $service->setEtatEvenementService($etatService);
         $service->setNotificationService($notificationService);

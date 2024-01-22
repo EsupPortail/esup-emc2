@@ -38,6 +38,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
 
 $isAcquis = (isset($options['acquis']) && $options['acquis'] === true);
 
+
 $canAcquisAfficher = false;
 $canAcquisModifier = false;
 if ($objet instanceof FicheMetier) {
@@ -62,6 +63,7 @@ $canValider         = (CompetenceBlocViewHelper::isActionActivee($options, 'vali
 $displayTitre       = CompetenceBlocViewHelper::isDisplayed($options,'titre');
 $displayValidation  = CompetenceBlocViewHelper::isDisplayed($options,'validation');
 $displayRaison      = CompetenceBlocViewHelper::isDisplayed($options,'raison');
+$displayTheme       = CompetenceBlocViewHelper::isDisplayed($options,'theme');
 
 //var_dump([
 //        'actions' => $options['actions'],
@@ -98,7 +100,7 @@ ksort($groupes);
                 <br/>
                 <?php if ($objet instanceof Agent) : ?>
                     <a
-                        <?php /** @see \Application\Controller\ElementController::ajouterCompetenceElementAction() */?>
+                        <?php /** @see \Element\Controller\ElementController::ajouterCompetenceElementAction() */?>
                         <?php //todo ... Agent::class => get_class($objet) ... ?>
                             href="<?php echo $this->url('element_/ajouter-competence-element', ['type' => Agent::class, 'id' => $objet->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                             class="ajax-modal btn btn-primary action"
@@ -161,6 +163,11 @@ ksort($groupes);
                             <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
                         <?php endif; ?>
                     </td>
+                    <?php if ($displayTheme) : ?>
+                        <td>
+                            <?php echo ($competence->getTheme())?$competence->getTheme()->getLibelle():"Non précisé"; ?>
+                        </td>
+                    <?php endif; ?>
                     <td class="niveau">
                         <?php if ($entite instanceof CompetenceElement) : ?>
                             <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Non précisé"; ?>
@@ -190,13 +197,13 @@ ksort($groupes);
 <!--                            --><?php //endif; ?>
                             <?php if ($canModifier) : ?>
                                 <?php if (!$isAcquis) : ?>
-                                    <a  <?php /** @see \Application\Controller\ElementController::changerNiveauAction() */ ?>
+                                    <a  <?php /** @see \Element\Controller\ElementController::changerNiveauAction() */ ?>
                                             href="<?php echo $this->url("element_/changer-niveau", ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId(), 'clef' => ($objet instanceof FicheMetier)?'afficher':'masquer'], [], true); ?>"
                                             class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                             title="Modifier le niveau de la compétence <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
                                         <span class="icon icon-editer"></span></a>
                                 <?php else : ?>
-                                    <a  <?php /** @see \Application\Controller\ElementController::modifierCompetenceElementAction() */ ?>
+                                    <a  <?php /** @see \Element\Controller\ElementController::modifierCompetenceElementAction() */ ?>
                                             href="<?php echo $this->url("element_/modifier-competence-element", ['competence-element' => $entite->getId()], [], true); ?>"
                                             class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
                                             title="Modifier l'acquis <span class='highlight competence'><?php echo $competence->getLibelle(); ?></span>">
@@ -205,7 +212,7 @@ ksort($groupes);
                             <?php endif; ?>
                             <?php if ($canSupprimer) : ?>
                                 <a
-                                    <?php /** @see \Application\Controller\ElementController::supprimerAction() */?>
+                                    <?php /** @see \Element\Controller\ElementController::supprimerAction() */?>
                                         href="<?php echo $this->url('element_/supprimer', ['type' => ElementController::TYPE_COMPETENCE, 'id' => $entite->getId()], [], true); ?>"
                                         class="ajax-modal"
                                         data-event="modification"

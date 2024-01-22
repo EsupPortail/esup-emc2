@@ -29,7 +29,7 @@ class NotificationFormationsOuvertesServiceFactory {
         $notificationService = $container->get(NotificationService::class);
 
         $service = new NotificationFormationsOuvertesService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setFormationInstanceService($formationInstanceService);
         $service->setNotificationService($notificationService);
         return $service;

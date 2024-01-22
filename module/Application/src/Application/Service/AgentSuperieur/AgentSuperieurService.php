@@ -189,7 +189,7 @@ class AgentSuperieurService
      */
     public function getUsersInSuperieurs() : array
     {
-        $qb = $this->getEntityManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('asuperieur')
+        $qb = $this->getObjectManager()->getRepository(AgentSuperieur::class)->createQueryBuilder('asuperieur')
             ->join('asuperieur.superieur', 'agent')
             ->join('agent.utilisateur', 'utilisateur')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC')

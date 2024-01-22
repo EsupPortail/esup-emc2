@@ -10,6 +10,7 @@ use Fichier\Service\Nature\NatureService;
 use Formation\Form\Demande2Formation\Demande2FormationForm;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
 use Formation\Form\Inscription\InscriptionForm;
+use Formation\Form\Justification\JustificationForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
@@ -52,13 +53,13 @@ class DemandeExterneControllerFactory
         /**
          * @var DemandeExterneForm $demandeExterneForm
          * @var Demande2FormationForm $demande2formationForm
-         * @var InscriptionForm $inscriptionForm
+         * @var JustificationForm $justificationForm
          * @var SelectionAgentForm $selectionAgentForm
          * @var UploadForm $uploadForm
          */
         $demandeExterneForm = $container->get('FormElementManager')->get(DemandeExterneForm::class);
         $demande2formationForm = $container->get('FormElementManager')->get(Demande2FormationForm::class);
-        $inscriptionForm = $container->get('FormElementManager')->get(InscriptionForm::class);
+        $justificationForm = $container->get('FormElementManager')->get(JustificationForm::class);
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
@@ -75,7 +76,7 @@ class DemandeExterneControllerFactory
 
         $controller->setDemandeExterneForm($demandeExterneForm);
         $controller->setDemande2formationForm($demande2formationForm);
-        $controller->setInscriptionForm($inscriptionForm);
+        $controller->setJustificationForm($justificationForm);
         $controller->setSelectionAgentForm($selectionAgentForm);
         $controller->setUploadForm($uploadForm);
 

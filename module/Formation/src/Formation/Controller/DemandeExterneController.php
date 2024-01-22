@@ -12,7 +12,7 @@ use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Demande2Formation\Demande2FormationFormAwareTrait;
 use Formation\Form\DemandeExterne\DemandeExterneFormAwareTrait;
-use Formation\Form\Inscription\InscriptionFormAwareTrait;
+use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
@@ -44,9 +44,9 @@ class DemandeExterneController extends AbstractActionController {
 
     use DemandeExterneFormAwareTrait;
     use Demande2FormationFormAwareTrait;
+    use JustificationFormAwareTrait;
     use SelectionAgentFormAwareTrait;
     use UploadFormAwareTrait;
-    use InscriptionFormAwareTrait;
 
     public function indexAction() : ViewModel
     {
@@ -242,7 +242,7 @@ class DemandeExterneController extends AbstractActionController {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
         $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_RESP);
         $this->getDemandeExterneService()->update($demande);
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-responsable', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
         $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du responsable de l'agent : ");
@@ -281,7 +281,7 @@ class DemandeExterneController extends AbstractActionController {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
         $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
         $this->getDemandeExterneService()->update($demande);
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-responsable', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
         $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
@@ -318,7 +318,7 @@ class DemandeExterneController extends AbstractActionController {
 
         $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_DRH);
         $this->getDemandeExterneService()->update($demande);
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
 
@@ -349,7 +349,7 @@ class DemandeExterneController extends AbstractActionController {
         $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
         $this->getDemandeExterneService()->update($demande);
 
-        $form = $this->getInscriptionForm();
+        $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-drh', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
         $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
