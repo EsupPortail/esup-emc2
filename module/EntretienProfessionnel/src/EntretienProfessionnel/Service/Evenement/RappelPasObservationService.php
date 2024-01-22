@@ -49,6 +49,10 @@ class RappelPasObservationService extends EvenementService {
 
         try {
             $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($parametres['entretien']);
+            if (!isset($entretien)) {
+                $evenement->setLog("Plus d'entretien professionnel");
+                return Etat::ECHEC;
+            }
             if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) {
                 $this->getNotificationService()->triggerPasObservations($entretien);
                 $evenement->setLog('Notification effectuée');
