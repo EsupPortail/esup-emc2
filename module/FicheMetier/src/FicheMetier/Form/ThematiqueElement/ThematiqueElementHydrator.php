@@ -23,7 +23,7 @@ class ThematiqueElementHydrator implements HydratorInterface
     public function hydrate(array $data, object $object): object
     {
         $niveau = (isset($data['niveau']))?$this->getNiveauService()->getMaitriseNiveau($data['niveau']):null;
-        $complement = (isset($data['complement']) && trim($data['complement']) !== null)?trim($data['complement']):null;
+        $complement = (isset($data['complement']) && trim($data['complement']) !== "")?trim($data['complement']):null;
 
         /** @var ThematiqueElement $object */
         $object->setNiveauMaitrise($niveau);

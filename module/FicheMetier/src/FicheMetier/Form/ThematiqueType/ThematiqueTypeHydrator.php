@@ -16,6 +16,7 @@ class ThematiqueTypeHydrator implements HydratorInterface
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
             'obligatoire' => $object->isObligatoire(),
+            'ordre' => $object->getOrdre(),
         ];
         return $data;
     }
@@ -26,12 +27,14 @@ class ThematiqueTypeHydrator implements HydratorInterface
         $libelle = (isset($data['libelle']) && trim($data['libelle']) !== null)?trim($data['libelle']):null;
         $description = (isset($data['description']) && trim($data['description']) !== null)?trim($data['description']):null;
         $obligatoire = (isset($data['obligatoire']) && $data['obligatoire'] === "1");
+        $ordre = (isset($data['ordre']))?((int) $data['ordre']):null;
 
         /** @var ThematiqueType $object */
         $object->setCode($code);
         $object->setLibelle($libelle);
         $object->setDescription($description);
         $object->setObligatoire($obligatoire);
+        $object->setOrdre($ordre);
         return $object;
 
     }

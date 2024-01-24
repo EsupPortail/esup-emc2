@@ -4,6 +4,7 @@ namespace FicheMetier\Form\ThematiqueType;
 
 use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Form\Element\Button;
+use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
@@ -73,6 +74,19 @@ class ThematiqueTypeForm extends Form
             ],
         ]);
         $this->add([
+            'type' => Number::class,
+            'name' => 'ordre',
+            'options' => [
+                'label' => "Ordre <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => ['disable_html_escape' => true,],
+            ],
+            'attributes' => [
+                'id' => 'obligatoire',
+                'min' => '0',
+                'max' => '9999',
+            ],
+        ]);
+        $this->add([
             'type' => Button::class,
             'name' => 'creer',
             'options' => [
@@ -108,6 +122,7 @@ class ThematiqueTypeForm extends Form
             'libelle'               => [ 'required' => true,  ],
             'description'           => [ 'required' => false, ],
             'obligatoire'           => [ 'required' => true,  ],
+            'ordre'                 => [ 'required' => true,  ],
         ]));
     }
 }

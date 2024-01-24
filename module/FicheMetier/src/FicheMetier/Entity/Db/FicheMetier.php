@@ -207,7 +207,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         /** @var ThematiqueElement[] $thematiques */
         $thematiques = $this->thematiques->toArray();
         $thematiques = array_filter($thematiques, function (ThematiqueElement $a) { return $a->estNonHistorise() && $a->getType()->estNonHistorise();});
-        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getLibelle() > $b->getType()->getLibelle();});
+        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getOrdre() > $b->getType()->getOrdre();});
 
         $texte  = "<table>";
         $texte .= "<thead><tr><th>Libelle</th><th>Niveau</th></tr></thead>";

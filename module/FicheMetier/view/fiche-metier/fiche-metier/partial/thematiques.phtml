@@ -50,6 +50,7 @@ foreach ($thematiquesElements as $thematiqueElement) {
             </tr>
             </thead>
             <tbody>
+            <?php usort($thematiquesTypes, function (ThematiqueType $a, ThematiqueType $b) { return $a->getOrdre() > $b->getOrdre();}); ?>
             <?php foreach ($thematiquesTypes as $thematiqueType): ?>
                 <?php if ($editable || $thematiqueType->isObligatoire() ||  isset($elements[$thematiqueType->getCode()])) : ?>
                 <tr>

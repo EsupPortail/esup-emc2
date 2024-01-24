@@ -10,6 +10,7 @@
         <field name="libelle"         type="string" length="1024"     column="libelle"            />
         <field name="description"     type="text"                     column="description"      nullable="true"  />
         <field name="obligatoire"     type="boolean"                  column="obligatoire"        />
+        <field name="ordre"           type="integer"                  column="ordre"              />
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

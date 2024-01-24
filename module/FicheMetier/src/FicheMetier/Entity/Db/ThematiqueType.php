@@ -12,6 +12,7 @@ class ThematiqueType implements HistoriqueAwareInterface {
     private ?string $code = null;
     private ?string $libelle = null;
     private ?string $description = null;
+    private ?int $ordre = null;
     private bool $obligatoire = false;
 
     public function getId(): ?int
@@ -59,7 +60,14 @@ class ThematiqueType implements HistoriqueAwareInterface {
         $this->obligatoire = $obligatoire;
     }
 
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
 
-
+    public function setOrdre(?int $ordre): void
+    {
+        $this->ordre = $ordre;
+    }
 
 }

@@ -38,6 +38,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
         <th> Libellé </th>
         <th> Code </th>
         <th> Obligatoire </th>
+        <th> Ordre </th>
         <th class="action"> Action </th>
     </tr>
     </thead>
@@ -47,6 +48,7 @@ $canSupprimer = $this->isAllowed(ThematiquetypePrivileges::getResourceId(Themati
             <td> <?php echo $thematiqueType->getLibelle(); ?> </td>
             <td> <?php echo $thematiqueType->getCode(); ?> </td>
             <td> <?php echo ($thematiqueType->isObligatoire())?"<span class='text-success'>Oui</span>":"<span class='text-danger'>Non</span>"; ?> </td>
+            <td> <?php echo $thematiqueType->getOrdre(); ?></td>
             <td class="action">
                 <?php if ($canAfficher) : ?>
                     <?php /** @see \FicheMetier\Controller\ThematiqueTypeController::afficherAction() */ ?>

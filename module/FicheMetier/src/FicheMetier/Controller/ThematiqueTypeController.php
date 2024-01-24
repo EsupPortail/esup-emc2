@@ -15,7 +15,7 @@ class ThematiqueTypeController extends AbstractActionController {
 
     public function indexAction(): ViewModel
     {
-        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('libelle','ASC', true);
+        $thematiquesTypes = $this->getThematiqueTypeService()->getThematiquesTypes('ordre','ASC', true);
 
         return new ViewModel([
             'thematiquesTypes' => $thematiquesTypes,
