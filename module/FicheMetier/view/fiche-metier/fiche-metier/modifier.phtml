@@ -7,6 +7,8 @@ use FicheMetier\Entity\Db\FicheMetier;
  * @var FicheMetier $fiche
  * @var array $competences
  * @var array $applications
+ * @var array $thematiquestypes
+ * @var array $thematiqueselements
  */
 
 $mode = 'edition-fiche-metier';
@@ -19,6 +21,9 @@ echo $this->messenger()->addMessagesFromFlashMessenger();
 echo $this->partial('partial/missions-principales', ['fichemetier' => $fiche, 'missionsprincipales' => $fiche->getMissions(), 'mode' => $mode], [], true);
 echo $this->partial('partial/competences', ['fichemetier' => $fiche, 'competences' => $competences, 'mode' => $mode], [], true);
 echo $this->partial('partial/applications', ['fichemetier' => $fiche, 'applications' => $applications, 'mode' => $mode], [], true);
+
+
+echo $this->partial('partial/thematiques', ['fichemetier' => $fiche, 'thematiquesTypes' => $thematiquestypes, 'thematiquesElements' => $thematiqueselements, 'mode' => $mode], [], true);
 
 ?>
 

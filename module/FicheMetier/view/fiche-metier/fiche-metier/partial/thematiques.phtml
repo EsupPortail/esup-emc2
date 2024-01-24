@@ -1,0 +1,117 @@
+<?php
+
+/**
+ * @var FicheMetier $fichemetier
+ * @var ThematiqueType[] $thematiquesTypes
+ * @var ThematiqueElement[] $thematiquesElements
+ * @var string $mode
+ */
+
+use FicheMetier\Entity\Db\FicheMetier;
+use FicheMetier\Entity\Db\ThematiqueElement;
+use FicheMetier\Entity\Db\ThematiqueType;
+
+$actions = ['modifier' => false, 'supprimer' => false, 'valider' => false];
+if ($mode === 'edition-fiche-metier') {
+    $actions['modifier'] = true;
+    $actions['supprimer'] = true;
+}
+
+$editable =  $mode === 'edition-fiche-metier';
+
+$elements = [];
+foreach ($thematiquesElements as $thematiqueElement) {
+    $elements[$thematiqueElement->getType()->getCode()] = $thematiqueElement;
+}
+?>
+
+<div class="card info">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                    Contexte et environnement de travail
+                </h2>
+            </div>
+            <div class="col-md-9">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table id='thematique'>
+            <thead>
+            <tr>
+                <th> Libellé </th>
+                <th> Niveau</th>
+                <?php if ($editable) : ?>
+                    <th class="action"> Action </th>
+                <?php endif; ?>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($thematiquesTypes as $thematiqueType): ?>
+                <?php if ($editable || $thematiqueType->isObligatoire() ||  isset($elements[$thematiqueType->getCode()])) : ?>
+                <tr>
+                    <td>
+                        <span>
+                            <?php echo $thematiqueType->getLibelle(); ?>
+                            <?php if ($thematiqueType->isObligatoire()): ?>
+                                <span class="icon icon-obligatoire" title="Obligatoire"></span>
+                            <?php endif; ?>
+                        </span>
+                        <?php if ($thematiqueType->getDescription() !== null) : ?>
+                            <span class="icon icon-information text-info" title="<?php echo $thematiqueType->getDescription(); ?>"></span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (isset($elements[$thematiqueType->getCode()])) : ?>
+                            <?php echo $elements[$thematiqueType->getCode()]->getNiveauMaitrise()->getLibelle(); ?>
+                            <?php if ($elements[$thematiqueType->getCode()]->getComplement() !== null) : ?>
+                                <span class="icon icon-information text-info" title="<?php echo $elements[$thematiqueType->getCode()]->getComplement(); ?>"></span>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <em> Non précisé </em>
+                        <?php endif; ?>
+                    </td>
+                    <?php if ($editable) : ?>
+                        <td class="action">
+                            <?php /** @see \FicheMetier\Controller\ThematiqueElementController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url('fiche-metier/thematique-element/modifier', ['fiche-metier'=>$fichemetier->getId(), 'thematique-type' => $thematiqueType->getId()],[], true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                            <?php if (isset($elements[$thematiqueType->getCode()])) : ?>
+                                <span class="icon icon-modifier"></span>
+                                Modifier
+                            <?php else : ?>
+                                <span class="icon icon-ajouter"></span>
+                                Ajouter
+                            <?php endif; ?>
+                            </a>
+                            <?php if (isset($elements[$thematiqueType->getCode()])) : ?>
+                                <br>
+                                <?php /** @see \FicheMetier\Controller\ThematiqueElementController::historiserAction() */ ?>
+                                <a href="<?php echo $this->url('fiche-metier/thematique-element/historiser', ['thematique-element' => $elements[$thematiqueType->getCode()]->getId()],['query' => ['retour'=>$this->url(null,[],[], true)]], true); ?>"
+                                   class="ajax-modal" data-event="modification"
+                                >
+                                    <span class="icon icon-historiser"></span>
+                                    Historiser
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    <?php endif; ?>
+
+                </tr>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<style>
+    table#thematique {
+        width:100%;
+    }
+</style>

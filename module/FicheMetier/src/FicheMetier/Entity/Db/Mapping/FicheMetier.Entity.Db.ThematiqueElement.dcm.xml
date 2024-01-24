@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping>
+    <entity name="FicheMetier\Entity\Db\ThematiqueElement" table="fichemetier_thematique_element">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="FicheMetier\Entity\Db\FicheMetier"  field="ficheMetier">
+            <join-column name="fichemetier_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="FicheMetier\Entity\Db\ThematiqueType"  field="type">
+            <join-column name="thematiquetype_id" referenced-column-name="id"/>
+        </many-to-one>
+
+        <field name="complement"     type="text"                     column="complement"      nullable="true"  />
+
+        <many-to-one target-entity="Element\Entity\Db\Niveau"  field="niveau">
+            <join-column name="niveau_id" referenced-column-name="id"/>
+        </many-to-one>
+        
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

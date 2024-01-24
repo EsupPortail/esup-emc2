@@ -33,6 +33,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
 
     private Collection $activites;
     private Collection $missions;
+    private Collection $thematiques;
 
     public function __construct()
     {
@@ -41,6 +42,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $this->missions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->competences = new ArrayCollection();
+        $this->thematiques = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -197,5 +199,28 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         }
         $texte .= "</ul>";
         return $texte;
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringThematiques(): string
+    {
+        /** @var ThematiqueElement[] $thematiques */
+        $thematiques = $this->thematiques->toArray();
+        $thematiques = array_filter($thematiques, function (ThematiqueElement $a) { return $a->estNonHistorise() && $a->getType()->estNonHistorise();});
+        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getLibelle() > $b->getType()->getLibelle();});
+
+        $texte  = "<table>";
+        $texte .= "<thead><tr><th>Libelle</th><th>Niveau</th></tr></thead>";
+        $texte .= "<tbody>";
+        foreach ($thematiques as $thematique) {
+            $texte .="<tr>";
+            $texte .="<td>".$thematique->getType()->getLibelle()."</td>";
+            $texte .="<td>".$thematique->getNiveauMaitrise()->getLibelle()."</td>";
+            $texte .="</tr>";
+        }
+        $texte .= "</tbody>";
+        $texte .= "</table>";
+        return $texte;
+
     }
 }

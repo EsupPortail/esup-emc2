@@ -13,6 +13,8 @@ use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationFormAwareTrait
 use FicheMetier\Form\Raison\RaisonFormAwareTrait;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleServiceAwareTrait;
+use FicheMetier\Service\ThematiqueElement\ThematiqueElementServiceAwareTrait;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
@@ -32,6 +34,8 @@ class FicheMetierController extends AbstractActionController {
     use FichePosteServiceAwareTrait;
     use MetierServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
+    use ThematiqueElementServiceAwareTrait;
+    use ThematiqueTypeServiceAwareTrait;
 
     use FicheMetierImportationFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
@@ -71,11 +75,16 @@ class FicheMetierController extends AbstractActionController {
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences =  $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
 
+        $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
+        $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
+
         return new ViewModel([
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
             'applications' => $applications,
+            'thematiquestypes' => $thematiquestypes,
+            'thematiqueselements' => $thematiqueselements,
         ]);
     }
 
@@ -119,11 +128,16 @@ class FicheMetierController extends AbstractActionController {
         $applications = $this->getFicheMetierService()->getApplicationsDictionnaires($fichemetier, true);
         $competences = $this->getFicheMetierService()->getCompetencesDictionnaires($fichemetier, true);
 
+        $thematiquestypes = $this->getThematiqueTypeService()->getThematiquesTypes();
+        $thematiqueselements = $this->getThematiqueElementService()->getThematiquesElementsByFicheMetier($fichemetier);
+
         return new ViewModel([
             'fiche' => $fichemetier,
             'missions' => $missions,
             'competences' => $competences,
             'applications' => $applications,
+            'thematiquestypes' => $thematiquestypes,
+            'thematiqueselements' => $thematiqueselements,
         ]);
     }
 

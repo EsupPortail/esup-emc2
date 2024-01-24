@@ -10,6 +10,8 @@ use FicheMetier\Form\FicheMetierImportation\FicheMetierImportationForm;
 use FicheMetier\Form\Raison\RaisonForm;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
+use FicheMetier\Service\ThematiqueElement\ThematiqueElementService;
+use FicheMetier\Service\ThematiqueType\ThematiqueTypeService;
 use Metier\Form\SelectionnerMetier\SelectionnerMetierForm;
 use Metier\Service\Domaine\DomaineService;
 use Metier\Service\Metier\MetierService;
@@ -36,6 +38,8 @@ class FicheMetierControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var MetierService $metierService
          * @var MissionPrincipaleService $missionPrincipaleService
+         * @var ThematiqueElementService $thematiqueElementService
+         * @var ThematiqueTypeService $thematiqueTypeService
          */
         $domaineService = $container->get(DomaineService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -43,6 +47,8 @@ class FicheMetierControllerFactory {
         $fichePosteService = $container->get(FichePosteService::class);
         $metierService = $container->get(metierService::class);
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
+        $thematiqueElementService = $container->get(ThematiqueElementService::class);
+        $thematiqueTypeService = $container->get(ThematiqueTypeService::class);
 
         /**
          * @var FicheMetierImportationForm $importationForm
@@ -68,6 +74,8 @@ class FicheMetierControllerFactory {
         $controller->setFichePosteService($fichePosteService);
         $controller->setMetierService($metierService);
         $controller->setMissionPrincipaleService($missionPrincipaleService);
+        $controller->setThematiqueElementService($thematiqueElementService);
+        $controller->setThematiqueTypeService($thematiqueTypeService);
         $controller->setFicheMetierImportationForm($importationForm);
         $controller->setModifierLibelleForm($modifierLibelleForm);
         $controller->setRaisonForm($raisonForm);

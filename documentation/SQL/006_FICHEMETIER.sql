@@ -98,6 +98,63 @@ create table fichemetier_etat
         primary key (fichemetier_id, etat_id)
 );
 
+create table fichemetier_thematique_type
+(
+    id                    serial                  not null
+        constraint fichemetier_thematique_type_pk
+            primary key,
+    code                  varchar(256)            not null
+        constraint fichemetier_thematique_type_pk_2
+            unique,
+    libelle               varchar(1024),
+    description           text,
+    obligatoire           bool      default false not null,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint fichemetier_thematique_type_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint fichemetier_thematique_type_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint fichemetier_thematique_type_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
+create table fichemetier_thematique_element
+(
+    id                    serial                  not null
+        constraint fichemetier_thematique_element_pk
+            primary key,
+    fichemetier_id        integer                 not null
+        constraint fichemetier_thematique_element_fichemetier_id_fk
+            references fichemetier
+            on delete cascade,
+    thematiquetype_id     integer                 not null
+        constraint fme_fichemetier_thematique_type_id_fk
+            references fichemetier_thematique_type
+            on delete cascade,
+    complement            text,
+    niveau_id             integer
+        constraint fichemetier_thematique_element_element_niveau_id_fk
+            references element_niveau
+            on delete set null,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint fichemetier_thematique_element_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint fichemetier_thematique_element_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint fichemetier_thematique_element_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
 -- I::::::::IN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R T:::::::::::::::::::::T
@@ -152,7 +209,21 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'fichemetier';
 
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('thematiquetype', 'Gestion des types de thématiques', 200, 'FicheMetier\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'thematiquetype_index', 'Accéder à l''index', 10 UNION
+    SELECT 'thematiquetype_afficher', 'Afficher', 20 UNION
+    SELECT 'thematiquetype_ajouter', 'Ajouter', 30 UNION
+    SELECT 'thematiquetype_modifier', 'Modifier', 40 UNION
+    SELECT 'thematiquetype_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'thematiquetype_supprimer', 'Supprimer', 60
 
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'thematiquetype';
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Macros et templates -------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
