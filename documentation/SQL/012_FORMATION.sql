@@ -466,6 +466,36 @@ create table formation_instance
 create unique index formation_instance_id_uindex
     on formation_instance (id);
 
+
+create table formation_stagiaire_externe
+(
+    id                    serial                  not null
+        constraint formation_stagiaire_externe_pk
+            primary key,
+    prenom                varchar(1024)           not null,
+    nom                   varchar(1024)           not null,
+    date_naissance        timestamp,
+    sexe                  varchar(1),
+    structure             varchar(1024),
+    email                 varchar(1024)           not null,
+    login                 varchar(1024),
+    utilisateur_id        integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk4
+            references unicaen_utilisateur_user,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk3
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk2
+            references unicaen_utilisateur_user
+);
+
 create table formation_inscription
 (
     id                        serial
@@ -531,9 +561,6 @@ create table formation_inscription_frais
         constraint formation_inscription_frais_user_id_fk_3
             references unicaen_utilisateur_user
 );
-
-create unique index formation_instance_frais_id_uindex
-    on formation_instance_frais (id);
 
 create table formation_seance
 (
@@ -606,43 +633,6 @@ create table formation_formateur
 
 create unique index formation_instance_formateur_id_uindex
     on formation_formateur (id);
-
-create table formation_stagiaire_externe
-(
-    id                    serial                  not null
-        constraint formation_stagiaire_externe_pk
-            primary key,
-    prenom                varchar(1024)           not null,
-    nom                   varchar(1024)           not null,
-    date_naissance        timestamp,
-    sexe                  varchar(1),
-    structure             varchar(1024),
-    email                 varchar(1024)           not null,
-    login                 varchar(1024),
-    utilisateur_id        integer
-        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk4
-            references unicaen_utilisateur_user,
-    histo_creation        timestamp default now() not null,
-    histo_createur_id     integer   default 0     not null
-        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk
-            references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_modificateur_id integer
-        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk3
-            references unicaen_utilisateur_user,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer
-        constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk2
-            references unicaen_utilisateur_user
-);
-
-alter table formation_stagiaire_externe
-    add utilisateur_id integer;
-
-alter table formation_stagiaire_externe
-    add constraint formation_stagiaire_externe_unicaen_utilisateur_user_id_fk4
-        foreign key (utilisateur_id) references unicaen_utilisateur_user;
-
 
 create table formation_presence
 (
