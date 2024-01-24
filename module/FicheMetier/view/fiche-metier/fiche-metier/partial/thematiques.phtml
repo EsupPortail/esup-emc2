@@ -92,7 +92,6 @@ foreach ($thematiquesElements as $thematiqueElement) {
                                 <br>
                                 <?php /** @see \FicheMetier\Controller\ThematiqueElementController::historiserAction() */ ?>
                                 <a href="<?php echo $this->url('fiche-metier/thematique-element/historiser', ['thematique-element' => $elements[$thematiqueType->getCode()]->getId()],['query' => ['retour'=>$this->url(null,[],[], true)]], true); ?>"
-                                   class="ajax-modal" data-event="modification"
                                 >
                                     <span class="icon icon-historiser"></span>
                                     Historiser
