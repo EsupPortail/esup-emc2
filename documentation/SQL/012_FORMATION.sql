@@ -783,11 +783,11 @@ create table agent_element_formation
 (
     agent_id             varchar(40) not null
         constraint agent_formation_agent_c_individu_fk
-            references public.agent
+            references agent
             on delete cascade,
     formation_element_id integer     not null
         constraint agent_formation_formation_element_id_fk
-            references public.formation_element
+            references formation_element
             on delete cascade,
     constraint agent_formation_pk
         primary key (agent_id, formation_element_id)
@@ -1309,7 +1309,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 -- ---------------------------------------------------------------------------------------------------------------------
 
 -- Macro portant sur les inscriptions
-INSERT INTO public.unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
     ('INSCRIPTION#justificationResponsable', '<p>Retourne la motivation du responsable</p>', 'inscription', 'getJustificationResponsable'),
     ('INSCRIPTION#justificationRefus', '<p>Retourne la motivation de la désinscription ou du refus</p>', 'inscription', 'getJustificationRefus'),
     ('INSCRIPTION#justificationAgent', '<p>Retourne la motivation de l agent</p>', 'inscription', 'getJustificationAgent'),
