@@ -24,16 +24,9 @@ use Formation\Service\Notification\NotificationService;
 use Formation\Service\Notification\NotificationServiceFactory;
 use Formation\Service\Url\UrlService;
 use Formation\Service\Url\UrlServiceFactory;
-use Unicaen\Console\Console;
 use Laminas\Router\Http\Literal;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
-
-$hostname = match (getenv('APPLICATION_ENV')) {
-    'development' => 'mes-formations.n302z-dsi008.png.unicaen.fr:8443',
-    'test' => 'mes-formations-pp.unicaen.fr',
-    default => 'mes-formations.unicaen.fr',
-};
 
 
 return [
@@ -79,17 +72,7 @@ return [
     'router' => [
         'routes' => [
             'mes-formations' => [
-                'type' => 'Hostname',
-                'options' => [
-                    'route' => ':hostname',
-                    'constraints' => [
-                        'hostname' => 'mes-formations(-pp)?(.n302z-dsi008)?.unicaen.fr',
-                    ],
-                    'defaults' => [
-                        'hostname' => !Console::isConsole() ? $hostname : '',
-                    ],
-                ],
-                'may_terminate' => true,
+//              Configuration faites au niveau de config/autoload/local.php
                 'child_routes' => [
                     'home' => [
                         'type'  => Literal::class,

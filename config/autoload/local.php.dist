@@ -1,5 +1,12 @@
 <?php
 
+use Unicaen\Console\Console;
+
+$hostname = match (getenv('APPLICATION_ENV')) {
+    'development' => 'mes-formations.ma-machine.mon-etablissement.fr:8443',
+    'test' => 'mes-formations-pp.mon-etablissement.fr',
+    default => 'mes-formations.mon-etablissement.fr',
+};
 
 return [
 
@@ -8,4 +15,21 @@ return [
         'display_exceptions'       => true,
     ],
 
+    'router' => [
+        'routes' => [
+            'mes-formations' => [
+                'type' => 'Hostname',
+                'options' => [
+                    'route' => ':hostname',
+                    'constraints' => [
+                        'hostname' => 'mes-formations(-pp)?(.n302z-dsi008)?.unicaen.fr',
+                    ],
+                    'defaults' => [
+                        'hostname' => !Console::isConsole() ? $hostname : '',
+                    ],
+                ],
+                'may_terminate' => true,
+            ],
+        ],
+    ],
 ];
