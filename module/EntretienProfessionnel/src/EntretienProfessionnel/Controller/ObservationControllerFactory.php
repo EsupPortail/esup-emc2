@@ -4,9 +4,9 @@ namespace EntretienProfessionnel\Controller;
 
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Interop\Container\ContainerInterface;
-use Observation\Form\ObservationInstance\ObservationInstanceForm;
-use Observation\Service\ObservationInstance\ObservationInstanceService;
-use Observation\Service\ObservationType\ObservationTypeService;
+use UnicaenObservation\Form\ObservationInstance\ObservationInstanceForm;
+use UnicaenObservation\Service\ObservationInstance\ObservationInstanceService;
+use UnicaenObservation\Service\ObservationType\ObservationTypeService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
