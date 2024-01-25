@@ -412,6 +412,35 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
      null);
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- MACROS --------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name)
+VALUES
+    ('AGENT#AffectationsActives', '<p>Affiche sous la forme d''une liste à puces les affectations actives d''un agent</p>', 'agent', 'toStringAffectationsActives'),
+    ('AGENT#AffectationStructure', '<p>Affiche le libellé long de la structure de niveau 2 de l''agent.</p>', 'agent', 'toStringAffectationStructure'),
+    ('AGENT#AffectationStructureFine', '<p>Affiche le libellé long de la structure fine de l''agent</p>', 'agent', 'toStringAffectationStructureFine'),
+    ('AGENT#CorpsGrade', null, 'agent', 'toStringCorpsGrade'),
+    ('AGENT#DateAffectationPrincipale', null, 'agent', 'toStringAffectationDate'),
+    ('AGENT#Denomination', '<p>Retourne la d&eacute;nomination de l''agent (Pr&eacute;nom1 NomUsuel)</p>', 'agent', 'getDenomination'),
+    ('Agent#Echelon', null, 'agent', 'toStringEchelon'),
+    ('Agent#EchelonDate', null, 'agent', 'toStringEchelonPassage'),
+    ('AGENT#EmploiType', null, 'agent', 'toStringEmploiType'),
+    ('AGENT#GradesActifs', '<p>Affiche les grades actifs d''un agent sous la forme d''une liste &agrave; puce</p>', 'agent', 'toStringGradesActifs'),
+    ('AGENT#IntitulePoste', null, 'agent', 'toStringIntitulePoste'),
+    ('AGENT#Missions', null, 'agent', 'toStringMissions'),
+    ('AGENT#MissionsSpecifiques', '<p>Affiches la section ''mission spécifique'' de la fiche de poste d''un agent (si il y a des missions spécifique)</p>', 'agent', 'toStringMissionsSpecifiques'),
+    ('AGENT#NomFamille', null, 'agent', 'toStringNomFamille'),
+    ('AGENT#NomUsage', null, 'agent', 'toStringNomUsage'),
+    ('AGENT#Prenom', null, 'agent', 'toStringPrenom'),
+    ('AGENT#Quotite', null 'agent', 'toStringQuotite'),
+    ('AGENT#QuotiteAffectation', null, 'agent', 'toStringQuotiteAffectation'),
+    ('AGENT#StatutsActifs', '<p>Affiche la liste des statuts actifs d''un agent sous la forme d''une liste &agrave; puce</p>', 'agent', 'toStringStatutsActifs'),
+    ('AGENT#StructureAffectationPrincipale', null, 'agent', 'toStringAffectationStructure')
+;
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
