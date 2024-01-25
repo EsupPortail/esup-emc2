@@ -6,12 +6,14 @@
  * @var ConfigurationFicheMetier[] $competences
  * @var ConfigurationFicheMetier[] $formations
  * @var ConfigurationEntretienProfessionnel[] $recopies
- * @var Champ[] $champs
+ * @var Champ[] $champsCREP
+ * @var Champ[] $champsCREF
  */
 
 use Application\Entity\Db\ConfigurationEntretienProfessionnel;
 use Application\Entity\Db\ConfigurationFicheMetier;
 use Application\Provider\Privilege\ConfigurationPrivileges;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use UnicaenAutoform\Entity\Db\Champ;
 
 $canAjouter     = $this->isAllowed(ConfigurationPrivileges::getResourceId(ConfigurationPrivileges::CONFIGURATION_AJOUTER));
@@ -99,12 +101,23 @@ $this->headTitle("Configuration de l'application");
 
                     <?php if ($canAjouter): ?>
                         <a
-                            <?php /** @see \Application\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
-                                href="<?php echo $this->url("configuration/ajouter-recopie", [], [], true); ?>"
+                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
+                                href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREP], [], true); ?>"
                                 class="btn btn-primary ajax-modal"
                                 data-event="modification"
                         >
-                            <span class="icon icon-ajouter"></span> Ajouter une recopie
+                            <span class="icon icon-ajouter"></span> Ajouter une recopie pour la partie CREP
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($canAjouter): ?>
+                        <a
+                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::ajouterRecopieAction() */ ?>
+                                href="<?php echo $this->url("configuration/ajouter-recopie", ['formulaire' => EntretienProfessionnel::FORMULAIRE_CREF], [], true); ?>"
+                                class="btn btn-primary ajax-modal"
+                                data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span> Ajouter une recopie pour la partie CREF
                         </a>
                     <?php endif; ?>
 
@@ -119,24 +132,30 @@ $this->headTitle("Configuration de l'application");
                         <tbody>
                         <?php foreach ($recopies as $recopie) : ?>
                             <?php
-                            $previousId = explode(";",$recopie->getValeur())[0];
+                            [$form, $ids] = explode("|",$recopie->getValeur());
+                            $champs = [];
+                            switch($form) {
+                                case 'CREP': $champs = $champsCREP; break;
+                                case 'CREF': $champs = $champsCREF; break;
+                            }
+                            [$previousId, $currentId] = explode(";", $ids);
                             $previous = null;
+
                             if (isset($champs[$previousId])) $previous = $champs[$previousId];
-                            $currentId  = explode(";",$recopie->getValeur())[1];
                             $current = null;
                             if (isset($champs[$currentId])) $current = $champs[$currentId];
                             ?>
                             <tr>
                                 <td>
                                     <?php if ($previous !== null) : ?>
-                                        <?php echo $previous->getLibelle() ; ?>
+                                        <?php echo $previous->getCategorie()->getLibelle()." > ".$previous->getLibelle() ; ?>
                                     <?php else : ?>
                                         Id: <?php echo $previousId; ?> non connu;
                                     <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($current !== null) : ?>
-                                        <?php echo $current->getLibelle() ; ?>
+                                        <?php echo $current->getCategorie()->getLibelle()." > ".$current->getLibelle() ; ?>
                                     <?php else : ?>
                                         Id: <?php echo $currentId; ?> non connu;
                                     <?php endif; ?>
@@ -144,8 +163,8 @@ $this->headTitle("Configuration de l'application");
                                 <td>
                                     <?php if ($canModifier): ?>
                                         <a
-                                            <?php /** @see \Application\Controller\ConfigurationController::modifierRecopieAction() */ ?>
-                                                href="<?php echo $this->url("configuration/modifier-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
+                                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::modifierRecopieAction() */ ?>
+                                                href="<?php echo $this->url("configuration/modifier-recopie", ['recopie' => $recopie->getId(), 'formulaire' => $form], [], true); ?>"
                                                 title="Modifier la recopie"
                                                 class="ajax-modal" data-event="modification"
                                         >
@@ -153,7 +172,7 @@ $this->headTitle("Configuration de l'application");
                                     <?php endif; ?>
                                     <?php if ($canDetruire): ?>
                                         <a
-                                            <?php /** @see \Application\Controller\ConfigurationController::supprimerRecopieAction() */ ?>
+                                            <?php /** @see \EntretienProfessionnel\Controller\ConfigurationController::supprimerRecopieAction() */ ?>
                                                 href="<?php echo $this->url("configuration/supprimer-recopie", ['recopie' => $recopie->getId()], [], true); ?>"
                                                 title="Supprimer la recopie"
                                         >
@@ -164,6 +183,9 @@ $this->headTitle("Configuration de l'application");
                         <?php endforeach; ?>
                         </tbody>
                     </table>
+
+
+
                 </div>
 
             </div>

@@ -3,6 +3,7 @@
 namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use UnicaenAutoform\Entity\Db\Formulaire;
 use UnicaenAutoform\Service\Formulaire\FormulaireServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Hidden;
@@ -13,11 +14,22 @@ use Laminas\InputFilter\Factory;
 class ConfigurationRecopieForm extends Form {
     use FormulaireServiceAwareTrait;
 
+    private ?Formulaire $formulaire = null;
+
+    public function getFormulaire(): ?Formulaire
+    {
+        return $this->formulaire;
+    }
+
+    public function setFormulaire(?Formulaire $formulaire): void
+    {
+        $this->formulaire = $formulaire;
+    }
+
     public function init(): void
     {
         //id => code
-        $formulaire = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
-        $options = $this->getFormulaireService()->getChampsAsOptions($formulaire);
+        $options = ($this->formulaire)?$this->getFormulaireService()->getChampsAsOptions($this->formulaire):null;
 
         //operation
         $this->add([

@@ -11,13 +11,14 @@ class ConfigurationRecopieHydrator implements HydratorInterface {
      * @param ConfigurationEntretienProfessionnel $object
      * @return array
      */
-    public function extract($object): array
+    public function extract(object $object): array
     {
-        $splits = explode(";",$object->getValeur());
+        [$form, $ids] = explode("|",$object->getValeur());
+        [$from, $to] = explode(";", $ids);
         $data = [
             'operation' => 'recopie',
-            'from' => $splits[0]??null,
-            'to'   => $splits[1]??null,
+            'from' => $from,
+            'to'   => $to,
         ];
         return $data;
     }
@@ -27,7 +28,7 @@ class ConfigurationRecopieHydrator implements HydratorInterface {
      * @param ConfigurationEntretienProfessionnel $object
      * @return ConfigurationEntretienProfessionnel
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data, object $object): object
     {
         $valeur = $data['from'] . ";" . $data['to'];
         $object->setOperation($data['operation']);

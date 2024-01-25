@@ -4,25 +4,16 @@ namespace EntretienProfessionnel\Form\ConfigurationRecopie;
 
 trait ConfigurationRecopieFormAwareTrait {
 
-    /** @var ConfigurationRecopieForm */
-    private $configurationRecopieForm;
+    private ConfigurationRecopieForm $configurationRecopieForm;
 
-    /**
-     * @return ConfigurationRecopieForm
-     */
     public function getConfigurationRecopieForm() : ConfigurationRecopieForm
     {
         return $this->configurationRecopieForm;
     }
 
-    /**
-     * @param ConfigurationRecopieForm $configurationRecopieForm
-     * @return ConfigurationRecopieForm
-     */
-    public function setConfigurationRecopieForm(ConfigurationRecopieForm $configurationRecopieForm) : ConfigurationRecopieForm
+    public function setConfigurationRecopieForm(ConfigurationRecopieForm $configurationRecopieForm) : void
     {
         $this->configurationRecopieForm = $configurationRecopieForm;
-        return $this->configurationRecopieForm;
     }
 
 }

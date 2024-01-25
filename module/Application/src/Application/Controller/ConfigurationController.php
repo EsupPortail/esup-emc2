@@ -9,6 +9,7 @@ use Element\Entity\Db\Application;
 use Element\Entity\Db\Competence;
 use Element\Service\Application\ApplicationServiceAwareTrait;
 use Element\Service\Competence\CompetenceServiceAwareTrait;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use FicheMetier\Service\FicheMetier\FicheMetierServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Service\Formation\FormationServiceAwareTrait;
@@ -31,18 +32,26 @@ class ConfigurationController extends AbstractActionController  {
     use ConfigurationFicheMetierFormAwareTrait;
 
 
-    public function indexAction()
+    public function indexAction(): ViewModel
     {
         $applications = $this->getConfigurationService()->getConfigurationsFicheMetier(Application::class);
         $competences  = $this->getConfigurationService()->getConfigurationsFicheMetier(Competence::class);
         $formations   = $this->getConfigurationService()->getConfigurationsFicheMetier(Formation::class);
 
         $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
-        $formulaire = $this->getFormulaireService()->getFormulaire(1);
-        $champs = [];
-        foreach ($formulaire->getCategories() as $categorie) {
+        $formulaire_crep = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREP);
+        $champs_crep = [];
+        foreach ($formulaire_crep->getCategories() as $categorie) {
             foreach ($categorie->getChamps() as $champ) {
-                $champs[$champ->getId()] = $champ;
+                $champs_crep[$champ->getId()] = $champ;
+            }
+        }
+
+        $formulaire_cref = $this->getFormulaireService()->getFormulaireByCode(EntretienProfessionnel::FORMULAIRE_CREF);
+        $champs_cref = [];
+        foreach ($formulaire_cref->getCategories() as $categorie) {
+            foreach ($categorie->getChamps() as $champ) {
+                $champs_cref[$champ->getId()] = $champ;
             }
         }
 
@@ -52,7 +61,8 @@ class ConfigurationController extends AbstractActionController  {
             'formations' => $formations,
 
             'recopies' => $recopies,
-            'champs' => $champs,
+            'champsCREP' => $champs_crep,
+            'champsCREF' => $champs_cref,
         ]);
     }
 

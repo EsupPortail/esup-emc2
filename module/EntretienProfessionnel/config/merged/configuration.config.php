@@ -47,10 +47,11 @@ return [
                 'child_routes' => [
                     /** configuration des entretien pro ***************************************************************/
                     'ajouter-recopie' => [
-                        'type'  => Literal::class,
+                        'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-recopie',
+                            'route'    => '/ajouter-recopie/:formulaire',
                             'defaults' => [
+                                /** @see ConfigurationController::ajouterRecopieAction() */
                                 'controller' => ConfigurationController::class,
                                 'action'     => 'ajouter-recopie',
                             ],
@@ -59,8 +60,9 @@ return [
                     'modifier-recopie' => [
                         'type'  => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-recopie/:recopie',
+                            'route'    => '/modifier-recopie/:recopie/:formulaire',
                             'defaults' => [
+                                /** @see ConfigurationController::modifierRecopieAction() */
                                 'controller' => ConfigurationController::class,
                                 'action'     => 'modifier-recopie',
                             ],
