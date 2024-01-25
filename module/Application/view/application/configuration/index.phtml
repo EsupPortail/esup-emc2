@@ -121,9 +121,10 @@ $this->headTitle("Configuration de l'application");
                         </a>
                     <?php endif; ?>
 
-                    <table class="table table-condensed">
+                    <table class="table table-condensed datatable" id="recopies">
                         <thead>
                         <tr>
+                            <th> Formulaire </th>
                             <th> Précédent entretien </th>
                             <th> Entretien courant </th>
                             <th> Action </th>
@@ -146,6 +147,9 @@ $this->headTitle("Configuration de l'application");
                             if (isset($champs[$currentId])) $current = $champs[$currentId];
                             ?>
                             <tr>
+                                <td>
+                                    <?php echo $form; ?>
+                                </td>
                                 <td>
                                     <?php if ($previous !== null) : ?>
                                         <?php echo $previous->getCategorie()->getLibelle()." > ".$previous->getLibelle() ; ?>
@@ -197,6 +201,15 @@ $this->headTitle("Configuration de l'application");
             window.location.reload();
         });
     });
+
+    $(document).ready(function() {
+        $('#recopies').DataTable( {
+            "paging":   false,
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
+    } );
 
     $(function () {
         let hash = $(location).attr('hash');

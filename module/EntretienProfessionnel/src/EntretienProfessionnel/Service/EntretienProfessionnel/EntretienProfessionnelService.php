@@ -320,18 +320,26 @@ class EntretienProfessionnelService
         return $entretien;
     }
 
-    /**
-     * @param EntretienProfessionnel $entretien
-     * @return EntretienProfessionnel
-     */
     public function recopiePrecedent(EntretienProfessionnel $entretien): EntretienProfessionnel
     {
         $previous = $this->getPreviousEntretienProfessionnel($entretien);
         if ($previous) {
             $recopies = $this->getConfigurationService()->getConfigurationsEntretienProfessionnel();
             foreach ($recopies as $recopie) {
-                $splits = explode(";", $recopie->getValeur());
-                $this->getFormulaireInstanceService()->recopie($previous->getFormulaireInstance(), $entretien->getFormulaireInstance(), $splits[0], $splits[1]);
+                [$form, $ids] = explode('|', $recopie->getValeur());
+                [$from, $to] = explode(';', $ids);
+                $previousFormulaire = null; $currentFormulaire = null;
+                if ($form === 'CREP') {
+                    $previousFormulaire = $previous->getFormulaireInstance();
+                    $currentFormulaire = $entretien->getFormulaireInstance();
+                }
+                if ($form === 'CREF') {
+                    $previousFormulaire = $previous->getFormationInstance();
+                    $currentFormulaire = $entretien->getFormationInstance();
+                }
+                if ($previousFormulaire !== null && $currentFormulaire !== null) {
+                    $this->getFormulaireInstanceService()->recopie($previousFormulaire, $currentFormulaire, $from, $to);
+                }
             }
         }
         return $entretien;
