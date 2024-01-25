@@ -1201,3 +1201,14 @@ FROM d
 
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('EMC2_ACCUEIL', '<p>Texte de la page d''accueil</p>', 'texte', 'Instance de démonstration de EMC2', e'<p>Instance de démonstration de EMC2.</p>
 <p><em>Ce texte est template modifiable dans la partie Administration &gt; Template.</em></p>', null, 'Application\Provider\Template');
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- MACROS --------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name)
+VALUES
+    ('EMC2#appname', '', 'MacroService', 'getAppName'),
+    ('EMC2#date', 'Affiche la date du jour d/m/Y', 'MacroService', 'getDate'),
+    ('EMC2#datetime', 'Affiche la date et l heure d/m/Y à H:i', 'MacroService', 'getDateTime')
+;
