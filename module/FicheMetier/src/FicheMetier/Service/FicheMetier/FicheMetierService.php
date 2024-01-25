@@ -532,6 +532,9 @@ class FicheMetierService
         $competences_ids = explode(FicheMetierService::REFERENS_SEP, $array[1][$competences_index]);
 
         $referens = $this->getCompetenceReferentielService()->getCompetenceReferentielByCode('REFERENS');
+        if ($referens === null) {
+            throw new RuntimeException("<strong>Aucun référentiel de compétence [REFERENS].</strong><br>Celui-ci est nécessaire pour l'import de fiche CSV ReferensIII.");
+        }
         $competences = [];
         $competencesListe = [];
         foreach ($competences_ids as $competence_id) {
