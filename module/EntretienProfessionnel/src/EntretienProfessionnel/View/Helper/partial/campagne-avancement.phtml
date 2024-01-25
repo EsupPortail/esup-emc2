@@ -22,10 +22,10 @@ foreach ($entretiens as $entretien) {
     } else {
         switch ($entretien->getEtatActif()->getType()->getCode()) {
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
-                $validerObservation[] = $entretien;
+                $validerSuperieur[] = $entretien;
                 break;
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
-                $validerSuperieur[] = $entretien;
+                $validerObservation[] = $entretien;
                 break;
             case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
                 $validerAutorite[] = $entretien;
@@ -70,13 +70,13 @@ if ($nbTotal !== 0) {
                  title="Entretiens complétés <?php echo $nbValiderAgent; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioAgent); ?>%</div>
             <div class="progress-bar entretien-autorite" role="progressbar" style="width: <?php echo $ratioAutorite; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                 title="Entretiens en attente de validation de l'agent <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
+                 title="Entretiens validés par l'autorité hiérarchique <?php echo $nbValiderAutorite; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioAutorite); ?>%</div>
             <div class="progress-bar entretien-observation" role="progressbar" style="width: <?php echo $ratioObservation; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                 title="Entretiens en attente de validation de l'agent <?php echo $nbValiderObservation; ?>/<?php echo $nbTotal; ?>">
+                 title="Entretiens avec des observations émises par l'agent·e <?php echo $nbValiderObservation; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioObservation); ?>%</div>
             <div class="progress-bar entretien-superieur" role="progressbar" style="width: <?php echo $ratioSuperieur; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                 title="Entretiens en attente de validation de l'autorité hiérarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
+                 title="Entretiens validés par le ou la supérieure hierarchique <?php echo $nbValiderSuperieur; ?>/<?php echo $nbTotal; ?>">
                 <?php echo round($ratioSuperieur); ?>%</div>
             <div class="progress-bar planifie" role="progressbar" style="width: <?php echo $ratioPlanifie; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
                  title="Entretiens planifiés <?php echo $nbEncours; ?>/<?php echo $nbTotal; ?>">
@@ -111,12 +111,12 @@ if ($nbTotal !== 0) {
 
 
 <div style="margin:0.25rem;">
-    <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien complétés <br/>
-    <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'agent <br/>
-    <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente des observation <br/>
-    <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien en attente de validation de l'autorité hiérarchique <br/>
-    <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien planifié <br/>
-    <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretien non planifié <br/>
+    <span class="legende entretien-agent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens complétés <br/>
+    <span class="legende entretien-autorite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par l'autorité hiérarchique <br/>
+    <span class="legende entretien-observation">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens avec des observations de l'agent·e<br/>
+    <span class="legende entretien-superieur">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens validés par le ou la supérieur·e hiérarchique <br/>
+    <span class="legende planifie">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens planifiés <br/>
+    <span class="legende sans">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Entretiens non planifiés <br/>
 </div>
 
 <style>
