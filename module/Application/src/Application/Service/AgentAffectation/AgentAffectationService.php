@@ -54,15 +54,8 @@ class AgentAffectationService {
         return $result;
     }
 
-    /**
-     * @param Agent $agent
-     * @param bool $actif
-     * @param bool $principale
-     * @param bool $hierarchique
-     * @param bool $fonctionnelle
-     * @return AgentAffectation[]
-     */
-    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true, bool $principale = false, bool $hierarchique = true, bool $fonctionnelle = false) : array
+    /** @return AgentAffectation[] */
+    public function getAgentAffectationsByAgent(Agent $agent, bool $actif = true) : array
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentaffectation.agent = :agent')
@@ -70,9 +63,6 @@ class AgentAffectationService {
             ->orderBy('agentaffectation.dateDebut', 'DESC')
         ;
 
-        if ($principale) $qb = $qb->andWhere("agentaffectation.principale = 'O'");
-        if ($hierarchique) $qb = $qb->andWhere("agentaffectation.hierarchique = 'O'");
-        if ($fonctionnelle) $qb = $qb->andWhere("agentaffectation.fonctionnelle = 'O'");
         if ($actif === true) $qb = AgentAffectation::decorateWithActif($qb, 'agentaffectation');
 
         $result = $qb->getQuery()->getResult();
@@ -82,9 +72,10 @@ class AgentAffectationService {
     /** @return AgentAffectation[]|null */
     public function getAgentAffectationHierarchiquePrincipaleByAgent(Agent $agent) : ?array
     {
-        $result = $this->getAgentAffectationsByAgent($agent, true, true,true, false);
+        $result = $this->getAgentAffectationsByAgent($agent, true);
+        $result = array_filter($result, function (AgentAffectation $a) { return $a->isPrincipale() && $a->isHierarchique();});
         $nb = count($result);
-//        if ( $nb > 1) throw new RuntimeException("Plusieurs affections hiérarchique principale pour l'agent [".$agent->getDenomination()."]");
+        //        if ( $nb > 1) throw new RuntimeException("Plusieurs affections hiérarchique principale pour l'agent [".$agent->getDenomination()."]");
         if ($nb === 0 ) return null;
         return $result;
     }

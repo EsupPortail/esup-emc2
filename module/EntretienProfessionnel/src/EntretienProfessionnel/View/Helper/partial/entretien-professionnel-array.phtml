@@ -119,10 +119,10 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
         ?>
     <tr>
         <?php if ($displayAgent) : ?>
-            <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
+            <td  data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>"> <?php echo $entretien->getAgent()->getDenomination(true); ?> </td>
         <?php endif; ?>
         <?php if ($displayResponsable) : ?>
-            <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
+            <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </td>
         <?php endif; ?>
         <?php if ($displayAnnee) : ?>
             <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>

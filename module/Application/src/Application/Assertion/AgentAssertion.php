@@ -9,6 +9,8 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
@@ -25,7 +27,7 @@ class AgentAssertion extends AbstractAssertion
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
 
-    protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
+    public function computeAssertion(?Agent $entity, string $privilege) : bool
     {
         if (!$entity instanceof Agent) {
             return false;
@@ -38,7 +40,7 @@ class AgentAssertion extends AbstractAssertion
 
 
         $structures = [];
-        foreach ($entity->getAffectations() as $affectation) {
+        foreach ($entity->getAffectationsActifs() as $affectation) {
             $structures[] = $affectation->getStructure();
         }
         foreach ($entity->getStructuresForcees() as $structureAgentForce) {
@@ -111,6 +113,14 @@ class AgentAssertion extends AbstractAssertion
         return true;
     }
 
+    protected function assertEntity(ResourceInterface $entity = null, $privilege = null): bool
+    {
+        if (! $entity instanceof Agent) {
+            return false;
+        }
+        return $this->computeAssertion($entity, $privilege);
+    }
+
     /**
      * @param AbstractActionController $controller
      * @param $action
@@ -119,51 +129,13 @@ class AgentAssertion extends AbstractAssertion
      */
     protected function assertController($controller, $action = null, $privilege = null): bool
     {
-        $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
-        $role = $this->getUserService()->getConnectedRole();
-
         /** @var Agent|null $entity */
         $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
         $entity = $this->getAgentService()->getAgent($agentId);
-        if ($entity === null) $entity = $agent;
-        if ($entity === null) return false;
 
-        $structures = [];
-        $affectations = $this->getAgentAffectationService()->getAgentAffectationsByAgent($entity);
-        foreach ($affectations as $affectation) {
-            $structures[] = $affectation->getStructure();
-        }
-        foreach ($entity->getStructuresForcees() as $structureAgentForce) {
-            $structures[] = $structureAgentForce->getStructure();
-        }
-
-        $isResponsable = false;
-        $isSuperieur = false;
-        $isAutorite = false;
-        if ($role->getRoleId() === StructureRoleProvider::RESPONSABLE) $isResponsable = $this->getStructureService()->isResponsableS($structures, $agent);
-        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) $isSuperieur = $this->getAgentSuperieurService()->isSuperieur($entity,$agent);
-        if ($role->getRoleId() === Agent::ROLE_AUTORITE) $isAutorite = $this->getAgentAutoriteService()->isAutorite($entity,$agent);
-
-        switch ($action) {
-            case 'afficher' :
-            case 'afficher-statuts-grades' :
-            switch ($role->getRoleId()) {
-                case AppRoleProvider::ADMIN_TECH :
-                case AppRoleProvider::ADMIN_FONC :
-                case AppRoleProvider::OBSERVATEUR :
-                    return true;
-                case StructureRoleProvider::RESPONSABLE:
-                    return $isResponsable;
-                case Agent::ROLE_SUPERIEURE:
-                    return $isSuperieur;
-                case Agent::ROLE_AUTORITE:
-                    return $isAutorite;
-                case AppRoleProvider::AGENT :
-                    return $entity === $agent;
-            }
-            return false;
-        }
-        return true;
+        return match ($action) {
+            'afficher', 'afficher-statuts-grades'       => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
+            default => true,
+        };
     }
 }
