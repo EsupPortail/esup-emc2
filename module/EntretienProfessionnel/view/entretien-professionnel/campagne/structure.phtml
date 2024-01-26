@@ -22,6 +22,7 @@ use Structure\Entity\Db\Structure;
  * @var EntretienProfessionnel[] $entretiens
  * @var EntretienProfessionnel[] $encours
  * @var EntretienProfessionnel[] $finalises
+ * @var string[] $raison
  */
 
 $sansObligatoires = []; $sansFacultatifs = [];
@@ -99,7 +100,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() .
             </div>
         </div>
     </div>
-    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation']); ?>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raison], ); ?>
 <?php endif; ?>
 
 

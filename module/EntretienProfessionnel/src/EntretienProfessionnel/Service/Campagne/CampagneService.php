@@ -263,28 +263,31 @@ class CampagneService
     {
         $obligatoires = [];
         $facultatifs = [];
+        $raison = [];
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
 
         /** @var Agent $agent */
         foreach ($agents as $agent) {
             $ok = false;
-            if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
+            if ($agent->isForceSansObligation($campagne)) {
                 $facultatifs[] = $agent;
+                $raison[$agent->getId()] = "Forcé·e sans obligation";
                 $ok = true;
             }
             if (!$ok) {
-                if ($agent->isForceSansObligation($campagne)) {
+                if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
                     $facultatifs[] = $agent;
+                    $raison[$agent->getId()] = "Sans affectation valide";
                     $ok = true;
                 }
             }
-            $res = $this->getAgentService()->isValideEmploiType($agent, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
+            $res = $agent->isValideEmploiType($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
             if (!$ok && !$res) {
                 $facultatifs[] = $agent;
                 $ok = true;
             }
             if (!$ok) $obligatoires[] = $agent;
         }
-        return [$obligatoires, $facultatifs];
+        return [$obligatoires, $facultatifs, $raison];
     }
 }

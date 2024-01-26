@@ -4,7 +4,7 @@ namespace Application\Service\Agent;
 
 trait AgentServiceAwareTrait {
 
-    private ?AgentService $agentService = null;
+    private AgentService $agentService;
 
     public function getAgentService(): AgentService
     {

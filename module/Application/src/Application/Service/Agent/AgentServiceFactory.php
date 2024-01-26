@@ -36,7 +36,7 @@ class AgentServiceFactory {
 
         /** @var AgentService $service */
         $service = new AgentService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentAffectationService($agentAffectationService);
         $service->setParametreService($parametreService);
         $service->setStructureService($structureService);

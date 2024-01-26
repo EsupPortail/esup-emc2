@@ -17,6 +17,7 @@ $canAfficher = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::
 $canConvoquer = ($campagne->estEnCours() AND $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_CONVOQUER)));
 $canAction = ($canAfficher OR $canConvoquer);
 
+$raison = (isset($options['raison']))?$options['raison']:[];
 ?>
 
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
@@ -35,7 +36,11 @@ $canAction = ($canAfficher OR $canConvoquer);
     <tbody>
     <?php foreach ($agents as $agent) : ?>
         <tr>
-            <td> <?php echo $agent->getDenomination(); ?> </td>
+            <td> <?php echo $agent->getDenomination(); ?>
+                <?php if (isset($raison[$agent->getId()])) : ?>
+                    <span class="icon icon-information" title="<?php echo $raison[$agent->getId()]; ?>"></span>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php $affectations = $agent->getAffectationsActifs($campagne->getDateDebut()); ?>
                 <?php if (empty($affectations)) : ?>

@@ -372,39 +372,15 @@ class CampagneController extends AbstractActionController {
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
-        try {
-            $temoins = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION);
-        } catch (Exception $e) {
-            throw new RuntimeException("Erreur de récupération pour un paramètre.",0,$e);
-        }
-        if ($temoins !== null) {
-            $temoins = explode(";",$temoins);
-        } else $temoins = [];
-        $agentsAll = $this->getAgentService()->getAgentsByStructuresAndDate($structures, $campagne->getDateDebut(), $temoins);
-        $agentsAll = $this->getAgentService()->filtrerWithStatutTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
-        $agentsAll = $this->getAgentService()->filtrerWithAffectationTemoin($agentsAll, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut(), $structures);
 
-        /** Filtrage des agents (seuls les agents ayants le statut adminstratif lors de la campagne sont éligibles) */
-        $agents = [];
-        /** @var Agent $agent */
-        foreach ($agentsAll as $agent) {
-            $isAdministratif = false;
-            $statuts = $agent->getStatutsActifs($campagne->getDateDebut());
-            foreach ($statuts as $statut) {
-                if ($statut->isAdministratif()) {
-                    $isAdministratif = true; break;
-                }
-            }
-            if ($isAdministratif) $agents[] = $agent;
-        }
-        usort($agents, function (Agent $a, Agent $b) {
-            $aaa = $a->getNomUsuel()." ".$a->getPrenom();
-            $bbb = $b->getNomUsuel()." ".$b->getPrenom();
-            return $aaa > $bbb;
-        });
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
+        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());
+        // tri assumé par datatable ...
 
         $dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
-        [$obligatoires, $facultatifs] = $this->getCampagneService()->trierAgents($campagne, $agents);
+        [$obligatoires, $facultatifs, $raison] = $this->getCampagneService()->trierAgents($campagne, $agents);
 
         $entretiens = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents);
         $finalises = [];
@@ -437,6 +413,7 @@ class CampagneController extends AbstractActionController {
             'dateMinEnPoste' => $dateMinEnPoste,
             'obligatoires' => $obligatoires,
             'facultatifs' => $facultatifs,
+            'raison' => $raison,
         ]);
     }
 

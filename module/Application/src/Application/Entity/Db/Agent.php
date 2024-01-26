@@ -2,6 +2,7 @@
 
 namespace Application\Entity\Db;
 
+use Carriere\Entity\Db\EmploiType;
 use FichePoste\Provider\Etat\FichePosteEtats;
 use Carriere\Entity\Db\NiveauEnveloppe;
 use Doctrine\Common\Collections\Collection;
@@ -24,6 +25,7 @@ use Formation\Entity\Db\Interfaces\HasFormationCollectionInterface;
 use Formation\Entity\Db\Traits\HasFormationCollectionTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Entity\Db\StructureAgentForce;
+use UnicaenParametre\Entity\Db\Parametre;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
@@ -257,11 +259,11 @@ class Agent implements
     }
 
     /** @return AgentStatut[] */
-    public function getStatutsActifs(?DateTime $date = null, ?Structure $structure = null) : array
+    public function getStatutsActifs(?DateTime $date = null, ?array $structures = null) : array
     {
         if ($date === null) $date = (new DateTime());
         $statuts = $this->getStatuts($date);
-        if ($structure) $statuts = array_filter($statuts, function (AgentStatut $a) use ($structure) { return $a->getStructure() === $structure;});
+        if ($structures != null) $statuts = array_filter($statuts, function (AgentStatut $a) use ($structures) { return in_array($a->getStructure(), $structures);});
         return $statuts;
     }
 
@@ -269,9 +271,98 @@ class Agent implements
     public function getEmploiTypesActifs(?DateTime $date = null, ?array $structures = null) : array
     {
         if ($date === null) $date = (new DateTime());
-        $affectations =  $this->getGrades($date);
-        if ($structures !== null) $affectations = array_filter($affectations, function (AgentGrade $a) use ($structures) { return in_array($a->getStructure(), $structures);});
-        return $affectations;
+        $grades =  $this->getGrades($date);
+        if ($structures !== null) $grades = array_filter($grades, function (AgentGrade $a) use ($structures) { return in_array($a->getStructure(), $structures);});
+        return $grades;
+    }
+
+    /** Prédicats avec temoins ****************************************************************************************/
+    // TODO factoriser le comptage ...
+
+    public function isValideAffectation(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    {
+        $temoins = $parametre->getTemoins();
+
+        $count = [];
+        $affectations = $this->getAffectationsActifs($date, $structures);
+        foreach ($affectations as $affectation) {
+            foreach (AgentAffectation::TEMOINS as $temoin) {
+                if ($affectation->getTemoin($temoin)) {
+                    $count[$temoin] = true;
+                }
+            }
+        }
+
+        $keep = true;
+        foreach ($temoins['on'] as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        foreach ($temoins['off'] as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        return $keep;
+    }
+
+    public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    {
+        $temoins = $parametre->getTemoins();
+
+        $count = [];
+        $statuts = $this->getStatutsActifs($date, $structures);
+        foreach ($statuts as $statut) {
+            foreach (AgentStatut::TEMOINS as $temoin) {
+                if ($statut->getTemoin($temoin)) {
+                    $count[$temoin] = true;
+                }
+            }
+        }
+
+        $keep = true;
+        foreach ($temoins['on'] as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        foreach ($temoins['off'] as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        return $keep;
+    }
+
+    public function isValideEmploiType(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    {
+        $temoins = $parametre->getTemoins();
+
+        $count = [];
+        $grades = $this->getEmploiTypesActifs($date, $structures);
+        foreach ($grades as $grade) {
+            if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
+        }
+
+        $keep = true;
+        foreach ($temoins['on'] as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        foreach ($temoins['off'] as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        return $keep;
     }
 
     /** Autres accesseurs *********************************************************************************************/
