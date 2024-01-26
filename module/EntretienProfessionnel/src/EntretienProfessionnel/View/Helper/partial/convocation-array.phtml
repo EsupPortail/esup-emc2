@@ -23,7 +23,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
 <table class="table table-condensed table-hover" id="<?php echo $options['id']; ?>">
     <thead>
         <tr>
-            <th> Dénomination </th>
+            <th data-type="string"> Dénomination </th>
             <th> Affectation·s </th>
             <th> Grade·s </th>
             <?php if ($canAction) : ?>
@@ -36,7 +36,7 @@ $raison = (isset($options['raison']))?$options['raison']:[];
     <tbody>
     <?php foreach ($agents as $agent) : ?>
         <tr>
-            <td> <?php echo $agent->getDenomination(); ?>
+            <td data-order="<?php echo $agent->getDenomination(); ?>"> <?php echo $agent->getDenomination(true); ?>
                 <?php if (isset($raison[$agent->getId()])) : ?>
                     <span class="icon icon-information" title="<?php echo $raison[$agent->getId()]; ?>"></span>
                 <?php endif; ?>

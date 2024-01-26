@@ -55,15 +55,15 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
             Aucun entretien professionnel pour les critères de recherche.
         </div>
     <?php else : ?>
-        <table class="table table-condensed">
+        <table class="table table-condensed datatable">
             <thead>
             <tr>
                 <th> Année</th>
                 <th> Structure</th>
-                <th> Agent</th>
-                <th> Responsable</th>
-                <th> Date</th>
-                <th id="etat"> État</th>
+                <th data-type="string"> Agent</th>
+                <th data-type="string"> Responsable</th>
+                <th data-type="num"> Date</th>
+                <th data-type="num" id="etat"> État</th>
                 <th id="action"> Action</th>
             </tr>
             </thead>
@@ -79,10 +79,10 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
                             <?php endforeach; ?>
                         </ul>
                     </td>
-                    <td> <?php echo $entretien->getAgent()->getDenomination(); ?> </td>
-                    <td> <?php echo $entretien->getResponsable()->getDenomination(); ?> </td>
-                    <td> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </td>
-                    <td> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
+                    <td data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>"> <?php echo $entretien->getAgent()->getDenomination(true); ?> </td>
+                    <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </td>
+                    <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </td>
+                    <td data-order="<?php echo ($entretien->getEtatActif())?$entretien->getEtatActif()->getType()->getOrdre():9999; ?>"> <?php echo $this->etatinstance($entretien->getEtatActif()); ?> </td>
                     <td>
                         <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
                         <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], [], true); ?>">
@@ -146,5 +146,11 @@ $canDetruire = $this->isAllowed(EntretienproPrivileges::getResourceId(Entretienp
     $("body").on("modification", function (event) {
         event.div.modal('hide');
         window.location.reload();
+    });
+
+    $(function () {
+        $('.datatable').DataTable({
+            paging: false,
+        });
     });
 </script>
