@@ -277,7 +277,7 @@ class CampagneService
             if (!$ok) {
                 if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
                     $facultatifs[] = $agent;
-                    $raison[$agent->getId()] = "Sans affectation valide";
+                    $raison[$agent->getId()] = "Sans affectation valide (à la date du ".$dateMinEnPoste->format('d/m/y').") ";
                     $ok = true;
                 }
             }
