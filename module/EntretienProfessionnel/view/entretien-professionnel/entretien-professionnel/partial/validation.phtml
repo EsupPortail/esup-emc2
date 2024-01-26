@@ -51,6 +51,7 @@ else $autorites = $agent->getAutorites();
 
 
 $observationEntretien = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN);
+$observationFormation = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION);
 $observationPerspective = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE);
 $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AUTORITE);
 
@@ -66,9 +67,7 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
 <?php endif; ?>
 
 <div>
-    <h3 class="categorie">
-        Validation du responsable de l'entretien professionnel
-    </h3>
+    <h3 class="categorie"> Validation du responsable de l'entretien professionnel </h3>
 
     <?php if ($step === 0) : ?>
         <div class="alert alert-info">
@@ -148,6 +147,7 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
         </div>
     <?php endif; ?>
 
+    <div id="observations">
     <?php
         $optionsObservationsAgent = [];
         if ($step !== 1) {
@@ -165,11 +165,23 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
             <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
             <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="modification">
-                Ajouter une observation à propos de l'entretien
+                Ajouter une observation à propos de l'entretien profesionnel
             </a>
         <?php endif; ?>
     <?php else : ?>
         <?php echo $this->observationinstance($observationEntretien, $optionsObservationsAgent); ?>
+    <?php endif; ?>
+
+    <?php if ($observationFormation === null) : ?>
+        <?php if ($step === 1) : ?>
+            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+            <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION], [], true); ?>"
+               class="btn btn-primary ajax-modal" data-event="modification">
+                Ajouter une observation à propos  l'entretien de formation
+            </a>
+        <?php endif; ?>
+    <?php else : ?>
+        <?php echo $this->observationinstance($observationFormation, $optionsObservationsAgent); ?>
     <?php endif; ?>
 
     <?php if ($observationPerspective === null) : ?>
@@ -184,11 +196,10 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
         <?php echo $this->observationinstance($observationPerspective, $optionsObservationsAgent); ?>
     <?php endif; ?>
 
-
-
     <?php if ($validationObservation) : ?>
         <?php echo $this->validationAfficher($validationObservation); ?>
     <?php endif; ?>
+    </div>
 
     <div>
     <?php if ($step === 1) : ?>
@@ -217,6 +228,7 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
         <?php endif; ?>
     <?php endif; ?>
     </div>
+
     <?php if ($validationObservation and $validationHierarchie === null) : ?>
         <a
             <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
@@ -227,6 +239,7 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
             Révoquer la validation
         </a>
     <?php endif; ?>
+</div>
 
 <div>
     <h3 class="categorie"> Validation de l'autorité hiérarchique </h3>
@@ -279,9 +292,6 @@ $observationAutorite = $entretien->getObservationWithTypeCode(EntretienProfessio
             </strong>
         </div>
     <?php endif; ?>
-
-
-
 
     <?php if ($validationHierarchie !== null) : ?>
         <?php echo $this->validationAfficher($validationHierarchie); ?>

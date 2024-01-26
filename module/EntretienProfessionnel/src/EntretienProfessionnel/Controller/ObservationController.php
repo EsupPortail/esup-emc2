@@ -27,7 +27,7 @@ class ObservationController extends AbstractActionController {
         $type = $this->params()->fromRoute('type');
 
         $observationType = null;
-        if (in_array($type, [EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN, EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE])) {
+        if (in_array($type, [EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN, EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE, EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION])) {
             $observationType = $this->getObservationTypeService()->getObservationTypeByCode($type);
         }
         if ($observationType === null) throw new RuntimeException("Type de validation non valide.");

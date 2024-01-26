@@ -403,8 +403,22 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /** @noinspection PhpUnused */
+    public function toStringObservationFormation() : string {
+        $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION);
+        if ($observation) return $observation->getObservation();
+        return "Aucune observation";
+    }
+
+    /** @noinspection PhpUnused */
     public function toStringObservationPerspective() : string {
         $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE);
+        if ($observation) return $observation->getObservation();
+        return "Aucune observation";
+    }
+
+    /** @noinspection PhpUnused */
+    public function toStringObservationAutorite() : string {
+        $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AUTORITE);
         if ($observation) return $observation->getObservation();
         return "Aucune observation";
     }
