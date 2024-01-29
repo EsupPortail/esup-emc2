@@ -371,6 +371,7 @@ class CampagneController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $selecteur = $this->getStructureService()->getStructuresByCurrentRole();
 
+        if ($structure === null) { throw new RuntimeException("Aucune structure de trouvée."); }
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());

@@ -9,19 +9,12 @@
 
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenUtilisateur\Entity\Db\User;
 
-$isAgent                = $entretien->getAgent()->getUtilisateur() === $connectedUser;
-$isConducteur           = $entretien->getResponsable()->getUtilisateur() === $connectedUser;
-$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
-$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
-$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
-$canRenseigner          = ($isAgent OR $isConducteur OR $canValiderDrh OR $canValiderResponsable OR $canValiderAgent);
-
 $canAfficherEntretien = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+$canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
 
 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
 
@@ -29,6 +22,8 @@ $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
 
 $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+
+$isAgent = $entretien->getAgent()->getUtilisateur() === $connectedUser;
 $date_depassee = (($isAgent) AND ($now > $date));
 
 ?>
@@ -36,16 +31,6 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <h2 class="page-header-tab"> Compte-rendu d'entretien professionnel </h2>
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
-
-<?php if ($isAgent && (
-        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) ||
-        $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER))) : ?>
-
-    <div class="alert alert-info">
-        Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.
-    </div>
-
-<?php else : ?>
 
     <h3 class="categorie"> Missions du poste </h3>
 
@@ -65,20 +50,14 @@ $date_depassee = (($isAgent) AND ($now > $date));
     <?php
     $instance = $entretien->getFormulaireInstance();
     $formulaire = $instance->getFormulaire();
-    $reponses = $instance->getReponses();
-
-    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
-    $data = [];
-    foreach ($reponses as $reponse) {
-        $data[$reponse->getChamp()->getId()] = $reponse;
-    }
+    $data = $instance->buildResponseDictionnary();
     ?>
 
 
     <?php if ($canRenseigner) : ?>
         <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
             <?php
-                /** @see \UnicaenAutoform\View\Helper\InstanceAsFormulaireHelper */
+                /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
                 $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
                 /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
                 $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
@@ -97,4 +76,3 @@ $date_depassee = (($isAgent) AND ($now > $date));
             </div>
         <?php endif; ?>
     <?php endif; ?>
-<?php endif; ?>

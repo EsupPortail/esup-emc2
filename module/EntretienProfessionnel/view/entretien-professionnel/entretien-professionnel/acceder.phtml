@@ -135,18 +135,12 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <div class="tab-content">
 
     <div id="formulaire" class="tab-pane" >
-        <?php echo $this->partial('partial/formulaire', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
     </div>
 
     <div id="formations" class="tab-pane">
-        <?php echo $this->partial('partial/formations.phtml', ['entretien' => $entretien, 'parcours' => $parcours??null,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/cref.phtml', ['entretien' => $entretien, 'parcours' => $parcours??null,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
-
-<!--            --><?php //if ($displayParcours === true) : ?>
-<!--                <div id="parcours" class="tab-pane">-->
-<!--                    --><?php //echo $this->partial('partial/parcours.phtml', ['entretien' => $entretien, 'agent' => $agent, 'parcours' => $parcours, 'fiche' => $ficheposte, 'options' => ['mode' => 'modification', 'modification' => true, 'droits' => $droits], 'source' => 'renseignerAction']); ?>
-<!--                </div>-->
-<!--            --><?php //endif; ?>
 
 <!--            --><?php //if ($displayAcquis === true) : ?>
 <!--            <div id="acquis" class="tab-pane">-->

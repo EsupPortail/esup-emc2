@@ -68,32 +68,17 @@ $date_depassee = (($isAgent) AND ($now > $date));
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
 
-<?php if ($isAgent && (
-    $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION) ||
-    $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER))) : ?>
-
-    <div class="alert alert-info">
-        Attention : Vous êtes l'agent associé·e à cet entretien professionnel, vous ne pourrez voir ce compte rendu qu'une fois celui-ci aura été validé.
-    </div>
-
-<?php else : ?>
 
     <?php
     $instance = $entretien->getFormationInstance();
     $formulaire = $instance->getFormulaire();
-    $reponses = $instance->getReponses();
-
-    /** nécessaire car l'aide de vue var utiliser l'id du champ comme référence dans le tableau ...  */
-    $data = [];
-    foreach ($reponses as $reponse) {
-        $data[$reponse->getChamp()->getId()] = $reponse;
-    }
+    $data = $instance->buildResponseDictionnary();
     ?>
 
     <?php if ($canRenseigner) : ?>
         <?php if (!$date_depassee AND ($validationReponsable === null OR $validationReponsable->estHistorise())) : ?>
             <?php
-            /** @see \Autoform\View\Helper\InstanceAsFormulaireHelper */
+            /** @see InstanceAsFormulaireHelper */
             $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
             $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
@@ -111,4 +96,3 @@ $date_depassee = (($isAgent) AND ($now > $date));
             </div>
          <?php endif; ?>
     <?php endif; ?>
-<?php endif; ?>

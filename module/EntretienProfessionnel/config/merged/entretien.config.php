@@ -37,6 +37,7 @@ return [
                             EntretienproPrivileges::ENTRETIENPRO_CONVOQUER,
                             EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
                             EntretienproPrivileges::ENTRETIENPRO_HISTORISER,
+                            EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE,
                             EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH,
@@ -118,9 +119,8 @@ return [
                     'controller' => EntretienProfessionnelController::class,
                     'action' => [
                         'acceder',
-                        'renseigner',
                     ],
-                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_MODIFIER,
+                    'privileges' => EntretienproPrivileges::ENTRETIENPRO_AFFICHER,
                     'assertion' => EntretienProfessionnelAssertion::class,
                 ],
                 [
@@ -306,17 +306,6 @@ return [
                         'may_terminate' => true,
                         'options' => [
                             'route'    => '/acceder/:entretien-professionnel',
-                            'defaults' => [
-                                'controller' => EntretienProfessionnelController::class,
-                                'action'     => 'acceder',
-                            ],
-                        ],
-                    ],
-                    'renseigner' => [
-                        'type'  => Segment::class,
-                        'may_terminate' => true,
-                        'options' => [
-                            'route'    => '/renseigner/:entretien',
                             'defaults' => [
                                 'controller' => EntretienProfessionnelController::class,
                                 'action'     => 'acceder',
