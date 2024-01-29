@@ -10,6 +10,8 @@
  * @var User $connectedUser
  * @var Mail[] $mails
  * @var string[] $documents
+ * @var FormulaireInstance $crep
+ * @var FormulaireInstance $cref
  *
  * @var Agent[] $superieures
  * @var Agent[] $autorites
@@ -23,6 +25,7 @@ use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\User;
 
@@ -135,11 +138,11 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <div class="tab-content">
 
     <div id="formulaire" class="tab-pane" >
-        <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'crep' => $crep, 'fichePoste' => $ficheposte, 'connectedUser' => $connectedUser, 'source' => 'renseignerAction']); ?>
     </div>
 
     <div id="formations" class="tab-pane">
-        <?php echo $this->partial('partial/cref.phtml', ['entretien' => $entretien, 'parcours' => $parcours??null,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => $parcours??null,  'connectedUser' => $connectedUser, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
 <!--            --><?php //if ($displayAcquis === true) : ?>

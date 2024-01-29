@@ -3,6 +3,7 @@
 /**
  * @var EntretienProfessionnel $entretien
  * @var FichePoste $fichePoste
+ * @var FormulaireInstance $crep
  * @var User $connectedUser
  * @var string $source
  */
@@ -11,12 +12,13 @@ use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenUtilisateur\Entity\Db\User;
 
-$canAfficherEntretien = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+$canAfficher = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
 $canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
 
-$retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+$retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formulaire'], true);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
@@ -48,28 +50,22 @@ $date_depassee = (($isAgent) AND ($now > $date));
     <br/>
 
     <?php
-    $instance = $entretien->getFormulaireInstance();
-    $formulaire = $instance->getFormulaire();
-    $data = $instance->buildResponseDictionnary();
+    $data = $crep->buildResponseDictionnary();
     ?>
 
 
-    <?php if ($canRenseigner) : ?>
-        <?php if (!$date_depassee  AND ($validationResponsable === null OR $validationResponsable->estHistorise())) : ?>
-            <?php
-                /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
-                $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-                /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
-                $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+    <?php if ($canRenseigner && $validationResponsable === null) : ?>
+        <?php
+            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
+            $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+            /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
+            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $crep->getFormulaire()->getId(), 'instance' => $crep->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
-                echo $this->instanceAsFormulaire()->render($instance, $url, $data);
-            ?>
-        <?php else : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
-        <?php endif; ?>
+            echo $this->instanceAsFormulaire()->render($crep, $url, $data);
+        ?>
     <?php else : ?>
-        <?php if ($canAfficherEntretien) : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
+        <?php if ($canAfficher) : ?>
+            <?php echo $this->instanceAsText()->render($crep); ?>
         <?php else : ?>
             <div class="alert alert-danger">
                 Vous ne pouvez pas saisir le formulaire d'entretien professionnel.

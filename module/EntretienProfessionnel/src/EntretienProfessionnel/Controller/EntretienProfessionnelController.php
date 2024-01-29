@@ -34,6 +34,7 @@ use Laminas\View\Model\ViewModel;
 use Structure\Provider\Role\RoleProvider as StructureRoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -63,6 +64,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use RappelEntretienProfessionnelServiceAwareTrait;
     use RappelPasObservationServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use FormulaireInstanceServiceAwareTrait;
 
     use EntretienProfessionnelFormAwareTrait;
 
@@ -268,6 +270,9 @@ class EntretienProfessionnelController extends AbstractActionController
             return $a->getAutorite();
         }, $this->getAgentAutoriteService()->getAgentsAutoritesByAgent($agent));
 
+        $crep = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormulaireInstance()->getId());
+        $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
+
         return new ViewModel([
             'entretien' => $entretien,
 
@@ -280,6 +285,9 @@ class EntretienProfessionnelController extends AbstractActionController
             'connectedUser' => $this->getUserService()->getConnectedUser(),
             'mails' => $mails,
             'documents' => $this->getEntretienProfessionnelService()->getDocumentsUtiles(),
+
+            'crep' => $crep,
+            'cref' => $cref,
         ]);
     }
 

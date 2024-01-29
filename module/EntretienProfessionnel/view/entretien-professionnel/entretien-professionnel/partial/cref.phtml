@@ -6,93 +6,58 @@
  * @var User $connectedUser
  * @var array $options
  * @var string $source
+ * @var FormulaireInstance $cref
  */
 
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
-use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
-use UnicaenUtilisateur\Entity\Db\User;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 
-$agent = $entretien->getAgent();
 
-$isAgent        = $entretien->getAgent()->getUtilisateur() === $connectedUser;
-$isConducteur           = $entretien->getResponsable()->getUtilisateur() === $connectedUser;
-$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
-$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
+$canAfficher = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
+$canRenseigner = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
 
-$canAfficherEntretien = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
-
-$canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT);
-$canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
-$canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
-$canRenseigner = ($canValiderDrh OR $isConducteur OR $canValiderResponsable OR $canValiderAgent);
-
-$droits = [
-    'afficher' => $canVoir,
-    'ajouter' => $canAjouter,
-    'modifier' => $canModifier,
-    'historiser' => $canHistoriser,
-    'detruire' => $canDetruire,
-    'valider' => $canValider,
-];
-$options = [];
-$options['mode'] = 'modification';
-$options['modification'] = $canModifier;
-$options['droits'] = $droits;
-$options['retour'] = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['fragment' => 'formations'], true);
-
-$DEBUG = false;
+$retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formation'], true);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiEntretien();
-$res = ($now <= $date);
 
-$validationReponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+$validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
+
+$isAgent = $entretien->getAgent()->getUtilisateur() === $connectedUser;
 $date_depassee = (($isAgent) AND ($now > $date));
+$agent  = $entretien->getAgent();
 ?>
 
 <h2 class="page-header-tab"> Compte-rendu d'entretien de formation </h2>
-
-
-<!-- Formulaire ------------------------------------------------------------------------------------------------------->
 
 <h3> Formations suivies durant la période de la campagne (<?php echo $entretien->getCampagne()->getAnnee(); ?>)</h3>
 
 <?php echo $this->partial("partial/formations-suivies-campagne", ["entretien" => $entretien, 'formations' => $agent->getFormationListe()]); ?>
 
 
+<?php
+    $data = $cref->buildResponseDictionnary();
+?>
 
+
+<?php if ($canRenseigner && $validationResponsable === null) : ?>
     <?php
-    $instance = $entretien->getFormationInstance();
-    $formulaire = $instance->getFormulaire();
-    $data = $instance->buildResponseDictionnary();
+    /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
+    $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+    /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
+    $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $cref->getFormulaire()->getId(), 'instance' => $cref->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+    echo $this->instanceAsFormulaire()->render($cref, $url, $data);
     ?>
-
-    <?php if ($canRenseigner) : ?>
-        <?php if (!$date_depassee AND ($validationReponsable === null OR $validationReponsable->estHistorise())) : ?>
-            <?php
-            /** @see InstanceAsFormulaireHelper */
-            $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $formulaire->getId(), 'instance' => $instance->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
-
-            echo $this->instanceAsFormulaire()->render($instance, $url, $data);
-            ?>
-        <?php else : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
-        <?php endif; ?>
+<?php else : ?>
+    <?php if ($canAfficher) : ?>
+        <?php echo $this->instanceAsText()->render($cref); ?>
     <?php else : ?>
-        <?php if ($canAfficherEntretien) : ?>
-            <?php echo $this->instanceAsText()->render($instance); ?>
-        <?php else : ?>
-            <div class="alert alert-danger">
-                Vous ne pouvez saisir le formulaire d'entretien de formation.
-            </div>
-         <?php endif; ?>
+        <div class="alert alert-danger">
+            Vous ne pouvez pas saisir le formulaire d'entretien de formation.
+        </div>
     <?php endif; ?>
+<?php endif; ?>

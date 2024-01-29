@@ -16,6 +16,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenAutoform\Service\Formulaire\FormulaireInstanceService;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
@@ -52,6 +53,7 @@ class EntretienProfessionnelControllerFactory {
          * @var RappelPasObservationService $rappelPasObservationService
          * @var StructureService $structureService
          * @var ValidationInstanceService $validationInstanceService
+         * @var FormulaireInstanceService $formulaireInstanceService
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
@@ -72,6 +74,7 @@ class EntretienProfessionnelControllerFactory {
         $rappelPasObservationService = $container->get(RappelPasObservationService::class);
         $structureService = $container->get(StructureService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
+        $formulaireInstanceService = $container->get(FormulaireInstanceService::class);
 
         /**
          * @var EntretienProfessionnelForm $entretienProfessionnelForm
@@ -98,6 +101,7 @@ class EntretienProfessionnelControllerFactory {
         $controller->setRappelEntretienProfessionnelService($rappelEntretienProfessionnelService);
         $controller->setRappelPasObservationService($rappelPasObservationService);
         $controller->setStructureService($structureService);
+        $controller->setFormulaireInstanceService($formulaireInstanceService);
 
         $controller->setEntretienProfessionnelForm($entretienProfessionnelForm);
 
