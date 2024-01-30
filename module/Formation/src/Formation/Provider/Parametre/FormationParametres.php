@@ -20,4 +20,8 @@ class FormationParametres {
     const AUTO_RETOUR = 'AUTO_RETOUR';
     const AUTO_CLOTURE = 'AUTO_CLOTURE';
 
+    const LOGO = 'LOGO';
+    const LIBELLE = 'LIBELLE';
+    const SOUSLIBELLE = 'SOUSLIBELLE';
+
 }

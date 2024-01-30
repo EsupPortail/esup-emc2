@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\Macro\MacroService;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Seance\SeanceService;
@@ -12,6 +13,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\View\Renderer\PhpRenderer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class FormationInstanceDocumentControllerFactory
@@ -42,6 +44,8 @@ class FormationInstanceDocumentControllerFactory
         $seanceService = $container->get(SeanceService::class);
         $urlService = $container->get(UrlService::class);
 
+
+
         /* @var PhpRenderer $renderer */
         $renderer = $container->get('ViewRenderer');
 
@@ -55,6 +59,12 @@ class FormationInstanceDocumentControllerFactory
         $controller->setSeanceService($seanceService);
         $controller->setUrlService($urlService);
         $controller->setRenderer($renderer);
+
+        /** @var ParametreService $parametreService */
+        $parametreService = $container->get(ParametreService::class);
+        $controller->addValeur('image', $parametreService->getValeurForParametre(FormationParametres::TYPE, FormationParametres::LOGO));
+        $controller->addValeur('libelle', $parametreService->getValeurForParametre(FormationParametres::TYPE, FormationParametres::LIBELLE));
+        $controller->addValeur('souslibelle', $parametreService->getValeurForParametre(FormationParametres::TYPE, FormationParametres::SOUSLIBELLE));
 
         return $controller;
     }

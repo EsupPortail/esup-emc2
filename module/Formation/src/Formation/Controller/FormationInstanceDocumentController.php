@@ -36,10 +36,15 @@ class FormationInstanceDocumentController extends AbstractActionController
     use UrlServiceAwareTrait;
 
     private ?PhpRenderer $renderer = null;
-
     public function setRenderer(PhpRenderer $renderer): void
     {
         $this->renderer = $renderer;
+    }
+
+    private ?array $etablissementInfos = null;
+    public function addValeur(string $clef, ?string $valeur) :void
+    {
+        $this->etablissementInfos[$clef] = $valeur;
     }
 
     public function exportEmargementAction(): void
@@ -99,7 +104,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
         return $exporter->export($rendu->getSujet());
@@ -121,11 +126,12 @@ class FormationInstanceDocumentController extends AbstractActionController
             'MacroService' => $this->getMacroService(),
             'UrlService' => $this->getUrlService(),
         ];
+
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplates::FORMATION_ATTESTATION, $vars);
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
         return $exporter->export($rendu->getSujet());
@@ -182,7 +188,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc');
+        $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->getMpdf()->SetMargins(0, 0, 50);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($corps);
