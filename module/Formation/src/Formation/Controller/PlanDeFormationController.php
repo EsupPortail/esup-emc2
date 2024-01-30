@@ -52,6 +52,8 @@ class PlanDeFormationController extends AbstractActionController
             return new ViewModel();
         }
 
+        $axes = [];
+
         $formations = $planDeFormation->getFormations();
         $sansgroupe = new FormationGroupe();
         $sansgroupe->setLibelle("Formations sans groupe");
