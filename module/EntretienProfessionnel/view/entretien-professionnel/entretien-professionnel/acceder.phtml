@@ -21,7 +21,6 @@ use Application\Entity\Db\Agent;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
-use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -34,23 +33,9 @@ $displayAcquis = false;
 
 $this->headTitle('Modification de l\'entretien professionnel');
 
-$canVoir        = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VOIR);
-$canAjouter     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_AJOUTER);
-$canModifier    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_MODIFIER);
-$canHistoriser  = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_HISTORISER);
-$canDetruire    = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
-$canValider     = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
 
 $canExporterEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
 $canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER);
-$droits = [
-    'afficher' => $canVoir,
-    'ajouter' => $canAjouter,
-    'modification' => $canModifier,
-    'historiser' => $canHistoriser,
-    'detruire' => $canDetruire,
-    'valider' => $canValider,
-];
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
@@ -130,7 +115,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <button class="nav-link" id="mails-tab"
             data-bs-toggle="tab" data-bs-target="#mails"
             type="button" role="tab" aria-controls="mails" aria-selected="true">
-        Mails <br/> &nbsp;
+        Courriers <br/> &nbsp;électroniques <span class="badge" style="margin-left:1rem;"><?php echo count($mails); ?></span>
     </button>
 </div>
 
@@ -152,10 +137,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 <!--            --><?php //endif; ?>
 
     <div id="validation" class="tab-pane">
-        <?php echo $this->partial('partial/validation', [
-                'entretien' => $entretien, 'source' => 'renseignerAction',
-                'superieures' => $superieures, 'autorites' => $autorites,
-                'droits' => $droits, 'step' => $step]); ?>
+        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step]); ?>
     </div>
 
     <div id="mails" class="tab-pane">

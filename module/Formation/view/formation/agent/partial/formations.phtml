@@ -54,7 +54,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                     <?php else : ?>
                         <a
                             <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererAttestationAction() */?>
-                                href="<?php echo $this->url('formation-instance/generer-attestation', ['inscrit' => $inscription->getId()], [], true); ?>"
+                                href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
                                 class="btn btn-primary action"
                         >
                             <span class="icon icon-pdf"> Télécharge l'attestation</span>

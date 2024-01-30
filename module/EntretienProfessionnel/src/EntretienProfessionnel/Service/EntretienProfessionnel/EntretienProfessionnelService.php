@@ -202,11 +202,14 @@ class EntretienProfessionnelService
     public function getEntretienProfessionnel(?int $id): ?EntretienProfessionnel
     {
         $qb = $this->createQueryBuilder(false)
-            ->addSelect('formulaireInstance')->leftJoin('entretien.formulaireInstance', 'formulaireInstance')
-            ->addSelect('reponse')->leftJoin('formulaireInstance.reponses', 'reponse')
-            ->addSelect('champ')->leftJoin('reponse.champ', 'champ')
-            ->addSelect('categorie')->leftJoin('champ.categorie', 'categorie')
-            ->addSelect('formulaire')->leftJoin('formulaireInstance.formulaire', 'formulaire')
+//            ->addSelect('crep')->leftJoin('entretien.formulaireInstance', 'crep')
+//            ->addSelect('crep_reponse')->leftJoin('crep.reponses', 'crep_reponse')
+//            ->addSelect('crep_champ')->leftJoin('crep_reponse.champ', 'crep_champ')
+//            ->addSelect('crep_categorie')->leftJoin('crep_champ.categorie', 'crep_categorie')
+//            ->addSelect('cref')->leftJoin('entretien.formationInstance', 'cref')
+//            ->addSelect('cref_reponse')->leftJoin('cref.reponses', 'cref_reponse')
+//            ->addSelect('cref_champ')->leftJoin('cref_reponse.champ', 'cref_champ')
+//            ->addSelect('cref_categorie')->leftJoin('cref_champ.categorie', 'cref_categorie')
             ->andWhere('entretien.id = :id')->setParameter('id', $id);
 
         try {
