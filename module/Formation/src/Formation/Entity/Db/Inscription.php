@@ -244,10 +244,10 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     /** MACROS ********************************************************************************************************/
 
     /** @noinspection PhpUnsued */
-    public function getStagiaireDenomination(): string
+    public function getStagiaireDenomination(bool $prenomFirst = true): string
     {
-        if ($this->isInterne()) return $this->getAgent()->getDenomination(true);
-        if ($this->isExterne()) return $this->getStagiaire()->getDenomination();
+        if ($this->isInterne()) return $this->getAgent()->getDenomination($prenomFirst);
+        if ($this->isExterne()) return $this->getStagiaire()->getDenomination($prenomFirst);
         return "Aucun·e stagiaire de trouvé·e pour l'inscription #".$this->getId();
     }
 

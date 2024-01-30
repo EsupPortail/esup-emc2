@@ -55,10 +55,10 @@ $complementaireComplete = $instance->isListeComplementaireComplete();
 $inscriptions = $instance->getInscriptions()
 ?>
 
-<table id="agents" class="datatable table table-condensed">
+<table id="inscriptions" class="datatable table table-condensed">
     <thead>
     <tr>
-        <th> Dénomination </th>
+        <th data-type="string"> Dénomination </th>
         <th> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th style="width:13rem;"> Date de demande </th>
@@ -71,7 +71,7 @@ $inscriptions = $instance->getInscriptions()
     <?php foreach ($inscriptions as $inscription) : ?>
         <?php if ($inscription->estNonHistorise()) : ?>
         <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td>
+            <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>">
                 <?php echo $inscription->getStagiaireDenomination(); ?>
             </td>
             <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
@@ -152,10 +152,13 @@ $inscriptions = $instance->getInscriptions()
     <?php endif; ?>
 </h4>
 
-<table id="agents" class="datatable table table-condensed">
+<?php if (empty($principales)): ?>
+    <div class="alert alert-info"> Aucune inscription dans la liste principale. </div>
+<?php else: ?>
+    <table id="principale" class="datatable table table-condensed">
     <thead>
     <tr>
-        <th> Dénomination </th>
+        <th data-type="string"> Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th> Documents </th>
@@ -165,7 +168,7 @@ $inscriptions = $instance->getInscriptions()
     <tbody>
     <?php foreach ($principales as $inscription) : ?>
         <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
+            <td data-order="<?php echo $inscription->getStagiaireDenomination(false);?>"> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
             <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
                 <?php if ($inscription->isInterne()) : ?>
@@ -286,7 +289,7 @@ $inscriptions = $instance->getInscriptions()
         </tr>
     <?php endforeach; ?>
 </table><br/>
-
+<?php endif; ?>
 <h4>
     Liste complémentaire
     (<?php echo count($complementaires); ?>/<?php echo $instance->getNbPlaceComplementaire(); ?>)
@@ -294,10 +297,14 @@ $inscriptions = $instance->getInscriptions()
         <span class="label label-success"> Complète</span>
     <?php endif; ?>
 </h4>
-<table id="agents" class="datatable table table-condensed">
+
+<?php if (empty($complementaires)) : ?>
+    <div class="alert alert-info"> Aucune inscription dans la liste complémentaire. </div>
+<?php else : ?>
+    <table id="complementaire" class="datatable table table-condensed">
     <thead>
     <tr>
-        <th > Dénomination </th>
+        <th data-type="string"> Dénomination </th>
         <th style="width:26rem;"> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th class="action"> Action </th>
@@ -306,7 +313,7 @@ $inscriptions = $instance->getInscriptions()
     <tbody>
     <?php foreach ($complementaires as $inscription) : ?>
         <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
+            <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>"> <?php echo $inscription->getStagiaireDenomination(); ?> </td>
             <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
             <td>
                 <?php if ($inscription->isInterne()) : ?>
@@ -362,16 +369,20 @@ $inscriptions = $instance->getInscriptions()
     <?php endforeach; ?>
     </tbody>
 </table><br/>
+<?php endif; ?>
 
 <h4>
     Stagiaire·s historisé·es
     (<?php echo count($historises); ?>)
 </h4>
 
-<table id="agents" class="datatable table table-condensed table-hover">
+<?php if (empty($historises)) : ?>
+    <div class="alert alert-info"> Aucune inscription historisée. </div>
+<?php else : ?>
+    <table id="historise" class="datatable table table-condensed table-hover">
     <thead>
     <tr>
-        <th style="width:50rem;"> Dénomination </th>
+        <th data-type="string"> Dénomination </th>
         <th> Affection principale </th>
         <th style="width:6rem;"> Statut </th>
         <th class="action"> Action </th>
@@ -380,7 +391,7 @@ $inscriptions = $instance->getInscriptions()
     <tbody>
     <?php foreach ($historises as $inscription) : ?>
         <tr <?php if ($inscription->estHistorise()) echo " class='historise' "; ?>>
-            <td>
+            <td data-order="<?php echo $inscription->getStagiaireDenomination(false); ?>">
                 <?php echo $inscription->getStagiaireDenomination(); ?>
             </td>
             <td> <?php echo $inscription->getStagiaireStructure(); ?> </td>
@@ -431,3 +442,21 @@ $inscriptions = $instance->getInscriptions()
     <?php endforeach; ?>
     </tbody>
 </table>
+<?php endif; ?>
+
+<script>
+    $(function() {
+        $('.datatable#inscriptions').DataTable( {
+            'paging' : false,
+        });
+       $('.datatable#principale').DataTable( {
+           'paging' : false,
+       });
+       $('.datatable#complementaire').DataTable( {
+           'paging' : false,
+       });
+       $('.datatable#historise').DataTable( {
+           'paging' : false,
+       });
+    });
+</script>

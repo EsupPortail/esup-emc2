@@ -121,9 +121,10 @@ class StagiaireExterne implements HistoriqueAwareInterface {
         return $this->inscriptions->toArray();
     }
 
-    public function getDenomination(): string
+    public function getDenomination(bool $prenomFirst = true): string
     {
-        return $this->getPrenom().' '.$this->getNom();
+        if ($prenomFirst) return $this->getPrenom().' '.$this->getNom();
+        return $this->getNom().' '.$this->getPrenom();
     }
 
     public function generateTag(): string
