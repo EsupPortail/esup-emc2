@@ -899,11 +899,23 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'AUTO_FERMETURE', 'Délai pour fermeture automatique des inscriptions (en jours)', null, 'String', 400 UNION
     SELECT 'AUTO_CONVOCATION', 'Délai pour convocation automatique des inscrits (en jours)', null, 'String', 410 UNION
     SELECT 'AUTO_RETOUR', 'Délai pour la demande de retour', null, 'Number', 420 UNION
-    SELECT 'AUTO_CLOTURE', 'Délai pour la cloture de la session (en jours)', null, 'Number', 430
-)
+    SELECT 'AUTO_CLOTURE', 'Délai pour la cloture de la session (en jours)', null, 'Number', 430 UNION
+    SELECT 'LOGO', 'Logo de l''établissement', 'Le logo de l''établissement qui figurera sur les documents', 'String', null, 1010 UNION
+    SELECT 'LIBELLE', 'Libellé de l''établissement', 'Le libellé de l''établissement', 'String', null, 1020 UNION
+    SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', null, 1030
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- NATURE DE FICHIER ---------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO fichier_nature (code, libelle, description)
+VALUES
+    ('DEMANDEEXTERNE_DEVIS', 'Devis de demande externe', null) UNION
+    ('INSCRIPTION_ATTESTATION', 'Attestation de formation', 'Attestion de formation déposer dans [Mes Formations] qui se substituera à l''attestation générée')
+;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - TEXTE ----------------------------------------------------------------------------------------------------
