@@ -2,10 +2,10 @@
 
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationInstanceInscrit;
+use Formation\Entity\Db\Inscription;
 
 /**
- * @var FormationInstanceInscrit[] $inscriptions
+ * @var Inscription[] $inscriptions
  * @var DemandeExterne[] $demandes
  */
 
@@ -15,7 +15,7 @@ foreach ($inscriptions as $inscription) {
 }
 usort($dictionnaryInscriptions,
     function ($a, $b) {
-        /** @var FormationInstanceInscrit[] $a */
+        /** @var Inscription[] $a */
         $aaa = $a[0]->getAgent()->getNomUsuel(). " " .$a[0]->getAgent()->getPrenom();
         $bbb = $b[0]->getAgent()->getNomUsuel(). " " .$b[0]->getAgent()->getPrenom();
         return $aaa > $bbb;
@@ -43,7 +43,7 @@ usort($dictionnaryDemandes,
     <div class="col-md-6">
         <h3>Formations du plan de formation</h3>
 
-        <?php /** @var FormationInstanceInscrit[] $ds */ ?>
+        <?php /** @var Inscription[] $ds */ ?>
         <ul>
             <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
                 <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
@@ -53,8 +53,8 @@ usort($dictionnaryDemandes,
                     <?php foreach ($ds as $d) : ?>
                         <br/>
                         <?php echo $this->etatinstance($d->getEtatActif()); ?>
-                        <?php echo $d->getInstance()->getFormation()->getLibelle(); ?>
-                        (<?php echo $d->getInstance()->getPeriode(); ?>)
+                        <?php echo $d->getSession()->getFormation()->getLibelle(); ?>
+                        (<?php echo $d->getSession()->getPeriode(); ?>)
                     <?php endforeach; ?>
                 </li>
             <?php endforeach; ?>
