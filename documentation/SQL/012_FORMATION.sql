@@ -833,16 +833,17 @@ INSERT INTO unicaen_etat_categorie (code, libelle, icone, couleur, ordre) VALUES
     ('FORMATION_SESSION', 'Gestion des sessions de formation', 'fas fa-chalkboard', '#3465a4', 300),
     ('FORMATION_INSCRIPTION', 'Gestion des inscriptions au formation', 'fas fa-chalkboard-teacher', '#204a87', 400);
 
-INSERT INTO unicaen_etat_type(code, libelle, categorie_id, icone, couleur)
-WITH d(code, libelle, icone, couleur) AS (
+INSERT INTO unicaen_etat_type(code, libelle, categorie_id, icone, couleur, ordre)
+WITH d(code, libelle, icone, couleur, ordre) AS (
     SELECT 'DEMANDE_EXTERNE_REDACTION', 'Demande en cours de rédaction', 'fas fa-edit', '#75507b', 10 UNION
     SELECT 'DEMANDE_EXTERNE_AGENT', 'Validation de l''agent', 'fas fa-user', '#f57900', 20 UNION
     SELECT 'DEMANDE_EXTERNE_RESP', 'Validation du responsable de l''agent', 'fas fa-user-tie', '#edd400', 30 UNION
+    SELECT 'DEMANDE_EXTERNE_FORCEE_PARAPHEUR', 'Demande envoyée dans le parapheur', 'icon icon-importer', '#cbcb00', 35 UNION
     SELECT 'DEMANDE_EXTERNE_DRH', 'Validation par le bureau de gestion des formations', 'fas fa-user-check', '#8ae234', 40 UNION
     SELECT 'DEMANDE_EXTERNE_TERMINEE', 'Demande de formation externe traitée', 'far fa-check-square', '#4e9a06', 50 UNION
     SELECT 'DEMANDE_EXTERNE_REJETEE', 'Demande de formation externe rejetée', 'fas fa-times', '#a40000', 60
 )
-SELECT d.code, d.libelle, cp.id, d.icone, d.couleur
+SELECT d.code, d.libelle, cp.id, d.icone, d.couleur, d.ordre
 FROM d
 JOIN unicaen_etat_categorie cp ON cp.CODE = 'DEMANDE_EXTERNE';
 

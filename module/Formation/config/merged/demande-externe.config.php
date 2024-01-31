@@ -153,6 +153,7 @@ return [
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
+                        'envoyer-parapheur',
                         'gerer',
                     ],
                     'privileges' => [
@@ -219,6 +220,16 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'envoyer-parapheur' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/envoyer-parapheur/:demande-externe',
+                                    'defaults' => [
+                                        /** @see DemandeExterneController::envoyerParapheurAction() */
+                                        'action' => 'envoyer-parapheur'
+                                    ],
+                                ],
+                            ],
                             'parapheur' => [
                                 'type'  => Literal::class,
                                 'options' => [

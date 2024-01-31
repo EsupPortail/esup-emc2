@@ -390,12 +390,20 @@ class DemandeExterneController extends AbstractActionController {
         ];
         $demandesInternes = $this->getDemandeExterneService()->getInscriptionService()->getInscriptionsWithFiltre($paramsInternes);
 
-        $paramsExternes = [
+        $paramsExternes_standard = [
             'etat' => $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::ETAT_VALIDATION_RESP),
             'historise' => '0',
             'annee' => Formation::getAnnee(),
         ];
-        $demandesExternes = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes);
+        $demandesExternes_standard = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes_standard);
+
+        $paramsExternes_forcee = [
+            'etat' => $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR),
+            'historise' => '0',
+            'annee' => Formation::getAnnee(),
+        ];
+        $demandesExternes_forcee = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes_forcee);
+            $demandesExternes = array_merge($demandesExternes_standard, $demandesExternes_forcee);
 
         return new ViewModel([
             'demandesInternes' => $demandesInternes,
@@ -480,10 +488,24 @@ class DemandeExterneController extends AbstractActionController {
         $fichier = $this->getFichierService()->getRequestedFichier($this, 'devis');
         $this->getFichierService()->delete($fichier);
 
-        return $this->redirect()->toRoute('inscription-formation', [], ['fragment' => "demandes"], true);
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+
+        return $this->redirect()->toRoute('inscription-externe', [], ['fragment' => "demandes"], true);
     }
 
-    /** FONCTIONS POUR LE FILTRE ***************************************************************************/
+    /** ENVOYER DANS LE PARAPHEUR *************************************************************************************/
+
+    public function envoyerParapheurAction() : Response
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR);
+
+        return $this->redirect()->toRoute('formation/demande-externe', [],[],true);
+
+    }
+
+    /** FONCTIONS POUR LE FILTRE **************************************************************************************/
 
     public function rechercherAgentAction() : JsonModel
     {

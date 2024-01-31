@@ -12,4 +12,5 @@ class DemandeExterneEtats {
     const ETAT_VALIDATION_DRH         = 'DEMANDE_EXTERNE_DRH';
     const ETAT_TERMINEE               = 'DEMANDE_EXTERNE_TERMINEE';
     const ETAT_REJETEE                = 'DEMANDE_EXTERNE_REJETEE';
+    const ETAT_FORCEE_PARAPHEUR       = 'DEMANDE_EXTERNE_FORCEE_PARAPHEUR';
 }
