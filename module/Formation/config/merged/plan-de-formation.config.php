@@ -67,6 +67,7 @@ return [
                     'controller' => PlanDeFormationController::class,
                     'action' => [
                         'modifier',
+                        'importer-depuis-csv',
                     ],
                     'privileges' => [
                         PlanformationPrivileges::PLANFORMATION_MODIFIER
@@ -78,7 +79,6 @@ return [
                         'gerer-formations',
                         'reprendre',
                         'supprimer',
-                        'importer-depuis-csv',
                         'vider',
                     ],
                     'privileges' => [
