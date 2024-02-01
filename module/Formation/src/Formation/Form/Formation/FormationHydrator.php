@@ -10,12 +10,9 @@ class FormationHydrator implements HydratorInterface
 {
     use FormationGroupeServiceAwareTrait;
 
-    /**
-     * @return array
-     * @var Formation $object
-     */
     public function extract($object): array
     {
+        /** @var Formation $object */
         $data = [
             'libelle' => $object->getLibelle(),
             'HasDescription' => ['description' => $object->getDescription()],
@@ -27,17 +24,13 @@ class FormationHydrator implements HydratorInterface
             'type' => $object->getType(),
             'objectifs' => $object->getObjectifs(),
             'programme' => $object->getProgramme(),
-
+            'prerequis' => $object->getPrerequis(),
+            'public' => $object->getPublic(),
         ];
 
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param Formation $object
-     * @return Formation
-     */
     public function hydrate(array $data,object $object) : object
     {
         $groupe = (isset($data['groupe']) && $data['groupe'] !== "") ? $this->getFormationGroupeService()->getFormationGroupe($data['groupe']) : null;
@@ -47,7 +40,10 @@ class FormationHydrator implements HydratorInterface
         $type = $data['type'] ?? null;
         $objectifs = $data['objectifs'] ?? null;
         $programme = $data['programme'] ?? null;
+        $prerequis = $data['prerequis'] ?? null;
+        $public = $data['public'] ?? null;
 
+        /** @var Formation $object */
         $object->setLibelle($data['libelle']);
         $object->setDescription($description);
         $object->setLien($data['lien']);
@@ -58,6 +54,8 @@ class FormationHydrator implements HydratorInterface
         $object->setType($type);
         $object->setObjectifs($objectifs);
         $object->setProgramme($programme);
+        $object->setPrerequis($prerequis);
+        $object->setPublic($public);
         return $object;
     }
 

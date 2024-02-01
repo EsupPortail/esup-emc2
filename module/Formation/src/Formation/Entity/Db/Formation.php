@@ -50,6 +50,8 @@ class Formation implements HistoriqueAwareInterface,
     private ?string $type = null;
     private ?string $objectifs = null;
     private ?string $programme = null;
+    private ?string $prerequis = null;
+    private ?string $public = null;
 
     private Collection $missions;
     private Collection $instances;
@@ -254,6 +256,26 @@ class Formation implements HistoriqueAwareInterface,
     public function setProgramme(?string $programme): void
     {
         $this->programme = $programme;
+    }
+
+    public function getPrerequis(): ?string
+    {
+        return $this->prerequis;
+    }
+
+    public function setPrerequis(?string $prerequis): void
+    {
+        $this->prerequis = $prerequis;
+    }
+
+    public function getPublic(): ?string
+    {
+        return $this->public;
+    }
+
+    public function setPublic(?string $public): void
+    {
+        $this->public = $public;
     }
 
     /** Formation Instances *******************************************************************************************/

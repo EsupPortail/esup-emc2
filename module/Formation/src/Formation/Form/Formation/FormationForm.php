@@ -99,6 +99,28 @@ class FormationForm extends Form
                 'class' => 'type2 form-control',
             ],
         ]);
+        $this->add([
+            'type' => Textarea::class,
+            'name' => 'prerequis',
+            'options' => [
+                'label' => "Pré-requis :",
+            ],
+            'attributes' => [
+                'id' => 'prerequis',
+                'class' => 'type2 form-control',
+            ],
+        ]);
+        $this->add([
+            'type' => Textarea::class,
+            'name' => 'public',
+            'options' => [
+                'label' => "Public visé :",
+            ],
+            'attributes' => [
+                'id' => 'public',
+                'class' => 'type2 form-control',
+            ],
+        ]);
 
         //lien
         $this->add([
@@ -169,6 +191,8 @@ class FormationForm extends Form
             'type' => ['required' => true,],
             'objectifs' => ['required' => false,],
             'programme' => ['required' => false,],
+            'prerequis' => ['required' => false,],
+            'public' => ['required' => false,],
         ]));
     }
 }

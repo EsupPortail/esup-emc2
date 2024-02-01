@@ -80,6 +80,14 @@ $canModifierPlans = !$noAction && $this->isAllowed(FormationPrivileges::getResou
             <dt class="col-md-3"> Programme </dt>
             <dd class="col-md-9"> <?php echo $formation->getProgramme(); ?> </dd>
         <?php endif; ?>
+        <?php if ($formation->getPrerequis() !== null AND trim($formation->getPrerequis() !== '')) : ?>
+            <dt class="col-md-3"> Pré-requis </dt>
+            <dd class="col-md-9"> <?php echo $formation->getPrerequis(); ?> </dd>
+        <?php endif; ?>
+        <?php if ($formation->getPublic() !== null AND trim($formation->getPublic() !== '')) : ?>
+            <dt class="col-md-3"> Public visé </dt>
+            <dd class="col-md-9"> <?php echo $formation->getPublic(); ?> </dd>
+        <?php endif; ?>
 
         <dt class="col-md-3"> Affichage "plan" </dt>
         <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>
