@@ -352,12 +352,7 @@ class PlanDeFormationController extends AbstractActionController
                 $handle = fopen($fichier_path, "r");
 
                 while ($content = fgetcsv($handle, 0, ";")) {
-//                    $array[] = $content;
-//                    $array[] = array_map(function ($a) {return mb_convert_encoding($a, 'UTF-8', 'auto');}, $content);
-//                    $array[] = array_map(function ($a) {return  iconv(iconv_get_encoding($a), 'UTF-8//IGNORE', $a);}, $content);
                     $array[] = array_map(function ($a) {return  str_replace('','\'',iconv('ISO-8859-1', 'UTF-8//IGNORE', $a));}, $content);
-
-//                    $array[] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $content);
                 }
 
                 $header = $array[0];
@@ -370,6 +365,8 @@ class PlanDeFormationController extends AbstractActionController
                 $objectifColumn = array_search("Objectif", $header);
                 $programmeColumn = array_search("Programme", $header);
                 $modaliteColumn = array_search("Modalite", $header);
+                $prerequisColumn = array_search("Prerequis", $header);
+                $publicColumn = array_search("Public", $header);
 
                 if ($axeColumn === false) $error[] = "La colonne [Axe] n'a pas été trouvée dans le fichier csv !";
                 if ($themeColumn === false) $error[] = "La colonne [Theme] n'a pas été trouvée dans le fichier csv !";
@@ -379,6 +376,8 @@ class PlanDeFormationController extends AbstractActionController
                 if ($objectifColumn === false) $error[] = "La colonne [Objectif] n'a pas été trouvée dans le fichier csv !";
                 if ($programmeColumn === false) $error[] = "La colonne [Programme] n'a pas été trouvée dans le fichier csv !";
                 if ($modaliteColumn === false) $error[] = "La colonne [Modalite] n'a pas été trouvée dans le fichier csv !";
+                if ($prerequisColumn === false) $error[] = "La colonne [Prerequis] n'a pas été trouvée dans le fichier csv !";
+                if ($publicColumn === false) $error[] = "La colonne [Public] n'a pas été trouvée dans le fichier csv !";
 
                 $array = array_slice($array, 1);
                 $axes = [];
@@ -476,11 +475,15 @@ class PlanDeFormationController extends AbstractActionController
                         $objectif = $line[$descriptionColumn];
                         $programme = $line[$programmeColumn];
                         $modalite = $line[$modaliteColumn];
+                        $prerequis = $line[$prerequisColumn];
+                        $public = $line[$publicColumn];
 
                         $formation->setDescription($description);
                         $formation->setObjectifs($objectif);
                         $formation->setProgramme($programme);
                         $formation->setType($modalite);
+                        $formation->setPrerequis($prerequis);
+                        $formation->setPublic($public);
                         $this->getFormationService()->update($formation);
 
 
