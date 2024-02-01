@@ -336,9 +336,6 @@ class PlanDeFormationController extends AbstractActionController
             $mode = $data['mode'];
             $plan = $this->getPlanDeFormationService()->getPlanDeFormation($data['plan-de-formation']);
 
-
-
-
             $nouveauxAxes = [];
             $nouveauxThemes = [];
             $nouveauxFormations = [];
@@ -355,7 +352,12 @@ class PlanDeFormationController extends AbstractActionController
                 $handle = fopen($fichier_path, "r");
 
                 while ($content = fgetcsv($handle, 0, ";")) {
-                    $array[] = $content;
+//                    $array[] = $content;
+//                    $array[] = array_map(function ($a) {return mb_convert_encoding($a, 'UTF-8', 'auto');}, $content);
+//                    $array[] = array_map(function ($a) {return  iconv(iconv_get_encoding($a), 'UTF-8//IGNORE', $a);}, $content);
+                    $array[] = array_map(function ($a) {return  str_replace('','\'',iconv('ISO-8859-1', 'UTF-8//IGNORE', $a));}, $content);
+
+//                    $array[] = iconv('ISO-8859-1', 'UTF-8//IGNORE', $content);
                 }
 
                 $header = $array[0];
@@ -422,7 +424,7 @@ class PlanDeFormationController extends AbstractActionController
                         }
                     }
 
-                    if (!in_array($line[$modaliteColumn], ['Présentiel', 'Distanciel', 'Mixte'])) {
+                    if (!in_array($line[$modaliteColumn], ['Présentiel', 'Distanciel', 'Mixte', ''])) {
                         $error[] = "Modalité [".$line[$modaliteColumn]."] non reconnue !";
                     }
                 }
