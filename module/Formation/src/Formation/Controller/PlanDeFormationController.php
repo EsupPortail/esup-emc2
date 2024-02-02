@@ -38,7 +38,7 @@ class PlanDeFormationController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $plans = $this->getPlanDeFormationService()->getPlansDeFormation();
+        $plans = $this->getPlanDeFormationService()->getPlansDeFormation('annee', 'ASC', true);
         return new ViewModel([
             'plans' => $plans,
         ]);

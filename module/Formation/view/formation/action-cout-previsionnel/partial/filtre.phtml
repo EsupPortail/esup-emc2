@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * @var PlanDeFormation[] $plans
+ * @var Formation[] $actions
+ * @var array $params
+ */
+
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\PlanDeFormation;
+
+$actionDeFormation = $params['action-de-formation']??null;
+$planDeFormation = $params['plan-de-formation']??null;
+$histo = $params['histo']??null;
+
+?>
+
+<div class="card">
+    <div class="card-header bg-default">
+        Filtre des coûts prévisionnels
+    </div>
+    <div class="card-body">
+        <form method="get" action="<?php echo $this->url(); ?>">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="action-de-formation"> Action de formation : </label>
+                            <select id="action-de-formation" name="action-de-formation" class="selectpicker show-tick" data-live-search="true">
+                                <option value="">Toutes les actions</option>
+                                <?php foreach ($actions as $action) : ?>
+                                    <option value="<?php echo $action->getId(); ?>" <?php if ($actionDeFormation == $action->getId()) echo " selected "; ?>>
+                                        <?php echo $action->getLibelle(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="plan-de-formation"> Plan de formation : </label>
+                            <select id="plan-de-formation" name="plan-de-formation" class="selectpicker show-tick" data-live-search="true">>
+                                <option value="">Tous les plans</option>
+                                <?php foreach ($plans as $plan) : ?>
+                                    <option value="<?php echo $plan->getId(); ?>"  <?php if ($planDeFormation == $plan->getId()) echo " selected "; ?>>
+                                        <?php echo $plan->getAnnee(); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="histo"> Historisé : </label>
+                            <select id="histo" name="histo" class="selectpicker show-tick" data-live-search="true">>
+                                <option value="">Peu importe</option>
+                                <option value="oui" <?php if ($histo == "oui") echo " selected "; ?>>Oui</option>
+                                <option value="non" <?php if ($histo == "non") echo " selected "; ?>>Non</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="filter">
+                        <span class="icon icon-filtrer"></span>
+                        Filtrer
+                    </button>
+                    <br>
+                    <button class="btn btn-primary" id="clear">
+                        <span class="icon icon-gommer"></span>
+                        R.A.Z.
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('button#clear').on("click",function(e) {
+        e.preventDefault();
+        window.location.href = 'action-cout-previsionnel';
+    });
+
+    $(function() {
+        $('select').selectpicker();
+    });
+
+</script>

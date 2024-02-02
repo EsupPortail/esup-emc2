@@ -14,7 +14,7 @@ use Formation\Entity\Db\FormationAbonnement;
 
 $retour = null;
 
-if (isset($agent) !== null) {
+if (isset($agent)) {
     $this->headTitle("Listing des abonnements pour l'agent [".$agent->getDenomination()."]");
     $retour = $this->url('formation/abonnement/lister-abonnements-par-agent', ['agent' => $agent->getId()], [], true);
 }

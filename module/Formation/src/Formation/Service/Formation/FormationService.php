@@ -120,10 +120,11 @@ class FormationService
      * @param string $ordre
      * @return Formation[]
      */
-    public function getFormations(string $champ = 'libelle', string $ordre = 'ASC'): array
+    public function getFormations(string $champ = 'libelle', string $ordre = 'ASC', bool $histo=false): array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('groupe.libelle, formation.' . $champ, $ordre);
+        if (!$histo) $qb = $qb->andWhere('formation.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
         return $result;
     }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping>
+    <entity name="Formation\Entity\Db\ActionCoutPrevisionnel" table="formation_action_cout_previsionnel">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <many-to-one target-entity="Formation\Entity\Db\Formation"  field="action">
+            <join-column name="action_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Formation\Entity\Db\PlanDeFormation"  field="plan">
+            <join-column name="plan_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="coutParSession"    type="float"                    column="cout_par_session"   nullable="false"/>
+        <field name="nombreDeSession"   type="float"                    column="nombre_de_session"  nullable="false"/>
+
+        <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
+        <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>
+        <field name="histoDestruction"  type="datetime"                 column="histo_destruction"  nullable="true"/>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoCreateur">
+            <join-column name="histo_createur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoModificateur">
+            <join-column name="histo_modificateur_id" referenced-column-name="ID"/>
+        </many-to-one>
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="histoDestructeur">
+            <join-column name="histo_destructeur_id" referenced-column-name="ID"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>
