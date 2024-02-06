@@ -71,12 +71,10 @@ class PlanDeFormationService {
     }
 
     /** @return PlanDeFormation[] */
-    public function getPlansDeFormation(string $champ='annee', string $ordre='ASC', bool $histo = false) : array
+    public function getPlansDeFormation(string $champ='annee', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('plan.'.$champ, $ordre);
-
-        if ($histo) $qb = $qb->andWhere('plan.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
         return $result;
