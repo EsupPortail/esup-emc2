@@ -912,7 +912,7 @@ JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';
 
 INSERT INTO fichier_nature (code, libelle, description)
 VALUES
-    ('DEMANDEEXTERNE_DEVIS', 'Devis de demande externe', null) UNION
+    ('DEMANDEEXTERNE_DEVIS', 'Devis de demande externe', null),
     ('INSCRIPTION_ATTESTATION', 'Attestation de formation', 'Attestion de formation déposer dans [Mes Formations] qui se substituera à l''attestation générée')
 ;
 
