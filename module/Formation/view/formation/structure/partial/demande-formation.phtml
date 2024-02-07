@@ -18,8 +18,8 @@ $canValiderResponsable = $this->isAllowed(FormationinstanceinscritPrivileges::ge
 $array = [];
 foreach ($inscriptions as $inscription) {
     if ($inscription->estNonHistorise()) {
-        $formation = $inscription->getInstance()->getFormation();
-        $instance = $inscription->getInstance();
+        $formation = $inscription->getSession()->getFormation();
+        $instance = $inscription->getSession();
         $array[$formation->getId()]["formation"] = $formation;
         $array[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
         $array[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;
@@ -29,8 +29,8 @@ foreach ($inscriptions as $inscription) {
 $attentes = [];
 foreach ($inscriptions as $inscription) {
     if ($inscription->estNonHistorise() && $inscription->isEtatActif(InscriptionEtats::ETAT_DEMANDE)) {
-        $formation = $inscription->getInstance()->getFormation();
-        $instance = $inscription->getInstance();
+        $formation = $inscription->getSession()->getFormation();
+        $instance = $inscription->getSession();
         $attentes[$formation->getId()]["formation"] = $formation;
         $attentes[$formation->getId()]["instances"][$instance->getId()]['instance'] = $instance;
         $attentes[$formation->getId()]["instances"][$instance->getId()]['inscriptions'][] = $inscription;

@@ -44,7 +44,7 @@ foreach ($inscriptions as $inscription) {
                     <a
                         <?php /** @see \Formation\Controller\InscriptionController::desinscriptionAction() */?>
                             href="
-        <?php echo $this->url('formation/inscription/desinscription', ['inscription' => $inscription->getId()], [], true); ?>"
+        <?php echo $this->url('formation/inscription/annuler-inscription', ['inscription' => $inscription->getId()], [], true); ?>"
                             class="btn btn-danger action ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-unchecked"> J'annule mon inscription </span>

@@ -49,7 +49,7 @@ foreach ($inscriptions as $inscription) {
 <?php else : ?>
     <?php foreach ($formationValidees as $inscription) : ?>
     <?php
-        $instance = $inscription->getInstance();
+        $instance = $inscription->getSession();
         $nbPlace = ($instance->getNbPlacePrincipale() + $instance->getNbPlaceComplementaire()) - (count($instance->getListePrincipale()) + count($instance->getListeComplementaire()));
     ?>
     <div class="row formation-inscription">
