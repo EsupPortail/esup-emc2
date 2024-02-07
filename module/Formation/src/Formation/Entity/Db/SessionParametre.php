@@ -13,6 +13,7 @@ class SessionParametre implements HistoriqueAwareInterface {
     private bool $mail = true;
     private bool $evenement = true;
     private bool $enquete = true;
+    private bool $emargement = true;
 
     public function getId(): ?int
     {
@@ -58,5 +59,16 @@ class SessionParametre implements HistoriqueAwareInterface {
     {
         $this->enquete = $enquete;
     }
+
+    public function isEmargementActive(): bool
+    {
+        return $this->emargement;
+    }
+
+    public function setEmargement(bool $emargement): void
+    {
+        $this->emargement = $emargement;
+    }
+
 
 }

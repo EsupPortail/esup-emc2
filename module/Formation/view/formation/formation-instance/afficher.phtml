@@ -217,9 +217,15 @@ $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivi
                                     title="Proposition de l'enquête et exige sa complétion pour avoir l'attestation"></span>
                         </dt>
                         <dd class="col-md-6"> <?php echo ($instance->isEnqueteActive()) ? "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>" : "<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
+                        <dt class="col-md-6"> Envoi des émargements aux formateurs <span
+                                    class="icon icon-information text-info"
+                                    title="Essaie d'envoyer l'émargement aux formateurs si un courrier électronique est renseigné."></span>
+                        </dt>
+                        <dd class="col-md-6"> <?php echo ($instance->isEmargementActive()) ? "<span class='text-success'><span class='icon icon-checked'></span> Activé</span>" : "<span class='text-danger'><span class='icon icon-unchecked'></span> Désactivé</span>"; ?> </dd>
                     </dl>
                 </div>
                 <div class="col-md-3">
+                    <?php /** @see \Formation\Controller\SessionParametreController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('formation/session-parametre', ['session' => $instance->getId()], [], true); ?>"
                        class="btn btn-primary ajax-modal" data-event="modification">
                         <span class="icon gerer"></span>

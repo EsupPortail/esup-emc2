@@ -169,6 +169,7 @@ create table formation_session_parametre
     mail                  boolean default true not null,
     evenement             boolean default true not null,
     enquete               boolean default true not null,
+    emargement            boolean default true not null,
     histo_creation        timestamp            not null,
     histo_createur_id     integer              not null
         constraint formation_session_parametre_unicaen_utilisateur_user_null_fk_1

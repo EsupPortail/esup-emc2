@@ -9,6 +9,7 @@
         <field name="mail"          type="boolean"      column="mail"          nullable="false"/>
         <field name="evenement"     type="boolean"      column="evenement"     nullable="false"/>
         <field name="enquete"       type="boolean"      column="enquete"       nullable="false"/>
+        <field name="emargement"    type="boolean"      column="emargement"    nullable="false"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

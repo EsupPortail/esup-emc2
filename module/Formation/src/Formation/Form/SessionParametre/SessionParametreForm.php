@@ -2,7 +2,6 @@
 
 namespace Formation\Form\SessionParametre;
 
-
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Form;
@@ -58,6 +57,21 @@ class SessionParametreForm extends Form {
                 'id' => 'enquete',
             ],
         ]);
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'emargement',
+            'options' => [
+                'label' => "Activation de l'envoi de l'émargement :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'value_options' => [
+                    true => "Oui",
+                    false => "Non",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'emargement',
+            ],
+        ]);
         //submit
         $this->add([
             'type' => Button::class,
@@ -77,6 +91,7 @@ class SessionParametreForm extends Form {
             'mail' => ['required' => true,],
             'evenement' => ['required' => false,],
             'enquete' => ['required' => false,],
+            'emargement' => ['required' => false,],
         ]));
     }
 }

@@ -243,6 +243,7 @@ class FormationInstanceController extends AbstractActionController
                     exit();
                 case SessionEtats::ETAT_FORMATION_CONVOCATION :
                     $this->getFormationInstanceService()->envoyerConvocation($instance);
+                    $this->getFormationInstanceService()->envoyerEmargement($instance);
                     exit();
                 case SessionEtats::ETAT_ATTENTE_RETOURS :
                     $this->getFormationInstanceService()->demanderRetour($instance);

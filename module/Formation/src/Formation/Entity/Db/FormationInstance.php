@@ -464,6 +464,12 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $this->parametre->isEnqueteActive();
     }
 
+    public function isEmargementActive(): bool
+    {
+        if ($this->parametre === null) return true;
+        return $this->parametre->isEmargementActive();
+    }
+
     /** PREDICAT D'ETAT *********************************************************************************************/
 
     public function estPreparation(): bool
