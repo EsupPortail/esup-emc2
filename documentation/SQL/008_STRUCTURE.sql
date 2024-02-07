@@ -189,18 +189,19 @@ INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, par
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
-
-INSERT INTO unicaen_parametre_categorie (code, libelle, ordre)
-VALUES ('STRUCTURE', 'Paramètres associés aux structures', 300);
 INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE)
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE) AS (
-    SELECT 'AGENT_TEMOIN_STATUT', 'Filtre sur les témoins de statuts associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : cdi, cdd, titulaire, vacataire, enseignant, administratif, chercheur, doctorant, detacheIn, detacheOut, dispo <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'administratif;!dispo;!doctorant', 100 UNION
-    SELECT 'AGENT_TEMOIN_AFFECTATION', 'Filtre sur les témoins d''affectations associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : principale, hierarchique, fonctionnelle <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'principale', 200
+    SELECT 'AGENT_TEMOIN_STATUT', 'Filtre sur les témoins de statuts associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;n
+e de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : cdi, cdd, titulaire, vacataire, enseignant, administratif, chercheur, doctorant, de
+tacheIn, detacheOut, dispo <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'administratif;!dispo;!doctorant', 100 UNION
+    SELECT 'AGENT_TEMOIN_AFFECTATION', 'Filtre sur les témoins d''affectations associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une c
+ha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : principale, hierarchique, fonctionnelle <br/> Le modificateur ! est une n
+&eacute;gation.</p>', 'String', 'principale', 200 UNION
     SELECT 'AGENT_TEMOIN_EMPLOITYPE', 'Filtres associés aux emploi-types', null, 'String', null, 300
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.VALEUR, d.ORDRE
 FROM d
-JOIN unicaen_parametre_categorie cp ON cp.CODE = 'STRUCTURE';
+         JOIN unicaen_parametre_categorie cp ON cp.CODE = 'STRUCTURE';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGES ----------------------------------------------------------------------------------------------------------
