@@ -23,7 +23,7 @@ return [
          * Allows users to register through the website.
          * Accepted values: boolean true or false
          */
-        'enable_registration' => true,
+        'enable_registration' => false,
     ],
 
     'bjyauthorize' => [

@@ -11,6 +11,7 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationFormAwar
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationFormAwareTrait;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
+use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareTrait;
 use Formation\Service\Axe\AxeServiceAwareTrait;
 use Formation\Service\Domaine\DomaineServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
@@ -24,6 +25,7 @@ class PlanDeFormationController extends AbstractActionController
 {
     use AxeServiceAwareTrait;
     use AbonnementServiceAwareTrait;
+    use ActionCoutPrevisionnelServiceAwareTrait;
     use AgentServiceAwareTrait;
     use DomaineServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
@@ -38,7 +40,7 @@ class PlanDeFormationController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $plans = $this->getPlanDeFormationService()->getPlansDeFormation('annee', 'ASC');
+        $plans = $this->getPlanDeFormationService()->getPlansDeFormation();
         return new ViewModel([
             'plans' => $plans,
         ]);
@@ -150,6 +152,8 @@ class PlanDeFormationController extends AbstractActionController
             'groupesArrayByAxe' => $groupesArrayByAxe,
             'formationsArrayByGroupe' => $formationsArrayByGroupe,
             'sessionsArrayByFormation' => $sessionsArrayByFormation,
+            'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByPlan($plan),
+
         ]);
     }
 

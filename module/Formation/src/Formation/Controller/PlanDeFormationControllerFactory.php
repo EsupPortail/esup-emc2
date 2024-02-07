@@ -8,6 +8,7 @@ use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationForm;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationForm;
 use Formation\Service\Abonnement\AbonnementService;
+use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelService;
 use Formation\Service\Axe\AxeService;
 use Formation\Service\Domaine\DomaineService;
 use Formation\Service\Formation\FormationService;
@@ -31,6 +32,7 @@ class PlanDeFormationControllerFactory
     {
         /**
          * @var AbonnementService $abonnementService
+         * @var ActionCoutPrevisionnelService $actionCoutPrevisionnelService
          * @var AgentService $agentService
          * @var AxeService $axeService
          * @var DomaineService $domaineService
@@ -42,6 +44,7 @@ class PlanDeFormationControllerFactory
         $abonnementService = $container->get(AbonnementService::class);
         $axeService = $container->get(AxeService::class);
         $agentService = $container->get(AgentService::class);
+        $actionCoutPrevisionnelService = $container->get(ActionCoutPrevisionnelService::class);
         $domaineService = $container->get(DomaineService::class);
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
@@ -62,6 +65,7 @@ class PlanDeFormationControllerFactory
         $controller = new PlanDeFormationController();
         $controller->setAbonnementService($abonnementService);
         $controller->setAgentService($agentService);
+        $controller->setActionCoutPrevisionnelService($actionCoutPrevisionnelService);
         $controller->setAxeService($axeService);
         $controller->setDomaineService($domaineService);
         $controller->setFormationService($formationService);

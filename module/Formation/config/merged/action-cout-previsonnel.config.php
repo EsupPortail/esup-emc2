@@ -8,9 +8,11 @@ use Formation\Form\ActionCoutPrevisionnel\ActionCoutPrevisionnelForm;
 use Formation\Form\ActionCoutPrevisionnel\ActionCoutPrevisionnelFormFactory;
 use Formation\Form\ActionCoutPrevisionnel\ActionCoutPrevisionnelHydrator;
 use Formation\Form\ActionCoutPrevisionnel\ActionCoutPrevisionnelHydratorFactory;
+use Formation\Provider\Privilege\CoutprevisionnelPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelService;
 use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceFactory;
+use Formation\View\Helper\CoutsPrevisionnelsViewHelper;
 use UnicaenPrivilege\Guard\PrivilegeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -23,14 +25,75 @@ return [
                     'controller' => ActionCoutPrevisionnelController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => ActionCoutPrevisionnelController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => ActionCoutPrevisionnelController::class,
+                    'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => ActionCoutPrevisionnelController::class,
+                    'action' => [
                         'modifier',
+                    ],
+                    'privileges' => [
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => ActionCoutPrevisionnelController::class,
+                    'action' => [
                         'historiser',
                         'restaurer',
+                    ],
+                    'privileges' => [
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => ActionCoutPrevisionnelController::class,
+                    'action' => [
                         'supprimer',
                     ],
                     'privileges' => [
-                        FormationPrivileges::FORMATION_AFFICHER,
+                        CoutprevisionnelPrivileges::COUTPREVISIONNEL_SUPPRIMER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'pages' => [
+                            'couts_previsionnels' =>[
+                                'label' => "Coûts prévisionnels",
+                                'route' => 'formation/action-cout-previsionnel',
+                                'resource' => PrivilegeController::getResourceId(ActionCoutPrevisionnelController::class, 'index') ,
+                                'order'    => 130,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -134,5 +197,9 @@ return [
             ActionCoutPrevisionnelHydrator::class => ActionCoutPrevisionnelHydratorFactory::class,
         ],
     ],
-
+    'view_helpers' => [
+        'invokables' => [
+            'coutsPrevisionnels' => CoutsPrevisionnelsViewHelper::class,
+        ],
+    ],
 ];

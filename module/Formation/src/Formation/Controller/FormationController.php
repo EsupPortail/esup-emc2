@@ -13,6 +13,7 @@ use Element\Service\CompetenceElement\CompetenceElementServiceAwareTrait;
 use Formation\Entity\Db\Formation;
 use Formation\Form\Formation\FormationFormAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
+use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationElement\FormationElementServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -28,6 +29,7 @@ use Laminas\View\Model\ViewModel;
 /** @method FlashMessenger flashMessenger() */
 class FormationController extends AbstractActionController
 {
+    use ActionCoutPrevisionnelServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
@@ -77,6 +79,7 @@ class FormationController extends AbstractActionController
         return new ViewModel([
             'title' => "Action de formation [".$formation->getLibelle()."]",
             'formation' => $formation,
+            'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
     }
 
@@ -141,6 +144,7 @@ class FormationController extends AbstractActionController
             'formation' => $formation,
             'instances' => $instances,
             'form' => $form,
+            'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByAction($formation),
         ]);
         return $vm;
     }

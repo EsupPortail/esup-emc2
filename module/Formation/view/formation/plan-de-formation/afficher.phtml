@@ -5,16 +5,19 @@
  * @var PlanDeFormation $plan
  * @var Axe[] $axes
  * @var FormationGroupe[] $groupes
- * @var Formation[]  $formations
+ * @var Formation[] $formations
  * @var FormationGroupe[] $groupesArrayByAxe @desc $axeId => FormationGroupe[]
  * @var Formation[] $formationsArrayByGroupe @desc $groupeId => Formation[]
  * @var Formation[] $sessionsArrayByFormation @desc $formationId => FormationInstance[]
+ * @var ActionCoutPrevisionnel[] $coutsPrevisionnels
  */
 
+use Formation\Entity\Db\ActionCoutPrevisionnel;
 use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Privilege\CoutprevisionnelPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Provider\Privilege\PlanformationPrivileges;
 
@@ -23,8 +26,11 @@ $canAjouterFormation = $this->isAllowed(PlanformationPrivileges::getResourceId(P
 $canReprendre = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
 
 $canAfficherAction = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAfficherCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AFFICHER));
 
-usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();});
+usort($axes, function (Axe $a, Axe $b) {
+    return $a->getOrdre() > $b->getOrdre();
+});
 ?>
 
 <h1 class="page-header">
@@ -49,13 +55,13 @@ usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();
         Gérer les formations
     </a>
     <?php /** @see \Formation\Controller\PlanDeFormationController::importerDepuisCsvAction() */ ?>
-    <a href="<?php echo $this->url('plan-de-formation/importer', ['plan-de-formation' => $plan->getId()],[], true); ?>"
+    <a href="<?php echo $this->url('plan-de-formation/importer', ['plan-de-formation' => $plan->getId()], [], true); ?>"
        class="btn btn-primary">
         <span class="icon icon-csv"></span>
         Compléter un plan de formation avec un csv
     </a>
     <?php /** @see \Formation\Controller\PlanDeFormationController::viderAction() */ ?>
-    <a href="<?php echo $this->url('plan-de-formation/vider', ['plan-de-formation' => $plan->getId()],[], true); ?>"
+    <a href="<?php echo $this->url('plan-de-formation/vider', ['plan-de-formation' => $plan->getId()], [], true); ?>"
        class="btn btn-primary ajax-modal" data-event="modification">
         <span class="icon icon-gommer"></span>
         Vider le plan de formation
@@ -76,39 +82,47 @@ usort($axes, function (Axe $a, Axe $b) { return $a->getOrdre() > $b->getOrdre();
 <?php foreach ($axes as $axe) : ?>
     <span class="axe" style="border-color: <?php echo $axe->getCouleur(); ?>"><?php echo $axe->getLibelle(); ?></span>
     <ul>
-    <?php foreach ($groupesArrayByAxe[$axe->getId()] as $groupe) : ?>
-        <?php if( $groupe !== null) : ?>
-            <li>
-                <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
-                (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
-                <ul>
-                    <?php /** @var Formation $formation */ ?>
-                    <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
-                        <li>
-                            <?php if ($canAfficherAction) : ?>
-                                <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
-                                <a href="<?php echo $this->url("formation/afficher", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
+        <?php foreach ($groupesArrayByAxe[$axe->getId()] as $groupe) : ?>
+            <?php if ($groupe !== null) : ?>
+                <li>
+                    <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
+                    (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
+                    <ul>
+                        <?php /** @var Formation $formation */ ?>
+                        <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
+                            <li>
+                                <?php if ($canAfficherAction) : ?>
+                                    <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
+                                    <a href="<?php echo $this->url("formation/afficher", ["formation" => $formation->getId()], [], true); ?>"
+                                       class="ajax-modal">
+                                        <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
+                                    </a>
+                                <?php else : ?>
                                     <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
-                                </a>
-                            <?php else : ?>
-                                <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
-                            <?php endif; ?>
-                            <?php foreach ($formation->getDomaines() as $domaine) : ?>
-                                <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>" title="<?php echo $domaine->getLibelle(); ?>">&nbsp;</span>
-                            <?php endforeach; ?>
-                            (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </li>
-        <?php endif; ?>
-    <?php endforeach; ?>
+                                <?php endif; ?>
+                                <?php foreach ($formation->getDomaines() as $domaine) : ?>
+                                    <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>"
+                                          title="<?php echo $domaine->getLibelle(); ?>">&nbsp;</span>
+                                <?php endforeach; ?>
+                                (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </ul>
 <?php endforeach; ?>
 
+<?php if ($canAfficherCout) : ?>
+    <h2>Coûts prévisionnels </h2>
+
+    <?php echo $this->coutsPrevisionnels($coutsPrevisionnels, null, $plan); ?>
+<?php endif; ?>
+
 
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();

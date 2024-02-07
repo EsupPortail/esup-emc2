@@ -1,0 +1,179 @@
+<?php
+
+use Formation\Entity\Db\ActionCoutPrevisionnel;
+use Formation\Entity\Db\Formation;
+use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Privilege\CoutprevisionnelPrivileges;
+use Formation\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Privilege\PlanformationPrivileges;
+
+/**
+ * @see \Formation\View\Helper\CoutsPrevisionnelsViewHelper
+ * @var ActionCoutPrevisionnel[] $couts
+ * @var Formation|null $action
+ * @var PlanDeFormation|null $plan
+ */
+
+$canAfficherCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AFFICHER));
+$canAjouterCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AJOUTER));
+$canModifierCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_MODIFIER));
+$canHistoriserCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_HISTORISER));
+$canSupprimerCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_SUPPRIMER));
+
+$canAfficherAction  = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
+$canAfficherPlan    = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_AFFICHER));
+
+$coutTotal = 0;
+
+?>
+
+
+<?php if ($canAjouterCout) : ?>
+    <?php /** @see \Formation\Controller\ActionCoutPrevisionnelController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url("formation/action-cout-previsionnel/ajouter", ['action-de-formation' => $action?$action->getId():0, 'plan-de-formation' => $plan?$plan->getId():0],[],true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter un coût prévisionnel
+    </a>
+<?php endif; ?>
+
+
+<?php if (empty($couts)) : ?>
+    <div class="alert alert-info">
+        Aucun coût prévisionnel
+    </div>
+<?php else : ?>
+    <table class="table table-condensed datatable">
+        <thead>
+        <tr>
+            <?php if ($plan === null) : ?>
+                <th> Plan de formation </th>
+            <?php endif; ?>
+            <?php if ($action === null) : ?>
+                <th> Action </th>
+            <?php endif; ?>
+            <th> Coût par session </th>
+            <th> Nombre de session </th>
+            <th> Coût prévisionnel </th>
+            <th class="action" style="width:10rem;"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($couts as $actionCoutPrevisionnel): ?>
+            <tr class=" <?php if ($actionCoutPrevisionnel->estHistorise()) echo ' historise '; ?> ">
+                <?php if ($plan === null) : ?>
+                <td>
+                    <?php if ($actionCoutPrevisionnel->getPlan()) : ?>
+                        <?php echo $actionCoutPrevisionnel->getPlan()->getAnnee(); ?>
+                    <?php else : ?>
+                        Aucun plan de formation
+                    <?php endif; ?>
+                </td>
+                <?php endif; ?>
+                <?php if ($action === null) : ?>
+                <td>
+                    <?php if ($actionCoutPrevisionnel->getAction()) : ?>
+                        <?php echo $actionCoutPrevisionnel->getAction()->getLibelle(); ?>
+                    <?php else : ?>
+                        Aucune action de formation
+                    <?php endif; ?>
+                </td>
+                <?php endif; ?>
+                <td>
+                    <?php
+                    $cout =  $actionCoutPrevisionnel->getCoutParSession();
+                    echo number_format($cout,2,',',' ');
+                    ?> €
+                </td>
+                <td> <?php echo $actionCoutPrevisionnel->getNombreDeSession(); ?> </td>
+                <td>
+                    <?php
+                    $cout = $actionCoutPrevisionnel->getCoutParSession() * $actionCoutPrevisionnel->getNombreDeSession();
+                    $coutTotal += $cout;
+                    echo number_format($cout,2,',',' ');
+                    ?> €
+                </td>
+                <td class="action">
+                    <?php $firstAction = true; ?>
+                    <?php if ($canAfficherAction && $action === null) : ?>
+                        <?php $firstAction = false; ?>
+                        <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation/afficher', ['formation' => $actionCoutPrevisionnel->getAction()->getId()], [], true); ?>">
+                            <span class="icon icon-voir"></span>
+                            Action de formation
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($actionCoutPrevisionnel->getPlan()) : ?>
+                    <?php if ($canAfficherPlan && $plan === null) : ?>
+                    <?php if ($firstAction !== true) : ?> <br> <?php endif; ?>
+                    <?php /** @see \Formation\Controller\PlanDeFormationController::afficherAction() */ ?>
+                    <a href="<?php echo $this->url('plan-de-formation/afficher', ['plan-de-formation' => $actionCoutPrevisionnel->getPlan()->getId()], [], true); ?>">
+                        <span class="icon icon-voir"></span>
+                        Plan de formation
+                        <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canModifierCout) : ?>
+                            <br>
+                            <?php /** @see \Formation\Controller\ActionCoutPrevisionnelController::modifierAction() */ ?>
+                            <a href="<?php echo $this->url("formation/action-cout-previsionnel/modifier", ['action-cout-previsionnel' => $actionCoutPrevisionnel->getId()],[],true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                                <span class="icon icon-modifier"></span>
+                                Modifier
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canHistoriserCout) : ?>
+                            <br>
+                            <?php if ($actionCoutPrevisionnel->estNonHistorise()) : ?>
+                                <?php /** @see \Formation\Controller\ActionCoutPrevisionnelController::historiserAction() */ ?>
+                                <a href="<?php echo $this->url("formation/action-cout-previsionnel/historiser", ['action-cout-previsionnel' => $actionCoutPrevisionnel->getId()],['query' => ["retour" => $this->url(null, [],[],true) ]],true); ?>"
+                                >
+                                    <span class="icon icon-historiser"></span>
+                                    Historiser
+                                </a>
+                            <?php else : ?>
+                                <?php /** @see \Formation\Controller\ActionCoutPrevisionnelController::restaurerAction() */ ?>
+                                <a href="<?php echo $this->url("formation/action-cout-previsionnel/restaurer", ['action-cout-previsionnel' => $actionCoutPrevisionnel->getId()],['query' => ["retour" => $this->url(null, [],[],true) ]],true); ?>"
+                                >
+                                    <span class="icon icon-restaurer"></span>
+                                    Restaurer
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($canSupprimerCout) : ?>
+                            <br>
+                            <?php /** @see \Formation\Controller\ActionCoutPrevisionnelController::supprimer() */ ?>
+                            <a href="<?php echo $this->url("formation/action-cout-previsionnel/supprimer", ['action-cout-previsionnel' => $actionCoutPrevisionnel->getId()],[],true); ?>"
+                               class="ajax-modal" data-event="modification"
+                            >
+                            <span class="text-danger">
+                                <span class="icon icon-unchecked"></span>
+                                Supprimer
+                            </span>
+                            </a>
+                        <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<div class="cout">
+    <dl class="row">
+        <dt class="col-md-3">
+            Coût total :
+        </dt>
+        <dd class="col-md-3"><?php echo number_format($coutTotal,2,',',' '); ?> €</dd>
+    </dl>
+</div>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>

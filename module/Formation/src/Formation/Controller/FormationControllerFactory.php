@@ -8,6 +8,7 @@ use Element\Service\ApplicationElement\ApplicationElementService;
 use Element\Service\CompetenceElement\CompetenceElementService;
 use Formation\Form\Formation\FormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationForm;
+use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationElement\FormationElementService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
@@ -29,12 +30,14 @@ class FormationControllerFactory
     public function __invoke(ContainerInterface $container): FormationController
     {
         /**
+         * @var ActionCoutPrevisionnelService $actionCoutPrevisionnelService
          * @var FormationService $formationService
          * @var FormationElementService $formationElementService
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
          * @var PlanDeFormationService $planDeFormationService
          */
+        $actionCoutPrevisionnelService = $container->get(ActionCoutPrevisionnelService::class);
         $formationService = $container->get(FormationService::class);
         $formationElementService = $container->get(FormationElementService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
@@ -59,8 +62,8 @@ class FormationControllerFactory
         $competenceElementService = $container->get(CompetenceElementService::class);
         $competenceElementForm = $container->get('FormElementManager')->get(CompetenceElementForm::class);
 
-        /** @var FormationController $controller */
         $controller = new FormationController();
+        $controller->setActionCoutPrevisionnelService($actionCoutPrevisionnelService);
         $controller->setFormationService($formationService);
         $controller->setFormationElementService($formationElementService);
         $controller->setFormationGroupeService($formationGroupeService);
