@@ -295,6 +295,8 @@ create table formation
     rattachement          varchar(1024),
     objectifs             text,
     programme             text,
+    prerequis             text,
+    public                text,
     type                  varchar(64),
     id_source             varchar(256)
 );
@@ -423,6 +425,34 @@ create table formation_formation_abonnement
         references unicaen_utilisateur_user
 );
 
+create table formation_action_cout_previsionnel
+(
+    id                    serial  not null
+        constraint fapc_pk
+            primary key,
+    action_id             integer not null
+        constraint fapc_formation_id_fk
+            references formation
+            on delete cascade,
+    plan_id               integer
+        constraint fapc_formation_plan_formation_id_fk
+            references formation_plan_formation
+            on delete cascade,
+    cout_par_session      float   not null,
+    nombre_de_session     integer not null,
+    histo_creation        timestamp  not null default now(),
+    histo_createur_id     integer not null default 0
+        constraint fapc_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint fapc_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint fapc_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
 
 create table formation_instance
 (
@@ -1608,6 +1638,20 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'stagiaireexterne';
 
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('coutprevisionnel', 'Gestion des coûts prévisionnel', 2000, 'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'coutprevisionnel_index', 'Accéder à l''index', 10 UNION
+    SELECT 'coutprevisionnel_afficher', 'Afficher', 20 UNION
+    SELECT 'coutprevisionnel_ajouter', 'Ajouter', 30 UNION
+    SELECT 'coutprevisionnel_modifier', 'Modifier', 40 UNION
+    SELECT 'coutprevisionnel_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'coutprevisionnel_supprimer', 'Supprimer', 60
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'coutprevisionnel';
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- EVENEMENT -----------------------------------------------------------------------------------------------------------
