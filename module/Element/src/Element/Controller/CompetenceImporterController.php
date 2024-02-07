@@ -9,6 +9,7 @@ use Element\Service\CompetenceTheme\CompetenceThemeServiceAwareTrait;
 use Element\Service\CompetenceType\CompetenceTypeServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 
 class CompetenceImporterController extends AbstractActionController
 {
@@ -35,7 +36,10 @@ class CompetenceImporterController extends AbstractActionController
 
             $fichier_path = $file['fichier']['tmp_name'];
             $mode = $data['mode'];
+            if (!isset($data['referentiel']) || $data['referentiel'] === "") { throw new RuntimeException("Aucun référentiel de sélectionné.");}
             $referentiel = $this->getCompetenceReferentielService()->getCompetenceReferentiel($data['referentiel']);
+            if ($referentiel === null) { throw new RuntimeException("Aucun référentiel [".$data['referentiel']."] de trouvé .");}
+
 
             //reading
             $array = [];
