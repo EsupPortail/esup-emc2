@@ -227,8 +227,6 @@ $this->headTitle("Présences pour la formation : " . $instance->getInstanceCode(
             let split = id.split("_");
             let inscrit = split[1];
             let journee = split[0];
-            // console.log('inscrit: ' + inscrit);
-            // console.log('journee: ' + journee);
 
             <?php /** @see PresenceController::togglePresenceAction() */ ?>
             let url = "../toggle-presence/" + journee + "/" + inscrit;

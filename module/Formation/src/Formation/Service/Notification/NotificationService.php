@@ -18,7 +18,6 @@ use Formation\Provider\Template\MailTemplates;
 use Formation\Service\Url\UrlServiceAwareTrait;
 use RuntimeException;
 use UnicaenMail\Entity\Db\Mail;
-use UnicaenMail\Exception\NotFoundConfigException;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;

@@ -4,7 +4,6 @@ namespace Formation\Form\Seance;
 
 use Formation\Entity\Db\Seance;
 use Laminas\Form\Element\Button;
-use Laminas\Form\Element\DateTime;
 use Laminas\Form\Element\Number;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;

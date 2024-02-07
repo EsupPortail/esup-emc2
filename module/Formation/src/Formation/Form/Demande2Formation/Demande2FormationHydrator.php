@@ -7,12 +7,9 @@ use Laminas\Hydrator\HydratorInterface;
 
 class Demande2FormationHydrator implements HydratorInterface {
 
-    /**
-     * @param DemandeExterne $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var DemandeExterne $object */
         $data = [
             'libelle' => $object->getLibelle(),
         ];
@@ -21,6 +18,7 @@ class Demande2FormationHydrator implements HydratorInterface {
 
     public function hydrate(array $data, object $object): object
     {
+        /** @var DemandeExterne $object */
         return $object;
     }
 

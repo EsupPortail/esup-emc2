@@ -8,11 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Formation\Entity\Db\EnqueteQuestion;
 use Formation\Entity\Db\EnqueteReponse;
 use Formation\Entity\Db\Inscription;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class EnqueteReponseHydrator implements HydratorInterface {
-    use EntityManagerAwareTrait;
 
     public function extract(object $object) : array
     {

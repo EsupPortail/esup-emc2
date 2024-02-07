@@ -7,7 +7,6 @@ use Application\Service\Agent\AgentService;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstance\FormationInstanceService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\Inscription\InscriptionService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\StagiaireExterne\StagiaireExterneService;

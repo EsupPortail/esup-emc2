@@ -38,38 +38,6 @@ class HasFormationCollectionService
 
     /**
      * @param HasFormationCollectionInterface $object
-     * @param array $data
-     * @return HasFormationCollectionInterface
-     */
-    public function updateFormations(HasFormationCollectionInterface $object, $data): HasFormationCollectionInterface
-    {
-        $formationIds = [];
-        if (isset($data['formations'])) $formationIds = $data['formations'];
-
-        //Suppression des formations plus présentes
-        /** @var FormationElement $formationElement */
-        foreach ($object->getFormationCollection() as $formationElement) {
-            if (!in_array($formationElement->getFormation()->getId(), $formationIds)) {
-                $this->getFormationElementService()->historise($formationElement);
-            }
-        }
-        //Ajout des formations plus présentes
-        foreach ($formationIds as $formationId) {
-            $formation = $this->getFormationService()->getFormation($formationId);
-            if ($formation !== null and !$object->hasFormation($formation)) {
-                $formationElement = new FormationElement();
-                $formationElement->setFormation($formation);
-                //TODO ajouter les autres elements : commentaires / validations tout çà
-                $this->getFormationElementService()->create($formationElement);
-                $object->getFormationCollection()->add($formationElement);
-                $this->updateObject($object);
-            }
-        }
-        return $object;
-    }
-
-    /**
-     * @param HasFormationCollectionInterface $object
      * @param FormationElement $formationElement
      * @return HasFormationCollectionInterface
      */

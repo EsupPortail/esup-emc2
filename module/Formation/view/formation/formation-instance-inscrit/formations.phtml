@@ -51,7 +51,7 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
                 <br/>
             </div>
             <div class="col-md-5">
-                <!-- Si une attstation est déposée alors elle surplante le mécanisme de base -->
+                <!-- Si une attestation est déposée alors elle prévaut sur le mécanisme de base -->
                 <?php $attestations = $inscription->getFichiersByNatureCode(FichierNature::INSCRIPTION_ATTESTATION); ?>
                 <?php if (!empty($attestations)) : ?>
                     <ul>

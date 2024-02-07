@@ -8,12 +8,9 @@ use Laminas\Hydrator\HydratorInterface;
 
 class DemandeExterneHydrator implements HydratorInterface {
 
-    /**
-     * @param DemandeExterne $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var DemandeExterne $object */
         $data = [
             'libelle' => $object->getLibelle(),
             'organisme' => $object->getOrganisme(),
@@ -33,11 +30,6 @@ class DemandeExterneHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param DemandeExterne $object
-     * @return DemandeExterne
-     */
     public function hydrate(array $data, object $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
@@ -53,6 +45,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $priseEnCharge = isset($data['prise-en-charge'])??true;
         $cofinanceur = (isset($data['cofinanceur']) AND trim($data['cofinanceur']) !== '')?trim($data['cofinanceur']):null;
 
+        /** @var DemandeExterne $object */
         $object->setLibelle($libelle);
         $object->setOrganisme($organisme);
         $object->setContact($contact);

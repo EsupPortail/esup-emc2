@@ -310,7 +310,7 @@ return [
                                     ],
                                 ],
                             ],
-                            /** autre * */
+                            /** Autre * */
                             'renseigner-frais' => [
                                 'type' => Segment::class,
                                 'options' => [

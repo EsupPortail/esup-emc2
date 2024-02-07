@@ -2,21 +2,19 @@
 
 namespace Formation\Service\Formation;
 
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class FormationService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,12 +24,8 @@ class FormationService
      */
     public function create(Formation $formation): Formation
     {
-        try {
-            $this->getEntityManager()->persist($formation);
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($formation);
+        $this->getObjectManager()->flush($formation);
         return $formation;
     }
 
@@ -41,11 +35,7 @@ class FormationService
      */
     public function update(Formation $formation): Formation
     {
-        try {
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($formation);
         return $formation;
     }
 
@@ -55,12 +45,8 @@ class FormationService
      */
     public function historise(Formation $formation): Formation
     {
-        try {
-            $formation->historiser();
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $formation->historiser();
+        $this->getObjectManager()->flush($formation);
         return $formation;
     }
 
@@ -70,12 +56,8 @@ class FormationService
      */
     public function restore(Formation $formation): Formation
     {
-        try {
-            $formation->dehistoriser();
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $formation->dehistoriser();
+        $this->getObjectManager()->flush($formation);
         return $formation;
     }
 
@@ -85,12 +67,8 @@ class FormationService
      */
     public function delete(Formation $formation): Formation
     {
-        try {
-            $this->getEntityManager()->remove($formation);
-            $this->getEntityManager()->flush($formation);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($formation);
+        $this->getObjectManager()->flush($formation);
         return $formation;
     }
 
@@ -101,25 +79,17 @@ class FormationService
      */
     public function createQueryBuilder(): QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Formation::class)->createQueryBuilder('formation')
-                ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
-                ->addSelect('axe')->leftJoin('groupe.axe', 'axe')
-                ->addSelect('competence')->leftJoin('formation.competences', 'competence')
-                ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
-                ->addSelect('application')->leftJoin('formation.applications', 'application')
-                ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formation::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Formation::class)->createQueryBuilder('formation')
+            ->addSelect('groupe')->leftJoin('formation.groupe', 'groupe')
+            ->addSelect('axe')->leftJoin('groupe.axe', 'axe')
+            ->addSelect('competence')->leftJoin('formation.competences', 'competence')
+            ->addSelect('niveau_c')->leftJoin('competence.niveau', 'niveau_c')
+            ->addSelect('application')->leftJoin('formation.applications', 'application')
+            ->addSelect('niveau_a')->leftJoin('application.niveau', 'niveau_a');
         return $qb;
     }
 
-    /**
-     * @param string $champ
-     * @param string $ordre
-     * @return Formation[]
-     */
+    /** @return Formation[] */
     public function getFormations(string $champ = 'libelle', string $ordre = 'ASC', bool $histo=false): array
     {
         $qb = $this->createQueryBuilder()
@@ -268,21 +238,6 @@ class FormationService
         return $options;
     }
 
-    /**
-     * @param Formation $formation
-     * @param array $data
-     * @return Formation
-     */
-    public function updateLibelle(Formation $formation, array $data): Formation
-    {
-        /** @var string $libelle */
-        $libelle = null;
-        if (isset($data['libelle'])) $libelle = $data['libelle'];
-        $formation->setLibelle($libelle);
-        $this->update($formation);
-        return $formation;
-    }
-
     public function getFormationByLibelle(?string $libelle, ?FormationGroupe $theme = null, ?Axe $axe = null): ?Formation
     {
         if ($libelle === null) return null;
@@ -291,7 +246,7 @@ class FormationService
             ->andWhere('formation.libelle = :libelle') ->setParameter('libelle', $libelle)
         ;
         if ($theme) $qb = $qb->andWhere('formation.groupe = :groupe')->setParameter('groupe', $theme);
-//        if ($axe) $qb = $qb->andWhere('groupe.axe = :axe')->setParameter('axe', $axe);
+        if ($axe) $qb = $qb->andWhere('groupe.axe = :axe')->setParameter('axe', $axe);
 
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
@@ -324,7 +279,6 @@ class FormationService
     public function formatFormationtJSON(array $formations): array
     {
         $result = [];
-        /** @var Formation[] $formations */
         foreach ($formations as $formation) {
             $groupe = $formation->getGroupe();
             $result[] = array(
@@ -344,13 +298,9 @@ class FormationService
      */
     public function findFormateurByTerm(string $texte): array
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-                ->andWhere("LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search")
-                ->setParameter('search', '%' . strtolower($texte) . '%');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formateur::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+            ->andWhere("LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search")
+            ->setParameter('search', '%' . strtolower($texte) . '%');
         $result = $qb->getQuery()->getResult();
 
         $data = [];

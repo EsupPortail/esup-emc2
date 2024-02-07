@@ -2,6 +2,7 @@
 
 namespace Formation;
 
+use Laminas\Config\Config;
 use Laminas\Config\Factory as ConfigFactory;
 use Laminas\Loader\StandardAutoloader;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -13,7 +14,7 @@ use Unicaen\Console\Controller\AbstractConsoleController;
 
 class Module
 {
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $e): void
     {
         $application = $e->getApplication();
         $eventManager = $application->getEventManager();
@@ -34,7 +35,7 @@ class Module
         }, 100);
     }
 
-    public function getConfig()
+    public function getConfig(): array|Config
     {
         $configInit = [
             __DIR__ . '/config/module.config.php'

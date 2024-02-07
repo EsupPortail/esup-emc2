@@ -24,7 +24,7 @@ class FormateurServiceFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new FormateurService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

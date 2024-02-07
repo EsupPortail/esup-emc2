@@ -2,21 +2,17 @@
 
 namespace Formation\Service\FormationGroupe;
 
-use Application\Service\RendererAwareTrait;
-use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\FormationGroupe;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class FormationGroupeService
 {
-    use EntityManagerAwareTrait;
-    use RendererAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -26,12 +22,8 @@ class FormationGroupeService
      */
     public function create(FormationGroupe $groupe) : FormationGroupe
     {
-        try {
-            $this->getEntityManager()->persist($groupe);
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($groupe);
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
@@ -41,11 +33,7 @@ class FormationGroupeService
      */
     public function update(FormationGroupe $groupe) : FormationGroupe
     {
-        try {
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
@@ -55,12 +43,8 @@ class FormationGroupeService
      */
     public function historise(FormationGroupe $groupe) : FormationGroupe
     {
-        try {
-            $groupe->historiser();
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $groupe->historiser();
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
@@ -70,12 +54,8 @@ class FormationGroupeService
      */
     public function restore(FormationGroupe $groupe) : FormationGroupe
     {
-        try {
-            $groupe->dehistoriser();
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $groupe->dehistoriser();
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
@@ -85,12 +65,8 @@ class FormationGroupeService
      */
     public function delete(FormationGroupe $groupe) : FormationGroupe
     {
-        try {
-            $this->getEntityManager()->remove($groupe);
-            $this->getEntityManager()->flush($groupe);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($groupe);
+        $this->getObjectManager()->flush($groupe);
         return $groupe;
     }
 
@@ -101,13 +77,8 @@ class FormationGroupeService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
-                ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . FormationGroupe::class . "]", 0, $e);
-
-        }
+        $qb = $this->getObjectManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
+            ->addSelect('formation')->leftJoin('groupe.formations', 'formation');
         return $qb;
     }
 
@@ -198,13 +169,9 @@ class FormationGroupeService
 
     public function getFormationGroupeBySource(string $source, $id) : ? FormationGroupe
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
-                ->andWhere('groupe.source = :source')->setParameter('source', $source)
-                ->andWhere('groupe.idSource = :id')->setParameter('id', $id);
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la creation du querybuilder",0,$e);
-        }
+        $qb = $this->getObjectManager()->getRepository(FormationGroupe::class)->createQueryBuilder('groupe')
+            ->andWhere('groupe.source = :source')->setParameter('source', $source)
+            ->andWhere('groupe.idSource = :id')->setParameter('id', $id);
         try {
             $result = $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

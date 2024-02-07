@@ -26,7 +26,7 @@ class StagiaireServiceFactory {
         $agentService = $container->get(AgentService::class);
 
         $service = new StagiaireService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
         return $service;
     }

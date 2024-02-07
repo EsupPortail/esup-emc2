@@ -10,12 +10,9 @@ use Laminas\Hydrator\HydratorInterface;
 class EnqueteQuestionHydrator implements HydratorInterface {
     use EnqueteCategorieServiceAwareTrait;
 
-    /**
-     * @param object|EnqueteQuestion $object
-     * @return array
-     */
     public function extract(object $object) : array
     {
+        /** @var EnqueteQuestion $object */
         $data = [
             'libelle' => $object->getLibelle(),
             'description' => $object->getDescription(),
@@ -25,11 +22,6 @@ class EnqueteQuestionHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param EnqueteQuestion $object
-     * @return EnqueteQuestion
-     */
     public function hydrate(array $data, $object): object
     {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
@@ -38,6 +30,7 @@ class EnqueteQuestionHydrator implements HydratorInterface {
         $categorie = (isset($data['categorie']))?$this->getEnqueteCategorieService()->getEnqueteCateorie($data['categorie']):null;
         $ordre = (isset($data['ordre']))?trim($data['ordre']):null;
 
+        /** @var EnqueteQuestion $object */
         $object->setLibelle($libelle);
         $object->setDescription($description);
         $object->setCategorie($categorie);

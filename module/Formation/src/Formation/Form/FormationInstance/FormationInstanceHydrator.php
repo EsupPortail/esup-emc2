@@ -8,12 +8,9 @@ use Laminas\Hydrator\HydratorInterface;
 class FormationInstanceHydrator implements HydratorInterface
 {
 
-    /**
-     * @param FormationInstance $object
-     * @return array
-     */
     public function extract($object) : array
     {
+        /** @var FormationInstance $object */
         $data = [
             'description' => ($object AND $object->getComplement()) ?: null,
             'principale' => ($object AND $object->getNbPlacePrincipale()) ?$object->getNbPlacePrincipale(): 0,
@@ -27,11 +24,6 @@ class FormationInstanceHydrator implements HydratorInterface
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param FormationInstance $object
-     * @return FormationInstance
-     */
     public function hydrate(array $data, $object): object
     {
         $description = (isset($data['description']) and trim($data['description']) !== "") ? trim($data['description']) : null;
@@ -43,6 +35,7 @@ class FormationInstanceHydrator implements HydratorInterface
         $coutHt = (isset($data['cout_ht']) and trim($data['cout_ht']) !== "") ? trim($data['cout_ht']) : null;
         $coutTtc = (isset($data['cout_ttc']) and trim($data['cout_ttc']) !== "") ? trim($data['cout_ttc']) : null;
 
+        /** @var FormationInstance $object */
         $object->setComplement($description);
         $object->setNbPlacePrincipale($principale);
         $object->setNbPlaceComplementaire($complementaire);

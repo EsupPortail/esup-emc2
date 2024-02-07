@@ -15,7 +15,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     $structureF = new SearchAndSelect('formation');
     $structureF
         ->setAutocompleteSource($this->url('formation/rechercher-formation'))
-        ->setSelectionRequired(true)
+        ->setSelectionRequired()
         ->setAttributes([
             'id' => 'formation',
             'placeholder' => "Sélectionner une formation",

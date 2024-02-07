@@ -3,10 +3,11 @@
 use Formation\Entity\Db\EnqueteCategorie;
 use Formation\Entity\Db\EnqueteQuestion;
 use Formation\Entity\Db\EnqueteReponse;
+use Formation\Entity\Db\FormationInstance;
 
 /**
  * @see \Formation\Controller\EnqueteReponseController::afficherResultatsAction()
- * @var \Formation\Entity\Db\FormationInstance $session
+ * @var FormationInstance $session
  * @var EnqueteCategorie[] $categories
  * @var array $array;
  * @var array $histogramme;
@@ -28,6 +29,7 @@ $nbReponses = count($array);
 ?>
 <!-- todo remplacer -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js">
+// <script src="./vendor/chart-2.9.4/Chart.bundle.js">
 </script>
 
 <div class="row">
@@ -102,8 +104,8 @@ $nbReponses = count($array);
             <div class="col-md-6">
                 <canvas id="myChart_<?php echo $question->getId(); ?>" width="400" height="200"></canvas>
                 <script>
-            var ctx = document.getElementById('myChart_<?php echo $question->getId(); ?>').getContext('2d');
-            var myChart = new Chart(ctx, {
+            let ctx = document.getElementById('myChart_<?php echo $question->getId(); ?>').getContext('2d');
+            let myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: [<?php foreach (EnqueteReponse::NIVEAUX as $niveau) echo "'".$niveau."',"; ?>],
@@ -196,7 +198,7 @@ $nbReponses = count($array);
         console.log(csv);
 
         // Create link and download
-        var link = document.createElement('a');
+        let link = document.createElement('a');
         link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
         link.setAttribute('download', filename);
         link.style.visibility = 'hidden';

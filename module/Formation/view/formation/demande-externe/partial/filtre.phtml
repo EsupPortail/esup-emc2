@@ -26,7 +26,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                                 $agentF = new SearchAndSelect('agent', ['label' => "Agent :"]);
                                 $agentF
                                     ->setAutocompleteSource($this->url('formation/demande-externe/rechercher-agent'))
-                                    ->setSelectionRequired(true)
+                                    ->setSelectionRequired()
                                     ->setAttributes([
                                         'id' => 'agent',
                                         'placeholder' => "Nom de l'agent ...",
@@ -40,7 +40,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $organismeF = new SearchAndSelect('organisme', ['label' => "Organisme :"]);
                             $organismeF
                                 ->setAutocompleteSource($this->url('formation/demande-externe/rechercher-organisme'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'organisme',
                                     'placeholder' => "Nom de l'organisme ...",

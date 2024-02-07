@@ -23,7 +23,7 @@ class FormationElementServiceFactory {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
 
         $service = new FormationElementService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

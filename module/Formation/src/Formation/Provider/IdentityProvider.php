@@ -23,10 +23,9 @@ class IdentityProvider extends AbstractIdentityProvider
      */
     public function computeUsersAutomatiques(string $code): ?array
     {
-        switch ($code) {
-            case FormationRoles::STAGIAIRE_EXTERNE :
-                $user = $this->getStagiaireExterneService()->getUsersInStagiaireExterne();
-                return $user;
+        if ($code == FormationRoles::STAGIAIRE_EXTERNE) {
+            $user = $this->getStagiaireExterneService()->getUsersInStagiaireExterne();
+            return $user;
         }
         return null;
     }

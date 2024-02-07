@@ -8,14 +8,12 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class NotificationFormationsOuvertesService extends EvenementService
 {
-    use EntityManagerAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use NotificationServiceAwareTrait;
 

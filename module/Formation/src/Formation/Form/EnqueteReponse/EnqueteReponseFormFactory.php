@@ -26,7 +26,7 @@ class EnqueteReponseFormFactory {
         $hydrator = $container->get('HydratorManager')->get(EnqueteReponseHydrator::class);
 
         $form = new EnqueteReponseForm();
-        $form->setEntityManager($entityManager);
+        $form->setObjectManager($entityManager);
         $form->setHydrator($hydrator);
         return $form;
     }

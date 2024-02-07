@@ -28,7 +28,7 @@ $current = ((int) (new DateTime())->format('Y'));
                         $actionF = new SearchAndSelect('formation', ['label' => "Action de formation :"]);
                         $actionF
                             ->setAutocompleteSource($this->url('formation/rechercher-formation'))
-                            ->setSelectionRequired(true)
+                            ->setSelectionRequired()
                             ->setAttributes([
                                 'id' => 'formation',
                                 'placeholder' => "Libelle de l'action de formation ...",
@@ -42,7 +42,7 @@ $current = ((int) (new DateTime())->format('Y'));
                         $formateurF = new SearchAndSelect('formateur', ['label' => "Formateur :"]);
                         $formateurF
                             ->setAutocompleteSource($this->url('formation/rechercher-formateur'))
-                            ->setSelectionRequired(true)
+                            ->setSelectionRequired()
                             ->setAttributes([
                                 'id' => 'formateur',
                                 'placeholder' => "Nom du formateur ...",

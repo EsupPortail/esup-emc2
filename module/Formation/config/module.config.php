@@ -137,17 +137,6 @@ return [
                         'resource' => 'controller/UnicaenApp\Controller\Application:contact',
                         'order'    => 1002,
                     ],
-//                    'plan'                     => [
-//                        'label'    => _("Plan de navigation"),
-//                        'title'    => _("Plan de navigation au sein de l'application"),
-//                        'route'    => 'plan',
-//                        'class'    => 'plan',
-//                        'visible'  => false,
-//                        'footer'   => true, // propriété maison pour inclure cette page dans le menu de pied de page
-//                        'sitemap'  => true, // propriété maison pour inclure cette page dans le plan
-//                        'resource' => 'controller/UnicaenApp\Controller\Application:plan',
-//                        'order'    => 1003,
-//                    ],
                     'mentions-legales'         => [
                         'label'    => _("Mentions légales"),
                         'title'    => _("Mentions légales"),

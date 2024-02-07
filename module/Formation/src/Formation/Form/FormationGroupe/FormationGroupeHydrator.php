@@ -22,11 +22,6 @@ class FormationGroupeHydrator implements HydratorInterface
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param FormationGroupe $object
-     * @return FormationGroupe
-     */
     public function hydrate(array $data, $object) : object
     {
         $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '') ? trim($data['libelle']) : null;

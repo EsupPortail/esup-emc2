@@ -21,7 +21,7 @@ class InscriptionForm extends Form {
         $session = new SearchAndSelect('session', ['label' => "Session de formation * :"]);
         $session
             ->setAutocompleteSource($this->sessionUrl)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'session',
                 'placeholder' => "Session de formation ...",
@@ -47,7 +47,7 @@ class InscriptionForm extends Form {
         $agent = new SearchAndSelect('agent', ['label' => "Agent associé·e à l'inscription * :"]);
         $agent
             ->setAutocompleteSource($this->agentUrl)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'agent',
                 'placeholder' => "Dénomination de l'agent ...",
@@ -57,7 +57,7 @@ class InscriptionForm extends Form {
         $agent = new SearchAndSelect('stagiaire', ['label' => "Stagiaire associé·e à l'inscription * :"]);
         $agent
             ->setAutocompleteSource($this->stagiaireUrl)
-            ->setSelectionRequired(true)
+            ->setSelectionRequired()
             ->setAttributes([
                 'id' => 'stagiaire',
                 'placeholder' => "Dénomination du stagiaire ...",

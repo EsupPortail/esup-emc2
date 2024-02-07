@@ -3,18 +3,18 @@
 namespace Formation\Service\Evenement;
 
 use DateTime;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Exception;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
 class RappelAgentAvantFormationService extends EvenementService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use NotificationServiceAwareTrait;
 
     /**
@@ -47,7 +47,7 @@ class RappelAgentAvantFormationService extends EvenementService
 
         try {
             /** @var FormationInstance|null $instance */
-            $instance = $this->getEntityManager()->getRepository(FormationInstance::class)->find($parametres['instance']);
+            $instance = $this->getObjectManager()->getRepository(FormationInstance::class)->find($parametres['instance']);
             if ($instance !== null) $this->getNotificationService()->triggerRappelAgentAvantFormation($instance);
         } catch(Exception $e) {
             $evenement->setLog($e->getMessage());

@@ -1,6 +1,7 @@
 <?php
 
 use Formation\Entity\Db\PlanDeFormation;
+use Formation\Provider\Privilege\PlanformationPrivileges;
 
 /**
  * @see \Formation\Controller\PlanDeFormationController::indexAction()
@@ -9,11 +10,10 @@ use Formation\Entity\Db\PlanDeFormation;
 
 $this->headTitle("Plans de formation");
 
-//todo privilege et tout
-$canAfficher = true;
-$canAjouter = true;
-$canEditer = true;
-$canSupprimer = true;
+$canAfficher    = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_AFFICHER));
+$canAjouter     = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_AJOUTER));
+$canEditer      = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_MODIFIER));
+$canSupprimer   = $this->isAllowed(PlanformationPrivileges::getResourceId(PlanformationPrivileges::PLANFORMATION_SUPPRIMER));
 
 ?>
 

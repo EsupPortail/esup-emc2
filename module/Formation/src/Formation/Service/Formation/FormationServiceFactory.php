@@ -25,7 +25,7 @@ class FormationServiceFactory
 
         /** @var FormationService $service */
         $service = new FormationService();
-        $service->setEntityManager($entityManager);
+        $service->setObjectManager($entityManager);
         return $service;
     }
 }

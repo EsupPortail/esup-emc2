@@ -30,7 +30,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $agentF = new SearchAndSelect('agent');
                             $agentF
                                 ->setAutocompleteSource($this->url('agent/rechercher'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'agent',
                                     'placeholder' => "Sélectionner un·e agent·e",
@@ -45,7 +45,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             $structureF = new SearchAndSelect('structure');
                             $structureF
                                 ->setAutocompleteSource($this->url('structure/rechercher'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'structure',
                                     'placeholder' => "Sélectionner une structure",
@@ -54,7 +54,7 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                             <?php echo $this->formControlGroup($structureF); ?>
                         </div>
                         <div class="col-md-4">
-                            <label for="mobilite">Action de formation</label>
+                            <label for="formation">Action de formation</label>
                             <input id="formation" name="formation">
                         </div>
                         <div class="col-md-4">

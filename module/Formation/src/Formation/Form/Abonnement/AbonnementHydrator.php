@@ -12,12 +12,9 @@ class AbonnementHydrator implements HydratorInterface {
     use AgentServiceAwareTrait;
     use FormationServiceAwareTrait;
 
-    /**
-     * @param FormationAbonnement $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var FormationAbonnement $object */
         $data = [
             'agent' =>
                 ($object AND $object->getAgent()) ? [
@@ -29,16 +26,12 @@ class AbonnementHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param FormationAbonnement $object
-     * @return FormationAbonnement
-     */
     public function hydrate(array $data, object $object): object
     {
         $agent = (isset($data['agent']) AND isset($data['agent']['id']))?$this->getAgentService()->getAgent($data['agent']['id']):null;
         $formation = (isset($data['formation']))?$this->getFormationService()->getFormation($data['formation']):null;
 
+        /** @var FormationAbonnement $object */
         $object->setAgent($agent);
         $object->setFormation($formation);
         $object->setDateInscription(new DateTime());

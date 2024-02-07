@@ -2,9 +2,9 @@
 
 namespace Formation\Form\EnqueteReponse;
 
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\EnqueteQuestion;
 use Formation\Entity\Db\EnqueteReponse;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Textarea;
@@ -13,11 +13,11 @@ use Laminas\InputFilter\Factory;
 
 class EnqueteReponseForm extends Form
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     public function init(): void
     {
-        $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
+        $questions = $this->getObjectManager()->getRepository(EnqueteQuestion::class)->findAll();
         $questions = array_filter($questions, function (EnqueteQuestion $a) { return $a->estNonHistorise();});
         usort($questions, function(EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() > $b->getOrdre();});
 

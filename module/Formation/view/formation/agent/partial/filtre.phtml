@@ -28,7 +28,7 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
                             $structureF = new SearchAndSelect('structure-filtre', ['label' => "Structure :"]);
                             $structureF
                                 ->setAutocompleteSource($this->url('structure/rechercher'))
-                                ->setSelectionRequired(true)
+                                ->setSelectionRequired()
                                 ->setAttributes([
                                     'id' => 'structure-filtre',
                                     'placeholder' => "Nom de la structure ...",

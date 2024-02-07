@@ -2,18 +2,16 @@
 
 namespace Formation\Service\Formateur;
 
-use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formateur;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 
 class FormateurService
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -23,12 +21,8 @@ class FormateurService
      */
     public function create(Formateur $formateur) : Formateur
     {
-        try {
-            $this->getEntityManager()->persist($formateur);
-            $this->getEntityManager()->flush($formateur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->persist($formateur);
+        $this->getObjectManager()->flush($formateur);
         return $formateur;
     }
 
@@ -38,11 +32,7 @@ class FormateurService
      */
     public function update(Formateur $formateur) : Formateur
     {
-        try {
-            $this->getEntityManager()->flush($formateur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->flush($formateur);
         return $formateur;
     }
 
@@ -52,12 +42,8 @@ class FormateurService
      */
     public function historise(Formateur $formateur) : Formateur
     {
-        try {
-            $formateur->historiser();
-            $this->getEntityManager()->flush($formateur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $formateur->historiser();
+        $this->getObjectManager()->flush($formateur);
         return $formateur;
     }
 
@@ -67,12 +53,8 @@ class FormateurService
      */
     public function restore(Formateur $formateur) : Formateur
     {
-        try {
-            $formateur->dehistoriser();
-            $this->getEntityManager()->flush($formateur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $formateur->dehistoriser();
+        $this->getObjectManager()->flush($formateur);
         return $formateur;
     }
 
@@ -82,12 +64,8 @@ class FormateurService
      */
     public function delete(Formateur $formateur) : Formateur
     {
-        try {
-            $this->getEntityManager()->remove($formateur);
-            $this->getEntityManager()->flush($formateur);
-        } catch (ORMException $e) {
-            throw new RuntimeException("Un problème est survenue lors de l'enregistrement en BD.", $e);
-        }
+        $this->getObjectManager()->remove($formateur);
+        $this->getObjectManager()->flush($formateur);
         return $formateur;
     }
 
@@ -98,12 +76,8 @@ class FormateurService
      */
     public function createQueryBuilder() : QueryBuilder
     {
-        try {
-            $qb = $this->getEntityManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-                ->addSelect('finstance')->join('formateur.instance', 'finstance');
-        } catch (NotSupported $e) {
-            throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [" . Formateur::class . "]", 0, $e);
-        }
+        $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+            ->addSelect('finstance')->join('formateur.instance', 'finstance');
         return $qb;
     }
 

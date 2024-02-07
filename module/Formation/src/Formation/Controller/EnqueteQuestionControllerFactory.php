@@ -49,7 +49,7 @@ class EnqueteQuestionControllerFactory {
         $enqueteReponseForm = $container->get('FormElementManager')->get(EnqueteReponseForm::class);
 
         $controller = new EnqueteQuestionController();
-        $controller->setEntityManager($entityManager);
+        $controller->setObjectManager($entityManager);
         $controller->setEnqueteCategorieService($enqueteCategorieService);
         $controller->setEnqueteQuestionService($enqueteQuestionService);
         $controller->setEnqueteReponseService($enqueteReponseService);

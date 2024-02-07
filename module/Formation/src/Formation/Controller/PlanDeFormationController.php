@@ -56,6 +56,7 @@ class PlanDeFormationController extends AbstractActionController
 
         $axes = [];
 
+
         $formations = $planDeFormation->getFormations();
         $sansgroupe = new FormationGroupe();
         $sansgroupe->setLibelle("Formations sans groupe");
@@ -323,6 +324,8 @@ class PlanDeFormationController extends AbstractActionController
 
     public function importerDepuisCsvAction(): ViewModel
     {
+        $warning = []; $title = "Importation depuis un CSV";
+
         $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
         if ($plan === null) $plan = new PlanDeFormation();
 
@@ -432,9 +435,10 @@ class PlanDeFormationController extends AbstractActionController
                     }
                 }
 
-                //Création & ajout
+                //Création et ajout
                 if ($mode === 'import' && empty($error)) {
                     foreach ($array as $line) {
+                        $domaine = null;
 
                         $axeLibelle = trim($line[$axeColumn]);
                         if (!isset($axes[$axeLibelle])) {
@@ -504,7 +508,6 @@ class PlanDeFormationController extends AbstractActionController
                 if ($mode === 'import') {
                     $title = "Importation de chaînes hiérarchiques (Importation)";
                 }
-                $warning = [];
                 if (!empty($nouveauxAxes)) {
                     $warningAxe = "Nouveau·x axe·s : <ul>";
                     foreach ($nouveauxAxes as $nouveauAxe) $warningAxe .= "<li>" . $nouveauAxe . "</li>";

@@ -3,13 +3,15 @@
 namespace Formation\Service\Emargement;
 
 use Formation\Entity\Db\Seance;
+use Mpdf\MpdfException;
+use RuntimeException;
 use UnicaenPdf\Exporter\PdfExporter as PdfExporter;
 use Laminas\View\Renderer\PhpRenderer;
 use Laminas\View\Resolver\TemplatePathStack;
 
 class EmargementPdfExporter extends PdfExporter
 {
-    private $vars;
+    private array $vars;
 
     public function setVars(array $vars) : EmargementPdfExporter
     {
@@ -42,7 +44,7 @@ class EmargementPdfExporter extends PdfExporter
      * @param null $memoryLimit
      * @return string
      */
-    public function exportAll(array $journees, $filename = null, $destination = self::DESTINATION_BROWSER, $memoryLimit = null)
+    public function exportAll(array $journees, $filename = null, string $destination = self::DESTINATION_BROWSER, $memoryLimit = null): string
     {
         $first = true;
         $this->setHeaderScript('empty.phtml');
@@ -52,6 +54,11 @@ class EmargementPdfExporter extends PdfExporter
             $this->addBodyScript('emargement.phtml', !$first, $this->vars);
             $first = false;
         }
-        return PdfExporter::export($filename, $destination, $memoryLimit);
+
+        try {
+            return PdfExporter::export($filename, $destination, $memoryLimit);
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors de la création du PDF",0,$e);
+        }
     }
 }

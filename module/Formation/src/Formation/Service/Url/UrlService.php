@@ -8,6 +8,7 @@ use Formation\Entity\Db\FormationInstance;
 
 class UrlService extends \Application\Service\Url\UrlService
 {
+    /** @noinspection PhpUnused :: macro */
     public function getMesFormationsUrl() : string
     {
         /** @see IndexController::indexAction() */
@@ -15,6 +16,7 @@ class UrlService extends \Application\Service\Url\UrlService
         return $url;
     }
 
+    /** @noinspection PhpUnused :: macro */
     public function getUrlSessionAfficher() : string
     {
         /** @var FormationInstance $instance */

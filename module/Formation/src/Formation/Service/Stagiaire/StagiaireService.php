@@ -3,11 +3,13 @@
 namespace Formation\Service\Stagiaire;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Doctrine\ORM\NonUniqueResultException;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\LAGAFStagiaire;
-use UnicaenApp\Service\EntityManagerAwareTrait;
+use RuntimeException;
 
 class StagiaireService {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use AgentServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
@@ -18,8 +20,8 @@ class StagiaireService {
      */
 
     public function create(LAGAFStagiaire $stagiaire) : LAGAFStagiaire {
-        $this->getEntityManager()->persist($stagiaire);
-        $this->getEntityManager()->flush($stagiaire);
+        $this->getObjectManager()->persist($stagiaire);
+        $this->getObjectManager()->flush($stagiaire);
         return $stagiaire;
     }
 
@@ -29,7 +31,7 @@ class StagiaireService {
      */
 
     public function update(LAGAFStagiaire $stagiaire) : LAGAFStagiaire {
-        $this->getEntityManager()->flush($stagiaire);
+        $this->getObjectManager()->flush($stagiaire);
         return $stagiaire;
     }
 
@@ -39,8 +41,8 @@ class StagiaireService {
     */
 
     public function delete(LAGAFStagiaire $stagiaire) : LAGAFStagiaire {
-        $this->getEntityManager()->remove($stagiaire);
-        $this->getEntityManager()->flush($stagiaire);
+        $this->getObjectManager()->remove($stagiaire);
+        $this->getObjectManager()->flush($stagiaire);
         return $stagiaire;
     }
 
@@ -49,16 +51,20 @@ class StagiaireService {
      */
     public function getStagiaires() : array
     {
-        $qb = $this->getEntityManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaires');
+        $qb = $this->getObjectManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaires');
         $result = $qb->getQuery()->getResult();
         return $result;
     }
 
     public function getStagiaire(int $id) : LAGAFStagiaire
     {
-        $qb = $this->getEntityManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaire')
+        $qb = $this->getObjectManager()->getRepository(LAGAFStagiaire::class)->createQueryBuilder('stagiaire')
             ->andWhere('stagiaire.nStagiaire = :id')->setParameter('id', $id);
-        $result = $qb->getQuery()->getOneOrNullResult();
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new RuntimeException("Plusieurs StagiaireLagaf avec le mêm id [".$id."]",0,$e);
+        }
         return $result;
     }
 }

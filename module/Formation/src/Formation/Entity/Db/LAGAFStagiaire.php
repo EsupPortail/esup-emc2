@@ -4,18 +4,12 @@ namespace Formation\Entity\Db;
 
 class LAGAFStagiaire {
 
-    /** @var int */
-    private $nStagiaire;
-    /** @var string */
-    private $nom;
-    /** @var string */
-    private $prenom;
-    /** @var int */
-    private $annee;
-    /** @var string */
-    private $harp_id;
-    /** @var string */
-    private $octopus_id;
+    private ?int $nStagiaire = null;
+    private ?string $nom = null;
+    private ?string $prenom = null;
+    private ?int $annee = null;
+    private ?string $harp_id = null;
+    private ?string $octopus_id = null;
 
 
     /**

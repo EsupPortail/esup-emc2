@@ -4,7 +4,6 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
-use Formation\Service\FormationInstanceInscrit\FormationInstanceInscritService;
 use Formation\Service\Inscription\InscriptionService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;

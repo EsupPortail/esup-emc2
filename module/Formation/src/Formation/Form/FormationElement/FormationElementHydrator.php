@@ -9,12 +9,9 @@ use Laminas\Hydrator\HydratorInterface;
 class FormationElementHydrator implements HydratorInterface {
     use FormationServiceAwareTrait;
 
-    /**
-     * @param FormationElement $object
-     * @return array
-     */
     public function extract($object): array
     {
+        /** @var  FormationElement $object */
         $commentaires = $object->getCommentaire();
         $niveau = null;
         $annee = null;
@@ -32,11 +29,6 @@ class FormationElementHydrator implements HydratorInterface {
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param FormationElement $object
-     * @return FormationElement
-     */
     public function hydrate(array $data, $object): object
     {
         $formation = isset($data['formation'])?$this->getFormationService()->getFormation($data['formation']):null;
@@ -44,6 +36,7 @@ class FormationElementHydrator implements HydratorInterface {
         $annee= (isset($data['annee']) AND $data['annee'] !== "")? ($data['annee']):null;
         $commentaire = $annee . " - " . $niveau;
 
+        /** @var  FormationElement $object */
         $object->setFormation($formation);
         $object->setCommentaire($commentaire);
 

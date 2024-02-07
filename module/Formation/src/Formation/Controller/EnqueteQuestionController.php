@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\EnqueteCategorie;
 use Formation\Entity\Db\EnqueteQuestion;
 use Formation\Entity\Db\EnqueteReponse;
@@ -18,11 +19,10 @@ use Formation\Service\Inscription\InscriptionServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 
 class EnqueteQuestionController extends AbstractActionController
 {
-    use EntityManagerAwareTrait;
+    use ProvidesObjectManager;
     use EnqueteCategorieServiceAwareTrait;
     use EnqueteQuestionServiceAwareTrait;
     use EnqueteReponseServiceAwareTrait;
@@ -38,7 +38,7 @@ class EnqueteQuestionController extends AbstractActionController
     {
         $session = $this->getInscriptionService()->getRequestedInscription($this);
 
-        $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
+        $questions = $this->getObjectManager()->getRepository(EnqueteQuestion::class)->findAll();
         $questions = array_filter($questions, function (EnqueteQuestion $a) {
             return $a->estNonHistorise();
         });
@@ -46,7 +46,7 @@ class EnqueteQuestionController extends AbstractActionController
             return $a->getOrdre() > $b->getOrdre();
         });
 
-        $reponses = $this->getEntityManager()->getRepository(EnqueteReponse::class)->findAll();
+        $reponses = $this->getObjectManager()->getRepository(EnqueteReponse::class)->findAll();
 
         //todo exploiter le filtre pour réduire
         if ($session) $reponses = array_filter($reponses, function (EnqueteReponse $r) use ($session) {
@@ -85,7 +85,7 @@ class EnqueteQuestionController extends AbstractActionController
             }
         }
 
-        $categories = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->findAll();
+        $categories = $this->getObjectManager()->getRepository(EnqueteCategorie::class)->findAll();
         return new ViewModel([
             "array" => $array,
             "histogramme" => $histogramme,
@@ -99,8 +99,8 @@ class EnqueteQuestionController extends AbstractActionController
 
     public function afficherQuestionsAction(): ViewModel
     {
-        $questions = $this->getEntityManager()->getRepository(EnqueteQuestion::class)->findAll();
-        $categories = $this->getEntityManager()->getRepository(EnqueteCategorie::class)->findAll();
+        $questions = $this->getObjectManager()->getRepository(EnqueteQuestion::class)->findAll();
+        $categories = $this->getObjectManager()->getRepository(EnqueteCategorie::class)->findAll();
 
         return new ViewModel([
             'categories' => $categories,
