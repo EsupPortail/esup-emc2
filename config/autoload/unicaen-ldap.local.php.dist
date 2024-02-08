@@ -3,6 +3,9 @@
 return [
     'unicaen-ldap' => [
         'host' => 'ldap.XXXX.XX',
+        'port' => 389,
+//        'host' => 'ldaps://ldap.XXXX.XX',
+//        'port' => 636,
         'username' => "uid=XXXX,ou=system,dc=XXXXX,dc=fr",
         'password' => "XXXX",
         'baseDn' => "ou=people,dc=XXXXX,dc=fr",
@@ -10,7 +13,6 @@ return [
         //dé-commenter la ligne correspondant à votre situation
 //        'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
 //        'accountFilterFormat' => "(&(objectClass=posixAccount)(uid=%s))",
-        'port' => 389,
     ],
 
     'unicaen-app' => [
@@ -18,13 +20,15 @@ return [
             'connection' => [
                 'default' => [
                     'params' => [
-                        'host' => 'ldap.unicaen.fr',
+                        'host' => 'ldap.XXXX.fr',
+                        'port' => 389,
+//                        'host' => 'ldaps://ldap.XXXX.fr',
+//                        'port' => 636,
                         'username' => "uid=XXX,ou=system,dc=XXX,dc=fr",
                         'password' => "XXXX",
                         'baseDn' => "ou=people,dc=XXX,dc=fr",
                         'bindRequiresDn' => true,
                         'accountFilterFormat' => "(&(objectClass=posixAccount)(supannAliasLogin=%s))",
-                        'port' => 389,
                     ]
                 ]
             ],
@@ -37,8 +41,6 @@ return [
                 //dé-commenter la ligne correspondant à votre situation
 //                'LOGIN_FILTER' => '(supannAliasLogin=%s)',
 //                'LOGIN_FILTER' => '(uid=%s)',
-                'FILTER_STRUCTURE_DN'		            => '(%s)',
-                'FILTER_STRUCTURE_CODE_ENTITE'	        => '(supannCodeEntite=%s)',
             ],
         ],
     ],

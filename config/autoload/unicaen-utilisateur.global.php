@@ -77,6 +77,7 @@ return [
         ],
         'application-username' => 'preecog',
         'default-user' => 0,
+        'display-user-info' => false,
     ],
 
     // pour la mise a jour des champs d'historisation ...
