@@ -9,25 +9,27 @@ use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Event\EvenementProvider;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
-use UnicaenApp\Service\EntityManagerAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Evenement\EvenementService;
 
-class ConvocationEvent extends  EvenementService
+class ConvocationEvent extends EvenementService
 {
-    use EntityManagerAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use NotificationServiceAwareTrait;
 
-    private ?string  $deadline = null;
-    public function setDeadline(?string $deadline): void { $this->deadline = $deadline; }
+    private ?string $deadline = null;
+
+    public function setDeadline(?string $deadline): void
+    {
+        $this->deadline = $deadline;
+    }
 
     /**
      * @param DateTime|null $dateTraitement
      * @return Evenement
      */
-    public function creer(DateTime $dateTraitement = null) : Evenement
+    public function creer(DateTime $dateTraitement = null): Evenement
     {
         $type = $this->getTypeService()->findByCode(EvenementProvider::CONVOCATION);
         $etat = $this->getEtatEvenementService()->findByCode(Etat::EN_ATTENTE);
@@ -45,7 +47,7 @@ class ConvocationEvent extends  EvenementService
      * @param Evenement $evenement
      * @return string
      */
-    public function traiter(Evenement $evenement) : string
+    public function traiter(Evenement $evenement): string
     {
         $log = "";
 
@@ -64,7 +66,7 @@ class ConvocationEvent extends  EvenementService
                 }
             }
             $this->getNotificationService()->triggerNotifierConvocationAutomatique($convocations);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $evenement->setLog($e->getMessage());
             return Etat::ECHEC;
         }

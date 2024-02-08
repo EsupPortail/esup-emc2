@@ -3,15 +3,16 @@
 namespace Application\Event\RgpdRenderer;
 
 use Interop\Container\ContainerInterface;
-use UnicaenDbImport\Service\SynchroService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEvenement\Service\Type\TypeService;
 use UnicaenRenderer\Service\Rendu\RenduService;
 
 class RgpdRendererEvenementFactory {
 
     /**
-     * @param ContainerInterface $container
-     * @return RgpdRendererEvenement
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container) : RgpdRendererEvenement
     {
