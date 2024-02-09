@@ -315,7 +315,7 @@ class FormationInstanceService
      */
     public function envoyerEmargement(FormationInstance $instance): FormationInstance
     {
-        if ($instance->getParametre()->isEmargementActive()) {
+        if ($instance->isEmargementActive()) {
             $this->update($instance);
             $this->getNotificationService()->triggerLienPourEmargement($instance);
         }
