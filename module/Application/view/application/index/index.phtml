@@ -32,6 +32,9 @@ use UnicaenUtilisateur\Entity\Db\User;
 
     <br/>
 
+    <textarea class="tinymce-autoform" id="choucroute">
+
+    </textarea>
 
 
     <?php if ($user): ?>
@@ -110,3 +113,54 @@ use UnicaenUtilisateur\Entity\Db\User;
         }
     }
 </style>
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.tinymce-autoform',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    // console.log(tinymce.get('description').getContent());
+                    //
+                    // alert("out");
+
+                    let id = $(this).attr('id');
+                    let content = tinymce.get(id).getContent();
+                    $('textarea').val(tinymce.get(id).getContent());
+
+
+                    //ajax
+                    $.ajax({
+                        url: "",
+                        method: "POST",
+                        data: {
+                            champ_id: id,
+                            value: content
+                        },
+                        success: function () {
+                            let notification = editor.notificationManager.open({
+                                text: 'success ! [' + id + '|' + content + ']',
+                                type: 'success',
+                            });
+                        },
+                        error: function () {
+                            let notification = editor.notificationManager.open({
+                                text: 'failure ! [' + id + '|' + content + ']',
+                                type: 'error',
+                            });
+                        },
+                    });
+                });
+            }
+        });
+    });
+</script>
