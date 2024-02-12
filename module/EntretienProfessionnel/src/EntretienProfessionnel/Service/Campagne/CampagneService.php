@@ -236,10 +236,14 @@ class CampagneService
 
     public function getAgentsEligibles(Campagne $campagne): array
     {
-        $agents = $this->getAgentService()->getAgents();
-        $agents = array_filter($agents, function (Agent $a) use ($campagne) {
-            return $campagne->isEligible($a);
-        });
+        $agents = $this->getAgentService()->getAgentsWithDates($campagne->getDateDebut(), $campagne->getDateFin());
+
+//        var_dump(new DateTime()); var_dump(count($agents));
+
+        //todo filtrer avec les bonnes choses
+//        $agents = array_filter($agents, function (Agent $a) use ($campagne) {
+//            return $campagne->isEligible($a);
+//        });
         return $agents;
     }
 

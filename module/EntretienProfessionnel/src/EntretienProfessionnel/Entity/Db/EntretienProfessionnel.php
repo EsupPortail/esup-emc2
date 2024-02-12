@@ -381,6 +381,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     }
 
     /** @noinspection PhpUnused */
+    public function toStringObservationFinale() : string {
+        $observation = $this->getObservationWithTypeCode(EntretienProfessionnelObservations::OBSERVATION_AGENT_FINALE);
+        if ($observation) return $observation->getObservation();
+        return "Aucune observation";
+    }
+
+
+    /** @noinspection PhpUnused */
     public function toString_CREP_projet() : string {
         $res = $this->formulaireInstance->fetchChampReponseByMotsClefs(['CREP', 'projet']);
         if (trim($res) === '' ) return "Non";

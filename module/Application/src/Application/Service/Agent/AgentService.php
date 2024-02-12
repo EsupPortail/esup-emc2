@@ -89,9 +89,34 @@ class AgentService
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('utilisateur')->leftjoin('agent.utilisateur', 'utilisateur')
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-            //            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
+//            ->addSelect('affectation')->leftjoin('agent.affectations', 'affectation')
             ->andWhere('agent.deleted_on IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom');
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getAgentsWithDates(?DateTime $debut = null, ?DateTime $fin = null): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
+            ->addSelect('affectation')->join('agent.affectations', 'affectation')
+            ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->andWhere('agent.deleted_on IS NULL')
+            ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
+            ->andWhere('statut.enseignant = :false')
+            ->setParameter('true', 'O')
+            ->setParameter('false', 'N')
+            ->orderBy('agent.nomUsuel, agent.prenom');
+
+        if ($debut) $qb = $qb
+            ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin > :debut')
+            ->andWhere('statut.dateFin IS NULL OR statut.dateFin > :debut')
+            ->setParameter('debut', $debut);
+        if ($fin) $qb = $qb
+            ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut < :fin')
+            ->andWhere('statut.dateDebut IS NULL OR statut.dateDebut  < :fin')
+            ->setParameter('fin', $fin);
+
         $result = $qb->getQuery()->getResult();
         return $result;
     }
