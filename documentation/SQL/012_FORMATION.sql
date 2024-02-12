@@ -932,7 +932,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'AUTO_CLOTURE', 'Délai pour la cloture de la session (en jours)', null, 'Number', 430 UNION
     SELECT 'LOGO', 'Logo de l''établissement', 'Le logo de l''établissement qui figurera sur les documents', 'String', 1010 UNION
     SELECT 'LIBELLE', 'Libellé de l''établissement', 'Le libellé de l''établissement', 'String', 1020 UNION
-    SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', 1030)
+    SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', 1030
+)
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'FORMATION';

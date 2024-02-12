@@ -433,7 +433,7 @@ VALUES
     ('AGENT#NomFamille', null, 'agent', 'toStringNomFamille'),
     ('AGENT#NomUsage', null, 'agent', 'toStringNomUsage'),
     ('AGENT#Prenom', null, 'agent', 'toStringPrenom'),
-    ('AGENT#Quotite', null 'agent', 'toStringQuotite'),
+    ('AGENT#Quotite', null, 'agent', 'toStringQuotite'),
     ('AGENT#QuotiteAffectation', null, 'agent', 'toStringQuotiteAffectation'),
     ('AGENT#StatutsActifs', '<p>Affiche la liste des statuts actifs d''un agent sous la forme d''une liste &agrave; puce</p>', 'agent', 'toStringStatutsActifs'),
     ('AGENT#StructureAffectationPrincipale', null, 'agent', 'toStringAffectationStructure')
