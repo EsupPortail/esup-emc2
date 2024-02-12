@@ -474,13 +474,21 @@ class EntretienProfessionnelService
             ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
             ->andWhere('entretien.histoDestruction IS NULL')
         ;
-        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien');
 
 
         /** @var EntretienProfessionnel[] $entretiens */
         $entretiens = $qb->getQuery()->getResult();
         if (!$sortByEtat) return $entretiens;
+        return $this->sortByEtat($entretiens);
+    }
 
+    /**
+     * @var EntretienProfessionnel[] $entretiens
+     * @return EntretienProfessionnel[]
+     */
+    public function sortByEtat(array $entretiens): array
+    {
         $dictionnaire = [];
         foreach ($entretiens as $entretien) {
             $etat = $entretien->getEtatActif()->getType()->getCode();
@@ -488,5 +496,4 @@ class EntretienProfessionnelService
         }
         return $dictionnaire;
     }
-
 }

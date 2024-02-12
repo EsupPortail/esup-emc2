@@ -33,6 +33,7 @@ class RappelCampagneAvancementSuperieurServiceFactory {
          * @var StructureService $structureService
          * @var TypeService $typeService
          */
+        $entityManager = $container->get('doctrin.entitymanager.orm_default');
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
@@ -42,6 +43,7 @@ class RappelCampagneAvancementSuperieurServiceFactory {
         $typeService = $container->get(TypeService::class);
 
         $service = new RappelCampagneAvancementSuperieurService();
+        $service->setObjectManager($entityManager);
         $service->setAgentSuperieurService($agentSuperieurService);
         $service->setCampagneService($campagneService);
         $service->setEntretienProfessionnelService($entretienProfessionnelService);
