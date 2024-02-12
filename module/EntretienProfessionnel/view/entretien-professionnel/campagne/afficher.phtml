@@ -8,7 +8,8 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
 /**
  * @see \EntretienProfessionnel\Controller\CampagneController::afficherAction()
  * @var Campagne $campagne
- * @var Agent[] $agents
+// * @var Agent[] $agents
+ * @var int $nbAgents
  * @var EntretienProfessionnel[] $entretiens
  *
  * @var EntretienProfessionnel[] $entretiensResponsable
@@ -18,7 +19,7 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
  */
 
 
-$nbAgent = isset($agents)?count($agents):0;
+//$nbAgent = isset($agents)?count($agents):0;
 
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee());
 
@@ -118,7 +119,7 @@ foreach ($entretiens as $etat => $liste) {
             <div class="col-md-8">
                 <dl class="row">
                     <dt class="col-md-5"> Nombre d'agent <span class="icon icon-information" title="<?php echo $condition; ?>>"></span>: </dt>
-                    <dd class="col-md-7"> <?php echo $nbAgent; ?></dd>
+                    <dd class="col-md-7"> <?php echo $nbAgents; ?></dd>
                     <dt class="col-md-5"> Nombre d'entretien :  </dt>
                     <dd class="col-md-7"> <?php echo $nbEntretiens; ?> </dd>
                 </dl>
@@ -159,7 +160,7 @@ foreach ($entretiens as $etat => $liste) {
 <!--            --><?php //endforeach; ?>
 <!--        --><?php //endforeach; ?>
 
-        <?php echo $this->campagneAvancement($entretiens, $agents, ['array' => true]); ?>
+        <?php echo $this->campagneAvancement($entretiens, [], $nbAgents,  ['array' => true]); ?>
 
 <!--        <div class="row">-->
 <!--            <div class="col-md-8">-->

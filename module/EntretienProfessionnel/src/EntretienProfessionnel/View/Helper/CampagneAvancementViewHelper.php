@@ -22,7 +22,7 @@ class CampagneAvancementViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $entretiens, ?array $agents = null,array $options = [])
+    public function __invoke(array $entretiens, ?array $agents = null, ?int $nbAgents = null, array $options = [])
     {
         $this->entretiens = $entretiens;
         $this->agents = $agents;
@@ -32,7 +32,7 @@ class CampagneAvancementViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        return $view->partial('campagne-avancement', ['entretiens' => $entretiens, 'agents' => $agents, 'options' => $options]);
+        return $view->partial('campagne-avancement', ['entretiens' => $entretiens, 'agents' => $agents, 'nbAgents' => $nbAgents, 'options' => $options]);
     }
 
     public function __toString() {

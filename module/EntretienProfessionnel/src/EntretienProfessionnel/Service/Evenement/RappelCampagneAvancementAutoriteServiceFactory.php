@@ -33,7 +33,7 @@ class RappelCampagneAvancementAutoriteServiceFactory {
          * @var StructureService $structureService
          * @var TypeService $typeService
          */
-        $entityManager = $container->get('doctrin.entitymanager.orm_default');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $campagneService = $container->get(CampagneService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);

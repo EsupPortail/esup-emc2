@@ -5,9 +5,10 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 
 /**
- * @see \EntretienProfessionnel\View\Helper\CampagneInformationArrayViewHelper
+ * @see \EntretienProfessionnel\View\Helper\CampagneAvancementViewHelper
  * @var EntretienProfessionnel[] $entretiens
- * @var Agent[] $agents
+ * @var Agent[]|null $agents
+ * @var int|null $nbAgents
  * @var array $options
  */
 
@@ -16,6 +17,9 @@ $array = false;
 if (isset($options['mode'])) $mode = $options['mode'];
 if (isset($options['array'])) $array = $options['array'];
 
+if ($nbAgents === null) {
+    if ($agents !== null) $nbAgents = count($agents);
+}
 
 $validerSuperieur = []; $validerObservation = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
 if ($array === false) {
@@ -48,11 +52,11 @@ if ($array === false) {
         if (!isset($entretiens[$agent->getId()])) $sans[] = $agent;
     }
 } else {
-    $validerSuperieur = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE];
-    $validerObservation = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION];
-    $validerAutorite = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE];
-    $validerAgent = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT];
-    $encours = array_merge($entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER], $entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION]);
+    $validerSuperieur = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE] ?? [];
+    $validerObservation = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION] ?? [];
+    $validerAutorite = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE] ?? [];
+    $validerAgent = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT] ?? [];
+    $encours =  array_merge($entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER] ?? [], $entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION] ?? []);
 }
 
 $nbValiderAgent = count($validerAgent);
@@ -60,7 +64,7 @@ $nbValiderAutorite = count($validerAutorite);
 $nbValiderObservation = count($validerObservation);
 $nbValiderSuperieur = count($validerSuperieur);
 $nbEncours = count($encours);
-$nbSans = count($agents) - ($nbValiderAgent + $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours);
+$nbSans = $nbAgents - ($nbValiderAgent + $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours);
 
 $nbTotal =  $nbValiderAgent +  $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
 

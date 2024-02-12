@@ -13,6 +13,7 @@ use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservatio
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenObservation\Entity\Db\ObservationInstance;
 use UnicaenObservation\Entity\Interface\HasObservationsInterface;
 use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenApp\Exception\RuntimeException;
@@ -150,50 +151,6 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     {
         $this->formationInstance = $formationInstance;
         return $this;
-    }
-
-    /** OBSERVATIONS **************************************************************************************************/
-
-//    public function getObservations() : array
-//    {
-//        return $this->observations->toArray();
-//    }
-//
-//    public function hasObservation(?Observation $observation) : bool
-//    {
-//        return $this->observations->contains($observation);
-//    }
-//
-//    public function addObservation(?Observation $observation) : EntretienProfessionnel
-//    {
-//        if ($this->hasObservation($observation)) $this->observations->add($observation);
-//        return $this;
-//    }
-//
-//    public function removeObservation(?Observation $observation) : EntretienProfessionnel
-//    {
-//        $this->observations->removeElement($observation);
-//        return $this;
-//    }
-//
-//    public function setObservations(array $observations) : EntretienProfessionnel
-//    {
-//        $this->observations->clear();
-//        foreach ($observations as $observation) $this->addObservation($observation);
-//        return $this;
-//    }
-
-    public function getObservationActive() : ?Observation
-    {
-        $observation = null;
-        /** @var Observation $obs */
-        foreach ($this->observations as $obs) {
-            if ($obs->estNonHistorise()) {
-                if ($observation !== null) throw new RuntimeException("Plusieurs observations actives pour l'entretien #".$this->id, 0, null);
-                $observation = $obs;
-            }
-        }
-        return $observation;
     }
 
     public function getMaxSaisiEntretien() : ?DateTime
