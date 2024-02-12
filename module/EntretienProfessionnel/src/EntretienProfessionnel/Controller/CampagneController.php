@@ -66,14 +66,17 @@ class CampagneController extends AbstractActionController {
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
 
+
         return new ViewModel([
             'campagne' => $campagne,
-            'entretiens' => $this->getCampagneService()->getEntretiensProfessionnels($campagne),
             'agents' => $this->getCampagneService()->getAgentsEligibles($campagne),
-            'entretiensResponsable' => $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne),
-            'entretiensAutorite' => $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne),
-            'entretiensAgent' => $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne),
-            'entretiensCompletes' => $this->getCampagneService()->getEntretiensCompletes($campagne),
+            'entretiens' => $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, true),
+//            'entretiens' => $this->getCampagneService()->getEntretiensProfessionnels($campagne),
+
+//            'entretiensResponsable' => $this->getCampagneService()->getEntretiensEnAttenteResponsable($campagne),
+//            'entretiensAutorite' => $this->getCampagneService()->getEntretiensEnAttenteAutorite($campagne),
+//            'entretiensAgent' => $this->getCampagneService()->getEntretiensEnAttenteAgent($campagne),
+//            'entretiensCompletes' => $this->getCampagneService()->getEntretiensCompletes($campagne),
         ]);
     }
 

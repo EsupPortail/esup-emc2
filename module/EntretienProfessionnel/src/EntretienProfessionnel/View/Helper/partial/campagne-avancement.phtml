@@ -12,35 +12,47 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
  */
 
 $mode = 'div';
+$array = false;
 if (isset($options['mode'])) $mode = $options['mode'];
+if (isset($options['array'])) $array = $options['array'];
+
 
 $validerSuperieur = []; $validerObservation = []; $validerAutorite = []; $validerAgent = []; $encours = []; $sans = [];
-foreach ($entretiens as $entretien) {
-    if ($entretien->getEtatActif() === null) {
-        $encours[] = $entretien;
-        //throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
-    } else {
-        switch ($entretien->getEtatActif()->getType()->getCode()) {
-            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
-                $validerSuperieur[] = $entretien;
-                break;
-            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
-                $validerObservation[] = $entretien;
-                break;
-            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
-                $validerAutorite[] = $entretien;
-                break;
-            case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
-                $validerAgent[] = $entretien;
-                break;
-            default :
-                $encours[] = $entretien;
-                break;
+if ($array === false) {
+    foreach ($entretiens as $entretien) {
+        if ($entretien->getEtatActif() === null) {
+            $encours[] = $entretien;
+            //throw new RuntimeException("L'entretien #".$entretien->getId()." na pas d'état actif");
+        } else {
+            switch ($entretien->getEtatActif()->getType()->getCode()) {
+                case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE :
+                    $validerSuperieur[] = $entretien;
+                    break;
+                case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION :
+                    $validerObservation[] = $entretien;
+                    break;
+                case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE :
+                    $validerAutorite[] = $entretien;
+                    break;
+                case EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT :
+                    $validerAgent[] = $entretien;
+                    break;
+                default :
+                    $encours[] = $entretien;
+                    break;
+            }
         }
     }
-}
-foreach ($agents as $agent) {
-    if (!isset($entretiens[$agent->getId()]))  $sans[] = $agent;
+
+    foreach ($agents as $agent) {
+        if (!isset($entretiens[$agent->getId()])) $sans[] = $agent;
+    }
+} else {
+    $validerSuperieur = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE];
+    $validerObservation = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION];
+    $validerAutorite = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE];
+    $validerAgent = $entretiens[EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AGENT];
+    $encours = array_merge($entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER], $entretiens[EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION]);
 }
 
 $nbValiderAgent = count($validerAgent);
@@ -48,7 +60,8 @@ $nbValiderAutorite = count($validerAutorite);
 $nbValiderObservation = count($validerObservation);
 $nbValiderSuperieur = count($validerSuperieur);
 $nbEncours = count($encours);
-$nbSans = count($sans);
+$nbSans = count($agents) - ($nbValiderAgent + $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours);
+
 $nbTotal =  $nbValiderAgent +  $nbValiderObservation + $nbValiderAutorite +  $nbValiderSuperieur + $nbEncours + $nbSans;
 
 $ratioAgent = "NC"; $ratioObservation = "NC"; $ratioAutorite = "NC"; $ratioSuperieur = "NC"; $ratioPlanifie = "NC"; $ratioSans = "NC";

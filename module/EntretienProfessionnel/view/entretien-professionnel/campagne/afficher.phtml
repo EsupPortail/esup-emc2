@@ -18,13 +18,19 @@ use EntretienProfessionnel\Provider\Privilege\CampagnePrivileges;
  */
 
 
-$nbAgent = count($agents);
+$nbAgent = isset($agents)?count($agents):0;
 
 $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee());
 
 $canRappel = $this->isAllowed(CampagnePrivileges::getResourceId(CampagnePrivileges::CAMPAGNE_MODIFIER));
 
 $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doivent passer un entretien professionnel.";
+
+$nbEntretiens = 0;
+foreach ($entretiens as $etat => $liste) {
+    $nbEntretiens += count($liste);
+}
+
 ?>
 
 <div class="row">
@@ -43,6 +49,7 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
     </div>
 </div>
 
+<!-- INFORMATIONS ----------------------------------------------------------------------------------------------------->
 <div class="card">
     <div class="card-header card-info">
         Informations générales à propos de la campagne
@@ -113,7 +120,7 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
                     <dt class="col-md-5"> Nombre d'agent <span class="icon icon-information" title="<?php echo $condition; ?>>"></span>: </dt>
                     <dd class="col-md-7"> <?php echo $nbAgent; ?></dd>
                     <dt class="col-md-5"> Nombre d'entretien :  </dt>
-                    <dd class="col-md-7"> <?php echo count($entretiens); ?> </dd>
+                    <dd class="col-md-7"> <?php echo $nbEntretiens; ?> </dd>
                 </dl>
             </div>
             <div class="col-md-4">
@@ -142,14 +149,17 @@ $condition = "Les agents titulaires ou contratuel en poste depuis XX mois doiven
 
         <h2> Entretiens de la campagne </h2>
 
-        <?php $listes = []; ?>
-        <?php foreach ($entretiens as $agent => $array): ?>
-            <?php
-                $nb = count($array);
-                if ($nb === 1) $listes[] = current($array);
-            ?>
-        <?php endforeach; ?>
-        <?php echo $this->campagneAvancement($listes,$agents); ?>
+<!--        --><?php //$listes = []; ?>
+<!--        --><?php //foreach ($entretiens as $etat => $array): ?>
+<!--            --><?php //foreach ($entretiens as $agent => $e): ?>
+<!--                --><?php
+//                    $nb = count($array);
+//                    if ($nb === 1) $listes[] = current($e);
+//                ?>
+<!--            --><?php //endforeach; ?>
+<!--        --><?php //endforeach; ?>
+
+        <?php echo $this->campagneAvancement($entretiens, $agents, ['array' => true]); ?>
 
 <!--        <div class="row">-->
 <!--            <div class="col-md-8">-->

@@ -463,22 +463,30 @@ class EntretienProfessionnelService
         return $dictionnaire;
     }
 
-    public function getEntretiensProfessionnelsByCampagne(?Campagne $campagne, bool $histo = false, bool $withAffectation = true): array
+
+    /** @return  EntretienProfessionnel[] */
+    public function getEntretiensProfessionnelsByCampagne(Campagne $campagne, bool $sortByEtat = false): array
     {
-        if ($campagne === null) return [];
+        $qb = $this->getObjectManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
+            ->addSelect('agent')->leftjoin('entretien.agent', 'agent')
+            ->addSelect('responsable')->leftjoin('entretien.responsable', 'responsable')
+            ->addSelect('campagne')->leftjoin('entretien.campagne', 'campagne')
+            ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne)
+            ->andWhere('entretien.histoDestruction IS NULL')
+        ;
+        $qb = EntretienProfessionnel::decorateWithEtats($qb, 'entretien'); //todo remettre
 
-//        $qb = $this->getEntityManager()->getRepository(EntretienProfessionnel::class)->createQueryBuilder('entretien')
-        $qb = $this->createQueryBuilder($withAffectation)
-            ->andWhere('entretien.campagne = :campagne')->setParameter('campagne', $campagne);
-        if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 
-        $result = $qb->getQuery()->getResult();
+        /** @var EntretienProfessionnel[] $entretiens */
+        $entretiens = $qb->getQuery()->getResult();
+        if (!$sortByEtat) return $entretiens;
+
         $dictionnaire = [];
-        foreach ($result as $entretien) {
-            $dictionnaire[$entretien->getAgent()->getId()] = $entretien;
+        foreach ($entretiens as $entretien) {
+            $etat = $entretien->getEtatActif()->getType()->getCode();
+            $dictionnaire[$etat][] = $entretien;
         }
         return $dictionnaire;
     }
-
 
 }

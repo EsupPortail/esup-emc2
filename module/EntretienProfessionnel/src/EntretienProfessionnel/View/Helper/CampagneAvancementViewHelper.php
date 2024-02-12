@@ -12,9 +12,9 @@ use Laminas\View\Resolver\TemplatePathStack;
 class CampagneAvancementViewHelper extends AbstractHelper
 {
     public ?PhpRenderer $renderer = null;
-    public array $entretiens = [];
-    public array $agents = [];
-    public array $options = [];
+    public ?array $entretiens = [];
+    public ?array $agents = [];
+    public ?array $options = [];
 
     /**
      * @param EntretienProfessionnel[] $entretiens
@@ -22,7 +22,7 @@ class CampagneAvancementViewHelper extends AbstractHelper
      * @param array $options
      * @return string|Partial
      */
-    public function __invoke(array $entretiens, array $agents,array $options = [])
+    public function __invoke(array $entretiens, ?array $agents = null,array $options = [])
     {
         $this->entretiens = $entretiens;
         $this->agents = $agents;
