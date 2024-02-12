@@ -310,7 +310,8 @@ class NotificationService {
             'session' => $instance,
             'agent' => $inscrit->getAgent(),
             'MacroService' => $this->getMacroService(),
-            'UrlService' => $this->getUrlService()
+            'UrlService' => $this->getUrlService(),
+            'inscription' => $inscrit,
         ];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_DEMANDE_RETOUR, $vars);
         $mail = $this->getMailService()->sendMail($inscrit->getIndividu()->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
@@ -352,7 +353,7 @@ class NotificationService {
         }
 
         $urlService = $this->getUrlService()->setVariables(['instance' => $instance]);
-        $vars = ['instance' => $instance, 'UrlService' => $urlService];
+        $vars = ['session' => $instance, 'instance' => $instance, 'UrlService' => $urlService];
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_EMARGEMENT, $vars);
         $mail = $this->getMailService()->sendMail(implode(",", $mails), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);

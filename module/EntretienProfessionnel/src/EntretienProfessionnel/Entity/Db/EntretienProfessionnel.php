@@ -639,4 +639,19 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $texte .= "</ul>";
         return $texte;
     }
+
+    public function isAccepte(): bool
+    {
+        return ($this->getEtatsByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER, false) !== null);
+    }
+
+    public function isValideResponsable(): bool
+    {
+        return ($this->getEtatsByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE, false) !== null);
+    }
+
+    public function isDepasse(): bool
+    {
+        return ($this->getDateEntretien() < (new DateTime()));
+    }
 }
