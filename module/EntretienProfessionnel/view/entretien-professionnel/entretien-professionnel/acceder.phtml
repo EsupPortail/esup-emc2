@@ -41,7 +41,7 @@ $this->headTitle('Modification de l\'entretien professionnel');
 
 
 $canExporterEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER);
-$canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER);
+$canModifierEP = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER);
 
 $now = new DateTime();
 $date = $entretien->getMaxSaisiObservation();
@@ -105,12 +105,15 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 <?php if ($role->getRoleId() === RoleProvider::AGENT) : ?>
     <div class="alert alert-info">
-        <span class="icon icon-information"></span>
-        En tant qu'Agent·e, vous pouvez modifier le compte-rendu d'entretien professionnel :
+        <strong> <span class="icon icon-information"></span> Modification des compte-rendus. </strong>
+
+        <br>
+        En tant qu'Agent ou Agente, vous pouvez modifier le compte-rendu d'entretien professionnel :
         <ul>
             <li> après avoir accepté celui-ci <?php echo ($entretien->isAccepte())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
             <li> tant que la date d'entretien n'est pas dépassée <?php echo (!$entretien->isDepasse())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
-            <li> tant que le ou la responsable de l'entretien n'a pas validé celui-ci <?php echo (!$entretien->isValideResponsable())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
+            <li> tant que le ou la Responsable de l'entretien n'a pas validé celui-ci <?php echo (!$entretien->isValideResponsable())?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?> </li>
+<!--            <li> avoir le droit de renseigner les comptes-rendus --><?php //echo ($canModifierEP)?"<span class='icon icon-checked'></span>":"<span class='icon icon-unchecked'></span>"; ?><!-- </li>-->
         </ul>
     </div>
 <?php endif; ?>

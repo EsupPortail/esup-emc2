@@ -599,12 +599,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     public function isAccepte(): bool
     {
-        return ($this->getEtatsByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER, false) !== null);
+        $validations = $this->getEtatsByCode(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER, false);
+        return ($validations !== null && !$validations->isEmpty());
     }
 
     public function isValideResponsable(): bool
     {
-        return ($this->getEtatsByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE, false) !== null);
+        $validations = $this->getEtatsByCode(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE, false);
+        return ($validations !== null && !$validations->isEmpty());
     }
 
     public function isDepasse(): bool

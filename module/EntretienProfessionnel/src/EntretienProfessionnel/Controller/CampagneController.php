@@ -65,12 +65,12 @@ class CampagneController extends AbstractActionController {
     public function afficherAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-
+        $agents = $this->getCampagneService()->getAgentsEligibles($campagne);
 
         return new ViewModel([
             'campagne' => $campagne,
             'agents' => [],//$this->getCampagneService()->getAgentsEligibles($campagne),
-            'nbAgents' => count($this->getCampagneService()->getAgentsEligibles($campagne)),
+            'nbAgents' => count($agents),
             'entretiens' => $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, true),
         ]);
     }

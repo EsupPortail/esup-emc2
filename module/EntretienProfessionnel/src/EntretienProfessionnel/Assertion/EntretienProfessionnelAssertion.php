@@ -136,8 +136,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                 if (! $entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                 if (!$this->isScopeCompatible($entity, $agent, $role, $predicats)) return false;
                 if ($role->getRoleId() === AppRoleProvider::AGENT) {
-                    if ($now < $entity->getDateEntretien()) return false;
-                    return ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER));
+                    if ($now > $entity->getDateEntretien()) return false;
                 }
                 return true;
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
