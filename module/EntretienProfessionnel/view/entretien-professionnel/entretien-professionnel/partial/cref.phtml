@@ -47,7 +47,7 @@ $agent  = $entretien->getAgent();
 <?php if ($canRenseigner && $validationResponsable === null) : ?>
     <?php
     /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
-    $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formation'], true);
+    $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formations'], true);
     /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
     $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $cref->getFormulaire()->getId(), 'instance' => $cref->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
