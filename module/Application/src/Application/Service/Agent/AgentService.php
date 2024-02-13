@@ -108,8 +108,8 @@ class AgentService
             ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->andWhere('agent.deleted_on IS NULL')
             // devrait être un filtrage ... et pas une requete même si cela accélère les choses
-//            ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
-//            ->andWhere('statut.enseignant = :false')
+            ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
+            ->andWhere('statut.enseignant = :false')
 //            ->andWhere('emploitype.code <> :UCNRECH')
 //            ->setParameter('true', 'O')
 //            ->setParameter('false', 'N')
