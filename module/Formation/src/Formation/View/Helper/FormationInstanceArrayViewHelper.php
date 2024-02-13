@@ -26,7 +26,7 @@ class FormationInstanceArrayViewHelper extends AbstractHelper
         $view = $this->getView();
         $view->resolver()->attach(new TemplatePathStack(['script_paths' => [__DIR__ . "/partial"]]));
 
-        usort($instances, function (FormationInstance $a, FormationInstance $b) { return $a->getDebut(true) < $b->getDebut(true); });
+        usort($instances, function (FormationInstance $a, FormationInstance $b) { return $a->getDebut(true) <=> $b->getDebut(true); });
 
         return $view->partial('formation-instance-array', ['instances' => $instances, 'options' => $options]);
     }

@@ -2,6 +2,7 @@
 
 namespace Carriere\Service\EmploiType;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\EmploiType;
 use Doctrine\ORM\Exception\NotSupported;
@@ -53,11 +54,11 @@ class EmploiTypeService {
                     ->andWhere('agent.deleted_on IS NULL')
                     ->andWhere('agentGrade.deleted_on IS NULL')
             ;
-            $qb = HasPeriodeTrait::decorateWithActif($qb,'agentGrade');
+            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
         }
 
         if ($avecHisto === false) {
-            $qb = HasPeriodeTrait::decorateWithActif($qb, 'emploitype');
+            $qb = EmploiType::decorateWithActif($qb, 'emploitype');
         }
 
         $result = $qb->getQuery()->getResult();

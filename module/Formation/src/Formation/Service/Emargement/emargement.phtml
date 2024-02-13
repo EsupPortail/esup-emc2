@@ -8,7 +8,7 @@ use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 
 $inscrits = $journee->getInstance()->getListePrincipale();
-usort($inscrits, function (Inscription $a, Inscription $b) { return $a->getStagiaireDenomination(false) > $b->getStagiaireDenomination(false);});
+usort($inscrits, function (Inscription $a, Inscription $b) { return $a->getStagiaireDenomination(false) <=> $b->getStagiaireDenomination(false);});
 $formation = $journee->getInstance()->getFormation();
 ?>
 

@@ -137,7 +137,7 @@ class AgentController extends AbstractActionController
         usort($agents, function (Agent $a, Agent $b) {
             $aaa = $a->getNomUsuel() . " " . $a->getPrenom() . " " . $a->getId();
             $bbb = $b->getNomUsuel() . " " . $b->getPrenom() . " " . $b->getId();
-            return $aaa > $bbb;
+            return $aaa <=> $bbb;
         });
         return new ViewModel([
             'title' => "Liste des agents dont je suis responsable",

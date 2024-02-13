@@ -43,7 +43,7 @@ class EnqueteQuestionController extends AbstractActionController
             return $a->estNonHistorise();
         });
         usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) {
-            return $a->getOrdre() > $b->getOrdre();
+            return $a->getOrdre() <=> $b->getOrdre();
         });
 
         $reponses = $this->getObjectManager()->getRepository(EnqueteReponse::class)->findAll();
@@ -58,7 +58,7 @@ class EnqueteQuestionController extends AbstractActionController
             return $a->estNonHistorise();
         });
         usort($reponses, function (EnqueteReponse $a, EnqueteReponse $b) {
-            return $a->getQuestion()->getId() > $b->getQuestion()->getId();
+            return $a->getQuestion()->getId() <=> $b->getQuestion()->getId();
         });
 
         /** PREP HISTOGRAMME $histogramme */
@@ -308,7 +308,7 @@ class EnqueteQuestionController extends AbstractActionController
         $dictionnaireQuestion = [];
         foreach ($questions as $question) $dictionnaireQuestion[$question->getId()] = $question;
         usort($questions, function (EnqueteQuestion $a, EnqueteQuestion $b) {
-            return $a->getOrdre() > $b->getOrdre();
+            return $a->getOrdre() <=> $b->getOrdre();
         });
 
         $reponses = $this->getEnqueteReponseService()->findEnqueteReponseByInscription($inscription);

@@ -198,7 +198,7 @@ class Formation implements HistoriqueAwareInterface,
         foreach ($groupes as $libelle => $liste) {
             $optionsoptions = [];
             usort($liste, function (Formation $a, Formation $b) {
-                return $a->getLibelle() > $b->getLibelle();
+                return $a->getLibelle() <=> $b->getLibelle();
             });
             foreach ($liste as $formation) {
                 $optionsoptions[] = [

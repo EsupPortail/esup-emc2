@@ -84,31 +84,19 @@ create table entretienprofessionnel
 );
 create unique index entretien_professionnel_id_uindex on entretienprofessionnel (id);
 
-create table entretienprofessionnel_observation
+create table if not exists entretienprofessionnel_observation
 (
-    id                            serial
-        constraint entretienprofessionnel_observation_pk
-        primary key,
-    entretien_id                  integer   not null
-        constraint entretienprofessionnel_observation_entretien_professionnel_id_f
-        references entretienprofessionnel
-        on delete cascade,
-    observation_agent_entretien   text,
-    observation_agent_perspective text,
-    histo_creation                timestamp not null,
-    histo_createur_id             integer   not null
-        constraint entretienprofessionnel_observation_user_id_fk
-        references unicaen_utilisateur_user,
-    histo_modification            timestamp,
-    histo_modificateur_id         integer
-        constraint entretienprofessionnel_observation_user_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_destruction             timestamp,
-    histo_destructeur_id          integer
-        constraint entretienprofessionnel_observation_user_id_fk_3
-        references unicaen_utilisateur_user
+    entretien_id   integer not null
+        constraint entretienprofessionnel_observation_entretienprofessionnel_id_fk
+            references entretienprofessionnel
+            on delete cascade,
+    observation_id integer not null
+        constraint epo_unicaen_observation_observation_instance_id_fk
+            references unicaen_observation_observation_instance
+            on delete cascade,
+    constraint epo_pk
+        primary key (entretien_id, observation_id)
 );
-create unique index entretienprofessionnel_observation_id_uindex on entretienprofessionnel_observation (id);
 
 create table entretienprofessionnel_validation
 (
@@ -286,7 +274,9 @@ INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'MAIL_LISTE_DAC', 'Adresse électronique de la liste de liste de diffusion pour les DAC', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien professionnel</p>', 'String', 10 UNION
     SELECT 'MAIL_LISTE_BIATS', 'Adresse électronique de la liste de diffusion pour le personnel', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien profesionnel</p>', 'String', 11 UNION
-    SELECT 'TEMOIN_AFFECTATION', 'Témoin', null, 'String', 100 UNION
+    SELECT 'TEMOIN_AFFECTATION', 'Témoin', null, 'String', 200 UNION
+    SElECT 'TEMOIN_STATUT', 'Filtrage selon les statuts', null, 'String',  2000 UNION
+    SElECT 'TEMOIN_AFFECTATION', 'Filtrage selon les affectations', null, 'String', 2000 UNION
     SELECT 'DELAI_ACCEPTATION_AGENT', 'Délai d''acceptation de l''entretien par l''agent (en jours)', null, 'Number', 100 UNION
     SELECT 'INTRANET_DOCUMENT', 'Lien vers les documents associés à l''entretien professionnel', null, 'String', 1000 UNION
     SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000
@@ -294,6 +284,19 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
 JOIN unicaen_parametre_categorie cp ON cp.CODE = 'ENTRETIEN_PROFESSIONNEL';
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- OBSERVATION ---------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_observation_observation_type (code, libelle, categorie)
+VALUES
+    ('OBS_EP_AGENT_ENTRETIEN', 'Observations sur l''entretien professionnel émises par l''agent à propos de l''entretien lui-même', 'Entretien professionnel'),
+    ('OBS_EP_AGENT_PERSPECTIVE', 'Observations sur l''entretien professionnel émises par l''agent à propos de les prespective', 'Entretien professionnel'),
+    ('OBS_EP_AGENT_FORMATION', 'Observations sur l''entretien de formation émises par l''agent à propos des formations', 'Entretien professionnel'),
+    ('OBS_EP_AGENT_FINALE', 'Observations finales de l''agent en fin de circuit de l''entretien professionnel', 'Entretien professionnel'),
+    ('OBS_EP_AUTORITE', 'Observations sur l''entretien professionnel émises par l''autorité hiérarchique de l''agent', 'Entretien professionnel')
+;
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Macros --------------------------------------------------------------------------------------------------------------
@@ -326,6 +329,9 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('ENTRETIEN#lieu', '<p>Retourne le lieu de l''entretien professionnel</p>', 'entretien', 'toStringLieu'),
     ('ENTRETIEN#ObservationEntretien', 'Retourne l''observation sur l''entretien faite par l''agent', 'entretien', 'toStringObservationEntretien'),
     ('ENTRETIEN#ObservationPerspective', 'Retourne l''observation sur les perspectives faite par l''agent', 'entretien', 'toStringObservationPerspective'),
+    ('ENTRETIEN#ObservationFormation', '<p>Retour le texte de l''observation de l''agent à propos de l''entretien de formation</p>', 'entretien', 'toStringObservationFormation'),
+    ('ENTRETIEN#ObservationFinale', '<p>Retourne le texte de l''observation finale de l''agent</p>', 'entretien', 'toStringObservationFinale'),
+    ('ENTRETIEN#ObservationAutorite', '<p>Retourne le texte de l''observation de l''autorité</p>', 'entretien', 'toStringObservationAutorite'),
     ('ENTRETIEN#ReponsableCorpsGrade', 'Retourne le Corps/Garde du responsable de l''entretien professionnel', 'entretien', 'toStringReponsableCorpsGrade'),
     ('ENTRETIEN#ReponsableIntitlePoste', null, 'entretien', 'toStringReponsableIntitulePoste'),
     ('ENTRETIEN#ReponsableNomFamille', 'Retourne le nom de famille du responsable de l''entretien professionnel', 'entretien', 'toStringReponsableNomFamille'),
@@ -336,6 +342,7 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('ENTRETIEN#VALIDATION_AGENT', 'Retourne la date (si validation) de la validation de l''entretien professionnel par l''agent', 'entretien', 'toStringValidationAgent'),
     ('ENTRETIEN#VALIDATION_AUTORITE', 'Retourne la date (si validation) de la validation de l''entretien professionnel par l''autorité', 'entretien', 'toStringValidationHierarchie'),
     ('ENTRETIEN#VALIDATION_SUPERIEUR', 'Retourne la date (si validation) de la validation de l''entretien professionnel par le responsable', 'entretien', 'toStringValidationResponsable');
+
 
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -1154,6 +1161,7 @@ WITH d(code, lib, ordre) AS (
     SELECT 'entretienpro_modifier', 'Modifier un entretien professionnel', 30 UNION
     SELECT 'entretienpro_historiser', 'Historiser/restaurer un entretien professionnel', 40 UNION
     SELECT 'entretienpro_detruire', 'Supprimer un entretien professionnel', 50 UNION
+    SELECT 'entretienpro_renseigner', 'Renseigner les formulaires associés à l''entretien' , 100 UNION
     SELECT 'entretienpro_valider_agent', 'Valider en tant qu''Agent', 900 UNION
     SELECT 'entretienpro_valider_responsable', 'Valider en tant que Responsable', 910 UNION
     SELECT 'entretienpro_valider_drh', 'Valider en tant que DRH', 920 UNION

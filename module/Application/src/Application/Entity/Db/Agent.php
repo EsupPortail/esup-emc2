@@ -162,7 +162,7 @@ class Agent implements
         if ($histo === false) $affectations = array_filter($affectations, function (AgentAffectation $ae) { return !$ae->isDeleted();});
         if ($date  !== null)  $affectations = array_filter($affectations, function (AgentAffectation $ae) use ($date) { return ($ae->estEnCours($date));});
 
-        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() > $b->getDateDebut(); });
+        usort($affectations, function (AgentAffectation $a, AgentAffectation $b) { return $a->getDateDebut() <=> $b->getDateDebut(); });
         return $affectations;
     }
 
@@ -200,7 +200,7 @@ class Agent implements
         if ($histo === false) $echelons = array_filter($echelons, function (AgentEchelon $ae) { return !$ae->isDeleted();});
         if ($date  !== null)  $echelons = array_filter($echelons, function (AgentEchelon $ae) use ($date) { return ($ae->estEnCours($date));});
 
-        usort($echelons, function (AgentEchelon $a, AgentEchelon $b) { return $a->getDateDebut() > $b->getDateDebut(); });
+        usort($echelons, function (AgentEchelon $a, AgentEchelon $b) { return $a->getDateDebut() <=> $b->getDateDebut(); });
         return $echelons;
     }
 
@@ -218,7 +218,7 @@ class Agent implements
         if ($histo === false) $grades = array_filter($grades, function (AgentGrade $ag) { return !$ag->isDeleted();});
         if ($date  !== null)  $grades = array_filter($grades, function (AgentGrade $ag) use ($date) { return ($ag->estEnCours($date));});
 
-        usort($grades, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() < $b->getDateDebut(); });
+        usort($grades, function (AgentGrade $a, AgentGrade $b) { return $a->getDateDebut() <=> $b->getDateDebut(); });
         return $grades;
     }
 
@@ -236,7 +236,7 @@ class Agent implements
         if ($histo === false) $quotites = array_filter($quotites, function (AgentQuotite $q) { return !$q->isDeleted(); });
         if ($date  !== null)  $quotites = array_filter($quotites, function (AgentQuotite $q) use ($date) { return ($q->estEnCours($date));});
 
-        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDateDebut() < $b->getDateDebut();});
+        usort($quotites, function(AgentQuotite $a, AgentQuotite $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
         return $quotites;
     }
 
@@ -254,7 +254,7 @@ class Agent implements
         if ($histo === false) $statuts = array_filter($statuts, function (AgentStatut $as) { return (!$as->isDeleted());});
         if ($date  !== null)  $statuts = array_filter($statuts, function (AgentStatut $as) use ($date) { return ($as->estEnCours($date));});
 
-        usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDateDebut() < $b->getDateDebut(); });
+        usort($statuts, function (AgentStatut $a, AgentStatut $b) { return $a->getDateDebut() <=> $b->getDateDebut(); });
         return $statuts;
     }
 
@@ -542,8 +542,8 @@ class Agent implements
             $aFin = ($a->getDateFin()) ? $a->getDateFin()->format('Y-m-d') : "---";
             $bDebut = ($b->getDateDebut()) ? $b->getDateDebut()->format('Y-m-d') : "---";
             $bFin = ($b->getDateFin()) ? $b->getDateFin()->format('Y-m-d') : "---";
-            if ($aDebut !== $bDebut) return $aDebut > $bDebut;
-            return $aFin > $bFin;
+            if ($aDebut !== $bDebut) return $aDebut <=> $bDebut;
+            return $aFin <=> $bFin;
         });
         return $missions;
     }

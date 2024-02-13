@@ -11,8 +11,8 @@ use Metier\Entity\Db\Metier;
  * @var Metier[] $metiers
  */
 
-usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle();});
-usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() > $b->getLibelle();});
+usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle();});
+usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle();});
 ?>
 
 <dl class="row">

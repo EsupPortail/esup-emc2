@@ -17,7 +17,7 @@ $categories = array_filter($categories, function (EnqueteCategorie $a) {
     return $a->estNonHistorise();
 });
 usort($categories, function (EnqueteCategorie $a, EnqueteCategorie $b) {
-    return $a->getOrdre() > $b->getOrdre();
+    return $a->getOrdre() <=> $b->getOrdre();
 });
 
 ?>
@@ -38,7 +38,7 @@ usort($categories, function (EnqueteCategorie $a, EnqueteCategorie $b) {
         return $a->estNonHistorise();
     });
     usort($questionsC, function (EnqueteQuestion $a, EnqueteQuestion $b) {
-        return $a->getOrdre() > $b->getOrdre();
+        return $a->getOrdre() <=> $b->getOrdre();
     });
     ?>
 
@@ -77,7 +77,7 @@ $sans = array_filter($sans, function (EnqueteQuestion $a) {
     return $a->estNonHistorise();
 });
 usort($sans, function (EnqueteQuestion $a, EnqueteQuestion $b) {
-    return $a->getOrdre() > $b->getOrdre();
+    return $a->getOrdre() <=> $b->getOrdre();
 });
 ?>
 <?php if (!empty($sans)) : ?>

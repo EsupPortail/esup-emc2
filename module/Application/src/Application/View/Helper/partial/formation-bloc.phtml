@@ -107,7 +107,7 @@ ksort($groupes);
                     <?php echo $libelle; ?>
                 </th>
             </tr>
-            <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
+            <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() <=> $b['entite']->getLibelle(); }); ?>
             <?php foreach ($groupe as $element) : ?>
                 <?php
                     $entite = $element['entite'];

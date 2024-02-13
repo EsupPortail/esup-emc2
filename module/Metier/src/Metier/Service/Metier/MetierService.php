@@ -209,7 +209,7 @@ class MetierService {
 
         usort($results, function($a, $b) {
             if ($a['metier'] !== $b['metier'])  return $a['metier'] > $b['metier'];
-            return $a['domaine'] > $b['domaine'];
+            return $a['domaine'] <=> $b['domaine'];
         });
 
         return $results;

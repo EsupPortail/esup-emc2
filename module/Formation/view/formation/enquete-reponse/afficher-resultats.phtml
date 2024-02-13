@@ -20,7 +20,7 @@ $title = "Affichage des résultats de l'enquêtes";
 $this->headTitle($this->translate($title));
 
 
-usort($categories, function (EnqueteCategorie $a, EnqueteCategorie $b) { return $a->getOrdre() > $b->getOrdre();});
+usort($categories, function (EnqueteCategorie $a, EnqueteCategorie $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
 $questions = [];
 foreach ($categories as $categorie) { $questions = array_merge($questions, $categorie->getQuestions()->toArray());}
@@ -65,7 +65,7 @@ $nbReponses = count($array);
 <?php foreach ($categories as $categorie) : ?>
     <?php
         $questionsC = $categorie->getQuestions()->toArray();
-        usort($questionsC, function (EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($questionsC, function (EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() <=> $b->getOrdre();});
     ?>
 
     <?php foreach ($questionsC as $question) : ?>

@@ -236,7 +236,9 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
             ('FICHE_METIER#COMPETENCES_COMPORTEMENTALES', null, 'fichemetier', 'getCompetencesComportementales'),
             ('FICHE_METIER#APPLICATIONS', '<p>Affiche les applications associ&eacute;s &agrave; une fiche m&eacute;tier</p>', 'fichemetier', 'getApplicationsAffichage'),
             ('FICHE_METIER#INTITULE', '<p>Retourne le titre du m&eacute;tier associ&eacute; &agrave; la fiche m&eacute;tier</p>', 'fichemetier', 'getIntitule'),
-            ('FICHE_METIER#CONNAISSANCES', null, 'fichemetier', 'getConnaissances');
+            ('FICHE_METIER#CONNAISSANCES', null, 'fichemetier', 'getConnaissances'),
+            ('FICHEMETIER#Environnement', '<p>Affiche le tableau contenant les thématiques déclarées pour la partie <strong>Contexte et environnement de travail</strong></p>', 'fichemetier', 'toStringThematiques')
+;
 
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
     VALUES ('FICHE_METIER',

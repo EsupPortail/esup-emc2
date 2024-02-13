@@ -46,7 +46,7 @@ usort($dictionnaryInscriptions,
         /** @var Inscription[] $a */
         $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
         $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
-        return $aaa > $bbb;
+        return $aaa <=> $bbb;
     }
 );
 
@@ -59,7 +59,7 @@ usort($dictionnaryDemandes,
         /** @var DemandeExterne[] $a */
         $aaa = $a[0]->getAgent()->getNomUsuel() . " " . $a[0]->getAgent()->getPrenom();
         $bbb = $b[0]->getAgent()->getNomUsuel() . " " . $b[0]->getAgent()->getPrenom();
-        return $aaa > $bbb;
+        return $aaa <=> $bbb;
     }
 );
 ?>
@@ -75,7 +75,7 @@ usort($dictionnaryDemandes,
         <?php /** @var Inscription[] $ds */ ?>
         <ul>
             <?php foreach ($dictionnaryInscriptions as $id => $ds) : ?>
-                <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() > $b->getDebut(); }); ?>
+                <?php //usort($ds, function (FormationInstanceInscrit $a, FormationInstanceInscrit $b) { return $a->getDebut() <=> $b->getDebut(); }); ?>
                 <li>
                     <?php echo $ds[0]->getAgent()->getDenomination(); ?>
 
@@ -109,7 +109,7 @@ usort($dictionnaryDemandes,
         <ul>
             <?php foreach ($dictionnaryDemandes as $id => $ds) : ?>
                 <?php usort($ds, function (DemandeExterne $a, DemandeExterne $b) {
-                    return $a->getDebut() > $b->getDebut();
+                    return $a->getDebut() <=> $b->getDebut();
                 }); ?>
                 <li>
                     <?php echo $ds[0]->getAgent()->getDenomination(); ?>

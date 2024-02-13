@@ -956,6 +956,8 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('PARCOURS_ENTREE_TEXTE', '<p>Texte descriptif du parcours d''entrée</p>', 'texte', 'Formation\Provider\Template', '...', e'<p>Ceci est le texte d\'introduction au parcours d\'entrée à la formation</p>
 <p> </p>
 <p>&gt;&gt; ICI LIEN VERS MOODLE ET LE PARCOURS DE L\'AGENT</p>', null);
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
+VALUES ('MES_FORMATIONS_PROJETPERSO', '<p>Texte associé à la page du projet personnel</p>', 'texte', 'Mon projet personnel', '<p>Dans le cadre de la formation professionnelle tout au long de la vie, vous pouvez mobiliser différents dispositifs pour la réalisation de projets professionnels d''ordre personnel, tels que le bilan de compétences, la validation des acquis de l''expérience, le congé de Formation professionnelle ou le compte personnel de formation.<br /><br />Quel que soit le dispositif choisi, une commission a lieu deux fois par an. Vous pouvez consulter le lien intranet pour connaître l''ensemble des modalités.</p>', null, 'Formation\Provider\Template');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------

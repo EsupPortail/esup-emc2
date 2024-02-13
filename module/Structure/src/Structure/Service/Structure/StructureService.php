@@ -453,7 +453,7 @@ EOS;
         $selecteur = [];
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $structures = $this->getStructuresByResponsable($user);
-            usort($structures, function(Structure $a, Structure $b) {return $a->getLibelleCourt() > $b->getLibelleCourt();});
+            usort($structures, function(Structure $a, Structure $b) {return strcmp($a->getLibelleCourt(),$b->getLibelleCourt());});
             $selecteur = $structures;
         }
 

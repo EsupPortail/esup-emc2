@@ -54,7 +54,7 @@ class Domaine implements HistoriqueAwareInterface {
     public function getFamilles() : array
     {
         $familles =  $this->familles->toArray();
-        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() > $b->getLibelle();});
+        usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() <=> $b->getLibelle();});
         return $familles;
     }
 

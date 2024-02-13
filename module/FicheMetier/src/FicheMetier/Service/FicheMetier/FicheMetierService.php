@@ -358,7 +358,7 @@ class FicheMetierService
     public function compressMission(FicheMetier $ficheMetier) : void
     {
         $missions = $ficheMetier->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
         $position = 1;
         foreach ($missions as $mission) {
@@ -635,11 +635,11 @@ class FicheMetierService
         // tri
 //        foreach (['Connaissances', 'Opérationnelles', 'Comportementales'] as $type) {
 //            usort($csvInfos['competences'][$type], function (Competence $a, Competence $b) {
-//                return $a->getLibelle() > $b->getLibelle();
+//                return $a->getLibelle() <=> $b->getLibelle();
 //            });
 //        }
         usort($csvInfos['applications'], function (Application $a, Application $b) {
-            return $a->getLibelle() > $b->getLibelle();
+            return $a->getLibelle() <=> $b->getLibelle();
         });
 
         return $csvInfos;

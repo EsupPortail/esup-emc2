@@ -158,7 +158,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $texte = "";
         foreach ($array as $annee => $inscriptions) {
             usort($inscriptions, function (Inscription $a, Inscription $b) {
-                return $a->getSession()->getDebut(true) > $b->getSession()->getDebut(true);
+                return $a->getSession()->getDebut(true) <=> $b->getSession()->getDebut(true);
             });
             $texte .= "<div>";
             $texte .= "<h3>Formations pour l'année " . $annee . "/" . ($annee + 1) . "</h3>";

@@ -2,6 +2,7 @@
 
 namespace Carriere\Service\Corps;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Corps;
 use Doctrine\ORM\Exception\NotSupported;
@@ -53,11 +54,11 @@ class CorpsService {
                     ->andWhere('agent.deleted_on IS NULL')
                     ->andWhere('agentGrade.deleted_on IS NULL')
             ;
-            $qb = HasPeriodeTrait::decorateWithActif($qb,'agentGrade');
+            $qb = AgentGrade::decorateWithActif($qb,'agentGrade');
         }
 
         if ($avecHisto === false) {
-            $qb = HasPeriodeTrait::decorateWithActif($qb, 'corps');
+            $qb = Corps::decorateWithActif($qb, 'corps');
         }
 
         $result = $qb->getQuery()->getResult();

@@ -50,7 +50,7 @@ $canAction = ($canAjouter OR $canModifier OR $canHistoriser OR $canSupprimer);
     </tr>
     </thead>
     <tbody>
-    <?php usort($elements, function(Niveau $a, Niveau $b) { return $a->getNiveau() > $b->getNiveau(); }); ?>
+    <?php usort($elements, function(Niveau $a, Niveau $b) { return $a->getNiveau() <=> $b->getNiveau(); }); ?>
     <?php /** @var Niveau $element */ ?>
     <?php foreach ($elements as $element) : ?>
     <tr <?php if ($element->estHistorise()) echo " class='historise'; ";?> >

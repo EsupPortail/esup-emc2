@@ -145,7 +145,9 @@ class CompetenceService {
         $options = [];
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
-            usort($listing, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+            usort($listing, function (Competence $a, Competence $b) {
+                return $a->getLibelle()  <=>  $b->getLibelle();
+            });
 
             foreach ($listing as $competence) {
                 $optionsoptions[$competence->getId()] = $this->competenceOptionify($competence);

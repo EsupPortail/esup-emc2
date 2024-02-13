@@ -74,7 +74,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     public function getMissions() : array
     {
         $missions =  $this->missions->toArray();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) { return $a->getOrdre() <=> $b->getOrdre();});
         return $missions;
     }
 
@@ -87,7 +87,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
     {
         $texte = '<ul>';
         $missions = $this->getMissions();
-        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {return $a->getOrdre() > $b->getOrdre();});
+        usort($missions, function (FicheMetierMission $a, FicheMetierMission $b) {return $a->getOrdre() <=> $b->getOrdre();});
         foreach ($missions as $activite) {
             $texte .= '<li>'.$activite->getMission()->getLibelle().'</li>';
         }
@@ -145,7 +145,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         $competences = $this->getCompetenceListe();
         $competences = array_map(function (CompetenceElement $c) { return $c->getCompetence();}, $competences);
         $competences = array_filter($competences, function (Competence $c) use ($typeId) { return $c->getType()->getId() === $typeId;});
-        usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() > $b->getLibelle();});
+        usort($competences, function (Competence $a, Competence $b) { return $a->getLibelle() <=> $b->getLibelle();});
 
         if (empty($competences)) return "";
 
@@ -207,7 +207,7 @@ class FicheMetier implements HistoriqueAwareInterface, HasEtatsInterface, HasMet
         /** @var ThematiqueElement[] $thematiques */
         $thematiques = $this->thematiques->toArray();
         $thematiques = array_filter($thematiques, function (ThematiqueElement $a) { return $a->estNonHistorise() && $a->getType()->estNonHistorise();});
-        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getOrdre() > $b->getType()->getOrdre();});
+        usort($thematiques, function (ThematiqueElement $a, ThematiqueElement $b) { return $a->getType()->getOrdre() <=> $b->getType()->getOrdre();});
 
         $texte  = "<table>";
         $texte .= "<thead><tr><th>Libelle</th><th>Niveau</th></tr></thead>";

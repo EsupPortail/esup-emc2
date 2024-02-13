@@ -60,7 +60,7 @@ $nbApplications = count($applications);
         </tr>
         <?php
             $metiers4domaine = $domaine->getMetiers();
-            usort($metiers4domaine, function (Metier $a, Metier $b) { return $a->getLibelle() > $b->getLibelle(); });
+            usort($metiers4domaine, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle(); });
         ?>
         <?php foreach ($metiers4domaine as $metier) : ?>
             <?php $libelle = $metier->getLibelle(); ?>

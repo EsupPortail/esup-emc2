@@ -182,7 +182,7 @@ class ParcoursDeFormation implements HistoriqueAwareInterface {
             if ($groupe !== null) $groupes[$groupe->getId()] = $groupe;
             else $groupes[$sans->getId()] = $sans;
         }
-        usort($groupes, function(FormationGroupe $a, FormationGroupe $b) { return $a->getOrdre()>$b->getOrdre();});
+        usort($groupes, function(FormationGroupe $a, FormationGroupe $b) { return $a->getOrdre()<=>$b->getOrdre();});
 
         $texte .= "<ul>";
         foreach ($groupes as $groupe) {

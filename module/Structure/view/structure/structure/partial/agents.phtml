@@ -83,7 +83,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     <?php
                         $superieurs = $agent->getSuperieurs();
-                        usort($superieurs, function (AgentSuperieur $a, AgentSuperieur $b) { return $a->getSuperieur()->getNomUsuel()." ".$a->getSuperieur()->getPrenom() > $b->getSuperieur()->getNomUsuel()." ".$b->getSuperieur()->getPrenom();});
+                        usort($superieurs, function (AgentSuperieur $a, AgentSuperieur $b) { return $a->getSuperieur()->getNomUsuel()." ".$a->getSuperieur()->getPrenom() <=> $b->getSuperieur()->getNomUsuel()." ".$b->getSuperieur()->getPrenom();});
                         $asString = implode("<br>", array_map(function (AgentSuperieur $a) { return $a->getSuperieur()->getDenomination();}, $superieurs));
                         echo $asString;
                     ?>
@@ -100,7 +100,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php else : ?>
                     <?php
                         $autorites = $agent->getAutorites();
-                        usort($autorites, function (AgentAutorite $a, AgentAutorite $b) { return $a->getAutorite()->getNomUsuel()." ".$a->getAutorite()->getPrenom() > $b->getAutorite()->getNomUsuel()." ".$b->getAutorite()->getPrenom();});
+                        usort($autorites, function (AgentAutorite $a, AgentAutorite $b) { return $a->getAutorite()->getNomUsuel()." ".$a->getAutorite()->getPrenom() <=> $b->getAutorite()->getNomUsuel()." ".$b->getAutorite()->getPrenom();});
                         $asString = implode("<br>", array_map(function (AgentAutorite $a) { return $a->getAutorite()->getDenomination();}, $autorites));
                         echo $asString;
                     ?>

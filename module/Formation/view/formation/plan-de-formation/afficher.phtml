@@ -29,7 +29,7 @@ $canAfficherAction = $this->isAllowed(FormationPrivileges::getResourceId(Formati
 $canAfficherCout = $this->isAllowed(CoutprevisionnelPrivileges::getResourceId(CoutprevisionnelPrivileges::COUTPREVISIONNEL_AFFICHER));
 
 usort($axes, function (Axe $a, Axe $b) {
-    return $a->getOrdre() > $b->getOrdre();
+    return $a->getOrdre() <=> $b->getOrdre();
 });
 ?>
 

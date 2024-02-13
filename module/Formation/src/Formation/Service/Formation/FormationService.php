@@ -222,7 +222,7 @@ class FormationService
         foreach ($dictionnaire as $clef => $listing) {
             $optionsoptions = [];
             usort($listing, function (Formation $a, Formation $b) {
-                return $a->getLibelle() > $b->getLibelle();
+                return strcmp($a->getLibelle(),$b->getLibelle());
             });
 
             foreach ($listing as $formation) {

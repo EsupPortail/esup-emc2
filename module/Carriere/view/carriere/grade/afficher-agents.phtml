@@ -17,7 +17,7 @@ $now = new DateTime();
 /** @var  AgentGrade[] $agents */
 $agents = $grade->getAgentGrades();
 $agents = array_filter($agents, function (AgentGrade $a) { return $a->estCommence() && !$a->isDeleted();});
-usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() > $b->getAgent()->getDenomination();});
+usort($agents, function(AgentGrade $a, AgentGrade $b) {return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
 
 $actifs = 0; $inactifs = 0;
 foreach ($agents as $agent) { if ($agent->estFini()) $inactifs++; else $actifs++;}

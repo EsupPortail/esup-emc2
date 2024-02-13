@@ -395,7 +395,7 @@ class CampagneController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         return new ViewModel([
             'campagne' => $campagne,

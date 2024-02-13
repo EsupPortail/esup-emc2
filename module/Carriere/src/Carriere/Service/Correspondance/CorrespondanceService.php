@@ -2,6 +2,7 @@
 
 namespace Carriere\Service\Correspondance;
 
+use Application\Entity\Db\AgentGrade;
 use Application\Entity\Db\Traits\HasPeriodeTrait;
 use Carriere\Entity\Db\Correspondance;
 use Carriere\Entity\Db\CorrespondanceType;
@@ -47,11 +48,11 @@ class CorrespondanceService {
                 ->addSelect('agent')->join('agentGrade.agent','agent')
                 ->andWhere('agent.deleted_on IS NULL')
             ;
-            $qb = HasPeriodeTrait::decorateWithActif($qb, 'agentGrade');
+            $qb = AgentGrade::decorateWithActif($qb, 'agentGrade');
         }
 
         if ($avecHisto === false) {
-            $qb = HasPeriodeTrait::decorateWithActif($qb, 'correspondance');
+            $qb = Correspondance::decorateWithActif($qb, 'correspondance');
         }
 
         $result = $qb->getQuery()->getResult();

@@ -19,7 +19,7 @@ $canSupprimerQuestion   = $this->isAllowed(FormationenquetePrivileges::getResour
 
 
 //$categories = array_filter($categories, function (EnqueteCategorie $a) { return $a->estNonHistorise(); });
-usort($categories, function(EnqueteCategorie $a, EnqueteCategorie $b) { return $a->getOrdre() > $b->getOrdre(); });
+usort($categories, function(EnqueteCategorie $a, EnqueteCategorie $b) { return $a->getOrdre() <=> $b->getOrdre(); });
 $sans = array_filter($questions, function (EnqueteQuestion $a) { return $a->getCategorie() === null; })
 ?>
 

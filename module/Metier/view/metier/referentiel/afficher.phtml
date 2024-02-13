@@ -11,7 +11,7 @@ use Metier\Entity\Db\Referentiel;
  * @var Metier[] $metiers
  */
 
-usort($references, function (Reference $a, Reference $b) {return $a->getCode() > $b->getCode();});
+usort($references, function (Reference $a, Reference $b) {return $a->getCode() <=> $b->getCode();});
 ?>
 
 <dl class="row">

@@ -17,7 +17,7 @@ use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 $journees = $instance->getJournees();
 /** @var Inscription[] $inscriptions */
 $inscriptions = $instance->getListePrincipale();
-usort($inscriptions, function (Inscription $a, Inscription $b) { return $a->getStagiaireDenomination(false)>$b->getStagiaireDenomination(false); });
+usort($inscriptions, function (Inscription $a, Inscription $b) { return $a->getStagiaireDenomination(false)<=>$b->getStagiaireDenomination(false); });
 
 $canPresenceModifier = /** $instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS) &&**/
     $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER));

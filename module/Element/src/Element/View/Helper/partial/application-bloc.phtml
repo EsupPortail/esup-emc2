@@ -123,15 +123,22 @@ ksort($groupes);
 <?php endif; ?>
 
 <div class="listing">
+
     <table>
+        <thead>
+        <tr>
+            <th style="width:40%;"> Libellé </th>
+            <th style="width:30%;"> Groupe </th>
+            <th style="width:20%;"> Niveau </th>
+            <th></th>
+            <th style="width:10%;"> Action </th>
+        </tr>
+        </thead>
         <?php foreach ($groupes as $libelle => $groupe) : ?>
         <?php if ($groupe !== null AND !empty($groupe)) : ?>
-        <tr>
-            <th colspan="5">
-                <?php echo $libelle; ?>
-            </th>
-        </tr>
-        <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() > $b['entite']->getLibelle(); }); ?>
+
+            <tbody>
+        <?php usort($groupe, function ($a, $b) { return $a['entite']->getLibelle() <=> $b['entite']->getLibelle(); }); ?>
         <?php foreach ($groupe as $element) : ?>
             <?php
             $entite = $element['entite'];
@@ -144,6 +151,7 @@ ksort($groupes);
                 $application = $entite->getApplication();
 
             }
+            /** @var Application $application */
             ?>
             <tr>
                 <td>
@@ -156,6 +164,7 @@ ksort($groupes);
                         <u>Précision :</u> <?php echo $old->getCommentaire(); ?>
                     <?php endif; ?>
                 </td>
+                <td> <?php echo $application->getGroupe()->getLibelle(); ?> </td>
                 <td class="niveau">
                     <?php if ($entite instanceof ApplicationElement) : ?>
                         <?php echo ($entite->getNiveauMaitrise())?$entite->getNiveauMaitrise()->getLibelle():"Non précisé"; ?>
@@ -230,9 +239,12 @@ ksort($groupes);
                 </td>
             </tr>
         <?php endforeach; ?>
+
         <?php endif; ?>
         <?php endforeach; ?>
+            </tbody>
     </table>
+
 </div>
 
 <style>

@@ -16,7 +16,7 @@ use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 
 $realisees  = array_filter($inscriptions, function (Inscription $a) { return $a->getSession()->estRealisee();} );
-usort($realisees, function (Inscription $a, Inscription $b) { return $a->getSession()->getDebut(true) < $b->getSession()->getDebut(true); });
+usort($realisees, function (Inscription $a, Inscription $b) { return $a->getSession()->getDebut(true) <=> $b->getSession()->getDebut(true); });
 
 $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_HISTORIQUE));
 

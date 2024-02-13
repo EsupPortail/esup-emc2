@@ -63,5 +63,5 @@ if (isset($options["mode"])) $mode = $options["mode"];
 <?php
     $canAjouterActivite = $this->isAllowed($fichePoste, FichePostePrivileges::FICHEPOSTE_MODIFIER);
     $missionsAdditionnelles = $fichePoste->getMissionsAdditionnelles();
-    usort($missionsAdditionnelles, function (MissionAdditionnelle $a, MissionAdditionnelle $b) { return $a->getMission()->getLibelle() > $b->getMission()->getLibelle();});
+    usort($missionsAdditionnelles, function (MissionAdditionnelle $a, MissionAdditionnelle $b) { return $a->getMission()->getLibelle() <=> $b->getMission()->getLibelle();});
 ?>

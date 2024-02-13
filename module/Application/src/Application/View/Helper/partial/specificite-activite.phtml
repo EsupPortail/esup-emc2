@@ -17,7 +17,7 @@ $mode = 'affichage';
 if (isset($options["mode"])) $mode = $options["mode"];
 
 $activites = $mission->getActivites();
-usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});
+usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
 $retrait = explode(";",$missionAdditionnelle->getRetraits());
 $retraits = [];

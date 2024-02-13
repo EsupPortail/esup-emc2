@@ -39,7 +39,7 @@ $inscriptions = $instance->getInscriptions();
 /** @var Formateur[] $formateurs */
 $formateurs = $instance->getFormateurs();
 usort($formateurs, function (Formateur $a, Formateur $b) {
-    return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
+    return ($a->getNom() . " " . $a->getPrenom()) <=> ($b->getNom() . " " . $b->getPrenom());
 });
 
 $this->headTitle("Formation Instance: #" . $instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());

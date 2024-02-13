@@ -20,7 +20,7 @@ use Metier\Entity\Db\Metier;
     <dd class="col-md-8">
         <?php
             $familles = $domaine->getFamilles();
-            usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() > $b->getLibelle(); });
+            usort($familles, function (FamilleProfessionnelle $a, FamilleProfessionnelle $b) { return $a->getLibelle() <=> $b->getLibelle(); });
         ?>
         <?php if (empty($familles)) : ?>
             <em> Aucune famille professionnelle attachée à ce domaine </em>
@@ -36,7 +36,7 @@ use Metier\Entity\Db\Metier;
     <dd class="col-md-8">
         <?php
             $metiers = $domaine->getMetiers();
-            usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() > $b->getLibelle(); });
+            usort($metiers, function (Metier $a, Metier $b) { return $a->getLibelle() <=> $b->getLibelle(); });
         ?>
         <?php if (empty($metiers)) : ?>
             <em> Aucun métier attaché à ce domaine </em>

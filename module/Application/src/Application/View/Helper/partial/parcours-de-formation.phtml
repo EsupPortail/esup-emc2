@@ -38,7 +38,7 @@ usort($formationArray,
     function($a, $b) {
         $ordre_a = ($a[0]->getFormation()->getGroupe())?$a[0]->getFormation()->getGroupe()->getOrdre():9999;
         $ordre_b = ($b[0]->getFormation()->getGroupe())?$b[0]->getFormation()->getGroupe()->getOrdre():9999;
-        return $ordre_a > $ordre_b;
+        return $ordre_a <=> $ordre_b;
     });
 ?>
 
@@ -71,7 +71,7 @@ usort($formationArray,
     <div class="listing">
         <table>
             <?php foreach ($formationArray as $groupe => $formationSubarray) : ?>
-                <?php usort($formationSubarray, function ($a, $b) {return $a->getOrdre() > $b->getOrdre();}); ?>
+                <?php usort($formationSubarray, function ($a, $b) {return $a->getOrdre() <=> $b->getOrdre();}); ?>
                 <tr>
                     <th colspan="2">
                         <?php /** @var FormationGroupe $groupe */ $groupe = $formationSubarray[0]->getFormation()->getGroupe(); ?>

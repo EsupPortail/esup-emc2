@@ -332,7 +332,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return ($a->getListe() === Inscription::PRINCIPALE and $a->estNonHistorise());
         });
         usort($array, function (Inscription $a, Inscription $b) {
-            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
+            return $a->getStagiaireDenomination() <=> $b->getStagiaireDenomination();
         });
         return $array;
     }
@@ -346,7 +346,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return ($a->getListe() === Inscription::COMPLEMENTAIRE and $a->estNonHistorise());
         });
         usort($array, function (Inscription $a, Inscription $b) {
-            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
+            return $a->getStagiaireDenomination() <=> $b->getStagiaireDenomination();
         });
         return $array;
     }
@@ -360,7 +360,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return $a->estHistorise();
         });
         usort($array, function (Inscription $a, Inscription $b) {
-            return $a->getStagiaireDenomination() > $b->getStagiaireDenomination();
+            return $a->getStagiaireDenomination() <=> $b->getStagiaireDenomination();
         });
         return $array;
     }
@@ -526,7 +526,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         /** @var Formateur[] $formateurs */
         $formateurs = $this->getFormateurs();
         usort($formateurs, function (Formateur $a, Formateur $b) {
-            return ($a->getNom() . " " . $a->getPrenom()) > ($b->getNom() . " " . $b->getPrenom());
+            return ($a->getNom() . " " . $a->getPrenom()) <=> ($b->getNom() . " " . $b->getPrenom());
         });
 
         $text = "<table style='width:100%;'>";
@@ -554,7 +554,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         /** @var Seance[] $journees */
         $journees = $this->getJournees();
-        //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a > $b;});
+        //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a <=> $b;});
 
         $text = "<table style='width:100%;'>";
         $text .= "<thead>";
@@ -603,7 +603,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             return $a->estNonHistorise();
         });
         usort($inscrits, function (Inscription $a, Inscription $b) {
-            return ($a->getAgent()->getNomUsuel() . " " . $a->getAgent()->getPrenom()) > ($b->getAgent()->getNomUsuel() . " " . $b->getAgent()->getPrenom());
+            return ($a->getAgent()->getNomUsuel() . " " . $a->getAgent()->getPrenom()) <=> ($b->getAgent()->getNomUsuel() . " " . $b->getAgent()->getPrenom());
         });
 
         $text = "<table style='width:100%;'>";

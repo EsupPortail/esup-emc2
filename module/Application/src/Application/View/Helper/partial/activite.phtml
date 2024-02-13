@@ -35,10 +35,10 @@ $fichemetier = (isset($options['fichemetier'])) ?  $fichemetier = $options['fich
 $retirees    = (isset($options['retirees'])) ?     $retirees    = $options['retirees'] : null;
 
 $competencesListe   = $mission->getCompetenceListe();
-usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) { return $a->getCompetence()->getLibelle() > $b->getCompetence()->getLibelle();});
+usort($competencesListe, function (CompetenceElement $a, CompetenceElement $b) { return $a->getCompetence()->getLibelle() <=> $b->getCompetence()->getLibelle();});
 $nbCompetence  = count($competencesListe);
 $applicationsListe  = $mission->getApplicationListe();
-usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() > $b->getApplication()->getLibelle();});
+usort($applicationsListe, function (ApplicationElement $a, ApplicationElement $b) { return $a->getApplication()->getLibelle() <=> $b->getApplication()->getLibelle();});
 $nbApplication = count($applicationsListe);
 
 $nbObject      = $nbCompetence +  $nbApplication;
@@ -112,7 +112,7 @@ $nbObject      = $nbCompetence +  $nbApplication;
 
     <?php
         $activites = $mission->getActivites();
-        usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
 //        var_dump("INIT");
 //        foreach ($activites as $activite) {

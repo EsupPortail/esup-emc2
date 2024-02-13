@@ -90,7 +90,7 @@ class StructureController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         return new ViewModel([
             'selecteur' => $selecteur,
@@ -121,7 +121,7 @@ class StructureController extends AbstractActionController {
         usort($agents, function (Agent $a, Agent $b) {
            $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
            $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
-           return $aaa > $bbb;
+           return $aaa <=> $bbb;
         });
         $superieurs = []; $autorites = [];
 //        foreach ($allAgents as $agent) {
@@ -136,7 +136,7 @@ class StructureController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         try {
             $emailAssistance = $this->getParametreService()->getValeurForParametre(GlobalParametres::TYPE, GlobalParametres::EMAIL_ASSISTANCE);
@@ -169,7 +169,7 @@ class StructureController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         return new ViewModel([
             'structure' => $structure,
@@ -196,7 +196,7 @@ class StructureController extends AbstractActionController {
         usort($allAgents, function (Agent $a, Agent $b) {
             $aaa = ($a->getNomUsuel()??$a->getNomFamille())." ".$a->getPrenom();
             $bbb = ($b->getNomUsuel()??$b->getNomFamille())." ".$b->getPrenom();
-            return $aaa > $bbb;
+            return $aaa <=> $bbb;
         });
 
         $fichesDePoste = [];
@@ -210,7 +210,7 @@ class StructureController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         return new ViewModel([
             'structure' => $structure,
@@ -232,7 +232,7 @@ class StructureController extends AbstractActionController {
         $last =  $this->getCampagneService()->getLastCampagne();
         $campagnes =  $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
-        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() > $b->getDateDebut();});
+        usort($campagnes, function (Campagne $a, Campagne $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
 
         return new ViewModel([
             'structure' => $structure,

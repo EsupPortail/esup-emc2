@@ -119,7 +119,7 @@ class Metier implements HistoriqueAwareInterface {
     public function getDomaines() : array
     {
         $domaines =  $this->domaines->toArray();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle();});
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle();});
         return $domaines;
     }
 
@@ -186,7 +186,7 @@ class Metier implements HistoriqueAwareInterface {
     public function getDomainesAffichage() : string
     {
         $domaines = $this->getDomaines();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle(); });
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle(); });
 
         $texte = "Domaine" . ((count($domaines) > 1)?"s":"") . " : ";
         $texte .= "<ul id='domaine'>";
@@ -227,7 +227,7 @@ class Metier implements HistoriqueAwareInterface {
 
         /** @var Domaine $domaine */
         $domaines = $this->domaines->toArray();
-        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() > $b->getLibelle(); });
+        usort($domaines, function (Domaine $a, Domaine $b) { return $a->getLibelle() <=> $b->getLibelle(); });
         $texte .= "<tbody style='border:2px solid black;'>";
         foreach ($domaines as $domaine) {
             $texte .= "<tr><td style='padding:0.25rem 1rem;'>" . $domaine->getLibelle() . "</td></tr>";

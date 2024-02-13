@@ -19,7 +19,7 @@ class EnqueteReponseForm extends Form
     {
         $questions = $this->getObjectManager()->getRepository(EnqueteQuestion::class)->findAll();
         $questions = array_filter($questions, function (EnqueteQuestion $a) { return $a->estNonHistorise();});
-        usort($questions, function(EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() > $b->getOrdre();});
+        usort($questions, function(EnqueteQuestion $a, EnqueteQuestion $b) { return $a->getOrdre() <=> $b->getOrdre();});
 
         foreach ($questions as $question) {
             $this->add([

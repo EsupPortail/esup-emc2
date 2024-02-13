@@ -55,7 +55,7 @@ ksort($applicationsArray);
     <div class="listing">
         <table>
             <?php foreach($applicationsArray as $groupe => $applicationArray) : ?>
-                <?php usort($applicationArray, function ($a, $b) {return $a->getLibelle() > $b->getLibelle();}); ?>
+                <?php usort($applicationArray, function ($a, $b) {return $a->getLibelle() <=> $b->getLibelle();}); ?>
                     <tr>
                         <th colspan="2">
                             <?php echo $groupe; ?>
