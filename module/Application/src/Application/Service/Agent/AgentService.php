@@ -111,8 +111,8 @@ class AgentService
             ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
             ->andWhere('statut.enseignant = :false')
 //            ->andWhere('emploitype.code <> :UCNRECH')
-//            ->setParameter('true', 'O')
-//            ->setParameter('false', 'N')
+            ->setParameter('true', 'O')
+            ->setParameter('false', 'N')
 //            ->setParameter('UCNRECH', 'UCNRECH')
             ->orderBy('agent.nomUsuel, agent.prenom');
 
