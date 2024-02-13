@@ -17,7 +17,7 @@ class AgentForceSansObligationHydrator implements HydratorInterface {
     {
         /** @var AgentForceSansObligation $object */
         $data = [
-            'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
+            'agentsearch'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'campagne'  => ($object->getCampagne())?$object->getCampagne()->getId():null,
             'raison'    => $object->getRaison(),
         ];
@@ -26,7 +26,7 @@ class AgentForceSansObligationHydrator implements HydratorInterface {
 
     public function hydrate(array $data, object $object): object
     {
-        $agent      = (isset($data['agent']['id']))?$this->getAgentService()->getAgent($data['agent']['id']):null;
+        $agent      = (isset($data['agentsearch']['id']))?$this->getAgentService()->getAgent($data['agentsearch']['id']):null;
         $campagne   = (isset($data['campagne']))?$this->getCampagneService()->getCampagne($data['campagne']):null;
         $raison     = (isset($data['raison']) && trim($data['raison']) !== '')?trim($data['raison']):null;
 

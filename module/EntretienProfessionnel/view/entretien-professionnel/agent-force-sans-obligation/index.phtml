@@ -135,20 +135,14 @@ $canSupprimer = $this->isAllowed(AgentforcesansobligationPrivileges::getResource
 
 <script>
 
-    $(function() {
-        $("table.datatable").DataTable( {
-            'paging' : false,
-            'info' : false,
-        });
-    });
-
-
     $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
         });
+        $("table.datatable").DataTable( {
+            'paging' : false,
+            'info' : false,
+        });
     });
-
-
 </script>

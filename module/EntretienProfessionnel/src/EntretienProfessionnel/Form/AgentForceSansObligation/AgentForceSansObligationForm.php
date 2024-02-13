@@ -25,13 +25,13 @@ class AgentForceSansObligationForm extends Form
     {
         //agent
         //Agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
+        $agent = new SearchAndSelect('agentsearch', ['label' => "Agent <span class='icon obligatoire text-danger' title='Champ obligatoire'></span> :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
-                'id' => 'agent',
+                'id' => 'agentsearch',
                 'placeholder' => "Nom de l'agent ...",
             ]);
         $this->add($agent);
@@ -78,7 +78,7 @@ class AgentForceSansObligationForm extends Form
         ]);
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent' => ['required' => true,],
+            'agentsearch' => ['required' => true,],
             'campagne' => ['required' => true,],
             'raison' => ['required' => false,],
         ]));
