@@ -4,6 +4,7 @@ namespace EntretienProfessionnel\Service\Campagne;
 
 use Application\Service\Agent\AgentService;
 use Doctrine\ORM\EntityManager;
+use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationService;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,17 +25,20 @@ class CampagneServiceFactory
         /**
          * @var EntityManager $entityManager
          * @var AgentService $agentService
+         * @var AgentForceSansObligationService $agentForceService
          * @var EtatTypeService $etatTypeService
          * @var ParametreService $parametreService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $agentService = $container->get(AgentService::class);
+        $agentForceService = $container->get(AgentForceSansObligationService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $parametreService = $container->get(ParametreService::class);
 
         $service = new CampagneService();
         $service->setObjectManager($entityManager);
         $service->setAgentService($agentService);
+        $service->setAgentForceSansObligationService($agentForceService);
         $service->setEtatTypeService($etatTypeService);
         $service->setParametreService($parametreService);
         return $service;

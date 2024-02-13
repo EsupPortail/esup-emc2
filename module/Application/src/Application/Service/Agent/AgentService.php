@@ -5,9 +5,7 @@ namespace Application\Service\Agent;
 use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAffectation;
 use Application\Entity\Db\AgentAutorite;
-use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\AgentSuperieur;
-use Application\Provider\Parametre\GlobalParametres;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use DateTime;
 use Doctrine\DBAL\Driver\Exception as DRV_Exception;
@@ -15,7 +13,6 @@ use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
-use Exception;
 use Fichier\Entity\Db\Fichier;
 use Formation\Entity\Db\FormationElement;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -96,26 +93,44 @@ class AgentService
         return $result;
     }
 
-    public function getAgentsWithDates(?DateTime $debut = null, ?DateTime $fin = null): array
+    /**
+     * @param DateTime|null $debut
+     * @param DateTime|null $fin
+     * @param Structure[]|null $structures
+     * @return Agent[]
+     */
+    public function getAgentsWithDates(?DateTime $debut = null, ?DateTime $fin = null, ?array $structures = null): array
     {
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('statut')->join('agent.statuts', 'statut')
+            ->addSelect('grade')->join('agent.grades', 'grade')
+            ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->andWhere('agent.deleted_on IS NULL')
-            ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
-            ->andWhere('statut.enseignant = :false')
-            ->setParameter('true', 'O')
-            ->setParameter('false', 'N')
+            // devrait être un filtrage ... et pas une requete même si cela accélère les choses
+//            ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
+//            ->andWhere('statut.enseignant = :false')
+//            ->andWhere('emploitype.code <> :UCNRECH')
+//            ->setParameter('true', 'O')
+//            ->setParameter('false', 'N')
+//            ->setParameter('UCNRECH', 'UCNRECH')
             ->orderBy('agent.nomUsuel, agent.prenom');
 
         if ($debut) $qb = $qb
             ->andWhere('affectation.dateFin IS NULL OR affectation.dateFin > :debut')
             ->andWhere('statut.dateFin IS NULL OR statut.dateFin > :debut')
+            ->andWhere('grade.dateFin IS NULL OR grade.dateFin > :debut')
+            ->andWhere('emploitype.dateFin IS NULL OR emploitype.dateFin > :debut')
             ->setParameter('debut', $debut);
         if ($fin) $qb = $qb
             ->andWhere('affectation.dateDebut IS NULL OR affectation.dateDebut < :fin')
             ->andWhere('statut.dateDebut IS NULL OR statut.dateDebut  < :fin')
+            ->andWhere('grade.dateDebut IS NULL OR grade.dateDebut  < :fin')
+            ->andWhere('emploitype.dateDebut IS NULL OR emploitype.dateDebut  < :fin')
             ->setParameter('fin', $fin);
+        if ($structures) $qb = $qb
+            ->andWhere('affectation.structure in (:structures)')
+            ->setParameter('structures', $structures);
 
         $result = $qb->getQuery()->getResult();
         return $result;
@@ -614,7 +629,9 @@ EOS;
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) { return $a->isValideStatut($parametre, $date, $structures); });
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
+            return $a->isValideStatut($parametre, $date, $structures);
+        });
         return $agents;
     }
 
@@ -628,7 +645,9 @@ EOS;
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) { return $a->isValideAffectation($parametre, $date, $structures); });
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
+            return $a->isValideAffectation($parametre, $date, $structures);
+        });
         return $agents;
     }
 
@@ -642,7 +661,9 @@ EOS;
         if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
         if ($date === null) $date = new DateTime();
 
-        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) { return $a->isValideEmploiType($parametre, $date, $structures); });
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
+            return $a->isValideEmploiType($parametre, $date, $structures);
+        });
         return $agents;
     }
 

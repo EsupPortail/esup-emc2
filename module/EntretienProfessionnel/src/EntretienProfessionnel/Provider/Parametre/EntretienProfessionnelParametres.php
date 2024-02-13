@@ -12,4 +12,5 @@ class EntretienProfessionnelParametres {
     const MAIL_LISTE_DAC = 'MAIL_LISTE_DAC';
     const TEMOIN_AFFECTATION = 'TEMOIN_AFFECTATION';
     const TEMOIN_EMPLOITYPE = 'TEMOIN_EMPLOITYPE';
+    const TEMOIN_STATUT = 'TEMOIN_STATUT';
 }

@@ -9,14 +9,12 @@ use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
-use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 
 class AgentForceSansObligationService {
     use ProvidesObjectManager;
     use AgentServiceAwareTrait;
-    use CampagneServiceAwareTrait;
 
     /** Gestion des entités **************************************************************/
 
@@ -91,7 +89,18 @@ class AgentForceSansObligationService {
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('agentForceSansObligation.' . $champ, $ordre);
+        if (!$withHisto) $qb = $qb->andWhere('agentForceSansObligation.histoDestruction IS NULL');
 
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return AgentForceSansObligation[] */
+    public function getAgentsForcesSansObligationByCampagne(Campagne $campagne, bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentForceSansObligation.campagne = :campagne')->setParameter('campagne', $campagne)
+        ;
         if (!$withHisto) $qb = $qb->andWhere('agentForceSansObligation.histoDestruction IS NULL');
 
         $result = $qb->getQuery()->getResult();
@@ -100,7 +109,6 @@ class AgentForceSansObligationService {
 
     //TODO getWithAgent
     //TODO getWithAgents
-    //TODO getWithCampagne
     //TODO getWithFiltre
 
     /** Façade ********************************************************************************************************/
@@ -115,5 +123,7 @@ class AgentForceSansObligationService {
         $this->create($agentForceSansObligation);
         return $agentForceSansObligation;
     }
+
+
 
 }

@@ -9,10 +9,12 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use EntretienProfessionnel\Entity\Db\AgentForceSansObligation;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Service\AgentForceSansObligation\AgentForceSansObligationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
@@ -22,6 +24,7 @@ class CampagneService
 {
     use ProvidesObjectManager;
     use AgentServiceAwareTrait;
+    use AgentForceSansObligationServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use ParametreServiceAwareTrait;
 
@@ -237,14 +240,23 @@ class CampagneService
     public function getAgentsEligibles(Campagne $campagne): array
     {
         $agents = $this->getAgentService()->getAgentsWithDates($campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION));
+        $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT));
+        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE));
 
-//        var_dump(new DateTime()); var_dump(count($agents));
+        $sansObligations = array_map(function (AgentForceSansObligation $a) { return $a->getAgent(); }, $this->getAgentForceSansObligationService()->getAgentsForcesSansObligationByCampagne($campagne));
+        $agentsFinales = [];
+        foreach ($agents as $agent) {
+            $keep = true;
+            foreach ($sansObligations as $sansObligation) {
+                if ($agent === $sansObligation) {
+                    $keep = false; break;
+                }
+            }
+            if ($keep) $agentsFinales[] = $agent;
+        }
 
-        //todo filtrer avec les bonnes choses
-//        $agents = array_filter($agents, function (Agent $a) use ($campagne) {
-//            return $campagne->isEligible($a);
-//        });
-        return $agents;
+        return $agentsFinales;
     }
 
     /** FACADE ********************************************************************************************************/
