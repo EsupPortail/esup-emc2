@@ -12,7 +12,7 @@ class FormateurHydrator implements HydratorInterface
     {
         /** @var Formateur $object */
         $data = [
-            'type' => ($object) ? $object->getType() : null,
+            'formateur-type' => ($object) ? $object->getType() : null,
 
             'organisme' => ($object) ? $object->getOrganisme() : null,
 
@@ -29,7 +29,7 @@ class FormateurHydrator implements HydratorInterface
 
     public function hydrate(array $data, $object) : object
     {
-        $type = $data['type'] ?? null;
+        $type = $data['formateur-type'] ?? null;
         $organisme = (isset($data['organisme']) and trim($data['organisme']) !== "") ? trim($data['organisme']) : null;
         $prenom = (isset($data['prenom']) and trim($data['prenom']) !== "") ? trim($data['prenom']) : null;
         $nom = (isset($data['nom']) and trim($data['nom']) !== "") ? trim($data['nom']) : null;

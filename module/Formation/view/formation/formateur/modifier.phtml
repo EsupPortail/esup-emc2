@@ -10,10 +10,8 @@ use Laminas\Form\Form;
 
 <?php //echo $this->form($form); ?>
 
-<span class="todo">L'ajout fait planter le js de masquage des champs inutiles </span>
-<span class="todo">La modification fait planter le js de masquage des champs inutiles </span>
 <?php echo $this->form()->openTag($form); ?>
-<?php echo $this->formControlGroup($form->get('type')); ?>
+<?php echo $this->formControlGroup($form->get('formateur-type')); ?>
 
 <div id="Organisme">
     <?php echo $this->formControlGroup($form->get('organisme')); ?>
@@ -30,33 +28,23 @@ use Laminas\Form\Form;
 
 <script>
     function checkType() {
-        let type = $('select#type').val();
-        console.log(type);
-        if (type === 'Formateur') {
+        let vtype = $('select#formateur-type option:selected').val();
+        if (vtype === 'Formateur') {
             $('div#Formateur').show();
             $('div#Organisme').hide();
         }
-        if (type === 'Organisme') {
+        if (vtype === 'Organisme') {
             $('div#Formateur').hide();
             $('div#Organisme').show();
         }
     }
 
     checkType();
-    $('select#type').change(
+    $('select#formateur-type').change(
         function() {
-            console.log(type);
             checkType();
         }
     );
 
-    $('select').selectpicker();
-
 </script>
 
-<style>
-    .ui-datepicker{
-        position: absolute;
-        z-index:1050 !important;
-    }
-</style>

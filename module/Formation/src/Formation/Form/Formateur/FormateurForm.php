@@ -18,14 +18,14 @@ class FormateurForm extends Form
         // type
         $this->add([
             'type' => Select::class,
-            'name' => 'type',
+            'name' => 'formateur-type',
             'options' => [
                 'label' => "Type de formateur <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
                 'label_options' => [ 'disable_html_escape' => true, ],
                 'value_options' => Formateur::TYPES
             ],
             'attributes' => [
-                'id' => 'type',
+                'id' => 'formateur-type',
                 'class'             => 'bootstrap-selectpicker show-tick',
             ],
         ]);
@@ -113,7 +113,7 @@ class FormateurForm extends Form
 
         //inputfilter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'type' => ['required' => true,
+            'formateur-type' => ['required' => true,
                 'validators' => [[
                     'name' => Callback::class,
                     'options' => [
