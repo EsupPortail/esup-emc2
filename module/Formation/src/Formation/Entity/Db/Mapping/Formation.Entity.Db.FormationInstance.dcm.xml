@@ -30,7 +30,17 @@
 
         <one-to-many field="journees"       target-entity="Formation\Entity\Db\Seance"    mapped-by="instance"/>
         <one-to-many field="inscriptions"   target-entity="Formation\Entity\Db\Inscription"    mapped-by="session"/>
-        <one-to-many field="formateurs"     target-entity="Formation\Entity\Db\Formateur"    mapped-by="instance"/>
+
+        <many-to-many field="formateurs" target-entity="Formation\Entity\Db\Formateur">
+            <join-table name="formation_formateur_session">
+                <join-columns>
+                    <join-column name="session_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="formateur_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <field name="coutHt"                type="float"     column="cout_ht"                  nullable="true"/>
         <field name="coutTtc"               type="float"     column="cout_ttc"                 nullable="true"/>

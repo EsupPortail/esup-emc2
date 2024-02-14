@@ -6,20 +6,25 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <many-to-one target-entity="Formation\Entity\Db\FormationInstance"  field="instance">
-            <join-column name="instance_id" referenced-column-name="id"/>
-        </many-to-one>
-
         <field name="type"                column="type"             type="string"  length="64"    nullable="false"/>
-
         <field name="organisme"           column="organisme"        type="string"  length="1024"   nullable="true"/>
-
         <field name="prenom"              column="prenom"           type="string"  length="256"    nullable="true"/>
         <field name="nom"                 column="nom"              type="string"  length="256"    nullable="true"/>
         <field name="attachement"         column="attachement"      type="string"  length="1024"   nullable="true"/>
-
         <field name="email"               column="email"            type="string"  length="1024"   nullable="true"/>
         <field name="telephone"           column="telephone"        type="string"  length="64"     nullable="true"/>
+
+
+        <many-to-many field="sessions" target-entity="Formation\Entity\Db\FormationInstance">
+            <join-table name="formation_formateur_session">
+                <join-columns>
+                    <join-column name="formateur_id" referenced-column-name="id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="session_id" referenced-column-name="id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
         <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

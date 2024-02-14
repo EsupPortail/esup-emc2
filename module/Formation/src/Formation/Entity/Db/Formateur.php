@@ -2,6 +2,8 @@
 
 namespace Formation\Entity\Db;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -17,7 +19,6 @@ class Formateur implements HistoriqueAwareInterface
     ];
 
     private ?int $id = -1;
-    private ?FormationInstance $instance = null;
     private string $type = Formateur::TYPE_FORMATEUR;
     private ?string $organisme = null;
     private ?string $prenom = null;
@@ -25,6 +26,13 @@ class Formateur implements HistoriqueAwareInterface
     private ?string $email = null;
     private ?string $telephone = null;
     private ?string $attachement = null;
+
+    private Collection $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -39,6 +47,12 @@ class Formateur implements HistoriqueAwareInterface
     public function setInstance(?FormationInstance $instance): void
     {
         $this->instance = $instance;
+    }
+
+    /** @return FormationInstance[] */
+    public function getSessions(): array
+    {
+        return $this->sessions->toArray();
     }
 
     public function getType(): string

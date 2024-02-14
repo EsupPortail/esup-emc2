@@ -77,7 +77,7 @@ class FormateurService
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-            ->addSelect('finstance')->join('formateur.instance', 'finstance');
+            ->addSelect('session')->leftjoin('formateur.sessions', 'session');
         return $qb;
     }
 
@@ -107,5 +107,94 @@ class FormateurService
     {
         $id = $controller->params()->fromRoute($param);
         return $this->getFormateur($id);
+    }
+
+    /** @return Formateur[] */
+    public function getFormateurs(bool $withHisto = false): array
+    {
+        $qb = $this->createQueryBuilder();
+        if (!$withHisto) $qb = $qb->andWhere('formateur.histoDestruction IS NULL');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return Formateur[] */
+    public function getFormateursWithFiltre(array $params): array
+    {
+        $type = $params['type']??null;
+        $formateurId = isset($params['formateur'])?$params['formateur']['id']:null;
+        $rattachement = isset($params['rattachement'])?$params['rattachement']['label']:null;
+
+        $qb = $this->createQueryBuilder();
+        if ($type) $qb = $qb->andWhere('formateur.type = :type')->setParameter('type', $type);
+        if ($formateurId) $qb = $qb->andWhere('formateur.id = :formateurId')->setParameter('formateurId', $formateurId);
+        if ($rattachement) $qb = $qb->andWhere('formateur.attachement = :rattachement')->setParameter('rattachement', $rattachement);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** Fonctions liées aux recherches ********************************************************************************/
+
+    /** @return Formateur[] */
+    public function getFormateursByTerm(?string $term): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+            ->andWhere("LOWER(CONCAT(formateur.nom, ' ', formateur.prenom)) like :search OR LOWER(CONCAT(formateur.prenom, ' ', formateur.nom)) like :search OR LOWER(formateur.organisme) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+//            ->orderBy("coalesce(formateur.organisme, concat(formateur.nom, ' ', formateur.prenom))", 'ASC')
+            ->orderBy("concat(formateur.nom, ' ', formateur.prenom)", 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function formatFormateursJSON(array $formateurs): array
+    {
+        $result = [];
+        /** @var Formateur[] $formateurs */
+        foreach ($formateurs as $formateur) {
+            $extra = ($formateur->getEmail()) ?? "Aucune adresse électronique connue";
+            $result[] = array(
+                'id' => $formateur->getId(),
+                'label' => $formateur->getDenomination(),
+                'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
+    }
+
+    /** @return Formateur[] */
+    public function getRattachementByTerm(?string $term): array
+    {
+        $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
+            ->andWhere("LOWER(formateur.attachement) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+            ->orderBy('formateur.attachement', 'ASC')
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function formatRattachementsJSON(array $formateurs): array
+    {
+        $result = [];
+        /** @var Formateur[] $formateurs */
+        foreach ($formateurs as $formateur) {
+//            $extra = ($formateur->getEmail()) ?? "Aucune adresse électronique connue";
+            $result[] = array(
+                'id' => $formateur->getId(),
+                'label' => $formateur->getAttachement(),
+//                'extra' => "<span class='badge' style='background-color: slategray;'>" . $extra . "</span>",
+            );
+        }
+        usort($result, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        return $result;
     }
 }

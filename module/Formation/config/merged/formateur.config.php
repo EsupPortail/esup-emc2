@@ -8,9 +8,11 @@ use Formation\Form\Formateur\FormateurForm;
 use Formation\Form\Formateur\FormateurFormFactory;
 use Formation\Form\Formateur\FormateurHydrator;
 use Formation\Form\Formateur\FormateurHydratorFactory;
+use Formation\Provider\Privilege\FormateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formateur\FormateurServiceFactory;
+use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use UnicaenPrivilege\Guard\PrivilegeController;
 
@@ -18,6 +20,63 @@ return [
     'bjyauthorize' => [
         'guards' => [
             PrivilegeController::class => [
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'index',
+                        'rechercher',
+                        'rechercher-rattachement',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'afficher',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_AFFICHER,
+                    ],
+                ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'ajouter',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'modifier',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_MODIFIER,
+                    ],
+                ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_SUPPRIMER,
+                    ],
+                ],
                 [
                     'controller' => FormateurController::class,
                     'action' => [
@@ -35,57 +94,180 @@ return [
         ],
     ],
 
-    'router'          => [
+    'router' => [
         'routes' => [
+            'formation' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/formation',
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'formateur' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/formateur',
+                            'defaults' => [
+                                /** @see FormateurController::indexAction() */
+                                'controller' => FormateurController::class,
+                                'action' => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'afficher' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/afficher/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::afficherAction() */
+                                        'action' => 'afficher',
+                                    ],
+                                ],
+                            ],
+                            'rechercher' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/rechercher',
+                                    'defaults' => [
+                                        /** @see FormateurController::rechercherAction() */
+                                        'action' => 'rechercher',
+                                    ],
+                                ],
+                            ],
+                            'rechercher-rattachement' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/rechercher-rattachement',
+                                    'defaults' => [
+                                        /** @see FormateurController::rechercherRattachementAction() */
+                                        'action' => 'rechercher-rattachement',
+                                    ],
+                                ],
+                            ],
+                            'ajouter' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/ajouter',
+                                    'defaults' => [
+                                        /** @see FormateurController::ajouterAction() */
+                                        'action' => 'ajouter',
+                                    ],
+                                ],
+                            ],
+                            'modifier' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/modifier/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::modifierAction() */
+                                        'action' => 'modifier',
+                                    ],
+                                ],
+                            ],
+                            'historiser' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/historiser/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::historiserAction() */
+                                        'action' => 'historiser',
+                                    ],
+                                ],
+                            ],
+                            'restaurer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/restaurer/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::restaurerAction() */
+                                        'action' => 'restaurer',
+                                    ],
+                                ],
+                            ],
+                            'supprimer' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/supprimer/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::supprimerAction() */
+                                        'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'formation-instance' => [
                 'child_routes' => [
                     'ajouter-formateur' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/ajouter-formateur/:formation-instance',
+                            'route' => '/ajouter-formateur/:formation-instance',
                             'defaults' => [
                                 'controller' => FormateurController::class,
-                                'action'     => 'ajouter-formateur',
+                                'action' => 'ajouter-formateur',
                             ],
                         ],
                     ],
                     'modifier-formateur' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/modifier-formateur/:formateur',
+                            'route' => '/modifier-formateur/:formateur',
                             'defaults' => [
                                 'controller' => FormateurController::class,
-                                'action'     => 'modifier-formateur',
+                                'action' => 'modifier-formateur',
                             ],
                         ],
                     ],
                     'historiser-formateur' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/historiser-journee/:formateur',
+                            'route' => '/historiser-journee/:formateur',
                             'defaults' => [
                                 'controller' => FormateurController::class,
-                                'action'     => 'historiser-formateur',
+                                'action' => 'historiser-formateur',
                             ],
                         ],
                     ],
                     'restaurer-formateur' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/restaurer-formateur/:formateur',
+                            'route' => '/restaurer-formateur/:formateur',
                             'defaults' => [
                                 'controller' => FormateurController::class,
-                                'action'     => 'restaurer-formateur',
+                                'action' => 'restaurer-formateur',
                             ],
                         ],
                     ],
                     'supprimer-formateur' => [
-                        'type'  => Segment::class,
+                        'type' => Segment::class,
                         'options' => [
-                            'route'    => '/supprimer-formateur/:formateur',
+                            'route' => '/supprimer-formateur/:formateur',
                             'defaults' => [
                                 'controller' => FormateurController::class,
-                                'action'     => 'supprimer-formateur',
+                                'action' => 'supprimer-formateur',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation' => [
+        'formation' => [
+            'home' => [
+                'pages' => [
+                    'gestion-formation' => [
+                        'pages' => [
+                            'formateur' => [
+                                'label' => 'Formateurs',
+                                'route' => 'formation/formateur',
+                                'resource' => PrivilegeController::getResourceId(FormateurController::class, 'index'),
+                                'order' => 225,
+                                'icon' => 'fas fa-angle-right',
                             ],
                         ],
                     ],
@@ -99,7 +281,7 @@ return [
             FormateurService::class => FormateurServiceFactory::class,
         ],
     ],
-    'controllers'     => [
+    'controllers' => [
         'factories' => [
             FormateurController::class => FormateurControllerFactory::class,
         ],

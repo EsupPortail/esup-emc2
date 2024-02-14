@@ -1,0 +1,114 @@
+<?php
+
+use Formation\Entity\Db\Formateur;
+use Formation\Provider\Privilege\FormateurPrivileges;
+
+/**
+ * @see \Formation\Controller\FormateurController::indexAction()
+ * @var Formateur[] $formateurs
+ * @var array $params
+ */
+
+$this->headTitle('Formateurs');
+
+$canAjouter = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_AJOUTER));
+$canAfficher = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_AFFICHER));
+$canModifier = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_MODIFIER));
+$canHistoriser = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_HISTORISER));
+$canSupprimer = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_SUPPRIMER));
+?>
+
+<h1 class="page-header">
+    Formateurs
+</h1>
+
+<?php echo $this->partial('partial/filtre', ['params' => $params]); ?>
+
+<?php if ($canAjouter): ?>
+    <?php /** @see \Formation\Controller\FormateurController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('formation/formateur/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification">
+        <span class="icon icon-ajouter"></span>
+        Ajouter un·e formateur·trice
+    </a>
+<?php endif; ?>
+
+<table class="table table-condensed datatable" id="formateur">
+    <thead>
+    <tr>
+        <th> Type </th>
+        <th> Dénomination </th>
+        <th> Adresse électronique </th>
+        <th> #Session </th>
+        <th class="action"> Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($formateurs as $formateur): ?>
+    <tr class="<?php if ($formateur->estHistorise()) echo " historise "; ?>">
+        <td> <?php echo Formateur::TYPES[$formateur->getType()]; ?> </td>
+        <td>
+            <?php echo $formateur->getDenomination(); ?>
+            <?php if ($formateur->getAttachement()) : ?>
+                <br/>
+                <?php echo $formateur->getAttachement(); ?>
+            <?php endif; ?>
+        </td>
+        <td> <?php echo $formateur->getEmail()??"<span class='text-warning'><span class='icon icon-attention'></span>Aucune adresse connue</span>"; ?> </td>
+        <td> <?php echo count($formateur->getSessions()); ?> </td>
+        <td class="action">
+            <?php if ($canAfficher) : ?>
+                <?php /** @see \Formation\Controller\FormateurController::afficherAction() */ ?>
+                <a href="<?php echo $this->url('formation/formateur/afficher', ['formateur' => $formateur->getId()], [], true); ?>"
+                   class="ajax-modal">
+                    <span class="icon icon-voir"></span>
+                    Afficher
+                </a>
+            <?php endif; ?>
+            <?php if ($canModifier): ?>
+                <br>
+                <?php /** @see \Formation\Controller\FormateurController::modifierAction() */ ?>
+                <a href="<?php echo $this->url('formation/formateur/modifier', ['formateur' => $formateur->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification">
+                    <span class="icon icon-modifier"></span>
+                    Modifier
+                </a>
+            <?php endif; ?>
+            <?php if ($canHistoriser): ?>
+                <br>
+                <?php if ($formateur->estNonHistorise()) : ?>
+                    <?php /** @see \Formation\Controller\FormateurController::historiserAction() */ ?>
+                    <a href="<?php echo $this->url('formation/formateur/historiser', ['formateur' => $formateur->getId()], [], true); ?>">
+                        <span class="icon icon-historiser"></span> Historiser
+                    </a>
+                <?php else : ?>
+                    <?php /** @see \Formation\Controller\FormateurController::restaurerAction() */ ?>
+                    <a href="<?php echo $this->url('formation/formateur/restaurer', ['formateur' => $formateur->getId()], [], true); ?>">
+                            <span class="icon icon-restaurer"></span> Restaurer
+                    </a>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($canSupprimer): ?>
+                <br>
+                <?php /** @see \Formation\Controller\FormateurController::supprimerAction() */ ?>
+                <a href="<?php echo $this->url('formation/formateur/supprimer', ['formateur' => $formateur->getId()], [], true); ?>"
+                   class="ajax-modal" data-event="modification">
+                    <span class="text-danger">
+                        <span class="icon icon-unchecked"></span> Supprimer
+                    </span>
+                </a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(function() {
+        $("body").on("modification", function (event) {
+            event.div.modal('hide');
+            window.location.reload();
+        });
+    });
+</script>
