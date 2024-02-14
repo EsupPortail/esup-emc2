@@ -3,6 +3,8 @@
 namespace Formation\Controller;
 
 use Formation\Form\FormationInstance\FormationInstanceForm;
+use Formation\Form\SelectionFormateur\SelectionFormateurForm;
+use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Notification\NotificationService;
@@ -29,6 +31,7 @@ class FormationInstanceControllerFactory
         /**
          * @var EtatCategorieService $etatCategorieService
          * @var EtatTypeService $etatTypeService
+         * @var FormateurService $formateurService
          * @var FormationService $formationService
          * @var FormationInstanceService $formationInstanceService
          * @var MailService $mailService
@@ -38,6 +41,7 @@ class FormationInstanceControllerFactory
          */
         $etatCategorieService = $container->get(EtatCategorieService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
+        $formateurService = $container->get(FormateurService::class);
         $formationService = $container->get(FormationService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $mailService = $container->get(MailService::class);
@@ -47,20 +51,24 @@ class FormationInstanceControllerFactory
 
         /**
          * @var FormationInstanceForm $formationInstanceForm
+         * @var SelectionFormateurForm $selectionFormateurForm
          */
         $formationInstanceForm = $container->get('FormElementManager')->get(FormationInstanceForm::class);
+        $selectionFormateurForm = $container->get('FormElementManager')->get(SelectionFormateurForm::class);
 
-        /** @var FormationInstanceController $controller */
         $controller = new FormationInstanceController();
         $controller->setEtatCategorieService($etatCategorieService);
         $controller->setEtatTypeService($etatTypeService);
+        $controller->setFormateurService($formateurService);
         $controller->setFormationService($formationService);
         $controller->setFormationInstanceService($formationInstanceService);
-        $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setPresenceService($presenceService);
+        $controller->setFormationInstanceForm($formationInstanceForm);
+        $controller->setSelectionFormateurForm($selectionFormateurForm);
+
         return $controller;
     }
 

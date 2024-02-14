@@ -8,8 +8,11 @@ use Formation\Form\Formateur\FormateurForm;
 use Formation\Form\Formateur\FormateurFormFactory;
 use Formation\Form\Formateur\FormateurHydrator;
 use Formation\Form\Formateur\FormateurHydratorFactory;
+use Formation\Form\SelectionFormateur\SelectionFormateurForm;
+use Formation\Form\SelectionFormateur\SelectionFormateurFormFactory;
+use Formation\Form\SelectionFormateur\SelectionFormateurHydrator;
+use Formation\Form\SelectionFormateur\SelectionFormateurHydratorFactory;
 use Formation\Provider\Privilege\FormateurPrivileges;
-use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formateur\FormateurServiceFactory;
 use Laminas\Router\Http\Literal;
@@ -75,19 +78,6 @@ return [
                     ],
                     'privileges' => [
                         FormateurPrivileges::FORMATEUR_SUPPRIMER,
-                    ],
-                ],
-                [
-                    'controller' => FormateurController::class,
-                    'action' => [
-                        'ajouter-formateur',
-                        'modifier-formateur',
-                        'historiser-formateur',
-                        'restaurer-formateur',
-                        'supprimer-formateur',
-                    ],
-                    'privileges' => [
-                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR,
                     ],
                 ],
             ],
@@ -199,60 +189,6 @@ return [
                     ],
                 ],
             ],
-            'formation-instance' => [
-                'child_routes' => [
-                    'ajouter-formateur' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/ajouter-formateur/:formation-instance',
-                            'defaults' => [
-                                'controller' => FormateurController::class,
-                                'action' => 'ajouter-formateur',
-                            ],
-                        ],
-                    ],
-                    'modifier-formateur' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/modifier-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormateurController::class,
-                                'action' => 'modifier-formateur',
-                            ],
-                        ],
-                    ],
-                    'historiser-formateur' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/historiser-journee/:formateur',
-                            'defaults' => [
-                                'controller' => FormateurController::class,
-                                'action' => 'historiser-formateur',
-                            ],
-                        ],
-                    ],
-                    'restaurer-formateur' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/restaurer-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormateurController::class,
-                                'action' => 'restaurer-formateur',
-                            ],
-                        ],
-                    ],
-                    'supprimer-formateur' => [
-                        'type' => Segment::class,
-                        'options' => [
-                            'route' => '/supprimer-formateur/:formateur',
-                            'defaults' => [
-                                'controller' => FormateurController::class,
-                                'action' => 'supprimer-formateur',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
         ],
     ],
 
@@ -289,11 +225,14 @@ return [
     'form_elements' => [
         'factories' => [
             FormateurForm::class => FormateurFormFactory::class,
+            SelectionFormateurForm::class => SelectionFormateurFormFactory::class,
         ],
     ],
     'hydrators' => [
         'factories' => [
             FormateurHydrator::class => FormateurHydratorFactory::class,
+            //attention bidon !!!
+            SelectionFormateurHydrator::class => SelectionFormateurHydratorFactory::class,
         ],
     ]
 

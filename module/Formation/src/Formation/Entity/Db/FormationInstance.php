@@ -236,6 +236,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $this->formateurs->toArray();
     }
 
+    public function addFormateur(Formateur $formateur): void
+    {
+        $this->formateurs->add($formateur);
+    }
+
+    public function removeFormateur(Formateur $formateur): void
+    {
+        $this->formateurs->removeElement($formateur);
+    }
+
     /** JOURNEE *******************************************************************************************************/
 
     /**
@@ -676,4 +686,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             });
         return count($inscriptions);
     }
+
+
 }

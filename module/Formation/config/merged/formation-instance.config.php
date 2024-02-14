@@ -106,6 +106,16 @@ return [
                         FormationinstancePrivileges::FORMATIONINSTANCE_SUPPRIMER,
                     ],
                 ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'ajouter-formateur',
+                        'retirer-formateur',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR,
+                    ],
+                ],
                 //console
 //                [
 //                    'controller' => FormationInstanceController::class,
@@ -147,6 +157,46 @@ return [
 
     'router' => [
         'routes' => [
+            'formation' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/formation',
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'session' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/session',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes' => [
+                            'ajouter-formateur' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/ajouter-formateur/:session',
+                                    'defaults' => [
+                                        /** @see FormationInstanceController::ajouterFormateurAction() */
+                                        'controller' => FormationInstanceController::class,
+                                        'action'     => 'ajouter-formateur',
+                                    ],
+                                ],
+                            ],
+                            'retirer-formateur' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/retirer-formateur/:session/:formateur',
+                                    'defaults' => [
+                                        /** @see FormationInstanceController::retirerFormateurAction() */
+                                        'controller' => FormationInstanceController::class,
+                                        'action'     => 'retirer-formateur',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'formation-instance' => [
                 'type'  => Literal::class,
                 'options' => [

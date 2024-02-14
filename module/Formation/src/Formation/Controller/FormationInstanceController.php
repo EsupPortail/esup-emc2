@@ -3,7 +3,9 @@
 namespace Formation\Controller;
 
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
+use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
@@ -24,6 +26,7 @@ class FormationInstanceController extends AbstractActionController
 {
     use EtatCategorieServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
+    use FormateurServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
@@ -31,6 +34,7 @@ class FormationInstanceController extends AbstractActionController
     use ParametreServiceAwareTrait;
     use PresenceServiceAwareTrait;
     use FormationInstanceFormAwareTrait;
+    use SelectionFormateurFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -169,6 +173,50 @@ class FormationInstanceController extends AbstractActionController
         return $vm;
     }
 
+    /** ASSOCIATION DES FORMATEURS  ***********************************************************************************/
+
+    //ajout
+    public function ajouterFormateurAction(): ViewModel
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $form = $this->getSelectionFormateurForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/session/ajouter-formateur', ['session' => $session->getId()], [], true));
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data['formateur']['id'] !== '') {
+                $formateurId = $data['formateur']['id'];
+                $formateur = $this->getFormateurService()->getFormateur($formateurId);
+
+                if ($formateur) {
+                    $session->addFormateur($formateur);
+                    $this->getFormationInstanceService()->update($session);
+                    exit();
+                }
+
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélection un·formateur·trice ou un organisme",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+    }
+
+    //retrait
+    public function retirerFormateurAction(): Response
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $formateur = $this->getFormateurService()->getRequestedFormateur($this);
+
+        $this->getFormationInstanceService()->retirerFormateur($session, $formateur);
+        return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => "information"], true);
+    }
+
+    /** WORKFLOW  *****************************************************************************************************/
     public function ouvrirInscriptionAction(): Response
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);

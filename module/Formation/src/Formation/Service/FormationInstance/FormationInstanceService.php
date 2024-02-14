@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
+use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
@@ -456,5 +457,19 @@ class FormationInstanceService
             return strcmp($a['label'], $b['label']);
         });
         return $result;
+    }
+
+    /** Gestion des fomateurs *****************************************************************************************/
+
+    public function ajouterFormateur(FormationInstance $session, Formateur $formateur): void
+    {
+        $session->addFormateur($formateur);
+        $this->update($session);
+    }
+
+    public function retirerFormateur(FormationInstance $session, Formateur $formateur): void
+    {
+        $session->removeFormateur($formateur);
+        $this->update($session);
     }
 }

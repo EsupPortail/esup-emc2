@@ -6,6 +6,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Privilege\FormateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -44,6 +45,7 @@ usort($formateurs, function (Formateur $a, Formateur $b) {
 
 $this->headTitle("Formation Instance: #" . $instance->getInstanceCode() . " - " . $instance->getFormation()->getLibelle());
 
+$canFormateurAjouter = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_AJOUTER));
 $canFormateurModifier = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_FORMATEUR)));
 $canJourneeModifier = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_SEANCE)));
 $canPresenceAfficher = $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_AFFICHER));
@@ -235,17 +237,26 @@ $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivi
             </div>
 
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-6">
                     <h2>Formateur(s) </h2>
                 </div>
-                <div class="col-md-3">
-                    <?php if ($canFormateurModifier) : ?>
-                        <?php /** @see FormateurController::ajouterFormateurAction() */ ?>
-                        <a href="<?php echo $this->url('formation-instance/ajouter-formateur', ['formation-instance' => $instance->getId()], [], true); ?>"
+                <div class="col-md-6">
+                    <?php if ($canFormateurAjouter) : ?>
+                        <?php /** @see \Formation\Controller\FormateurController::ajouterAction() */ ?>
+                        <a href="<?php echo $this->url('formation/formateur/ajouter', [], [], true); ?>"
                            class="action btn btn-primary ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-ajouter"></span>
-                            Ajouter un formateur
+                            Créer un·e formateur·trice
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($canFormateurModifier) : ?>
+                        <?php /** @see \Formation\Controller\FormationInstanceController::ajouterFormateurAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session/ajouter-formateur', ['session' => $instance->getId()], [], true); ?>"
+                           class="action btn btn-primary ajax-modal" data-event="modification"
+                        >
+                            <span class="icon icon-ajouter"></span>
+                            Ajouter un·e formateur·trice
                         </a>
                     <?php endif; ?>
                 </div>
@@ -273,31 +284,15 @@ $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivi
                         <tr class="<?php echo ($formateur->estHistorise()) ? "historise" : ""; ?>">
                             <td> <?php echo $formateur->getDenomination(); ?> </td>
                             <td> <?php echo ($formateur->getAttachement()) ?: "Non renseigné"; ?> </td>
-                            <td>
+                            <td class="action">
                                 <?php if ($canFormateurModifier) : ?>
-                                    <a <?php /** @see FormateurController::modifierFormateurAction() */ ?>
-                                            href="<?php echo $this->url('formation-instance/modifier-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="modification"
-                                            title="Modifier les informations du formateur"
-                                    >
-                                        <span class="icon icon-editer"></span></a>
-                                    <?php if ($formateur->estNonHistorise()) : ?>
-                                        <a <?php /** @see FormateurController::historiserFormateurAction() */ ?>
-                                                href="<?php echo $this->url('formation-instance/historiser-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
-                                                title="Supprimer le formateur"
-                                        >
-                                            <span class="icon icon-historiser"></span></a>
-                                    <?php else : ?>
-                                        <a <?php /** @see FormateurController::restaurerFormateurAction() */ ?>
-                                                href="<?php echo $this->url('formation-instance/restaurer-formateur', ['formateur' => $formateur->getId()], [], true); ?>">
-                                            <span class="icon icon-restaurer"></span></a>
-                                    <?php endif; ?>
-                                    <a <?php /** @see FormateurController::supprimerFormateurAction() */ ?>
-                                            href="<?php echo $this->url('formation-instance/supprimer-formateur', ['formateur' => $formateur->getId()], [], true); ?>"
-                                            class="ajax-modal" data-event="modification"
-                                            title="Supprimer définitivement le formateur"
-                                    >
-                                        <span class="icon icon-unchecked text-danger"></span></a>
+                                    <?php /** @see \Formation\Controller\FormationInstanceController::retirerFormateurAction() */ ?>
+                                    <a href="<?php echo $this->url('formation/session/retirer-formateur', ['session' => $instance->getId(), 'formateur' => $formateur->getId()], [], true); ?>">
+                                        <span class="text-danger">
+                                            <span class="icon icon-unchecked"></span>
+                                            Retirer
+                                        </span>
+                                    </a>
                                 <?php endif; ?>
                             </td>
                         </tr>
