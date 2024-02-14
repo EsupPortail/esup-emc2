@@ -36,6 +36,8 @@ class AgentStatut implements HasPeriodeInterface {
     private ?string $heberge = 'N';
     private ?string $emerite = 'N';
     private ?string $retraite = 'N';
+    private ?string $congeParental = 'N';
+    private ?string $langueMaladie = 'N';
 
     public function getId() : ?string
     {
@@ -63,7 +65,7 @@ class AgentStatut implements HasPeriodeInterface {
     const TEMOINS = [
         'cdi', 'cdd', 'titulaire', 'vacataire',
         'enseignant', 'administratif', 'chercheur', 'doctorant',
-        'detacheIn', 'detacheOut','dispo'
+        'detacheIn', 'detacheOut','dispo', 'longue_maladie', 'conge_parental'
     ];
 
     public function getTemoin(string $temoin) : bool
@@ -80,6 +82,8 @@ class AgentStatut implements HasPeriodeInterface {
             case 'detacheIn' : return $this->isDetacheIn();
             case 'detacheOut' : return $this->isDetacheOut();
             case 'dispo' : return $this->isDispo();
+            case 'longue_maladie' : return $this->isLangueMaladie();
+            case 'conge_parental' : return $this->isCongeParental();
             default :
                 throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0);
         }
@@ -163,6 +167,16 @@ class AgentStatut implements HasPeriodeInterface {
     public function isRetraite() : bool
     {
         return $this->retraite === 'O';
+    }
+
+    public function isCongeParental(): bool
+    {
+        return $this->congeParental === 'O';
+    }
+
+    public function isLangueMaladie(): bool
+    {
+        return $this->langueMaladie === 'O';
     }
 
     /** Fonction pour affichage/macro *********************************************************************************/

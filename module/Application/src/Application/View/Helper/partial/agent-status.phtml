@@ -84,6 +84,8 @@ $displayTemoin = (isset($options['temoin']) and $options['temoin'] !== false);
                 if ($statut->isHeberge()) echo '<li>Hébergé</li>';
                 if ($statut->isEmerite()) echo '<li>Émerite</li>';
                 if ($statut->isRetraite()) echo '<li>Retraité</li>';
+                if ($statut->isLangueMaladie()) echo '<li>Longue maladie</li>';
+                if ($statut->isCongeParental()) echo '<li>Congé parental</li>';
                 ?>
             </ul>
         <?php endif; ?>

@@ -297,6 +297,8 @@ create table agent_carriere_statut
     t_heberge             varchar(1)                                                         not null,
     t_emerite             varchar(1)                                                         not null,
     t_retraite            varchar(1)                                                         not null,
+    t_conge_parental      varchar(1)                                                         not null default 'N',
+    t_longue_maladie      varchar(1)                                                         not null default 'N',
     created_on            timestamp(0) default ('now'::text)::timestamp(0) without time zone not null,
     updated_on            timestamp(0),
     deleted_on            timestamp(0),

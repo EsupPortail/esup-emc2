@@ -28,6 +28,8 @@
         <field name="heberge"       type="string" length="1"            column="t_heberge"                 nullable="true"/>
         <field name="emerite"       type="string" length="1"            column="t_emerite"                 nullable="true"/>
         <field name="retraite"      type="string" length="1"            column="t_retraite"                nullable="true"/>
+        <field name="longueMaladie" type="string" length="1"            column="t_longue_maladie"          nullable="true"/>
+        <field name="congeParental" type="string" length="1"            column="t_conge_parental"          nullable="true"/>
 
         <!-- DB IMPORT #############################  -->
         <field name="created_on"               column="created_on"       type="datetime"/>
