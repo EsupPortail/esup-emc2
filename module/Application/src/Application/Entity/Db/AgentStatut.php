@@ -76,7 +76,7 @@ class AgentStatut implements HasPeriodeInterface {
             'detacheIn' => $this->isDetacheIn(),
             'detacheOut' => $this->isDetacheOut(),
             'dispo' => $this->isDispo(),
-            'longue_maladie' => $this->isLangueMaladie(),
+            'longue_maladie' => $this->isLongueMaladie(),
             'conge_parental' => $this->isCongeParental(),
             default => throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0),
         };
@@ -167,7 +167,7 @@ class AgentStatut implements HasPeriodeInterface {
         return $this->congeParental === 'O';
     }
 
-    public function isLangueMaladie(): bool
+    public function isLongueMaladie(): bool
     {
         return $this->longueMaladie === 'O';
     }
