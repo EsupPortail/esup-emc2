@@ -44,17 +44,11 @@ class AgentStatut implements HasPeriodeInterface {
         return $this->id;
     }
 
-    /**
-     * @return Agent|null
-     */
     public function getAgent() : ?Agent
     {
         return $this->agent;
     }
 
-    /**
-     * @return Structure
-     */
     public function getStructure() : ?Structure
     {
         return $this->structure;
@@ -70,23 +64,22 @@ class AgentStatut implements HasPeriodeInterface {
 
     public function getTemoin(string $temoin) : bool
     {
-        switch ($temoin) {
-            case 'cdi' : return $this->isCdi();
-            case 'cdd' : return $this->isCdd();
-            case 'titulaire' : return $this->isTitulaire();
-            case 'vacataire' : return $this->isVacataire();
-            case 'enseignant' : return $this->isEnseignant();
-            case 'administratif' : return $this->isAdministratif();
-            case 'chercheur' : return $this->isChercheur();
-            case 'doctorant' : return $this->isDoctorant();
-            case 'detacheIn' : return $this->isDetacheIn();
-            case 'detacheOut' : return $this->isDetacheOut();
-            case 'dispo' : return $this->isDispo();
-            case 'longue_maladie' : return $this->isLangueMaladie();
-            case 'conge_parental' : return $this->isCongeParental();
-            default :
-                throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0);
-        }
+        return match ($temoin) {
+            'cdi' => $this->isCdi(),
+            'cdd' => $this->isCdd(),
+            'titulaire' => $this->isTitulaire(),
+            'vacataire' => $this->isVacataire(),
+            'enseignant' => $this->isEnseignant(),
+            'administratif' => $this->isAdministratif(),
+            'chercheur' => $this->isChercheur(),
+            'doctorant' => $this->isDoctorant(),
+            'detacheIn' => $this->isDetacheIn(),
+            'detacheOut' => $this->isDetacheOut(),
+            'dispo' => $this->isDispo(),
+            'longue_maladie' => $this->isLangueMaladie(),
+            'conge_parental' => $this->isCongeParental(),
+            default => throw new RuntimeException("Le temoin [" . $temoin . "] est inconnu ou non géré.", 0),
+        };
     }
     
     public function isTitulaire() : bool
@@ -176,7 +169,7 @@ class AgentStatut implements HasPeriodeInterface {
 
     public function isLangueMaladie(): bool
     {
-        return $this->langueMaladie === 'O';
+        return $this->longueMaladie === 'O';
     }
 
     /** Fonction pour affichage/macro *********************************************************************************/
