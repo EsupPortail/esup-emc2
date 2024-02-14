@@ -37,7 +37,7 @@ class AgentStatut implements HasPeriodeInterface {
     private ?string $emerite = 'N';
     private ?string $retraite = 'N';
     private ?string $congeParental = 'N';
-    private ?string $langueMaladie = 'N';
+    private ?string $longueMaladie = 'N';
 
     public function getId() : ?string
     {
