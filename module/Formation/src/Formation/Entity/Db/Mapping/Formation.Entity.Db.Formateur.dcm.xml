@@ -26,6 +26,10 @@
             </join-table>
         </many-to-many>
 
+        <many-to-one target-entity="UnicaenUtilisateur\Entity\Db\User"  field="utilisateur">
+            <join-column name="user_id" referenced-column-name="ID"/>
+        </many-to-one>
+
         <!-- HISTO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>
         <field name="histoModification" type="datetime"                 column="histo_modification" nullable="false"/>

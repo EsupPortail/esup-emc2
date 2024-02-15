@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class Formateur implements HistoriqueAwareInterface
 {
@@ -26,6 +27,7 @@ class Formateur implements HistoriqueAwareInterface
     private ?string $email = null;
     private ?string $telephone = null;
     private ?string $attachement = null;
+    private ?User $utilisateur = null;
 
     private Collection $sessions;
 
@@ -37,16 +39,6 @@ class Formateur implements HistoriqueAwareInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getInstance(): ?FormationInstance
-    {
-        return $this->instance;
-    }
-
-    public function setInstance(?FormationInstance $instance): void
-    {
-        $this->instance = $instance;
     }
 
     /** @return FormationInstance[] */
@@ -106,7 +98,9 @@ class Formateur implements HistoriqueAwareInterface
     }
     public function getEmail(): ?string
     {
-        return $this->email;
+        if ($this->email) return $this->email;
+        if ($this->utilisateur && $this->utilisateur->getEmail()) return $this->utilisateur->getEmail();
+        return null;
     }
 
     public function setEmail(?string $email): void
@@ -133,4 +127,15 @@ class Formateur implements HistoriqueAwareInterface
             default => "Type de formateur non prévu",
         };
     }
+
+    public function getUtilisateur(): ?User
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?User $utilisateur): void
+    {
+        $this->utilisateur = $utilisateur;
+    }
+
 }

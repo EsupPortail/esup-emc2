@@ -2,6 +2,7 @@
 
 use Formation\Entity\Db\Formateur;
 use Formation\Provider\Privilege\FormateurPrivileges;
+use UnicaenUtilisateur\Provider\Privilege\UtilisateurPrivileges;
 
 /**
  * @see \Formation\Controller\FormateurController::indexAction()
@@ -16,6 +17,8 @@ $canAfficher = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPriv
 $canModifier = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_MODIFIER));
 $canHistoriser = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_HISTORISER));
 $canSupprimer = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_SUPPRIMER));
+
+$canCreerCompte = $this->isAllowed(UtilisateurPrivileges::getResourceId(UtilisateurPrivileges::UTILISATEUR_AJOUTER));
 ?>
 
 <h1 class="page-header">
@@ -39,6 +42,7 @@ $canSupprimer = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPri
         <th> Type </th>
         <th> Dénomination </th>
         <th> Adresse électronique </th>
+        <th> Compte </th>
         <th> #Session </th>
         <th class="action"> Action</th>
     </tr>
@@ -55,6 +59,45 @@ $canSupprimer = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPri
             <?php endif; ?>
         </td>
         <td> <?php echo $formateur->getEmail()??"<span class='text-warning'><span class='icon icon-attention'></span>Aucune adresse connue</span>"; ?> </td>
+        <td>
+            <?php if ($formateur->getUtilisateur()) : ?>
+                <?php echo $formateur->getUtilisateur()->getUsername(); ?>
+                <?php if ($formateur->getUtilisateur()->getPassword() === 'ldap'): ?>
+                    <span class="icon icon-information" title="Compte de l'établissement"></span>
+                <?php else : ?>
+                    <span class="icon icon-information" title="Compte local"></span>
+                <?php endif; ?>
+            <?php else : ?>
+                <span class="text-warning">
+                    <span class="icon icon-attention"></span>
+                    Aucun compte associé
+                </span>
+            <?php endif; ?>
+            <?php if ($canModifier) : ?>
+                <div class="action">
+                    <?php if ($formateur->getUtilisateur() === null) : ?>
+                        <?php if ($canCreerCompte) : ?>
+                            <?php /** @see \Formation\Controller\FormateurController::creerCompteAction() */ ?>
+                            <a href="<?php echo $this->url('formation/formateur/creer-compte', ['formateur' => $formateur->getId()], [], true); ?>"
+                               class="ajax-modal" data-event="modification">
+                                <span class="icon icon-ajouter"></span> Créer et associer un compte local
+                            </a>
+                            <?php endif; ?>
+                        <br>
+                        <?php /** @see \Formation\Controller\FormateurController::associerCompteAction() */ ?>
+                        <a href="<?php echo $this->url('formation/formateur/associer-compte', ['formateur' => $formateur->getId()], [], true); ?>"
+                           class="ajax-modal" data-event="modification">
+                            <span class="icon icon-lier"></span> Associer un compte existant
+                        </a>
+                    <?php else :?>
+                        <?php /** @see \Formation\Controller\FormateurController::deassocierCompteAction() */ ?>
+                        <a href="<?php echo $this->url('formation/formateur/deassocier-compte', ['formateur' => $formateur->getId()], [], true); ?>">
+                            <span class="icon icon-unlink"></span> Déassocier le compte
+                        </a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </td>
         <td> <?php echo count($formateur->getSessions()); ?> </td>
         <td class="action">
             <?php if ($canAfficher) : ?>

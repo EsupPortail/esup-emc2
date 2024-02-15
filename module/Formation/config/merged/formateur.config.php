@@ -56,6 +56,9 @@ return [
                     'controller' => FormateurController::class,
                     'action' => [
                         'modifier',
+                        'creer-compte',
+                        'associer-compte',
+                        'deassocier-compte'
                     ],
                     'privileges' => [
                         FormateurPrivileges::FORMATEUR_MODIFIER,
@@ -182,6 +185,36 @@ return [
                                     'defaults' => [
                                         /** @see FormateurController::supprimerAction() */
                                         'action' => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'creer-compte' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/creer-compte/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::creerCompteAction() */
+                                        'action' => 'creer-compte',
+                                    ],
+                                ],
+                            ],
+                            'associer-compte' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/associer-compte/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::associerCompteAction() */
+                                        'action' => 'associer-compte',
+                                    ],
+                                ],
+                            ],
+                            'deassocier-compte' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/deassocier-compte/:formateur',
+                                    'defaults' => [
+                                        /** @see FormateurController::deassocierCompteAction() */
+                                        'action' => 'deassocier-compte',
                                     ],
                                 ],
                             ],

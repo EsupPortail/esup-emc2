@@ -77,7 +77,9 @@ class FormateurService
     public function createQueryBuilder() : QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Formateur::class)->createQueryBuilder('formateur')
-            ->addSelect('session')->leftjoin('formateur.sessions', 'session');
+            ->addSelect('session')->leftjoin('formateur.sessions', 'session')
+            ->addSelect('utilisateur')->leftjoin('formateur.utilisateur', 'utilisateur')
+        ;
         return $qb;
     }
 
