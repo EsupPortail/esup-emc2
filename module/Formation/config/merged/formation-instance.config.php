@@ -2,6 +2,8 @@
 
 namespace Formation;
 
+use Formation\Assertion\SessionAssertion;
+use Formation\Assertion\SessionAssertionFactory;
 use Formation\Controller\FormationInstanceController;
 use Formation\Controller\FormationInstanceControllerFactory;
 use Formation\Controller\InscriptionController;
@@ -18,9 +20,29 @@ use UnicaenPrivilege\Guard\PrivilegeController;
 use Unicaen\Console\Router\Simple;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
+use UnicaenPrivilege\Provider\Rule\PrivilegeRuleProvider;
 
 return [
     'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'Session' => [],
+            ],
+        ],
+        'rule_providers' => [
+            PrivilegeRuleProvider::class => [
+                'allow' => [
+                    [
+                        'privileges' => [
+                            FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                        ],
+                        'resources' => ['Session'],
+                        'assertion' => SessionAssertion::class
+                    ],
+                ],
+            ]
+        ],
+
         'guards' => [
             PrivilegeController::class => [
                 [
@@ -36,6 +58,15 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'afficher',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                    ],
+                    'assertion' => SessionAssertion::class,
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
                         'rechercher',
                     ],
                     'privileges' => [
@@ -394,6 +425,7 @@ return [
     'service_manager' => [
         'factories' => [
             FormationInstanceService::class => FormationInstanceServiceFactory::class,
+            SessionAssertion::class => SessionAssertionFactory::class,
         ],
     ],
     'controllers'     => [

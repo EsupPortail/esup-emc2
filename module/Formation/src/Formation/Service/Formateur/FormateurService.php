@@ -8,6 +8,7 @@ use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Formateur;
 use UnicaenApp\Exception\RuntimeException;
 use Laminas\Mvc\Controller\AbstractActionController;
+use UnicaenUtilisateur\Entity\Db\User;
 
 class FormateurService
 {
@@ -197,6 +198,35 @@ class FormateurService
         usort($result, function ($a, $b) {
             return strcmp($a['label'], $b['label']);
         });
+        return $result;
+    }
+
+    /** Gestion pour les rôles automatiques ***************************************************************************/
+
+    public function getUsersInFormateur() : array
+    {
+        $qb = $this->createQueryBuilder();
+        $result = $qb->getQuery()->getResult();
+
+        $users = [];
+        /** @var Formateur $item */
+        foreach ($result as $item) {
+            $users[] = $item->getUtilisateur();
+        }
+        return $users;
+    }
+
+    /** @return Formateur[] */
+    public function getFormateursByUser(?User $user) : array
+    {
+        if ($user === null) return [];
+
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formateur.histoDestruction IS NULL')
+            ->andWhere('formateur.utilisateur = :user')
+            ->setParameter('user', $user)
+        ;
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 }

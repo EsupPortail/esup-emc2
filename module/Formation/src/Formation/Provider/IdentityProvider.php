@@ -4,6 +4,7 @@ namespace Formation\Provider;
 
 use Application\Entity\Db\Agent;
 use Formation\Provider\Role\FormationRoles;
+use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\User;
@@ -13,6 +14,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class IdentityProvider extends AbstractIdentityProvider
 {
+    use FormateurServiceAwareTrait;
     use StagiaireExterneServiceAwareTrait;
     use RoleServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -23,9 +25,14 @@ class IdentityProvider extends AbstractIdentityProvider
      */
     public function computeUsersAutomatiques(string $code): ?array
     {
-        if ($code == FormationRoles::STAGIAIRE_EXTERNE) {
-            $user = $this->getStagiaireExterneService()->getUsersInStagiaireExterne();
-            return $user;
+        switch ($code)  {
+            case FormationRoles::STAGIAIRE_EXTERNE :
+                $user = $this->getStagiaireExterneService()->getUsersInStagiaireExterne();
+                return $user;
+            case FormationRoles::FORMATEUR :
+                $user = $this->getFormateurService()->getUsersInFormateur();
+                return $user;
+
         }
         return null;
     }
@@ -46,6 +53,11 @@ class IdentityProvider extends AbstractIdentityProvider
         if ($stagiaire !== null) {
             $roleStagiaire = $this->getRoleService()->findByRoleId(FormationRoles::STAGIAIRE_EXTERNE);
             $roles[] = $roleStagiaire;
+        }
+        $formateur = $this->getFormateurService()->getFormateursByUser($user);
+        if (!empty($formateur)) {
+            $roleFormateur = $this->getRoleService()->findByRoleId(FormationRoles::FORMATEUR);
+            $roles[] = $roleFormateur;
         }
         return $roles;
     }

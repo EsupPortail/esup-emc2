@@ -12,4 +12,5 @@ class FormateurPrivileges extends Privileges
     const FORMATEUR_MODIFIER = 'formateur-formateur_modifier';
     const FORMATEUR_HISTORISER = 'formateur-formateur_historiser';
     const FORMATEUR_SUPPRIMER = 'formateur-formateur_supprimer';
+    const FORMATEUR_MES_SESSIONS = 'formateur-formateur_mes_sessions';
 }

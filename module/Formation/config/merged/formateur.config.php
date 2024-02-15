@@ -83,6 +83,15 @@ return [
                         FormateurPrivileges::FORMATEUR_SUPPRIMER,
                     ],
                 ],
+                [
+                    'controller' => FormateurController::class,
+                    'action' => [
+                        'mes-sessions',
+                    ],
+                    'privileges' => [
+                        FormateurPrivileges::FORMATEUR_MES_SESSIONS,
+                    ],
+                ],
             ],
         ],
     ],
@@ -218,6 +227,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'mes-sessions' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/mes-sessions',
+                                    'defaults' => [
+                                        /** @see FormateurController::mesSessionsAction() */
+                                        'action' => 'mes-sessions',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -229,6 +248,12 @@ return [
         'formation' => [
             'home' => [
                 'pages' => [
+                    'formateur' => [
+                        'label' => 'Mes sessions',
+                        'route' => 'formation/formateur/mes-sessions',
+                        'resource' => PrivilegeController::getResourceId(FormateurController::class, 'mes-sessions'),
+                        'order' => 500,
+                    ],
                     'gestion-formation' => [
                         'pages' => [
                             'formateur' => [

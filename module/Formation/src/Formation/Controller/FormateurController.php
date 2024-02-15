@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Formation\Entity\Db\Formateur;
 use Formation\Form\Formateur\FormateurFormAwareTrait;
+use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Laminas\Http\Request;
@@ -11,6 +12,7 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Form\User\UserFormAwareTrait;
 use UnicaenUtilisateur\Form\User\UserRechercheFormAwareTrait;
@@ -34,6 +36,8 @@ class FormateurController extends AbstractActionController
             'params' => $params,
         ]);
     }
+
+    /** CRUD **********************************************************************************************************/
 
     public function afficherAction(): ViewModel
     {
@@ -280,7 +284,43 @@ EOS;
         return $this->redirect()->toRoute('formation/formateur', [], [], true);
     }
 
-    /** Fonctions de recherche *****************************************************************************************/
+    /** Point de chute pour les formateurs ****************************************************************************/
+
+    public function mesSessionsAction(): ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $formateurs = $this->getFormateurService()->getFormateursByUser($user);
+
+        if (empty($formateurs)) {
+            throw new RuntimeException("[".$user->getDisplayName()." #".$user->getId()."] est associé·e à aucun formateur actif.");
+        }
+        if (count($formateurs) > 1) {
+            throw new RuntimeException("[".$user->getDisplayName()." #".$user->getId()."] est associé·e à plusieurs formateurs actifs.");
+        }
+        /** @var Formateur $formateur */
+        $formateur = current($formateurs);
+        $sessions = $formateur->getSessions();
+
+        $sessionsActives = [];
+        $sessionsInactives = [];
+        foreach ($sessions as $session) {
+            if ($session->estNonHistorise()) {
+                if ($session->isEtatActif(SessionEtats::ETAT_CLOTURE_INSTANCE) || $session->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) {
+                    $sessionsInactives[] = $session;
+                } else {
+                    $sessionsActives[] = $session;
+                }
+            }
+        }
+
+        return new ViewModel([
+            'formateur' => $formateur,
+            'sessionsActives' => $sessionsActives,
+            'sessionsInactives' => $sessionsInactives,
+        ]);
+    }
+
+    /** Fonctions de recherche ****************************************************************************************/
 
     public function rechercherAction(): JsonModel
     {

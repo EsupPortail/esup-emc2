@@ -107,6 +107,7 @@ class FormationInstanceService
 ////                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
             ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
+            ->addSelect('formateur')->leftjoin('Finstance.formateurs', 'formateur')
             ->andWhere('etat.histoDestruction IS NULL');
         return $qb;
     }

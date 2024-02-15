@@ -1,0 +1,106 @@
+<?php
+
+use Formation\Entity\Db\Formateur;
+use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Privilege\FormationinstancePrivileges;
+
+/**
+ * @see \Formation\Controller\FormateurController::mesSessionsAction()
+ * @var Formateur $formateur
+ * @var FormationInstance[] $sessionsActives
+ * @var FormationInstance[] $sessionsInactives
+ */
+
+$this->headTitle('Mes sessions');
+
+?>
+
+<h1 class="page-header">
+    Mes sessions
+</h1>
+
+<h2> Sessions de formation active </h2>
+
+<?php if (empty($sessionsActives)) : ?>
+    <em> Aucune session de formations</em>
+<?php else : ?>
+    <table class="table table-condensed" id="actives">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <th> Période </th>
+            <th> État </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($sessionsActives as $session): ?>
+            <?php //todo >>> $canSessionAfficher = $this->isAllowed($session, FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER); ?>
+            <?php $canSessionAfficher = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER)); ?>
+            <tr>
+                <td>
+                    <?php echo $session->getFormation()->getLibelle(); ?>
+                </td>
+                <td>
+                    <?php echo $session->getPeriode(); ?>
+                </td>
+                <td>
+                    <?php echo $this->etatinstance($session->getEtatActif()); ?>
+                </td>
+                <td class="action">
+                    <?php if ($canSessionAfficher) : ?>
+                        <?php /** @see \Formation\Controller\FormationInstanceController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                            <span class="icon icon-voir"></span>
+                            Accéder
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<h2> Sessions de formation inactive </h2>
+
+<?php if (empty($sessionsInactives)) : ?>
+    <em> Aucune session de formations</em>
+<?php else : ?>
+    <table class="table table-condensed" id="actives">
+        <thead>
+        <tr>
+            <th> Libellé </th>
+            <th> Période </th>
+            <th> État </th>
+            <th class="action"> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($sessionsInactives as $session): ?>
+            <?php //todo >>> $canSessionAfficher = $this->isAllowed($session, FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER); ?>
+            <?php $canSessionAfficher = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER)); ?>
+            <tr>
+                <td>
+                    <?php echo $session->getFormation()->getLibelle(); ?>
+                </td>
+                <td>
+                    <?php echo $session->getPeriode(); ?>
+                </td>
+                <td>
+                    <?php echo $this->etatinstance($session->getEtatActif()); ?>
+                </td>
+                <td class="action">
+                    <?php if ($canSessionAfficher) : ?>
+                        <?php /** @see \Formation\Controller\FormationInstanceController::afficherAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/afficher', ['formation-instance' => $session->getId()], [], true); ?>">
+                            <span class="icon icon-voir"></span>
+                            Accéder
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

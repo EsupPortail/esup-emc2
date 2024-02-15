@@ -74,6 +74,7 @@ return [
         'identity-provider' => [
             IdentityProvider::class,
             \Structure\Provider\IdentityProvider::class,
+            \Formation\Provider\IdentityProvider::class,
         ],
         'application-username' => 'preecog',
         'default-user' => 0,

@@ -11,17 +11,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use Formation\Provider\Etat\SessionEtats;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface
+class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface
 {
     use HasEtatsTrait;
     use HasSourceTrait;
     use HistoriqueAwareTrait;
+
+    public function getResourceId(): string
+    {
+        return 'Session';
+    }
 
     const TYPE_INTERNE = "formation interne";
     const TYPE_EXTERNE = "formation externe";
