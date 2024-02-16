@@ -133,6 +133,11 @@ class AgentAssertion extends AbstractAssertion
         $agentId = (($this->getMvcEvent()->getRouteMatch()->getParam('agent')));
         $entity = $this->getAgentService()->getAgent($agentId);
 
+        if ($entity === null) {
+            $user = $this->getUserService()->getConnectedUser();
+            $entity = $this->getAgentService()->getAgentByUser($user);
+        }
+
         return match ($action) {
             'afficher', 'afficher-statuts-grades'       => $this->computeAssertion($entity, AgentPrivileges::AGENT_AFFICHER),
             default => true,
