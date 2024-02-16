@@ -51,7 +51,7 @@ return [
                         'index',
                     ],
                     'privileges' => [
-                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER,
+                        FormationinstancePrivileges::FORMATIONINSTANCE_INDEX
                     ],
                 ],
                 [

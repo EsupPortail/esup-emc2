@@ -6,6 +6,7 @@ use Formation\Entity\Db\FormationInstance;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Privilege\FormateurPrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -44,6 +45,10 @@ $canPresenceAfficher = $this->isAllowed(FormationinstancepresencePrivileges::get
 $canPresenceModifier = (!$estAnnulee and $this->isAllowed(FormationinstancepresencePrivileges::getResourceId(FormationinstancepresencePrivileges::FORMATIONINSTANCEPRESENCE_MODIFIER)));
 $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 
+$canFormationModifier = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER));
+$canFormationIndex = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_ACCES));
+$canSessionConfigurer = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_MODIFIER));
+$canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurPrivileges::FORMATEUR_MES_SESSIONS));
 ?>
 
 <h1 class="page-header">
@@ -58,19 +63,32 @@ $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivi
             <?php echo $this->formationInformations($formation); ?>
         </div>
         <div class="col-md-3">
-            <a <?php /** @see FormationController::editerAction() */ ?>
-                    href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
-                    class="btn btn-info action">
-                <span class="icon icon-retour"></span>
-                Retour à l'action formation
-            </a>
+            <?php if ($canMesSessions) : ?>
+                <?php /** @see \Formation\Controller\FormateurController::mesSessionsAction() */ ?>
+                <a href="<?php echo $this->url('formation/formateur/mes-sessions', [], [], true); ?>"
+                        class="btn btn-secondary action">
+                    <span class="icon icon-retour"></span>
+                    Retour à - Mes sessions -
+                </a>
+            <?php endif; ?>
             <br/>
-            <a <?php /** @see FormationController::indexAction() */ ?>
-                    href="<?php echo $this->url('formation', [], [], true); ?>"
-                    class="btn btn-info action">
-                <span class="icon icon-retour"></span>
-                Retour à l'index des formations
-            </a>
+            <?php if ($canFormationModifier) : ?>
+                <?php /** @see FormationController::editerAction() */ ?>
+                <a href="<?php echo $this->url('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true); ?>"
+                        class="btn btn-secondary action">
+                    <span class="icon icon-retour"></span>
+                    Retour à l'action formation
+                </a>
+            <?php endif; ?>
+            <br/>
+            <?php if ($canFormationIndex) : ?>
+                <?php /** @see FormationController::indexAction() */ ?>
+                <a href="<?php echo $this->url('formation', [], [], true); ?>"
+                        class="btn btn-secondary action">
+                    <span class="icon icon-retour"></span>
+                    Retour à l'index des formations
+                </a>
+            <?php endif; ?>
             <?php if ($canGererInscription) : ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_CREATION_EN_COURS) && $instance->hasJournee())  : ?>
                     <br/>
@@ -219,12 +237,14 @@ $canGererInscription = (!$estAnnulee and $this->isAllowed(FormationinstancePrivi
                     </dl>
                 </div>
                 <div class="col-md-3">
-                    <?php /** @see \Formation\Controller\SessionParametreController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('formation/session-parametre', ['session' => $instance->getId()], [], true); ?>"
-                       class="btn btn-primary ajax-modal" data-event="modification">
-                        <span class="icon gerer"></span>
-                        Configurer la session
-                    </a>
+                    <?php if ($canSessionConfigurer) : ?>
+                        <?php /** @see \Formation\Controller\SessionParametreController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('formation/session-parametre', ['session' => $instance->getId()], [], true); ?>"
+                           class="btn btn-primary ajax-modal" data-event="modification">
+                            <span class="icon icon-gerer"></span>
+                            Configurer la session
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
 

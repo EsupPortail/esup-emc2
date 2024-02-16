@@ -4,6 +4,7 @@
  * @var FormationInstance $instance
  */
 
+use Application\Provider\Privilege\AgentPrivileges;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\Etat\SessionEtats;
@@ -17,13 +18,16 @@ $historises = $instance->getListeHistorisee();
 
 $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE));
 
-$canAfficherIndividu          = true;
+$canAfficherIndividu          = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 $canInscritModifier           = (!$estAnnulee && $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
 $canTelechargerAttestation    = $canAfficherIndividu;
 $canTeleverserAttestation     = $canInscritModifier;
 $canSupprimerAttestation      = $canInscritModifier;
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
 $canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
+
+$canHistoriserInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
+$canSupprimerInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 
 $urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['fragment' => 'inscriptions'], true);
 ?>
@@ -117,6 +121,7 @@ $inscriptions = $instance->getInscriptions()
                         <span class="icon icon-sort" title="Classer l'inscription"></span> Classer</a>
                 <?php endif; ?>
 
+                <?php if ($canHistoriserInscription) : ?>
                     <br>
                     <?php /** @see \Formation\Controller\InscriptionController::historiserAgentAction() */?>
                     <a  href="<?php echo $this->url('formation/inscription/historiser', ['inscription' => $inscription->getId()], ['query' => ['retour' => $urlRetour] ], true); ?>"
@@ -125,7 +130,9 @@ $inscriptions = $instance->getInscriptions()
                         <span class="icon icon-historiser"></span>
                         Historiser
                     </a>
+                <?php endif; ?>
 
+                <?php if ($canSupprimerInscription) : ?>
                     <br>
                     <?php /** @see \Formation\Controller\InscriptionController::supprimerAction() */?>
                     <a  href="<?php echo $this->url('formation/inscription/supprimer', ['inscription' => $inscription->getId()], [], true); ?>"
@@ -137,6 +144,7 @@ $inscriptions = $instance->getInscriptions()
                             Supprimer
                         </span>
                     </a>
+                <?php endif; ?>
             </td>
         </tr>
         <?php endif; ?>

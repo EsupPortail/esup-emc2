@@ -35,6 +35,14 @@ return [
                     'controller' => InscriptionController::class,
                     'action' => [
                         'index',
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => InscriptionController::class,
+                    'action' => [
                         'afficher'
                     ],
                     'privileges' => [
