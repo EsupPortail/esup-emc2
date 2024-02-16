@@ -27,9 +27,9 @@ $this->headTitle('Mes sessions');
     <table class="table table-condensed" id="actives">
         <thead>
         <tr>
-            <th> Libellé </th>
-            <th> Période </th>
-            <th> État </th>
+            <th class="libelle"> Libellé </th>
+            <th class="periode"> Période </th>
+            <th class="etat"> État </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
@@ -70,9 +70,9 @@ $this->headTitle('Mes sessions');
     <table class="table table-condensed" id="actives">
         <thead>
         <tr>
-            <th> Libellé </th>
-            <th> Période </th>
-            <th> État </th>
+            <th class="libelle"> Libellé </th>
+            <th class="periode"> Période </th>
+            <th class="etat"> État </th>
             <th class="action"> Action </th>
         </tr>
         </thead>
@@ -104,3 +104,16 @@ $this->headTitle('Mes sessions');
         </tbody>
     </table>
 <?php endif; ?>
+
+<style>
+    th.libelle {
+        width:50%;
+    }
+    th.periode
+    {
+        /*width:50%;*/
+    }
+    th.etat {
+        width: 10rem;
+    }
+</style>

@@ -7,6 +7,7 @@ use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormateurPrivileges;
+use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
@@ -27,7 +28,10 @@ $canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges
 $canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
 
 $canAnnuler = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
-
+$canEmargement = (
+    $this->isAllowed($instance, FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER)
+    && $this->isAllowed(FormationinstancedocumentPrivileges::getResourceId(FormationinstancedocumentPrivileges::FORMATIONINSTANCEDOCUMENT_EMARGEMENT))
+);
 
 $retour = $this->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
 
@@ -276,6 +280,8 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                             Ajouter une séance
                         </a>
                         <br/>
+                    <?php endif; ?>
+                    <?php if ($canEmargement): ?>
                         <?php /** @see FormationInstanceDocumentController::exportTousEmargementsAction() */ ?>
                         <a href="<?php echo $this->url('formation-instance/export-tous-emargements', ['formation-instance' => $instance->getId()], [], true); ?>"
                            class="btn btn-primary action" target="_blank">
@@ -325,11 +331,13 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                             <?php endif; ?>
                             <td> <?php echo $journee->getLieu(); ?></td>
                             <td>
-                                <?php if ($canJourneeModifier) : ?>
+                               <?php if ($canEmargement) : ?>
                                     <?php /** @see FormationInstanceDocumentController::exportEmargementAction() */ ?>
                                     <a href="<?php echo $this->url('formation-instance/export-emargement', ['journee' => $journee->getId()], [], true); ?>"
                                        title="Exporter l'émargement de la séance de formation" target="_blank">
                                         <span class="icon icon-pdf"></span><span class="lettrine">E</span></a>
+                                <?php endif; ?>
+                                <?php if ($canJourneeModifier) : ?>
                                     <?php /** @see FormationInstanceJourneeController::modifierJourneeAction() */ ?>
                                     <a href="<?php echo $this->url('formation-instance/modifier-journee', ['journee' => $journee->getId()], [], true); ?>"
                                        class="ajax-modal" data-event="modification"

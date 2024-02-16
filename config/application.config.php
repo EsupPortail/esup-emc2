@@ -56,7 +56,7 @@ $modules = [
     'Element',
     'Application',
 
-    'Laminas\DeveloperTools',
+//    'Laminas\DeveloperTools',
 //    'UnicaenTest',
 
 ];
