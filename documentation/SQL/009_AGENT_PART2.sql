@@ -522,3 +522,11 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agent';
 
+-- --------------------------------------------------------------------------------------------------------------------
+-- ROLE ---------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto) VALUES
+    ('Supérieur·e hiérarchique direct·e', 'Supérieur·e hiérarchique direct·e', false, true),
+    ('Autorité hiérarchique', 'Autorité hiérarchique', false, true)
+;
