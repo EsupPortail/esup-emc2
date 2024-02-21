@@ -344,7 +344,7 @@ class DemandeExterneService
         $formation = new Formation();
         $formation->setLibelle($libelle);
         $formation->setGroupe($theme);
-        $formation->setDescription("Action de formation générée depuis la demande " . $demande->getId());
+        $formation->setDescription("<p><strong>Action de formation générée depuis la demande " . $demande->getId(). "</strong></p>" . $demande->toStringDescription());
         $formation->setAffichage(false);
         $theme->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationService()->create($formation);

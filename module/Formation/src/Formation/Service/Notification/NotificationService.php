@@ -288,8 +288,15 @@ class NotificationService {
             'UrlService' => $this->getUrlService()
         ];
 
+        $copie = [];
+        $avecCopieSuperieur = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::CONVOCATION_SUPERIEUR_COPIE);
+        if ($avecCopieSuperieur && $inscrit->getAgent() !== null) {
+            $superieurs = $this->getAgentSuperieurService()->getAgentsSuperieursByAgent($agent);
+            foreach ($superieurs as $superieur) $copie[] = $superieur->getSuperieur()->getEmail();
+        }
+
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::SESSION_CONVOCATION, $vars);
-        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation');
+        $mail = $this->getMailService()->sendMail($agent->getEmail(), $rendu->getSujet(), $rendu->getCorps(), 'Formation', null, $copie);
         $mail->setMotsClefs([$instance->generateTag(), $rendu->getTemplate()->generateTag()]);
         $this->getMailService()->update($mail);
 

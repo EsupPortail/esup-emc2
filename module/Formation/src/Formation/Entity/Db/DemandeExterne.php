@@ -253,4 +253,25 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     {
         $this->devis->add($fichier);
     }
+
+    /** MACRO ET PRETTYPRINT ******************************************************************************************/
+
+    public function toStringDescription(): string
+    {
+        $text = "<dl class='row'>";
+        if ($this->getOrganisme()) {
+            $text.= "<dt class='col-md-4'>Organisme</dt><dd>".$this->getOrganisme()."</dd>";
+        }
+        if ($this->getContact()) {
+            $text.= "<dt class='col-md-4'>Contact</dt><dd>".$this->getContact()."</dd>";
+        }
+        if ($this->getLieu()) {
+            $text.= "<dt class='col-md-4'>Lieu</dt><dd>".$this->getLieu()."</dd>";
+        }
+        if ($this->getMontant()) {
+            $text.= "<dt class='col-md-4'>Montant</dt><dd>".$this->getMontant()."</dd>";
+        }
+        $text .= "</dl>";
+        return $text;
+    }
 }

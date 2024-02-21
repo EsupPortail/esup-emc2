@@ -24,4 +24,6 @@ class FormationParametres {
     const LIBELLE = 'LIBELLE';
     const SOUSLIBELLE = 'SOUSLIBELLE';
 
+    const CONVOCATION_SUPERIEUR_COPIE = 'CONVOCATION_SUPERIEUR_COPIE';
+
 }

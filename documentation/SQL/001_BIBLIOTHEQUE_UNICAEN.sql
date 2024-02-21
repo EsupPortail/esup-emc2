@@ -172,6 +172,7 @@ create table unicaen_mail_mail
     status_envoi           varchar(256) not null,
     destinataires          text         not null,
     destinataires_initials text,
+    copies                 text,
     sujet                  text,
     corps                  text,
     mots_clefs             text,
