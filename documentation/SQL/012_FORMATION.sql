@@ -1373,6 +1373,17 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
     ('URL#FormationInstanceAfficher', '<p>Retourne l''URL pour accéder à l''affichage d''une instance de formation</p>', 'UrlService', 'getUrlFormationInstanceAfficher');
 
+-- Macro portant sur les demandes de formation externe
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('DEMANDE#debut', '', 'demande', 'getDebutAsString'),
+    ('DEMANDE#fin', '', 'demande', 'getFinAsString'),
+    ('DEMANDE#libelle', '<p>Retourne le libellé de la formation associé à la demande externe</p>', 'demande', 'getLibelle'),
+    ('DEMANDE#lieu', '', 'demande', 'getLieu'),
+    ('DEMANDE#motivation', '', 'demande', 'getJustificationAgent'),
+    ('DEMANDE#organisme', '<p>Retourne l''organisme de la formation associée à la demande externe</p>', 'demande', 'getOrganisme')
+;
+
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -----------------------------------------------------------------------------------------------------------
