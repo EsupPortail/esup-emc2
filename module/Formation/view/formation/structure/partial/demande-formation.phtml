@@ -85,9 +85,9 @@ usort($dictionnaryDemandes,
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <?php if ($canValiderResponsable ) : ?>
                             <?php  /** @see \Formation\Controller\InscriptionController::validerResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation/inscription/valider-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
+                            <a href="<?php echo $this->url('formation/inscription/valider-responsable', ['inscription' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success">Valider</span></a>
                             <?php  /** @see \Formation\Controller\InscriptionController::refuserResponsableAction() */ ?>
-                            <a href="<?php echo $this->url('formation/inscription/refuser-responsable', ['inscrit' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
+                            <a href="<?php echo $this->url('formation/inscription/refuser-responsable', ['inscription' => $d->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-unchecked text-danger">Refuser</span></a>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </li>
