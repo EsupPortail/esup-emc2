@@ -144,4 +144,8 @@ $this->headTitle("Demande de stage externe");
     });
 
     $('select').selectpicker();
+
+    <?php if (isset($js)) {
+        echo $js;
+    } ?>
 </script>

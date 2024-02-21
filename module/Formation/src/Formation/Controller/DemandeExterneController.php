@@ -52,7 +52,7 @@ class DemandeExterneController extends AbstractActionController {
     {
         $fromQueries  = $this->params()->fromQuery();
         $params = [
-            'agent' => $this->getAgentService()->getAgent($fromQueries['agent']['id']??null),
+            'agent' => $this->getAgentService()->getAgent($fromQueries['agent-filtre']['id']??null),
             'organisme' => $fromQueries['organisme']['id']??null,
             'etat' => $this->getEtatTypeService()->getEtatType((isset($fromQueries['etat']) && trim($fromQueries['etat'])!=='')?trim($fromQueries['etat']):null),
             'historise' => $fromQueries['historise']??null,
@@ -125,6 +125,14 @@ class DemandeExterneController extends AbstractActionController {
                 $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_CREATION_EN_COURS);
                 $this->getDemandeExterneService()->update($demande);
 
+                $vm = new ViewModel([
+                    'title' => "Ajout d'une demande de formation externe",
+                    'agent' => $agent,
+                    'form' => $form,
+                    'js' => "$(function() { $('.modal').modal('hide'); window.location.reload();})",
+                ]);
+                $vm->setTemplate('formation/demande-externe/modifier');
+                return $vm;
             }
         }
 

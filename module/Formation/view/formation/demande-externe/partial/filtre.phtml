@@ -23,12 +23,12 @@ use UnicaenApp\Form\Element\SearchAndSelect;
                         <div class="col-md-4">
                                 <?php
                                 /** @see \Formation\Controller\DemandeExterneController::rechercherAgentAction() */
-                                $agentF = new SearchAndSelect('agent', ['label' => "Agent :"]);
+                                $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent :"]);
                                 $agentF
                                     ->setAutocompleteSource($this->url('formation/demande-externe/rechercher-agent'))
                                     ->setSelectionRequired()
                                     ->setAttributes([
-                                        'id' => 'agent',
+                                        'id' => 'agent-filtre',
                                         'placeholder' => "Nom de l'agent ...",
                                     ]);
                                 ?>
@@ -108,12 +108,12 @@ use UnicaenApp\Form\Element\SearchAndSelect;
         $('form#filter').submit();
     });
 
-    <?php if ($params['agent'] !== null) :?>
-    $('input[name="agent[label]').val(" <?php echo $params['agent']->getDenomination(); ?> ");
-    $('input[name="agent[id]').val("<?php echo $params['agent']->getId(); ?>");
+    <?php if (isset($params['agent'])) :?>
+    $('input[name="agent-filtre[label]').val(" <?php echo $params['agent']->getDenomination(); ?> ");
+    $('input[name="agent-filtre[id]').val("<?php echo $params['agent']->getId(); ?>");
     <?php endif; ?>
 
-    <?php if ($params['organisme'] !== null) :?>
+    <?php if (isset($params['organisme'])) :?>
     $('input[name="organisme[label]').val(" <?php echo $params['organisme']; ?> ");
     $('input[name="organisme[id]').val("<?php echo $params['organisme']; ?>");
     <?php endif; ?>
@@ -121,10 +121,10 @@ use UnicaenApp\Form\Element\SearchAndSelect;
     <?php if (isset($params['etat'])) :?>
     $('select#etat option[value=<?php echo $params['etat']->getId(); ?>]').prop('selected', true);
     <?php endif; ?>
-    <?php if (isset($params['annee'])) :?>
+    <?php if (isset($params['annee']) AND $params['annee'] !== '') :?>
         $('select#annee option[value=<?php echo $params['annee']; ?>]').prop('selected', true);
     <?php endif; ?>
-    <?php if (isset($params['historise'])) :?>
+    <?php if (isset($params['historise'])  AND $params['historise'] !== '') :?>
         $('select#historise option[value=<?php echo $params['historise']; ?>]').prop('selected', true);
     <?php endif; ?>
 </script>
