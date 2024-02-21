@@ -82,7 +82,7 @@ $canTeleverserDevis = $canGerer;
                 <?php endif; ?>
                 <?php if ($canTeleverserDevis && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
                     <?php /** @see \Formation\Controller\DemandeExterneController::ajouterDevisAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true); ?>"
+                    <a href="<?php echo $this->url('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $this->url(null,[],[], true)]], true); ?>"
                        class="ajax-modal" data-event="modification">
                         <span class="icon icon-televerser"></span>Ajouter un devis</a>
                 <?php endif; ?>

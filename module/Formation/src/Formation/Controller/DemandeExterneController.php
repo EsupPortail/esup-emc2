@@ -454,12 +454,13 @@ class DemandeExterneController extends AbstractActionController {
     public function ajouterDevisAction(): ViewModel|Response
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+        $retour = $this->params()->fromQuery('retour');
 
         $fichier = new Fichier();
         $devisNature = $this->getNatureService()->getNatureByCode(FichierNature::DEMANDEEXTERNE_DEVIS);
         $fichier->setNature($devisNature);
         $form = $this->getUploadForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $retour]], true));
         /** @var Select $select */
         $select = $form->get('nature');
         $select->setValueOptions([$devisNature->getId() => $devisNature->getLibelle()]);
@@ -479,6 +480,9 @@ class DemandeExterneController extends AbstractActionController {
                 $demande->addDevis($fichier);
                 $this->getDemandeExterneService()->update($demande);
             }
+
+
+            if ($retour) return $this->redirect()->toUrl($retour);
             return $this->redirect()->toRoute('inscription-externe', [], [], true);
         }
 
