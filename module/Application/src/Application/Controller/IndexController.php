@@ -11,6 +11,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
+use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
@@ -44,15 +45,18 @@ class IndexController extends AbstractActionController
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
     use UserContextServiceAwareTrait;
+    use UrlServiceAwareTrait;
 
     use FichePosteServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use InscriptionServiceAwareTrait;
     use DemandeExterneServiceAwareTrait;
 
+
     public function indexAction(): ViewModel|Response
     {
-        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, [], false);
+        $vars = ['UrlService' => $this->getUrlService()];
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TexteTemplate::EMC2_ACCUEIL, $vars, false);
         $texte = $rendu->getCorps();
 
         /** @var User $connectedUser */

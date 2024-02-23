@@ -6,6 +6,7 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
+use Application\Service\Url\UrlService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Formation\Service\DemandeExterne\DemandeExterneService;
@@ -42,6 +43,7 @@ class IndexControllerFactory
          * @var StructureService $structureService
          * @var UserService $userService
          * @var UserContext $userContext
+         * @var UrlService $urlService
          *
          * @var FichePosteService $fichePosteService
          * @var EntretienProfessionnelService $entretienProfessionelService
@@ -57,6 +59,7 @@ class IndexControllerFactory
         $roleService = $container->get(RoleService::class);
         $userService = $container->get(UserService::class);
         $userContext = $container->get(UserContext::class);
+        $urlService = $container->get(UrlService::class);
         $structureService = $container->get(StructureService::class);
 
         $fichePosteService = $container->get(FichePosteService::class);
@@ -76,6 +79,7 @@ class IndexControllerFactory
         $controller->setServiceUserContext($userContext);
         $controller->setStructureService($structureService);
         $controller->setUserService($userService);
+        $controller->setUrlService($urlService);
 
         $controller->setFichePosteService($fichePosteService);
         $controller->setEntretienProfessionnelService($entretienProfessionelService);
