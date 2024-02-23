@@ -69,7 +69,6 @@ return [
                         CorpsPrivileges::CORPS_INDEX,
                         MetierPrivileges::METIER_INDEX,
                         FormationPrivileges::FORMATION_ACCES,
-                        ActivitePrivileges::ACTIVITE_INDEX,
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_INDEX,
                         StructurePrivileges::STRUCTURE_INDEX,
                     ],
