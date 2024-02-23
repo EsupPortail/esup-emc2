@@ -284,25 +284,38 @@ class CampagneService
 
         /** @var Agent $agent */
         foreach ($agents as $agent) {
-            $ok = false;
+            $raison[$agent->getId()] = "<ul>";
+
+            $kept = true;
+
             if ($agent->isForceSansObligation($campagne)) {
-                $facultatifs[] = $agent;
-                $raison[$agent->getId()] = "Forcé·e sans obligation";
-                $ok = true;
+                $raison[$agent->getId()] .= "<li>Forcé·e sans obligation</li>";
+                $kept = false;
             }
-            if (!$ok) {
-                if (empty($agent->getAffectationsActifs($dateMinEnPoste))) {
-                    $facultatifs[] = $agent;
-                    $raison[$agent->getId()] = "Sans affectation valide (à la date du ".$dateMinEnPoste->format('d/m/y').") ";
-                    $ok = true;
-                }
+
+
+            if (!$agent->isContratLong()) {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans 'contrat long'</li>";
             }
-            $res = $agent->isValideEmploiType($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste);
-            if (!$ok && !$res) {
-                $facultatifs[] = $agent;
-                $ok = true;
+            if (!$agent->isValideEmploiType($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_EMPLOITYPE), $dateMinEnPoste)) {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Emploi-type invalide dans le cadre des entretiens professionnels</li>";
             }
-            if (!$ok) $obligatoires[] = $agent;
+            if (!$agent->isValideStatut($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_STATUT), $dateMinEnPoste))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Statut invalide dans le cadre des entretiens professionnels</li>";
+
+            }
+            if (!$agent->isValideAffectation($this->getParametreService()->getParametreByCode(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::TEMOIN_AFFECTATION), $dateMinEnPoste))
+            {
+                $kept = false;
+                $raison[$agent->getId()] .= "<li>Sans affectation valide (à la date du ".$dateMinEnPoste->format('d/m/y').") </li>";
+
+            }
+            if ($kept) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+            $raison[$agent->getId()] .= "</ul>";
         }
         return [$obligatoires, $facultatifs, $raison];
     }

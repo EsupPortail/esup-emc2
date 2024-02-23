@@ -481,7 +481,6 @@ class DemandeExterneController extends AbstractActionController {
                 $this->getDemandeExterneService()->update($demande);
             }
 
-
             if ($retour) return $this->redirect()->toUrl($retour);
             return $this->redirect()->toRoute('inscription-externe', [], [], true);
         }

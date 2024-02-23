@@ -13,7 +13,6 @@ use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservatio
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use Exception;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
-use UnicaenObservation\Entity\Db\ObservationInstance;
 use UnicaenObservation\Entity\Interface\HasObservationsInterface;
 use UnicaenObservation\Entity\Trait\HasObservationsTrait;
 use UnicaenApp\Exception\RuntimeException;

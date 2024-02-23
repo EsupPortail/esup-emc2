@@ -311,6 +311,7 @@ class Agent implements
 
     public function isValideStatut(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
     {
+        if ($parametre === null) return true;
         $temoins = $parametre->getTemoins();
 
         $count = [];

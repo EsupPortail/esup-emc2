@@ -22,7 +22,7 @@ return [
                 'options' => [
                     'route' => ':hostname',
                     'constraints' => [
-                        'hostname' => 'mes-formations(-pp)?(.n302z-dsi008)?.unicaen.fr',
+                        'hostname' => $hostname,
                     ],
                     'defaults' => [
                         'hostname' => !Console::isConsole() ? $hostname : '',
