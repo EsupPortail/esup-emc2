@@ -10,7 +10,6 @@ use Application\Service\Agent\AgentService;
 use Application\Service\AgentAffectation\AgentAffectationService;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\FicheProfil\FicheProfilService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use EntretienProfessionnel\Service\Campagne\CampagneService;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
@@ -40,7 +39,6 @@ class StructureControllerFactory {
          * @var EtatTypeService $etatTypeService
          * @var CampagneService $campagneService
          * @var FichePosteService $fichePosteService
-         * @var FicheProfilService $ficheProfilService
          * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
@@ -54,7 +52,6 @@ class StructureControllerFactory {
         $campagneService = $container->get(CampagneService::class);
         $fichePosteService = $container->get(FichePosteService::class);
         $parametreService = $container->get(ParametreService::class);
-        $ficheProfilService = $container->get(FicheProfilService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
         $structureAgentForceService = $container->get(StructureAgentForceService::class);
@@ -68,7 +65,6 @@ class StructureControllerFactory {
         $selectionAgentForm = $container->get('FormElementManager')->get(SelectionAgentForm::class);
         $hasDescriptionForm = $container->get('FormElementManager')->get(HasDescriptionForm::class);
 
-        /** @var StructureController $controller */
         $controller = new StructureController();
 
         $controller->setAgentService($agentService);
@@ -78,7 +74,6 @@ class StructureControllerFactory {
         $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
         $controller->setFichePosteService($fichePosteService);
-        $controller->setFicheProfilService($ficheProfilService);
         $controller->setParametreService($parametreService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);

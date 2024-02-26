@@ -14,7 +14,6 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\FicheProfil\FicheProfilServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\Campagne;
@@ -44,7 +43,6 @@ class StructureController extends AbstractActionController {
     use AgentMissionSpecifiqueServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FichePosteServiceAwareTrait;
-    use FicheProfilServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
