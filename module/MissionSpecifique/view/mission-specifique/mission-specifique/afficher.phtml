@@ -15,9 +15,27 @@ use MissionSpecifique\Entity\Db\MissionSpecifique;
             <dt> Libellé </dt>
             <dd> <?php echo $mission->getLibelle(); ?> </dd>
             <dt> Type </dt>
-            <dd> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"Aucun"; ?> </dd>
+            <dd>
+                <?php if ($mission->getType()): ?>
+                    <?php echo $mission->getType()->getLibelle(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun type
+                    </span>
+                <?php endif; ?>
+            </dd>
             <dt> Thème </dt>
-            <dd> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"Aucun"; ?> </dd>
+            <dd>
+                <?php if ($mission->getTheme()): ?>
+                    <?php echo $mission->getTheme()->getLibelle(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun thème
+                    </span>
+                <?php endif; ?>
+            </dd>
             <dt>
                 Liste des Agents
 

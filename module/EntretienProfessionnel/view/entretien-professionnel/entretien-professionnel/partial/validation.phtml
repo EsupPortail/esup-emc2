@@ -278,7 +278,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         }
         ?>
 
-        <?php if ($observationAutorite === null) : ?>
+        <?php if ($observationAutorite === null AND $canValiderDrh) : ?>
             <a href="<?php echo $this->url('entretien-professionnel/observation/autorite/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="modification">
                 Ajouter une observation
@@ -358,7 +358,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             ?>
 
             <?php if ($observationFinale === null) : ?>
-                <?php if ($step === 3) : ?>
+                <?php if ($step === 3 AND $canValiderAgent) : ?>
                     <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
                     <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_FINALE], [], true); ?>"
                        class="btn btn-primary ajax-modal" data-event="modification">
@@ -384,7 +384,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <strong>Visa effectué par l'agent</strong><br>
             Visé le <?php echo $validationAgent->getHistoModification()->format('d/m/y à H:i:s'); ?> par <?php echo $validationAgent->getHistoModificateur()->getDisplayName(); ?>.
         </div>
-        <?php if ($canValiderAgent AND $entretien->getCampagne()->estEnCours()) : ?>
+        <?php if ($canValiderAgent) : ?>
             <a
                 <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::revoquerValidationAction() */ ?>
                     href="<?php echo $this->url('entretien-professionnel/revoquer-validation', ['entretien-professionnel' => $entretien->getId(), 'validation' => $validationAgent->getId()], [], true); ?>"

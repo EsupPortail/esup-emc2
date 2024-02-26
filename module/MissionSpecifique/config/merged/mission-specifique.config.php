@@ -41,9 +41,15 @@ return [
                     'controller' => MissionSpecifiqueController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueController::class,
+                    'action' => [
                         'modifier',
-                        'historiser',
-                        'restaurer',
                     ],
                     'privileges' => [
                         MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER,
@@ -106,6 +112,7 @@ return [
                 'options' => [
                     'route'    => '/mission-specifique',
                     'defaults' => [
+                        /** @see MissionSpecifiqueController::indexAction() */
                         'controller' => MissionSpecifiqueController::class,
                         'action'     => 'index',
                     ],
@@ -117,7 +124,7 @@ return [
                         'options' => [
                             'route'    => '/afficher/:mission',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::afficherAction() */
                                 'action'     => 'afficher',
                             ],
                         ],
@@ -127,7 +134,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::ajouterAction() */
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -137,7 +144,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:mission',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::modifierAction() */
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -147,7 +154,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:mission',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::historiserAction() */
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -157,7 +164,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:mission',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::restaurerAction() */
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -167,7 +174,7 @@ return [
                         'options' => [
                             'route'    => '/detruire/:mission',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueController::class,
+                                /** @see MissionSpecifiqueController::detruireAction() */
                                 'action'     => 'detruire',
                             ],
                         ],

@@ -4,21 +4,13 @@ namespace MissionSpecifique\Service\MissionSpecifiqueType;
 
 trait MissionSpecifiqueTypeServiceAwareTrait {
 
-    /** @var MissionSpecifiqueTypeService */
-    private $missionSpecifiqueTypeService;
+    private MissionSpecifiqueTypeService $missionSpecifiqueTypeService;
 
-    /**
-     * @return MissionSpecifiqueTypeService
-     */
     public function getMissionSpecifiqueTypeService(): MissionSpecifiqueTypeService
     {
         return $this->missionSpecifiqueTypeService;
     }
 
-    /**
-     * @param MissionSpecifiqueTypeService $missionSpecifiqueTypeService
-     * @return MissionSpecifiqueTypeService
-     */
     public function setMissionSpecifiqueTypeService(MissionSpecifiqueTypeService $missionSpecifiqueTypeService): MissionSpecifiqueTypeService
     {
         $this->missionSpecifiqueTypeService = $missionSpecifiqueTypeService;

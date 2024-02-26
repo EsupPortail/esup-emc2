@@ -4,11 +4,19 @@ namespace MissionSpecifique\Controller;
 
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use MissionSpecifique\Service\MissionSpecifiqueTheme\MissionSpecifiqueThemeService;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class MissionSpecifiqueThemeControllerFactory
 {
 
+    /**
+     * @param ContainerInterface $container
+     * @return MissionSpecifiqueThemeController
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container): MissionSpecifiqueThemeController
     {
         /**

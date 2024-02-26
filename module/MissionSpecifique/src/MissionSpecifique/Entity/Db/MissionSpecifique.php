@@ -2,6 +2,7 @@
 
 namespace MissionSpecifique\Entity\Db;
 
+use Application\Entity\Db\AgentMissionSpecifique;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -76,7 +77,7 @@ class MissionSpecifique implements HistoriqueAwareInterface
 
     /** MACROS ********************************************************************************************************/
 
-    /** @noinspection PhpUnsued */
+    /** @noinspection PhpUnused */
     public function toStringLibelle(): string
     {
         if ($this->getLibelle() === null) {
@@ -85,7 +86,7 @@ class MissionSpecifique implements HistoriqueAwareInterface
         return $this->getLibelle();
     }
 
-    /** @noinspection PhpUnsued */
+    /** @noinspection PhpUnused */
     public function toStringDescription(): string
     {
         if ($this->getDescription() === null) {
@@ -94,7 +95,7 @@ class MissionSpecifique implements HistoriqueAwareInterface
         return $this->getDescription();
     }
 
-    /** @noinspection PhpUnsued */
+    /** @noinspection PhpUnused */
     public function toStringTheme(): string
     {
         if ($this->getTheme() === null || $this->getTheme()->getLibelle() === null) {
@@ -103,7 +104,7 @@ class MissionSpecifique implements HistoriqueAwareInterface
         return $this->getTheme()->getLibelle();
     }
 
-    /** @noinspection PhpUnsued */
+    /** @noinspection PhpUnused */
     public function toStringType(): string
     {
         if ($this->getType() === null || $this->getType()->getLibelle() === null) {

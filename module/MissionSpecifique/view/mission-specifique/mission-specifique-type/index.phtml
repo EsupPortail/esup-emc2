@@ -16,8 +16,8 @@ $canIndexMissionSpecifique = $this->isAllowed(MissionspecifiquePrivileges::getRe
 $canIndexMissionSpecifiqueTheme = $this->isAllowed(MissionspecifiquethemePrivileges::getResourceId(MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_INDEX));
 
 $canAfficher = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_AFFICHER));
-$canAjouter = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_MODIFIER));
-$canModifier = $canAjouter;
+$canAjouter = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_AJOUTER));
+$canModifier = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_MODIFIER));
 $canHistoriser = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_HISTORISER));
 $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_DETRUIRE));
 
@@ -30,6 +30,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(Mi
         </h1>
 
         <?php if ($canAjouter) : ?>
+            <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('mission-specifique-type/ajouter', [], [], true); ?>"
                class="btn btn-primary ajax-modal" data-event="modification">
                 <span class="icon icon-ajouter"></span>
@@ -39,12 +40,14 @@ $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(Mi
     </div>
     <div class="col-md-3">
         <?php if ($canIndexMissionSpecifique) : ?>
+            <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::indexAction() */ ?>
             <a href="<?php echo $this->url("mission-specifique"); ?>" class="btn btn-primary">
                 <span class="icon icon-listing"></span>
                 Accéder aux missions
             </a>
         <?php endif; ?>
         <?php if ($canIndexMissionSpecifiqueTheme) : ?>
+            <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::indexAction() */ ?>
             <a href="<?php echo $this->url("mission-specifique-theme"); ?>" class="btn btn-primary">
                 <span class="icon icon-listing"></span>
                 Accéder aux thèmes
@@ -55,12 +58,12 @@ $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(Mi
 
 <br/>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed datatable">
     <thead>
     <tr>
         <th> Libellé</th>
         <th> #Missions</th>
-        <th style="width:10rem;"> Action</th>
+        <th class="action"> Action</th>
     </tr>
     </thead>
     <tbody>
@@ -68,36 +71,55 @@ $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(Mi
         <tr class="<?php if ($type->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $type->getLibelle(); ?> </td>
             <td> <?php echo count($type->getMissions()); ?> </td>
-            <td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-type/afficher', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal"
                     >
-                        <span class="icon icon-voir" title="Afficher le type de mission spécifique"></span></a>
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
+                    <br>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-type/modifier', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-editer" title="Modifier le type de mission spécifique"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
+                    <br>
                     <?php if ($type->estNonHistorise()) : ?>
+                        <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique-type/historiser', ['type' => $type->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-historiser" title="Historiser le type de mission spécifique"></span></a>
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
                     <?php else : ?>
+                        <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique-type/restaurer', ['type' => $type->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-restaurer"
-                                  title="Restaurer le type de mission spécifique"></span></a>
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
+                    <br>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::detruireAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique-type/detruire', ['type' => $type->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-unchecked" title="Supprimer le type de mission spécifique"></span></a>
+                        <span class="text text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -107,11 +129,17 @@ $canEffacer = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(Mi
 
 
 <script>
-    $(function () {
+    $(function() {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
-            tinyMCE.editors = [];
+            tinyMCE.editors=[];
             window.location.reload();
         });
+
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
     });
 </script>

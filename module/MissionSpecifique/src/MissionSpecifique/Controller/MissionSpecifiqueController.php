@@ -22,7 +22,7 @@ class MissionSpecifiqueController extends AbstractActionController
     use MissionSpecifiqueFormAwareTrait;
     use ModifierLibelleFormAwareTrait;
 
-    /** Partie gestion des missions spécifiques  **********************************************************************/
+    /** Partie gestion des missions spécifiques ***********************************************************************/
 
     public function indexAction(): ViewModel
     {

@@ -46,7 +46,7 @@ $canModifier = ($modification AND $this->isAllowed(MissionPrincipalePrivileges::
     <dd>
         <?php
             $activites = $mission->getActivites();
-            usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() > $b->getOrdre();});
+            usort($activites, function (MissionActivite $a, MissionActivite $b) { return $a->getOrdre() <=> $b->getOrdre();});
         ?>
         <?php foreach ($activites as $activite) : ?>
             <li>

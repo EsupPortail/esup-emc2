@@ -4,9 +4,17 @@ namespace MissionSpecifique\Service\MissionSpecifiqueType;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class MissionSpecifiqueTypeServiceFactory {
 
+    /**
+     * @param ContainerInterface $container
+     * @return MissionSpecifiqueTypeService
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container) : MissionSpecifiqueTypeService
     {
         /**

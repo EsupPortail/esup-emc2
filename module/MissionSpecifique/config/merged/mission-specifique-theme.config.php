@@ -37,6 +37,14 @@ return [
                     'controller' => MissionSpecifiqueThemeController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquethemePrivileges::MISSIONSPECIFIQUETHEME_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueThemeController::class,
+                    'action' => [
                         'modifier',
                     ],
                     'privileges' => [
@@ -73,6 +81,7 @@ return [
                 'options' => [
                     'route'    => '/mission-specifique-theme',
                     'defaults' => [
+                        /** @see MissionSpecifiqueThemeController::indexAction() */
                         'controller' => MissionSpecifiqueThemeController::class,
                         'action'     => 'index',
                     ],
@@ -84,7 +93,7 @@ return [
                         'options' => [
                             'route'    => '/afficher/:theme',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::afficherAction() */
                                 'action'     => 'afficher',
                             ],
                         ],
@@ -94,7 +103,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::ajouterAction() */
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -104,7 +113,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:theme',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::modifierAction() */
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -114,7 +123,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:theme',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::historiserAction() */
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -124,7 +133,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:theme',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::restaurerAction() */
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -134,7 +143,7 @@ return [
                         'options' => [
                             'route'    => '/detruire/:theme',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueThemeController::class,
+                                /** @see MissionSpecifiqueThemeController::detruireAction() */
                                 'action'     => 'detruire',
                             ],
                         ],

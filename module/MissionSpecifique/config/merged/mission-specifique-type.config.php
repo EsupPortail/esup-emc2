@@ -37,6 +37,14 @@ return [
                     'controller' => MissionSpecifiqueTypeController::class,
                     'action' => [
                         'ajouter',
+                    ],
+                    'privileges' => [
+                        MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_AJOUTER,
+                    ],
+                ],
+                [
+                    'controller' => MissionSpecifiqueTypeController::class,
+                    'action' => [
                         'modifier',
                     ],
                     'privileges' => [
@@ -73,6 +81,7 @@ return [
                 'options' => [
                     'route'    => '/mission-specifique-type',
                     'defaults' => [
+                        /** @see MissionSpecifiqueTypeController::indexAction() */
                         'controller' => MissionSpecifiqueTypeController::class,
                         'action'     => 'index',
                     ],
@@ -84,7 +93,7 @@ return [
                         'options' => [
                             'route'    => '/afficher/:type',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::afficherAction() */
                                 'action'     => 'afficher',
                             ],
                         ],
@@ -94,7 +103,7 @@ return [
                         'options' => [
                             'route'    => '/ajouter',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::ajouterAction() */
                                 'action'     => 'ajouter',
                             ],
                         ],
@@ -104,7 +113,7 @@ return [
                         'options' => [
                             'route'    => '/modifier/:type',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::modifierAction() */
                                 'action'     => 'modifier',
                             ],
                         ],
@@ -114,7 +123,7 @@ return [
                         'options' => [
                             'route'    => '/historiser/:type',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::historiserAction() */
                                 'action'     => 'historiser',
                             ],
                         ],
@@ -124,7 +133,7 @@ return [
                         'options' => [
                             'route'    => '/restaurer/:type',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::restaurerAction() */
                                 'action'     => 'restaurer',
                             ],
                         ],
@@ -134,7 +143,7 @@ return [
                         'options' => [
                             'route'    => '/detruire/:type',
                             'defaults' => [
-                                'controller' => MissionSpecifiqueTypeController::class,
+                                /** @see MissionSpecifiqueTypeController::detruireAction() */
                                 'action'     => 'detruire',
                             ],
                         ],

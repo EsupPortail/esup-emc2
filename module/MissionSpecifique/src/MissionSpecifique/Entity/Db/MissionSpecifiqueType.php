@@ -10,9 +10,6 @@ use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 class MissionSpecifiqueType implements HistoriqueAwareInterface {
     use HistoriqueAwareTrait;
 
-    const TYPE_ID_REFERENT = 1;
-    const TYPE_ID_CHARGE   = 2;
-
     private ?int $id = null;
     private ?string $libelle = null;
     private Collection $missions;

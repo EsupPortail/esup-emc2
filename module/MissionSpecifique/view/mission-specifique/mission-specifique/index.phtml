@@ -16,8 +16,8 @@ $canIndexMissionSpecifiqueTheme = $this->isAllowed(MissionspecifiquethemePrivile
 $canIndexMissionSpecifiqueType = $this->isAllowed(MissionspecifiquetypePrivileges::getResourceId(MissionspecifiquetypePrivileges::MISSIONSPECIFIQUETYPE_INDEX));
 
 $canAfficher = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFICHER));
-$canAjouter = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER));
-$canModifier = $canAjouter;
+$canAjouter = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AJOUTER));
+$canModifier = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER));
 $canHistoriser = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_HISTORISER));
 $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_DETRUIRE));
 
@@ -30,6 +30,7 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
         </h1>
 
         <?php if ($canAjouter) : ?>
+            <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::ajouterAction() */ ?>
             <a href="<?php echo $this->url('mission-specifique/ajouter', [], [], true); ?>" class="btn btn-primary ajax-modal" data-event="modification">
                 <span class="icon icon-ajouter"></span>
                 Ajouter une mission spécifique
@@ -38,12 +39,14 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
     </div>
     <div class="col-md-3">
             <?php if ($canIndexMissionSpecifiqueTheme) : ?>
+                <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueThemeController::indexAction() */ ?>
                 <a href="<?php echo $this->url("mission-specifique-theme"); ?>" class="btn btn-primary">
                     <span class="icon icon-listing"></span>
                     Accéder aux thèmes
                 </a>
             <?php endif; ?>
             <?php if ($canIndexMissionSpecifiqueType) : ?>
+                <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueTypeController::indexAction() */ ?>
                 <a href="<?php echo $this->url("mission-specifique-type"); ?>" class="btn btn-primary">
                     <span class="icon icon-listing"></span>
                     Accéder aux types
@@ -54,50 +57,88 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
 
 <br/>
 
-<table class="table table-condensed table-hover">
+<table class="table table-condensed datatable">
     <thead>
     <tr>
-        <th> Libellé </th>
+        <th style="min-width: 30rem;"> Libellé </th>
         <th> Type </th>
         <th> Thème </th>
-        <th style="width:10rem;"> Action </th>
+        <th class="action"> Action </th>
     </tr>
     </thead>
     <tbody>
     <?php foreach ($missions as $mission) : ?>
         <tr class="<?php if ($mission->estHistorise()) echo " historise "; ?>">
             <td> <?php echo $mission->getLibelle(); ?> </td>
-            <td> <?php echo ($mission->getType())?$mission->getType()->getLibelle():"<span class='text-danger'>Aucun type</span>"; ?> </td>
-            <td> <?php echo ($mission->getTheme())?$mission->getTheme()->getLibelle():"<span class='text-danger'>Aucun thème</span>"; ?> </td>
             <td>
+                <?php if ($mission->getType()): ?>
+                    <?php echo $mission->getType()->getLibelle(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun type
+                    </span>
+                <?php endif; ?>
+             </td>
+            <td>
+                <?php if ($mission->getTheme()): ?>
+                    <?php echo $mission->getTheme()->getLibelle(); ?>
+                <?php else : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention"></span>
+                        Aucun thème
+                    </span>
+                <?php endif; ?>
+            </td>
+            <td class="action">
                 <?php if ($canAfficher) : ?>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::afficherAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique/afficher', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal"
                     >
-                        <span class="icon icon-voir" title="Afficher la mission spécifique"></span></a>
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
                 <?php endif; ?>
                 <?php if ($canModifier) : ?>
+                    <br>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::modifierAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique/modifier', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-editer" title="Modifier la mission spécifique"></span></a>
+                        <span class="icon icon-editer"></span>
+                        Modifier
+                    </a>
                 <?php endif; ?>
                 <?php if ($canHistoriser) : ?>
+                    <br>
                     <?php if ($mission->estNonHistorise()) : ?>
+                        <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::historiserAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique/historiser', ['mission' => $mission->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-historiser" title="Historiser la mission spécifique"></span></a>
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
                     <?php else : ?>
+                        <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::restaurerAction() */ ?>
                         <a href="<?php echo $this->url('mission-specifique/restaurer', ['mission' => $mission->getId()], [], true); ?>"
                         >
-                            <span class="icon icon-restaurer" title="Restaurer la mission spécifique"></span></a>
+                            <span class="icon icon-restaurer" title="Restaurer la mission spécifique"></span>
+                            Restaurer
+                        </a>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canEffacer) : ?>
+                    <br>
+                    <?php  /** @see \MissionSpecifique\Controller\MissionSpecifiqueController::detruireAction() */ ?>
                     <a href="<?php echo $this->url('mission-specifique/detruire', ['mission' => $mission->getId()], [], true); ?>"
                        class="ajax-modal" data-event="modification"
                     >
-                        <span class="icon icon-unchecked" title="Supprimer la mission spécifique"></span></a>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked" title="Supprimer la mission spécifique"></span>
+                            Supprimer
+                        </span>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -113,5 +154,11 @@ $canEffacer = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(Missio
             tinyMCE.editors=[];
             window.location.reload();
         });
+
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        } );
     });
 </script>

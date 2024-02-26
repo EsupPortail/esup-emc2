@@ -5,6 +5,7 @@ namespace EntretienProfessionnel\Assertion;
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
@@ -53,7 +54,6 @@ class EntretienProfessionnelAssertionFactory {
         $assertion->setAgentAutoriteService($agentAutoriteService);
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setEntretienProfessionnelService($entretienProfessionnelService);
-        $assertion->setParametreService($parametreService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
@@ -64,6 +64,10 @@ class EntretienProfessionnelAssertionFactory {
         $application = $container->get('Application');
         $mvcEvent    = $application->getMvcEvent();
         $assertion->setMvcEvent($mvcEvent);
+
+        $assertion->setBLOCAGECOMPTERENDU($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION));
+        $assertion->setBLOCAGEVALIDATION($parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION));
+
         return $assertion;
     }
 }

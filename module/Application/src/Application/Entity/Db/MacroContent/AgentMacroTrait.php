@@ -90,6 +90,7 @@ trait AgentMacroTrait
         $agent = $this;
         $statuts = $agent->getStatutsActifs();
 //        $texte  = "<ul>";
+        $texte  = "";
         foreach ($statuts as $statut) {
             $temoins = [];
             if ($statut->isTitulaire()) $temoins[] = "Titulaire";

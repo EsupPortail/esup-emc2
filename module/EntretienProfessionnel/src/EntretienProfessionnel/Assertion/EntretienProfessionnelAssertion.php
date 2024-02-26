@@ -31,7 +31,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
-    use ParametreServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use PrivilegeCategorieServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -41,6 +40,21 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     private ?EntretienProfessionnel $lastEntretien = null;
     private ?Role $lastRole = null;
     private ?array $predicats = null;
+
+
+    private bool $BLOCAGE_COMPTERENDU = false;
+    private bool $BLOCAGE_VALIDATION = false;
+
+    public function setBLOCAGECOMPTERENDU(bool $BLOCAGE_COMPTERENDU): void
+    {
+        $this->BLOCAGE_COMPTERENDU = $BLOCAGE_COMPTERENDU;
+    }
+
+    public function setBLOCAGEVALIDATION(bool $BLOCAGE_VALIDATION): void
+    {
+        $this->BLOCAGE_VALIDATION = $BLOCAGE_VALIDATION;
+    }
+
 
     /**
      * @param EntretienProfessionnel|null $entretienProfessionnel
@@ -133,8 +147,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             case EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER :
                 if (! $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                 if (!$this->isScopeCompatible($entretien, $agent, $role, $predicats)) return false;
-                if ($this->parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION)
-                    AND !$this->isPeriodeCompatible($entretien)) return false;
+                if ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien)) return false;
                 if ($role->getRoleId() === AppRoleProvider::AGENT) {
                     if ($now > $entretien->getDateEntretien()) return false;
                 }
@@ -173,11 +186,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     default => false,
                 };
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :
+                return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION :
+                if ($this->BLOCAGE_VALIDATION AND !$this->isPeriodeCompatible($entretien)) return false;
                 return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
+                if ($this->BLOCAGE_VALIDATION AND !$this->isPeriodeCompatible($entretien)) return false;
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
                     RoleProvider::RESPONSABLE, Agent::ROLE_AUTORITE => ($predicats['isAutoriteHierarchique'] && ($inhibition || !$predicats['isResponsableEntretien'])),

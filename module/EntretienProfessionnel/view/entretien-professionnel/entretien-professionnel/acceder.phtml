@@ -18,6 +18,9 @@
  *
  * @var Agent[] $superieures
  * @var Agent[] $autorites
+ *
+ * @var bool $BLOCAGE_COMPTERENDU
+ * @var bool $BLOCAGE_VALIDATION
  */
 
 use Application\Entity\Db\Agent;
@@ -146,10 +149,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <div class="tab-content">
 
     <div id="formulaire" class="tab-pane" >
-        <?php if ($canModifierEP) : ?>
-            CAN MODIFIER
-        <?php endif; ?>
-        <?php if (!EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
+        <?php if ($BLOCAGE_COMPTERENDU && !EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
             <div class="alert alert-info">
                 <strong>
                     <span class="icon icon-information"></span>
@@ -164,6 +164,18 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     </div>
 
     <div id="formations" class="tab-pane">
+
+        <?php if ($BLOCAGE_COMPTERENDU && !EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    La campagne n'est pas active !
+                </strong>
+
+                <p> Par conséquent, vous ne pouvez plus modifier le compte-rendu d'entretien professionnel.</p>
+            </div>
+        <?php endif; ?>
+
         <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => $parcours??null,  'connectedUser' => $user, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
@@ -174,6 +186,18 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 <!--            --><?php //endif; ?>
 
     <div id="validation" class="tab-pane">
+
+        <?php if ($BLOCAGE_VALIDATION && !EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    La campagne n'est pas active !
+                </strong>
+
+                <p> Par conséquent, vous ne pouvez plus valider l'entretien professionnel.</p>
+            </div>
+        <?php endif; ?>
+
         <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step]); ?>
     </div>
 
