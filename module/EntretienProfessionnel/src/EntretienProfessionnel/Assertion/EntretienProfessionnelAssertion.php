@@ -10,12 +10,14 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
+use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -29,10 +31,11 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
-    use UserServiceAwareTrait;
-    use StructureServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use PrivilegeCategorieServiceAwareTrait;
+    use UserServiceAwareTrait;
+    use StructureServiceAwareTrait;
 
     private ?Agent $lastAgent = null;
     private ?EntretienProfessionnel $lastEntretien = null;
@@ -84,19 +87,24 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         };
     }
 
-    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
+    static public function isPeriodeCompatible(EntretienProfessionnel $entretienProfessionnel): bool
     {
+        $campagne = $entretienProfessionnel->getCampagne();
+        $now = new DateTime();
 
-
-        /** @var EntretienProfessionnel $entity */
-        if (!$entity instanceof EntretienProfessionnel) {
+        if ($campagne->getDateDebut() !== null AND $now < $campagne->getDateDebut()) {
             return false;
         }
+        if ($campagne->getDateFin() !== null AND $now > $campagne->getDateFin()) {
+            return false;
+        }
+        return true;
+    }
 
-        /** @var EntretienProfessionnel $entity */
+    public function computeAssertion(EntretienProfessionnel $entretien, string $privilege) : bool
+    {
+
         $role = $this->getUserService()->getConnectedRole();
-        if ($role->getRoleId() === AppRoleProvider::ADMIN_TECH) return true;
-
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
@@ -111,7 +119,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
         $now = new DateTime();
 
-        $grades = $entity->getAgent()->getGradesActifs($entity->getDateEntretien());
+        $grades = $entretien->getAgent()->getGradesActifs($entretien->getDateEntretien());
         $inhibition = false;
         foreach ($grades as $grade) {
             if ($grade->getCorps()->isSuperieurAsAutorite()) {
@@ -120,29 +128,21 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             }
         }
 
-		$grades = $entity->getAgent()->getGradesActifs($entity->getDateEntretien());
-        $inhibition = false;
-		foreach ($grades as $grade) {
-			if ($grade->getCorps()->isSuperieurAsAutorite()) {
-				$inhibition = true;
-				break;
-			}
-		}
-
-        $predicats = $this->computePredicats($entity, $agent, $role);
-
+        $predicats = $this->computePredicats($entretien, $agent, $role);
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER :
-                if (! $entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
-                if (!$this->isScopeCompatible($entity, $agent, $role, $predicats)) return false;
+                if (! $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
+                if (!$this->isScopeCompatible($entretien, $agent, $role, $predicats)) return false;
+                if ($this->parametreService->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION)
+                    AND !$this->isPeriodeCompatible($entretien)) return false;
                 if ($role->getRoleId() === AppRoleProvider::AGENT) {
-                    if ($now > $entity->getDateEntretien()) return false;
+                    if ($now > $entretien->getDateEntretien()) return false;
                 }
                 return true;
             case EntretienproPrivileges::ENTRETIENPRO_EXPORTER :
-                if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
-                    $entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
-                return $this->isScopeCompatible($entity, $agent, $role, $predicats);
+                if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER) ||
+                    $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
+                return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_CONVOQUER :
             case EntretienproPrivileges::ENTRETIENPRO_MODIFIER :
                 switch ($role->getRoleId()) {
@@ -152,8 +152,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     case AppRoleProvider::OBSERVATEUR:
                         return true;
                     case AppRoleProvider::AGENT:
-                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
-                        if ($entity->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
+                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
+                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
                         return $predicats['isAgentEntretien'];
                     case RoleProvider::RESPONSABLE:
                         return $predicats['isResponsableStructure'];
@@ -176,7 +176,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_AGENT :
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION :
-                    return $this->isScopeCompatible($entity, $agent, $role, $predicats);
+                return $this->isScopeCompatible($entretien, $agent, $role, $predicats);
             case EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH :
                 return match ($role->getRoleId()) {
                     AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH => true,
@@ -187,6 +187,18 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         return true;
     }
 
+    protected function assertEntity(ResourceInterface $entity = null,  $privilege = null) : bool
+    {
+
+
+        /** @var EntretienProfessionnel $entity */
+        if (!$entity instanceof EntretienProfessionnel) {
+            return false;
+        }
+
+        return $this->computeAssertion($entity, $privilege);
+    }
+
     /**
      * @param AbstractActionController $controller
      * @param $action
@@ -195,74 +207,19 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
      */
     protected function assertController($controller, $action = null, $privilege = null) : bool
     {
-        /** @var EntretienProfessionnel $entity */
-        $user = $this->getUserService()->getConnectedUser();
-        $agent = $this->getAgentService()->getAgentByUser($user);
-        $role = $this->getUserService()->getConnectedRole();
 
-        $predicats = [];
-        $entretien = null;
-        if ($agent) {
-            //to remove copium here
-            $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien-professionnel')));
-            if ($entretienId === null) $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
-            $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
-            if ($entretien) $predicats = $this->computePredicats($entretien, $agent, $role);
-        }
+        //to remove copium here
+        $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien-professionnel')));
+        if ($entretienId === null) $entretienId = (($this->getMvcEvent()->getRouteMatch()->getParam('entretien')));
+        $entretien = $this->getEntretienProfessionnelService()->getEntretienProfessionnel($entretienId);
 
         if ($entretien === null) return true;
-        switch ($action) {
-            case 'exporter-crep' :
-            case 'exporter-cref' :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_TECH :
-                    case AppRoleProvider::ADMIN_FONC :
-                    case AppRoleProvider::OBSERVATEUR :
-                        return true;
-                    case Agent::ROLE_AGENT :
-                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) return false;
-                        if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
-                        return $predicats['isAgentEntretien'];
-                    case RoleProvider::RESPONSABLE : return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
-                    case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
-                    case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
-                }
-                return false;
-            case 'creer' :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_TECH :
-                    case AppRoleProvider::ADMIN_FONC :
-                    case RoleProvider::RESPONSABLE :
-                    case Agent::ROLE_SUPERIEURE :
-                    case Agent::ROLE_AUTORITE :
-                        return true;
-                }
-                return false;
-            case 'modifier' :
-            case 'historiser' :
-            case 'restaurer' :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_TECH :
-                    case AppRoleProvider::ADMIN_FONC :
-                        return true;
-                    case RoleProvider::RESPONSABLE :  return ($predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
-                    case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
-                    case Agent::ROLE_AUTORITE : return $predicats['isAutoriteHierarchique'];
-                }
-                return false;
-            case 'acceder' :
-                switch ($role->getRoleId()) {
-                    case AppRoleProvider::ADMIN_TECH :
-                    case AppRoleProvider::ADMIN_FONC :
-                        return true;
-                    case Agent::ROLE_AGENT : return $predicats['isAgentEntretien'];
-                    case RoleProvider::RESPONSABLE : return ($predicats['isResponsableEntretien'] OR $predicats['isResponsableStructure'] OR $predicats['isAutoriteStructure']);
-                    case Agent::ROLE_SUPERIEURE : return $predicats['isSuperieureHierarchique'];
-                    case Agent::ROLE_AUTORITE :
-                        return $predicats['isAutoriteHierarchique'];
-                }
-                return false;
-        }
-        return true;
+        return match ($action) {
+            'exporter-crep', 'exporter-cref' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_EXPORTER),
+            'creer' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_CONVOQUER),
+            'modifier', 'historiser', 'restaurer' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_MODIFIER),
+            'acceder' => $this->computeAssertion($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER),
+            default => true,
+        };
     }
 }

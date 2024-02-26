@@ -22,6 +22,7 @@
 
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider;
+use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\ParcoursDeFormation;
@@ -31,7 +32,6 @@ use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
-use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 $displayParcours = false;
@@ -48,6 +48,7 @@ $date = $entretien->getMaxSaisiObservation();
 $depasseObs = ($date !== null AND $date < $now);
 
 $step = 0;
+
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) $step = 1;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION) OR $depasseObs) $step = 2;
 if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_HIERARCHIE))  $step = 3;
@@ -145,6 +146,20 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
     <div class="tab-content">
 
     <div id="formulaire" class="tab-pane" >
+        <?php if ($canModifierEP) : ?>
+            CAN MODIFIER
+        <?php endif; ?>
+        <?php if (!EntretienProfessionnelAssertion::isPeriodeCompatible($entretien)) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    La campagne n'est pas active !
+                </strong>
+
+                <p> Par conséquent, vous ne pouvez plus modifier le compte-rendu d'entretien professionnel.</p>
+            </div>
+        <?php endif; ?>
+
         <?php echo $this->partial('partial/crep', ['entretien' => $entretien, 'crep' => $crep, 'fichePoste' => $ficheposte, 'user' => $user, 'role' => $role, 'source' => 'renseignerAction']); ?>
     </div>
 
