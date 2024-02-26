@@ -359,7 +359,9 @@ class PlanDeFormationController extends AbstractActionController
                 $handle = fopen($fichier_path, "r");
 
                 while ($content = fgetcsv($handle, 0, ";")) {
-                    $array[] = array_map(function ($a) {return  str_replace('','\'',iconv('ISO-8859-1', 'UTF-8//IGNORE', $a));}, $content);
+                    $array[] = array_map(function ($a) {
+                        return  ($a !== null)?str_replace('','\'',iconv('ISO-8859-1', 'UTF-8', $a)):null;
+                        }, $content);
                 }
 
                 $header = $array[0];
@@ -394,7 +396,7 @@ class PlanDeFormationController extends AbstractActionController
 
                 //Lecture
                 foreach ($array as $line) {
-                    $axeLibelle = trim($line[$axeColumn]);
+                    $axeLibelle = isset($line[$axeColumn])?trim($line[$axeColumn]):null;
                     $axe = ($axeLibelle !== '') ? $this->getAxeService()->getAxeByLibelle($axeLibelle) : null;
                     if ($axe === null && $axeLibelle !== '') {
                         $nouveauxAxes[$axeLibelle] = $axeLibelle;
@@ -402,7 +404,7 @@ class PlanDeFormationController extends AbstractActionController
                         $axes[$axeLibelle] = $axe;
                     }
 
-                    $themeLibelle = trim($line[$themeColumn]);
+                    $themeLibelle = isset($line[$themeColumn])?trim($line[$themeColumn]):null;
                     $theme = ($themeLibelle !== '') ? $this->getFormationGroupeService()->getFormationGroupeByLibelle($themeLibelle, $axe) : null;
                     if ($theme === null && $themeLibelle !== '') {
                         $nouveauxThemes[$themeLibelle] = $themeLibelle;

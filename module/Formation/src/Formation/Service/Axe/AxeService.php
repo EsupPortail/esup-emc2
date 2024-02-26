@@ -98,7 +98,7 @@ class AxeService {
         return $options;
     }
 
-    public function getAxeByLibelle(string $libelle, bool $withHisto = false) : ?Axe
+    public function getAxeByLibelle(?string $libelle, bool $withHisto = false) : ?Axe
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('axe.libelle = :libelle')->setParameter('libelle', $libelle);

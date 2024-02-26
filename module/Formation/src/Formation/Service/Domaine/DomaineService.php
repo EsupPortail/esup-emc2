@@ -97,7 +97,7 @@ class DomaineService {
         return $options;
     }
 
-    public function getDomaineByLibelle(string $libelle, bool $withHisto = false) : ?Domaine
+    public function getDomaineByLibelle(?string $libelle, bool $withHisto = false) : ?Domaine
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('domaine.libelle = :libelle')->setParameter('libelle', $libelle);
