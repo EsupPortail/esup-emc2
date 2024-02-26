@@ -376,23 +376,24 @@ EOS;
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
         if ($affectationsPrincipales === null or count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
-        $affectationPrincipale = $affectationsPrincipales[0];
-
-        $structure = $affectationPrincipale->getStructure();
-        do {
-            $responsablesAll = array_map(function (StructureResponsable $a) {
-                return $a->getAgent();
-            }, $this->getStructureService()->getResponsables($structure, $date));
-            if (!in_array($agent, $responsablesAll)) {
-                $responsables = [];
-                foreach ($responsablesAll as $responsable) {
-                    $responsables["structure_" . $responsable->getId()] = $responsable;
+        if (isset($affectationsPrincipales[0])) {
+            $affectationPrincipale = $affectationsPrincipales[0];
+            $structure = $affectationPrincipale->getStructure();
+            do {
+                $responsablesAll = array_map(function (StructureResponsable $a) {
+                    return $a->getAgent();
+                }, $this->getStructureService()->getResponsables($structure, $date));
+                if (!in_array($agent, $responsablesAll)) {
+                    $responsables = [];
+                    foreach ($responsablesAll as $responsable) {
+                        $responsables["structure_" . $responsable->getId()] = $responsable;
+                    }
+                    if (!empty($responsables)) return $responsables;
                 }
-                if (!empty($responsables)) return $responsables;
-            }
 
-            $structure = $structure->getParent();
-        } while ($structure !== null);
+                $structure = $structure->getParent();
+            } while ($structure !== null);
+        }
 
         return [];
     }
