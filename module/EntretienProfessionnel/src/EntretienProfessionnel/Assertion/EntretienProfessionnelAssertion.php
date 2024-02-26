@@ -106,10 +106,10 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $campagne = $entretienProfessionnel->getCampagne();
         $now = new DateTime();
 
-        if ($campagne->getDateDebut() !== null AND $now < $campagne->getDateDebut()) {
+        if ($campagne !== null AND $campagne->getDateDebut() !== null AND $now < $campagne->getDateDebut()) {
             return false;
         }
-        if ($campagne->getDateFin() !== null AND $now > $campagne->getDateFin()) {
+        if ($campagne !== null AND $campagne->getDateFin() !== null AND $now > $campagne->getDateFin()) {
             return false;
         }
         return true;

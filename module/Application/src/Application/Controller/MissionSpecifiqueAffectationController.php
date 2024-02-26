@@ -8,7 +8,10 @@ use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
+use Laminas\Http\Response;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
+use Mpdf\MpdfException;
+use RuntimeException;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenPdf\Exporter\PdfExporter;
@@ -31,10 +34,10 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $fromQueries  = $this->params()->fromQuery();
         $agentId      = $fromQueries['agent']??'';
         $structureId  = $fromQueries['structure']??'';
-        $missionId    = $fromQueries['mission']??'';
+        $missionId    = (isset($fromQueries['mission']) AND $fromQueries['mission'] !== '')?((int) $fromQueries['mission']):null;
         $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
         $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
-        $mission      = ($missionId !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($missionId):null;
+        $mission      = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
         $affectations = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgentAndMissionAndStructure($agent, $mission, $structure, false);
         $missions    = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
 
@@ -68,7 +71,6 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $agent = $this->getAgentService()->getAgent($agentId);
 
         $affectation = new AgentMissionSpecifique();
-        /** @var AgentMissionSpecifiqueForm $form */
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent');
@@ -109,7 +111,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    public function modifierAction()
+    public function modifierAction(): ViewModel
     {
         $structureId = $this->params()->fromQuery('structure');
         $structure = $this->getStructureService()->getStructure($structureId);
@@ -156,7 +158,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() {
+    public function historiserAction(): Response
+    {
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentMissionSpecifiqueService()->historise($affectation);
 
@@ -165,7 +168,8 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $this->redirect()->toRoute('mission-specifique-affectation', [], [], true);
     }
 
-    public function restaurerAction() {
+    public function restaurerAction(): Response
+    {
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
         $this->getAgentMissionSpecifiqueService()->restore($affectation);
 
@@ -174,7 +178,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $this->redirect()->toRoute('mission-specifique-affectation', [], [], true);
     }
 
-    public function detruireAction()
+    public function detruireAction(): ViewModel
     {
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
@@ -198,7 +202,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         return $vm;
     }
 
-    public function genererLettreTypeAction()
+    public function genererLettreTypeAction(): ?string
     {
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
@@ -211,10 +215,14 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(PdfTemplate::LETTRE_MISSION, $vars);
 
         $exporter = new PdfExporter();
-        $exporter->getMpdf()->SetTitle($rendu->getSujet());
-        $exporter->setHeaderScript('');
-        $exporter->setFooterScript('');
-        $exporter->addBodyHtml($rendu->getCorps());
-        return $exporter->export($rendu->getSujet(), PdfExporter::DESTINATION_BROWSER, null);
+        try {
+            $exporter->getMpdf()->SetTitle($rendu->getSujet());
+            $exporter->setHeaderScript('');
+            $exporter->setFooterScript('');
+            $exporter->addBodyHtml($rendu->getCorps());
+            return $exporter->export($rendu->getSujet());
+        } catch(MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors de la génération du PDF",0,$e);
+        }
     }
 }

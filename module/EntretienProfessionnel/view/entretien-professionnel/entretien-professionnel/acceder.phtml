@@ -63,7 +63,13 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 <div class="row">
     <div class="col-md-8">
         <h1 class="page-header">
-            Entretien professionnel <?php echo $entretien->getCampagne()->getAnnee(); ?> <br/>
+            Entretien professionnel
+            <?php if ($entretien->getCampagne()) : ?>
+                <?php echo $entretien->getCampagne()->getAnnee(); ?>
+            <?php else : ?>
+                Sans campagne
+            <?php endif; ?>
+            <br/>
             <?php echo $agent->getPrenom(); ?>
             <?php echo $agent->getNomUsuel(); ?>
         </h1>

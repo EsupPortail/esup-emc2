@@ -150,8 +150,10 @@ $canAfficherInformationMetier = (
                 <dl class="row">
                     <dt class="col-md-4"> Responsable </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(); ?> </dd>
-                    <dt class="col-md-4"> Année </dt>
-                    <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
+                    <?php if ($entretien->getCampagne()) : ?>
+                        <dt class="col-md-4"> Année </dt>
+                        <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?> </dd>
+                    <?php endif; ?>
                     <dt class="col-md-4"> Date </dt>
                     <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </dd>
                     <dt class="col-md-4"> Lieu </dt>

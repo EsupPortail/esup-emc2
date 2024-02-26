@@ -28,7 +28,7 @@ foreach ($missions as $mission) {
 
 <div class="card panel-default">
     <div class="card-header">
-        <span class="icon icon-filtrer"></span> Filtre des affections
+        <span class="icon icon-filtrer"></span> Filtre de recherche des affections de missions spécifiques
     </div>
     <div class="card-body">
         <form method="get" id="filtre" action="<?php echo $this->url(); ?>">
@@ -84,12 +84,13 @@ foreach ($missions as $mission) {
         <div class="col-md-3">
             <br/>
             <button class="btn btn-primary" id="clear">
-                <span class="icon effacer"></span>
+                <span class="icon icon-gommer"></span>
+                R.A.Z.
             </button>
 
-            <button class="btn btn-primary" id="filter" style="width:20rem;">
+            <button class="btn btn-primary" id="filter">
                 <span class="icon icon-filtrer"></span>
-                Filtrer
+                Rechercher
             </button>
         </div>
     </div>
@@ -121,7 +122,7 @@ foreach ($missions as $mission) {
     });
 
     $('button#clear').click(function() {
-        window.location.href = 'affectation';
+        window.location.href = 'mission-specifique-affectation';
     });
 
     $('button#filter').click(function() {
@@ -137,7 +138,7 @@ foreach ($missions as $mission) {
             query += "&agent=" + agentId;
         // if (missionId !== "")
             query += "&mission=" + missionId;
-        window.location.href = 'affectation?'+ query;
+        window.location.href = 'mission-specifique-affectation?'+ query;
     });
 
 

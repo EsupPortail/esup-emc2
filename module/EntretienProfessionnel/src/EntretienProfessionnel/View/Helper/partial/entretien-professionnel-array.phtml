@@ -125,7 +125,7 @@ if (isset($options['affichages']) AND isset($options['affichages']['width'])) $w
             <td data-order="<?php echo $entretien->getResponsable()->getDenomination(); ?>"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </td>
         <?php endif; ?>
         <?php if ($displayAnnee) : ?>
-            <td> <?php echo $entretien->getCampagne()->getAnnee(); ?> </td>
+            <td> <?php echo ($entretien->getCampagne())?$entretien->getCampagne()->getAnnee():"Sans campagne"; ?> </td>
         <?php endif; ?>
         <?php if ($displayStructure) : ?>
             <td>

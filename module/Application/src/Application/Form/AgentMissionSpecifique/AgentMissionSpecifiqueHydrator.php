@@ -41,7 +41,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
      */
     public function hydrate(array $data, object $object)
     {
-        $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']);
+        $mission = (isset($data['mission']) AND $data['mission'] !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']):null;
         $agent = $this->getAgentService()->getAgent($data['agent']['id']);
         $structure = $this->getStructureService()->getStructure((int) $data['structure']['id']);
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
