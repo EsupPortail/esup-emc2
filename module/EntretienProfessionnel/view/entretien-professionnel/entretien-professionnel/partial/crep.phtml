@@ -65,7 +65,7 @@ $date_depassee = (($isAgent) AND ($now > $date));
             /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
             $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $crep->getFormulaire()->getId(), 'instance' => $crep->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
-            echo $this->instanceAsFormulaire()->render($crep, $url, $data);
+            echo $this->instanceAsFormulaire()->render($crep, $url, $data, ['validation-floating' => true]);
         ?>
     <?php else : ?>
         <?php if ($canAfficher) : ?>

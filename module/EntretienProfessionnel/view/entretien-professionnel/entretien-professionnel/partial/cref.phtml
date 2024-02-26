@@ -53,7 +53,7 @@ $agent  = $entretien->getAgent();
     /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
     $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $cref->getFormulaire()->getId(), 'instance' => $cref->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
 
-    echo $this->instanceAsFormulaire()->render($cref, $url, $data);
+    echo $this->instanceAsFormulaire()->render($cref, $url, $data, ['validation-floating' => true]);
     ?>
 <?php else : ?>
     <?php if ($canAfficher) : ?>
