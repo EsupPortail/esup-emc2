@@ -56,10 +56,20 @@
             </join-table>
         </many-to-many>
 
+        <many-to-many field="sessions" target-entity="Formation\Entity\Db\FormationInstance">
+            <join-table name="formation_demande_externe_session">
+                <join-columns>
+                    <join-column name="demande_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="session_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
-        <field name="justificationAgent"        column="justification_agent"                type="string"       length="9999"  />
-        <field name="justificationResponsable"  column="justification_responsable"          type="string" length="9999"         nullable="true"/>
-        <field name="justificationRefus"        column="justification_refus"                type="string" length="9999"         nullable="true"/>
+        <field name="justificationAgent"        column="justification_agent"                type="text"  />
+        <field name="justificationResponsable"  column="justification_responsable"          type="text"         nullable="true"/>
+        <field name="justificationRefus"        column="justification_refus"                type="text"         nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

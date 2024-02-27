@@ -50,12 +50,15 @@ th.action {
 }
 
 td.action,
-div.action
+div.action,
+span.action
 {
     font-size: small;
 }
 td.action a,
-div.action a {
+div.action a,
+span.action a
+{
     text-decoration: none;
 }
 

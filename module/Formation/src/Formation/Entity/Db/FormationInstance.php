@@ -53,6 +53,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private Collection $externes;
     private Collection $formateurs;
     private Collection $inscriptions;
+    private Collection $demandes;
 
     private ?SessionParametre $parametre = null;
 
@@ -64,6 +65,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->inscrits = new ArrayCollection();
         $this->externes = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
 
         $this->formateurs = new ArrayCollection();
 
@@ -250,6 +252,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function removeFormateur(Formateur $formateur): void
     {
         $this->formateurs->removeElement($formateur);
+    }
+
+    /** DEMANDES EXTERNES *********************************************************************************************/
+
+    /** @return DemandeExterne[] */
+    public function getDemandesExternes(): array
+    {
+        return $this->demandes->toArray();
     }
 
     /** JOURNEE *******************************************************************************************************/
@@ -613,7 +623,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /** @noinspection PhpUnused */
     public function getListeComplementaireAgents(): string
     {
-        /** @var Inscription[] $inscrits */
         $inscrits = $this->getListeComplementaire();
         $inscrits = array_filter($inscrits, function (Inscription $a) {
             return $a->estNonHistorise();

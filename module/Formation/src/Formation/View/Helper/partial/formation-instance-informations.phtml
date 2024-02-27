@@ -9,6 +9,9 @@
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Privilege\DemandeexternePrivileges;
+
+$canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 
 ?>
 
@@ -64,4 +67,29 @@ use Formation\Entity\Db\FormationInstance;
     <?php endif; ?>
 <!--    --->
 <!--    Liste complémentaire --><?php //echo count($instance->getListeComplementaire());  ?><!--/--><?php //echo $instance->getNbPlaceComplementaire(); ?>
+<?php endif; ?>
+
+
+<?php if (!empty($instance->getDemandesExternes())) : ?>
+    <dt> Demandes de formations externes associées</dt>
+    <dd>
+        <ul>
+            <?php foreach ($instance->getDemandesExternes() as $demandesExterne) : ?>
+                <li>
+                    Demande #<?php echo $demandesExterne->getId(); ?> (<?php echo $demandesExterne->getAgent()->getDenomination(true); ?>)
+                    <?php if ($canAfficherDemande) : ?>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
+                        <a  href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demandesExterne->getId()], [], true); ?>"
+                            class="ajax-modal"
+                        >
+                        <span class="action">
+                            <span class="icon icon-voir"></span>
+                            Afficher
+                        </span>
+                        </a>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </dd>
 <?php endif; ?>

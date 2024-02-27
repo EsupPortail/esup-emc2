@@ -364,6 +364,10 @@ class DemandeExterneService
         $session->setIdSource($formation->getId() . "-" . $session->getId());
         $this->getFormationInstanceService()->update($session);
 
+        //lien demande <-> session
+        $demande->addSession($session);
+        $this->update($demande);
+
         //inscription
         $inscription = new Inscription();
         $inscription->setAgent($demande->getAgent());

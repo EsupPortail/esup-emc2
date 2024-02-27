@@ -7,6 +7,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
@@ -45,10 +46,13 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $justificationRefus = null;
     private ?Collection $devis;
 
+    private Collection $sessions;
+
     public function __construct()
     {
         $this->etats = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
 
     }
 
@@ -253,6 +257,24 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     {
         $this->devis->add($fichier);
     }
+
+    /** @return FormationInstance[] */
+    public function getSessions(): array
+    {
+        return $this->sessions->toArray();
+    }
+
+    public function addSession(FormationInstance $session): void
+    {
+        $this->sessions->add($session);
+    }
+
+    public function removeSession(FormationInstance $session): void
+    {
+        $this->sessions->removeElement($session);
+    }
+
+
 
     /** MACRO ET PRETTYPRINT ******************************************************************************************/
 
