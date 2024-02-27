@@ -326,29 +326,31 @@ class DemandeExterneService
 
     /** FACADE ********************************************************************************************************/
 
-    public function transformer(?DemandeExterne $demande, string $libelle, float $volume, float $suivi): FormationInstance
+    public function transformer(?DemandeExterne $demande, string $libelle, ?FormationGroupe $groupe, float $volume, float $suivi): FormationInstance
     {
         //theme
-        $theme = $this->getFormationGroupeService()->getFormationGroupeByLibelle("Stage externe");
-        if ($theme === null) {
-            $theme = new FormationGroupe();
-            $theme->setLibelle('Stage externe');
-            $theme->setOrdre(99999999);
-            $theme->setSource(HasSourceInterface::SOURCE_EMC2);
-            $this->getFormationGroupeService()->create($theme);
-            $theme->setIdSource($theme->getId());
-            $this->getFormationGroupeService()->update($theme);
+        if ($groupe === null) {
+            $groupe = $this->getFormationGroupeService()->getFormationGroupeByLibelle("Stage externe");
+            if ($groupe === null) {
+                $groupe = new FormationGroupe();
+                $groupe->setLibelle('Stage externe');
+                $groupe->setOrdre(99999999);
+                $groupe->setSource(HasSourceInterface::SOURCE_EMC2);
+                $this->getFormationGroupeService()->create($groupe);
+                $groupe->setIdSource($groupe->getId());
+                $this->getFormationGroupeService()->update($groupe);
+            }
         }
 
         //creation de l'action de formation
         $formation = new Formation();
         $formation->setLibelle($libelle);
-        $formation->setGroupe($theme);
+        $formation->setGroupe($groupe);
         $formation->setDescription("<p><strong>Action de formation générée depuis la demande " . $demande->getId(). "</strong></p>" . $demande->toStringDescription());
         $formation->setAffichage(false);
-        $theme->setSource(HasSourceInterface::SOURCE_EMC2);
         $this->getFormationService()->create($formation);
-        $theme->setIdSource($formation->getId());
+        $formation->setSource(HasSourceInterface::SOURCE_EMC2);
+        $formation->setIdSource($formation->getId());
         $this->getFormationService()->update($formation);
 
         //session

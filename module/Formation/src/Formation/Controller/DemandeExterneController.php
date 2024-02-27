@@ -18,6 +18,7 @@ use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
+use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Form\Element\Select;
 use Laminas\Http\Request;
@@ -38,6 +39,7 @@ class DemandeExterneController extends AbstractActionController {
     use EtatInstanceServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FichierServiceAwareTrait;
+    use FormationGroupeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -433,9 +435,10 @@ class DemandeExterneController extends AbstractActionController {
             $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== "")?trim($data['libelle']):null;
             $volume = $data['volume']??null;
             $suivi = $data['suivi']??null;
+            $groupe = (isset($data['groupe']) AND $data['groupe'] !== '')?$this->getFormationGroupeService()->getFormationGroupe($data['groupe']):null;
             //todo HYDRATOR ...
             if  ($libelle AND $volume AND $suivi) {
-                $this->getDemandeExterneService()->transformer($demande, $libelle, $volume, $suivi);
+                $this->getDemandeExterneService()->transformer($demande, $libelle, $groupe, $volume, $suivi);
                 $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_TERMINEE);
                 $this->getDemandeExterneService()->update($demande);
             }

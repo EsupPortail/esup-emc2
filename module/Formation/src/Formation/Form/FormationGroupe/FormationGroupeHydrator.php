@@ -15,7 +15,7 @@ class FormationGroupeHydrator implements HydratorInterface
         /** @var FormationGroupe $object */
         $data = [
             'libelle' => ($object->getLibelle()) ?: null,
-            'axe' => ($object->getAxe()) ?$object->getAxe()->getLibelle(): null,
+            'axe' => ($object->getAxe()) ?$object->getAxe()->getId(): null,
             'HasDescription' => ['description' => $object->getDescription()],
             'ordre' => ($object->getOrdre() !== null) ? $object->getOrdre(): null,
         ];

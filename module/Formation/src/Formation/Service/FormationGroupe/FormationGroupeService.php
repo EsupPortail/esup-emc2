@@ -83,6 +83,18 @@ class FormationGroupeService
     }
 
     /**
+     * @return FormationGroupe[]
+     */
+    public function getFormationsGroupesByAxe(Axe $axe, string $champ = 'ordre', string $ordre = 'ASC') : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('groupe.axe = :axe')->setParameter('axe', $axe)
+            ->orderBy('groupe.' . $champ, $ordre);
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
      * @param string $champ
      * @param string $ordre
      * @return FormationGroupe[]
@@ -117,6 +129,22 @@ class FormationGroupeService
     public function getFormationsGroupesAsOption(string $champ = 'libelle', string $ordre = 'ASC') : array
     {
         $groupes = $this->getFormationsGroupes($champ, $ordre);
+        $array = [];
+        foreach ($groupes as $groupe) {
+            $option = $this->optionify($groupe);
+            $array[$groupe->getId()] = $option;
+        }
+        return $array;
+    }
+
+    /**
+     * @param string $champ
+     * @param string $ordre
+     * @return array
+     */
+    public function getFormationsGroupesByAxeAsOption(Axe $axe, string $champ = 'libelle', string $ordre = 'ASC') : array
+    {
+        $groupes = $this->getFormationsGroupesByAxe($axe, $champ, $ordre);
         $array = [];
         foreach ($groupes as $groupe) {
             $option = $this->optionify($groupe);

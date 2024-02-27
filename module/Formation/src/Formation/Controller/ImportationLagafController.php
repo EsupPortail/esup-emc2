@@ -627,10 +627,14 @@ class ImportationLagafController extends AbstractActionController
                         $presence = new Presence();
                         $presence->setJournee($journee);
                         $presence->setInscription($inscrit);
-                        $presence->setStatut($data[$position_presence] === Presence::PRESENCE_PRESENCE);
                         $presence->setSource($this->sourceLagaf);
                         $presence->setIdSource($st_journee . "-" . $st_inscrit);
                         $presence->setPresenceType("LAGAF");
+                        if ($data[$position_presence] === "1") {
+                            $presence->setStatut(Presence::PRESENCE_PRESENCE);
+                        } else {
+                            $presence->setStatut(Presence::PRESENCE_ABSENCE_JUSTIFIEE);
+                        }
                         $this->getPresenceService()->create($presence);
 
                         $presences[] = $presence;

@@ -12,6 +12,7 @@ use Formation\Form\DemandeExterne\DemandeExterneForm;
 use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\Justification\JustificationForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
+use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\Notification\NotificationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -37,6 +38,7 @@ class DemandeExterneControllerFactory
          * @var EtatInstanceService $etatInstanceService
          * @var EtatTypeService $etatTypeService
          * @var FichierService $fichierService
+         * @var FormationGroupeService $formationGroupeService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
          * @var ValidationInstanceService $validationInstanceService
@@ -46,6 +48,7 @@ class DemandeExterneControllerFactory
         $etatInstanceService = $container->get(EtatInstanceService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $fichierService = $container->get(FichierService::class);
+        $formationGroupeService = $container->get(FormationGroupeService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
@@ -70,6 +73,7 @@ class DemandeExterneControllerFactory
         $controller->setEtatInstanceService($etatInstanceService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFichierService($fichierService);
+        $controller->setFormationGroupeService($formationGroupeService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
         $controller->setValidationInstanceService($validationInstanceService);
