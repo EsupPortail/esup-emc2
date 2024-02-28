@@ -2,11 +2,14 @@
 
 namespace EntretienProfessionnel\Controller;
 
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Stdlib\RequestInterface;
 use Laminas\View\Model\ViewModel;
 use UnicaenObservation\Entity\Db\ObservationInstance;
+use UnicaenObservation\Form\ObservationInstance\ObservationInstanceForm;
 use UnicaenObservation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
 use UnicaenObservation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
 use UnicaenObservation\Service\ObservationType\ObservationTypeServiceAwareTrait;
@@ -75,8 +78,6 @@ class ObservationController extends AbstractActionController {
         $form->cacherType();
         $form->bind($observation);
 
-
-
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
@@ -97,4 +98,5 @@ class ObservationController extends AbstractActionController {
         $vm->setTemplate('default/default-form');
         return $vm;
     }
+
 }

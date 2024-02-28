@@ -162,53 +162,55 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         }
     ?>
 
-    <?php if ($observationPerspective === null) : ?>
-        <?php if ($step === 1) : ?>
-            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
-            <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE], [], true); ?>"
-               class="btn btn-primary ajax-modal" data-event="modification">
-                Ajouter une observation à propos des perspectives
-            </a>
+    <?php if ($step === 1) : ?>
+        <?php if ($canValiderObservation) : ?>
+        <?php if ($observationPerspective === null) : ?>
+            <?php if ($step === 1) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_PERSPECTIVE], [], true); ?>"
+                   class="btn btn-primary ajax-modal" data-event="modification">
+                    Ajouter une observation à propos des perspectives
+                </a>
+            <?php endif; ?>
+
+        <?php if ($observationEntretien === null) : ?>
+            <?php if ($step === 1) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN], [], true); ?>"
+                   class="btn btn-primary ajax-modal" data-event="modification">
+                    Ajouter une observation à propos du déroulement de l'entretien
+                </a>
+            <?php endif; ?>
+        <?php else : ?>
+            <?php echo $this->observationinstance($observationEntretien, $optionsObservationsAgent); ?>
         <?php endif; ?>
 
-    <?php if ($observationEntretien === null) : ?>
-        <?php if ($step === 1) : ?>
-            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
-            <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_ENTRETIEN], [], true); ?>"
-               class="btn btn-primary ajax-modal" data-event="modification">
-                Ajouter une observation à propos du déroulement de l'entretien
-            </a>
+        <?php if ($observationFormation === null) : ?>
+            <?php if ($step === 1) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION], [], true); ?>"
+                   class="btn btn-primary ajax-modal" data-event="modification">
+                    Ajouter une observation à propos l'entretien de formation
+                </a>
+            <?php endif; ?>
+        <?php else : ?>
+            <?php echo $this->observationinstance($observationFormation, $optionsObservationsAgent); ?>
         <?php endif; ?>
-    <?php else : ?>
-        <?php echo $this->observationinstance($observationEntretien, $optionsObservationsAgent); ?>
-    <?php endif; ?>
-
-    <?php if ($observationFormation === null) : ?>
-        <?php if ($step === 1) : ?>
-            <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
-            <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_FORMATION], [], true); ?>"
-               class="btn btn-primary ajax-modal" data-event="modification">
-                Ajouter une observation à propos l'entretien de formation
-            </a>
+        <?php else : ?>
+            <?php echo $this->observationinstance($observationPerspective, $optionsObservationsAgent); ?>
         <?php endif; ?>
-    <?php else : ?>
-        <?php echo $this->observationinstance($observationFormation, $optionsObservationsAgent); ?>
-    <?php endif; ?>
 
-
-    <?php else : ?>
-        <?php echo $this->observationinstance($observationPerspective, $optionsObservationsAgent); ?>
-    <?php endif; ?>
-
-    <?php if ($validationObservation) : ?>
+        <?php if ($validationObservation) : ?>
         <?php echo $this->validationAfficher($validationObservation); ?>
+    <?php endif; ?>
+        <?php endif; ?>
     <?php endif; ?>
     </div>
 
     <div>
     <?php if ($step === 1) : ?>
         <?php if ($canValiderObservation) : ?>
-            <?php if ($observationEntretien || $observationPerspective) : ?>
+            <?php if ($observationEntretien || $observationPerspective || $observationFormation) : ?>
                 <a
                     <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::validerElementAction() */ ?>
                         href="<?php echo $this->url('entretien-professionnel/valider-element', ['entretien' => $entretien->getId(), 'type' => EntretienProfessionnelValidations::VALIDATION_OBSERVATION], [], true); ?>"
@@ -283,7 +285,8 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                class="btn btn-primary ajax-modal" data-event="modification">
                 Ajouter une observation
             </a>
-        <?php else : ?>
+        <?php endif; ?>
+        <?php if ($observationAutorite !== null) : ?>
             <?php echo $this->observationinstance($observationAutorite,$optionsObservationsAutorite); ?>
         <?php endif; ?>
     <?php endif; ?>

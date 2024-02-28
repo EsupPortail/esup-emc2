@@ -127,7 +127,7 @@ class IndexController extends AbstractActionController
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
         usort($agents, function (Agent $a, Agent $b) {
-            return $a->getNomUsuel() . " " . $a->getPrenom() > $b->getNomUsuel() . " " . $b->getPrenom();
+            return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
         });
 
         /** Campagne d'entretien professionnel ************************************************************************/
@@ -135,7 +135,7 @@ class IndexController extends AbstractActionController
         $campagnes = $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() > $b->getDateDebut();
+            return $a->getDateDebut() <=> $b->getDateDebut();
         });
 
         /** Récuperation des eps **************************************************************************************/
@@ -184,7 +184,7 @@ class IndexController extends AbstractActionController
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION));
 
         usort($agents, function (Agent $a, Agent $b) {
-            return $a->getNomUsuel() . " " . $a->getPrenom() > $b->getNomUsuel() . " " . $b->getPrenom();
+            return $a->getNomUsuel() . " " . $a->getPrenom() <=> $b->getNomUsuel() . " " . $b->getPrenom();
         });
 
         /** Campagne d'entretien professionnel ************************************************************************/
@@ -192,7 +192,7 @@ class IndexController extends AbstractActionController
         $campagnes = $this->getCampagneService()->getCampagnesActives();
         if ($last !== null) $campagnes[] = $last;
         usort($campagnes, function (Campagne $a, Campagne $b) {
-            return $a->getDateDebut() > $b->getDateDebut();
+            return $a->getDateDebut() <=> $b->getDateDebut();
         });
 
         /** Récuperation des eps **************************************************************************************/
