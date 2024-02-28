@@ -32,6 +32,7 @@ echo $this->doctype();
 <body class="unistrap unistrap-comm unistrap-th-emc2 unistrap-bg-dark unistrap-sticky-header flex-column">
     <!-- HEADER -------------------------------------->
 
+    <div id="personna"></div>
     <header>
     <nav id="navbar" class="navbar navbar-main navbar-lg navbar-shadow navbar-expand-lg navbar-dark bg-dark" role="navigation">
         <div class="container-sm" id="menu">
@@ -115,6 +116,49 @@ echo $this->doctype();
         $('[data-bs-toggle="tooltip"]').tooltip({});
     });
 </script>
+
+<!-- Personna -------------------->
+
+<script>
+    $(function() {
+        switch($('#user-status-name').text()) {
+            case 'Blanche' : $('div#personna').addClass('Blanche'); break;
+            case 'Bruno' : $('div#personna').addClass('Bruno'); break;
+            case 'Clémentine' : $('div#personna').addClass('Clementine'); break;
+            case 'Grey' : $('div#personna').addClass('Grey'); break;
+            case 'Jonathan' : $('div#personna').addClass('Jonathan'); break;
+            case 'Océane' : $('div#personna').addClass('Oceane'); break;
+            case 'Olive' : $('div#personna').addClass('Olive'); break;
+            case 'Violette' : $('div#personna').addClass('Violette'); break;
+
+        }
+    })
+</script>
+
+<style>
+    div#personna {
+        position: fixed;
+        top: 65px;
+        right: 80px;
+        width: 200px;
+        height: 200px;
+        z-index: 1020;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    body {
+    }
+
+    div#personna.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/blanche.jpg'); }
+    div#personna.Bruno { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/bruno.jpg'); }
+    div#personna.Clementine { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/clementine.jpg'); }
+    div#personna.Grey     { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/grey.jpg'); }
+    div#personna.Jonathan     { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/jonathan.jpg'); }
+    div#personna.Oceane     { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/oceane.jpg'); }
+    div#personna.Olive     { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/olive.jpg'); }
+    div#personna.Violette { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/violette.jpg'); }
+</style>
 
 </body>
 </html>
