@@ -175,7 +175,7 @@ class FichePosteController extends AbstractActionController
         $fiche = $this->getFichePosteService()->getRequestedFichePoste($this);
 
         $structureId = $this->params()->fromQuery('structure');
-        $structure = $this->getStructureService()->getStructure($structureId);
+        $structure = null; //$this->getStructureService()->getStructure($structureId);
 
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
