@@ -9,16 +9,21 @@ use EntretienProfessionnel\Provider\Event\EvenementProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use Exception;
+use RuntimeException;
+use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEvenement\Entity\Db\Etat;
 use UnicaenEvenement\Entity\Db\Evenement;
 use UnicaenEvenement\Service\Etat\EtatServiceAwareTrait;
 use UnicaenEvenement\Service\Evenement\EvenementService;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class RappelPasObservationService extends EvenementService {
 
     use EntretienProfessionnelServiceAwareTrait;
     use EtatServiceAwareTrait;
+    use EtatInstanceServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     /**
      * @param EntretienProfessionnel $entretien
@@ -55,6 +60,17 @@ class RappelPasObservationService extends EvenementService {
             }
             if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_RESPONSABLE)) {
                 $this->getNotificationService()->triggerPasObservations($entretien);
+
+                try {
+                    $this->getEtatInstanceService()->setEtatActif($entretien, EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_OBSERVATION);
+                } catch (Exception $e) {
+                    print $e->getMessage() . "<br>";
+                    while ($e->getPrevious()) {
+                        $e = $e->getPrevious();
+                        print $e->getMessage() . "<br>";
+                    }
+                }
+
                 $evenement->setLog('Notification effectuée');
             } else {
                 $evenement->setLog('Des observations ont été faites, pas de notification');

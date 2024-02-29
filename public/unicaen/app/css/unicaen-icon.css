@@ -335,3 +335,7 @@
 .icon.icon-unfollow:before {
     content: "\f1f6";
 }
+
+.icon.icon-gerer:before {
+    content:"\f013";
+}
