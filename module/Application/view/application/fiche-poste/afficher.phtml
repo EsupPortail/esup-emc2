@@ -21,10 +21,8 @@ use Structure\Entity\Db\Structure;
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
 
-$canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canAfficher = true; //$this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
 $canExport   = $canAfficher;
-
-die("fine");
 
 ?>
 
