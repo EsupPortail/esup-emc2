@@ -38,7 +38,7 @@ class AgentHierarchieSaisieForm extends Form {
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'superieur1',
-                'placeholder' => "Nom du supéreieur·e ...",
+                'placeholder' => "Nom du supérieur·e ...",
             ]);
         $this->add($sup1);
         //sup2
@@ -49,7 +49,7 @@ class AgentHierarchieSaisieForm extends Form {
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'superieur2',
-                'placeholder' => "Nom du supéreieur·e ...",
+                'placeholder' => "Nom du supérieur·e ...",
             ]);
         $this->add($sup2);
         //sup3
@@ -60,7 +60,7 @@ class AgentHierarchieSaisieForm extends Form {
             ->setLabelOption('disable_html_escape',true)
             ->setAttributes([
                 'id' => 'superieur3',
-                'placeholder' => "Nom du supéreieur·e ...",
+                'placeholder' => "Nom du supérieur·e ...",
             ]);
         $this->add($sup3);
 

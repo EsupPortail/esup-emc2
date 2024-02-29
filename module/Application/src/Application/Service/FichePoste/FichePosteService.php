@@ -123,7 +123,7 @@ class FichePosteService {
         try {
             $qb = $this->getEntityManager()->getRepository(FichePoste::class)->createQueryBuilder('fiche')
                 // AGENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
+//                ->addSelect('agent')->leftJoin('fiche.agent', 'agent')
                 //status de l'agent
                 //            ->addSelect('statut')->leftJoin('agent.statuts', 'statut')
                 //            ->addSelect('statut_structure')->leftJoin('statut.structure', 'statut_structure')
@@ -143,11 +143,11 @@ class FichePosteService {
 
                 //            ->addSelect('poste')->leftJoin('fiche.poste', 'poste')
                 //            ->addSelect('specificite')->leftJoin('fiche.specificite', 'specificite')
-                ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
-                ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
-                ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
-                ->addSelect('reference')->leftJoin('metier.references', 'reference')
-                ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
+//                ->addSelect('externe')->leftJoin('fiche.fichesMetiers', 'externe')
+//                ->addSelect('fichemetier')->leftJoin('externe.ficheType', 'fichemetier')
+//                ->addSelect('metier')->leftJoin('fichemetier.metier', 'metier')
+//                ->addSelect('reference')->leftJoin('metier.references', 'reference')
+//                ->addSelect('referentiel')->leftJoin('reference.referentiel', 'referentiel')
             ;
         } catch (NotSupported $e) {
             throw new RuntimeException("Un problème est survenu lors de la création du QueryBuilder de [".FichePoste::class."]",0,$e);

@@ -179,32 +179,32 @@ class FichePosteController extends AbstractActionController
 
         $titre = 'Fiche de poste <br/>';
         $titre .= '<strong>';
-        if ($fiche->getFicheTypeExternePrincipale()) {
-            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
-        } else {
-            $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
-        }
-        if ($fiche->getLibelle() !== null) {
-            $titre .= "(" . $fiche->getLibelle() . ")";
-        }
+//        if ($fiche->getFicheTypeExternePrincipale()) {
+//            $titre .= $fiche->getFicheTypeExternePrincipale()->getFicheType()->getMetier()->getLibelle();
+//        } else {
+//            $titre .= "<span class='icon icon-attention' style='color:darkred;'></span> Aucun fiche principale";
+//        }
+//        if ($fiche->getLibelle() !== null) {
+//            $titre .= "(" . $fiche->getLibelle() . ")";
+//        }
         $titre .= '</strong>';
 
-        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
-        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
-        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
-        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
+//        $applications = $this->getFichePosteService()->getApplicationsDictionnaires($fiche);
+//        $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
+//        $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
+//        $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
         //parcours de formation
-        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
+//        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
 
         return new ViewModel([
             'title' => $titre,
             'fiche' => $fiche,
-            'applications' => $applications,
-            'competences' => $competences,
-            'formations' => $formations,
-            'activites' => $activites,
-            'parcours' => $parcours,
+//            'applications' => $applications,
+//            'competences' => $competences,
+//            'formations' => $formations,
+//            'activites' => $activites,
+//            'parcours' => $parcours,
             'structure' => $structure,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
         ]);
