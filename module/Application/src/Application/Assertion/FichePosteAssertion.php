@@ -31,6 +31,9 @@ class FichePosteAssertion extends AbstractAssertion {
             return false;
         }
 
+        return true;
+
+
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
         $connectedAgent = $this->getAgentService()->getAgentByUser($user);

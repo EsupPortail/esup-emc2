@@ -21,7 +21,7 @@ use Structure\Entity\Db\Structure;
 $date = new DateTime();
 $this->headTitle("Fiche de poste #" . $fiche->getId());
 
-$canAfficher = true; //$this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
+$canAfficher = $this->isAllowed($fiche, FichePostePrivileges::FICHEPOSTE_AFFICHER);
 $canExport   = $canAfficher;
 
 ?>
@@ -49,7 +49,7 @@ $canExport   = $canAfficher;
     </div>
 </div>
 
-<?php //echo $this->partial("partial/validations.phtml"); ?>
+<?php echo $this->partial("partial/validations.phtml"); ?>
 
 
 <?php if (! $canAfficher) : ?>
