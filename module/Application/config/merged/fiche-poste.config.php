@@ -92,7 +92,6 @@ return [
                         'index',
                     ],
                     'privileges' => FichePostePrivileges::FICHEPOSTE_INDEX,
-                    'assertion'  => FichePosteAssertion::class,
                 ],
                 [
                     'controller' => FichePosteController::class,

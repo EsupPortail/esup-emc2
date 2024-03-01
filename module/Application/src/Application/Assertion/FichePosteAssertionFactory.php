@@ -7,9 +7,11 @@ use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Interop\Container\ContainerInterface;
+use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Structure\Service\Structure\StructureService;
+use UnicaenPrivilege\Service\Privilege\PrivilegeService;
 use UnicaenUtilisateur\Service\User\UserService;
 
 class FichePosteAssertionFactory
@@ -28,21 +30,34 @@ class FichePosteAssertionFactory
          * @var AgentSuperieurService $agentSuperieurService
          * @var FichePosteService $fichePosteService
          * @var StructureService $structureService
+         *
+         * @var PrivilegeService $privilegeService
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $fichePosteService = $container->get(FichePosteService::class);
+        $structureService = $container->get(StructureService::class);
+
+        $privilegeService = $container->get(PrivilegeService::class);
         $userService = $container->get(UserService::class);
 
-        /** @var FichePosteAssertion $assertion */
         $assertion = new FichePosteAssertion();
         $assertion->setAgentService($agentService);
         $assertion->setAgentAutoriteService($agentAutoriteService);
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setFichePosteService($fichePosteService);
+        $assertion->setStructureService($structureService);
+
+        $assertion->setPrivilegeService($privilegeService);
         $assertion->setUserService($userService);
+
+        /* @var $application Application */
+        $application = $container->get('Application');
+        $mvcEvent    = $application->getMvcEvent();
+        $assertion->setMvcEvent($mvcEvent);
+
         return $assertion;
     }
 
