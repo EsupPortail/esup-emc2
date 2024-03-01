@@ -101,6 +101,7 @@ class AgentSuperieurService
     {
         $qb = $this->createQueryBuilder()
             ->andWhere('agentsuperieur.agent = :agent')->setParameter('agent', $agent)
+            ->andWhere('agent.deleted_on  IS NULL')
             ->orderBy('agentsuperieur.' . $champ, $ordre);
         if ($histo === false) $qb = $qb->andWhere('agentsuperieur.histoDestruction IS NULL');
 
@@ -124,6 +125,7 @@ class AgentSuperieurService
     public function getAgentsWithSuperieur(Agent $superieur, DateTime $dateDebut = null, DateTime $dateFin = null): array
     {
         $qb = $this->createQueryBuilder()
+            ->andWhere('agent.deleted_on  IS NULL')
             ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
             ->andWhere('agentsuperieur.histoCreation IS NULL OR agentsuperieur.histoCreation < :fin')->setParameter('fin', $dateFin)
             ->andWhere('agentsuperieur.histoDestruction IS NULL OR agentsuperieur.histoDestruction > :debut')->setParameter('debut', $dateDebut);

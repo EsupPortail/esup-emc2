@@ -11,13 +11,15 @@ use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
  * @var Agent[] $agents
  */
 
-$obligatoires = [];
-$facultatifs = [];
-$dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
-foreach ($agents as $agent) {
-    if (!empty($agent->getAffectationsActifs($dateMinEnPoste)) && !$agent->isForceSansObligation($campagne)) $obligatoires[] = $agent; else $facultatifs[] = $agent;
-}
+$obligatoires = $agents[0];
+$facultatifs = $agents[1];
+$raisons = $agents[2];
 
+$dateMinEnPoste = (DateTime::createFromFormat('d/m/Y', $campagne->getDateFin()->format('d/m/Y')))->sub(new DateInterval('P12M'));
+//foreach ($agents as $agent) {
+//    if (!empty($agent->getAffectationsActifs($dateMinEnPoste)) && !$agent->isForceSansObligation($campagne)) $obligatoires[] = $agent; else $facultatifs[] = $agent;
+//}
+//
 $finalises = [];
 $encours = [];
 foreach ($entretiens as $entretien) {
@@ -97,7 +99,7 @@ $this->headTitle("Campagne d'entretien professionnel " . $campagne->getAnnee() )
             </div>
         </div>
     </div>
-    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation']); ?>
+    <?php echo $this->convocationArray($sansFacultatifs, $campagne, ['id' => 'sansobligation', 'raison' => $raisons]); ?>
 <?php endif; ?>
 
 
