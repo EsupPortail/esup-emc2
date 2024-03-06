@@ -411,7 +411,7 @@ EOS;
         if ($affectationsPrincipales === null) return [];
         $structure = null;
         if (count($affectationsPrincipales) === 1) {
-            $structure = $affectationsPrincipales[0]->getStructure()->getNiv2();
+            $structure = current($affectationsPrincipales)->getStructure()->getNiv2();
         } else {
             foreach ($affectationsPrincipales as $affectation) {
                 $niveau2 = $affectation->getStructure()->getNiv2();

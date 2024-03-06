@@ -47,7 +47,10 @@ use Laminas\Form\Form;
         });
     });
 
-    $('select').selectpicker();
+    $(function() {
+        $('select').selectpicker();
+    });
+
 
     $('input#agent[id]').hide()
 

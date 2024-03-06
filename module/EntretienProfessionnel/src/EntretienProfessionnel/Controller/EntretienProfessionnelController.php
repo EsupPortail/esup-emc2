@@ -197,8 +197,9 @@ class EntretienProfessionnelController extends AbstractActionController
         $vm = new ViewModel();
         $vm->setTemplate('default/default-form');
         $vm->setVariables([
-            'title' => 'Ajout d\'un nouvel entretien professionnel ',
+            'title' => 'Ajout d\'un nouvel entretien professionnel pour la campagne '.$campagne->getAnnee(),
             'form' => $form,
+            'js' => "$('#campagne').parent().hide();",
         ]);
         return $vm;
     }
