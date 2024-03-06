@@ -58,6 +58,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
     private ?FormulaireInstance $formationInstance = null;
 
     private Collection $sursis;
+    private Collection $recours;
 
     private ?string $token = null;
     private ?DateTime $acceptation = null;
@@ -68,6 +69,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->observations = new ArrayCollection();
         $this->sursis = new ArrayCollection();
         $this->validations = new ArrayCollection();
+        $this->recours = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -195,6 +197,27 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->acceptation = $acceptation;
         return $this;
     }
+
+    /** @return Recours[] */
+    public function getRecours(): array
+    {
+        return $this->recours->toArray();
+    }
+
+    public function getRecoursActif(): ?Recours
+    {
+        $recours = $this->getRecours();
+        $actif = null;
+        foreach ($recours as $r) {
+            if ($r->estNonHistorise()) {
+                if ($actif !== null) throw new RuntimeException("Plusieurs recours actifs pour l'entretien #");
+                $actif = $r;
+            }
+        }
+        return $actif;
+    }
+
+
 
     /** PREDICATS *****************************************************************************************************/
 
