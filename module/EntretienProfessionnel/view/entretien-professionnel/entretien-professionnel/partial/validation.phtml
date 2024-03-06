@@ -14,6 +14,7 @@ use Application\Entity\Db\AgentAutorite;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenObservation\Provider\Privilege\ObservationinstancePrivileges;
 
@@ -21,6 +22,11 @@ $canValiderAgent        = $this->isAllowed($entretien, EntretienproPrivileges::E
 $canValiderObservation  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_OBSERVATION);
 $canValiderResponsable  = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_RESPONSABLE);
 $canValiderDrh          = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH);
+
+// TODO serait plus sûr d'ajouter une assertion (mais surement de l'overkill car la page check ce qu'il faut en amont)
+$canVoirObservationsAgent = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_VOIR_OBSERVATION_AGENT));
+$canVoirObservationsAutorite = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_VOIR_OBSERVATION_AUTORITE));
+$canVoirObservationsFinales = $this->isAllowed(ObservationPrivileges::getResourceId(ObservationPrivileges::OBSERVATION_VOIR_OBSERVATION_FINALE));
 
 $now = new DateTime();
 $dateOk = ($now > $entretien->getDateEntretien());
@@ -190,14 +196,16 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($observationPerspective !== null) : ?>
-            <?php echo $this->observationinstance($observationPerspective, $optionsObservationsAgent); ?>
-        <?php endif; ?>
-        <?php if ($observationEntretien !== null) : ?>
-            <?php echo $this->observationinstance($observationEntretien, $optionsObservationsAgent); ?>
-        <?php endif; ?>
-        <?php if ($observationFormation !== null) : ?>
-            <?php echo $this->observationinstance($observationFormation, $optionsObservationsAgent); ?>
+        <?php if ($canVoirObservationsAgent) : ?>
+            <?php if ($observationPerspective !== null) : ?>
+                <?php echo $this->observationinstance($observationPerspective, $optionsObservationsAgent); ?>
+            <?php endif; ?>
+            <?php if ($observationEntretien !== null) : ?>
+                <?php echo $this->observationinstance($observationEntretien, $optionsObservationsAgent); ?>
+            <?php endif; ?>
+            <?php if ($observationFormation !== null) : ?>
+                <?php echo $this->observationinstance($observationFormation, $optionsObservationsAgent); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($validationObservation) : ?>
@@ -288,8 +296,10 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
         <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ($observationAutorite !== null) : ?>
-        <?php echo $this->observationinstance($observationAutorite,$optionsObservationsAutorite); ?>
+    <?php if ($canVoirObservationsAutorite) : ?>
+        <?php if ($observationAutorite !== null) : ?>
+            <?php echo $this->observationinstance($observationAutorite,$optionsObservationsAutorite); ?>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($step < 2) : ?>
@@ -370,7 +380,9 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                     </a>
                 <?php endif; ?>
             <?php else : ?>
-                <?php echo $this->observationinstance($observationFinale, $optionsObservationsFinale); ?>
+                <?php if ($canVoirObservationsFinales) : ?>
+                    <?php echo $this->observationinstance($observationFinale, $optionsObservationsFinale); ?>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
 
