@@ -15,6 +15,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Privilege\ObservationPrivileges;
+use EntretienProfessionnel\Provider\Privilege\RecoursPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenObservation\Provider\Privilege\ObservationinstancePrivileges;
 
@@ -421,6 +422,83 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                 <span class="icon icon-checked"></span>
                 Validation de l'agent
             </a>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
+
+<?php
+    /** BLOC CONCERNANT LES RECOURS */
+    $canAfficherRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_AFFICHER));
+    $canAjouterRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_AJOUTER));
+    $canModifierRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_MODIFIER));
+    $canToggleRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_MODIFIER));
+    $canHistoriserRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_HISTORISER));
+    $canSupprimerRecours = $this->isAllowed(RecoursPrivileges::getResourceId(RecoursPrivileges::RECOURS_SUPPRIMER));
+    $recours = $entretien->getRecoursActif();
+?>
+<div>
+    <?php if ($canAfficherRecours) : ?>
+        <h3 class="categorie"> Procédure de recours </h3>
+
+        <?php if ($recours === null) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-attention"></span>
+                    Aucune procédure de recours pour cet entretien
+                </strong>
+            </div>
+
+            <?php if ($canAjouterRecours) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\RecoursController::ajouterAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/recours/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                   class="btn btn-primary ajax-modal" data-event="modification">
+                    <span class="icon icon-ajouter"></span>
+                    Ajouter une procédure de recours
+                </a>
+            <?php endif; ?>
+        <?php else : ?>
+            <div class="row">
+                <div class="col-md-8">
+                    <dl class="row">
+                <dt class="col-md-4"> Date de la procédure </dt>
+                <dd class="col-md-8"> <?php echo $recours->getDateProcedure()->format('d/m/Y'); ?></dd>
+                <dt class="col-md-4"> Statut des comptes-rendus</dt>
+                <dd class="col-md-8">
+                    <?php if ($recours->isEntretienModifiable()) : ?>
+                        <span class="text-success">
+                            <span class="icon icon-checked"></span>
+                            modifiable
+                        </span>
+                    <?php else: ?>
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                            non modifiable
+                        </span>
+                    <?php endif; ?>
+                    <?php if ($canModifierRecours) : ?>
+                        <span class="action">
+                        <a href="">
+                            <span class="icon icon-refresh"></span>
+                            Modifier le statut
+                        </a>
+                        </span>
+                    <?php endif; ?>
+                </dd>
+                <dt class="col-md-4"> Commentaire </dt>
+                <dd class="col-md-8">
+                    <?php if ($recours->getCommentaire() !== null) : ?>
+                        <?php echo $recours->getCommentaire(); ?>
+                    <?php else: ?>
+                        <em> Aucun commentaire associé au recours</em>
+                    <?php endif; ?>
+                </dd>
+
+            </dl>
+                </div>
+                <div class="col-md-4">
+                    todo
+                </div>
+            </div>
         <?php endif; ?>
     <?php endif; ?>
 </div>

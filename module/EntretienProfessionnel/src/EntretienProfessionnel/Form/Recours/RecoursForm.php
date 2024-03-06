@@ -11,7 +11,7 @@ use Laminas\InputFilter\Factory;
 class RecoursForm extends Form
 {
 
-    public function ini(): void
+    public function init(): void
     {
         //date procedure
         $this->add([
@@ -38,7 +38,7 @@ class RecoursForm extends Form
             ],
             'attributes' => [
                 'id'                => 'commentaire',
-                'class'             => 'tinymce',
+                'class'             => 'tinymce type2',
             ],
         ]);
         // button
