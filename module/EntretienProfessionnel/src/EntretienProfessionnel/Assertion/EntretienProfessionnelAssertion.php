@@ -145,6 +145,13 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $predicats = $this->computePredicats($entretien, $agent, $role);
         switch($privilege) {
             case EntretienproPrivileges::ENTRETIENPRO_RENSEIGNER :
+                /** Attention ceci est pour réouvrir lors de recours */
+                $recours = $entretien->getRecoursActif();
+                if ($recours and $recours->isEntretienModifiable()) {
+                    if ($role->getRoleId() === AppRoleProvider::DRH) return true;
+                    if ($role->getRoleId() === AppRoleProvider::ADMIN_TECH) return true;
+                    if ($role->getRoleId() === AppRoleProvider::ADMIN_FONC) return true;
+                }
                 if (! $entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTER)) return false;
                 if (!$this->isScopeCompatible($entretien, $agent, $role, $predicats)) return false;
                 if ($this->BLOCAGE_COMPTERENDU AND !$this->isPeriodeCompatible($entretien)) return false;

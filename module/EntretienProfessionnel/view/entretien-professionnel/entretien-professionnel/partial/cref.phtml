@@ -46,7 +46,7 @@ $agent  = $entretien->getAgent();
 ?>
 
 
-<?php if ($canRenseigner && $validationResponsable === null) : ?>
+<?php if ($canRenseigner) : ?>
     <?php
     /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
     $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false, 'fragment' => 'formations'], true);

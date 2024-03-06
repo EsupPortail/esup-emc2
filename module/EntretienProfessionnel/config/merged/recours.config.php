@@ -32,7 +32,7 @@ return [
                     'controller' => RecoursController::class,
                     'action' => [
                         'modifier',
-                        'toggleModifiable'
+                        'toggle'
                     ],
                     'privileges' => [
                         RecoursPrivileges::RECOURS_MODIFIER,
@@ -102,15 +102,15 @@ return [
                                     ],
                                 ],
                             ],
-                            'toggle-modifiable' => [
+                            'toggle' => [
                                 'type'  => Segment::class,
                                 'may_terminate' => true,
                                 'options' => [
-                                    'route'    => '/toggle-modifiable/:recours',
+                                    'route'    => '/toggle/:recours',
                                     'defaults' => [
-                                        /** @see RecoursController::toggleModifiableAction() */
+                                        /** @see RecoursController::toggleAction() */
                                         'controller' => RecoursController::class,
-                                        'action'     => 'toggle-modifiable',
+                                        'action'     => 'toggle',
                                     ],
                                 ],
                             ],

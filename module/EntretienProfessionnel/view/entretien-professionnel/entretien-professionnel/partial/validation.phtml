@@ -477,10 +477,11 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                     <?php endif; ?>
                     <?php if ($canModifierRecours) : ?>
                         <span class="action">
-                        <a href="">
-                            <span class="icon icon-refresh"></span>
-                            Modifier le statut
-                        </a>
+                            <?php /** @see \EntretienProfessionnel\Controller\RecoursController::toggleAction() */?>
+                            <a href="<?php echo $this->url('entretien-professionnel/recours/toggle', ['recours' => $recours->getId()], [], true); ?>">
+                                <span class="icon icon-refresh"></span>
+                                Modifier le statut
+                            </a>
                         </span>
                     <?php endif; ?>
                 </dd>
@@ -496,7 +497,42 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             </dl>
                 </div>
                 <div class="col-md-4">
-                    todo
+                    <?php if ($canModifierRecours) : ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\RecoursController::modifierAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/recours/modifier', ['recours' => $recours->getId()], [], true); ?>"
+                           class="btn btn-primary ajax-modal" data-event="modification">
+                            <span class="icon icon-modifier"></span>
+                            Modifier la procédure de recours
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($recours->estNonHistorise()) : ?>
+                        <?php if ($canHistoriserRecours) : ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\RecoursController::historiserAction() */ ?>
+                            <a href="<?php echo $this->url('entretien-professionnel/recours/historiser', ['recours' => $recours->getId()], [], true); ?>"
+                               class="btn btn-warning">
+                                <span class="icon icon-historiser"></span>
+                                Historiser la procédure de recours
+                            </a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <?php if ($canHistoriserRecours) : ?>
+                            <?php /** @see \EntretienProfessionnel\Controller\RecoursController::restaurerAction() */ ?>
+                            <a href="<?php echo $this->url('entretien-professionnel/recours/restaurer', ['recours' => $recours->getId()], [], true); ?>"
+                               class="btn btn-warning">
+                                <span class="icon icon-restaurer"></span>
+                                Restaurer la procédure de recours
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canSupprimerRecours) : ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\RecoursController::supprimerAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/recours/supprimer', ['recours' => $recours->getId()], [], true); ?>"
+                           class="btn btn-danger ajax-modal" data-event="modification">
+                            <span class="icon icon-unchecked"></span>
+                            Suppression la procédure de recours
+                        </a>
+                    <?php endif; ?>
+
                 </div>
             </div>
         <?php endif; ?>
