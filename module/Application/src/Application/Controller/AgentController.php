@@ -19,7 +19,6 @@ use Application\Service\AgentStatut\AgentStatutServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\AgentTutorat\AgentTutoratServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Carriere\Service\Categorie\CategorieServiceAwareTrait;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
@@ -85,7 +84,6 @@ class AgentController extends AbstractActionController
     use ApplicationServiceAwareTrait;
     use FormationServiceAwareTrait;
     use CategorieServiceAwareTrait;
-    use ParcoursDeFormationServiceAwareTrait;
     use StructureServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;
@@ -159,8 +157,6 @@ class AgentController extends AbstractActionController
 
             'superieures' => $superieures,
             'autorites' => $autorites,
-
-//          'parcoursArray' => $parcoursArray,
 
             'quotite' => $this->getAgentQuotiteService()->getAgentQuotiteCurrent($agent),
             'missions' => $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgent($agent, false),

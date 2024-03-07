@@ -3,7 +3,6 @@
 namespace Formation\Controller;
 
 use Application\Entity\Db\Interfaces\HasSourceInterface;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Element\Entity\Db\ApplicationElement;
 use Element\Entity\Db\CompetenceElement;
 use Element\Form\ApplicationElement\ApplicationElementFormAwareTrait;
@@ -34,7 +33,6 @@ class FormationController extends AbstractActionController
     use FormationElementServiceAwareTrait;
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
-    use ParcoursDeFormationServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
 
     use ApplicationElementFormAwareTrait;

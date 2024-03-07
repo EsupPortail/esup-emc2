@@ -4,7 +4,6 @@ namespace Application\Entity\Db\MacroContent;
 
 use Application\Entity\Db\FichePoste;
 use Application\Entity\Db\FicheposteActiviteDescriptionRetiree;
-use Application\Entity\Db\ParcoursDeFormation;
 use Element\Entity\Db\CompetenceType;
 use Formation\Entity\Db\Formation;
 use Metier\Entity\Db\Reference;
@@ -219,58 +218,6 @@ trait FichePosteMacroTrait {
             $texte .= "</li>";
         }
         $texte .= "</ul>";
-        return $texte;
-    }
-
-    /**
-     * @return string
-     */
-    public function toStringParcours() : string
-    {
-        /** @var FichePoste $ficheposte */
-        $ficheposte = $this;
-        $parcours = $ficheposte->getDictionnaire('parcours');
-        ksort($parcours);
-        $texte = "";
-
-        foreach ($parcours as $clef => $parcoursArray) {
-            foreach ($parcoursArray as $instance) {
-                /** @var ParcoursDeFormation $instance */
-                $texte .= "<h3>" . $instance->getLibelle() . "</h3>";
-
-                /** Tri pour bonne affichage ******************************************************************************************/
-                $nogroup = "ZZZZ";
-                $formationArray = [];
-                foreach ($instance->getFormations() as $formation) {
-                    $groupe = ($formation->getFormation()->getGroupe())?$formation->getFormation()->getGroupe()->getLibelle():$nogroup;
-                    $formationArray[$groupe][] = $formation;
-                }
-
-                usort($formationArray,
-                    function($a, $b) {
-                        $ordre_a = ($a[0]->getFormation()->getGroupe())?$a[0]->getFormation()->getGroupe()->getOrdre():9999;
-                        $ordre_b = ($b[0]->getFormation()->getGroupe())?$b[0]->getFormation()->getGroupe()->getOrdre():9999;
-                        return $ordre_a > $ordre_b;
-                });
-
-                foreach ($formationArray as $groupe => $formationSubarray) {
-                    usort($formationSubarray, function ($a, $b) {
-                        return $a->getOrdre() > $b->getOrdre();
-                    });
-                    $groupe = $formationSubarray[0]->getFormation()->getGroupe();
-
-                    $texte .= "<ul>";
-                    $texte .= "<li>";
-                    $texte .= ($groupe !== null) ? $groupe->getLibelle() : "Sans groupe ...";
-                    $texte .= "<ul>";
-                    foreach($formationSubarray as $formationP) {
-                        $texte .= "<li>". $formationP->getFormation()->getLibelle()."</li>";
-                    }$texte .= "</ul>";
-                    $texte .= "</li>";
-                    $texte .= "</ul>";
-                }
-            }
-        }
         return $texte;
     }
 

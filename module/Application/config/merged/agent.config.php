@@ -260,7 +260,6 @@ return [
 
                     /** Routes de gestion des applications*************************************************************/
 
-                    //TODO changer dans parcours-applicatifs
                     'ajouter-application' => [
                         'type'  => Segment::class,
                         'options' => [
@@ -271,9 +270,7 @@ return [
                             ],
                         ],
                     ],
-                    //TODO changer dans parcours-de-formation
                     //TODO changer dans formation-bloc
-
                     'ajouter-formation' => [
                         'type'  => Segment::class,
                         'options' => [

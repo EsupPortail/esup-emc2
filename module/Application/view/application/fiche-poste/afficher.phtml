@@ -3,7 +3,6 @@
 /**
  * @see \Application\Controller\FichePosteController::afficherAction()
  * @var FichePoste $fiche
- * @var array $parcours
  * @var Competence[] $competences
  * @var Application[] $applications
  * @var Structure $structure
@@ -131,7 +130,6 @@ $canExport   = $canAfficher;
             <?php echo $this->partial('partial/competences',  ['fiche' => $fiche, 'competences' => $competences,   'mode' => 'affichage'], [], true); ?>
             <?php echo $this->partial('partial/applications', ['fiche' => $fiche, 'applications' => $applications, 'mode' => 'affichage'], [], true); ?>
 <!--            --><?php //echo $this->partial('partial/formations',   ['fiche' => $fiche, 'formations' => $formations,     'mode' => 'affichage'], [], true); ?>
-            <?php //echo $this->partial('partial/parcours-de-formation',  ['parcours' => $parcours, 'agent' => $agent, 'fiche' => $fiche, 'mode' => 'affichage'], [], true); ?>
         </div>
     </div>
 

@@ -15,7 +15,6 @@ use Application\Service\ApplicationsRetirees\ApplicationsRetireesService;
 use Application\Service\CompetencesRetirees\CompetencesRetireesService;
 use Application\Service\Expertise\ExpertiseService;
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Application\Service\SpecificitePoste\SpecificitePosteService;
 use FicheMetier\Service\FicheMetier\FicheMetierService;
 use FicheMetier\Service\MissionPrincipale\MissionPrincipaleService;
@@ -53,7 +52,6 @@ class FichePosteControllerFactory
          * @var ExpertiseService $expertiseService
          * @var MissionPrincipaleService $missionPrincipaleService
          * @var NotificationService $notificationService
-         * @var ParcoursDeFormationService $parcoursService
          * @var SpecificitePosteService $specificitePosteService
          * @var ValidationInstanceService $validationInstanceService
          */
@@ -72,7 +70,6 @@ class FichePosteControllerFactory
         $missionPrincipaleService = $container->get(MissionPrincipaleService::class);
         $notificationService = $container->get(NotificationService::class);
         $specificitePosteService = $container->get(SpecificitePosteService::class);
-        $parcoursService = $container->get(ParcoursDeFormationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
@@ -91,7 +88,6 @@ class FichePosteControllerFactory
         $specificiftePosteForm = $container->get('FormElementManager')->get(SpecificitePosteForm::class);
 
 
-        /** @var FichePosteController $controller */
         $controller = new FichePosteController();
 
         $controller->setActivitesDescriptionsRetireesService($activitesDescriptionsRetireesService);
@@ -109,7 +105,6 @@ class FichePosteControllerFactory
         $controller->setMissionPrincipaleService($missionPrincipaleService);
         $controller->setNotificationService($notificationService);
         $controller->setSpecificitePosteService($specificitePosteService);
-        $controller->setParcoursDeFormationService($parcoursService);
         $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setAjouterFicheTypeForm($ajouterFicheMetierForm);

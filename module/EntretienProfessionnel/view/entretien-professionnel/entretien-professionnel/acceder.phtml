@@ -10,7 +10,6 @@
  * @var Agent $agent
  * @var FichePoste[] $ficheposte
  * @var FicheMetier[] $fichesmetiers
- * @var ParcoursDeFormation $parcours
  * @var Mail[] $mails
  * @var string[] $documents
  * @var FormulaireInstance $crep
@@ -28,7 +27,6 @@ use Application\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
-use Application\Entity\Db\ParcoursDeFormation;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -37,7 +35,6 @@ use UnicaenMail\Entity\Db\Mail;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
-$displayParcours = false;
 $displayAcquis = false;
 
 $this->headTitle('Modification de l\'entretien professionnel');
@@ -182,7 +179,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => $parcours??null,  'connectedUser' => $user, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
+        <?php echo $this->partial('partial/cref', ['entretien' => $entretien, 'cref' => $cref, 'parcours' => null,  'connectedUser' => $user, 'fiche' => $ficheposte, 'options' => ['modification' => true], 'source' => 'renseignerAction']); ?>
     </div>
 
 <!--            --><?php //if ($displayAcquis === true) : ?>

@@ -128,7 +128,7 @@ if ($structure) {
 
         $(function () {
             let hash = $(location).attr('hash');
-            let name = hash.substr(1);
+            let name = hash.substring(1);
             if (name === undefined || name === "") name = "formation-demande";
 
             $('button').removeClass('active');

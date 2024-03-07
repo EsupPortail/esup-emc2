@@ -23,7 +23,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var EntretienProfessionnel[] $entretiens
  * @var Agent[]  $superieures
  * @var Agent[]  $autorites
- * @var array $parcoursArray
  * @var FichePoste[] $fichespostes
  * @var FichePoste $ficheposte
  * @var AgentMissionSpecifique[] $missions
@@ -44,7 +43,6 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  *
  */
 
-$displayParcours = false;
 $displayAcquis = false;
 
 if ($agent !== null) {
@@ -101,13 +99,6 @@ if ($agent !== null) {
                 type="button" role="tab" aria-controls="fiches" aria-selected="true">
             Fiches de poste et <br/> missions spécifiques
         </button>
-        <?php if ($displayParcours) : ?>
-            <button class="nav-link" id="parcours-tab"
-                    data-bs-toggle="tab" data-bs-target="#parcours"
-                    type="button" role="tab" aria-controls="parcours" aria-selected="true">
-                Parcours de formation<br/> et logiciels metiers
-            </button>
-        <?php endif; ?>
         <?php if ($canPortfolio) : ?>
             <button class="nav-link" id="acquis-tab"
                     data-bs-toggle="tab" data-bs-target="#acquis"
@@ -158,20 +149,6 @@ if ($agent !== null) {
             </div>
 
 
-            <?php if ($displayParcours === true) : ?>
-            <div id="parcours" class="tab-pane " role="tabpanel">
-                <h2>
-                    Parcours de formation
-                </h2>
-
-                <div class="alert alert-info">
-                    <strong><span class="icon icon-attention"></span> Affichage des parcours de formations attachés à votre catégorie, domaines professionnels et métier.</strong> <br/>
-                    Il est possible qu'un domaine ou un métier ne possède pas de parcours.
-                </div>
-
-                <?php echo $this->partial('partial/parcours-de-formation.phtml', ['parcoursArray' => $parcoursArray, 'agent' => $agent, 'ficheposte' => $ficheposte], [], true); ?>
-            </div>
-            <?php endif; ?>
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <h2> Applications, compétences et formations</h2>
 
@@ -208,28 +185,11 @@ if ($agent !== null) {
     </div>
 <?php endif; ?>
 
-<style>
-    table.parcours-de-formation {
-        width:95%;
-    }
-
-    table.parcours-de-formation th {
-        padding: 0.5rem;
-        color: white;
-    }
-    table.parcours-de-formation td.libelle {
-        padding-left: 1rem;
-        width:80%;
-    }
-    table.parcours-de-formation td.formation {
-        text-align: center;
-    }
-</style>
 
 <script>
     $(function () {
         let hash = $(location).attr('hash');
-        let name = hash.substr(1);
+        let name = hash.substring(1);
         if (name === undefined || name === "") name = "informations";
 
         $('button').removeClass('active');

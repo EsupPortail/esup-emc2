@@ -107,7 +107,7 @@ class AgentService
             ->addSelect('grade')->join('agent.grades', 'grade')
             ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->andWhere('agent.deleted_on IS NULL')
-            // devrait être un filtrage ... et pas une requete même si cela accélère les choses
+            // Devrait être un filtrage ... et pas une requete même si cela accélère les choses
             ->andWhere('statut.titulaire = :true OR (statut.cdd = :true AND agent.tContratLong =:true) OR statut.cdi = :true')
             ->andWhere('statut.enseignant = :false')
 //            ->andWhere('emploitype.code <> :UCNRECH')
@@ -362,7 +362,7 @@ EOS;
         return null;
     }
 
-    /** Recuperation des supérieures et autorités  *********************************************************************/
+    /** Recuperation des supérieures et autorités *********************************************************************/
 
     /**
      * TODO :: a conserver pour init des superieurs depuis les structures

@@ -26,7 +26,6 @@ use Application\Service\ApplicationsRetirees\ApplicationsRetireesServiceAwareTra
 use Application\Service\CompetencesRetirees\CompetencesRetireesServiceAwareTrait;
 use Application\Service\Expertise\ExpertiseServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationServiceAwareTrait;
 use Application\Service\SpecificitePoste\SpecificitePosteServiceAwareTrait;
 use DateTime;
 use FicheMetier\Entity\Db\MissionActivite;
@@ -65,7 +64,6 @@ class FichePosteController extends AbstractActionController
     use FichePosteServiceAwareTrait;
     use MissionPrincipaleServiceAwareTrait;
     use NotificationServiceAwareTrait;
-    use ParcoursDeFormationServiceAwareTrait;
     use RenduServiceAwareTrait;
     use StructureServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
@@ -194,9 +192,6 @@ class FichePosteController extends AbstractActionController
         $formations = $this->getFichePosteService()->getFormationsDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
-        //parcours de formation
-        $parcours = $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
-
         return new ViewModel([
             'title' => $titre,
             'fiche' => $fiche,
@@ -204,7 +199,6 @@ class FichePosteController extends AbstractActionController
             'competences' => $competences,
             'formations' => $formations,
             'activites' => $activites,
-            'parcours' => $parcours,
             'structure' => $structure,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
         ]);
@@ -225,8 +219,6 @@ class FichePosteController extends AbstractActionController
         $competences = $this->getFichePosteService()->getCompetencesDictionnaires($fiche);
         $activites = $this->getFichePosteService()->getActivitesDictionnaires($fiche);
 
-        //TODO remettre en place après stabilisation
-        $parcours = []; // $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($fiche);
 
         return new ViewModel([
             'ficheId' => $this->params()->fromRoute('fiche-poste'),
@@ -236,7 +228,6 @@ class FichePosteController extends AbstractActionController
             'applications' => $applications,
             'competences' => $competences,
             'activites' => $activites,
-            'parcours' => $parcours,
             'postes' => ($fiche->getAgent()) ? $this->getAgentPosteService()->getPostesAsAgent($fiche->getAgent()) : [],
         ]);
     }
@@ -300,7 +291,6 @@ class FichePosteController extends AbstractActionController
         $ficheposte->addDictionnaire('applications', $this->getFichePosteService()->getApplicationsDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('competences', $this->getFichePosteService()->getCompetencesDictionnaires($ficheposte));
         $ficheposte->addDictionnaire('formations', $this->getFichePosteService()->getFormationsDictionnaires($ficheposte));
-        $ficheposte->addDictionnaire('parcours', $this->getParcoursDeFormationService()->generateParcoursArrayFromFichePoste($ficheposte));
 
         $vars = [
             'ficheposte' => $ficheposte,

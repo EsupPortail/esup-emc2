@@ -16,7 +16,6 @@ use Application\Service\AgentStatut\AgentStatutService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\AgentTutorat\AgentTutoratService;
 use Application\Service\FichePoste\FichePosteService;
-use Application\Service\ParcoursDeFormation\ParcoursDeFormationService;
 use Carriere\Service\Categorie\CategorieService;
 use Element\Form\ApplicationElement\ApplicationElementForm;
 use Element\Form\CompetenceElement\CompetenceElementForm;
@@ -62,7 +61,6 @@ class AgentControllerFactory
          * @var FormationElementService $formationElementService
          * @var HasFormationCollectionService $hasFormationElementService
          * @var ParametreService $parametreService
-         * @var ParcoursDeFormationService $parcoursService
          * @var ValidationInstanceService $validationInstanceService
          * @var ValidationTypeService $validationTypeService
          * @var NatureService $natureService
@@ -109,7 +107,6 @@ class AgentControllerFactory
         $hasFormationElementService = $container->get(HasFormationCollectionService::class);
         $categorieService = $container->get(CategorieService::class);
 
-        $parcoursService = $container->get(ParcoursDeFormationService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
         $validationTypeService = $container->get(ValidationTypeService::class);
         $natureService = $container->get(NatureService::class);
@@ -129,7 +126,6 @@ class AgentControllerFactory
         $formationElementForm = $container->get('FormElementManager')->get(FormationElementForm::class);
         $uploadForm = $container->get('FormElementManager')->get(UploadForm::class);
 
-        /** @var AgentController $controller */
         $controller = new AgentController();
 
         $controller->setAgentService($agentService);
@@ -154,7 +150,6 @@ class AgentControllerFactory
         $controller->setFormationElementService($formationElementService);
         $controller->setHasFormationCollectionService($hasFormationElementService);
 
-        $controller->setParcoursDeFormationService($parcoursService);
         $controller->setCategorieService($categorieService);
 
         $controller->setValidationInstanceService($validationInstanceService);
