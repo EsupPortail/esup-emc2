@@ -228,9 +228,9 @@ class EntretienProfessionnelService
     }
 
     /** @return EntretienProfessionnel[] */
-    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false): array
+    public function getEntretiensProfessionnelsByAgent(Agent $agent, bool $histo = false, bool $withAffectation = false): array
     {
-        $qb = $this->createQueryBuilder()
+        $qb = $this->createQueryBuilder($withAffectation)
             ->andWhere('entretien.agent = :agent')->setParameter('agent', $agent);
         if ($histo === false) $qb = $qb->andWhere('entretien.histoDestruction IS NULL');
 

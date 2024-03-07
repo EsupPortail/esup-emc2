@@ -15,10 +15,6 @@ $canAfficherEntretien = true;
     Mes entretiens professionnels
 </h1>
 
-    <div class="alert alert-info">
-        <span class="icon icon-attention"></span> Seuls les entretiens professionnels validés par le&middot;a supérieur·e hiérarchique direct·e (ou son&middot;a délégué&middot;e) sont visualisables par les agents.
-    </div>
-
     <?php echo $this->entretienProfessionnelArray($entretiens,
         [
             'affichages' => ['agent' => false, 'lieu' => false],
