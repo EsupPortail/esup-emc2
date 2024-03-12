@@ -10,16 +10,13 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
-use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
-use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
-use UnicaenPrivilege\Service\Privilege\PrivilegeCategorieServiceAwareTrait;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
@@ -32,7 +29,6 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
-    use PrivilegeCategorieServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
 
@@ -117,19 +113,12 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
 
     public function computeAssertion(EntretienProfessionnel $entretien, string $privilege) : bool
     {
-
+        /** @var ?RoleInterface $role */
         $role = $this->getUserService()->getConnectedRole();
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        //todo QUESTION : pourquoi devoir faire cela c'est pas normal !!!
-        [$catCode, $priCode] = explode('-', $privilege);
-        $categorie = $this->getPrivilegeCategorieService()->findByCode($catCode);
-        $pprivilege = $this->getPrivilegeService()->findByCode($priCode, $categorie->getId());
-        if ($pprivilege === null) return false;
-        $listings = $pprivilege->getRoles()->toArray();
-        if (!in_array($role, $listings)) return false;
-        //todo FIN BIZARERIE ...
+        if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
         $now = new DateTime();
 

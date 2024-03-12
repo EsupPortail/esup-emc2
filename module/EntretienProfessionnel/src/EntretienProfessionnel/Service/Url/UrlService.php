@@ -7,9 +7,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 class UrlService extends \Application\Service\Url\UrlService
 {
 
-    /**
-     * @return string
-     */
+    /** @noinspection PhpUnused */
     public function getUrlEntretienAccepter() : string
     {
         /** @var EntretienProfessionnel $entretien */
@@ -19,9 +17,7 @@ class UrlService extends \Application\Service\Url\UrlService
         return $url;
     }
 
-    /**
-     * @return string
-     */
+    /** @noinspection PhpUnused */
     public function getUrlEntretienRenseigner() : string
     {
         /** @var EntretienProfessionnel $entretien */

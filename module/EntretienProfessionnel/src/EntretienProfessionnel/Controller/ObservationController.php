@@ -2,21 +2,19 @@
 
 namespace EntretienProfessionnel\Controller;
 
-use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Observation\EntretienProfessionnelObservations;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Stdlib\RequestInterface;
 use Laminas\View\Model\ViewModel;
+use RuntimeException;
 use UnicaenObservation\Entity\Db\ObservationInstance;
-use UnicaenObservation\Form\ObservationInstance\ObservationInstanceForm;
 use UnicaenObservation\Form\ObservationInstance\ObservationInstanceFormAwareTrait;
 use UnicaenObservation\Service\ObservationInstance\ObservationInstanceServiceAwareTrait;
 use UnicaenObservation\Service\ObservationType\ObservationTypeServiceAwareTrait;
-use RuntimeException;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
-class ObservationController extends AbstractActionController {
+class ObservationController extends AbstractActionController
+{
     use EntretienProfessionnelServiceAwareTrait;
     use ObservationInstanceServiceAwareTrait;
     use ObservationTypeServiceAwareTrait;

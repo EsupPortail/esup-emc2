@@ -464,12 +464,15 @@ create table formation_instance
         constraint formation_instance_formation_id_fk
         references formation
         on delete cascade,
+    complement              text,
+    auto_inscription        boolean default false not null,
+
     nb_place_principale     integer default 0     not null,
     nb_place_complementaire integer default 0     not null,
-    complement              text,
     lieu                    varchar(256),
     type                    varchar(256),
-    auto_inscription        boolean default false not null,
+    affichage               boolean default true  not null,
+
     source_id               varchar(128),
     id_source               varchar(256),
     histo_creation          timestamp             not null,
@@ -486,7 +489,7 @@ create table formation_instance
         references unicaen_utilisateur_user,
     cout_ht                 double precision,
     cout_ttc                double precision,
-    affichage               boolean default true  not null,
+
     parametre_id            integer
         constraint formation_instance_formation_session_parametre_null_fk
         references formation_session_parametre
@@ -1647,7 +1650,8 @@ WITH d(code, lib, ordre) AS (
     SELECT 'stagiaireexterne_ajouter', 'Ajouter', 30 UNION
     SELECT 'stagiaireexterne_modifier', 'Modifier', 40 UNION
     SELECT 'stagiaireexterne_historiser', 'Historiser/Restaurer', 50 UNION
-    SELECT 'stagiaireexterne_supprimer', 'Supprimer', 60
+    SELECT 'stagiaireexterne_supprimer', 'Supprimer', 60 UNION
+    SELECT 'stagiaireexterne_rechercher', 'Rechercher', 100
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d

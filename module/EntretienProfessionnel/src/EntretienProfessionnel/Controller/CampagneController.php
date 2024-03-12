@@ -417,23 +417,23 @@ class CampagneController extends AbstractActionController {
     public function superieurAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $responsable = $this->getAgentService()->getRequestedAgent($this);
+        $superieur = $this->getAgentService()->getRequestedAgent($this);
 
-        if ($responsable === null) {
+        if ($superieur === null) {
             $user = $this->getUserService()->getConnectedUser();
-            $responsable = $this->getAgentService()->getAgentByUser($user);
+            $superieur = $this->getAgentService()->getAgentByUser($user);
         }
-        if ($responsable === null) {
-            throw new RuntimeException("EntretienController::superieurAction() > Aucun responsable de fourni.");
+        if ($superieur === null) {
+            throw new RuntimeException("EntretienController::superieurAction() > Aucun·e supérieur·e de fourni.");
         }
         
-        $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($responsable, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieur($superieur, $campagne->getDateDebut(), $campagne->getDateFin());
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
 
         //$entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByCampagne($campagne, false, false);
         $entretiensS = $this->getEntretienProfessionnelService()->getEntretienProfessionnelByCampagneAndAgents($campagne, $agents, false, false);
-        $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($responsable, $campagne, false, false);
+        $entretiensR = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByResponsableAndCampagne($superieur, $campagne, false, false);
 
         $entretiens = [];
         foreach ($entretiensR as $entretien) { $entretiens[$entretien->getAgent()->getId()] = $entretien; }
@@ -441,7 +441,7 @@ class CampagneController extends AbstractActionController {
 
         $vm = new ViewModel([
             'campagne' => $campagne,
-            'agent' => $responsable,
+            'agent' => $superieur,
             'agents' => $agents,
             'entretiens' => $entretiens,
         ]);
@@ -452,17 +452,17 @@ class CampagneController extends AbstractActionController {
     public function autoriteAction() : ViewModel
     {
         $campagne = $this->getCampagneService()->getRequestedCampagne($this);
-        $responsable = $this->getAgentService()->getRequestedAgent($this);
+        $autorite = $this->getAgentService()->getRequestedAgent($this);
 
-        if ($responsable === null) {
+        if ($autorite === null) {
             $user = $this->getUserService()->getConnectedUser();
-            $responsable = $this->getAgentService()->getAgentByUser($user);
+            $autorite = $this->getAgentService()->getAgentByUser($user);
         }
-        if ($responsable === null) {
-            throw new RuntimeException("EntretienController::superieurAction() > Aucun responsable de fourni.");
+        if ($autorite === null) {
+            throw new RuntimeException("EntretienController::superieurAction() > Aucun·e autorité de fourni.");
         }
 
-        $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($responsable, $campagne->getDateDebut(), $campagne->getDateFin());
+        $agents = $this->getAgentAutoriteService()->getAgentsWithAutorite($autorite, $campagne->getDateDebut(), $campagne->getDateFin());
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
 
@@ -470,7 +470,7 @@ class CampagneController extends AbstractActionController {
 
         $vm = new ViewModel([
             'campagne' => $campagne,
-            'agent' => $responsable,
+            'agent' => $autorite,
             'agents' => $agents,
             'entretiens' => $entretiens,
         ]);

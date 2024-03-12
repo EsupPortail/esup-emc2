@@ -68,10 +68,14 @@ $denomination = (isset($params['denomination']) AND trim($params['denomination']
         window.location.href = '?';
     });
 
-    $('input#denomination').val(<?php echo '"'.$params['denomination'].'"'; ?>);
-    <?php if ($params['structure-filtre'] !== null) :?>
+    <?php if (isset($params['denomination'])) :?>
+        $('input#denomination').val(<?php echo '"'.$params['denomination'].'"'; ?>);
+    <?php endif; ?>
+    <?php if (isset($params['structure-filtre'])) :?>
         $('input[name="structure-filtre[label]"]').val("<?php echo trim($params['structure-filtre']['label']); ?>");
         $('input[name="structure-filtre[id]"]').val("<?php echo $params['structure-filtre']['id']; ?>");
     <?php endif; ?>
-    $('select#encours option[value=<?php echo $params['encours']; ?>]').prop('selected', true);
+    <?php if (isset($params['encours'])) :?>
+        $('select#encours option[value=<?php echo $params['encours']; ?>]').prop('selected', true);
+    <?php endif; ?>
 </script>
