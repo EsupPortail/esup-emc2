@@ -87,7 +87,7 @@ echo $this->doctype();
             <path d="M1200 0L0 0 892.25 114.72 1200 0z" class="shape-fill"></path>
         </svg>
     </div>
-    <div id="contenu-principal" class="container bg-white px-4 pt-4 pb-6">
+    <div id="contenu-principal" class="personna container bg-white px-4 pt-4 pb-6">
         <?php echo $this->content; ?>
     </div>
 </main>
@@ -114,5 +114,50 @@ echo $this->doctype();
     });
 </script>
 
+
+
+<script>
+    $(function() {
+        switch($('#user-status-name').text()) {
+            case 'Blanche' : $('div#contenu-principal').addClass('Blanche'); break;
+            case 'Bruno' : $('div#contenu-principal').addClass('Bruno'); break;
+            case 'Clémentine' : $('div#contenu-principal').addClass('Clementine'); break;
+            case 'Grey' : $('div#contenu-principal').addClass('Grey'); break;
+            case 'Jonathan' : $('div#contenu-principal').addClass('Jonathan'); break;
+            case 'Océane' : $('div#contenu-principal').addClass('Oceane'); break;
+            case 'Olive' : $('div#contenu-principal').addClass('Olive'); break;
+            case 'Rose' : $('div#contenu-principal').addClass('Rose'); break;
+            case 'Rusty' : $('div#contenu-principal').addClass('Rusty'); break;
+            case 'Violette' : $('div#contenu-principal').addClass('Violette'); break;
+            default : $('div#contenu-principal').addClass('hidden'); break;
+
+        }
+    })
+</script>
+
+<style>
+    :root {
+        --position-x: 1550px;
+        --position-y: 70px;
+    }
+
+    div.personna {
+        background-size : 200px 200px;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: var(--position-x) var(--position-y);
+    }
+
+    div#contenu-principal.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Blanche.jpg'); }
+    div#contenu-principal.Bruno { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Bruno.jpg'); }
+    div#contenu-principal.Clementine { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Clementine.jpg'); }
+    div#contenu-principal.Grey { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Grey.jpg'); }
+    div#contenu-principal.Jonathan { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Jonathan.jpg'); }
+    div#contenu-principal.Oceane { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Oceane.jpg'); }
+    div#contenu-principal.Olive { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Olive.jpg'); }
+    div#contenu-principal.Rose { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rose.jpg'); }
+    div#contenu-principal.Rusty { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rusty.jpg'); }
+    div#contenu-principal.Violette { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Violette.jpg'); }
+</style>
 </body>
 </html>
