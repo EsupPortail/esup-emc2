@@ -10,7 +10,7 @@
         <field name="organisme"     column="organisme"      type="string"       length="1024"  />
         <field name="contact"       column="contact"        type="string"       length="1024"  />
         <field name="pourquoi"      column="pourquoi"       type="string"       length="9999"  />
-        <field name="montant"       column="montant"        type="string"       length="9999"  />
+        <field name="montant"       column="montant"        type="float"  />
         <field name="lieu"          column="lieu"           type="string"       length="1024"  />
         <field name="debut"         column="debut"          type="datetime"  />
         <field name="fin"           column="fin"            type="datetime"  />

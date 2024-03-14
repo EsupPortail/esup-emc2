@@ -9,6 +9,7 @@ use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Textarea;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\Regex;
 use UnicaenApp\Form\Element\Date;
 
 class DemandeExterneForm extends Form
@@ -70,10 +71,10 @@ class DemandeExterneForm extends Form
         ]);
 
         $this->add([
-            'type' => Textarea::class,
+            'type' => Text::class,
             'name' => 'montant',
             'options' => [
-                'label' => "Montant des frais d’inscription : ",
+                'label' => "Montant des frais associés : ",
             ],
             'attributes' => [
                 'id' => 'montant',
@@ -208,7 +209,21 @@ class DemandeExterneForm extends Form
             'organisme' => ['required' => true,],
             'contact' => ['required' => true,],
             'pourquoi' => ['required' => false,],
-            'montant' => ['required' => false,],
+            'montant' => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Regex::class,
+                        'options' => [
+                            'pattern' => '/^\d+(\.\d+)?$/',
+                            'messages' => [
+                                Regex::NOT_MATCH => "Veuillez saisir une valeur numérique",
+                            ],
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
             'lieu' => ['required' => true,],
             'debut' => ['required' => true,],
             'fin' => ['required' => true,],

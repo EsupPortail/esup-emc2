@@ -8,7 +8,6 @@ use Application\Event\RgpdRenderer\RgpdRendererEvenementFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleForm;
 use Application\Form\ModifierLibelle\ModifierLibelleFormFactory;
 use Application\Form\ModifierLibelle\ModifierLibelleHydrator;
-use Application\Provider\Privilege\ActivitePrivileges;
 use Application\Provider\Privilege\AgentPrivileges;
 use Application\Provider\Privilege\ConfigurationPrivileges;
 use Application\Provider\Privilege\FicheMetierPrivileges;

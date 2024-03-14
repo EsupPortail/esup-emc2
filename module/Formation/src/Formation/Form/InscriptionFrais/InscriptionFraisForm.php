@@ -69,7 +69,7 @@ class InscriptionFraisForm extends Form
                     [
                         'name' => Regex::class,
                         'options' => [
-                            'pattern' => '/[0-9]*\.?[0-9]*/',
+                            'pattern' => '/^\d+(\.\d+)?$/',
                             'messages' => [
                                 Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
                             ],
@@ -84,7 +84,7 @@ class InscriptionFraisForm extends Form
                     [
                         'name' => Regex::class,
                         'options' => [
-                            'pattern' => '/[0-9]*\.?[0-9]*/',
+                            'pattern' => '/^\d+(\.\d+)?$/',
                             'messages' => [
                                 Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
                             ],
@@ -99,7 +99,7 @@ class InscriptionFraisForm extends Form
                     [
                         'name' => Regex::class,
                         'options' => [
-                            'pattern' => '/[0-9]*\.?[0-9]*/',
+                            'pattern' => '/^\d+(\.\d+)?$/',
                             'messages' => [
                                 Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
                             ],

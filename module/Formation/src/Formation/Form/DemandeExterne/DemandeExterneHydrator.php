@@ -36,7 +36,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $organisme = (isset($data['organisme']) AND trim($data['organisme']) !== '')?trim($data['organisme']):null;
         $contact = (isset($data['contact']) AND trim($data['contact']) !== '')?trim($data['contact']):null;
         $pourquoi = (isset($data['pourquoi']) AND trim($data['pourquoi']) !== '')?trim($data['pourquoi']):null;
-        $montant = (isset($data['montant']) AND trim($data['montant']) !== '')?trim($data['montant']):null;
+        $montant = (isset($data['montant']) AND trim($data['montant']) !== '')? ((float) trim($data['montant'])): null;
         $lieu = (isset($data['lieu']) AND trim($data['lieu']) !== '')?trim($data['lieu']):null;
         $debut = (isset($data['debut']) AND trim($data['debut']) !== '')?DateTime::createFromFormat('d/m/Y', $data['debut']):null;
         $fin = (isset($data['fin']) AND trim($data['fin']) !== '')?DateTime::createFromFormat('d/m/Y', $data['fin']):null;

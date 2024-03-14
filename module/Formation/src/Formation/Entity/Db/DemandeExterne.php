@@ -31,7 +31,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $organisme = null;
     private ?string $contact = null;
     private ?string $pourquoi = null;
-    private ?string $montant = null;
+    private ?float $montant = null;
     private ?string $lieu = null;
     private ?DateTime $debut = null;
     private ?DateTime $fin = null;
@@ -101,12 +101,12 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
         $this->pourquoi = $pourquoi;
     }
 
-    public function getMontant(): ?string
+    public function getMontant(): ?float
     {
         return $this->montant;
     }
 
-    public function setMontant(?string $montant): void
+    public function setMontant(?float $montant): void
     {
         $this->montant = $montant;
     }
