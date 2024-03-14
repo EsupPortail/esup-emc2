@@ -137,15 +137,15 @@ echo $this->doctype();
 
 <style>
     :root {
-        --position-x: 1550px;
-        --position-y: 70px;
+        --position-x: 5.3vw;
+        --position-y: 7.3vh;
     }
 
     div.personna {
         background-size : 200px 200px;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        background-position: var(--position-x) var(--position-y);
+        background-position: right var(--position-x) top var(--position-y);
     }
 
     div#contenu-principal.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Blanche.jpg'); }

@@ -143,6 +143,7 @@ return [
                                 'options' => [
                                     'route'    => '/resultats[/:session]',
                                     'defaults' => [
+                                        /** @see EnqueteReponseController::afficherResultatsAction() */
                                         'controller' => EnqueteReponseController::class,
                                         'action'     => 'afficher-resultats',
                                     ],

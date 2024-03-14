@@ -7,6 +7,7 @@ use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Privilege\FormateurPrivileges;
+use Formation\Provider\Privilege\FormationenquetePrivileges;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
 use Formation\Provider\Privilege\FormationinstancepresencePrivileges;
 use Formation\Provider\Privilege\FormationinstancePrivileges;
@@ -26,6 +27,7 @@ $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats:
 $canInformation = (!$estAnnulee and $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_MODIFIER)));
 $canAfficherMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_AFFICHER));
 $canReEnvoyerMail = $this->isAllowed(MailPrivileges::getResourceId(MailPrivileges::MAIL_REENVOI));
+$canAfficherEnquete = $this->isAllowed(FormationenquetePrivileges::getResourceId(FormationenquetePrivileges::ENQUETE_RESULTAT));
 
 $canAnnuler = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_ANNULER));
 $canEmargement = (
@@ -212,6 +214,13 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                                 <?php echo ($canPresenceModifier) ? "Renseigner" : "Voir"; ?> les présences
                             </a>
                         <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if ($canAfficherEnquete) : ?>
+                        <a href="<?php echo $this->url('formation/enquete/resultat', ['session' => $instance->getId()], [], true); ?>"
+                           class="btn btn-secondary">
+                            <span class="icon icon-diagramme"></span>
+                            Afficher le résultat de l'enquête
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>

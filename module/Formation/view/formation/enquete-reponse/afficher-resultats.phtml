@@ -104,39 +104,41 @@ $nbReponses = count($array);
             <div class="col-md-6">
                 <canvas id="myChart_<?php echo $question->getId(); ?>" width="400" height="200"></canvas>
                 <script>
-            let ctx = document.getElementById('myChart_<?php echo $question->getId(); ?>').getContext('2d');
-            let myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [<?php foreach (EnqueteReponse::NIVEAUX as $niveau) echo "'".$niveau."',"; ?>],
-                    datasets: [{
-                        label: 'Nombre de réponses',
-                        data: [<?php echo implode(",", $histogramme[$question->getId()]); ?>],
-                        backgroundColor: [
-                            'rgb(18,199,0,1)',
-                            'rgb(161,191,0,1)',
-                            'rgb(255,171,3,1)',
-                            'rgb(222,76,0,1)',
-                            'rgb(156,0,0,1)',
-                        ],
+                    {
+                        let ctx = document.getElementById('myChart_<?php echo $question->getId(); ?>').getContext('2d');
+                        let myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: [<?php foreach (EnqueteReponse::NIVEAUX as $niveau) echo "'" . $niveau . "',"; ?>],
+                                datasets: [{
+                                    label: 'Nombre de réponses',
+                                    data: [<?php echo implode(",", $histogramme[$question->getId()]); ?>],
+                                    backgroundColor: [
+                                        'rgb(18,199,0,1)',
+                                        'rgb(161,191,0,1)',
+                                        'rgb(255,171,3,1)',
+                                        'rgb(222,76,0,1)',
+                                        'rgb(156,0,0,1)',
+                                    ],
 
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false,
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: <?php echo $nbReponses; ?>,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                legend: {
+                                    display: false,
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0,
+                                            max: <?php echo $nbReponses; ?>,
+                                        }
+                                    }]
+                                }
                             }
-                        }]
+                        });
                     }
-                }
-            });
         </script>
             </div>
         </div>
