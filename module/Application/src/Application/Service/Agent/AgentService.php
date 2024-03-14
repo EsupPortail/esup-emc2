@@ -376,8 +376,8 @@ EOS;
         $affectationsPrincipales = $this->getAgentAffectationService()->getAgentAffectationHierarchiquePrincipaleByAgent($agent);
         if ($affectationsPrincipales === null or count($affectationsPrincipales) !== 1) return []; //throw new LogicException("Plusieurs affectations principales pour l'agent ".$agent->getId() . ":".$agent->getDenomination());
 
-        if (isset($affectationsPrincipales[0])) {
-            $affectationPrincipale = $affectationsPrincipales[0];
+        if (reset($affectationsPrincipales)) {
+            $affectationPrincipale = reset($affectationsPrincipales);
             $structure = $affectationPrincipale->getStructure();
             do {
                 $responsablesAll = array_map(function (StructureResponsable $a) {
