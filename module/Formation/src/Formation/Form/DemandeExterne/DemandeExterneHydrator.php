@@ -20,7 +20,7 @@ class DemandeExterneHydrator implements HydratorInterface {
             'lieu' => $object->getLieu(),
             'debut' => $object->getDebut(),
             'fin' => $object->getFin(),
-            'modalite' => $object->getJustificationAgent(),
+            'modalite' => $object->getModalite(),
             'motivation' => $object->getJustificationAgent(),
             'prise-en-charge' => $object->isPriseEnCharge(),
             'cofinanceur' => $object->getCofinanceur(),
@@ -40,7 +40,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $lieu = (isset($data['lieu']) AND trim($data['lieu']) !== '')?trim($data['lieu']):null;
         $debut = (isset($data['debut']) AND trim($data['debut']) !== '')?DateTime::createFromFormat('d/m/Y', $data['debut']):null;
         $fin = (isset($data['fin']) AND trim($data['fin']) !== '')?DateTime::createFromFormat('d/m/Y', $data['fin']):null;
-        $modalite = $data['prise-en-charge']??null;
+        $modalite = $data['modalite']??null;
         $motivation = (isset($data['motivation']) AND trim($data['motivation']) !== '')?trim($data['motivation']):null;
         $priseEnCharge = isset($data['prise-en-charge'])??true;
         $cofinanceur = (isset($data['cofinanceur']) AND trim($data['cofinanceur']) !== '')?trim($data['cofinanceur']):null;

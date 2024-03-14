@@ -16,6 +16,7 @@ use Formation\Form\Justification\JustificationFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\InscriptionEtats;
 use Formation\Provider\FichierNature\FichierNature;
+use Formation\Provider\Parametre\FormationParametres;
 use Formation\Provider\Validation\DemandeExterneValidations;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
@@ -29,6 +30,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
+use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
@@ -42,6 +44,7 @@ class DemandeExterneController extends AbstractActionController {
     use FormationGroupeServiceAwareTrait;
     use NatureServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ParametreServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
 
     use DemandeExterneFormAwareTrait;
@@ -69,7 +72,8 @@ class DemandeExterneController extends AbstractActionController {
             'demandes' => $demandes,
             'etats' => $etats,
 
-            'params' => $params
+            'params' => $params,
+            'plafond' => $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::DEMANDE_EXTERNE_PLAFOND),
         ]);
     }
 
@@ -322,6 +326,36 @@ class DemandeExterneController extends AbstractActionController {
         return $vm;
     }
 
+    public function validerGestionnaireAction() : ViewModel
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+
+        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_DRH);
+        $this->getDemandeExterneService()->update($demande);
+        $form = $this->getJustificationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
+        $form->bind($demande);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $justification = $data['HasDescription']['description'];
+            $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH, $justification);
+            $this->getDemandeExterneService()->update($demande);
+            $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+            $this->getNotificationService()->triggerValidationDrh($demande);
+            $this->getNotificationService()->triggerValidationComplete($demande);
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Validation de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'inscription' => $demande,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
+    }
+
     public function validerDrhAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
@@ -345,6 +379,44 @@ class DemandeExterneController extends AbstractActionController {
 
         $vm =  new ViewModel([
             'title' => "Validation de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'inscription' => $demande,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
+    }
+
+    public function refuserGestionnaireAction() : ViewModel
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+
+        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
+        $this->getDemandeExterneService()->update($demande);
+
+        $form = $this->getJustificationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
+        $form->bind($demande);
+        $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($demande->getJustificationRefus() === null) {
+                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
+                } else {
+                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
+                    $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
+                    $this->getDemandeExterneService()->update($demande);
+                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                    $this->getNotificationService()->triggerRefus($demande);
+                }
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "refus de l'inscription de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
             'inscription' => $demande,
             'form' => $form,
         ]);
@@ -400,12 +472,14 @@ class DemandeExterneController extends AbstractActionController {
         ];
         $demandesInternes = $this->getDemandeExterneService()->getInscriptionService()->getInscriptionsWithFiltre($paramsInternes);
 
+        $plafond = $this->getParametreService()->getValeurForParametre(FormationParametres::TYPE, FormationParametres::DEMANDE_EXTERNE_PLAFOND);
         $paramsExternes_standard = [
             'etat' => $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::ETAT_VALIDATION_RESP),
             'historise' => '0',
             'annee' => Formation::getAnnee(),
         ];
         $demandesExternes_standard = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes_standard);
+        $demandesExternes_standard = array_filter($demandesExternes_standard, function (DemandeExterne $a) use ($plafond) { return $a->getMontant() >= $plafond; });
 
         $paramsExternes_forcee = [
             'etat' => $this->getEtatTypeService()->getEtatTypeByCode(DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR),
@@ -413,7 +487,9 @@ class DemandeExterneController extends AbstractActionController {
             'annee' => Formation::getAnnee(),
         ];
         $demandesExternes_forcee = $this->getDemandeExterneService()->getDemandesExternesWithFiltre($paramsExternes_forcee);
-            $demandesExternes = array_merge($demandesExternes_standard, $demandesExternes_forcee);
+        $demandesExternes_forcee = array_filter($demandesExternes_forcee, function (DemandeExterne $a) use ($plafond) { return $a->getMontant() >= $plafond; });
+
+        $demandesExternes = array_merge($demandesExternes_standard, $demandesExternes_forcee);
 
         return new ViewModel([
             'demandesInternes' => $demandesInternes,

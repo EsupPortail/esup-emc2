@@ -11,6 +11,7 @@ use UnicaenEtat\Entity\Db\EtatType;
  * @var DemandeExterne[] $demandes
  * @var EtatType[] $etats
  * @var array $params
+ * @var float $plafond
  */
 
 $this->headTitle("Demandes de formations externes");
@@ -21,6 +22,7 @@ $canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(Deman
 $canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
 $canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
 $canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_GERER));
+$canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_GESTIONNAIRE));
 
 $canTelechargerDevis = $canGerer;
 $canTeleverserDevis = $canGerer;
@@ -58,6 +60,13 @@ $canTeleverserDevis = $canGerer;
             <td> <?php echo $demande->getOrganisme(); ?> </td>
 
             <td class="action devis">
+                Montant: <?php echo $demande->getMontant(); ?>
+                <?php if ($demande->getMontant() >= $plafond) : ?>
+                    <span class="text-warning">
+                        <span class="icon icon-attention" title="Plafond dépassé ! Nécessite validation de la DRH."></span>
+                    </span>
+                <?php endif; ?>
+                <br>
                 <?php if (empty($demande->getDevis())) : ?>
                     <em>Aucun devis</em>
                 <?php else : ?>
@@ -103,6 +112,34 @@ $canTeleverserDevis = $canGerer;
                        class="ajax-modal" data-event="modification"
                     >
                         <span class="icon icon-editer"></span> Modifier </a>
+                <?php endif; ?>
+                <?php if ($canValider AND $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_RESP)): ?>
+                    <?php if($demande->getMontant() < $plafond) : ?>
+                        <br>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::validerGestionnaireAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="text-success">
+                                <span class="icon icon-ok"></span> Valider
+                            </span>
+                        </a>
+                        <br>
+                        <?php /** @see \Formation\Controller\DemandeExterneController::validerGestionnaireAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
+                           class="ajax-modal" data-event="modification"
+                        >
+                            <span class="text-danger">
+                                <span class="icon icon-ko"></span> Refuser
+                            </span>
+                        </a>
+
+                    <?php else : ?>
+                    <span class="text-danger">
+                        <br>
+                        <strong>Nécessite DRH</strong>
+                        </span>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($canGerer && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
                     <br>

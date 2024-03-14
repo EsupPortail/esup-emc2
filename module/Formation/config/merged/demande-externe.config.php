@@ -153,6 +153,17 @@ return [
                 [
                     'controller' => DemandeExterneController::class,
                     'action' => [
+                        'valider-gestionnaire',
+                        'refuser-gestionnaire',
+                    ],
+                    'privileges' => [
+                        DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_GESTIONNAIRE
+                    ],
+                    'assertion' => DemandeExterneAssertion::class
+                ],
+                [
+                    'controller' => DemandeExterneController::class,
+                    'action' => [
                         'envoyer-parapheur',
                         'gerer',
                     ],
@@ -377,6 +388,26 @@ return [
                                     'defaults' => [
                                         'controller' => DemandeExterneController::class,
                                         'action' => 'refuser-drh'
+                                    ],
+                                ],
+                            ],
+                            'valider-gestionnaire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/valider-gestionnaire/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'valider-gestionnaire'
+                                    ],
+                                ],
+                            ],
+                            'refuser-gestionnaire' => [
+                                'type'  => Segment::class,
+                                'options' => [
+                                    'route'    => '/refuser-gestionnaire/:demande-externe',
+                                    'defaults' => [
+                                        'controller' => DemandeExterneController::class,
+                                        'action' => 'refuser-gestionnaire'
                                     ],
                                 ],
                             ],

@@ -935,7 +935,9 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'AUTO_CLOTURE', 'Délai pour la cloture de la session (en jours)', null, 'Number', 430 UNION
     SELECT 'LOGO', 'Logo de l''établissement', 'Le logo de l''établissement qui figurera sur les documents', 'String', 1010 UNION
     SELECT 'LIBELLE', 'Libellé de l''établissement', 'Le libellé de l''établissement', 'String', 1020 UNION
-    SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', 1030
+    SELECT 'SOUSLIBELLE', 'Sous libellé', 'Un complément au libellé de l''établissement (par exemple : Direction des ressources humaines <br> Formation)', 'String', 1030 UNION
+    SELECT 'CONVOCATION_SUPERIEUR_COPIE', 'Mise en copie des supérieur·es hiérarchiques lors de convocation', null, 'Bool', 2000 UNION
+    SELECT 'DEMANDE_EXTERNE_PLAFOND', 'Plafond du montant des formations externes exigeant validation', null , 'String', 3000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
@@ -1434,7 +1436,8 @@ WITH d(code, lib, ordre) AS (
     SELECT 'demandeexterne_supprimer', 'Supprimer une demande ', 60 UNION
     SELECT 'demandeexterne_valider_agent', 'Valider une demande en tant qu''agent', 110 UNION
     SELECT 'demandeexterne_valider_responsable', 'Valider une demande en tant que responsable', 120 UNION
-    SELECT 'demandeexterne_valider_drh', 'Valider une demande en tant que gestionnaire des formations', 130 UNION
+    SELECT 'demandeexterne_valider_gestionnaire', 'Valider une demande en tant que gestionnaire des formations', 125 UNION
+    SELECT 'demandeexterne_valider_drh', 'Valider une demande en tant que direction des ressources humaines', 130 UNION
     SELECT 'demandeexterne_gerer', 'Gérer la demande externe', 140
 )
 SELECT cp.id, d.code, d.lib, d.ordre

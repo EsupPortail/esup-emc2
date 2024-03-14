@@ -9,7 +9,6 @@ use Fichier\Service\Fichier\FichierService;
 use Fichier\Service\Nature\NatureService;
 use Formation\Form\Demande2Formation\Demande2FormationForm;
 use Formation\Form\DemandeExterne\DemandeExterneForm;
-use Formation\Form\Inscription\InscriptionForm;
 use Formation\Form\Justification\JustificationForm;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
@@ -19,6 +18,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
+use UnicaenParametre\Service\Parametre\ParametreService;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceService;
 
 class DemandeExterneControllerFactory
@@ -41,6 +41,7 @@ class DemandeExterneControllerFactory
          * @var FormationGroupeService $formationGroupeService
          * @var NatureService $natureService
          * @var NotificationService $notificationService
+         * @var ParametreService $parametreService
          * @var ValidationInstanceService $validationInstanceService
          */
         $agentService = $container->get(AgentService::class);
@@ -51,6 +52,7 @@ class DemandeExterneControllerFactory
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $natureService = $container->get(NatureService::class);
         $notificationService = $container->get(NotificationService::class);
+        $parametreService = $container->get(ParametreService::class);
         $validationInstanceService = $container->get(ValidationInstanceService::class);
 
         /**
@@ -76,6 +78,7 @@ class DemandeExterneControllerFactory
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setNatureService($natureService);
         $controller->setNotificationService($notificationService);
+        $controller->setParametreService($parametreService);
         $controller->setValidationInstanceService($validationInstanceService);
 
         $controller->setDemandeExterneForm($demandeExterneForm);

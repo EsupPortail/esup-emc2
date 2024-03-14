@@ -14,6 +14,8 @@ class DemandeexternePrivileges extends Privileges
     const DEMANDEEXTERNE_SUPPRIMER = 'demandeexterne-demandeexterne_supprimer';
     const DEMANDEEXTERNE_VALIDER_AGENT = 'demandeexterne-demandeexterne_valider_agent';
     const DEMANDEEXTERNE_VALIDER_RESPONSABLE = 'demandeexterne-demandeexterne_valider_responsable';
+    const DEMANDEEXTERNE_VALIDER_GESTIONNAIRE = 'demandeexterne-demandeexterne_valider_gestionnaire';
     const DEMANDEEXTERNE_VALIDER_DRH = 'demandeexterne-demandeexterne_valider_drh';
     const DEMANDEEXTERNE_GERER = 'demandeexterne-demandeexterne_gerer';
+
 }
