@@ -282,12 +282,15 @@ EOS;
         if ($date === null) $date = new DateTime();
 
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            //AFFECTATION
+            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
             ->addSelect('astructure')->join('affectation.structure', 'astructure')
-            ->andWhere('affectation.dateFin >= :today OR affectation.dateFin IS NULL')
-            ->andWhere('affectation.dateDebut <= :today')
             ->andWhere('affectation.deleted_on IS NULL')
+            // AFFECTATION FILTER
+            ->addSelect('affectationfilter')->join('agent.affectations', 'affectationfilter')
+            ->andWhere('affectationfilter.dateFin >= :today OR affectationfilter.dateFin IS NULL')
+            ->andWhere('affectationfilter.dateDebut <= :today')
+            ->andWhere('affectationfilter.deleted_on IS NULL')
             //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
 //            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
