@@ -1180,6 +1180,40 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'tableaudebord';
 
+-- OBSERVATION -
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre) VALUES
+('observationtype', 'UnicaenObservation - Gestion des types d''observation', 'UnicaenObservation\Provider\Privilege', 11020);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'observationtype_index', 'Accéder à l''index', 10 UNION
+    SELECT 'observationtype_afficher', 'Afficher', 20 UNION
+    SELECT 'observationtype_ajouter', 'Ajouter', 30 UNION
+    SELECT 'observationtype_modifier', 'Modifier', 40 UNION
+    SELECT 'observationtype_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'observationtype_supprimer', 'Supprimer', 60
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observationtype';
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
+VALUES ('observationinstance', 'UnicaenObservation - Gestion des observations', 'UnicaenObservation\Provider\Privilege', 11010);
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'observationinstance_index', 'Accéder à l''index', 10 UNION
+    SELECT 'observationinstance_afficher', 'Afficher', 20 UNION
+    SELECT 'observationinstance_ajouter', 'Ajouter', 30 UNION
+    SELECT 'observationinstance_modifier', 'Modifier', 40 UNION
+    SELECT 'observationinstance_historiser', 'Historiser/Restaurer', 50 UNION
+    SELECT 'observationinstance_supprimer', 'Supprimer', 60
+
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observationinstance';
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------

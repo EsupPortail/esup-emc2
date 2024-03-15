@@ -1454,7 +1454,6 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('formationinstancedocument', 'Gestion des formations - Documents', 'Formation\Provider\Privilege', 319);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'formationinstance_index', 'Accéder à l''index', 5 UNION
     SELECT 'formationinstancedocument_convocation', 'Génération des convocations', 10 UNION
     SELECT 'formationinstancedocument_emargement', 'Génération des listes d''émargement', 20 UNION
     SELECT 'formationinstancedocument_attestation', 'Génération des attestations de formation', 30 UNION
@@ -1484,6 +1483,7 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('formationinstance', 'Gestion des formations - Actions de formation', 'Formation\Provider\Privilege', 313);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstance_index', 'Accéder à l''index', 5 UNION
     SELECT 'formationinstance_afficher', 'Afficher une action de formation', 10 UNION
     SELECT 'formationinstance_ajouter', 'Ajouter une action de formation', 20 UNION
     SELECT 'formationinstance_modifier', 'Modifier une action de formation', 30 UNION
