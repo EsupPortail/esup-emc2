@@ -79,7 +79,7 @@ class Structure implements ResourceInterface, HasDescriptionInterface {
         return $this->libelleLong;
     }
 
-    public function getType() : StructureType
+    public function getType() : ?StructureType
     {
         return $this->type;
     }

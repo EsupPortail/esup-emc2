@@ -54,7 +54,7 @@ class StructureService
             ->leftJoin('gestionnaire.agent', 'gAgent')->addSelect('gAgent')
             ->addSelect('responsable')->leftJoin('structure.responsables', 'responsable')
             ->leftJoin('responsable.agent', 'rAgent')->addSelect('rAgent')
-            ->addSelect('type')->join('structure.type', 'type')
+            ->addSelect('type')->leftjoin('structure.type', 'type')
             ->andWhere('structure.deleted_on IS NULL')
             ->orderBy('structure.code')
         ;

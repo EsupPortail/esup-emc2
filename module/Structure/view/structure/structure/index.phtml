@@ -56,7 +56,16 @@ $canAfficher    = $this->isAllowed(StructurePrivileges::getResourceId(StructureP
                         <?php endif; ?>
                     </td>
                     <td> <?php echo $structure->getCode(); ?> </td>
-                    <td> <?php echo $structure->getType(); ?> </td>
+                    <td>
+                        <?php if ($structure->getType()) : ?>
+                            <?php echo $structure->getType()->getLibelle(); ?>
+                        <?php else : ?>
+                            <span class="text-warning">
+                                <span class="icon icon-attention"></span>
+                                Type de structure manquant
+                            </span>
+                        <?php endif; ?>
+                    </td>
                     <td>
                         <!-- responsables -->
                         <?php
