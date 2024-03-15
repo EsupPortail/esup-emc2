@@ -215,7 +215,31 @@ create table entretienprofessionnel_agent_force_sansobligation
 );
 comment on table entretienprofessionnel_agent_force_sansobligation is 'Table listant les agents pour lesquels on a forcé le fait qu''ils n''avait pas d''obligation d''entretien professionnel';
 
-
+create table entretienprofessionnel_recours
+(
+    id                    serial                  not null
+        constraint entretienprofessionnel_recours_pk
+            primary key,
+    entretien_id          integer                 not null
+        constraint entretienprofessionnel_recours_entretienprofessionnel_id_fk
+            references entretienprofessionnel
+            on delete cascade,
+    date_procedure        timestamp default now() not null,
+    commentaire           text,
+    entretien_modifiable  boolean   default false not null,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint entretienprofessionnel_recours_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint entretienprofessionnel_recours_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint entretienprofessionnel_recours_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
 
 -- IIIIIIIIIINNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   TTTTTTTTTTTTTTTTTTTTTTT
 -- I::::::::IN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  T:::::::::::::::::::::T
@@ -278,7 +302,9 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SElECT 'TEMOIN_AFFECTATION', 'Filtrage selon les affectations', null, 'String', 2000 UNION
     SELECT 'DELAI_ACCEPTATION_AGENT', 'Délai d''acceptation de l''entretien par l''agent (en jours)', null, 'Number', 100 UNION
     SELECT 'INTRANET_DOCUMENT', 'Lien vers les documents associés à l''entretien professionnel', null, 'String', 1000 UNION
-    SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000
+    SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000 UNION
+    SELECT 'CAMPAGNE_BLOCAGE_STRICT_MODIFICATION', 'Blocage strict de la modification des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la modification des entretiens professionnels (comptes-rendus) doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 1 UNION
+    SELECT 'CAMPAGNE_BLOCAGE_STRICT_VALIDATION', 'Blocage strict de la validation des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la validation des entretiens professionnels doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 2
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d
@@ -1164,6 +1190,7 @@ WITH d(code, lib, ordre) AS (
     SELECT 'entretienpro_valider_agent', 'Valider en tant qu''Agent', 900 UNION
     SELECT 'entretienpro_valider_responsable', 'Valider en tant que Responsable', 910 UNION
     SELECT 'entretienpro_valider_drh', 'Valider en tant que DRH', 920 UNION
+
     SELECT 'entretienpro_valider_observation', 'valider_observation', 921
 )
 SELECT cp.id, d.code, d.lib, d.ordre
@@ -1214,6 +1241,27 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'agentforcesansobligation';
 
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'observation_voir_observation_agent', 'Voir les observations emises par l''agent', 510 UNION
+    SELECT 'observation_voir_observation_autorite', 'Voir les observations emises par l''autorité hiérachique', 520 UNION
+    SELECT 'observation_voir_observation_finale', 'Voir les observations finales emises par l''agent', 530
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'observation';
 
-
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('recours','Gestion des recours',2030,'EntretienProfessionnel\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'recours_afficher', 'Afficher un recours', 20 UNION
+    SELECT 'recours_ajouter', 'Ajouter', 30 UNION
+    SELECT 'recours_modifier', 'Modifier', 40 UNION
+    SELECT 'recours_historiser', 'Historiser/Restaurer', 40 UNION
+    SELECT 'recours_supprimer', 'Supprimer', 50
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+JOIN unicaen_privilege_categorie cp ON cp.CODE = 'recours';
 

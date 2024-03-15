@@ -2,6 +2,10 @@
 
 use Unicaen\Console\Console;
 
+$env = getenv('APPLICATION_ENV') ?: 'production';
+
+
+
 $hostname = match (getenv('APPLICATION_ENV')) {
     'development' => 'mes-formations.ma-machine.mon-etablissement.fr:8443',
     'test' => 'mes-formations-pp.mon-etablissement.fr',
@@ -9,6 +13,15 @@ $hostname = match (getenv('APPLICATION_ENV')) {
 };
 
 return [
+    'module_listener_options' => [
+        'config_cache_enabled'     => ($env === 'production'),
+        'config_cache_key'         => 'app_config',
+        'module_map_cache_enabled' => ($env === 'production'),
+        'module_map_cache_key'     => 'module_map',
+        'cache_dir'                => 'data/config/',
+        'check_dependencies'       => ($env !== 'production'),
+    ],
+
 
     'view_manager' => [
         'display_not_found_reason' => true,

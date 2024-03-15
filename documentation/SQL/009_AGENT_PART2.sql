@@ -452,7 +452,7 @@ INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifiqueaffectation_index', 'Affectation - Afficher l''index des affectation', 200 UNION
     SELECT 'missionspecifiqueaffectation_afficher', 'Affectation - Afficher une affectations de missions spécifiques', 210 UNION
-    SELECT 'missionspecifiqueaffectation__ajouter', 'Affectation - Ajouter une affectation de mission spécifique', 220 UNION
+    SELECT 'missionspecifiqueaffectation_ajouter', 'Affectation - Ajouter une affectation de mission spécifique', 220 UNION
     SELECT 'missionspecifiqueaffectation_modifier', 'Affectation - Modifier une affectation de mission specifique', 230 UNION
     SELECT 'missionspecifiqueaffectation_historiser', 'Affectation - Historiser/restaurer une affectation de mission spécifique', 240 UNION
     SELECT 'missionspecifiqueaffectation_detruire', 'Affectation - Détruire une affectation de mission spécifique', 250 UNION

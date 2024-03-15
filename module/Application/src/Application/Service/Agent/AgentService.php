@@ -287,9 +287,11 @@ EOS;
             ->andWhere('affectation.deleted_on IS NULL')
             // AFFECTATION FILTER
             ->addSelect('affectationfilter')->join('agent.affectations', 'affectationfilter')
+            ->andWhere('affectationfilter.deleted_on IS NULL')
             ->andWhere('affectationfilter.dateFin >= :today OR affectationfilter.dateFin IS NULL')
             ->andWhere('affectationfilter.dateDebut <= :today')
-            ->andWhere('affectationfilter.deleted_on IS NULL')
+            ->setParameter('today', $date)
+
             //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
 //            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
@@ -305,7 +307,6 @@ EOS;
             ->andWhere('grade.deleted_on IS NULL')
             //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
-            ->setParameter('today', $date)
             ->andWhere('agent.deleted_on IS NULL')
             ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
 
@@ -336,7 +337,6 @@ EOS;
             $qb = $qb->andWhere('forcage.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
-
         $result = $qb->getQuery()->getResult();
 
         return $result;

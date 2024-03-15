@@ -448,6 +448,7 @@ create table unicaen_autoform_champ
     balise                boolean,
     options               varchar(1024),
     mots_clefs            varchar(1024),
+    obligatoire           boolean   default false not null,
     histo_creation        timestamp default now() not null,
     histo_createur_id     integer   default 0     not null
         constraint autoform_champ_createur_fk
@@ -1209,7 +1210,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 
 INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name)
 VALUES
-    ('EMC2#appname', '', 'MacroService', 'getAppName'),
+    ('EMC2#AppName', '', 'MacroService', 'getAppName'),
     ('EMC2#date', 'Affiche la date du jour d/m/Y', 'MacroService', 'getDate'),
     ('EMC2#datetime', 'Affiche la date et l heure d/m/Y à H:i', 'MacroService', 'getDateTime')
 ;

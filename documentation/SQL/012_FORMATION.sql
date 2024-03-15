@@ -19,26 +19,6 @@
 --       T:::::::::T A:::::A                 A:::::A B::::::::::::::::B  L::::::::::::::::::::::LE::::::::::::::::::::E
 --       TTTTTTTTTTTAAAAAAA                   AAAAAAABBBBBBBBBBBBBBBBB   LLLLLLLLLLLLLLLLLLLLLLLLEEEEEEEEEEEEEEEEEEEEEE
 
-create table formation_parcours
-(
-    id                    serial
-        constraint formation_parcours_pk
-        primary key,
-    type                  varchar(255),
-    reference_id          integer,
-    libelle               varchar(1024),
-    description           text,
-    histo_creation        timestamp not null,
-    histo_createur_id     integer   not null,
-    histo_modification    timestamp,
-    histo_modificateur_id integer,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer
-);
-
-create unique index formation_parcours_id_uindex
-    on formation_parcours (id);
-
 create table formation_demande_externe
 (
     id                        serial
@@ -48,7 +28,7 @@ create table formation_demande_externe
     organisme                 varchar(1024)           not null,
     contact                   varchar(1024)           not null,
     pourquoi                  text,
-    montant                   text,
+    montant                   float,
     lieu                      varchar(1024)           not null,
     debut                     date                    not null,
     fin                       date                    not null,
@@ -194,7 +174,6 @@ create table formation_plan_formation
         primary key,
     annee varchar(128) not null
 );
-
 
 create table formation_demande_externe_etat
 (
@@ -366,37 +345,6 @@ create table formation_obtenue_competence
         primary key (formation_id, competence_element_id)
 );
 
-create table formation_parcours_formation
-(
-    id                    serial
-        constraint formation_parcours_formation_pk
-        primary key,
-    parcours_id           integer   not null
-        constraint formation_parcours_formation_formation_parcours_id_fk
-        references formation_parcours
-        on delete cascade,
-    formation_id          integer
-        constraint formation_parcours_formation_formation_id_fk
-        references formation
-        on delete cascade,
-    ordre                 integer,
-    histo_creation        timestamp not null,
-    histo_createur_id     integer   not null
-        constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk
-        references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_modificateur_id integer
-        constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer
-        constraint formation_parcours_formation_unicaen_utilisateur_user_id_fk_3
-        references unicaen_utilisateur_user
-);
-
-create unique index formation_parcours_formation_id_uindex
-    on formation_parcours_formation (id);
-
 create table formation_formation_abonnement
 (
     id                    serial
@@ -499,6 +447,54 @@ create table formation_instance
 
 create unique index formation_instance_id_uindex
     on formation_instance (id);
+
+
+create table formation_formateur
+(
+    id                    serial
+        constraint formation_instance_formateur_pk
+            primary key,
+    instance_id           integer   not null
+        constraint formation_instance_formateur_formation_instance_id_fk
+            references formation_instance
+            on delete cascade,
+    prenom                varchar(256),
+    nom                   varchar(256),
+    email                 varchar(1024),
+    attachement           varchar(1024),
+    user_id               int
+        constraint formation_formateur_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user on delete set null,
+    histo_creation        timestamp not null,
+    histo_createur_id     integer   not null
+        constraint formation_instance_formateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_instance_formateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_instance_formateur_user_id_fk_3
+            references unicaen_utilisateur_user,
+    organisme             varchar(1024),
+    telephone             varchar(64),
+    type                  varchar(64)
+);
+
+create table formation_formateur_session
+(
+    formateur_id integer not null
+        constraint formation_formateur_session_formation_formateur_id_fk
+            references formation_formateur
+            on delete cascade,
+    session_id   integer not null
+        constraint formation_formateur_session_formation_instance_id_fk
+            references formation_instance
+            on delete cascade,
+    constraint formation_formateur_session_pk
+        primary key (formateur_id, session_id)
+);
 
 
 create table formation_stagiaire_externe
@@ -634,35 +630,7 @@ create table formation_seance
 create unique index formation_instance_journee_id_uindex
     on formation_seance (id);
 
-create table formation_formateur
-(
-    id                    serial
-        constraint formation_instance_formateur_pk
-        primary key,
-    instance_id           integer   not null
-        constraint formation_instance_formateur_formation_instance_id_fk
-        references formation_instance
-        on delete cascade,
-    prenom                varchar(256),
-    nom                   varchar(256),
-    email                 varchar(1024),
-    attachement           varchar(1024),
-    histo_creation        timestamp not null,
-    histo_createur_id     integer   not null
-        constraint formation_instance_formateur_user_id_fk
-        references unicaen_utilisateur_user,
-    histo_modification    timestamp,
-    histo_modificateur_id integer
-        constraint formation_instance_formateur_user_id_fk_2
-        references unicaen_utilisateur_user,
-    histo_destruction     timestamp,
-    histo_destructeur_id  integer
-        constraint formation_instance_formateur_user_id_fk_3
-        references unicaen_utilisateur_user,
-    organisme             varchar(1024),
-    telephone             varchar(64),
-    type                  varchar(64)
-);
+
 
 
 create unique index formation_instance_formateur_id_uindex
@@ -801,6 +769,15 @@ create table formation_formation_domaine
         on delete cascade,
     constraint formaton_formation_domaine_pk
         primary key (formation_id, domaine_id)
+);
+
+create table formation_demande_externe_session
+(
+    demande_id integer not null
+        constraint fdea_formation_demande_externe_id_fk references formation_demande_externe on delete cascade,
+    session_id  integer not null
+        constraint fdea_formation_instance_id_fk references formation_instance on delete cascade,
+    constraint fdea_pk primary key (demande_id, session_id)
 );
 
 create table agent_element_formation
@@ -1477,6 +1454,7 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, namespace, ordre)
 VALUES ('formationinstancedocument', 'Gestion des formations - Documents', 'Formation\Provider\Privilege', 319);
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
+    SELECT 'formationinstance_index', 'Accéder à l''index', 5 UNION
     SELECT 'formationinstancedocument_convocation', 'Génération des convocations', 10 UNION
     SELECT 'formationinstancedocument_emargement', 'Génération des listes d''émargement', 20 UNION
     SELECT 'formationinstancedocument_attestation', 'Génération des attestations de formation', 30 UNION
@@ -1675,6 +1653,23 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
          JOIN unicaen_privilege_categorie cp ON cp.CODE = 'coutprevisionnel';
 
+
+INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
+VALUES ('formateur','Gestion des formateurs',350,'Formation\Provider\Privilege');
+INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
+WITH d(code, lib, ordre) AS (
+    SELECT 'formateur_index', 'Accéder à l''index', 10 UNION
+    SELECT 'formateur_ajouter', 'Ajouter', 20 UNION
+    SELECT 'formateur_modifier', 'Modifier', 30 UNION
+    SELECT 'formateur_historiser', 'Historiser/Restaurer', 40 UNION
+    SELECT 'formateur_supprimer', 'Supprimer', 50 UNION
+    SELECT 'formateur_afficher', 'Afficher', 15 UNION
+    SELECT 'formateur_mes_sessions', 'Accéder à la page - Mes Sessions -', 100
+)
+SELECT cp.id, d.code, d.lib, d.ordre
+FROM d
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'formateur';
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- EVENEMENT -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -1686,3 +1681,10 @@ INSERT INTO unicaen_evenement_type (code, libelle, description, parametres, recu
     ('convocation_automatique', 'Convocation des agents aux formations imminentes', 'Convocation des agents aux formations imminentes', null, null),
     ('formation_demande_retour', 'Notification de demandes de retour pour les formations passées', 'Notification de demandes de retour pour les formations passées', null, null),
     ('formation_session_cloture', 'Clotûre des sessions ', 'Clotûre des sessions ', null, null);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- INSERT ELEMENTS MINIMAUX --------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO formation_axe (libelle, description, couleur, ordre)
+VALUES ('Formations externes', '<p>Cet axe est utilis&eacute; pour regrouper tous les th&egrave;mes des formations externes</p>', '#555753', 9999);
