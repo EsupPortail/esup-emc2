@@ -284,7 +284,6 @@ EOS;
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
             ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->addSelect('astructure')->join('affectation.structure', 'astructure')
             ->andWhere('affectation.deleted_on IS NULL')
             // AFFECTATION FILTER
             ->addSelect('affectationfilter')->join('agent.affectations', 'affectationfilter')
@@ -314,7 +313,7 @@ EOS;
         $qb = AgentAutorite::decorateWithAgentAutorite($qb);
 
         if (!empty($structures)) {
-            $qb = $qb->andWhere('affectation.structure IN (:structures)')
+            $qb = $qb->andWhere('affectationfilter.structure IN (:structures)')
                 ->setParameter('structures', $structures);
         }
 
