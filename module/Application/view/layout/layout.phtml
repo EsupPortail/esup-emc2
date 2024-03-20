@@ -123,6 +123,7 @@ echo $this->doctype();
         switch($('#user-status-name').text()) {
             case 'Blanche' : $('div#contenu-principal').addClass('Blanche'); break;
             case 'Bruno' : $('div#contenu-principal').addClass('Bruno'); break;
+            case 'Cerise' : $('div#contenu-principal').addClass('Cerise'); break;
             case 'Clémentine' : $('div#contenu-principal').addClass('Clementine'); break;
             case 'Grey' : $('div#contenu-principal').addClass('Grey'); break;
             case 'Jonathan' : $('div#contenu-principal').addClass('Jonathan'); break;
@@ -152,6 +153,7 @@ echo $this->doctype();
 
     div#contenu-principal.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Blanche.jpg'); }
     div#contenu-principal.Bruno { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Bruno.jpg'); }
+    div#contenu-principal.Cerise { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Cerise.jpg'); }
     div#contenu-principal.Clementine { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Clementine.jpg'); }
     div#contenu-principal.Grey { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Grey.jpg'); }
     div#contenu-principal.Jonathan { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Jonathan.jpg'); }
