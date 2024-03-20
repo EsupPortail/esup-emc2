@@ -13,8 +13,8 @@ class ConfigurationRecopieHydrator implements HydratorInterface {
      */
     public function extract(object $object): array
     {
-        [$form, $ids] = explode("|",$object->getValeur());
-        [$from, $to] = explode(";", $ids);
+        [$form, $ids] = ($object->getValeur() !== null)?explode("|",$object->getValeur()):[null,null];
+        [$from, $to] = (isset($ids))?explode(";", $ids):[null,null];
         $data = [
             'operation' => 'recopie',
             'from' => $from,

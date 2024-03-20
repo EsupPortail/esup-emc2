@@ -9,6 +9,7 @@
  */
 
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAuthentification\Service\User;
@@ -56,9 +57,18 @@ $agent  = $entretien->getAgent();
 <?php else : ?>
     <?php if ($canAfficher) : ?>
         <?php echo $this->instanceAsText()->render($cref); ?>
-    <?php else : ?>
-        <div class="alert alert-danger">
-            Vous ne pouvez pas saisir le formulaire d'entretien de formation.
-        </div>
+
+        <?php if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    Le compte-rendu n'est pas encore disponible.
+                </strong>
+                <p>
+                    Vous ne pouvez pas saisir le formulaire d'entretien de formation,
+                    car l'agent·e (<?php echo $entretien->getAgent()->getDenomination(); ?>) n'a pas encore accepté celui-ci.
+                </p>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>

@@ -368,6 +368,10 @@ INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_na
     ('ENTRETIEN#VALIDATION_AUTORITE', 'Retourne la date (si validation) de la validation de l''entretien professionnel par l''autorité', 'entretien', 'toStringValidationHierarchie'),
     ('ENTRETIEN#VALIDATION_SUPERIEUR', 'Retourne la date (si validation) de la validation de l''entretien professionnel par le responsable', 'entretien', 'toStringValidationResponsable');
 
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('URL#EntretienAccepter', null, 'UrlService', 'getUrlEntretienAccepter'),
+    ('URL#EntretienRenseigner', null, 'UrlService', 'getUrlEntretienRenseigner');
+
 
 
 -- ---------------------------------------------------------------------------------------------------------------------
