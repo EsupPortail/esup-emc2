@@ -88,7 +88,7 @@ echo $this->doctype();
                 <path d="M1200 0L0 0 892.25 114.72 1200 0z" class="shape-fill"></path>
             </svg>
         </div>
-        <div id="contenu-principal" class="personna container bg-white px-4 pt-4 pb-6">
+        <div id="contenu-principal" class="container bg-white px-4 pt-4 pb-6">
             <?php echo $this->content; ?>
         </div>
     </main>
@@ -115,9 +115,6 @@ echo $this->doctype();
     });
 </script>
 
-<!-- Personna -------------------->
-
-
 <script>
     $(function() {
         switch($('#user-status-name').text()) {
@@ -139,12 +136,13 @@ echo $this->doctype();
 </script>
 
 <style>
+
     :root {
         --position-x: 5.3vw;
         --position-y: 7.3vh;
     }
 
-    div.personna {
+    div#contenu-principal {
         background-size : 200px 200px;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -162,6 +160,7 @@ echo $this->doctype();
     div#contenu-principal.Rose { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rose.jpg'); }
     div#contenu-principal.Rusty { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rusty.jpg'); }
     div#contenu-principal.Violette { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Violette.jpg'); }
+
 </style>
 
 </body>

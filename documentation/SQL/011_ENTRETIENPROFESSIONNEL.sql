@@ -1269,3 +1269,11 @@ SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
 JOIN unicaen_privilege_categorie cp ON cp.CODE = 'recours';
 
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- ROLE ----------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur, description) VALUES
+    ('Gestionnaire des entretiens professionnels', 'Gestionnaire des entretiens professionnels', false, null, null, false, true, null)
+;
