@@ -18,31 +18,30 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 ?>
 
 <h1 class="page-header">
-    Liste des agents dont vous êtes le supérieur hiérarchique direct
+    Liste des agents dont vous êtes le ou la supérieur·e hiérarchique direct·e
 </h1>
 
 <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-
-<ul class="nav">
-    <li class="nav-item">
-        <a class="nav-link" href="#agent" aria-controls="agent" role="tab"   data-toggle="tabz">
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="agent-tab"
+            data-bs-toggle="tab" data-bs-target="#agent"
+            type="button" role="tab" aria-controls="agent" aria-selected="true">
         Liste des <br/> Agent·es
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#ficheposte" aria-controls="ficheposte" role="tab"   data-toggle="tabz">
-            Fiches de  <br/> poste
-        </a>
-    </li>
+    </button>
+    <button class="nav-link" id="ficheposte-tab"
+            data-bs-toggle="tab" data-bs-target="#ficheposte"
+            type="button" role="tab" aria-controls="ficheposte" aria-selected="true">
+        Fiches de  <br/> poste
+    </button>
     <?php foreach ($campagnes as $campagne) : ?>
-        <li class="nav-item" >
-            <a class="nav-link" href="#entretien_<?php echo $campagne->getId(); ?>" aria-controls="entretien_<?php echo $campagne->getId(); ?>" role="tab"   data-toggle="tabz">
-                Entretiens professionnels <br/> <?php echo $campagne->getAnnee(); ?>
-            </a>
-        </li>
+        <button class="nav-link" id="entretien_<?php echo $campagne->getId(); ?>-tab"
+                data-bs-toggle="tab" data-bs-target="#entretien_<?php echo $campagne->getId(); ?>"
+                type="button" role="tab" aria-controls="entretien_<?php echo $campagne->getId(); ?>" aria-selected="true">
+            Entretiens professionnels <br/> <?php echo $campagne->getAnnee(); ?>
+        </button>
     <?php endforeach; ?>
-</ul>
+</div>
 
 
 <div class="tab-content">
@@ -61,16 +60,26 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
 
 <script>
-    $(function() {
+    $(function () {
         let hash = $(location).attr('hash');
         let name = hash.substring(1);
         if (name === undefined || name === "") name = "agent";
 
-        $('a[aria-controls=' + name + ']').tab('show');
+        $('button').removeClass('active');
+        $('button#' + name + '-tab').addClass('active');
+        $('div.tab-pane').hide().removeClass('active');
+        $('div#' + name).show().addClass('active');
 
-        $('.nav-item a').click(function (e) {
-            // No e.preventDefault() here
-            $(this).tab('show');
+        //$('#' + name + '-tab').tab("show");
+        $('button.nav-link').on('click', function (e) {
+            let anchor = $(this).attr('aria-controls');
+            $('div.tab-pane').hide().removeClass('active');
+            $('div#' + anchor).show().addClass('active');
+            $('button').removeClass('active');
+            $('button#' + anchor + '-tab').addClass('active');
+            // console.log(anchor);
+            e.preventDefault(); // >> bloque le scrolling, mais aussi la ré-écriture de l'url "#info" ...
+            history.replaceState(null, null, "#" + anchor);
         });
     });
 

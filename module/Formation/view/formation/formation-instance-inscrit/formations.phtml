@@ -6,6 +6,8 @@
  * @var Agent $agent
  * @var StagiaireExterne $stagiaire
  * @var string|null $mailcontact
+ *
+ * @var Rendu $enqueteExplication
  */
 
 use Application\Entity\Db\Agent;
@@ -14,6 +16,7 @@ use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\StagiaireExterne;
 use Formation\Provider\FichierNature\FichierNature;
 use Formation\Provider\Privilege\FormationinstancedocumentPrivileges;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $realisees  = array_filter($inscriptions, function (Inscription $a) { return $a->getSession()->estRealisee();} );
 usort($realisees, function (Inscription $a, Inscription $b) { return $a->getSession()->getDebut(true) <=> $b->getSession()->getDebut(true); });
@@ -26,8 +29,12 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
     Formations réalisées
 </h2>
 
-<div class="alert alert-info">
-    <span class="icon icon-attention"></span> Vous ne pourrez récupérer l'attestation pour une formation qu'une fois l'enquête associée saisie et validée.
+
+<div class="row">
+<div class="alert alert-info col-md-9">
+    <strong><span class="icon icon-attention"></span> <?php echo $enqueteExplication->getSujet(); ?> </strong>
+    <?php echo $enqueteExplication->getCorps(); ?>
+</div>
 </div>
 
 <?php if ($canHistorique AND $agent !== null) : ?>
@@ -111,7 +118,6 @@ $canHistorique = $this->isAllowed(FormationinstancedocumentPrivileges::getResour
         </div>
     <?php endforeach; ?>
 <?php endif; ?>
-
 
 <script>
     $(function() {

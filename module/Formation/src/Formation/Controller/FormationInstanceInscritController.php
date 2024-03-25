@@ -9,6 +9,7 @@ use Formation\Form\Inscription\InscriptionFormAwareTrait;
 use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Parametre\FormationParametres;
+use Formation\Provider\Template\TextTemplates;
 use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Inscription\InscriptionServiceAwareTrait;
@@ -94,12 +95,15 @@ class FormationInstanceInscritController extends AbstractActionController
         }
 
         $mail = $this->getParametreService()->getParametreByCode(FormationParametres::TYPE, FormationParametres::MAIL_DRH_FORMATION);
+        $enqueteExplication = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::ENQUETE_EXPLICATION, [], false);
+
 
         return new ViewModel([
             'agent' => $agent,
             'stagiaire' => $stagiaire,
             'inscriptions' => $inscriptions,
             'mailcontact' => ($mail) ? $mail->getValeur() : null,
+            'enqueteExplication' => $enqueteExplication,
         ]);
     }
 
