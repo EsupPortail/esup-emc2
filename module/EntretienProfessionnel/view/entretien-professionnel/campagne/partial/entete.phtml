@@ -1,5 +1,6 @@
 <?php
 
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Structure;
 
@@ -9,8 +10,9 @@ use Structure\Entity\Db\Structure;
  * @var Campagne[] $campagnes
  */
 
-?>
+$canMissionSpecifiqueOnglet = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_ONGLET));
 
+?>
 
 <div class="row">
     <div class="col-md-8">
@@ -40,51 +42,61 @@ use Structure\Entity\Db\Structure;
     </div>
 </div>
 
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-            <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
-            <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()],[], true); ?>"
-               class="nav-link" aria-controls="description" role="tab">
-                Description de <br/> la structure
-            </a>
-        </li>
-        <li class="nav-item">
-            <?php /** @see \Structure\Controller\StructureController::agentsAction() */ ?>
-            <a href="<?php echo $this->url('structure/agents', ['structure' => $structure->getId()],[], true); ?>"
-               class="nav-link" aria-controls="agents" role="tab">
-                Liste des <br/>Agent·es
-            </a>
-        </li>
-        <li class="nav-item">
-            <?php /** @see \Structure\Controller\StructureController::fichesDePosteAction() */ ?>
-            <a href="<?php echo $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()],[], true); ?>"
-               class="nav-link" aria-controls="fiches-de-poste" role="tab">
-                Fiches de <br/>poste
-            </a>
-        </li>
-        <li class="nav-item">
+
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+        <button class="nav-link" id="informations-tab"
+                data-bs-toggle="tab" data-bs-target="#informations"
+                type="button" role="tab" aria-controls="informations" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('structure/description', ['structure' => $structure->getId()],[], true); ?>'"
+        >
+            Description de la structure
+        </button>
+        <?php /** @see \Structure\Controller\StructureController::agentsAction() */ ?>
+        <button class="nav-link" id="agents-tab"
+                data-bs-toggle="tab" data-bs-target="#agents"
+                type="button" role="tab" aria-controls="agents" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('structure/agents', ['structure' => $structure->getId()],[], true); ?>'"
+        >
+            Liste des Agent·es
+        </button>
+        <?php /** @see \Structure\Controller\StructureController::fichesDePosteAction() */ ?>
+        <button class="nav-link" id="fiches-de-poste-tab"
+                data-bs-toggle="tab" data-bs-target="#fiches-de-poste"
+                type="button" role="tab" aria-controls="fiches-de-poste" aria-selected="true"
+                onclick="location.href='<?php echo $this->url('structure/fiches-de-poste', ['structure' => $structure->getId()],[], true); ?>'"
+        >
+            Fiches de poste
+        </button>
+        <?php if ($canMissionSpecifiqueOnglet) : ?>
             <?php /** @see \Structure\Controller\StructureController::missionsSpecifiquesAction() */ ?>
-            <a href="<?php echo $this->url('structure/missions-specifiques', ['structure' => $structure->getId()],[], true); ?>"
-               class="nav-link" aria-controls="missions-specifiques" role="tab">
-                Missions <br/> spécifiques
-            </a>
-        </li>
+            <button class="nav-link" id="mission-specifique-tab"
+                    data-bs-toggle="tab" data-bs-target="#mission-specifique"
+                    type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                    onclick="location.href='<?php echo $this->url('structure/missions-specifiques', ['structure' => $structure->getId()],[], true); ?>'"
+            >
+                    Missions spécifiques
+            </button>
+        <?php endif; ?>
         <?php foreach ($campagnes as $campagne) : ?>
-        <li class="nav-item">
-            <a href="<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>"
-               class="nav-link" aria-controls="campagne_<?php echo $campagne->getId(); ?>" role="tab">
-                Entretiens professionnels <br/> <?php echo $campagne->getAnnee(); ?>
-            </a>
-        </li>
+            <?php if ($campagne !== null) : ?>
+                <?php /** @see \EntretienProfessionnel\Controller\CampagneController::structureAction() */ ?>
+                <button class="nav-link" id="campagne<?php echo $campagne->getId(); ?>-tab"
+                        data-bs-toggle="tab" data-bs-target="#mission-specifique"
+                        type="button" role="tab" aria-controls="mission-specifique" aria-selected="true"
+                        onclick="location.href='<?php echo $this->url('entretien-professionnel/campagne/structure', ['structure' => $structure->getId(), 'campagne' => $campagne->getId()],[],true); ?>'"
+                >
+                    Entretiens professionnels <?php echo $campagne->getAnnee(); ?>
+                </button>
+            <?php endif; ?>
         <?php endforeach; ?>
-        <li class="nav-item">
-            <?php /** @see \Structure\Controller\StructureController::extractionsAction() */ ?>
-            <a href="<?php echo $this->url('structure/extractions', ['structure' => $structure->getId()], [], true); ?>" class="nav-link" aria-controls="extractions" role="tab">
-                Extractions <br/> &nbsp;
-            </a>
-        </li>
-    </ul>
+        <?php /** @see \Structure\Controller\StructureController::extractionsAction() */ ?>
+        <button class="nav-link" id="extraction-tab"
+            data-bs-toggle="tab" data-bs-target="#extraction"
+            type="button" role="tab" aria-controls="extraction" aria-selected="true"
+            onclick="location.href='<?php echo $this->url('structure/extractions', ['structure' => $structure->getId()], [], true); ?>'">
+                Extractions
+        </button>
 </div>
 
 <script>
@@ -103,4 +115,5 @@ use Structure\Entity\Db\Structure;
             }
         });
     });
+
 </script>

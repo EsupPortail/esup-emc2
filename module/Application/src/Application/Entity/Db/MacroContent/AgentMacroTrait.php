@@ -272,6 +272,16 @@ trait AgentMacroTrait
         return $structure->getLibelleLong();
     }
 
+    public function toStringAffectationStructureParente() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $structure = ($agent->getAffectationPrincipale() && $agent->getAffectationPrincipale()->getStructure())?$agent->getAffectationPrincipale()->getStructure()->getParent():null;
+
+        if ($structure === null) return "Aucune structure parente";
+        return $structure->getLibelleLong();
+    }
+
     public function toStringAffectationDate() : string
     {
         /** @var Agent $agent */
