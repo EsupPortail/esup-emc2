@@ -6,6 +6,7 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\Recours;
 use EntretienProfessionnel\Form\Recours\RecoursFormAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
 use EntretienProfessionnel\Service\Recours\RecoursServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -14,6 +15,7 @@ use Laminas\View\Model\ViewModel;
 class RecoursController extends AbstractActionController
 {
     use EntretienProfessionnelServiceAwareTrait;
+    use NotificationServiceAwareTrait;
     use RecoursServiceAwareTrait;
     use RecoursFormAwareTrait;
 
@@ -128,6 +130,23 @@ class RecoursController extends AbstractActionController
                 'action' => $this->url()->fromRoute('entretien-professionnel/recours/supprimer', ["recours" => $recours->getId()], [], true),
             ]);
         }
+        return $vm;
+    }
+
+    /** NOTIFICATION **************************************************************************************************/
+
+    public function notifierModificationsAction(): ViewModel
+    {
+        $entretien = $this->getEntretienProfessionnelService()->getRequestedEntretienProfessionnel($this);
+        $this->getNotificationService()->triggerModificationComptesRendus($entretien);
+
+        $vm = new ViewModel([
+            'title' => "Notification des modifications des comptes-rendus",
+            'reponse' =>
+                "<strong><span class='icon icon-information'></span> La notification vient d'être faite.</strong>".
+                "<p>"."L'agent·e, les supérieur·es et autorité·s viennent d'être notifié·es."."</p>",
+        ]);
+        $vm->setTemplate('default/reponse');
         return $vm;
     }
 }

@@ -32,7 +32,8 @@ return [
                     'controller' => RecoursController::class,
                     'action' => [
                         'modifier',
-                        'toggle'
+                        'toggle',
+                        'notifier-modifications',
                     ],
                     'privileges' => [
                         RecoursPrivileges::RECOURS_MODIFIER,
@@ -147,6 +148,18 @@ return [
                                         /** @see RecoursController::supprimerAction() */
                                         'controller' => RecoursController::class,
                                         'action'     => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'notifier-modifications' => [
+                                'type'  => Segment::class,
+                                'may_terminate' => true,
+                                'options' => [
+                                    'route'    => '/notifier-modifications/:entretien-professionnel',
+                                    'defaults' => [
+                                        /** @see RecoursController::supprimerAction() */
+                                        'controller' => RecoursController::class,
+                                        'action'     => 'notifier-modifications',
                                     ],
                                 ],
                             ],

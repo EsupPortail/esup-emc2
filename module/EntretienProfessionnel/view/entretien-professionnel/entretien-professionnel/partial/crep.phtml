@@ -10,13 +10,12 @@
  */
 
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Role\RoleProvider;use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use UnicaenAutoform\Entity\Db\FormulaireInstance;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
-use UnicaenUtilisateur\Entity\Db\User;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 $canAfficher = $this->isAllowed($entretien, EntretienproPrivileges::ENTRETIENPRO_AFFICHER);
@@ -30,7 +29,7 @@ $date = $entretien->getMaxSaisiEntretien();
 $validationResponsable = $entretien->getValidationActiveByTypeCode(EntretienProfessionnelValidations::VALIDATION_RESPONSABLE);
 
 $isAgent = $entretien->getAgent()->getUtilisateur() === $user;
-$date_depassee = (($isAgent) AND ($now > $date));
+$date_depassee = (($isAgent) and ($now > $date));
 
 ?>
 
@@ -39,50 +38,51 @@ $date_depassee = (($isAgent) AND ($now > $date));
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
-    <h3 class="categorie"> Missions du poste </h3>
+<h3 class="categorie"> Missions du poste </h3>
 
-    <?php if ($fichePoste !== null) : ?>
-        <ul>
-            <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
-                <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
-                    <?php echo $ficheTypeExterne->getFicheType()->getActivitesFromFicheMetierAsText(); ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+<?php if ($fichePoste !== null) : ?>
+    <ul>
+        <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
+            <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
+                <?php echo $ficheTypeExterne->getFicheType()->getActivitesFromFicheMetierAsText(); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
 
-    <br/>
-    <br/>
+<br/>
+<br/>
 
+<?php
+$data = $crep->buildResponseDictionnary();
+?>
+
+
+<?php if ($canRenseigner) : ?>
     <?php
-    $data = $crep->buildResponseDictionnary();
+    /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
+    $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
+    /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
+    $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $crep->getFormulaire()->getId(), 'instance' => $crep->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
+
+    echo $this->instanceAsFormulaire()->render($crep, $url, $data, ['validation-floating' => true]);
     ?>
+<?php else : ?>
+    <?php if ($canAfficher) : ?>
+        <?php echo $this->instanceAsText()->render($crep); ?>
 
-
-    <?php if ($canRenseigner) : ?>
-        <?php
-            /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction(); */
-            $retour = $this->url('entretien-professionnel/acceder', ['entretien' => $entretien->getId()], ['force_canonical' => false], true);
-            /** @see  \UnicaenAutoform\Controller\FormulaireController::afficherFormulaireAction() */
-            $url = $this->url('autoform/formulaire/afficher-formulaire', ['formulaire' => $crep->getFormulaire()->getId(), 'instance' => $crep->getId()], ['query' => ['retour' => $retour], 'force_canonical' => false], true);
-
-            echo $this->instanceAsFormulaire()->render($crep, $url, $data, ['validation-floating' => true]);
-        ?>
-    <?php else : ?>
-        <?php if ($canAfficher) : ?>
-            <?php echo $this->instanceAsText()->render($crep); ?>
-
-            <?php if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
-                <div class="alert alert-info">
-                    <strong>
-                        <span class="icon icon-information"></span>
-                        Le compte-rendu n'est pas encore disponible.
-                    </strong>
-                    <p>
+        <?php if ($entretien->isEtatActif(EntretienProfessionnelEtats::ETAT_ENTRETIEN_ACCEPTATION)) : ?>
+            <div class="alert alert-info">
+                <strong>
+                    <span class="icon icon-information"></span>
+                    Le compte-rendu n'est pas encore disponible.
+                </strong>
+                <p>
                     Vous ne pouvez pas saisir le formulaire d'entretien professionnel,
-                    car l'agent·e (<?php echo $entretien->getAgent()->getDenomination(); ?>) n'a pas encore accepté celui-ci.
-                    </p>
-                </div>
-            <?php endif; ?>
+                    car l'agent·e (<?php echo $entretien->getAgent()->getDenomination(); ?>) n'a pas encore accepté
+                    celui-ci.
+                </p>
+            </div>
         <?php endif; ?>
     <?php endif; ?>
+<?php endif; ?>

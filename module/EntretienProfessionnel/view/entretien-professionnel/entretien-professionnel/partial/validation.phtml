@@ -532,6 +532,14 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
                             Suppression la procédure de recours
                         </a>
                     <?php endif; ?>
+                    <?php if ($canModifierRecours) : ?>
+                        <?php /** @see \EntretienProfessionnel\Controller\RecoursController::notifierModificationsAction() */ ?>
+                        <a href="<?php echo $this->url('entretien-professionnel/recours/notifier-modifications', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                           class="btn btn-primary ajax-modal">
+                            <span class="icon icon-notifier"></span>
+                            Notifier de la modification des CRs
+                        </a>
+                    <?php endif; ?>
 
                 </div>
             </div>

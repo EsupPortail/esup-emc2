@@ -361,4 +361,23 @@ class NotificationService
 
         return $mail;
     }
+
+    /** NOTIFICATIONS ASSOCIEES AUX PROCEDURES POST-ENTRETIEN *********************************************************/
+
+    public function triggerModificationComptesRendus(EntretienProfessionnel $entretien): Mail
+    {
+        $vars = ['campagne' => $entretien->getCampagne(), 'entretien' => $entretien, 'agent' => $entretien->getAgent()];
+        $this->getUrlService()->setVariables($vars);
+        $vars['UrlService'] = $this->getUrlService();
+
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::MODIFICATIONS_APPORTEES_AUX_CRS, $vars);
+        $mails  = implode(",", $this->getEmailAgent($entretien));
+        $mails .="," . implode(",",$this->getEmailSuperieursHierarchiques($entretien));
+        $mails .="," . implode(",",$this->getEmailAutoritesHierarchiques($entretien));
+
+        $mail = $this->getMailService()->sendMail($mails, $rendu->getSujet(), $rendu->getCorps());
+        $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
+        $this->getMailService()->update($mail);
+        return $mail;
+    }
 }
