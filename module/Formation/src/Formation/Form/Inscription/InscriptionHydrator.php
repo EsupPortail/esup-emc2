@@ -32,7 +32,7 @@ class InscriptionHydrator implements HydratorInterface
         /** @var Inscription $object */
         $session = (isset($data['session']) && $data['session']['id'] !== '') ? $this->getFormationInstanceService()->getFormationInstance((int)$data['session']['id']) : null;
         $type = $data['type'] ?? null;
-        $agent = (isset($data['agent']) && $data['agent']['id'] !== '') ? $this->getAgentService()->getAgent($data['agent']['id']) : null;
+        $agent = (isset($data['agent']) && $data['agent']['id'] !== '') ? $this->getAgentService()->getAgent($data['agent']['id'], true, false) : null;
         $stagiaire = (isset($data['stagiaire']) && $data['stagiaire']['id'] !== '') ? $this->getStagiaireExterneService()->getStagiaireExterne($data['stagiaire']['id']) : null;
 
         $object->setSession($session);

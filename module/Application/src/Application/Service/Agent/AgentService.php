@@ -50,7 +50,7 @@ class AgentService
 
     /** REQUETAGE *****************************************************************************************************/
 
-    public function createQueryBuilder(): QueryBuilder
+    public function createQueryBuilder(bool $enAffectation = true): QueryBuilder
     {
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
             //affectations
@@ -60,7 +60,10 @@ class AgentService
             ->addSelect('quotite')->leftJoin('agent.quotites', 'quotite')
             ->addSelect('utilisateur')->leftJoin('agent.utilisateur', 'utilisateur')
             ->andWhere('agent.deleted_on IS NULL')
-            ->andWhere('affectation.deleted_on IS NULL');
+        ;
+
+        if (!$enAffectation) $qb = $qb->andWhere('affectation.deleted_on IS NULL');
+
         return $qb;
     }
 
@@ -141,7 +144,7 @@ class AgentService
      * @param bool $enlarge (si mis à TRUE alors pas d'obligation de donnée minimum)
      * @return Agent|null
      */
-    public function getAgent(?string $id, bool $enlarge = false): ?Agent
+    public function getAgent(?string $id, bool $enlarge = false, bool $enAffectation=true): ?Agent
     {
         if ($id === null) return null;
 

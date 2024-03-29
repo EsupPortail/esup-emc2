@@ -108,6 +108,7 @@ $inscriptions = $instance->getInscriptions()
                 <?php endif; ?>
 
                 <?php if ($canInscritModifier && $inscription->isEtatActif(InscriptionEtats::ETAT_VALIDER_RESPONSABLE)) : ?>
+                    <br>
                     <?php  /** @see \Formation\Controller\InscriptionController::validerDrhAction() */ ?>
                     <a href="<?php echo $this->url('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true); ?>" class="ajax-modal" data-event="modification"> <span class="icon icon-checked text-success"> Valider</span>  </a>
                     <?php  /** @see \Formation\Controller\InscriptionController::refuserDrhAction() */ ?>
