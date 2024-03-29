@@ -1282,3 +1282,8 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'recours';
 INSERT INTO unicaen_utilisateur_role (libelle, role_id, is_default, ldap_filter, parent_id, is_auto, accessible_exterieur, description) VALUES
     ('Gestionnaire des entretiens professionnels', 'Gestionnaire des entretiens professionnels', false, null, null, false, true, null)
 ;
+
+-- DECALAGE SEQUENCES
+alter sequence unicaen_autoform_formulaire_id_seq restart with 10000;
+alter sequence unicaen_autoform_categorie_id_seq restart with 10000;
+alter sequence unicaen_autoform_champ_id_seq restart with 10000;

@@ -64,7 +64,15 @@ $raison = (isset($options['raison']))?$options['raison']:[];
                     </span>
                 <?php else : ?>
                     <?php foreach ($grades as $grade) : ?>
-                        <?php echo $grade->getGrade()->getLibelleLong(); ?> <br/>
+                        <?php if ($grade->getGrade() === null): ?>
+                        <span class="text-warning">
+                            <span class="icon icon-attention">
+                                Aucun grade
+                            </span>
+                        </span>
+                        <?php else : ?>
+                            <?php echo $grade->getGrade()->getLibelleLong(); ?> <br/>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </td>
