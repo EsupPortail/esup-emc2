@@ -941,6 +941,9 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace)
 VALUES ('MES_FORMATIONS_PROJETPERSO', '<p>Texte associé à la page du projet personnel</p>', 'texte', 'Mon projet personnel', '<p>Dans le cadre de la formation professionnelle tout au long de la vie, vous pouvez mobiliser différents dispositifs pour la réalisation de projets professionnels d''ordre personnel, tels que le bilan de compétences, la validation des acquis de l''expérience, le congé de Formation professionnelle ou le compte personnel de formation.<br /><br />Quel que soit le dispositif choisi, une commission a lieu deux fois par an. Vous pouvez consulter le lien intranet pour connaître l''ensemble des modalités.</p>', null, 'Formation\Provider\Template');
 
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENQUETE_EXPLICATION', '<p>Texte précisant le caractère anonyme et <em>facultatif</em> de l''enquête</p>', 'texte', 'À propos des formulaires de retour d''expérience', e'<p>Ces formulaires sont anonymes et si vous ne souhaitez pas fournir de réponse à une des questions de l\'enquête vous pouvez sélectionner la réponse "<em>Sans avis</em>".</p>
+<p>Vous ne pourrez récupérer l\'attestation pour une formation qu\'une fois l\'enquête associée saisie et validée.</p>', null, 'Formation\Provider\Privilege');
+
 -- ---------------------------------------------------------------------------------------------------------------------
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------

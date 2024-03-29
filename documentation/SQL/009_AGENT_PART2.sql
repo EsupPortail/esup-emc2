@@ -441,6 +441,8 @@ VALUES
     ('AGENT#StructureAffectationPrincipale', null, 'agent', 'toStringAffectationStructure')
 ;
 
+INSERT INTO unicaen_renderer_macro (code, description, variable_name, methode_name) VALUES
+    ('AGENT#AffectationStructureParente', '<p>Affiche le libellé long de la structure parente de l''agent.</p>', 'agent', 'toStringAffectationStructureParente');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PRIVILEGE -----------------------------------------------------------------------------------------------------------

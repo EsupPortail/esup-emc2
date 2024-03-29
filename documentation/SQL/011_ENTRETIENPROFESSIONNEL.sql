@@ -1012,7 +1012,12 @@ INSERT INTO unicaen_renderer_template (code, namespace, description, document_ty
 </table>
 <p>Cordialement,<br />Le bureau de gestion des personnels BIATSS<br />Le bureau Conseil Carrière Compétences<br /><br /><br /></p>', 'table { border : 1px; }');
 
-
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('MODIFICATIONS_APPORTEES_AUX_CRS', '<p>Courrier électronique envoyé aux acteurs (Agent, Supérieurs, Autorités) d''un EP suite à la modification post campagne.</p>', 'mail', 'Suite à la requête de modifications des comptes-rendus de l''entretien professionnel de VAR[AGENT#Denomination] pour la campagne VAR[CAMPAGNE#annee]', e'<p>Bonjour,</p>
+<p> </p>
+<p>Suite à la requête de modification des comptes-rendus de l\'entretien professionnel de VAR[AGENT#Denomination] pour la campagne VAR[CAMPAGNE#annee] des modifications ont été apportées.<br />Vous pouvez consulter les comptes-rendus modifiés  en consultant l\'entretien professionnel : VAR[URL#EntretienRenseigner]</p>
+<p>VAR[EMC2#AppName]</p>
+<p> </p>
+<p> </p>', null, 'EntretienProfessionnel\Provider\Template');
 ------------------------------------------------------------------------------------------------------------------------
 -- FORMULAIRE DE L'ENTRETIEN PROFESSIONNEL -----------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
