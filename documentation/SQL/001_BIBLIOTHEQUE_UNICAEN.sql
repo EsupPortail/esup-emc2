@@ -596,6 +596,18 @@ create unique index unicaen_evenement_journal_id_uindex on unicaen_evenement_jou
 -- ---------------------------------------------------------------------------------------------------------------------
 --  TABLE UNICAEN INDICATEUR -------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
+create table unicaen_indicateur_categorie
+(
+    id          serial
+        constraint unicaen_indicateur_categorie_pk
+            primary key,
+    code        varchar(256)
+        constraint unicaen_indicateur_categorie_pk_2
+            unique,
+    libelle     varchar(1024)        not null,
+    ordre       integer default 9999 not null,
+    description text
+);s
 
 create table unicaen_indicateur_indicateur
 (
@@ -608,52 +620,54 @@ create table unicaen_indicateur_indicateur
     dernier_rafraichissement timestamp,
     view_id                  varchar(256),
     entity                   varchar(256),
-    namespace                varchar(1024)
+    namespace                varchar(1024),
+    code                     varchar(256)
+        constraint unicaen_indicateur_indicateur_pk
+            unique,
+    nb_elements              integer,
+    categorie_id             integer
+        constraint uii_unicaen_indicateur_categorie_id_fk
+            references unicaen_indicateur_categorie
 );
-create unique index indicateur_id_uindex on unicaen_indicateur_indicateur (id);
+create unique index indicateur_id_uindex
+    on unicaen_indicateur_indicateur (id);
+
+
+
+create table unicaen_indicateur_abonnement
+(
+    id serial constraint abonnement_pk primary key,
+    user_id integer constraint indicateur_abonnement_user_id_fk references unicaen_utilisateur_user on delete cascade,
+    indicateur_id integer constraint indicateur_abonnement_indicateur_definition_id_fk references unicaen_indicateur on delete cascade,
+    frequence     varchar(256),
+    dernier_envoi timestamp
+);
+
+create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
+create unique index indicateur_id_uindex on unicaen_indicateur (id);
 
 create table unicaen_indicateur_tableaudebord
 (
-    id          serial
-        constraint unicaen_indicateur_tableaudebord_pk
-            primary key,
-    titre       varchar(1024) default 'Tableau de bord'::character varying not null,
+    id serial constraint unicaen_indicateur_tableaudebord_pk primary key,
+    titre varchar(1024) default 'Tableau de bord' not null,
     description text,
-    nb_column   integer       default 1                                    not null,
-    namespace   varchar(1024)
+    namespace varchar(256),
+    nb_column   integer       default 1                 not null
 );
 
 create table unicaen_indicateur_tableau_indicateur
 (
     tableau_id    integer not null
         constraint unicaen_indicateur_tableau_indicateur_tableaudebord_null_fk
-            references unicaen_indicateur_tableaudebord
+            references unicaen_indicateur_tableaudebord (id)
             on delete cascade,
     indicateur_id integer not null
         constraint unicaen_indicateur_tableau_indicateur_indicateur_null_fk
-            references unicaen_indicateur_indicateur
+            references unicaen_indicateur_indicateur (id)
             on delete cascade,
     constraint unicaen_indicateur_tableau_indicateur_pk
         primary key (tableau_id, indicateur_id)
 );
-
-create table unicaen_indicateur_abonnement
-(
-    id  serial not null
-        constraint abonnement_pk
-            primary key,
-    user_id       integer                                                                   not null
-        constraint indicateur_abonnement_user_id_fk
-            references unicaen_utilisateur_user
-            on delete cascade,
-    indicateur_id integer                                                                   not null
-        constraint indicateur_abonnement_indicateur_definition_id_fk
-            references unicaen_indicateur_indicateur
-            on delete cascade,
-    frequence     varchar(256),
-    dernier_envoi timestamp
-);
-create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- UNICAEN FICHIER -----------------------------------------------------------------------------------------------------
@@ -1145,16 +1159,18 @@ JOIN unicaen_privilege_categorie cp ON cp.CODE = 'evenementtype';
 -- ---------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
-VALUES ('indicateur', 'Gestion des indicateurs', 99992, 'UnicaenIndicateur\Provider\Privilege');
+VALUES ('indicateur', 'Gestions des indicateurs', 800, 'UnicaenIndicateur\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
-    SELECT 'afficher_indicateur', 'Afficher un indicateur', 10 UNION
-    SELECT 'editer_indicateur', 'Modifier un indicateur', 20 UNION
-    SELECT 'detruire_indicateur', 'Supprimer un indicateur', 30
+    SELECT 'afficher_indicateur', 'Afficher un indicateur', 1   UNION
+    SELECT 'editer_indicateur', 'Éditer un indicateur', 2   UNION
+    SELECT 'detruire_indicateur', 'Effacer un indicateur', 3 UNION
+    SELECT 'indicateur_mes_indicateurs', 'Affichage du menu - Mes Indicateurs -', 100
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
-JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
+         JOIN unicaen_privilege_categorie cp ON cp.CODE = 'indicateur';
+
 
 INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('abonnement', 'Gestion des abonnements', 99992, 'UnicaenIndicateur\Provider\Privilege');
