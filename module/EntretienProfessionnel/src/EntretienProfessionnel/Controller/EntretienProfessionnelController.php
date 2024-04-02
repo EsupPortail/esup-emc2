@@ -89,7 +89,11 @@ class EntretienProfessionnelController extends AbstractActionController
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
 
-        $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
+        $entretiens = [];
+        if ($agent !== null) {
+            $entretiens = $this->getEntretienProfessionnelService()->getEntretiensProfessionnelsByAgent($agent);
+        }
+
         try {
             $intranet = $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::INTRANET_DOCUMENT);
         } catch (Exception $e) {
