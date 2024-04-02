@@ -5,6 +5,7 @@ namespace Formation\Entity\Db;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasSourceTrait;
 use DateTime;
+use RuntimeException;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -102,6 +103,20 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
     public function setLieu(?string $lieu) : void
     {
         $this->lieu = $lieu;
+    }
+
+    public function getDateDebut(): null|DateTime
+    {
+        if ($this->getDebut() === null) return null;
+        switch($this->type) {
+            case Seance::TYPE_SEANCE :
+                $asString = $this->getJour()->format('d/m/y')." ".$this->getDebut();
+                return DateTime::createFromFormat('d/m/Y H:i', $asString);
+            case Seance::TYPE_VOLUME :
+                $asString = $this->getJour()->format('d/m/y')." 08:00";
+                return DateTime::createFromFormat('d/m/Y H:i', $asString);
+        }
+        throw new RuntimeException("Le type de seance est inconnu");
     }
 
     /** DONNEE RELATIVE AU "VOLUME" *****************************/

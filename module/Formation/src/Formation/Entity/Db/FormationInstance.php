@@ -262,15 +262,21 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         return $this->demandes->toArray();
     }
 
-    /** JOURNEE *******************************************************************************************************/
+    /** SÉANCES *******************************************************************************************************/
 
     /**
      * @return array|null
      */
-    public function getJournees(): ?array
+    public function getSeances(): ?array
     {
         if (!isset($this->journees)) return null;
-        return $this->journees->toArray();
+        $seances = $this->journees->toArray();
+        usort($seances, function (Seance $a, Seance $b) {
+            $debutA = $a->getDateDebut();
+            $debutB = $b->getDateDebut();
+            return $debutA <=> $debutB;
+        });
+        return $seances;
     }
 
     public function getDebut(bool $datetime = false): string|DateTime|null
@@ -579,7 +585,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function getListeJournees(): string
     {
         /** @var Seance[] $journees */
-        $journees = $this->getJournees();
+        $journees = $this->getSeances();
         //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a <=> $b;});
 
         $text = "<table style='width:100%;'>";

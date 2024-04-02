@@ -74,7 +74,7 @@ class FormationInstanceDocumentController extends AbstractActionController
     #[NoReturn] public function exportTousEmargementsAction(): void
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $journees = $instance->getJournees();
+        $journees = $instance->getSeances();
         $journees = array_filter($journees, function (Seance $a) {
             return $a->estNonHistorise();
         });

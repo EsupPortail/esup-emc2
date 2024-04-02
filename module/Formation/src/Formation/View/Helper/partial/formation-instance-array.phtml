@@ -59,7 +59,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
             </td>
             <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
             <td> <?php echo ($instance->getFin())?:"???"; ?></td>
-            <td> <?php echo ($instance->getJournees())?count($instance->getJournees()):"???"; ?></td>
+            <td> <?php echo ($instance->getSeances())?count($instance->getSeances()):"???"; ?></td>
             <td>
                 <?php if ($instance->getInscriptions()) : ?>
                     Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>

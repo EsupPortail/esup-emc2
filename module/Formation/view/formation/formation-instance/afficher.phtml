@@ -40,7 +40,7 @@ $retour = $this->url('formation-instance/afficher', ['formation-instance' => $in
 /** @var Formation $formation */
 $formation = $instance->getFormation();
 /** @var Seance[] $journees */
-$journees = $instance->getJournees();
+$journees = $instance->getSeances();
 /** @var Inscription[] $inscriptions */
 $inscriptions = $instance->getInscriptions();
 

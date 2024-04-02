@@ -73,7 +73,7 @@ $formation = $session->getFormation();
             <dd class="col-md-8">
                 <ul>
                     <?php /** @var Seance $journee */ ?>
-                    <?php foreach ($session->getJournees() as $journee) : ?>
+                    <?php foreach ($session->getSeances() as $journee) : ?>
                         <li>
                             <?php if ($journee->getType() === Seance::TYPE_VOLUME) : ?>
                                 Volume horaire de <?php echo $journee->getVolume(); ?>.<br/>

@@ -68,7 +68,7 @@ class PresenceController extends AbstractActionController
         $inscription = $this->getInscriptionService()->getRequestedInscription($this);
 
         $session = $inscription->getSession();
-        $journees = $session->getJournees();
+        $journees = $session->getSeances();
 
         /** @var  Presence $presence */
         foreach ($journees as $journee) {
@@ -100,7 +100,7 @@ class PresenceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
 
         foreach ($instance->getInscriptions() as $inscription) {
-            $journees = $instance->getJournees();
+            $journees = $instance->getSeances();
             /** @var  Presence $presence */
             foreach ($journees as $journee) {
                 $presence = $this->getPresenceService()->getPresenceByJourneeAndInscription($journee, $inscription);
