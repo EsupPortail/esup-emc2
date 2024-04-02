@@ -16,6 +16,7 @@
         <field name="fin"           column="fin"            type="datetime"  />
         <field name="modalite"      column="modalite"       type="string"       length="1024"  />
 
+        <field name="congeFormationSyndicale" column="conge_formation_syndicale" type="boolean"  />
         <field name="priseEnCharge" column="prise_en_charge" type="boolean"  />
         <field name="cofinanceur"   column="cofinanceur"    type="string"       length="1024" />
 

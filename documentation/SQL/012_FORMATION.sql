@@ -35,6 +35,7 @@ create table formation_demande_externe
     justification_agent       text                    not null,
     prise_en_charge           boolean   default true  not null,
     cofinanceur               varchar(1024),
+    conge_formation_syndicale bool      default false not null,
     histo_creation            timestamp default now() not null,
     histo_createur_id         integer   default 0     not null
         constraint formation_demande_externe_unicaen_utilisateur_user_id_fk

@@ -155,6 +155,23 @@ class DemandeExterneForm extends Form
             ],
         ]);
 
+        // type
+        $this->add([
+            'type' => Radio::class,
+            'name' => 'conge-formation-syndicale',
+            'options' => [
+                'label' => "Demandez-vous cette formation au titre du congé de formation syndicale ? <span class='icon obligatoire' title='Champ obligatoire'></span> :",
+                'label_options' => ['disable_html_escape' => true,],
+                'value_options' => [
+                    true => "Oui",
+                    false => "Non",
+                ],
+            ],
+            'attributes' => [
+                'id' => 'conge-formation-syndicale',
+            ],
+        ]);
+
         //-- Cofinancement -----------------------------
 
         // type

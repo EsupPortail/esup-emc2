@@ -346,7 +346,10 @@ class DemandeExterneService
         $formation = new Formation();
         $formation->setLibelle($libelle);
         $formation->setGroupe($groupe);
-        $formation->setDescription("<p><strong>Action de formation générée depuis la demande " . $demande->getId(). "</strong></p>" . $demande->toStringDescription());
+        $description = "<p><strong>Action de formation générée depuis la demande " . $demande->getId(). "</strong></p>";
+        if ($demande->isCongeFormationSyndicale()) $description .= "<p> La demande est faite au titre de congé de formation syndicale </p>";
+        $description .= $demande->toStringDescription();
+        $formation->setDescription($description);
         $formation->setAffichage(false);
         $this->getFormationService()->create($formation);
         $formation->setSource(HasSourceInterface::SOURCE_EMC2);

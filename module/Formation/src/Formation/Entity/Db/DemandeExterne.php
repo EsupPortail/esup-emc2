@@ -35,6 +35,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $lieu = null;
     private ?DateTime $debut = null;
     private ?DateTime $fin = null;
+    private bool $congeFormationSyndicale = false;
     private bool $priseEnCharge = true;
     private ?string $cofinanceur = null;
     private string $modalite = "présentiel";
@@ -201,6 +202,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     public function setPriseEnCharge(bool $priseEnCharge): void
     {
         $this->priseEnCharge = $priseEnCharge;
+    }
+
+    public function isCongeFormationSyndicale(): bool
+    {
+        return $this->congeFormationSyndicale;
+    }
+
+    public function setCongeFormationSyndicale(bool $congeFormationSyndicale): void
+    {
+        $this->congeFormationSyndicale = $congeFormationSyndicale;
     }
 
     public function getCofinanceur(): ?string

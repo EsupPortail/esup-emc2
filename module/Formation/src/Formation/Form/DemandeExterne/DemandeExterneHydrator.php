@@ -22,6 +22,7 @@ class DemandeExterneHydrator implements HydratorInterface {
             'fin' => $object->getFin(),
             'modalite' => $object->getModalite(),
             'motivation' => $object->getJustificationAgent(),
+            'conge-formation-syndicale' => $object->isCongeFormationSyndicale(),
             'prise-en-charge' => $object->isPriseEnCharge(),
             'cofinanceur' => $object->getCofinanceur(),
         ];
@@ -42,6 +43,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $fin = (isset($data['fin']) AND trim($data['fin']) !== '')?DateTime::createFromFormat('d/m/Y', $data['fin']):null;
         $modalite = $data['modalite']??null;
         $motivation = (isset($data['motivation']) AND trim($data['motivation']) !== '')?trim($data['motivation']):null;
+        $congeFormationSyndicale = isset($data['conge-formation-syndicale'])??true;
         $priseEnCharge = isset($data['prise-en-charge'])??true;
         $cofinanceur = (isset($data['cofinanceur']) AND trim($data['cofinanceur']) !== '')?trim($data['cofinanceur']):null;
 
@@ -56,6 +58,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $object->setFin($fin);
         $object->setModalite($modalite);
         $object->setJustificationAgent($motivation);
+        $object->setCongeFormationSyndicale($congeFormationSyndicale);
         $object->setPriseEnCharge($priseEnCharge);
         $object->setCofinanceur($cofinanceur);
 
