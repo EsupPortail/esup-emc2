@@ -607,7 +607,7 @@ create table unicaen_indicateur_categorie
     libelle     varchar(1024)        not null,
     ordre       integer default 9999 not null,
     description text
-);s
+);
 
 create table unicaen_indicateur_indicateur
 (
@@ -638,13 +638,12 @@ create table unicaen_indicateur_abonnement
 (
     id serial constraint abonnement_pk primary key,
     user_id integer constraint indicateur_abonnement_user_id_fk references unicaen_utilisateur_user on delete cascade,
-    indicateur_id integer constraint indicateur_abonnement_indicateur_definition_id_fk references unicaen_indicateur on delete cascade,
+    indicateur_id integer constraint indicateur_abonnement_indicateur_definition_id_fk references unicaen_indicateur_indicateur on delete cascade,
     frequence     varchar(256),
     dernier_envoi timestamp
 );
 
 create unique index abonnement_id_uindex on unicaen_indicateur_abonnement (id);
-create unique index indicateur_id_uindex on unicaen_indicateur (id);
 
 create table unicaen_indicateur_tableaudebord
 (

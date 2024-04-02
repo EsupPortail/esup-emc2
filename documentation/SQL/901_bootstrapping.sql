@@ -1,13 +1,13 @@
 -- PRIVILEGE À L'ADMINISTRATEUR·TRICE TECHNIQUE
--- TRUNCATE TABLE unicaen_privilege_privilege_role_linker;
--- INSERT INTO unicaen_privilege_privilege_role_linker (privilege_id, role_id)
--- WITH d(privilege_id) AS (
---     SELECT id FROM unicaen_privilege_privilege
--- )
--- SELECT d.privilege_id, cp.id
--- FROM d
--- JOIN unicaen_utilisateur_role cp ON cp.role_id = 'Administrateur·trice technique'
--- ;
+TRUNCATE TABLE unicaen_privilege_privilege_role_linker;
+INSERT INTO unicaen_privilege_privilege_role_linker (privilege_id, role_id)
+WITH d(privilege_id) AS (
+    SELECT id FROM unicaen_privilege_privilege
+)
+SELECT d.privilege_id, cp.id
+FROM d
+JOIN unicaen_utilisateur_role cp ON cp.role_id = 'Administrateur·trice technique'
+;
 
 -- NOMMER UN·E ADMINSTRATEUR·TRICE TECHNIQUE
 INSERT INTO unicaen_utilisateur_user (username, display_name, email, password)
