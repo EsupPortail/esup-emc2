@@ -95,6 +95,8 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
     </a>
     <?php endif; ?>
 
+<?php true; ?>
+
 <?php if (!empty($plansDeFormation)) : ?>
     <?php foreach ($axes as $axe) : ?>
     <span class="axe" style="border-color: <?php echo $axe->getCouleur(); ?>"><?php echo $axe->getLibelle(); ?></span>

@@ -66,6 +66,7 @@ class PlanDeFormationController extends AbstractActionController
         $sansgroupe->setLibelle("Formations sans groupe");
         $sansaxe = new Axe();
         $sansaxe->setLibelle("Thème de formation sans axe");
+        $sansaxe->setOrdre(99999);
 
         $groupes = [];
         $formationsArrayByGroupe = [];
@@ -79,6 +80,9 @@ class PlanDeFormationController extends AbstractActionController
                 if ($axe !== null) {
                     $axes[$axe->getId()] = $axe;
                     $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
+                } else {
+                    $axes[-1] = $sansaxe;
+                    $groupesArrayByAxe[-1][$groupe->getId()] = $groupe;
                 }
             } else {
                 $axes[-1] = $sansaxe;
@@ -121,6 +125,7 @@ class PlanDeFormationController extends AbstractActionController
         $sansgroupe->setLibelle("Formations sans thème");
         $sansaxe = new Axe();
         $sansaxe->setLibelle("Thème de formation sans axe");
+        $sansaxe->setOrdre(99999);
 
         $groupes = [];
         $formationsArrayByGroupe = [];
@@ -134,6 +139,9 @@ class PlanDeFormationController extends AbstractActionController
                 if ($axe !== null) {
                     $axes[$axe->getId()] = $axe;
                     $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
+                } else {
+                    $axes[-1] = $sansaxe;
+                    $groupesArrayByAxe[-1][$groupe->getId()] = $groupe;
                 }
             } else {
                 $axes[-1] = $sansaxe;
