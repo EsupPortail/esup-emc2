@@ -260,7 +260,7 @@ if ($retour)    $query['retour'] = $retour;
                                        title="Historiser la fiche de poste"></span></a>
                             <?php else : ?>
                                 <?php /** @see \Application\Controller\FichePosteController::restaurerAction() */ ?>
-                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $id], ["query" => $query], true); ?>">
+                                <a href="<?php echo $this->url('fiche-poste/restaurer', ['fiche-poste' =>  $id], ["query" => $query??[]], true); ?>">
                                             <span class="icon icon-restaurer"
                                                   data-bs-toggle="tooltip" data-bs-html="true"
                                                   title="Restaurer la fiche de poste"></span></a>

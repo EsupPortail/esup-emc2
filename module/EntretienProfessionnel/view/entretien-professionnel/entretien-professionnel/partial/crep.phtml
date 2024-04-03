@@ -38,9 +38,8 @@ $date_depassee = (($isAgent) and ($now > $date));
 
 <!-- Formulaire de l'agent : WARNING ---------------------------------------------------------------------------------->
 
-<h3 class="categorie"> Missions du poste </h3>
-
 <?php if ($fichePoste !== null) : ?>
+    <h3 class="categorie"> Missions du poste </h3>
     <ul>
         <?php foreach ($fichePoste->getFichesMetiers() as $ficheTypeExterne) : ?>
             <li> <?php echo $ficheTypeExterne->getFicheType()->getMetier()->getLibelle(); ?>
@@ -48,10 +47,10 @@ $date_depassee = (($isAgent) and ($now > $date));
             </li>
         <?php endforeach; ?>
     </ul>
+    <br/>
+    <br/>
 <?php endif; ?>
 
-<br/>
-<br/>
 
 <?php
 $data = $crep->buildResponseDictionnary();
