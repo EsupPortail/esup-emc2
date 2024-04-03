@@ -88,8 +88,8 @@ class AgentMissionSpecifique implements HistoriqueAwareInterface, HasAgentInterf
     public function getDechargeTexte(): string
     {
         if ($this->getDecharge() === null) {
-            return "0";
+            return "0 heure";
         }
-        return $this->getDecharge();
+        return $this->getDecharge(). " heure·s";
     }
 }

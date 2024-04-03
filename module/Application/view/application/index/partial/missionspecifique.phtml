@@ -1,0 +1,52 @@
+<?php
+
+use Application\Entity\Db\AgentMissionSpecifique;
+
+/**
+ * @var AgentMissionSpecifique[] $missionsSpecifiques
+ */
+
+
+?>
+
+<span class="todo">AJOUTER POUR MES AGENTS</span>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th data-type="string"> Agent </th>
+        <th> Mission</th>
+        <th> Période</th>
+        <th> Structure</th>
+        <th> Volume </th>
+        <th class="action"> Action </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($missionsSpecifiques as $missionsSpecifique) : ?>
+        <tr>
+            <td data-order="<?php echo $missionsSpecifique->getAgent()->getDenomination(); ?>">
+                <?php echo $missionsSpecifique->getAgent()->getDenomination(true); ?>
+            </td>
+            <td> <?php echo $missionsSpecifique->getMission()->getLibelle(); ?> </td>
+            <td> <?php echo $missionsSpecifique->getPeriode(); ?> </td>
+            <td>
+                <?php if ($missionsSpecifique->getStructure() === null) : ?>
+                    Aucune structure
+                <?php else : ?>
+                    <?php echo $missionsSpecifique->getStructure()->getLibelleLong(); ?>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php  echo $missionsSpecifique->getDechargeTexte(); ?>
+            </td>
+            <td>
+                <span class="todo">LETTRE</span>
+                <span class="todo">MODIFIER</span>
+                <span class="todo">HISTORISER</span>
+                <span class="todo">SUPPRIMER</span>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

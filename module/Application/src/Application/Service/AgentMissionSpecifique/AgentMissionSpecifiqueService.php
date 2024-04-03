@@ -157,6 +157,19 @@ class AgentMissionSpecifiqueService
         return $result;
     }
 
+    public function getAgentMissionsSpecifiquesByAgents(array $agents,  bool $actif = true) : array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('agentmission.agent in (:agents)')
+            ->setParameter('agents', $agents)
+        ;
+
+        if ($actif === true) $qb = AgentMissionSpecifique::decorateWithActif($qb, 'agentmission');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
     /**
      * @param MissionSpecifique $mission
      * @param bool $actif
@@ -247,4 +260,6 @@ class AgentMissionSpecifiqueService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+
 }

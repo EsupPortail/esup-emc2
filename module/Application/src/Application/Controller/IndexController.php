@@ -9,6 +9,7 @@ use Application\Provider\Role\RoleProvider as AppRoleProvider;
 use Application\Provider\Template\TexteTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
 use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
@@ -38,6 +39,7 @@ class IndexController extends AbstractActionController
     use AgentServiceAwareTrait;
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
+    use AgentMissionSpecifiqueServiceAwareTrait;
     use CampagneServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -160,9 +162,13 @@ class IndexController extends AbstractActionController
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
+        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
+
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $agent,
+
+            'missionsSpecifiques' => $missionsSpecifiques,
 
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
@@ -218,12 +224,16 @@ class IndexController extends AbstractActionController
         }
         $fichesDePostePdf = $this->getAgentService()->getFichesPostesPdfByAgents($agents);
 
+        $missionsSpecifiques = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgents($agents);
+
         return new ViewModel([
             'agents' => $agents,
             'connectedAgent' => $agent,
             'campagnes' => $campagnes,
             'entretiens' => $entretiens,
             'agentsByCampagne' => $agentsByCampagne,
+
+            'missionsSpecifiques' => $missionsSpecifiques,
 
             'fichesDePoste' => $fichesDePoste,
             'fichesDePostePdf' => $fichesDePostePdf,

@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Service\Agent\AgentService;
 use Application\Service\AgentAutorite\AgentAutoriteService;
+use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use Application\Service\FichePoste\FichePosteService;
 use Application\Service\Url\UrlService;
@@ -34,6 +35,7 @@ class IndexControllerFactory
         /**
          * @var AgentService $agentService
          * @var AgentAutoriteService $agentAutoriteService
+         * @var AgentMissionSpecifiqueService $agentMissionSpecifiqueService
          * @var AgentSuperieurService $agentSuperieurService
          * @var AgentService $agentService
          * @var CampagneService $campagneService
@@ -52,6 +54,7 @@ class IndexControllerFactory
          */
         $agentService = $container->get(AgentService::class);
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
+        $agentMissionSpecifiqueService = $container->get(AgentMissionSpecifiqueService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $campagneService = $container->get(CampagneService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -70,6 +73,7 @@ class IndexControllerFactory
         $controller = new IndexController();
         $controller->setAgentService($agentService);
         $controller->setAgentAutoriteService($agentAutoriteService);
+        $controller->setAgentMissionSpecifiqueService($agentMissionSpecifiqueService);
         $controller->setAgentSuperieurService($agentSuperieurService);
         $controller->setAgentService($agentService);
         $controller->setCampagneService($campagneService);
