@@ -27,7 +27,7 @@ class FormationGroupeHydrator implements HydratorInterface
         $libelle = (isset($data['libelle']) and trim($data['libelle']) !== '') ? trim($data['libelle']) : null;
         $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) != '')?trim($data['HasDescription']['description']):null;
         $ordre = (isset($data['ordre'])) ? $data['ordre'] : null;
-        $axe = (isset($data['axe'])) ? $this->getAxeService()->getAxe($data['axe']) : null;
+        $axe = (isset($data['axe']) and trim($data['axe']) !== '') ? $this->getAxeService()->getAxe($data['axe']) : null;
 
         /** @var FormationGroupe $object */
         $object->setLibelle($libelle);
