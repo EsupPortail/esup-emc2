@@ -144,7 +144,7 @@ class FormationInstanceService
 
     public function getFormationsInstancesByFormationAndPlan(Formation $formation, PlanDeFormation $plan): array
     {
-        $annees = explode("/", $plan->getAnnee());
+        $annees = explode("/", $plan->getLibelle());
         $debut = DateTime::createFromFormat('d/m/Y', '01/09/' . $annees[0]);
         $fin = DateTime::createFromFormat('d/m/Y', '31/08/' . $annees[1]);
 

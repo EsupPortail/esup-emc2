@@ -2,6 +2,7 @@
 
 namespace Formation\Service\PlanDeFormation;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -71,7 +72,7 @@ class PlanDeFormationService {
     }
 
     /** @return PlanDeFormation[] */
-    public function getPlansDeFormation(string $champ='annee', string $ordre='ASC') : array
+    public function getPlansDeFormation(string $champ='dateDebut', string $ordre='ASC') : array
     {
         $qb = $this->createQueryBuilder()
             ->orderBy('plan.'.$champ, $ordre);
@@ -99,29 +100,26 @@ class PlanDeFormationService {
         return $result;
     }
 
-    public function getPlanDeFormationByAnnee(?string $annee = null) : ?PlanDeFormation
+    /** @return PlanDeFormation[] */
+    public function getPlansDeFormationActifs(?DateTime $date = null): array
     {
-        if ($annee === null) {
-            $annee = Formation::getAnnee();
-            $annee = $annee ."/".($annee+1);
-        }
+        if ($date === null) $date = new DateTime();
 
         $qb = $this->createQueryBuilder()
-            ->andWhere('plan.annee = :annee')->setParameter('annee', $annee);
-        try {
-            $result = $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
-            throw new RuntimeException("Plusieurs plan de formation partagent la même année [".$annee."]", 0 , $e);
-        }
-        return $result;
+            ->andWhere('plan.dateDebut IS NULL or plan.dateDebut <= :date')
+            ->andWhere('plan.dateFin IS NULL or plan.dateFin >= :date')
+            ->setParameter('date', $date)
+            ->andWhere('plan.histoDestruction IS NULL')
+        ;
+        return $qb->getQuery()->getResult();
     }
 
-    public function getPlansDeFormationAsOption(string $champ='annee', string $ordre='ASC') : array
+    public function getPlansDeFormationAsOption(string $champ='dateDebut', string $ordre='ASC') : array
     {
         $plans = $this->getPlansDeFormation($champ, $ordre);
         $options = [];
         foreach ($plans as $plan) {
-            $options[$plan->getId()] = $plan->getAnnee();
+            $options[$plan->getId()] = $plan->getLibelle() ." (".")";
         }
         return $options;
     }

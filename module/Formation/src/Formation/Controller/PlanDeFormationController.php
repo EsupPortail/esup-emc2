@@ -48,16 +48,20 @@ class PlanDeFormationController extends AbstractActionController
 
     public function courantAction(): ViewModel
     {
-        $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormationByAnnee();
+        $plansDeFormation = $this->getPlanDeFormationService()->getPlansDeFormationActifs();
 
-        if (empty($planDeFormation)) {
-            return new ViewModel();
+        if (empty($plansDeFormation)) {
+            return new ViewModel(['plansDeFormation' => $plansDeFormation]);
         }
 
         $axes = [];
 
-
-        $formations = $planDeFormation->getFormations();
+        $formations = [];
+        foreach ($plansDeFormation as $planDeFormation) {
+            foreach ($planDeFormation->getFormations() as $formation) {
+                $formations[$formation->getId()] = $formation;
+            }
+        }
         $sansgroupe = new FormationGroupe();
         $sansgroupe->setLibelle("Formations sans groupe");
         $sansaxe = new Axe();
@@ -95,7 +99,7 @@ class PlanDeFormationController extends AbstractActionController
         if ($agent !== null) $abonnements = $this->getAbonnementService()->getAbonnementsByAgent($agent);
 
         return new ViewModel([
-            'planDeFormation' => $planDeFormation,
+            'plansDeFormation' => $plansDeFormation,
             'formations' => $formations,
             'groupes' => $groupes,
             'axes' => $axes,
@@ -142,7 +146,7 @@ class PlanDeFormationController extends AbstractActionController
         $sessionsArrayByFormation = [];
         foreach ($formations as $formation) {
             //todo recupérer par lot
-            $sessionsArrayByFormation[$formation->getId()] = $this->getFormationInstanceService()->getFormationsInstancesByFormationAndPlan($formation, $plan);
+            $sessionsArrayByFormation[$formation->getId()] = []; //todo $this->getFormationInstanceService()->getFormationsInstancesByFormationAndPlan($formation, $plan);
         }
 
         return new ViewModel([
@@ -225,7 +229,7 @@ class PlanDeFormationController extends AbstractActionController
         if ($plan !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Suppression du plan de formation " . $plan->getAnnee(),
+                'title' => "Suppression du plan de formation " . $plan->getLibelle(),
                 'text' => "La suppression est définitive êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('plan-de-formation/supprimer', ["plan-de-formation" => $plan->getId()], [], true),
             ]);
@@ -266,7 +270,7 @@ class PlanDeFormationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Ajouter une formation au plan de formation [".$planDeFormation->getAnnee()."]",
+            'title' => "Ajouter une formation au plan de formation [".$planDeFormation->getLibelle()."]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -292,7 +296,7 @@ class PlanDeFormationController extends AbstractActionController
         }
 
         $vm = new ViewModel([
-            'title' => "Reprendre un plan de formation pour le plan de formation [".$planDeFormation->getAnnee()."]",
+            'title' => "Reprendre un plan de formation pour le plan de formation [".$planDeFormation->getLibelle()."]",
             'form' => $form,
         ]);
         $vm->setTemplate('default/default-form');
@@ -314,7 +318,7 @@ class PlanDeFormationController extends AbstractActionController
         if ($plan !== null) {
             $vm->setTemplate('default/confirmation');
             $vm->setVariables([
-                'title' => "Retrait des formations du plan de formation " . $plan->getAnnee(),
+                'title' => "Retrait des formations du plan de formation " . $plan->getLibelle(),
                 'text' => "Cette opération est sans retour en arrière. Êtes-vous sûr&middot;e de vouloir continuer ?",
                 'action' => $this->url()->fromRoute('plan-de-formation/vider', ["plan-de-formation" => $plan->getId()], [], true),
             ]);

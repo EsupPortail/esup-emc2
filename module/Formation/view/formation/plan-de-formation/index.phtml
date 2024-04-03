@@ -39,7 +39,8 @@ $canSupprimer   = $this->isAllowed(PlanformationPrivileges::getResourceId(Planfo
 <table class="table table-condensed table-hover">
     <thead>
         <tr>
-            <th> Annee</th>
+            <th> Libellé</th>
+            <th> Période</th>
             <th> #Formation </th>
             <th class="action"> Action </th>
         </tr>
@@ -47,7 +48,17 @@ $canSupprimer   = $this->isAllowed(PlanformationPrivileges::getResourceId(Planfo
     <tbody>
     <?php foreach ($plans as $plan) : ?>
         <tr>
-            <td> <?php echo $plan->getAnnee(); ?> </td>
+            <td>
+                <?php echo $plan->getLibelle(); ?>
+                <?php if ($plan->getDescription()) : ?>
+                    <span class="icon icon-information" title="<?php echo $plan->getDescription(); ?>"
+                          data-bs-toggle="tooltip" data-bs-html="true"
+                    ></span>
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php echo $plan->getPeriode(); ?>
+            </td>
             <td> <?php echo count($plan->getFormations()); ?> </td>
             <td class="action">
                 <?php if ($canAfficher) : ?>

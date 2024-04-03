@@ -2,13 +2,21 @@
 
 namespace Formation\Entity\Db;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
+use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
-class PlanDeFormation {
+class PlanDeFormation implements HistoriqueAwareInterface {
+    use HistoriqueAwareTrait;
 
     private ?int $id = -1;
-    private ?string $annee = null;
+    private ?string $libelle = null;
+    private ?string $description = null;
+    private ?DateTime $dateDebut = null;
+    private ?DateTime $dateFin = null;
+
     private Collection $formations;
 
     public function __construct()
@@ -26,19 +34,47 @@ class PlanDeFormation {
         $this->id = $id;
     }
 
-    public function getAnnee(): ?string
+    public function getLibelle(): ?string
     {
-        return $this->annee;
+        return $this->libelle;
     }
 
-    public function setAnnee(?string $annee): void
+    public function setLibelle(?string $libelle): void
     {
-        $this->annee = $annee;
+        $this->libelle = $libelle;
     }
 
-    /**
-     * @return Formation[]
-     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getDateDebut(): ?DateTime
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut(?DateTime $dateDebut): void
+    {
+        $this->dateDebut = $dateDebut;
+    }
+
+    public function getDateFin(): ?DateTime
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(?DateTime $dateFin): void
+    {
+        $this->dateFin = $dateFin;
+    }
+
+    /** @return Formation[] */
     public function getFormations(): array
     {
         return $this->formations->toArray();
@@ -50,5 +86,17 @@ class PlanDeFormation {
     public function getFormationListe(): array
     {
         return $this->formations->toArray();
+    }
+
+    /** MACROS ***************************************************************************************/
+
+    public function getPeriode(): string
+    {
+        if ($this->getDateDebut() === null AND $this->getDateFin() === null) return "Aucune période précisée";
+        $periode = "";
+        if ($this->getDateDebut() !== null) $periode .= $this->getDateDebut()->format('d/m/Y'); else $periode .= "---";
+        $periode .= " au ";
+        if ($this->getDateFin() !== null) $periode .= $this->getDateFin()->format('d/m/Y'); else $periode .= "---";
+        return $periode;
     }
 }

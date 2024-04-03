@@ -41,7 +41,7 @@ $histo = $params['histo']??null;
                                 <option value="">Tous les plans</option>
                                 <?php foreach ($plans as $plan) : ?>
                                     <option value="<?php echo $plan->getId(); ?>"  <?php if ($planDeFormation == $plan->getId()) echo " selected "; ?>>
-                                        <?php echo $plan->getAnnee(); ?>
+                                        <?php echo $plan->getLibelle(); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

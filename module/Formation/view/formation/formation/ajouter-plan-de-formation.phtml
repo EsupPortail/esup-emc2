@@ -17,7 +17,7 @@ use Formation\Entity\Db\PlanDeFormation;
     <select id="plan" name="plan" class="selected" data-live-search="true">
         <?php foreach ($plans as $plan) : ?>
             <?php if (!$formation->hasPlanDeFormation($plan)) :?>
-                <option value="<?php echo $plan->getId(); ?>"> <?php echo $plan->getAnnee(); ?> </option>
+                <option value="<?php echo $plan->getId(); ?>"> <?php echo $plan->getLibelle(); ?> </option>
             <?php endif; ?>
         <?php endforeach; ?>
     </select>

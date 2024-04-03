@@ -2,33 +2,36 @@
 
 namespace Formation\Form\PlanDeFormation;
 
+use DateTime;
 use Formation\Entity\Db\PlanDeFormation;
 use Laminas\Hydrator\HydratorInterface;
 
 class PlanDeFormationHydrator implements HydratorInterface {
 
-    /**
-     * @param PlanDeFormation $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var PlanDeFormation $object */
         $data = [
-            'annee' => $object->getAnnee(),
+            'libelle' => $object->getLibelle(),
+            'description' => $object->getDescription(),
+            'date_debut' => $object->getDateDebut()?->format("Y-m-d"),
+            'date_fin' => $object->getDateFin()?->format("Y-m-d"),
         ];
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param PlanDeFormation $object
-     * @return PlanDeFormation
-     */
     public function hydrate(array $data, object $object) : object
     {
-        $annee = (isset($data['annee']) AND trim($data['annee']) !== "")?trim($data['annee']):null;
+        $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== "")?trim($data['libelle']):null;
+        $description = (isset($data['description']) AND trim($data['description']) !== "")?trim($data['description']):null;
+        $dateDebut = (isset($data['date_debut']))?DateTime::createFromFormat('Y-m-d H:i', $data['date_debut']." 08:00"):null;
+        $dateFin = (isset($data['date_fin']))?DateTime::createFromFormat('Y-m-d H:i', $data['date_fin']." 20:00"):null;
 
-        $object->setAnnee($annee);
+        /** @var PlanDeFormation $object */
+        $object->setLibelle($libelle);
+        $object->setDescription($description);
+        $object->setDateDebut($dateDebut);
+        $object->setDateFin($dateFin);
         return $object;
     }
 

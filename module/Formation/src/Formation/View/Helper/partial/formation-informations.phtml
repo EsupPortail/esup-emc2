@@ -105,7 +105,7 @@ $canModifierPlans = !$noAction && $this->isAllowed(FormationPrivileges::getResou
                 <ul>
                     <?php foreach ($plans as $plan) : ?>
                         <li>
-                            <?php echo $plan->getAnnee(); ?>
+                            <?php echo $plan->getLibelle(); ?>
                             <?php if ($canModifierPlans) : ?>
                                 <?php /** @see \Formation\Controller\FormationController::retirerPlanDeFormationAction() */ ?>
                                 <a href="<?php echo $this->url('formation/retirer-plan-de-formation', ['formation' => $formation->getId(), 'plan-de-formation' => $plan->getId()], [], true); ?>">

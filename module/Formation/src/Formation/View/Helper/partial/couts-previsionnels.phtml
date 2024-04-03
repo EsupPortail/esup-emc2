@@ -65,7 +65,7 @@ $coutTotal = 0;
                 <?php if ($plan === null) : ?>
                 <td>
                     <?php if ($actionCoutPrevisionnel->getPlan()) : ?>
-                        <?php echo $actionCoutPrevisionnel->getPlan()->getAnnee(); ?>
+                        <?php echo $actionCoutPrevisionnel->getPlan()->getLibelle(); ?>
                     <?php else : ?>
                         Aucun plan de formation
                     <?php endif; ?>

@@ -167,13 +167,27 @@ create table formation_session_parametre
 
 comment on table formation_session_parametre is 'Table permettant de parametre le comportement d''une session';
 
-
 create table formation_plan_formation
 (
-    id    serial
+    id                    serial
         constraint formation_plan_formation_pk
-        primary key,
-    annee varchar(128) not null
+            primary key,
+    libelle               varchar(1024)           not null,
+    date_debut            timestamp default now() not null,
+    date_fin              timestamp,
+    description           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_plan_formation_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_plan_formation_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_plan_formation_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
 );
 
 create table formation_demande_externe_etat
