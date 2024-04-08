@@ -2,6 +2,8 @@
 
 namespace Application;
 
+use Application\Assertion\AgentMissionSpecifiqueAssertion;
+use Application\Assertion\AgentMissionSpecifiqueAssertionFactory;
 use Application\Controller\MissionSpecifiqueAffectationController;
 use Application\Controller\MissionSpecifiqueAffectationControllerFactory;
 use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
@@ -184,6 +186,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            AgentMissionSpecifiqueAssertion::class => AgentMissionSpecifiqueAssertionFactory::class,
         ],
     ],
     'controllers' => [
