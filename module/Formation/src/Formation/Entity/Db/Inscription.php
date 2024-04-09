@@ -281,8 +281,10 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
             if ($journee->getType() === Seance::TYPE_SEANCE) {
                 $debut = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getDebut());
                 $fin = DateTime::createFromFormat('d/m/Y H:i', $journee->getJour()->format('d/m/Y') . " " . $journee->getFin());
-                $duree = $debut->diff($fin);
-                $sum->add($duree);
+                if ($debut instanceof DateTime and $fin instanceof DateTime) {
+                    $duree = $debut->diff($fin);
+                    $sum->add($duree);
+                }
             }
             if ($journee->getType() === Seance::TYPE_VOLUME) {
                 $volume = $journee->getVolume();
