@@ -50,10 +50,13 @@ class FormationInstanceDocumentController extends AbstractActionController
     public function exportEmargementAction(): void
     {
         $journee = $this->getSeanceService()->getRequestedSeance($this);
+        $session = $journee->getInstance();
+        $formateurs = $session->getFormateurs();
 
         $exporter = new EmargementPdfExporter($this->renderer, 'A4');
         $exporter->setVars([
             'journee' => $journee,
+            'formateurs' => $formateurs,
         ]);
 
         //$filemane = "PrEECoG_Emargement_" . /** . (new DateTime())->format('YmdHis') . "_" . str_replace(" ", "_", $metier->getLibelle()) .**/ '.pdf';

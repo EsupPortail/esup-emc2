@@ -46,11 +46,14 @@ class EmargementPdfExporter extends PdfExporter
      */
     public function exportAll(array $journees, $filename = null, string $destination = self::DESTINATION_BROWSER, $memoryLimit = null): string
     {
+        $session = reset($journees)->getInstance();
+        $formateurs = $session->getFormateurs();
         $first = true;
         $this->setHeaderScript('empty.phtml');
         $this->setFooterScript('empty.phtml');
         foreach ($journees as $journee) {
             $this->vars["journee"] = $journee;
+            $this->vars["formateurs"] = $formateurs;
             $this->addBodyScript('emargement.phtml', !$first, $this->vars);
             $first = false;
         }

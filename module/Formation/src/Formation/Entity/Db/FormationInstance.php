@@ -238,10 +238,14 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     /**
      * @return Formateur[]|null
      */
-    public function getFormateurs(): ?array
+    public function getFormateurs(bool $withHisto = false): ?array
     {
         if (!isset($this->formateurs)) return null;
-        return $this->formateurs->toArray();
+        /** @var Formateur[] $formateurs */
+        $formateurs = $this->formateurs->toArray();
+        if (!$withHisto) $formateurs = array_filter($formateurs, function (Formateur $formateur) {return $formateur->estNonHistorise();});
+        usort($formateurs, function (Formateur $a, Formateur $b) { return $a->getDenomination() <=> $b->getDenomination(); });
+        return $formateurs;
     }
 
     public function addFormateur(Formateur $formateur): void

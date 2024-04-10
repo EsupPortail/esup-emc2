@@ -2,8 +2,10 @@
 
 /**
  * @var Seance $journee
+ * @var Formateur[] $formateurs
  */
 
+use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Inscription;
 use Formation\Entity\Db\Seance;
 
@@ -34,6 +36,18 @@ $formation = $journee->getInstance()->getFormation();
         <th style="width:8rem; text-align:left; ">Lieu </th>
         <td><?php echo $journee->getLieu(); ?></td>
     </tr>
+    <?php if (!empty($formateurs)) : ?>
+    <tr>
+        <th style="width:8rem; text-align:left; ">Formateur·trices</th>
+        <td>
+            <ul>
+                <?php foreach ($formateurs as $formateur) : ?>
+                    <li> <?php echo $formateur->getDenomination(); ?> </li>
+                <?php endforeach; ?>
+            </ul>
+        </td>
+    </tr>
+    <?php endif; ?>
 </table>
 
 <br/>
