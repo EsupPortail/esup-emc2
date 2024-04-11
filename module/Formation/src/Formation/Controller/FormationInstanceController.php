@@ -2,6 +2,8 @@
 
 namespace Formation\Controller;
 
+use DateTime;
+use Formation\Entity\Db\Inscription;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
@@ -16,6 +18,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenApp\View\Model\CsvModel;
 use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
@@ -321,4 +324,66 @@ class FormationInstanceController extends AbstractActionController
         }
         exit;
     }
+
+    public function exporterInscriptionAction(): CsvModel
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+        $inscriptions = $session->getInscriptions();
+
+        $inscriptions = array_filter($inscriptions, function (Inscription $inscription) { return $inscription->estNonHistorise();});
+        $inscriptions = array_filter($inscriptions, function (Inscription $inscription) { return in_array($inscription->getListe(), [Inscription::PRINCIPALE, Inscription::COMPLEMENTAIRE]) ;});
+
+        $headers = [ 'Liste', 'Prenom', 'Nom', 'Adresse électronique', 'Date de naissance', 'Grade', 'Affectation'];
+
+        $records = [];
+        /** @var Inscription $inscription */
+        foreach ($inscriptions as $inscription) {
+            $item = [];
+            $item[] = $inscription->getListe();
+            if ($inscription->isInterne()) {
+                $individu = $inscription->getIndividu();
+                $item[] = $individu->getPrenom();
+                $item[] = $individu->getNomUsuel()??$individu->getNomFamille();
+                $item[] = $individu->getEmail();
+                $item[] = $individu->getDateNaissance();
+                $gradeTexte = [];
+                foreach($individu->getGradesActifs() as $grade) {
+                    $gradeTexte[] = $grade->getGrade()->getLibelleLong();
+                }
+                $item[] = implode(", ", $gradeTexte);
+                $affectationTexte = [];
+                foreach($individu->getAffectationsActifs() as $affectation) {
+                    if ($affectation->getStructure()->getNiv2() !== null) {
+                        $structure = $affectation->getStructure()->getNiv2()->getLibelleLong() ." > ". $affectation->getStructure()->getLibelleLong();
+                    } else {
+                        $structure = $affectation->getStructure()->getLibelleLong();
+                    }
+                    $affectationTexte[] = $structure;
+                }
+                $item[] = implode(", ", $affectationTexte);
+            }
+            if ($inscription->isExterne()) {
+                $item[] = $inscription->getStagiaire()->getPrenom();
+                $item[] = $inscription->getStagiaire()->getNom();
+                $item[] = $inscription->getStagiaire()->getEmail();
+                $item[] = $inscription->getStagiaire()->getDateNaissance();
+                $item[] = "";
+                $item[] = $inscription->getStagiaire()->getStructure();
+            }
+
+            $records[] = $item;
+        }
+
+        $date = (new DateTime())->format('Ymd-His');
+        $filename="export_inscriptions_sessions_".$date.".csv";
+        $CSV = new CsvModel();
+        $CSV->setDelimiter(';');
+        $CSV->setEnclosure('"');
+        $CSV->setHeader($headers);
+        $CSV->setData($records);
+        $CSV->setFilename($filename);
+
+        return $CSV;
+    }
+
 }

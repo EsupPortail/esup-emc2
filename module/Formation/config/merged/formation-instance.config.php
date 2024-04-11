@@ -103,6 +103,7 @@ return [
                         'demander-retour',
                         'cloturer',
                         'changer-etat',
+                        'exporter-inscription'
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -386,6 +387,16 @@ return [
                             'defaults' => [
                                 'controller' => FormationInstanceController::class,
                                 'action'     => 'cloturer',
+                            ],
+                        ],
+                    ],
+                    'exporter-inscription' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/exporter-inscription/:session',
+                            'defaults' => [
+                                /** @see FormationInstanceController::exporterInscriptionAction() */
+                                'action'     => 'exporter-inscription',
                             ],
                         ],
                     ],

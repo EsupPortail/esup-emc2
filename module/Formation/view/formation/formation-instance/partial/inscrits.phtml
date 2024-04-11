@@ -46,6 +46,14 @@ $urlRetour = $this->url('formation-instance/afficher', ['formation-instance' => 
                 Ajouter une inscription
             </a>
         <?php endif; ?>
+        <?php if ($canInscritModifier) : ?>
+            <a <?php /**  @see \Formation\Controller\InscriptionController::ajouterAction() */ ?>
+                    href="<?php echo $this->url('formation-instance/exporter-inscription', ['session' => $instance->getId()], [], true); ?>"
+                    class="btn btn-primary">
+                <span class="icon icon-csv"></span>
+                Exporter les inscriptions
+            </a>
+        <?php endif; ?>
     </div>
 
 </div>
