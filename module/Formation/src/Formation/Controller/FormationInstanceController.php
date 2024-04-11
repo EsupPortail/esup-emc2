@@ -347,12 +347,12 @@ class FormationInstanceController extends AbstractActionController
                 $item[] = $individu->getEmail();
                 $item[] = $individu->getDateNaissance();
                 $gradeTexte = [];
-                foreach($individu->getGradesActifs() as $grade) {
+                foreach($individu->getGradesActifs($session->getDebut(true)) as $grade) {
                     $gradeTexte[] = $grade->getGrade()->getLibelleLong();
                 }
                 $item[] = implode(", ", $gradeTexte);
                 $affectationTexte = [];
-                foreach($individu->getAffectationsActifs() as $affectation) {
+                foreach($individu->getAffectationsActifs($session->getDebut(true)) as $affectation) {
                     if ($affectation->getStructure()->getNiv2() !== null) {
                         $structure = $affectation->getStructure()->getNiv2()->getLibelleLong() ." > ". $affectation->getStructure()->getLibelleLong();
                     } else {
