@@ -1018,6 +1018,15 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 <p>VAR[EMC2#AppName]</p>
 <p> </p>
 <p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+INSERT INTO unicaen_renderer_template (code, description, document_type, document_sujet, document_corps, document_css, namespace) VALUES ('ENTRETIEN_VALIDATION_2-OBSERVATION_TRANSMISSION', '<p>Transmission des observations aux responsable d''entretien professionnel</p>', 'mail', 'L''expression des observations de VAR[AGENT#Denomination] sur son entretien professionnel de la campagne VAR[CAMPAGNE#annee]', e'<p>VAR[AGENT#Denomination] vient de valider ses observations pour l\'entretien professionnel de la campagne VAR[CAMPAGNE#annee].</p>
+<p><span style="text-decoration: underline;">Observations sur l\'entretien professionnel</span></p>
+<p>VAR[ENTRETIEN#ObservationEntretien]</p>
+<p><span style="text-decoration: underline;">Observation sur les perspectives</span></p>
+<p>VAR[ENTRETIEN#ObservationPerspective]</p>
+<p> </p>
+<p>Cordialement,<br />EMC2</p>
+<p> </p>', null, 'EntretienProfessionnel\Provider\Template');
+
 ------------------------------------------------------------------------------------------------------------------------
 -- FORMULAIRE DE L'ENTRETIEN PROFESSIONNEL -----------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
