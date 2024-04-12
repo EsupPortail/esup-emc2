@@ -253,13 +253,20 @@ $inscriptions = $instance->getInscriptions()
                     <a  href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
                         data-toogle="tooltip" data-bs-html="true" title="Générer la convocation">
                         <span class="icon icon-pdf"></span>
-                        Convocation
+                        Générer la convocation
+                    </a>
+                    <br>
+                    <?php /** @see \Formation\Controller\InscriptionController::envoyerConvocationAction() */?>
+                    <a  href="<?php echo $this->url('formation/inscription/envoyer-convocation', ['inscription' => $inscription->getId()], [], true); ?>"
+                        data-toogle="tooltip" data-bs-html="true" title="Envoyer la convocation"
+                        class="ajax-modal">
+                        <span class="icon icon-notifier"></span> Envoyer la convocation
                     </a>
                     <br>
                     <?php /** @see FormationInstanceDocumentController::genererAttestationAction() */?>
                     <a  href="<?php echo $this->url('formation-instance/generer-attestation', ['inscription' => $inscription->getId()], [], true); ?>"
-                        data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation">
-                        <span class="icon icon-pdf"></span>Attestation</a>
+                        data-toogle="tooltip" data-bs-html="true" title="Générer l'attestation" class="ajax-modal">
+                        <span class="icon icon-pdf"></span>Générer l'attestation</a>
                     <?php if ($canFraisAfficher) : ?>
                         <?php if ($canFraisModifier) : ?>
                             <br>

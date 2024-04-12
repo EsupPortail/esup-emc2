@@ -600,5 +600,18 @@ class InscriptionController extends AbstractActionController
         return $vm;
     }
 
+    public function envoyerConvocationAction(): ViewModel
+    {
+        $inscription = $this->getInscriptionService()->getRequestedInscription($this);
+        $session = $inscription->getSession();
 
+        $mail = $this->getFormationInstanceService()->envoyerConvocation($session, $inscription);
+
+        $vm = new ViewModel([
+            'title' => "Envoi de la convocation",
+            'reponse' => "La convocation pour la session ".$session->getFormation()->getLibelle(). " du ".$session->getPeriode()." vient d'être envoyée à ".$inscription->getStagiaireDenomination().".",
+        ]);
+        $vm->setTemplate('default/reponse');
+        return $vm;
+    }
 }

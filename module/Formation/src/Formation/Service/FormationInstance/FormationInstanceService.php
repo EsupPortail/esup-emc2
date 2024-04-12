@@ -296,19 +296,17 @@ class FormationInstanceService
         return $instance;
     }
 
-    /**
-     * @param FormationInstance $instance
-     * @return FormationInstance
-     */
-    public function envoyerConvocation(FormationInstance $instance): FormationInstance
+    public function envoyerConvocation(FormationInstance $session, ?Inscription $inscription=null): FormationInstance
     {
-        $this->getEtatInstanceService()->setEtatActif($instance, SessionEtats::ETAT_FORMATION_CONVOCATION);
-        $this->update($instance);
-        // Enovyer convocation aux agents en liste principale
-        foreach ($instance->getListePrincipale() as $inscrit) {
+        $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_FORMATION_CONVOCATION);
+        $this->update($session);
+
+        $liste = [];
+        if ($inscription !== null) $liste[] = $inscription; else $liste = $session->getListePrincipale();
+        foreach ($liste as $inscrit) {
             if ($inscrit->estNonHistorise()) $this->getNotificationService()->triggerConvocation($inscrit);
         }
-        return $instance;
+        return $session;
     }
 
     /**

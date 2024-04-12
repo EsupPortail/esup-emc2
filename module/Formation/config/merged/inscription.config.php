@@ -58,6 +58,8 @@ return [
                         'restaurer',
                         'supprimer',
                         'renseigner-frais',
+
+                        'envoyer-convocation',
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
@@ -205,7 +207,17 @@ return [
                                     ],
                                 ],
                             ],
-                            /** Attestation ***************************************************************************/
+                            /** Attestation et convocation ************************************************************/
+                            'envoyer-convocation' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route' => '/envoyer-convocation/:inscription',
+                                    'defaults' => [
+                                        /** @see InscriptionController::envoyerConvocationAction() */
+                                        'action' => 'envoyer-convocation',
+                                    ],
+                                ],
+                            ],
                             'televerser-attestation' => [
                                 'type' => Segment::class,
                                 'options' => [
