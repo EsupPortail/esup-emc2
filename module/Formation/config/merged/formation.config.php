@@ -24,6 +24,8 @@ use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormFactory;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydrator;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydratorFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
+use Formation\Service\ActionType\ActionTypeService;
+use Formation\Service\ActionType\ActionTypeServiceFactory;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\Formation\FormationServiceFactory;
 use Formation\Service\FormationElement\FormationElementService;
@@ -327,6 +329,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            ActionTypeService::class => ActionTypeServiceFactory::class,
             FormationInstanceInscritAssertion::class => FormationInstanceInscritAssertionFactory::class,
             FormationService::class => FormationServiceFactory::class,
             FormationElementService::class => FormationElementServiceFactory::class,

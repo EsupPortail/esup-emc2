@@ -120,6 +120,17 @@ class FormationInstanceForm extends Form
                 'id' => 'cout_ttc',
             ],
         ]);
+        //cout ht
+        $this->add([
+            'type' => Text::class,
+            'name' => 'cout_vacation',
+            'options' => [
+                'label' => "Coût vacation :",
+            ],
+            'attributes' => [
+                'id' => 'cout_vacation',
+            ],
+        ]);
 
         //button
         $this->add([
@@ -144,6 +155,21 @@ class FormationInstanceForm extends Form
             'inscription' => ['required' => true,],
             'lieu' => ['required' => true,],
             'type' => ['required' => true,],
+            'cout_vacation' => [
+                'required' => false,
+                'validators' => [
+                    [
+                        'name' => Regex::class,
+                        'options' => [
+                            'pattern' => '/^\d+(\.\d+)?$/',
+                            'messages' => [
+                                Regex::NOT_MATCH => "Veuillez saisir une valeur correcte",
+                            ],
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
             'cout_ht' => [
                 'required' => false,
                 'validators' => [

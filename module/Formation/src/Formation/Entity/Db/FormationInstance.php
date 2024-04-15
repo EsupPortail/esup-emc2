@@ -45,9 +45,12 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private int $nbPlaceComplementaire = -1;
     private ?string $lieu = null;
     private ?string $type = null;
+    private bool $affichage = true;
+
     private ?float $coutHt = null;
     private ?float $coutTtc = null;
-    private bool $affichage = true;
+    private ?float $coutVacation = null;
+
 
     private Collection $journees;
     private Collection $inscrits;
@@ -472,6 +475,16 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function setCoutTtc(?float $coutTtc): void
     {
         $this->coutTtc = $coutTtc;
+    }
+
+    public function getCoutVacation(): ?float
+    {
+        return $this->coutVacation;
+    }
+
+    public function setCoutVacation(?float $coutVacation): void
+    {
+        $this->coutVacation = $coutVacation;
     }
 
     /** @return AbstractUser[] */

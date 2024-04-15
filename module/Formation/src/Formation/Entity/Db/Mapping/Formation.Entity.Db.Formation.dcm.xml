@@ -69,6 +69,10 @@
             </join-table>
         </many-to-many>
 
+        <many-to-one target-entity="Formation\Entity\Db\ActionType"  field="actionType">
+            <join-column name="action_type_id" referenced-column-name="id"/>
+        </many-to-one>
+
         <field name="source"            column="source_id"          type="string"   length="128" nullable="true"/>
         <field name="idSource"          column="id_source"          type="string"   length="256" nullable="true"/>
 

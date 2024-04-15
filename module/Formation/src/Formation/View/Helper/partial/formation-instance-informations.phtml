@@ -66,6 +66,10 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
             <dt class="col-md-3"> Coût TTC </dt>
             <dd class="col-md-9"> <?php echo $instance->getCoutTtc(); ?>€</dd>
         <?php endif; ?>
+        <?php if ($instance->getCoutVacation() !== null) : ?>
+            <dt class="col-md-3"> Coût Vacation </dt>
+            <dd class="col-md-9"> <?php echo $instance->getCoutVacation(); ?>€</dd>
+        <?php endif; ?>
     </dl>
 <?php endif; ?>
 

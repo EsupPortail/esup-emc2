@@ -20,6 +20,7 @@ class FormationInstanceHydrator implements HydratorInterface
             'inscription' => ($object) ? $object->isAutoInscription() : null,
             'cout_ht' => ($object) ? $object->getCoutHt() : null,
             'cout_ttc' => ($object) ? $object->getCoutTtc() : null,
+            'cout_vacation' => ($object) ? $object->getCoutTtc() : null,
         ];
         return $data;
     }
@@ -34,6 +35,7 @@ class FormationInstanceHydrator implements HydratorInterface
         $inscription = (isset($data['inscription']))?$data['inscription'] : false;
         $coutHt = (isset($data['cout_ht']) and trim($data['cout_ht']) !== "") ? trim($data['cout_ht']) : null;
         $coutTtc = (isset($data['cout_ttc']) and trim($data['cout_ttc']) !== "") ? trim($data['cout_ttc']) : null;
+        $coutVacation = (isset($data['cout_vacation']) and trim($data['cout_vacation']) !== "") ? trim($data['cout_vacation']) : null;
 
         /** @var FormationInstance $object */
         $object->setComplement($description);
@@ -44,6 +46,7 @@ class FormationInstanceHydrator implements HydratorInterface
         $object->setAutoInscription($inscription);
         $object->setCoutHt($coutHt);
         $object->setCoutTtc($coutTtc);
+        $object->setCoutVacation($coutVacation);
 
         return $object;
     }

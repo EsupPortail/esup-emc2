@@ -3,11 +3,13 @@
 namespace Formation\Form\Formation;
 
 use Formation\Entity\Db\Formation;
+use Formation\Service\ActionType\ActionTypeServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Laminas\Hydrator\HydratorInterface;
 
 class FormationHydrator implements HydratorInterface
 {
+    use ActionTypeServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
 
     public function extract($object): array
@@ -20,8 +22,8 @@ class FormationHydrator implements HydratorInterface
             'groupe' => ($object->getGroupe()) ? $object->getGroupe()->getId() : null,
             'affichage' => $object->getAffichage(),
             'rattachement' => $object->getRattachement(),
-
             'type' => $object->getType(),
+            'actiontype' => ($object->getActionType()) ? $object->getActionType()->getId() : null,
             'objectifs' => $object->getObjectifs(),
             'programme' => $object->getProgramme(),
             'prerequis' => $object->getPrerequis(),
@@ -38,6 +40,7 @@ class FormationHydrator implements HydratorInterface
         $affichage = !((isset($data['affichage']) and $data['affichage'] === '0'));
         $rattachement = $data['rattachement'] ?? null;
         $type = $data['type'] ?? null;
+        $actiontype = (isset($data['actiontype']) AND $data['actiontype'] !== '')? $this->getActionTypeService()->getActionType($data['actiontype']) : null;
         $objectifs = $data['objectifs'] ?? null;
         $programme = $data['programme'] ?? null;
         $prerequis = $data['prerequis'] ?? null;
@@ -50,7 +53,7 @@ class FormationHydrator implements HydratorInterface
         $object->setGroupe($groupe);
         $object->setAffichage($affichage);
         $object->setRattachement($rattachement);
-
+        $object->setActionType($actiontype);
         $object->setType($type);
         $object->setObjectifs($objectifs);
         $object->setProgramme($programme);

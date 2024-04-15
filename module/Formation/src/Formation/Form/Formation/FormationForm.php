@@ -4,6 +4,7 @@ namespace Formation\Form\Formation;
 
 use Application\Form\HasDescription\HasDescriptionFieldset;
 use Formation\Entity\Db\Formation;
+use Formation\Service\ActionType\ActionTypeServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Radio;
@@ -16,6 +17,7 @@ use Laminas\InputFilter\Factory;
 class FormationForm extends Form
 {
     use FormationGroupeServiceAwareTrait;
+    use ActionTypeServiceAwareTrait;
 
     public function init(): void
     {
@@ -47,7 +49,6 @@ class FormationForm extends Form
             'attributes' => [
                 'class' => 'description form-control show-tick',
                 'data-live-search'  => 'true',
-                'style' => 'height:300px;',
             ]
         ]);
         //description
@@ -72,7 +73,22 @@ class FormationForm extends Form
             'attributes' => [
                 'class' => 'description form-control show-tick',
                 'data-live-search'  => 'true',
-                'style' => 'height:300px;',
+            ]
+        ]);
+        //type
+        $this->add([
+            'name' => 'actiontype',
+            'type' => Select::class,
+            'options' => [
+                'label' => "Type d'action :",
+                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_attributes' => [ 'class' => 'control-label', ],
+                'empty_option' => 'Sélectionner un type ...',
+                'value_options' => $this->getActionTypeService()->getActionsTypesAsOptions(),
+            ],
+            'attributes' => [
+                'class' => 'form-control show-tick',
+                'data-live-search'  => 'true',
             ]
         ]);
         //objectifs
@@ -189,6 +205,7 @@ class FormationForm extends Form
             'affichage' => ['required' => true,],
             'rattachement' => ['required' => false,],
             'type' => ['required' => true,],
+            'actiontype' => ['required' => false,],
             'objectifs' => ['required' => false,],
             'programme' => ['required' => false,],
             'prerequis' => ['required' => false,],

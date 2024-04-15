@@ -88,6 +88,15 @@ $canModifierPlans = !$noAction && $this->isAllowed(FormationPrivileges::getResou
             <dt class="col-md-3"> Public visé </dt>
             <dd class="col-md-9"> <?php echo $formation->getPublic(); ?> </dd>
         <?php endif; ?>
+        <?php if ($formation->getActionType() !== null) : ?>
+            <dt class="col-md-3"> Type d'action </dt>
+            <dd class="col-md-9">
+                <?php echo $formation->getActionType()->getLibelle(); ?>
+                <?php if ($formation->getActionType()->getDescription() !== null AND trim($formation->getActionType()->getDescription()) !== '') : ?>
+                    <span class="icon icon-information" title="<?php echo $formation->getActionType()->getDescription(); ?>"></span>
+                <?php endif; ?>
+            </dd>
+        <?php endif; ?>
 
         <dt class="col-md-3"> Affichage "plan" </dt>
         <dd class="col-md-9"> <?php echo ($formation->getAffichage())?"Oui":"Non"; ?> </dd>
