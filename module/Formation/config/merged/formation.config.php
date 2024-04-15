@@ -153,6 +153,16 @@ return [
 
     'router' => [
         'routes' => [
+            'index-mes-formations' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/index-mes-formations',
+                    'defaults' => [
+                        'controller' => IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'formation' => [
                 'type' => Literal::class,
                 'options' => [

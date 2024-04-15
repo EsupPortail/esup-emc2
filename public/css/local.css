@@ -43,3 +43,32 @@
     --bs-secondary-rgb: 108, 117, 125;
 }
 
+.unistrap.unistrap-th-unstra {
+    --unistrap-color-main: rgb(205, 169, 114);
+    --unistrap-color-dark: rgb(155, 119, 64);
+    --unistrap-color-light: rgb(255, 220, 220);
+
+    --bs-success: rgb(0, 100, 0);
+    --bs-success-rgb: 0, 100, 0;
+    --bs-danger: rgb(200, 0, 0);
+    --bs-danger-rgb: 200,0,0;
+    --bs-info: rgb(0, 0, 100);
+    --bs-info-rgb: 0,0,255;
+    --bs-warning: Sienna;
+    --bs-warning-rgb: 160, 82, 45;
+    --bs-primary: #0d6efd;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary: #6c757d;
+    --bs-secondary-rgb: 108, 117, 125;
+
+    --font: "Unistra A",Arial,sans-serif;
+
+    body {
+        font-family: var(--font);
+    }
+
+    nav {
+        color: black;
+    }
+}
+
