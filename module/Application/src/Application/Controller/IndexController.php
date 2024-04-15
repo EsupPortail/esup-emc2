@@ -59,7 +59,7 @@ class IndexController extends AbstractActionController
     {
         /** Failsafe :: le routing semble merdé ... */
         $r = $this->getRequest()->getUri();
-        if (str_contains($r,'mes-formations.')) {
+        if (str_contains($r,'mes-formations')) {
             return $this->redirect()->toRoute('index-mes-formations', [], ['force_canonical' => true], true);
         }
 
