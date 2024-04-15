@@ -11,6 +11,9 @@ use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Formation\Entity\Db\FormationInstance;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 
+
+$gestionnaires = $instance->getGestionnaires();
+
 $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
 
 ?>
@@ -39,6 +42,20 @@ $canAfficherDemande = $this->isAllowed(DemandeexternePrivileges::getResourceId(D
                 Oui (les agents peuvent s'inscrire eux-même)
             <?php else : ?>
                 Non (les agents doivent notifier les gestionnaires de formation)
+            <?php endif; ?>
+        </dd>
+        <dt class="col-md-3">
+            Gestionnaire·s associé·es
+        </dt>
+        <dd class="col-md-9">
+            <?php if (empty($gestionnaires)) : ?>
+                Aucun·e gestionnaire
+            <?php else: ?>
+                <ul>
+                    <?php foreach ($gestionnaires as $gestionnaire) : ?>
+                        <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                    <?php endforeach; ?>
+                </ul>
             <?php endif; ?>
         </dd>
         <?php if ($instance->getCoutHt() !== null) : ?>

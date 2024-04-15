@@ -205,6 +205,12 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                             <span class="icon icon-editer"></span>
                             Modifier les informations<!-- de la session -->
                         </a>
+                        <?php /** @see FormationInstanceController::selectionnerGestionnairesAction() */ ?>
+                        <a href="<?php echo $this->url('formation-instance/selectionner-gestionnaires', ['session' => $instance->getId()], [], true); ?>"
+                           class="btn btn-primary action ajax-modal" data-event="modification">
+                            <span class="icon icon-editer"></span>
+                            Renseigner les gestionnaires
+                        </a>
                         <br/>
                         <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                             <?php /** @see FormationInstancePresenceController::renseignerPresencesAction() */ ?>

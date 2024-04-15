@@ -47,6 +47,17 @@
 
         <field name="affichage"             type="boolean"   column="affichage"                nullable="true"/>
 
+        <many-to-many field="gestionnaires" target-entity="UnicaenUtilisateur\Entity\Db\User">
+            <join-table name="formation_session_gestionnaire">
+                <join-columns>
+                    <join-column name="session_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="gestionnaire_id" referenced-column-name="ID"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
         <many-to-many field="demandes" target-entity="Formation\Entity\Db\DemandeExterne">
             <join-table name="formation_demande_externe_session">
                 <join-columns>
@@ -57,6 +68,8 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+
 
         <one-to-one field="parametre" target-entity="Formation\Entity\Db\SessionParametre">
             <join-column name="parametre_id" referenced-column-name="id" />

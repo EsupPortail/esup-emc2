@@ -19,6 +19,10 @@ use Formation\Form\SelectionFormation\SelectionFormationForm;
 use Formation\Form\SelectionFormation\SelectionFormationFormFactory;
 use Formation\Form\SelectionFormation\SelectionFormationHydrator;
 use Formation\Form\SelectionFormation\SelectionFormationHydratorFactory;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireForm;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormFactory;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydrator;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydratorFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\Formation\FormationServiceFactory;
@@ -339,6 +343,7 @@ return [
             FormationForm::class => FormationFormFactory::class,
             FormationElementForm::class => FormationElementFormFactory::class,
             SelectionFormationForm::class => SelectionFormationFormFactory::class,
+            SelectionGestionnaireForm::class => SelectionGestionnaireFormFactory::class,
         ],
     ],
     'hydrators' => [
@@ -346,6 +351,7 @@ return [
             FormationHydrator::class => FormationHydratorFactory::class,
             FormationElementHydrator::class => FormationElementHydratorFactory::class,
             SelectionFormationHydrator::class => SelectionFormationHydratorFactory::class,
+            SelectionGestionnaireHydrator::class => SelectionGestionnaireHydratorFactory::class,
         ],
     ],
     'view_helpers' => [

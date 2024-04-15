@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Formation\Form\FormationInstance\FormationInstanceForm;
 use Formation\Form\SelectionFormateur\SelectionFormateurForm;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireForm;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationInstance\FormationInstanceService;
@@ -16,6 +17,7 @@ use UnicaenEtat\Service\EtatCategorie\EtatCategorieService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
 use UnicaenMail\Service\Mail\MailService;
 use UnicaenParametre\Service\Parametre\ParametreService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class FormationInstanceControllerFactory
 {
@@ -38,6 +40,7 @@ class FormationInstanceControllerFactory
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
          * @var PresenceService $presenceService
+         * @var UserService $userService
          */
         $etatCategorieService = $container->get(EtatCategorieService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
@@ -48,13 +51,16 @@ class FormationInstanceControllerFactory
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
         $presenceService = $container->get(PresenceService::class);
+        $userService = $container->get(UserService::class);
 
         /**
          * @var FormationInstanceForm $formationInstanceForm
          * @var SelectionFormateurForm $selectionFormateurForm
+         * @var SelectionGestionnaireForm $selectionGestionnaireForm
          */
         $formationInstanceForm = $container->get('FormElementManager')->get(FormationInstanceForm::class);
         $selectionFormateurForm = $container->get('FormElementManager')->get(SelectionFormateurForm::class);
+        $selectionGestionnaireForm = $container->get('FormElementManager')->get(SelectionGestionnaireForm::class);
 
         $controller = new FormationInstanceController();
         $controller->setEtatCategorieService($etatCategorieService);
@@ -66,8 +72,10 @@ class FormationInstanceControllerFactory
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);
         $controller->setPresenceService($presenceService);
+        $controller->setUserService($userService);
         $controller->setFormationInstanceForm($formationInstanceForm);
         $controller->setSelectionFormateurForm($selectionFormateurForm);
+        $controller->setSelectionGestionnaireForm($selectionGestionnaireForm);
 
         return $controller;
     }

@@ -6,6 +6,7 @@ use DateTime;
 use Formation\Entity\Db\Inscription;
 use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
+use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
@@ -23,6 +24,7 @@ use UnicaenEtat\Service\EtatCategorie\EtatCategorieServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenMail\Service\Mail\MailServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 /** @method FlashMessenger flashMessenger() */
 class FormationInstanceController extends AbstractActionController
@@ -36,8 +38,11 @@ class FormationInstanceController extends AbstractActionController
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use PresenceServiceAwareTrait;
+    use UserServiceAwareTrait;
+
     use FormationInstanceFormAwareTrait;
     use SelectionFormateurFormAwareTrait;
+    use SelectionGestionnaireFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
@@ -54,6 +59,11 @@ class FormationInstanceController extends AbstractActionController
     {
         $formation = $this->getFormationService()->getRequestedFormation($this);
         $instance = $this->getFormationInstanceService()->createNouvelleInstance($formation);
+
+        $user = $this->getUserService()->getConnectedUser();
+        $instance->addGestionnaire($user);
+        $this->getFormationInstanceService()->update($instance);
+
 
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $instance->getId()], [], true);
     }
@@ -176,7 +186,7 @@ class FormationInstanceController extends AbstractActionController
         return $vm;
     }
 
-    /** ASSOCIATION DES FORMATEURS  ***********************************************************************************/
+    /** ASSOCIATION DES FORMATEURS ET GESTIONNAIRES *******************************************************************/
 
     //ajout
     public function ajouterFormateurAction(): ViewModel
@@ -217,6 +227,33 @@ class FormationInstanceController extends AbstractActionController
 
         $this->getFormationInstanceService()->retirerFormateur($session, $formateur);
         return $this->redirect()->toRoute('formation-instance/afficher', ['formation-instance' => $session->getId()], ['fragment' => "information"], true);
+    }
+
+    public function selectionnerGestionnairesAction(): ViewModel
+    {
+        $session = $this->getFormationInstanceService()->getRequestedFormationInstance($this, 'session');
+
+        $form = $this->getSelectionGestionnaireForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation-instance/selectionner-gestionnaires', ['session' => $session->getId()], [], true));
+        $form->bind($session);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if (!isset($data['gestionnaires'])) $data['gestionnaires'] = [];
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getFormationInstanceService()->update($session);
+            }
+        }
+
+        $vm = new ViewModel([
+            'title' => "Sélectionner les gestionnaires pour cette session",
+            'form' => $form,
+        ]);
+        $vm->setTemplate('default/default-form');
+        return $vm;
+
     }
 
     /** WORKFLOW  *****************************************************************************************************/

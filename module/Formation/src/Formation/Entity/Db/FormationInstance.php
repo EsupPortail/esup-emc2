@@ -15,6 +15,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use RuntimeException;
 use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Entity\Db\HasEtatsTrait;
+use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -54,8 +55,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     private Collection $formateurs;
     private Collection $inscriptions;
     private Collection $demandes;
+    private Collection $gestionnaires;
 
     private ?SessionParametre $parametre = null;
+
 
 
     public function __construct()
@@ -66,6 +69,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->externes = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
         $this->demandes = new ArrayCollection();
+        $this->gestionnaires = new ArrayCollection();
 
         $this->formateurs = new ArrayCollection();
 
@@ -469,6 +473,28 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         $this->coutTtc = $coutTtc;
     }
+
+    /** @return AbstractUser[] */
+    public function getGestionnaires(): array
+    {
+        return $this->gestionnaires->toArray();
+    }
+
+    public function hasGestionnaire(AbstractUser $gestionnaire): bool
+    {
+        return $this->gestionnaires->contains($gestionnaire);
+    }
+
+    public function addGestionnaire(AbstractUser $gestionnaire): void
+    {
+        if (!$this->hasGestionnaire($gestionnaire)) $this->gestionnaires->add($gestionnaire);
+    }
+
+    public function removeGestionnaire(AbstractUser $gestionnaire): void
+    {
+        if ($this->hasGestionnaire($gestionnaire)) $this->gestionnaires->removeElement($gestionnaire);
+    }
+
 
     /** PARAMETRES ***************************************************************************************************/
 

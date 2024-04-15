@@ -87,6 +87,7 @@ return [
                     'controller' => FormationInstanceController::class,
                     'action' => [
                         'modifier-informations',
+                        'selectionner-gestionnaires',
                         'export-emargement',
                         'export-tous-emargements',
                     ],
@@ -335,8 +336,18 @@ return [
                         'options' => [
                             'route'    => '/modifier-informations/:formation-instance',
                             'defaults' => [
-                                'controller' => FormationInstanceController::class,
+                                /** @see FormationInstanceController::modifierInformationsAction() */
                                 'action'     => 'modifier-informations',
+                            ],
+                        ],
+                    ],
+                    'selectionner-gestionnaires' => [
+                        'type'  => Segment::class,
+                        'options' => [
+                            'route'    => '/selectionner-gestionnaires/:session',
+                            'defaults' => [
+                                /** @see FormationInstanceController::selectionnerGestionnairesAction() */
+                                'action'     => 'selectionner-gestionnaires',
                             ],
                         ],
                     ],

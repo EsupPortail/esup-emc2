@@ -37,8 +37,8 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
     <thead>
     <tr>
         <th> Id </th>
-        <th> Début </th>
-        <th> Fin </th>
+        <th> Gestionnaires </th>
+        <th> Période </th>
         <th> #Plage </th>
         <th> #Inscrit </th>
         <th> État </th>
@@ -57,8 +57,18 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                 <?php echo $instance->getFormation()->getLibelle(); ?> <br/>
                 <?php echo ($instance->getFormation()->getGroupe())?$instance->getFormation()->getGroupe()->getLibelle():"Sans thème de formation"; ?>
             </td>
-            <td> <?php echo ($instance->getDebut())?:"???"; ?></td>
-            <td> <?php echo ($instance->getFin())?:"???"; ?></td>
+            <td>
+                <?php if (empty($instance->getGestionnaires())) : ?>
+                    Aucun·e gestionnaire
+                <?php else : ?>
+                    <ul>
+                        <?php foreach ($instance->getGestionnaires() as $gestionnaire) : ?>
+                            <li> <?php echo $gestionnaire->getDisplayName(); ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
+            <td> <?php echo $instance->getPeriode(); ?></td>
             <td> <?php echo ($instance->getSeances())?count($instance->getSeances()):"???"; ?></td>
             <td>
                 <?php if ($instance->getInscriptions()) : ?>

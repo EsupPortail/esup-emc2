@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class FormationServiceFactory
 {
@@ -20,12 +21,14 @@ class FormationServiceFactory
     {
         /**
          * @var EntityManager $entityManager
+         * @var UserService $userService
          */
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $userService = $container->get(UserService::class);
 
-        /** @var FormationService $service */
         $service = new FormationService();
         $service->setObjectManager($entityManager);
+        $service->setUserService($userService);
         return $service;
     }
 }

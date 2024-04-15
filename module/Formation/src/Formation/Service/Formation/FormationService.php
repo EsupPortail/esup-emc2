@@ -9,12 +9,15 @@ use Formation\Entity\Db\Axe;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
+use Formation\Provider\Role\FormationRoles;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class FormationService
 {
     use ProvidesObjectManager;
+    use UserServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -334,6 +337,12 @@ class FormationService
     }
 
     /** FACADE *************************************************************************************/
+
+    public function getGestionnaires(): array
+    {
+        $gestionnaires = $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION);
+        return $gestionnaires;
+    }
 
     public function createFormation(string $libelle, ?FormationGroupe $theme): Formation
     {
