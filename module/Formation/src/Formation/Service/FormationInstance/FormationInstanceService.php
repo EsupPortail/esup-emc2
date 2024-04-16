@@ -20,6 +20,7 @@ use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
+use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
@@ -91,7 +92,7 @@ class FormationInstanceService
         return $instance;
     }
 
-    /** REQUETAGE *****************************************************************************************************/
+    /** Querybuilder et décorateur ************************************************************************************/
 
     /**
      * @return QueryBuilder
@@ -105,12 +106,36 @@ class FormationInstanceService
 ////                ->addSelect('agent')->leftJoin('inscrit.agent', 'agent')
 ////                ->addSelect('affectation')->leftJoin('agent.affectations', 'affectation')
 ////                ->addSelect('structure')->leftJoin('affectation.structure', 'structure')
-            ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
-            ->addSelect('etype')->leftjoin('etat.type', 'etype')
+//            ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
+//            ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('formateur')->leftjoin('Finstance.formateurs', 'formateur')
-            ->andWhere('etat.histoDestruction IS NULL');
+//            ->andWhere('etat.histoDestruction IS NULL')
+        ;
         return $qb;
     }
+
+    static public function decorateWithGestionnairesId(QueryBuilder $qb, array $gestionnaires, bool $addJointure = true): QueryBuilder
+    {
+        if ($addJointure) {
+            $qb = $qb->leftJoin('Finstance.gestionnaires', 'gestionnaire')->addSelect('gestionnaire');
+        }
+        $qb = $qb->andWhere('gestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        return $qb;
+    }
+    static public function decorateWithGroupeId(QueryBuilder $qb, array $themes, bool $addJointure = true): QueryBuilder
+    {
+        if ($addJointure) {
+            $qb = $qb
+                ->leftJoin('Finstance.formation', 'decorateurFormation')->addSelect('decorateurFormation')
+                ->leftJoin('decorateurFormation.groupe', 'decorateurGroupe')->addSelect('decorateurGroupe')
+            ;
+        }
+        $qb = $qb->andWhere('decorateurGroupe.id = (:themes)')->setParameter('themes', $themes);
+        return $qb;
+    }
+
+
+    /** Requetage *****************************************************************************************************/
 
     /**@return FormationInstance[] */
     public function getFormationsInstances(string $champ = 'id', string $ordre = 'ASC'): array
@@ -203,6 +228,28 @@ class FormationInstanceService
         $id = $controller->params()->fromRoute($param);
         $result = $this->getFormationInstance($id);
 
+        return $result;
+    }
+
+    /** @return FormationInstance[] */
+    public function getSessionsWithParams(array $params) : array
+    {
+        $qb = $this->createQueryBuilder();
+
+        if (isset($params['gestionnaires']) AND $params['gestionnaires'] != '') {
+            /** TODO :: REMOVE THIS */ $gestionnaires = [ $params['gestionnaires'] ];
+            $qb = FormationInstanceService::decorateWithGestionnairesId($qb, $gestionnaires);
+        }
+        if (isset($params['etats']) AND $params['etats'] != '') {
+            /** TODO :: REMOVE THIS */ if (is_string($params['etats'])) $etats = [ $params['etats'] ]; else $etats = $params['etats'];
+            $qb = FormationInstance::decorateWithEtatsCodes($qb, 'Finstance', $etats);
+        }
+        if (isset($params['themes'])  AND $params['themes'] != '') {
+            /** TODO :: REMOVE THIS */ $themes = [ $params['themes'] ];
+            $qb = FormationInstanceService::decorateWithGroupeId($qb,  $themes);
+        }
+
+        $result = $qb->getQuery()->getResult();
         return $result;
     }
 

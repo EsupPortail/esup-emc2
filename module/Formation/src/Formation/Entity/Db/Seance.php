@@ -113,7 +113,7 @@ class Seance implements HistoriqueAwareInterface, HasSourceInterface
                 $asString = $this->getJour()->format('d/m/y')." ".$this->getDebut();
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
             case Seance::TYPE_VOLUME :
-                $asString = $this->getJour()->format('d/m/y')." 08:00";
+                $asString = $this->getVolumeDebut()->format('d/m/y')." 08:00";
                 return DateTime::createFromFormat('d/m/Y H:i', $asString);
         }
         throw new RuntimeException("Le type de seance est inconnu");

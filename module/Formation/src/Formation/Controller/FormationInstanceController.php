@@ -8,8 +8,10 @@ use Formation\Form\FormationInstance\FormationInstanceFormAwareTrait;
 use Formation\Form\SelectionFormateur\SelectionFormateurFormAwareTrait;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormAwareTrait;
 use Formation\Provider\Etat\SessionEtats;
+use Formation\Provider\Role\FormationRoles;
 use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
+use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
@@ -33,6 +35,7 @@ class FormationInstanceController extends AbstractActionController
     use EtatTypeServiceAwareTrait;
     use FormateurServiceAwareTrait;
     use FormationServiceAwareTrait;
+    use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
@@ -46,10 +49,20 @@ class FormationInstanceController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $instances = $this->getFormationInstanceService()->getFormationInstanceEnCours();
+        $params = $this->params()->fromQuery();
+        if (empty($params)) {
+            $params['etats'] = [SessionEtats::ETAT_CREATION_EN_COURS , SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS];
+        }
+
+        $instances = $this->getFormationInstanceService()->getSessionsWithParams($params);
 
         return new ViewModel([
             'instances' => $instances,
+
+            'params' => $params,
+            'etats' => $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE),
+            'gestionnaires' => $this->getUserService()->getUtilisateursByRoleIdAsOptions(FormationRoles::GESTIONNAIRE_FORMATION),
+            'themes' => $this->getFormationGroupeService()->getFormationsGroupesAsOption(),
         ]);
     }
 

@@ -629,35 +629,57 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     {
         /** @var Seance[] $journees */
         $journees = $this->getSeances();
-        //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a <=> $b;});
+        $seances = array_filter($journees, function (Seance $seance) { return $seance->getType() === Seance::TYPE_SEANCE;});
+        $volumes = array_filter($journees, function (Seance $seance) { return $seance->getType() === Seance::TYPE_VOLUME;});
 
-        $text = "<table style='width:100%;'>";
-        $text .= "<thead>";
-        $text .= "<tr style='border-bottom:1px solid black;'>";
-        $text .= "<th>Date  </th>";
-        $text .= "<th>de  </th>";
-        $text .= "<th>à  </th>";
-        $text .= "<th>Lieu  </th>";
-        $text .= "</tr>";
-        $text .= "</thead>";
-        $text .= "<tbody>";
-        foreach ($journees as $journee) {
-            $text .= "<tr>";
-            if ($journee->getType() === Seance::TYPE_SEANCE) {
-                $text .= "<td>" . $journee->getJour()->format('d/m/Y') . "</td>";
-                $text .= "<td>" . $journee->getDebut() . "</td>";
-                $text .= "<td>" . $journee->getFin() . "</td>";
-            }
-            if ($journee->getType() === Seance::TYPE_VOLUME) {
-                $text .= "<td colspan='2'>Volume horaire</td>";
-                $text .= "<td>" . $journee->getVolume() . " heures </td>";
-            }
-            $text .= "<td>" . $journee->getLieu() . "</td>";
+            //usort($journees, function (FormationInstanceJournee $a, FormationInstanceJournee $b) { return $a <=> $b;});
+
+        $text = '';
+        if (!empty($seances)) {
+            $text .= "<h3>Séance·s de formation</h3>";
+            $text .= "<table style='width:100%;'>";
+            $text .= "<thead>";
+            $text .= "<tr style='border-bottom:1px solid black;'>";
+            $text .= "<th>Date  </th>";
+            $text .= "<th>de  </th>";
+            $text .= "<th>à  </th>";
+            $text .= "<th>Lieu  </th>";
             $text .= "</tr>";
+            $text .= "</thead>";
+            $text .= "<tbody>";
+            foreach ($seances as $seance) {
+                $text .= "<tr>";
+                $text .= "<td>" . $seance->getJour()->format('d/m/Y') . "</td>";
+                $text .= "<td>" . $seance->getDebut() . "</td>";
+                $text .= "<td>" . $seance->getFin() . "</td>";
+                $text .= "<td>" . $seance->getLieu() . "</td>";
+                $text .= "</tr>";
+            }
+            $text .= "</tbody>";
+            $text .= "</table>";
         }
-        $text .= "</tbody>";
-        $text .= "</table>";
 
+        if (!empty($volumes)) {
+            $text .= "<h3>Volume·s horarire·s </h3>";
+            $text .= "<table style='width:100%;'>";
+            $text .= "<thead>";
+            $text .= "<tr style='border-bottom:1px solid black;'>";
+            $text .= "<th>Volume  </th>";
+            $text .= "<th>Période  </th>";
+            $text .= "<th>Lieu  </th>";
+            $text .= "</tr>";
+            $text .= "</thead>";
+            $text .= "<tbody>";
+            foreach ($volumes as $volume) {
+                $text .= "<tr>";
+                $text .= "<td>" . $volume->getVolume() . " heures </td>";
+                $text .= "<td>" . $volume->getVolumeDebut()->format('d/m/Y') . " au  ".$volume->getVolumeFin()->format('d/m/Y')."</td>";
+                $text .= "<td>" . $volume->getLieu() . "</td>";
+                $text .= "</tr>";
+            }
+            $text .= "</tbody>";
+            $text .= "</table>";
+        }
         return $text;
     }
 

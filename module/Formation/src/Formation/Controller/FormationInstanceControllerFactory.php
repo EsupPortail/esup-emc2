@@ -7,6 +7,7 @@ use Formation\Form\SelectionFormateur\SelectionFormateurForm;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireForm;
 use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
+use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Presence\PresenceService;
@@ -35,6 +36,7 @@ class FormationInstanceControllerFactory
          * @var EtatTypeService $etatTypeService
          * @var FormateurService $formateurService
          * @var FormationService $formationService
+         * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
          * @var MailService $mailService
          * @var NotificationService $notificationService
@@ -46,6 +48,7 @@ class FormationInstanceControllerFactory
         $etatTypeService = $container->get(EtatTypeService::class);
         $formateurService = $container->get(FormateurService::class);
         $formationService = $container->get(FormationService::class);
+        $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
@@ -67,6 +70,7 @@ class FormationInstanceControllerFactory
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormateurService($formateurService);
         $controller->setFormationService($formationService);
+        $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
