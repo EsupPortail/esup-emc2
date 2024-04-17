@@ -168,7 +168,7 @@ return [
                     'gestion-formation' => [
                         'pages' => [
                             'session_' => [
-                                'label'    => 'Sessions en cours',
+                                'label'    => 'Sessions',
                                 'route'    => 'formation-instance',
                                 'resource' => PrivilegeController::getResourceId(FormationInstanceController::class, 'index') ,
                                 'order'    => 230,

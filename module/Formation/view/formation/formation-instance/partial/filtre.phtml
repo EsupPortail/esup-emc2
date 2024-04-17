@@ -9,8 +9,6 @@
 
 use UnicaenEtat\Entity\Db\EtatType;
 
-var_dump($params);
-
 ?>
 
 <div class="card">
@@ -25,10 +23,12 @@ var_dump($params);
                 <div class="row">
                     <div class="col-md-4">
                         <label for="etats">États :</label>
-                        <select id="etats" name="etats" class="selectpicker" data-live-search="true" multiple>
-                            <option value=""> Peu importe </option>
+                        <select id="etats" name="etats" class="selectpicker" data-live-search="true" multiple="multiple">
+<!--                            <option value=""> Peu importe </option>-->
                             <?php foreach ($etats as $etat) : ?>
-                                <option value="<?php echo $etat->getCode(); ?>" <?php if( isset($params['etats']) AND in_array($etat->getCode(), (is_string($params['etats'])?[$params['etats']]:$params['etats']))) echo " selected "; ?>>
+                                <option value="<?php echo $etat->getCode(); ?>" <?php if( isset($params['etats']) AND in_array($etat->getCode(), (is_string($params['etats'])?[$params['etats']]:$params['etats']))) echo " selected "; ?>
+                                        data-content='<?php  echo $this->etattype($etat); ?> <?php echo $etat->getLibelle(); ?>'
+                                >
                                     <?php echo $etat->getLibelle(); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -37,7 +37,7 @@ var_dump($params);
                     <div class="col-md-4">
                         <label for="gestionnaires">Gestionnaires :</label>
                         <select  id="gestionnaires" name="gestionnaires" class="selectpicker" data-live-search="true" multiple="multiple">
-                            <option value=""> Peu importe </option>
+<!--                            <option value=""> Peu importe </option>-->
                             <?php foreach ($gestionnaires as $id => $displayname) : ?>
                                 <option value="<?php echo $id; ?>"   <?php if( isset($params['gestionnaires']) AND in_array("".$id, (is_string($params['gestionnaires'])?[$params['gestionnaires']]:$params['gestionnaires']))) echo " selected "; ?>>
                                     <?php echo $displayname; ?>
@@ -48,7 +48,7 @@ var_dump($params);
                     <div class="col-md-4">
                         <label for="themes">Thèmes :</label>
                         <select id="themes" name="themes" class="selectpicker" data-live-search="true" multiple="multiple">
-                            <option value=""> Peu importe </option>
+<!--                            <option value=""> Peu importe </option>-->
                             <?php foreach ($themes as $id => $array) : ?>
                                 <option value="<?php echo $id; ?>"  <?php if( isset($params['themes']) AND in_array("".$id, (is_string($params['themes'])?[$params['themes']]:$params['themes']))) echo " selected "; ?>>
                                     <?php echo ($array['label'] AND $array['label'] !== '')?$array['label']:'Thème #'.$id; ?>

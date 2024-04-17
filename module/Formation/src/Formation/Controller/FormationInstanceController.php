@@ -49,9 +49,16 @@ class FormationInstanceController extends AbstractActionController
 
     public function indexAction(): ViewModel
     {
-        $params = $this->params()->fromQuery();
-        if (empty($params)) {
-            $params['etats'] = [SessionEtats::ETAT_CREATION_EN_COURS , SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS];
+        $liste = $this->getRequest()->getUri()->getQuery();
+        $params = [];
+        if ($liste AND $liste !== '') {
+            $liste = explode('&', $liste);
+            foreach ($liste as $item) {
+                [$key, $value] = explode('=', $item);
+                $params[$key][] = $value;
+            }
+        } else {
+                $params['etats'] = [SessionEtats::ETAT_CREATION_EN_COURS , SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS];
         }
 
         $instances = $this->getFormationInstanceService()->getSessionsWithParams($params);
