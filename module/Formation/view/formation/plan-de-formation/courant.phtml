@@ -60,10 +60,16 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
             </div>
             <div class="card-body">
                 <ul>
+                    <?php /** @var PlanDeFormation $planDeFormation */ ?>
                     <?php foreach ($plansDeFormation as $planDeFormation) : ?>
                         <li>
                             <?php echo $planDeFormation->getLibelle(); ?>
                             (<?php echo $planDeFormation->getPeriode(); ?>)
+                            <?php if ($planDeFormation->getDescription()) : ?>
+                                <span class="icon icon-information" title="<?php echo $planDeFormation->getDescription(); ?>"
+                                      data-bs-toggle="tooltip" data-bs-html="true"
+                                ></span>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

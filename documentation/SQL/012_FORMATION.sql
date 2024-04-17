@@ -1507,7 +1507,8 @@ WITH d(code, lib, ordre) AS (
     SELECT 'formationinstance_modifier', 'Modifier une action de formation', 30 UNION
     SELECT 'formationinstance_historiser', 'Historiser/Restaurer une action de formation', 40 UNION
     SELECT 'formationinstance_supprimer', 'Supprimer une instance de formation', 50 UNION
-    SELECT 'formationinstance_gerer_inscription', 'Gérer les inscriptions à une instance de formation', 100 UNION
+    SELECT 'formationinstance_afficher_inscription', 'Afficher/Exporter les inscriptions à une instance de formation', 100 UNION
+    SELECT 'formationinstance_gerer_inscription', 'Gérer les inscriptions à une instance de formation', 101 UNION
     SELECT 'formationinstance_gerer_seance', 'Gérer les séances d''une instance de formation', 110 UNION
     SELECT 'formationinstance_gerer_formateur', 'Gérer les formations d''une instance de formation', 120 UNION
     SELECT 'formationinstance_annuler', 'Annuler une session', 130

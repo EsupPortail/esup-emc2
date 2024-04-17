@@ -13,6 +13,7 @@ class FormationinstancePrivileges extends Privileges
     const FORMATIONINSTANCE_HISTORISER = 'formationinstance-formationinstance_historiser';
     const FORMATIONINSTANCE_SUPPRIMER = 'formationinstance-formationinstance_supprimer';
 
+    const FORMATIONINSTANCE_AFFICHER_INSCRIPTION = 'formationinstance-formationinstance_afficher_inscription';
     const FORMATIONINSTANCE_GERER_INSCRIPTION = 'formationinstance-formationinstance_gerer_inscription';
     const FORMATIONINSTANCE_GERER_SEANCE = 'formationinstance-formationinstance_gerer_seance';
     const FORMATIONINSTANCE_GERER_FORMATEUR = 'formationinstance-formationinstance_gerer_formateur';

@@ -20,12 +20,15 @@ $estAnnulee = ($instance->getEtatActif() && $instance->isEtatActif(SessionEtats:
 
 $canAfficherIndividu          = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_AFFICHER));
 $canInscritModifier           = (!$estAnnulee && $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION)));
+
 $canTelechargerAttestation    = $canAfficherIndividu;
 $canTeleverserAttestation     = $canInscritModifier;
 $canSupprimerAttestation      = $canInscritModifier;
 $canFraisAfficher       = $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_AFFICHER));
 $canFraisModifier       = (!$estAnnulee &&  $this->isAllowed(FormationinstancefraisPrivileges::getResourceId(FormationinstancefraisPrivileges::FORMATIONINSTANCEFRAIS_MODIFIER)));
 
+
+$canInscritExporter           = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER_INSCRIPTION));
 $canHistoriserInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 $canSupprimerInscription = $this->isAllowed(FormationinstancePrivileges::getResourceId(FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION));
 
