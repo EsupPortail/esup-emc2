@@ -104,10 +104,18 @@ return [
                         'demander-retour',
                         'cloturer',
                         'changer-etat',
-                        'exporter-inscription'
                     ],
                     'privileges' => [
                         FormationinstancePrivileges::FORMATIONINSTANCE_GERER_INSCRIPTION,
+                    ],
+                ],
+                [
+                    'controller' => FormationInstanceController::class,
+                    'action' => [
+                        'exporter-inscription'
+                    ],
+                    'privileges' => [
+                        FormationinstancePrivileges::FORMATIONINSTANCE_AFFICHER_INSCRIPTION,
                     ],
                 ],
                 [
