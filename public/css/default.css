@@ -1,0 +1,40 @@
+.unistrap {
+    --bs-success: rgb(0, 100, 0);
+    --bs-success-rgb: 0, 100, 0;
+    --bs-danger: rgb(200, 0, 0);
+    --bs-danger-rgb: 200,0,0;
+    --bs-info: rgb(0, 0, 100);
+    --bs-info-rgb: 0,0,255;
+    --bs-warning: Sienna;
+    --bs-warning-rgb: 160, 82, 45;
+    --bs-primary: #0d6efd;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary: #6c757d;
+    --bs-secondary-rgb: 108, 117, 125;
+
+    --bs-body-font-family: "Ubuntu", Helvetica;
+}
+
+.unistrap-th-emc2 {
+    --unistrap-color-main: rgb(55, 104, 155);
+    --unistrap-color-dark: rgb(15,64,95);
+    --unistrap-color-light: rgb(155, 204, 255);
+}
+
+.unistrap.unistrap-th-formations {
+    --unistrap-color-main: rgb(121, 78, 171);
+    --unistrap-color-dark: rgb(71,58,121);
+    --unistrap-color-light: rgb(246, 229, 255);
+}
+
+
+footer div#etablissement {
+    position: relative;
+    top: 40px;
+    height:85px;
+    width:160px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url('../img/nerv-logo.com.png');
+    background-size: 72px 85px;
+}

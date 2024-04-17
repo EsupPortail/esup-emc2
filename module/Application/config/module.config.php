@@ -347,6 +347,7 @@ return [
             '201_' => 'vendor/chart-2.9.3/Chart.bundle.js',
         ],
         'stylesheets' => [
+            '000_unistra' => 'css/font-local.css',
             '040_bootstrap' => 'unistrap-1.0.0/lib/bootstrap-5.2.2/dist/css/bootstrap.min.css',
             '041_ubuntu' => 'unistrap-1.0.0/css/font-ubuntu.css',
             '042_unistrap' => 'unistrap-1.0.0/css/unistrap.css',
@@ -356,9 +357,9 @@ return [
             '120_' => '/vendor/bootstrap-select-1.14.0-beta3/css/bootstrap-select.min.css',
             '065_unicaen-icon'        => '/unicaen/app/css/unicaen-icon.css',
 
-            '975_logos'                 => 'css/logos.css',
             '976_environnement'         => 'css/environnement.css',
             '977_app' => 'css/app.css',
+            '998_default' => 'css/default.css',
             '999_local' => 'css/local.css',
         ],
     ],

@@ -17,18 +17,18 @@ use UnicaenUtilisateur\Entity\Db\User;
 
 <div class="jumbotron" id="preecog">
     <div class="row">
-        <div class="col-md-5">
-            <div class="jumbo-title">
-                <span class='text-mesformations'>
-                    Mes formations
-                </span>
-            </div>
+        <div class="col-md-4">
+<!--            <div class="jumbo-title">-->
+<!--                <span class='text-mesformations'>-->
+<!--                    Mes formations-->
+<!--                </span>-->
+<!--            </div>-->
+<!---->
+<!--            <div style="font-size: large">-->
+<!--                Outils de gestion des formations du personnel-->
+<!--            </div>-->
 
-            <div style="font-size: large">
-                Outils de gestion des formations du personnel
-            </div>
-
-            <img src="../img/logo-mesformations.png" alt="placeholder">
+            <img src="../img/logo-mesformations.png" alt="placeholder" style="width:80%;">
 
             <br/>
 
@@ -47,7 +47,7 @@ use UnicaenUtilisateur\Entity\Db\User;
                 <?php endif; ?>
             </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <?php if ($rendu->getSujet() !== null && trim($rendu->getSujet()) !== '') : ?>
                 <h2> <?php echo $rendu->getSujet(); ?> </h2>
             <?php endif; ?>
@@ -56,7 +56,6 @@ use UnicaenUtilisateur\Entity\Db\User;
             <?php endif; ?>
         </div>
     </div>
-
 </div>
 
 <style>
