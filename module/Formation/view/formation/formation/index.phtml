@@ -54,7 +54,8 @@ $this->headTitle("Actions de formation");
     </thead>
     <tbody>
     <?php foreach($formations as $formation) : ?>
-        <tr id="<?php echo $formation->getId(); ?>"  class="<?php if ($formation->estHistorise()) echo "historise"; ?>">
+        <?php if ($canDetruire OR $formation->estNonHistorise()): ?>
+            <tr id="<?php echo $formation->getId(); ?>"  class="<?php if ($formation->estHistorise()) echo "historise"; ?>">
             <td> <?php echo $formation->getLibelle(); ?> </td>
             <td>
                 <strong>Axe :</strong>
@@ -128,6 +129,7 @@ $this->headTitle("Actions de formation");
                 <?php endif; ?>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

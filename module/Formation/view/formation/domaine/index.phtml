@@ -48,7 +48,8 @@ $this->headTitle("Domaines de formation");
     </thead>
     <tbody>
     <?php foreach ($domaines as $domaine) : ?>
-        <tr id="<?php echo $domaine->getId(); ?>" class="<?php if ($domaine->estHistorise()) echo "historise"; ?>">
+        <?php if ($canDetruire OR $domaine->estNonHistorise()) : ?>
+            <tr id="<?php echo $domaine->getId(); ?>" class="<?php if ($domaine->estHistorise()) echo "historise"; ?>">
 
             <td> <!-- LIBELLE -->
                 <span class="badge" style="background: <?php echo $domaine->getCouleur(); ?>">&nbsp;</span>
@@ -100,6 +101,7 @@ $this->headTitle("Domaines de formation");
                         <a
                             <?php /** @see \Formation\Controller\DomaineController::historiserAction() */ ?>
                                 href="<?php echo $this->url('formation-domaine/historiser', ['domaine' => $domaine->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-historiser" title="Historiser le domaine"></span>
                             Historiser
@@ -129,6 +131,7 @@ $this->headTitle("Domaines de formation");
                 <?php endif; ?>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

@@ -20,10 +20,10 @@ use Formation\Service\Evenement\RappelAgentAvantFormationServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use UnicaenApp\Exception\RuntimeException;
-use UnicaenEtat\Entity\Db\HasEtatsInterface;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenParametre\Service\Parametre\ParametreServiceAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class FormationInstanceService
 {
@@ -109,26 +109,25 @@ class FormationInstanceService
             ->addSelect('etat')->leftjoin('Finstance.etats', 'etat')
             ->addSelect('etype')->leftjoin('etat.type', 'etype')
             ->addSelect('formateur')->leftjoin('Finstance.formateurs', 'formateur')
-            ->andWhere('etat.histoDestruction IS NULL')
-        ;
+            ->andWhere('etat.histoDestruction IS NULL');
         return $qb;
     }
 
     static public function decorateWithGestionnairesId(QueryBuilder $qb, array $gestionnaires, bool $addJointure = true): QueryBuilder
     {
         if ($addJointure) {
-            $qb = $qb->leftJoin('Finstance.gestionnaires', 'gestionnaire')->addSelect('gestionnaire');
+            $qb = $qb->leftJoin('Finstance.gestionnaires', 'decorateurGestionnaire')->addSelect('decorateurGestionnaire');
         }
-        $qb = $qb->andWhere('gestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
+        $qb = $qb->andWhere('decorateurGestionnaire.id = (:gestionnaires)')->setParameter('gestionnaires', $gestionnaires);
         return $qb;
     }
+
     static public function decorateWithGroupeId(QueryBuilder $qb, array $themes, bool $addJointure = true): QueryBuilder
     {
         if ($addJointure) {
             $qb = $qb
                 ->leftJoin('Finstance.formation', 'decorateurFormation')->addSelect('decorateurFormation')
-                ->leftJoin('decorateurFormation.groupe', 'decorateurGroupe')->addSelect('decorateurGroupe')
-            ;
+                ->leftJoin('decorateurFormation.groupe', 'decorateurGroupe')->addSelect('decorateurGroupe');
         }
         $qb = $qb->andWhere('decorateurGroupe.id = (:themes)')->setParameter('themes', $themes);
         return $qb;
@@ -231,22 +230,54 @@ class FormationInstanceService
         return $result;
     }
 
+    /** @return FormationInstance[][] */
+    public function getSessionsByGestionnaires(UserInterface $gestionnaire): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = FormationInstanceService::decorateWithGestionnairesId($qb, [$gestionnaire->getId()]);
+        $qb = $qb->andWhere('Finstance.histoDestruction IS NULL');
+        /** @var FormationInstance[] $sessions */
+        $sessions = $qb->getQuery()->getResult();
+
+        $dictionnaire = [];
+        $etats = [SessionEtats::ETAT_CREATION_EN_COURS, SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS, SessionEtats::ETAT_CLOTURE_INSTANCE];
+        foreach ($etats as $etatCode) $dictionnaire[$etatCode] = [];
+        foreach ($sessions as $session) $dictionnaire[$session->getEtatActif()->getType()->getCode()][] = $session;
+
+        return $dictionnaire;
+    }
+
     /** @return FormationInstance[] */
-    public function getSessionsWithParams(array $params) : array
+    public function getSessionsSansGestionnaires(): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = $qb->leftJoin('Finstance.gestionnaires', 'gestionnaire')
+            ->andWhere('gestionnaire.id IS NULL')
+            ->andWhere('Finstance.histoDestruction IS NULL');
+        /** @var FormationInstance[] $sessions */
+        $sessions = $qb->getQuery()->getResult();
+        return $sessions;
+    }
+
+    /** @return FormationInstance[] */
+    public function getSessionsWithParams(array $params): array
     {
         $qb = $this->createQueryBuilder();
 
-        if (isset($params['gestionnaires']) AND $params['gestionnaires'] != '') {
-            /** TODO :: REMOVE THIS */ $gestionnaires = [ $params['gestionnaires'] ];
+        if (isset($params['gestionnaires']) and $params['gestionnaires'] != '') {
+            /** TODO :: REMOVE THIS */
+            $gestionnaires = [$params['gestionnaires']];
             $qb = FormationInstanceService::decorateWithGestionnairesId($qb, $gestionnaires);
         }
-        if (isset($params['etats']) AND $params['etats'] != '') {
-            /** TODO :: REMOVE THIS */ if (is_string($params['etats'])) $etats = [ $params['etats'] ]; else $etats = $params['etats'];
+        if (isset($params['etats']) and $params['etats'] != '') {
+            /** TODO :: REMOVE THIS */
+            if (is_string($params['etats'])) $etats = [$params['etats']]; else $etats = $params['etats'];
             $qb = FormationInstance::decorateWithEtatsCodes($qb, 'Finstance', $etats);
         }
-        if (isset($params['themes'])  AND $params['themes'] != '') {
-            /** TODO :: REMOVE THIS */ $themes = [ $params['themes'] ];
-            $qb = FormationInstanceService::decorateWithGroupeId($qb,  $themes);
+        if (isset($params['themes']) and $params['themes'] != '') {
+            /** TODO :: REMOVE THIS */
+            $themes = [$params['themes']];
+            $qb = FormationInstanceService::decorateWithGroupeId($qb, $themes);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -343,7 +374,7 @@ class FormationInstanceService
         return $instance;
     }
 
-    public function envoyerConvocation(FormationInstance $session, ?Inscription $inscription=null): FormationInstance
+    public function envoyerConvocation(FormationInstance $session, ?Inscription $inscription = null): FormationInstance
     {
         $this->getEtatInstanceService()->setEtatActif($session, SessionEtats::ETAT_FORMATION_CONVOCATION);
         $this->update($session);

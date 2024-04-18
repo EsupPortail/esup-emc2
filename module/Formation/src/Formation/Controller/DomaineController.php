@@ -86,14 +86,27 @@ class DomaineController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction() : ViewModel
     {
         $domaine = $this->getDomaineService()->getRequestedDomaine($this);
-        $this->getDomaineService()->historise($domaine);
 
-        $retour = $this->params()->fromRoute('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('formation-domaine', [], [], true);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getDomaineService()->historise($domaine);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($domaine !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Historisation du domaine " . $domaine->getLibelle(),
+                'text' => "Êtes-vous sûr&middot;e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('formation-domaine/historiser', ["domaine" => $domaine->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction() : Response

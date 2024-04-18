@@ -24,6 +24,7 @@ use Formation\Form\SelectionGestionnaire\SelectionGestionnaireFormFactory;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydrator;
 use Formation\Form\SelectionGestionnaire\SelectionGestionnaireHydratorFactory;
 use Formation\Provider\Privilege\FormationPrivileges;
+use Formation\Provider\Role\FormationRoles;
 use Formation\Service\ActionType\ActionTypeService;
 use Formation\Service\ActionType\ActionTypeServiceFactory;
 use Formation\Service\Formation\FormationService;
@@ -119,6 +120,15 @@ return [
                         FormationPrivileges::FORMATION_SUPPRIMER,
                     ],
                 ],
+                [
+                    'controller' => IndexController::class,
+                    'action' => [
+                        'index-gestionnaire',
+                    ],
+                    'roles' => [
+                        FormationRoles::GESTIONNAIRE_FORMATION,
+                    ],
+                ],
             ],
         ],
     ],
@@ -168,6 +178,18 @@ return [
                         'action'     => 'index',
                     ],
                 ],
+            ],
+            'index-gestionnaire' => [
+                'type'  => Literal::class,
+                'options' => [
+                    'route'    => '/index-gestionnaire',
+                    'defaults' => [
+                        /** @see IndexController::indexGestionnaireAction **/
+                        'controller' => IndexController::class,
+                        'action'     => 'index-gestionnaire',
+                    ],
+                ],
+                'may_terminate' => true,
             ],
             'formation' => [
                 'type' => Literal::class,

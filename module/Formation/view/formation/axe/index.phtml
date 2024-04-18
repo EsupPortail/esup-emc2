@@ -48,7 +48,8 @@ $this->headTitle("Axes de formation");
     </thead>
     <tbody>
     <?php foreach ($axes as $axe) : ?>
-        <tr id="<?php echo $axe->getId(); ?>" class="<?php if ($axe->estHistorise()) echo "historise"; ?>">
+        <?php if ($canDetruire OR $axe->estNonHistorise()) : ?>
+            <tr id="<?php echo $axe->getId(); ?>" class="<?php if ($axe->estHistorise()) echo "historise"; ?>">
 
             <td> <!-- LIBELLE -->
                 <span class="badge" style="background: <?php echo $axe->getCouleur(); ?>">&nbsp;</span>
@@ -99,6 +100,7 @@ $this->headTitle("Axes de formation");
                         <a
                             <?php /** @see \Formation\Controller\AxeController::historiserAction() */ ?>
                                 href="<?php echo $this->url('axe/historiser', ['axe' => $axe->getId()], [], true); ?>"
+                                class="ajax-modal" data-event="modification"
                         >
                             <span class="icon icon-historiser" title="Historiser le axe"></span>
                             Historiser
@@ -128,6 +130,7 @@ $this->headTitle("Axes de formation");
                 <?php endif; ?>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

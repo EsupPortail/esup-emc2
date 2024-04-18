@@ -47,7 +47,8 @@ $canSupprimerAttestation = $canModifier;
     </thead>
     <tbody>
             <?php foreach ($inscriptions as $inscription) : ?>
-                <tr class=" <?php if ($inscription->estHistorise()) echo " historise "; ?> " >
+                <?php if ($canSupprimer OR $inscription->estNonHistorise()) : ?>
+                    <tr class=" <?php if ($inscription->estHistorise()) echo " historise "; ?> " >
                     <td>
                         <?php echo $inscription->getSession()->getFormation()->getLibelle(); ?>
                         <br>
@@ -162,6 +163,7 @@ $canSupprimerAttestation = $canModifier;
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
     </tbody>
 </table>

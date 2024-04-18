@@ -640,10 +640,10 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $text .= "<table style='width:100%;'>";
             $text .= "<thead>";
             $text .= "<tr style='border-bottom:1px solid black;'>";
-            $text .= "<th>Date  </th>";
-            $text .= "<th>de  </th>";
-            $text .= "<th>à  </th>";
-            $text .= "<th>Lieu  </th>";
+            $text .= "<th>Date</th>";
+            $text .= "<th>de</th>";
+            $text .= "<th>à</th>";
+            $text .= "<th>Lieu</th>";
             $text .= "</tr>";
             $text .= "</thead>";
             $text .= "<tbody>";

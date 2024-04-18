@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @see \Formation\Controller\IndexController::indexGestionnaireAction()
+ * @var User $user
+ * @var Role $role
+ * @var EtatType[]  $etatsTypes
+ * @var FormationInstance[][]  $dictionnaire
+ * @var FormationInstance[]  $sansGestionnaire
+ */
+
+use Formation\Entity\Db\FormationInstance;
+use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenUtilisateur\Entity\Db\Role;
+use UnicaenUtilisateur\Entity\Db\User;
+
+?>
+
+<h1 class="page-header">
+    Index de gestion de vos sessions de formation
+</h1>
+
+<h2> Sessions dont vous êtes gestionnaire </h2>
+
+<?php foreach ($dictionnaire as $etatCode => $sessions) : ?>
+    <div class="card">
+        <div class="card-header bg-default">
+            <?php echo $this->etattype($etatsTypes[$etatCode]); ?>
+            <?php echo count($sessions); ?> session·s à l'états [<?php echo $etatsTypes[$etatCode]->getLibelle(); ?>]
+        </div>
+        <?php if (count($sessions) > 0) : ?>
+        <div class="card-body">
+            <?php echo $this->formationInstanceArray($sessions, ['affichage' => ['gestionnaires' => false]]); ?>
+        </div>
+        <?php endif; ?>
+    </div>
+<?php endforeach; ?>
+
+<h2> Sessions sans gestionnaire </h2>
+
+<div class="card-body">
+    <?php echo $this->formationInstanceArray($sansGestionnaire, ['affichage' => ['gestionnaires' => false]]); ?>
+</div>

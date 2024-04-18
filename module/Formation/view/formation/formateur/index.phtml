@@ -49,7 +49,8 @@ $canCreerCompte = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
     </thead>
     <tbody>
     <?php foreach ($formateurs as $formateur): ?>
-    <tr class="<?php if ($formateur->estHistorise()) echo " historise "; ?>">
+        <?php if ($canSupprimer OR $formateur->estNonHistorise()) : ?>
+            <tr class="<?php if ($formateur->estHistorise()) echo " historise "; ?>">
         <td> <?php echo Formateur::TYPES[$formateur->getType()]; ?> </td>
         <td>
             <?php echo $formateur->getDenomination(); ?>
@@ -143,6 +144,7 @@ $canCreerCompte = $this->isAllowed(UtilisateurPrivileges::getResourceId(Utilisat
             <?php endif; ?>
         </td>
     </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

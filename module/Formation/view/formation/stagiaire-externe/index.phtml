@@ -40,7 +40,8 @@ $canSupprimer = $this->isAllowed(StagiaireexternePrivileges::getResourceId(Stagi
     </thead>
     <tbody>
     <?php foreach($stagiaires as $stagiaire): ?>
-        <tr class="<?php if ($stagiaire->estHistorise()) echo " historise "; ?>">
+        <?php if ($canSupprimer OR $stagiaire->estNonHistorise()) : ?>
+            <tr class="<?php if ($stagiaire->estHistorise()) echo " historise "; ?>">
             <td data-order="<?php echo $stagiaire->getNom()."|".$stagiaire->getPrenom(); ?>">
                 <?php echo $stagiaire->getPrenom(); ?>
                 <?php echo $stagiaire->getNom(); ?>
@@ -106,6 +107,7 @@ $canSupprimer = $this->isAllowed(StagiaireexternePrivileges::getResourceId(Stagi
                 <?php endif; ?>
             </td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
     </tbody>
 </table>

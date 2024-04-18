@@ -84,14 +84,27 @@ class AxeController extends AbstractActionController {
         return $vm;
     }
 
-    public function historiserAction() : Response
+    public function historiserAction() : ViewModel
     {
         $axe = $this->getAxeService()->getRequestedAxe($this);
-        $this->getAxeService()->historise($axe);
 
-        $retour = $this->params()->fromRoute('retour');
-        if ($retour) return $this->redirect()->toUrl($retour);
-        return $this->redirect()->toRoute('axe', [], [], true);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getAxeService()->historise($axe);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($axe !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Historisation de l'axe " . $axe->getLibelle(),
+                'text' => "Êtes-vous sûr·e de vouloir continuer ?",
+                'action' => $this->url()->fromRoute('axe/historiser', ["axe" => $axe->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction() : Response

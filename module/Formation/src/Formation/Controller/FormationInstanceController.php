@@ -140,12 +140,28 @@ class FormationInstanceController extends AbstractActionController
         ]);
     }
 
-    public function historiserAction(): Response
+    public function historiserAction(): ViewModel
     {
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
-        $this->getFormationInstanceService()->historise($instance);
 
-        return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            if ($data["reponse"] === "oui") $this->getFormationInstanceService()->historise($instance);
+            exit();
+        }
+
+        $vm = new ViewModel();
+        if ($instance !== null) {
+            $vm->setTemplate('default/confirmation');
+            $vm->setVariables([
+                'title' => "Historisation d'une instance de formation",
+                'text' => "Est-vous sûr·e de vouloir historiser la session".$instance->getInstanceLibelle()." du ".$instance->getPeriode()." ?",
+                'action' => $this->url()->fromRoute('formation-instance/historiser', ["formation-instance" => $instance->getId()], [], true),
+            ]);
+        }
+        return $vm;
     }
 
     public function restaurerAction(): Response
@@ -153,7 +169,9 @@ class FormationInstanceController extends AbstractActionController
         $instance = $this->getFormationInstanceService()->getRequestedFormationInstance($this);
         $this->getFormationInstanceService()->restore($instance);
 
-        return $this->redirect()->toRoute('formation/editer', ['formation' => $instance->getFormation()->getId()], [], true);
+        $retour = $this->params()->fromQuery('retour');
+        if ($retour) return $this->redirect()->toUrl($retour);
+        return $this->redirect()->toRoute('formation-instance', [], [], true);
     }
 
     public function supprimerAction(): ViewModel
