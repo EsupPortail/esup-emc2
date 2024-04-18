@@ -1,7 +1,12 @@
 <?php
 
 /**
- * @see \Formation\Controller\FormationInstanceInscritController::inscriptionAction()
+ * @see \Formation\Controller\InscriptionController::inscriptionAction()
+ * @see \Formation\Controller\InscriptionController::desinscriptionAction()
+ * @see \Formation\Controller\InscriptionController::validerResponsableAction()
+ * @see \Formation\Controller\InscriptionController::refuserResponsableAction()
+ * @see \Formation\Controller\InscriptionController::validerDrhAction()
+ * @see \Formation\Controller\InscriptionController::refuserDrhAction()
  * @var Form $form
  * @var Inscription $inscription
  */
@@ -13,6 +18,8 @@ use Laminas\Form\Form;
 
 <dl>
 <?php if ($inscription->getJustificationAgent()) : ?>
+    <dt> Missions en adéquation avec le demande de formation </dt>
+    <dd> <?php echo $inscription->getMissions(); ?> </dd>
     <dt> Motivation de l'agent </dt>
     <dd> <?php echo $inscription->getJustificationAgent(); ?></dd>
 <?php endif; ?>
@@ -26,7 +33,14 @@ use Laminas\Form\Form;
     <?php endif; ?>
 </dl>
 
-<?php echo $this->form($form); ?>
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formControlGroup($form->get('etape')); ?>
+<div style="<?php if ($inscription->getEtatActif() !== null) echo " display: none; "; ?>">
+    <?php echo $this->formControlGroup($form->get('missions')); ?>
+</div>
+<?php echo $this->formControlGroup($form->get('justification')); ?>
+<?php echo $this->formControlGroup($form->get('bouton')); ?>
+<?php echo $this->form()->closeTag(); ?>
 
 <script>
     $(document).ready(function() {

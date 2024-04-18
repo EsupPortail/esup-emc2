@@ -254,31 +254,23 @@ class DemandeExterneController extends AbstractActionController {
     public function validerResponsableAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_RESP);
-        $this->getDemandeExterneService()->update($demande);
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-responsable', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
-        $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du responsable de l'agent : ");
+        $form->get('etape')->setValue('RESPONSABLE');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
-            $justification = $data['HasDescription']['description'];
-//            if ($form->isValid()) {
-//              if ($demande->getJustificationResponsable() === null) {
-            if ($justification === null || trim($justification) === '') {
-                    $this->flashMessenger()->addErrorMessage("<strong> Échec de la validation </strong> <br/> Veuillez justifier votre validation !");
-                } else {
-                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
-                    $demande->setJustificationResponsable($justification);
-                    $this->getDemandeExterneService()->update($demande);
-                    $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
-                    $this->getNotificationService()->triggerValidationResponsableAgent($demande);
-                    $this->getNotificationService()->triggerValidationResponsableDrh($demande);
-                }
-//            }
+            if ($form->isValid()) {
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_RESPONSABLE);
+                $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_RESP);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                $this->getNotificationService()->triggerValidationResponsableAgent($demande);
+                $this->getNotificationService()->triggerValidationResponsableDrh($demande);
+            }
         }
 
         $vm =  new ViewModel([
@@ -293,27 +285,21 @@ class DemandeExterneController extends AbstractActionController {
     public function refuserResponsableAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
-        $this->getDemandeExterneService()->update($demande);
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-responsable', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
-        $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
+        $form->get('etape')->setValue('REFUS');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                if ($demande->getJustificationRefus() === null) {
-                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
-                } else {
-                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
-                    $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
-                    $this->getDemandeExterneService()->update($demande);
-                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
-                    $this->getNotificationService()->triggerRefus($demande);
-                }
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
+                $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                $this->getNotificationService()->triggerRefus($demande);
             }
         }
 
@@ -335,16 +321,20 @@ class DemandeExterneController extends AbstractActionController {
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
+        $form->get('etape')->setValue('GESTIONNAIRE');
+        $form->get('justification')->setValue('Validation');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $justification = $data['HasDescription']['description'];
-            $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH, $justification);
-            $this->getDemandeExterneService()->update($demande);
-            $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
-            $this->getNotificationService()->triggerValidationDrh($demande);
-            $this->getNotificationService()->triggerValidationComplete($demande);
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                $this->getNotificationService()->triggerValidationDrh($demande);
+                $this->getNotificationService()->triggerValidationComplete($demande);
+            }
         }
 
         $vm =  new ViewModel([
@@ -359,22 +349,23 @@ class DemandeExterneController extends AbstractActionController {
     public function validerDrhAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_DRH);
-        $this->getDemandeExterneService()->update($demande);
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
+        $form->get('etape')->setValue('DRH');
+        $form->get('justification')->setValue('Validation');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
-            $justification = $data['HasDescription']['description'];
-            $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH, $justification);
-            $this->getDemandeExterneService()->update($demande);
-            $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
-            $this->getNotificationService()->triggerValidationDrh($demande);
-            $this->getNotificationService()->triggerValidationComplete($demande);
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                $this->getNotificationService()->triggerValidationDrh($demande);
+                $this->getNotificationService()->triggerValidationComplete($demande);
+            }
         }
 
         $vm =  new ViewModel([

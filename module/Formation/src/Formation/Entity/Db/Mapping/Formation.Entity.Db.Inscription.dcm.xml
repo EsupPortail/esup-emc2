@@ -18,6 +18,7 @@
 
         <field name="liste"             type="string" length="64"       column="liste"     nullable="true"/>
 
+        <field name="missions"                  column="missions"                           type="text"         nullable="true"/>
         <field name="justificationAgent"        column="justification_agent"                type="text"         nullable="true"/>
         <field name="justificationResponsable"  column="justification_responsable"          type="text"         nullable="true"/>
         <field name="justificationDrh"          column="justification_drh"                  type="text"         nullable="true"/>

@@ -31,6 +31,7 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     private ?FormationInstance $session = null;
     private ?string $liste = null;
 
+    private ?string $missions = null;
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
     private ?string $justificationDrh = null;
@@ -98,6 +99,16 @@ class Inscription implements HistoriqueAwareInterface, HasEtatsInterface, HasVal
     public function setListe(?string $liste): void
     {
         $this->liste = $liste;
+    }
+
+    public function getMissions(): ?string
+    {
+        return $this->missions;
+    }
+
+    public function setMissions(?string $missions): void
+    {
+        $this->missions = $missions;
     }
 
     public function getJustificationAgent(): ?string

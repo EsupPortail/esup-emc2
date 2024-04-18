@@ -10,22 +10,25 @@ use Laminas\Hydrator\HydratorInterface;
 
 class JustificationHydrator implements HydratorInterface
 {
-    /**
-     * @param $object
-     * @return array
-     */
     public function extract(object $object): array
     {
+        /** @var Inscription|DemandeExterne $object */
         $description = null;
         $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
         switch ($etattype) {
             case null :
+                $description = null;
+                break;
             case InscriptionEtats::ETAT_DEMANDE :
-                $description = $object->getJustificationAgent();
+                $description = $object->getJustificationResponsable();
                 break;
             case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
             case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                $description = $object->getJustificationResponsable();
+                $description = $object->getJustificationDrh();
+                break;
+            case InscriptionEtats::ETAT_VALIDER_DRH :
+//            case DemandeExterneEtats::ETAT_VALIDATION_DRH :
+                $description = $object->getJustificationDrh();
                 break;
             case InscriptionEtats::ETAT_REFUSER :
             case DemandeExterneEtats::ETAT_REJETEE :
@@ -34,37 +37,47 @@ class JustificationHydrator implements HydratorInterface
         }
 
         $data = [
-            'description' => $description,
+            'missions' => $object->getMissions()??null,
+            'justification' => $description,
         ];
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @param $object
-     * @return Inscription
-     */
     public function hydrate(array $data, object $object): object
     {
-        $description = (isset($data['HasDescription']) AND isset($data['HasDescription']['description']) AND trim($data['HasDescription']['description']) !== '')?trim($data['HasDescription']['description']):null;
+        $etape = $data['etape'];
+        $missions = (isset($data['missions']) AND trim($data['missions']) !== '')?trim($data['missions']):null;
+        $justification = (isset($data['justification']) AND trim($data['justification']) !== '')?trim($data['justification']):null;
 
-        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
-        switch ($etattype) {
-            case null :
-            case InscriptionEtats::ETAT_DEMANDE :
-                //note deplacer dans le controller : malin ?
-//                $object->setJustificationAgent($description);
-                break;
-            case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
-            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
-                //note deplacer dans le controller : malin ?
-//                $object->setJustificationResponsable($description);
-                break;
-            case InscriptionEtats::ETAT_REFUSER :
-            case DemandeExterneEtats::ETAT_REJETEE :
-                $object->setJustificationRefus($description);
-                break;
+        switch ($etape) {
+            case 'AGENT' : $object->setJustificationAgent($justification); break;
+            case 'RESPONSABLE' : $object->setJustificationResponsable($justification); break;
+            case 'GESTIONNAIRE' : $object->setJustificationGestionnaire($justification); break;
+            case 'DRH' : $object->setJustificationDrh($justification); break;
+            case 'REFUS' : $object->setJustificationRefus($justification); break;
         }
+
+//        /** @var DemandeExterne|Inscription $object */
+//        $etattype = ($object->getEtatActif())?$object->getEtatActif()->getType()->getCode():null;
+//        switch ($etattype) {
+//            case null :
+//            case InscriptionEtats::ETAT_DEMANDE :
+//                $object->setJustificationAgent($justification);
+//                break;
+//            case InscriptionEtats::ETAT_VALIDER_RESPONSABLE :
+//            case DemandeExterneEtats::ETAT_VALIDATION_RESP :
+//                $object->setJustificationResponsable($justification);
+//                break;
+//            case InscriptionEtats::ETAT_VALIDER_DRH :
+////            case DemandeExterneEtats::ETAT_VALIDATION_DRH :
+//                $object->setJustificationDrh($justification);
+//                break;
+//            case InscriptionEtats::ETAT_REFUSER :
+//            case DemandeExterneEtats::ETAT_REJETEE :
+//                $object->setJustificationRefus($justification);
+//                break;
+//        }
+        $object->setMissions($missions);
 
         return $object;
     }

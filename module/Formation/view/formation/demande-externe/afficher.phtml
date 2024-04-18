@@ -79,6 +79,14 @@ $canAfficherSession = $this->isAllowed(FormationinstancePrivileges::getResourceI
 
         <h3> Motivation </h3>
         <div class="row">
+            <div class="col-md-12">
+                <dl>
+                    <dt> Mission·s en lien avec la demande de formation :</dt>
+                    <dd> <?php echo $demande->getMissions(); ?></dd>
+                    <dt> Motivation·s </dt>
+                    <dt><?php echo $demande->getJustificationAgent(); ?> </dt>
+                </dl>
+            </div>
             <div class="col-md-12"> <?php echo $demande->getJustificationAgent(); ?> </div>
             <dl class="row">
                 <dt class="col-md-4"> Formation au titre de congé de formation syndicale </dt>

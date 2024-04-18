@@ -15,6 +15,7 @@ class DemandeExterneHydrator implements HydratorInterface {
             'libelle' => $object->getLibelle(),
             'organisme' => $object->getOrganisme(),
             'contact' => $object->getContact(),
+            'missions' => $object->getMissions(),
             'pourquoi' => $object->getPourquoi(),
             'montant' => $object->getMontant(),
             'lieu' => $object->getLieu(),
@@ -36,6 +37,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $libelle = (isset($data['libelle']) AND trim($data['libelle']) !== '')?trim($data['libelle']):null;
         $organisme = (isset($data['organisme']) AND trim($data['organisme']) !== '')?trim($data['organisme']):null;
         $contact = (isset($data['contact']) AND trim($data['contact']) !== '')?trim($data['contact']):null;
+        $missions = (isset($data['missions']) AND trim($data['missions']) !== '')?trim($data['missions']):null;
         $pourquoi = (isset($data['pourquoi']) AND trim($data['pourquoi']) !== '')?trim($data['pourquoi']):null;
         $montant = (isset($data['montant']) AND trim($data['montant']) !== '')? ((float) trim($data['montant'])): null;
         $lieu = (isset($data['lieu']) AND trim($data['lieu']) !== '')?trim($data['lieu']):null;
@@ -51,6 +53,7 @@ class DemandeExterneHydrator implements HydratorInterface {
         $object->setLibelle($libelle);
         $object->setOrganisme($organisme);
         $object->setContact($contact);
+        $object->setMissions($missions);
         $object->setPourquoi($pourquoi);
         $object->setMontant($montant);
         $object->setLieu($lieu);

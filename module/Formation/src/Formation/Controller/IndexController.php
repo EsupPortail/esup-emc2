@@ -33,7 +33,7 @@ class IndexController extends AbstractActionController
         $connectedUser = $this->getUserService()->getConnectedUser();
         $connectedRole = $this->getUserService()->getConnectedRole();
 
-        if ($connectedRole->getRoleId() === FormationRoles::GESTIONNAIRE_FORMATION) {
+        if ($connectedRole AND $connectedRole->getRoleId() === FormationRoles::GESTIONNAIRE_FORMATION) {
             /** @see IndexController::indexGestionnaireAction() */
             return $this->redirect()->toRoute('index-gestionnaire', [], [], true);
         }

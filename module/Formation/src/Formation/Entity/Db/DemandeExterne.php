@@ -30,6 +30,7 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     private ?string $libelle = null;
     private ?string $organisme = null;
     private ?string $contact = null;
+    private ?string $missions = null;
     private ?string $pourquoi = null;
     private ?float $montant = null;
     private ?string $lieu = null;
@@ -44,6 +45,8 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
 
     private ?string $justificationAgent = null;
     private ?string $justificationResponsable = null;
+    private ?string $justificationGestionnaire = null;
+    private ?string $justificationDrh = null;
     private ?string $justificationRefus = null;
     private ?Collection $devis;
 
@@ -90,6 +93,16 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     public function setContact(?string $contact): void
     {
         $this->contact = $contact;
+    }
+
+    public function getMissions(): ?string
+    {
+        return $this->missions;
+    }
+
+    public function setMissions(?string $missions): void
+    {
+        $this->missions = $missions;
     }
 
     public function getPourquoi(): ?string
@@ -192,6 +205,26 @@ class DemandeExterne implements HistoriqueAwareInterface, ResourceInterface, Has
     public function setJustificationAgent(?string $justificationAgent): void
     {
         $this->justificationAgent = $justificationAgent;
+    }
+
+    public function getJustificationGestionnaire(): ?string
+    {
+        return $this->justificationGestionnaire;
+    }
+
+    public function setJustificationGestionnaire(?string $justificationGestionnaire): void
+    {
+        $this->justificationGestionnaire = $justificationGestionnaire;
+    }
+
+    public function getJustificationDrh(): ?string
+    {
+        return $this->justificationDrh;
+    }
+
+    public function setJustificationDrh(?string $justificationDrh): void
+    {
+        $this->justificationDrh = $justificationDrh;
     }
 
     public function isPriseEnCharge(): bool

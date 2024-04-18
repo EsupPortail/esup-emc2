@@ -9,8 +9,9 @@
         <field name="libelle"       column="libelle"        type="string"       length="1024"  />
         <field name="organisme"     column="organisme"      type="string"       length="1024"  />
         <field name="contact"       column="contact"        type="string"       length="1024"  />
-        <field name="pourquoi"      column="pourquoi"       type="string"       length="9999"  />
-        <field name="montant"       column="montant"        type="float"  />
+        <field name="missions"      column="missions"       type="text"                        />
+        <field name="pourquoi"      column="pourquoi"       type="text"                        />
+        <field name="montant"       column="montant"        type="float"                       />
         <field name="lieu"          column="lieu"           type="string"       length="1024"  />
         <field name="debut"         column="debut"          type="datetime"  />
         <field name="fin"           column="fin"            type="datetime"  />
@@ -68,9 +69,11 @@
             </join-table>
         </many-to-many>
 
-        <field name="justificationAgent"        column="justification_agent"                type="text"  />
-        <field name="justificationResponsable"  column="justification_responsable"          type="text"         nullable="true"/>
-        <field name="justificationRefus"        column="justification_refus"                type="text"         nullable="true"/>
+        <field name="justificationAgent"         column="justification_agent"                type="text"  />
+        <field name="justificationResponsable"   column="justification_responsable"          type="text"         nullable="true"/>
+        <field name="justificationGestionnaire"  column="justification_gestionnaire"         type="text"         nullable="true"/>
+        <field name="justificationDrh"           column="justification_drh"                  type="text"         nullable="true"/>
+        <field name="justificationRefus"         column="justification_refus"                type="text"         nullable="true"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

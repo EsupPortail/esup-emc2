@@ -192,13 +192,14 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/valider-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('RESPONSABLE');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $justification = (isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) !== '') ? trim($data['HasDescription']['description']) : null;
+                $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
                     $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de la validation </strong></span> <br/> Veuillez justifier votre validation !");
                 } else {
@@ -228,13 +229,14 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-responsable', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('REFUS');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $justification = (isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) !== '') ? trim($data['HasDescription']['description']) : null;
+                $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
                     $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec du refus  </strong></span> <br/> Veuillez justifier votre refus !");
                 } else {
@@ -265,6 +267,7 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('DRH');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -300,13 +303,14 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/refuser-drh', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('REFUS');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $justification = (isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) !== '') ? trim($data['HasDescription']['description']) : null;
+                $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
                     $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
                 } else {
@@ -526,13 +530,14 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/creer-inscription', ['formation-instance' => $instance->getId(), 'agent' => $agent->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('AGENT');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $justification = (isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) !== '') ? trim($data['HasDescription']['description']) : null;
+                $justification = (isset($data['justification']) && trim($data['justification']) !== '') ? trim($data['justification']) : null;
                 if ($justification === null) {
                     $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de l'inscription  </strong></span> <br/> Veuillez motivier votre demande d'inscription!");
                 } else {
@@ -564,6 +569,7 @@ class InscriptionController extends AbstractActionController
         $form = $this->getJustificationForm();
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/annuler-inscription', ['inscrit' => $inscription->getId(), 'agent' => $agent->getId()], [], true));
         $form->bind($inscription);
+        $form->get('etape')->setValue('REFUS');
 
         $break = false;
         if ($agent->getUtilisateur() !== $this->getUserService()->getConnectedUser()) {
@@ -577,16 +583,9 @@ class InscriptionController extends AbstractActionController
                 $data = $request->getPost();
                 $form->setData($data);
                 if ($form->isValid()) {
-                    $justification = (isset($data['HasDescription']['description']) && trim($data['HasDescription']['description']) !== '') ? trim($data['HasDescription']['description']) : null;
-                    if ($justification === null) {
-                        $this->flashMessenger()->addErrorMessage("<span class='text-danger'><strong> Échec de la désinscription  </strong></span> <br/> Veuillez justifier votre demande de désinscription !");
-                    } else {
-                        $inscription->setJustificationRefus($justification);
-                        $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_REFUSER);
-                        $this->getInscriptionService()->historise($inscription);
-                        $this->flashMessenger()->addSuccessMessage("Désinscription faite.");
-                        //todo trigger reclassement
-                    }
+                    $this->getEtatInstanceService()->setEtatActif($inscription, InscriptionEtats::ETAT_REFUSER);
+                    $this->getInscriptionService()->historise($inscription);
+                    $this->flashMessenger()->addSuccessMessage("Désinscription faite.");
                 }
             }
         }

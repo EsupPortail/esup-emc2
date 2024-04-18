@@ -60,6 +60,17 @@ class DemandeExterneForm extends Form
 
         $this->add([
             'type' => Textarea::class,
+            'name' => 'missions',
+            'options' => [
+                'label' => "Missions en lien avec le demande de formation: ",
+            ],
+            'attributes' => [
+                'id' => 'missions',
+                'class' => 'tinymce',
+            ],
+        ]);
+        $this->add([
+            'type' => Textarea::class,
             'name' => 'pourquoi',
             'options' => [
                 'label' => "Pourquoi avez-vous choisi cet organisme ? ",
@@ -225,6 +236,7 @@ class DemandeExterneForm extends Form
             'libelle' => ['required' => true,],
             'organisme' => ['required' => true,],
             'contact' => ['required' => true,],
+            'missions' => ['required' => false,],
             'pourquoi' => ['required' => false,],
             'montant' => [
                 'required' => true,
