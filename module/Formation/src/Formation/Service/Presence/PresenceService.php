@@ -2,6 +2,8 @@
 
 namespace Formation\Service\Presence;
 
+use Doctrine\DBAL\Driver\Exception as DRV_Exception;
+use Doctrine\DBAL\Exception as DBA_Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
@@ -158,4 +160,37 @@ class PresenceService
     }
 
 
+    public function getPresencesManquantes(?FormationInstance $session): array
+    {
+        $sql = <<<EOS
+select presence.id, coalesce(concat(agent.prenom, ' ', coalesce(agent.nom_usage, agent.nom_famille)), concat(stagiaire.prenom, ' ', stagiaire.nom)) AS personne, seance.id, inscription.liste, presence.statut
+from formation_instance session
+left join formation_inscription inscription on session.id = inscription.session_id
+left join agent on inscription.agent_id = agent.c_individu
+left join formation_stagiaire_externe stagiaire on inscription.stagiaire_id = stagiaire.id
+left join formation_seance seance on session.id = seance.instance_id
+left join public.formation_presence presence on seance.id = presence.journee_id and inscription.id = presence.inscription_id
+where true
+    -- pas histo --
+AND    inscription.histo_destruction IS NULL
+AND    seance.histo_destruction IS NULL
+    -- selection --
+AND session.id=:session_id
+AND inscription.liste = 'principale'
+AND (presence.statut IS NULL OR presence.statut = 'NON_RENSEIGNEE')
+EOS;
+
+        try {
+            $res = $this->getObjectManager()->getConnection()->executeQuery($sql, ['session_id' => $session->getId()]);
+            try {
+                $tmp = $res->fetchAllAssociative();
+            } catch (DRV_Exception $e) {
+                throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+            }
+        } catch (DBA_Exception $e) {
+            throw new RuntimeException("Un problème est survenue lors de la récupération des fonctions d'un groupe d'individus", 0, $e);
+        }
+
+        return $tmp;
+    }
 }

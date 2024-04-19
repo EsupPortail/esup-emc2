@@ -3,6 +3,7 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentService;
+use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\FormationInstance\FormationInstanceService;
 use Formation\Service\StagiaireExterne\StagiaireExterneService;
 use Psr\Container\ContainerExceptionInterface;
@@ -25,6 +26,7 @@ class IndexControllerFactory
     {
         /**
          * @var AgentService $agentService
+         * @var DemandeExterneService $demandeExterneService
          * @var EtatTypeService $etatTypeService
          * @var FormationInstanceService $formationInstanceService
          * @var RenduService $renduService
@@ -32,6 +34,7 @@ class IndexControllerFactory
          * @var UserService $userService
          */
         $agentService = $container->get(AgentService::class);
+        $demandeExterneService = $container->get(DemandeExterneService::class);
         $etatTypeService = $container->get(EtatTypeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $renduService = $container->get(RenduService::class);
@@ -40,6 +43,7 @@ class IndexControllerFactory
 
         $controller = new IndexController();
         $controller->setAgentService($agentService);
+        $controller->setDemandeExterneService($demandeExterneService);
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setRenduService($renduService);

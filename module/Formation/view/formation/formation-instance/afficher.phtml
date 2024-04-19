@@ -19,6 +19,8 @@ use UnicaenMail\Provider\Privilege\MailPrivileges;
  * @see FormationInstanceController::afficherAction()
  * @var FormationInstance $instance
  * @var array $presences
+ * @var array $presencesManquantes
+ * @var array $fraisManquants
  * @var Mail[] $mails
  */
 
@@ -67,6 +69,28 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
     <div class="row">
         <div class="col-md-9">
             <?php echo $this->formationInformations($formation); ?>
+
+            <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
+            <br/>
+            <?php if (!empty($presencesManquantes) OR !empty($fraisManquants)) : ?>
+            <div class="alert alert-danger">
+                <p>
+                    <strong> <span class="icon icon-attention"></span> La session ne peut pas être clôturer. </strong>
+                </p>
+                Raison·s :
+                <ul>
+                    <?php if (!empty($presencesManquantes)) : ?>
+                        <li> des présences sont non renseignées (<?php echo implode(", ", array_unique(array_map(function ($a) { return $a['personne'];}, $presencesManquantes))); ?>)</li>
+                    <?php endif; ?>
+                    <?php if (!empty($fraisManquants)) : ?>
+                        <li>
+                            des frais sont non renseignés (<?php echo implode(", ", array_map(function ($a) { return $a['personne'];}, $fraisManquants)); ?>)
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+            <?php endif; ?>
         </div>
         <div class="col-md-3">
             <?php if ($canMesSessions) : ?>
@@ -130,11 +154,11 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
                 <?php endif; ?>
                 <?php if ($instance->isEtatActif(SessionEtats::ETAT_ATTENTE_RETOURS)) : ?>
                     <br/>
-                    <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
-                            href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
-                            class="btn btn-primary action">
-                        Clotûrer la session
-                    </a>
+                        <a <?php /** @see FormationInstanceController::cloturerAction() */ ?>
+                                href="<?php echo $this->url('formation-instance/cloturer', ['formation-instance' => $instance->getId()], [], true); ?>"
+                                class="btn btn-primary action  <?php if (!empty($presencesManquantes) OR !empty($fraisManquants)) echo " disabled "; ?>">
+                            Clotûrer la session
+                        </a>
                 <?php endif; ?>
             <?php endif; ?>
             <!-- todo privilege assicié -->

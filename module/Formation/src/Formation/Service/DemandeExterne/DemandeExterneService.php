@@ -29,6 +29,7 @@ use Structure\Entity\Db\Structure;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Exception\RuntimeException;
 use UnicaenEtat\Entity\Db\EtatType;
+use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenEtat\Service\EtatInstance\EtatInstanceServiceAwareTrait;
 use UnicaenEtat\Service\EtatType\EtatTypeServiceAwareTrait;
 use UnicaenValidation\Service\ValidationInstance\ValidationInstanceServiceAwareTrait;
@@ -173,6 +174,16 @@ class DemandeExterneService
             ->andWhere('demande.agent = :agent')->setParameter('agent', $agent)
             ->orderBy('demande.' . $champ, $ordre);
         $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    /** @return DemandeExterne[] */
+    public function getDemandesExternesByEtats(array $etatsCodes) : array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb = DemandeExterne::decorateWithEtatsCodes($qb, 'demande', $etatsCodes);
+        $result = $qb->getQuery()->getResult();
+
         return $result;
     }
 

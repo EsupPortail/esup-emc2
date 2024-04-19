@@ -18,6 +18,7 @@ use UnicaenEtat\Entity\Db\HasEtatsTrait;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface, HasEtatsInterface, ResourceInterface
 {
@@ -487,23 +488,23 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
         $this->coutVacation = $coutVacation;
     }
 
-    /** @return AbstractUser[] */
+    /** @return UserInterface[] */
     public function getGestionnaires(): array
     {
         return $this->gestionnaires->toArray();
     }
 
-    public function hasGestionnaire(AbstractUser $gestionnaire): bool
+    public function hasGestionnaire(UserInterface $gestionnaire): bool
     {
         return $this->gestionnaires->contains($gestionnaire);
     }
 
-    public function addGestionnaire(AbstractUser $gestionnaire): void
+    public function addGestionnaire(UserInterface $gestionnaire): void
     {
         if (!$this->hasGestionnaire($gestionnaire)) $this->gestionnaires->add($gestionnaire);
     }
 
-    public function removeGestionnaire(AbstractUser $gestionnaire): void
+    public function removeGestionnaire(UserInterface $gestionnaire): void
     {
         if ($this->hasGestionnaire($gestionnaire)) $this->gestionnaires->removeElement($gestionnaire);
     }
@@ -550,11 +551,7 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
     public function estPreparation(): bool
     {
         $etatCode = $this->getEtatActif() ? $this->getEtatActif()->getType()->getCode() : null;
-        return (
-            $etatCode === SessionEtats::ETAT_CREATION_EN_COURS ||
-            $etatCode === SessionEtats::ETAT_INSCRIPTION_OUVERTE ||
-            $etatCode === SessionEtats::ETAT_INSCRIPTION_FERMEE
-        );
+        return in_array($etatCode, SessionEtats::ETATS_PREPARATION);
     }
 
     public function estPrete(): bool
@@ -573,7 +570,6 @@ class FormationInstance implements HistoriqueAwareInterface, HasSourceInterface,
             $etatCode === SessionEtats::ETAT_CLOTURE_INSTANCE
         );
     }
-
 
     /** Fonctions pour les macros **********************************************************************************/
 

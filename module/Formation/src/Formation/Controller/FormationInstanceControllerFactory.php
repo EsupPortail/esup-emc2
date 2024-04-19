@@ -9,6 +9,7 @@ use Formation\Service\Formateur\FormateurService;
 use Formation\Service\Formation\FormationService;
 use Formation\Service\FormationGroupe\FormationGroupeService;
 use Formation\Service\FormationInstance\FormationInstanceService;
+use Formation\Service\InscriptionFrais\InscriptionFraisService;
 use Formation\Service\Notification\NotificationService;
 use Formation\Service\Presence\PresenceService;
 use Interop\Container\ContainerInterface;
@@ -38,6 +39,7 @@ class FormationInstanceControllerFactory
          * @var FormationService $formationService
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
+         * @var InscriptionFraisService $inscriptionFraisService
          * @var MailService $mailService
          * @var NotificationService $notificationService
          * @var ParametreService $parametreService
@@ -50,6 +52,7 @@ class FormationInstanceControllerFactory
         $formationService = $container->get(FormationService::class);
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
+        $inscriptionFraisService = $container->get(InscriptionFraisService::class);
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
         $parametreService = $container->get(ParametreService::class);
@@ -72,6 +75,7 @@ class FormationInstanceControllerFactory
         $controller->setFormationService($formationService);
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationInstanceService($formationInstanceService);
+        $controller->setInscriptionFraisService($inscriptionFraisService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
         $controller->setParametreService($parametreService);

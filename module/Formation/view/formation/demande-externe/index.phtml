@@ -17,15 +17,7 @@ use UnicaenEtat\Entity\Db\EtatType;
 $this->headTitle("Demandes de formations externes");
 
 // ATTENTION : ici pas d'appel à l'assertion pour économiser du temps
-$canAfficher    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AFFICHER));
-$canModifier    = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
-$canHistoriser  = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_HISTORISER));
-$canSupprimer   = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_SUPPRIMER));
-$canGerer       = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_GERER));
-$canValider     = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_VALIDER_GESTIONNAIRE));
-
-$canTelechargerDevis = $canGerer;
-$canTeleverserDevis = $canGerer;
+$canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER));
 ?>
 
 <h1 class="page-header">
@@ -34,170 +26,16 @@ $canTeleverserDevis = $canGerer;
 
 <?php echo $this->partial('partial/filtre', ['etats' => $etats, 'params' => $params], [], true); ?>
 
-<?php /** @see \Formation\Controller\DemandeExterneController::creerPourAgentAction() */ ?>
-<a href="<?php echo $this->url('formation/demande-externe/creer-pour-agent', [], [], true); ?>"
-    class="btn btn-primary ajax-modal">
-    <span class="icon icon-ajouter"></span>
-    Ajouter pour un agent
-</a>
+<?php if ($canAjouter) : ?>
+    <?php /** @see \Formation\Controller\DemandeExterneController::creerPourAgentAction() */ ?>
+    <a href="<?php echo $this->url('formation/demande-externe/creer-pour-agent', [], [], true); ?>"
+        class="btn btn-primary ajax-modal">
+        <span class="icon icon-ajouter"></span>
+        Ajouter pour un agent
+    </a>
+<?php endif; ?>
 
-<table class="table table-condensed table-hover">
-    <thead>
-        <tr>
-            <th> Agent             </th>
-            <th> Formation </th>
-            <th> Organisme </th>
-            <th> Devis </th>
-            <th> État </th>
-            <th class="action" style="width:10rem"> Action </th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($demandes as $demande) : ?>
-        <tr class=" <?php if ($demande->estHistorise()) echo " historise "; ?> ">
-            <td> <?php echo $demande->getAgent()->getDenomination(); ?> </td>
-            <td> <?php echo $demande->getLibelle(); ?> </td>
-            <td> <?php echo $demande->getOrganisme(); ?> </td>
-
-            <td class="action devis">
-                Montant: <?php echo $demande->getMontant(); ?>
-                <?php if ($demande->getMontant() >= $plafond) : ?>
-                    <span class="text-warning">
-                        <span class="icon icon-attention" title="Plafond dépassé ! Nécessite validation de la DRH."></span>
-                    </span>
-                <?php endif; ?>
-                <br>
-                <?php if (empty($demande->getDevis())) : ?>
-                    <em>Aucun devis</em>
-                <?php else : ?>
-                    <?php /** @var Fichier $devis */ ?>
-                    <?php foreach ($demande->getDevis() as $devis) : ?>
-                        <?php if ($canTelechargerDevis) : ?>
-                            <?php /** @see  \Fichier\Controller\FichierController::downloadAction()*/ ?>
-                            <a href="<?php echo $this->url('download-fichier', ['fichier' => $devis->getId()], [], true); ?>">
-                                <?php echo $devis->getNomOriginal(); ?>
-                            </a>
-                        <?php else : ?>
-                            <?php echo $devis->getNomOriginal(); ?>
-                        <?php endif; ?>
-                        <?php if ($canTeleverserDevis && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
-                            <?php /** @see \Formation\Controller\DemandeExterneController::retirerDevisAction() */ ?>
-                            <a href="<?php echo $this->url('formation/demande-externe/retirer-devis', ['devis' => $devis->getId()], ['query' => ['retour' => $this->url()]], true); ?>">
-                                <span class="icon icon-unchecked text-danger"></span>
-                            </a>
-                        <?php endif; ?>
-                        <br>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                <?php if ($canTeleverserDevis && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::ajouterDevisAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/ajouter-devis', ['demande-externe' => $demande->getId()], ['query' => ['retour' => $this->url(null,[],[], true)]], true); ?>"
-                       class="ajax-modal" data-event="modification">
-                        <span class="icon icon-televerser"></span>Ajouter un devis</a>
-                <?php endif; ?>
-            </td>
-            <td> <?php echo $this->etatinstance($demande->getEtatActif()); ?> </td>
-            <td class="action">
-                <?php if ($canAfficher) : ?>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::afficherAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/afficher', ['demande-externe' => $demande->getId()],[], true); ?>"
-                       class="ajax-modal"
-                    >
-                    <span class="icon icon-voir"></span> Afficher </a>
-                <?php endif; ?>
-                <?php if ($canModifier) : ?>
-                    <br>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/modifier', ['demande-externe' => $demande->getId()],[], true); ?>"
-                       class="ajax-modal" data-event="modification"
-                    >
-                        <span class="icon icon-editer"></span> Modifier </a>
-                <?php endif; ?>
-                <?php if ($canValider AND $demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_RESP)): ?>
-                    <?php if($demande->getMontant() < $plafond) : ?>
-                        <br>
-                        <?php /** @see \Formation\Controller\DemandeExterneController::validerGestionnaireAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="text-success">
-                                <span class="icon icon-ok"></span> Valider
-                            </span>
-                        </a>
-                        <br>
-                        <?php /** @see \Formation\Controller\DemandeExterneController::validerGestionnaireAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="text-danger">
-                                <span class="icon icon-ko"></span> Refuser
-                            </span>
-                        </a>
-
-                    <?php else : ?>
-                    <span class="text-danger">
-                        <br>
-                        <strong>Nécessite DRH</strong>
-                        </span>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canGerer && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
-                    <br>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::envoyerParapheurAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/envoyer-parapheur', ['demande-externe' => $demande->getId()],[], true); ?>">
-                        <span class="icon icon-importer"></span> Envoyer parapheur
-                    </a>
-                <?php endif; ?>
-                <?php if ($canGerer) : ?>
-                    <br>
-                    <?php if ($demande->isEtatActif(DemandeExterneEtats::ETAT_VALIDATION_DRH)) : ?>
-                        <?php /** @see \Formation\Controller\DemandeExterneController::gererAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/gerer', ['demande-externe' => $demande->getId()],[], true); ?>"
-                           class="ajax-modal" data-event="modification"
-                        >
-                            <span class="icon icon-cloner" title=""></span>
-                            Transformer
-                        </a>
-                    <?php else : ?>
-                        <span class="text-warning" title="La demande n'est pas dans un état valide">
-                            <span class="icon icon-cloner nope"></span>
-                            Transformer
-                        </span>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canHistoriser) : ?>
-                    <br>
-                    <?php if ($demande->estNonHistorise()) : ?>
-                        <?php /** @see \Formation\Controller\DemandeExterneController::historiserAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/historiser', ['demande-externe' => $demande->getId()], [], true); ?>"
-                           title="Supprimer la demande externe"
-                        >
-                            <span class="icon icon-historiser"></span> Historiser </a>
-                    <?php else : ?>
-                <?php /** @see \Formation\Controller\DemandeExterneController::restaurerAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/restaurer', ["demande-externe" => $demande->getId()], [], true); ?>"
-                           title="Restaurer la demande externe"
-                        >
-                            <span class="icon icon-restaurer"></span> Rstaurer</a>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <?php if ($canSupprimer) : ?>
-                    <br>
-                    <?php /** @see \Formation\Controller\DemandeExterneController::supprimerAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/supprimer', ["demande-externe" => $demande->getId()], [], true); ?>"
-                       class="ajax-modal" data-event="modification"
-                       title="Supprimer définitivement la demande externe"
-                    >
-                        <span class="text-danger">
-                            <span class="icon icon-unchecked"></span> Supprimer
-                        </span>
-                    </a>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+<?php echo $this->demandeExterneArray($demandes); ?>
 
 
 <script>

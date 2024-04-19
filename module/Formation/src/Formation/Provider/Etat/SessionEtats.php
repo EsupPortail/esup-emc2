@@ -13,4 +13,18 @@ class SessionEtats {
     const ETAT_ATTENTE_RETOURS        = 'ATTENTE_RETOUR';
     const ETAT_CLOTURE_INSTANCE       = 'FERMEE';
     const ETAT_SESSION_ANNULEE        = 'SESSION_ANNULEE';
+
+    const ETATS_OUVERTS               = [
+        SessionEtats::ETAT_CREATION_EN_COURS,
+        SessionEtats::ETAT_INSCRIPTION_OUVERTE,
+        SessionEtats::ETAT_INSCRIPTION_FERMEE,
+        SessionEtats::ETAT_FORMATION_CONVOCATION,
+        SessionEtats::ETAT_ATTENTE_RETOURS,
+    ];
+
+    const ETATS_PREPARATION         = [
+        SessionEtats::ETAT_CREATION_EN_COURS,
+        SessionEtats::ETAT_INSCRIPTION_OUVERTE,
+        SessionEtats::ETAT_INSCRIPTION_FERMEE,
+    ];
 }

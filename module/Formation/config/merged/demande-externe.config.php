@@ -17,6 +17,8 @@ use Formation\Form\DemandeExterne\DemandeExterneHydratorFactory;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
 use Formation\Service\DemandeExterne\DemandeExterneService;
 use Formation\Service\DemandeExterne\DemandeExterneServiceFactory;
+use Formation\View\Helper\DemandeExterneArrayViewHelper;
+use Formation\View\Helper\DemandeExterneArrayViewHelperFactory;
 use Formation\View\Helper\DemandeExterneViewHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -474,7 +476,13 @@ return [
     'view_helpers' => [
         'invokables' => [
             'demandeExterne' => DemandeExterneViewHelper::class,
-        ]
+        ],
+        'factories' => [
+            DemandeExterneArrayViewHelper::class => DemandeExterneArrayViewHelperFactory::class,
+        ],
+        'aliases' => [
+            'demandeExterneArray' => DemandeExterneArrayViewHelper::class,
+        ],
     ]
 
 ];

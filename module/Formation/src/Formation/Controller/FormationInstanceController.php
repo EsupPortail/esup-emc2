@@ -13,6 +13,7 @@ use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Formation\Service\Formation\FormationServiceAwareTrait;
 use Formation\Service\FormationGroupe\FormationGroupeServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
+use Formation\Service\InscriptionFrais\InscriptionFraisServiceAwareTrait;
 use Formation\Service\Notification\NotificationServiceAwareTrait;
 use Formation\Service\Presence\PresenceServiceAwareTrait;
 use Laminas\Http\Request;
@@ -37,6 +38,7 @@ class FormationInstanceController extends AbstractActionController
     use FormationServiceAwareTrait;
     use FormationGroupeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
+    use InscriptionFraisServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
     use ParametreServiceAwareTrait;
@@ -58,7 +60,7 @@ class FormationInstanceController extends AbstractActionController
                 $params[$key][] = $value;
             }
         } else {
-                $params['etats'] = [SessionEtats::ETAT_CREATION_EN_COURS , SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS];
+                $params['etats'] = SessionEtats::ETATS_OUVERTS;
         }
 
         $instances = $this->getFormationInstanceService()->getSessionsWithParams($params);
@@ -116,6 +118,8 @@ class FormationInstanceController extends AbstractActionController
         $mails = $this->getMailService()->getMailsByMotClef($instance->generateTag());
 
         $presences = $this->getPresenceService()->getPresenceByInstance($instance);
+        $presencesManquantes = $this->getPresenceService()->getPresencesManquantes($instance);
+        $fraisManquants = $this->getInscriptionFraisService()->getFraisManquants($instance);
 
         $dictionnaire = [];
         foreach ($presences as $presence) {
@@ -126,6 +130,8 @@ class FormationInstanceController extends AbstractActionController
             'instance' => $instance,
             'mode' => "affichage",
             'presences' => $dictionnaire,
+            'fraisManquants' => $fraisManquants,
+            'presencesManquantes' => $presencesManquantes,
             'mails' => $mails,
         ]);
     }

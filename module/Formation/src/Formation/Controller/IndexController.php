@@ -3,9 +3,11 @@
 namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use Formation\Provider\Etat\SessionEtats;
 use Formation\Provider\Role\FormationRoles;
 use Formation\Provider\Template\TextTemplates;
+use Formation\Service\DemandeExterne\DemandeExterneServiceAwareTrait;
 use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\StagiaireExterne\StagiaireExterneServiceAwareTrait;
 use Laminas\Http\Response;
@@ -20,6 +22,7 @@ class IndexController extends AbstractActionController
 {
 
     use AgentServiceAwareTrait;
+    use DemandeExterneServiceAwareTrait;
     use EtatTypeServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
     use RenduServiceAwareTrait;
@@ -73,16 +76,20 @@ class IndexController extends AbstractActionController
         $user = $this->getUserService()->getConnectedUser();
         $role = $this->getUserService()->getConnectedRole();
 
-        $etatsTypes = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
+        $etatsTypesSession = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(SessionEtats::TYPE);
+        $etatsTypesDemande = $this->getEtatTypeService()->getEtatsTypesByCategorieCode(DemandeExterneEtats::TYPE);
         $dictionnaire = $this->getFormationInstanceService()->getSessionsByGestionnaires($user);
         $sansGestionnaire = $this->getFormationInstanceService()->getSessionsSansGestionnaires();
+        $demandes = $this->getDemandeExterneService()->getDemandesExternesByEtats(DemandeExterneEtats::ETATS_ATTENTE_GESTION);
 
         return new ViewModel([
             'user' => $user,
             'role' => $role,
-            'etatsTypes' => $etatsTypes,
+            'etatsTypesSession' => $etatsTypesSession,
+            'etatsTypesDemande' => $etatsTypesDemande,
             'dictionnaire' => $dictionnaire,
             'sansGestionnaire' => $sansGestionnaire,
+            'demandes' => $demandes,
         ]);
     }
 

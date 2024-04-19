@@ -4,15 +4,26 @@
  * @see \Formation\Controller\IndexController::indexGestionnaireAction()
  * @var User $user
  * @var Role $role
- * @var EtatType[]  $etatsTypes
+ * @var EtatType[]  $etatsTypesSession
+ * @var EtatType[]  $etatsTypesDemande
  * @var FormationInstance[][]  $dictionnaire
  * @var FormationInstance[]  $sansGestionnaire
+ * @var DemandeExterne[]  $demandes
  */
 
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\FormationInstance;
+use Formation\Provider\Etat\DemandeExterneEtats;
 use UnicaenEtat\Entity\Db\EtatType;
 use UnicaenUtilisateur\Entity\Db\Role;
 use UnicaenUtilisateur\Entity\Db\User;
+
+$this->headTitle("Index de gestion de vos sessions de formation ");
+
+$sessionsEnGestion = 0;
+foreach ($dictionnaire as $etatCode => $sessions) {
+    $sessionsEnGestion += count($sessions);
+}
 
 ?>
 
@@ -20,13 +31,15 @@ use UnicaenUtilisateur\Entity\Db\User;
     Index de gestion de vos sessions de formation
 </h1>
 
-<h2> Sessions dont vous êtes gestionnaire </h2>
+<h2> Sessions dont vous êtes gestionnaire
+    <span class="badge"><?php echo $sessionsEnGestion; ?></span>
+</h2>
 
 <?php foreach ($dictionnaire as $etatCode => $sessions) : ?>
     <div class="card">
         <div class="card-header bg-default">
-            <?php echo $this->etattype($etatsTypes[$etatCode]); ?>
-            <?php echo count($sessions); ?> session·s à l'états [<?php echo $etatsTypes[$etatCode]->getLibelle(); ?>]
+            <?php echo $this->etattype($etatsTypesSession[$etatCode]); ?>
+            <?php echo count($sessions); ?> session·s à l'états [<?php echo $etatsTypesSession[$etatCode]->getLibelle(); ?>]
         </div>
         <?php if (count($sessions) > 0) : ?>
         <div class="card-body">
@@ -36,7 +49,26 @@ use UnicaenUtilisateur\Entity\Db\User;
     </div>
 <?php endforeach; ?>
 
-<h2> Sessions sans gestionnaire </h2>
+<h2>
+    Demandes hors plan de formations en attente de gestions
+    <span class="badge"><?php echo count($demandes); ?></span>
+</h2>
+
+<div class="alert alert-info">
+    <span class="icon icon-information"></span> Les demandes en attente de gestion sont les demandes ayant comme états actifs :
+    <ul>
+        <?php foreach (DemandeExterneEtats::ETATS_ATTENTE_GESTION as $etat) : ?>
+            <li> <?php echo $this->etattype($etatsTypesDemande[$etat]); ?> <?php echo $etatsTypesDemande[$etat]->getLibelle(); ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
+<?php echo $this->demandeExterneArray($demandes); ?>
+
+<h2>
+    Sessions sans gestionnaire
+    <span class="badge"><?php echo count($sansGestionnaire); ?></span>
+</h2>
 
 <div class="card-body">
     <?php echo $this->formationInstanceArray($sansGestionnaire, ['affichage' => ['gestionnaires' => false]]); ?>

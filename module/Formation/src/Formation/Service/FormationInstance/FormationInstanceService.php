@@ -240,8 +240,7 @@ class FormationInstanceService
         $sessions = $qb->getQuery()->getResult();
 
         $dictionnaire = [];
-        $etats = [SessionEtats::ETAT_CREATION_EN_COURS, SessionEtats::ETAT_INSCRIPTION_OUVERTE, SessionEtats::ETAT_INSCRIPTION_FERMEE, SessionEtats::ETAT_FORMATION_CONVOCATION, SessionEtats::ETAT_ATTENTE_RETOURS, SessionEtats::ETAT_CLOTURE_INSTANCE];
-        foreach ($etats as $etatCode) $dictionnaire[$etatCode] = [];
+        foreach (SessionEtats::ETATS_OUVERTS as $etatCode) $dictionnaire[$etatCode] = [];
         foreach ($sessions as $session) $dictionnaire[$session->getEtatActif()->getType()->getCode()][] = $session;
 
         return $dictionnaire;

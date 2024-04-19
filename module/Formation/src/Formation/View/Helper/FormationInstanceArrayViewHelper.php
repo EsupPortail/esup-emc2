@@ -28,6 +28,6 @@ class FormationInstanceArrayViewHelper extends AbstractHelper
 
         usort($instances, function (FormationInstance $a, FormationInstance $b) { return $a->getDebut(true) <=> $b->getDebut(true); });
 
-        return $view->partial('formation-instance-array', ['instances' => $instances, 'options' => $options]);
+        return $view->partial('sessions-array', ['instances' => $instances, 'options' => $options]);
     }
 }
