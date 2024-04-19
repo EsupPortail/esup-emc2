@@ -322,38 +322,7 @@ class DemandeExterneController extends AbstractActionController {
         $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
         $form->get('etape')->setValue('GESTIONNAIRE');
-        $form->get('justification')->setValue('Validation');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $data = $request->getPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
-                $this->getDemandeExterneService()->update($demande);
-                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
-                $this->getNotificationService()->triggerValidationDrh($demande);
-                $this->getNotificationService()->triggerValidationComplete($demande);
-            }
-        }
-
-        $vm =  new ViewModel([
-            'title' => "Validation de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
-            'inscription' => $demande,
-            'form' => $form,
-        ]);
-        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
-        return $vm;
-    }
-
-    public function validerDrhAction() : ViewModel
-    {
-        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-        $form = $this->getJustificationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true));
-        $form->bind($demande);
-        $form->get('etape')->setValue('DRH');
-        $form->get('justification')->setValue('Validation');
+        $form->get('justification')->setValue('Validation du bureau de gestion des formations');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -381,33 +350,27 @@ class DemandeExterneController extends AbstractActionController {
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
 
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
+        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_VALIDATION_DRH);
         $this->getDemandeExterneService()->update($demande);
-
         $form = $this->getJustificationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
-        $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
+        $form->get('etape')->setValue('REFUS');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                if ($demande->getJustificationRefus() === null) {
-                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
-                } else {
-                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
-                    $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
-                    $this->getDemandeExterneService()->update($demande);
-                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
-                    $this->getNotificationService()->triggerRefus($demande);
-                }
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Refus effectuée.");
+                $this->getNotificationService()->triggerRefus($demande);
             }
         }
 
         $vm =  new ViewModel([
-            'title' => "refus de l'inscription de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'title' => "Refus de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
             'inscription' => $demande,
             'form' => $form,
         ]);
@@ -415,37 +378,63 @@ class DemandeExterneController extends AbstractActionController {
         return $vm;
     }
 
-    public function refuserDrhAction() : ViewModel
+
+    public function validerDrhAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
-        $this->getDemandeExterneService()->update($demande);
-
         $form = $this->getJustificationForm();
-        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-drh', ['demande-externe' => $demande->getId()], [], true));
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/valider-drh', ['demande-externe' => $demande->getId()], [], true));
         $form->bind($demande);
-        $form->get('HasDescription')->get('description')->setLabel("Motivation obligatoire du refus : ");
+        $form->get('etape')->setValue('DRH');
+        $form->get('justification')->setValue('Validation de la Direction des Ressources Humaines');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = $request->getPost();
             $form->setData($data);
             if ($form->isValid()) {
-                if ($demande->getJustificationRefus() === null) {
-                    $this->flashMessenger()->addErrorMessage("<strong> Échec du refus </strong> <br/> Veuillez justifier votre refus !");
-                } else {
-                    $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
-                    $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_REJETEE);
-                    $this->getDemandeExterneService()->update($demande);
-                    $this->flashMessenger()->addSuccessMessage("Refus effectué.");
-                    $this->getNotificationService()->triggerRefus($demande);
-                }
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_DRH);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Validation effectuée.");
+                $this->getNotificationService()->triggerValidationDrh($demande);
+                $this->getNotificationService()->triggerValidationComplete($demande);
             }
         }
 
         $vm =  new ViewModel([
-            'title' => "refus de l'inscription de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'title' => "Validation de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'inscription' => $demande,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
+    }
+
+
+
+    public function refuserDrhAction() : ViewModel
+    {
+        $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
+
+        $form = $this->getJustificationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/refuser-drh', ['demande-externe' => $demande->getId()], [], true));
+        $form->bind($demande);
+        $form->get('etape')->setValue('REFUS');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getValidationInstanceService()->setValidationActive($demande, DemandeExterneValidations::FORMATION_DEMANDE_REFUS);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Refus effectué.");
+                $this->getNotificationService()->triggerRefus($demande);
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Refus de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
             'inscription' => $demande,
             'form' => $form,
         ]);
@@ -577,12 +566,36 @@ class DemandeExterneController extends AbstractActionController {
 
     /** ENVOYER DANS LE PARAPHEUR *************************************************************************************/
 
-    public function envoyerParapheurAction() : Response
+    //todo ajouter justification
+    public function envoyerParapheurAction() : ViewModel
     {
         $demande = $this->getDemandeExterneService()->getRequestedDemandeExterne($this);
-        $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR);
+        $form = $this->getJustificationForm();
+        $form->setAttribute('action', $this->url()->fromRoute('formation/demande-externe/envoyer-parapheur', ['demande-externe' => $demande->getId()], [], true));
+        $form->bind($demande);
+        $form->get('etape')->setValue('GESTIONNAIRE');
+        $form->get('justification')->setValue('Validation');
 
-        return $this->redirect()->toRoute('formation/demande-externe', [],[],true);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = $request->getPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                $this->getEtatInstanceService()->setEtatActif($demande, DemandeExterneEtats::ETAT_FORCEE_PARAPHEUR);
+                $this->getDemandeExterneService()->update($demande);
+                $this->flashMessenger()->addSuccessMessage("Envoi au parapheur effectué.");
+                $this->getNotificationService()->triggerValidationDrh($demande);
+                $this->getNotificationService()->triggerValidationComplete($demande);
+            }
+        }
+
+        $vm =  new ViewModel([
+            'title' => "Envoi au parapheur de la demande de ". $demande->getAgent()->getDenomination() ." à la formation ".$demande->getLibelle(),
+            'inscription' => $demande,
+            'form' => $form,
+        ]);
+        $vm->setTemplate('formation/formation-instance-inscrit/inscription');
+        return $vm;
 
     }
 

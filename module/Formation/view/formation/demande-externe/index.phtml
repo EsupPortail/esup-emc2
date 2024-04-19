@@ -17,7 +17,8 @@ use UnicaenEtat\Entity\Db\EtatType;
 $this->headTitle("Demandes de formations externes");
 
 // ATTENTION : ici pas d'appel à l'assertion pour économiser du temps
-$canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_AJOUTER));
+// TODO revoir le privilege associé à l'action
+$canAjouter = $this->isAllowed(DemandeexternePrivileges::getResourceId(DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER));
 ?>
 
 <h1 class="page-header">

@@ -107,6 +107,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->getMpdf()->SetMargins(0,0,50);
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());
@@ -134,6 +135,7 @@ class FormationInstanceDocumentController extends AbstractActionController
         $exporter = new PdfExporter();
         $exporter->setRenderer($this->renderer);
         $exporter->getMpdf()->SetTitle($rendu->getSujet());
+        $exporter->getMpdf()->SetMargins(0,0,50);
         $exporter->setHeaderScript('/application/document/pdf/entete-logo-ccc', null, $this->etablissementInfos);
         $exporter->setFooterScript('/application/document/pdf/pied-vide');
         $exporter->addBodyHtml($rendu->getCorps());

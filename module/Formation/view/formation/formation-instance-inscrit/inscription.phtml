@@ -8,9 +8,10 @@
  * @see \Formation\Controller\InscriptionController::validerDrhAction()
  * @see \Formation\Controller\InscriptionController::refuserDrhAction()
  * @var Form $form
- * @var Inscription $inscription
+ * @var Inscription|DemandeExterne $inscription
  */
 
+use Formation\Entity\Db\DemandeExterne;
 use Formation\Entity\Db\Inscription;
 use Laminas\Form\Form;
 
@@ -27,10 +28,14 @@ use Laminas\Form\Form;
     <dt> Motivation du responsable de l'agent </dt>
     <dd> <?php echo $inscription->getJustificationResponsable(); ?></dd>
 <?php endif; ?>
-    <?php if ($inscription->getJustificationRefus()) : ?>
-        <dt> Motif de refus </dt>
-        <dd> <?php echo $inscription->getJustificationRefus(); ?></dd>
+<?php if ($inscription instanceof DemandeExterne AND $inscription->getJustificationGestionnaire()) : ?>
+        <dt> Justification du bureau de gestion </dt>
+        <dd> <?php echo $inscription->getJustificationGestionnaire(); ?></dd>
     <?php endif; ?>
+<?php if ($inscription->getJustificationRefus()) : ?>
+    <dt> Motif de refus </dt>
+    <dd> <?php echo $inscription->getJustificationRefus(); ?></dd>
+<?php endif; ?>
 </dl>
 
 <?php echo $this->form()->openTag($form); ?>

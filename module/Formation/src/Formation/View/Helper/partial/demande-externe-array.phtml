@@ -107,8 +107,8 @@ $canTeleverserDevis = $canGerer;
                             </span>
                         </a>
                         <br>
-                        <?php /** @see \Formation\Controller\DemandeExterneController::validerGestionnaireAction() */ ?>
-                        <a href="<?php echo $this->url('formation/demande-externe/valider-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
+                        <?php /** @see \Formation\Controller\DemandeExterneController::refuserGestionnaireAction() */ ?>
+                        <a href="<?php echo $this->url('formation/demande-externe/refuser-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
                            class="ajax-modal" data-event="modification"
                         >
                             <span class="text-danger">
@@ -123,11 +123,21 @@ $canTeleverserDevis = $canGerer;
                         </span>
                     <?php endif; ?>
                 <?php endif; ?>
-                <?php if ($canGerer && $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) : ?>
+                <?php if ($canGerer && ($plafond < $demande->getMontant() OR $demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS))) : ?>
                     <br>
                     <?php /** @see \Formation\Controller\DemandeExterneController::envoyerParapheurAction() */ ?>
-                    <a href="<?php echo $this->url('formation/demande-externe/envoyer-parapheur', ['demande-externe' => $demande->getId()],[], true); ?>">
+                    <a href="<?php echo $this->url('formation/demande-externe/envoyer-parapheur', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
                         <span class="icon icon-importer"></span> Envoyer parapheur
+                    </a>
+                    <?php /** @see \Formation\Controller\DemandeExterneController::refuserGestionnaireAction() */ ?>
+                    <a href="<?php echo $this->url('formation/demande-externe/refuser-gestionnaire', ['demande-externe' => $demande->getId()],[], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                            <span class="text-danger">
+                                <span class="icon icon-ko"></span> Refuser
+                            </span>
                     </a>
                 <?php endif; ?>
                 <?php if ($canGerer) : ?>

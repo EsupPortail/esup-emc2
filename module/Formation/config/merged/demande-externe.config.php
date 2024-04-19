@@ -398,7 +398,7 @@ return [
                                 'options' => [
                                     'route'    => '/valider-gestionnaire/:demande-externe',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
+                                        /** @see DemandeExterneController::validerGestionnaireAction() */
                                         'action' => 'valider-gestionnaire'
                                     ],
                                 ],
@@ -408,7 +408,7 @@ return [
                                 'options' => [
                                     'route'    => '/refuser-gestionnaire/:demande-externe',
                                     'defaults' => [
-                                        'controller' => DemandeExterneController::class,
+                                        /** @see DemandeExterneController::refuserGestionnaireAction() */
                                         'action' => 'refuser-gestionnaire'
                                     ],
                                 ],

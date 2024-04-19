@@ -182,6 +182,7 @@ class DemandeExterneService
     {
         $qb = $this->createQueryBuilder();
         $qb = DemandeExterne::decorateWithEtatsCodes($qb, 'demande', $etatsCodes);
+        $qb = $qb->andWhere('demande.histoDestruction IS NULL');
         $result = $qb->getQuery()->getResult();
 
         return $result;
