@@ -2,6 +2,7 @@
 
 /**
  * @var EntretienProfessionnel $entretien
+ * @var bool|null $OBSERVATION_FINALE
  * @var array $droits
  * @var int $step
  *
@@ -373,7 +374,7 @@ $observationFinale = $entretien->getObservationWithTypeCode(EntretienProfessionn
             ?>
 
             <?php if ($observationFinale === null) : ?>
-                <?php if ($step === 3 AND $canValiderAgent) : ?>
+                <?php if ($OBSERVATION_FINALE !== false AND $step === 3 AND $canValiderAgent) : ?>
                     <?php /** @see \EntretienProfessionnel\Controller\ObservationController::ajouterAgentAction() */ ?>
                     <a href="<?php echo $this->url('entretien-professionnel/observation/agent/ajouter', ['entretien-professionnel' => $entretien->getId(), 'type' => EntretienProfessionnelObservations::OBSERVATION_AGENT_FINALE], [], true); ?>"
                        class="btn btn-primary ajax-modal" data-event="modification">

@@ -297,6 +297,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'BLOCAGE_COMPTERENDU' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION),
             'BLOCAGE_VALIDATION' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION),
+            'OBSERVATION_FINALE' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::OBSERVATION_AGENT_FINAL),
         ]);
     }
 

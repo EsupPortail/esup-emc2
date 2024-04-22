@@ -20,6 +20,7 @@
  *
  * @var bool $BLOCAGE_COMPTERENDU
  * @var bool $BLOCAGE_VALIDATION
+ * @var bool $OBSERVATION_FINALE
  */
 
 use Application\Entity\Db\Agent;
@@ -201,7 +202,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
             </div>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step]); ?>
+        <?php echo $this->partial('partial/validation', ['entretien' => $entretien, 'source' => 'renseignerAction','superieures' => $superieures, 'autorites' => $autorites,'step' => $step, 'OBSERVATION_FINALE' => $OBSERVATION_FINALE]); ?>
     </div>
 
     <div id="mails" class="tab-pane">
