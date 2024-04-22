@@ -69,7 +69,7 @@ class NotificationService
         $emails = [];
         if ($entretienProfessionnel !== null) {
             $agent = $entretienProfessionnel->getResponsable();
-            if ($agent and $agent->getEmail()) $emails[] = $agent->getEmail();
+            if ($agent and !$agent->isDeleted() and $agent->getEmail()) $emails[] = $agent->getEmail();
         }
         return $emails;
     }
@@ -86,7 +86,7 @@ class NotificationService
 
         $emails = [];
         foreach ($superieurs as $superieur) {
-            $emails[] = $superieur->getSuperieur()->getEmail();
+            if (!$superieur->getSuperieur()->isDeleted()) $emails[] = $superieur->getSuperieur()->getEmail();
         }
         return $emails;
     }
@@ -103,7 +103,7 @@ class NotificationService
 
         $emails = [];
         foreach ($autorites as $autorite) {
-            $emails[] = $autorite->getAutorite()->getEmail();
+            if (!$autorite->getAutorite()->isDeleted()) $emails[] = $autorite->getAutorite()->getEmail();
         }
         return $emails;
     }
@@ -371,9 +371,18 @@ class NotificationService
         $vars['UrlService'] = $this->getUrlService();
 
         $rendu = $this->getRenduService()->generateRenduByTemplateCode(MailTemplates::MODIFICATIONS_APPORTEES_AUX_CRS, $vars);
-        $mails  = implode(",", $this->getEmailAgent($entretien));
-        $mails .="," . implode(",",$this->getEmailSuperieursHierarchiques($entretien));
-        $mails .="," . implode(",",$this->getEmailAutoritesHierarchiques($entretien));
+        $mail_array = [];
+        foreach ($this->getEmailAgent($entretien) as $mail) {
+            $mail_array[] = $mail;
+        }
+        foreach ($this->getEmailSuperieursHierarchiques($entretien) as $mail) {
+            $mail_array[] = $mail;
+        }
+        foreach ($this->getEmailAutoritesHierarchiques($entretien) as $mail) {
+            $mail_array[] = $mail;
+        }
+        $mail_array = array_unique($mail_array);
+        $mails  = implode(",", $mail_array);
 
         $mail = $this->getMailService()->sendMail($mails, $rendu->getSujet(), $rendu->getCorps());
         $mail->setMotsClefs([$entretien->getCampagne()->generateTag(), $entretien->generateTag(), $rendu->getTemplate()->generateTag()]);
