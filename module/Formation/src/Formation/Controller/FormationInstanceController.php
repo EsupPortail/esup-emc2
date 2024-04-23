@@ -383,6 +383,9 @@ class FormationInstanceController extends AbstractActionController
                 case SessionEtats::ETAT_CLOTURE_INSTANCE :
                     $this->getFormationInstanceService()->cloturer($instance);
                     exit();
+                case SessionEtats::ETAT_SESSION_ANNULEE :
+                    $this->getFormationInstanceService()->annuler($instance);
+                    exit();
                 default :
             }
 

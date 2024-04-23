@@ -171,7 +171,7 @@ $canMesSessions = $this->isAllowed(FormateurPrivileges::getResourceId(FormateurP
             <?php endif; ?>
             <?php if ($canAnnuler) : ?>
                 <br/>
-                <?php if ($instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) : ?>
+                <?php if (!$instance->isEtatActif(SessionEtats::ETAT_SESSION_ANNULEE)) : ?>
                     <a <?php /** @see FormationInstanceController::annulerAction() */ ?>
                             href="<?php echo $this->url('formation-instance/annuler', ['formation-instance' => $instance->getId()], [], true); ?>"
                             class="btn btn-danger action">
