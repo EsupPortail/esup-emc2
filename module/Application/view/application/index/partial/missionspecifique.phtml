@@ -1,15 +1,33 @@
 <?php
 
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 
 /**
  * @var AgentMissionSpecifique[] $missionsSpecifiques
  */
 
+$canLettre = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canAjouter = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
+$canModifier = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
+$canHistoriser = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
+$canSupprimer = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 
 ?>
 
-<span class="todo">AJOUTER POUR MES AGENTS</span>
+<p><span class="todo">Limiter la recherche aux agents liés au rôle</span></p>
+
+<?php if ($canAjouter) : ?>
+    <a
+        <?php /** @see \Application\Controller\MissionSpecifiqueAffectationController::ajouterAction() */?>
+            href="<?php echo $this->url('mission-specifique-affectation/ajouter', [], [], true); ?>"
+            class="ajax-modal btn btn-primary action"
+            data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Ajouter une mission spécifique
+    </a>
+<?php endif; ?>
 
 <table class="table table-condensed">
     <thead>
@@ -24,7 +42,7 @@ use Application\Entity\Db\AgentMissionSpecifique;
     </thead>
     <tbody>
     <?php foreach ($missionsSpecifiques as $missionsSpecifique) : ?>
-        <tr>
+        <tr class=" <?php if ($missionsSpecifique->estHistorise()) echo " historise "; ?>">
             <td data-order="<?php echo $missionsSpecifique->getAgent()->getDenomination(); ?>">
                 <?php echo $missionsSpecifique->getAgent()->getDenomination(true); ?>
             </td>
@@ -40,11 +58,56 @@ use Application\Entity\Db\AgentMissionSpecifique;
             <td>
                 <?php  echo $missionsSpecifique->getDechargeTexte(); ?>
             </td>
-            <td>
-                <span class="todo">LETTRE</span>
-                <span class="todo">MODIFIER</span>
-                <span class="todo">HISTORISER</span>
-                <span class="todo">SUPPRIMER</span>
+            <td class="action">
+                <?php if ($canLettre) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::genererLettreTypeAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/generer-lettre-type', ['agent-mission-specifique' => $missionsSpecifique->getId()], [], true); ?>"
+                       target="_blank"
+                    >
+                        <span class="icon icon-pdf"  data-bs-toggle="tooltip" data-bs-html="true"
+                              title="Générer la lettre type associée l'affectation"></span>
+                                Générer lettre
+                    </a>
+                    <br>
+                <?php endif; ?>
+                <?php if ($canModifier) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/modifier', ['agent-mission-specifique' => $missionsSpecifique->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                            <span class="icon icon-editer"  data-bs-toggle="tooltip" data-bs-html="true"></span>
+                        Modifier
+                    </a>
+                    <br>
+                <?php endif; ?>
+                <?php if ($canHistoriser) : ?>
+                    <?php if ($missionsSpecifique->estNonHistorise()) : ?>
+                        <?php /** @see MissionSpecifiqueAffectationController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url('mission-specifique-affectation/historiser', ['agent-mission-specifique' => $missionsSpecifique->getId()], ['query' => ['retour' => $this->url(null,[], ['fragment' => 'missionspecifique'])]], true); ?>">
+                            <span class="icon icon-historiser"></span>
+                            Historiser
+                        </a>
+                    <?php else: ?>
+                        <?php /** @see MissionSpecifiqueAffectationController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url('mission-specifique-affectation/restaurer', ['agent-mission-specifique' => $missionsSpecifique->getId()], ['query' => ['retour' => $this->url(null,[], ['fragment' => 'missionspecifique'])]], true); ?>">
+                            <span class="icon icon-restaurer"></span>
+                            Restaurer
+                        </a>
+                    <?php endif; ?>
+                    <br>
+                <?php endif; ?>
+                <?php if ($canSupprimer) : ?>
+                    <?php /** @see MissionSpecifiqueAffectationController::detruireAction() */ ?>
+                    <a href="<?php echo $this->url('mission-specifique-affectation/detruire', ['agent-mission-specifique' => $missionsSpecifique->getId()], [], true); ?>"
+                       class="ajax-modal" data-event="modification"
+                    >
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"  data-bs-toggle="tooltip" data-bs-html="true"></span>
+                            Supprimer
+                        </span>
+                    </a>
+                    <br>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
