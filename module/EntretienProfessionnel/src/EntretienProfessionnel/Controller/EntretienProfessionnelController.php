@@ -549,6 +549,7 @@ class EntretienProfessionnelController extends AbstractActionController
             'entretien' => $entretien,
             'token' => $token,
             'depassee' => $depassee,
+            'role' => $this->getUserService()->getConnectedRole(),
         ]);
     }
 

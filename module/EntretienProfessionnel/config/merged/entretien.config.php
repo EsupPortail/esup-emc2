@@ -197,7 +197,7 @@ return [
                         'options' => [
                             'route'    => '/index-agent',
                             'defaults' => [
-                                'controller' => EntretienProfessionnelController::class,
+                                /** @see EntretienProfessionnelController::indexAgentAction() */
                                 'action'     => 'index-agent',
                             ],
                         ],

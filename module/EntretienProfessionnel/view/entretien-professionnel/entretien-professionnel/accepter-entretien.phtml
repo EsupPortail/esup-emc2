@@ -5,9 +5,12 @@
  * @var EntretienProfessionnel $entretien
  * @var string $token
  * @var bool $depassee
+ * @var Role $role
  */
 
+use Application\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use UnicaenUtilisateur\Entity\Db\Role;
 
 ?>
 
@@ -35,6 +38,12 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 
     <div class="alert alert-success">
         <p> Vous venez d'accepter votre entretien professionnel qui se déroule le <?php echo $entretien->getDateEntretien()->format('d/m/Y à H:i'); ?> </p>
-        <p> Vous pouvez dorénavant commencer à consulter votre fiche en vous connectant à EMC2 : <a href="<?php echo $this->url('home'); ?>">lien</a>. </p>
+        <p> Vous pouvez dorénavant commencer à consulter vos entretiens professionnels
+            <?php if ($role->getRoleId() === RoleProvider::AGENT) : ?>
+                en suivant le lien :
+                <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::indexAgentAction() */ ?>
+                <a href="<?php echo $this->url('entretien-professionnel/index-agent'); ?>">Accéder à mes entretiens professionnels</a>.
+            <?php endif; ?>
+        </p>
     </div>
 <?php endif; ?>
