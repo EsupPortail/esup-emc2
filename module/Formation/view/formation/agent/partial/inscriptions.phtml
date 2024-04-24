@@ -52,9 +52,9 @@ foreach ($inscriptions as $inscription) {
                     <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
                         <br/>
                         <a
-                            <?php /** @see \Formation\Controller\InscriptionController::genererConvocationAction() */?>
+                            <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                                 href="
-        <?php echo $this->url('formation/inscription/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+        <?php echo $this->url('formation/formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                         >
                             <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                         </a>
@@ -93,9 +93,9 @@ foreach ($inscriptions as $inscription) {
                         <?php if ($instance->isEtatActif(SessionEtats::ETAT_FORMATION_CONVOCATION) && $inscription->getListe() === Inscription::PRINCIPALE) : ?>
                             <br/>
                             <a
-                                <?php /** @see \Formation\Controller\InscriptionController::genererConvocationAction() */?>
+                                <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
                                     href="
-        <?php echo $this->url('formation/inscription/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+        <?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                             >
                                 <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                             </a>

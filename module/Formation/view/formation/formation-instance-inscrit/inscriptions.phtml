@@ -61,7 +61,7 @@ foreach ($inscriptions as $inscription) {
         <div class="col-md-4">
             <a
                 <?php /** @see \Formation\Controller\FormationInstanceInscritController::desinscriptionAction() */?>
-                    href="<?php echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
+                    href="<?php //echo $this->url('formation-instance/desinscription', ['inscrit' => $inscription->getId()], [], true); ?>"
                     class="btn btn-danger action ajax-modal" data-event="modification"
             >
                 <span class="icon icon-unchecked"> J'annule mon inscription </span>
@@ -70,7 +70,7 @@ foreach ($inscriptions as $inscription) {
             <br/>
                 <a
                     <?php /** @see \Formation\Controller\FormationInstanceDocumentController::genererConvocationAction() */?>
-                        href="<?php echo $this->url('formation-instance/generer-convocation', ['inscrit' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
+                        href="<?php echo $this->url('formation-instance/generer-convocation', ['inscription' => $inscription->getId()], [], true); ?>" class="btn btn-primary action"
                 >
                     <span class="icon icon-pdf"> Je télécharge ma convocation</span>
                 </a>
