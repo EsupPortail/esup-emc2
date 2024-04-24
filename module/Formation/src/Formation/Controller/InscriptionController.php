@@ -268,6 +268,7 @@ class InscriptionController extends AbstractActionController
         $form->setAttribute('action', $this->url()->fromRoute('formation/inscription/valider-drh', ['inscription' => $inscription->getId()], [], true));
         $form->bind($inscription);
         $form->get('etape')->setValue('DRH');
+        $form->get('justification')->setValue('Validation du bureau de gestion des formations');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
