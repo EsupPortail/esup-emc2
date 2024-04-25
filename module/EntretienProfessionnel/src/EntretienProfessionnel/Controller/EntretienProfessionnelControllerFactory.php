@@ -12,6 +12,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelService;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationService;
 use EntretienProfessionnel\Service\Notification\NotificationService;
+use EntretienProfessionnel\Service\Observateur\ObservateurService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -48,6 +49,7 @@ class EntretienProfessionnelControllerFactory {
          * @var FichePosteService $fichePosteService
          * @var MailService $mailService
          * @var NotificationService $notificationService
+         * @var ObservateurService $observateurService
          * @var ParametreService $parametreService
          * @var RappelEntretienProfessionnelService $rappelEntretienProfessionnelService
          * @var RappelPasObservationService $rappelPasObservationService
@@ -69,6 +71,7 @@ class EntretienProfessionnelControllerFactory {
 
         $mailService = $container->get(MailService::class);
         $notificationService = $container->get(NotificationService::class);
+        $observateurService = $container->get(ObservateurService::class);
         $parametreService = $container->get(ParametreService::class);
         $rappelEntretienProfessionnelService = $container->get(RappelEntretienProfessionnelService::class);
         $rappelPasObservationService = $container->get(RappelPasObservationService::class);
@@ -94,10 +97,11 @@ class EntretienProfessionnelControllerFactory {
         $controller->setEtatTypeService($etatTypeService);
         $controller->setFichePosteService($fichePosteService);
         $controller->setCampagneService($campagneService);
-        $controller->setParametreService($parametreService);
         $controller->setValidationInstanceService($validationInstanceService);
         $controller->setMailService($mailService);
         $controller->setNotificationService($notificationService);
+        $controller->setObservateurService($observateurService);
+        $controller->setParametreService($parametreService);
         $controller->setRappelEntretienProfessionnelService($rappelEntretienProfessionnelService);
         $controller->setRappelPasObservationService($rappelPasObservationService);
         $controller->setStructureService($structureService);

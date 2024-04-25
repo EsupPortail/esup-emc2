@@ -24,6 +24,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use EntretienProfessionnel\Service\Evenement\RappelEntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Evenement\RappelPasObservationServiceAwareTrait;
 use EntretienProfessionnel\Service\Notification\NotificationServiceAwareTrait;
+use EntretienProfessionnel\Service\Observateur\ObservateurServiceAwareTrait;
 use Exception;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -58,6 +59,7 @@ class EntretienProfessionnelController extends AbstractActionController
     use CampagneServiceAwareTrait;
     use MailServiceAwareTrait;
     use NotificationServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use ParametreServiceAwareTrait;
     use UserServiceAwareTrait;
     use ValidationInstanceServiceAwareTrait;
@@ -277,6 +279,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
         $crep = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormulaireInstance()->getId());
         $cref = $this->getFormulaireInstanceService()->getFormulaireInstance($entretien->getFormationInstance()->getId());
+        $observateurs = $this->getObservateurService()->getObservateursByEntretienProfessionnel($entretien);
 
         return new ViewModel([
             'entretien' => $entretien,
@@ -294,6 +297,7 @@ class EntretienProfessionnelController extends AbstractActionController
 
             'crep' => $crep,
             'cref' => $cref,
+            'observateurs' => $observateurs,
 
             'BLOCAGE_COMPTERENDU' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_MODIFICATION),
             'BLOCAGE_VALIDATION' => $this->getParametreService()->getValeurForParametre(EntretienProfessionnelParametres::TYPE, EntretienProfessionnelParametres::CAMPAGNE_BLOCAGE_STRICT_VALIDATION),

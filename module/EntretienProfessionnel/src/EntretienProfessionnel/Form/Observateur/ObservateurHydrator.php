@@ -25,7 +25,16 @@ class ObservateurHydrator implements HydratorInterface
 
     public function hydrate(array $data, object $object): object
     {
-        $user =(isset($data['user']) AND isset($data['user']['id']) AND $data['description']['id'] !== '')?$this->getUserService()->getRepo()->find($data['description']['id']):null;
+        $userId=(isset($data['user']) AND isset($data['user']['id']) AND $data['user']['id'] !== '')?$data['user']['id']:null;
+        $user  = null;
+        if ($userId) {
+            $splits = explode("||", $userId);
+            if ($splits[0] === 'app') {
+                $user = $this->getUserService()->getRepo()->find($splits[1]);
+            } else {
+                $user = $this->getUserService()->getRepo()->find($splits[0]);
+            }
+        }
         $description = (isset($data['description']) AND trim($data['description']) !== '')?trim($data['description']):null;
 
         /** @var Observateur $object */

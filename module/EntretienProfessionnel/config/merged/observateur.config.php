@@ -47,24 +47,24 @@ return [
                     'privileges' => [
                         ObservateurPrivileges::OBSERVATEUR_MODIFIER,
                     ],
-                    [
-                        'controller' => ObservateurController::class,
-                        'action' => [
-                            'historiser',
-                            'restaurer',
-                        ],
-                        'privileges' => [
-                            ObservateurPrivileges::OBSERVATEUR_HISTORISER,
-                        ],
+                ],
+                [
+                    'controller' => ObservateurController::class,
+                    'action' => [
+                        'historiser',
+                        'restaurer',
                     ],
-                    [
-                        'controller' => ObservateurController::class,
-                        'action' => [
-                            'supprimer',
-                        ],
-                        'privileges' => [
-                            ObservateurPrivileges::OBSERVATEUR_SUPPRIMER,
-                        ],
+                    'privileges' => [
+                        ObservateurPrivileges::OBSERVATEUR_HISTORISER,
+                    ],
+                ],
+                [
+                    'controller' => ObservateurController::class,
+                    'action' => [
+                        'supprimer',
+                    ],
+                    'privileges' => [
+                        ObservateurPrivileges::OBSERVATEUR_SUPPRIMER,
                     ],
                 ],
             ],

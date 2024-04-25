@@ -14,6 +14,7 @@
  * @var string[] $documents
  * @var FormulaireInstance $crep
  * @var FormulaireInstance $cref
+ * @var Observateur[] $observateurs
  *
  * @var Agent[] $superieures
  * @var Agent[] $autorites
@@ -26,6 +27,7 @@
 use Application\Entity\Db\Agent;
 use Application\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Assertion\EntretienProfessionnelAssertion;
+use EntretienProfessionnel\Entity\Db\Observateur;
 use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
@@ -107,7 +109,7 @@ if ($entretien->isEtatActif(EntretienProfessionnelEtats::ENTRETIEN_VALIDATION_AG
 
 
 <?php
-    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents], [], true);
+    echo $this->partial('partial/header', ['entretien' => $entretien, 'agent' => $agent, 'ficheposte' => $ficheposte, 'fichesmetiers' => $fichesmetiers, "documents" => $documents, 'observateurs' => $observateurs], [], true);
 ?>
 
 

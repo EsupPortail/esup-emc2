@@ -41,7 +41,7 @@ class ObservateurForm extends Form
             ],
             'attributes' => [
                 'id' => 'description',
-                'class' => "tinymce",
+                'class' => "tinymce type2",
             ],
         ]);
 
@@ -61,7 +61,7 @@ class ObservateurForm extends Form
 
         // Input filter
         $this->setInputFilter((new Factory())->createInputFilter([
-            'utilisateur' => ['required' => true,],
+            'user' => ['required' => true,],
             'description' => ['required' => false,],
         ]));
 

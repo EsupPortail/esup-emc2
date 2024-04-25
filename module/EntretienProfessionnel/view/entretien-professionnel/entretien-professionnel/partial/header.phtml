@@ -6,10 +6,13 @@
  * @var FichePoste $ficheposte
  * @var FicheMetier[] $fichesmetiers
  * @var string[] $documents
+ * @var Observateur[] $observateurs
  */
 
 use Application\Entity\Db\Agent;
-use FicheMetier\Entity\Db\FicheMetier;
+    use EntretienProfessionnel\Entity\Db\Observateur;
+    use EntretienProfessionnel\Provider\Privilege\ObservateurPrivileges;
+    use FicheMetier\Entity\Db\FicheMetier;
 use Application\Entity\Db\FichePoste;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
@@ -22,6 +25,13 @@ $canAfficherInformationMetier = (
         OR
         $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_VALIDER_DRH))
 );
+
+//TODO MODIFIER AVEC ASSERTION
+$canAfficherObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AFFICHER));
+$canAjouterObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_AJOUTER));
+$canModifierObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_MODIFIER));
+$canHistoriserObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_HISTORISER));
+$canSupprimerObservateurs = $this->isAllowed(ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_SUPPRIMER));
 ?>
 
 <div class="row">
@@ -135,6 +145,70 @@ $canAfficherInformationMetier = (
                 </ul>
             </div>
         </div>
+
+        <!-- Observateurs --------->
+        <?php if ($canAfficherObservateurs) : ?>
+        <div class="card">
+            <div class="card-header bg-default">
+                Observateurs
+            </div>
+            <div class="card-body">
+                <?php if ($canAjouterObservateurs) : ?>
+                    <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::ajouterAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/observateur/ajouter', ['entretien-professionnel' => $entretien->getId()], [], true); ?>"
+                       class="btn btn-primary ajax-modal" data-event="modification">
+                        <span class="icon icon-ajouter"></span>
+                        Ajouter un observateur
+                    </a>
+                <?php endif; ?>
+                <ul>
+                    <?php if (empty($observateurs)) : ?>
+                        Aucun·e observateur·trice
+                    <?php else : ?>
+                        <?php foreach ($observateurs as $observateur) : ?>
+                            <li>
+                                <?php echo $observateur->getUser()->getDisplayName() ?>
+                                <?php if ($observateur->getDescription()): ?>
+                                    <span class="icon icon-information" title="<?php echo $observateur->getDescription(); ?>"
+                                          data-bs-toggle="tooltip" data-bs-html="true">
+                                    </span>
+                                <?php endif; ?>
+                                <?php if ($canModifierObservateurs) : ?>
+                                    <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::modifierAction() */ ?>
+                                    <a href="<?php echo $this->url('entretien-professionnel/observateur/modifier', ['observateur' => $observateur->getId()], [], true); ?>"
+                                        title="Modifier l'observateur·trice" class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
+                                    >
+                                        <span class="icon icon-editer" ></span></a>
+                                <?php endif; ?>
+                                <?php if ($canHistoriserObservateurs) : ?>
+                                    <?php if ($observateur->estNonHistorise()) : ?>
+                                        <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::historiserAction() */ ?>
+                                        <a href="<?php echo $this->url('entretien-professionnel/observateur/historiser', ['observateur' => $observateur->getId()], [], true); ?>"
+                                           title="Historiser l'observateur·trice" data-bs-toggle="tooltip" data-bs-html="true"
+                                        >
+                                            <span class="icon icon-historiser" ></span></a>
+                                    <?php else : ?>
+                                        <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::restaurerAction() */ ?>
+                                        <a href="<?php echo $this->url('entretien-professionnel/observateur/restaurer', ['observateur' => $observateur->getId()], [], true); ?>"
+                                           title="Restaurer l'observateur·trice" data-bs-toggle="tooltip" data-bs-html="true"
+                                        >
+                                            <span class="icon icon-restaurer" ></span></a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($canSupprimerObservateurs) : ?>
+                                    <?php /** @see \EntretienProfessionnel\Controller\ObservateurController::supprimerAction() */ ?>
+                                    <a href="<?php echo $this->url('entretien-professionnel/observateur/supprimer', ['observateur' => $observateur->getId()], [], true); ?>"
+                                       title="Supprimer l'observateur·trice" class="ajax-modal" data-event="modification" data-bs-toggle="tooltip" data-bs-html="true"
+                                    >
+                                        <span class="icon icon-unchecked text-danger" ></span></a>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
