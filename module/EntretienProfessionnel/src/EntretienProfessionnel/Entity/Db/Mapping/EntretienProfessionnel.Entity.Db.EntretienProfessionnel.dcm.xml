@@ -64,6 +64,7 @@
         </many-to-many>
 
         <one-to-many field="recours" target-entity="EntretienProfessionnel\Entity\Db\Recours" mapped-by="entretien"/>
+        <one-to-many field="observateurs" target-entity="EntretienProfessionnel\Entity\Db\Observateur" mapped-by="entretien"/>
 
         <!-- HISTORISATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <field name="histoCreation"     type="datetime"                 column="histo_creation"     nullable="false"/>

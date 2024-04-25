@@ -6,4 +6,6 @@ class RoleProvider {
 
     const GESTIONNAIRE       = 'Gestionnaire des entretiens professionnels';
 
+    const OBSERVATEUR        = 'Observateur·trice (Entretien Professionnel)';
+
 }

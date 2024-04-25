@@ -59,6 +59,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
 
     private Collection $sursis;
     private Collection $recours;
+    private Collection $observateurs;
 
     private ?string $token = null;
     private ?DateTime $acceptation = null;
@@ -70,6 +71,7 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         $this->sursis = new ArrayCollection();
         $this->validations = new ArrayCollection();
         $this->recours = new ArrayCollection();
+        $this->observateurs = new ArrayCollection();
     }
 
     public function getId() : ?int
@@ -217,7 +219,14 @@ class EntretienProfessionnel implements HistoriqueAwareInterface, ResourceInterf
         return $actif;
     }
 
-
+    public function getObservateurs(bool $withHisto = false): Collection
+    {
+        $observateurs =  $this->observateurs->toArray();
+        if (!$withHisto) {
+            $observateurs = array_filter($observateurs, function (Observateur $observateur) {return $observateur->estNonHistorise();});
+        }
+        return $observateurs;
+    }
 
     /** PREDICATS *****************************************************************************************************/
 
