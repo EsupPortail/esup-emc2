@@ -32,7 +32,12 @@ create table formation_demande_externe
     lieu                      varchar(1024)           not null,
     debut                     date                    not null,
     fin                       date                    not null,
+    missions                  text                    not null,
     justification_agent       text                    not null,
+    justification_responsable text,
+    justification_gestionnaire text,
+    justification_drh         text,
+    justification_refus       text,
     prise_en_charge           boolean   default true  not null,
     cofinanceur               varchar(1024),
     conge_formation_syndicale bool      default false not null,
@@ -51,8 +56,6 @@ create table formation_demande_externe
     agent_id                  varchar(40)             not null
         constraint formation_demande_externe_agent_c_individu_fk
         references agent,
-    justification_responsable text,
-    justification_refus       text,
     modalite                  varchar(1024)
 );
 
@@ -141,6 +144,17 @@ create table formation_enquete_question
 
 create unique index formation_enquete_question_id_uindex
     on formation_enquete_question (id);
+
+create table formation_session_gestionnaire
+(
+    session_id      integer not null
+        constraint formation_session_gestionnaire_formation_instance_id_fk
+            references formation_instance on delete cascade,
+    gestionnaire_id integer not null
+        constraint formation_session_gestionnaire_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user on delete cascade,
+    constraint formation_session_gestionnaire_pk primary key (session_id, gestionnaire_id)
+);
 
 create table formation_session_parametre
 (
@@ -261,6 +275,32 @@ create table formation_groupe
 create unique index formation_groupe_id_uindex
     on formation_groupe (id);
 
+
+create table formation_action_type
+(
+    id                    serial                  not null
+        constraint formation_action_type_pk
+            primary key,
+    code                  varchar(256)            not null
+        constraint formation_action_type_pk_2
+            unique,
+    libelle               varchar(1024)           not null,
+    description           text,
+    histo_creation        timestamp default now() not null,
+    histo_createur_id     integer   default 0     not null
+        constraint formation_action_type_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user,
+    histo_modification    timestamp,
+    histo_modificateur_id integer
+        constraint formation_action_type_unicaen_utilisateur_user_id_fk_2
+            references unicaen_utilisateur_user,
+    histo_destruction     timestamp,
+    histo_destructeur_id  integer
+        constraint formation_action_type_unicaen_utilisateur_user_id_fk_3
+            references unicaen_utilisateur_user
+);
+
+
 create table formation
 (
     id                    serial
@@ -292,10 +332,12 @@ create table formation
     programme             text,
     prerequis             text,
     public                text,
+    type_id               integer
+        constraint formation_type_fk
+            references formation_action_type on delete set null,
     type                  varchar(64),
     id_source             varchar(256)
 );
-
 create unique index formation_id_uindex
     on formation (id);
 
@@ -452,6 +494,7 @@ create table formation_instance
         references unicaen_utilisateur_user,
     cout_ht                 double precision,
     cout_ttc                double precision,
+    cout_vacation           double precision,
 
     parametre_id            integer
         constraint formation_instance_formation_session_parametre_null_fk
@@ -558,6 +601,7 @@ create table formation_inscription
             references formation_instance
             on delete cascade,
     liste                     varchar(64),
+    missions                  text,
     justification_agent       text,
     justification_responsable text,
     justification_drh         text,
@@ -839,6 +883,12 @@ create table lagaf_stagiaire
 -- I::::::::IN::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::ER::::::R     R:::::R      T:::::::::T
 -- IIIIIIIIIINNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR      TTTTTTTTTTT
 
+-- ACTION TYPE
+
+INSERT INTO formation_action_type (code, libelle, description) VALUES
+('T1', 'Type 1 : formations d''adaptation immédiate au poste de travail', 'Stage d''adaptation à l''emploi'),
+('T2', 'Type 2 : formations à l''évolution des métiers ou des postes de travail', 'Approfondir ses compétences techniques'),
+('T3', 'Type 3 : formations d''acquisition de qualifications nouvelles', 'Favoriser sa culture professionnelle ou son niveau d''expertise');
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- ROLE ----------------------------------------------------------------------------------------------------------------
@@ -865,6 +915,7 @@ WITH d(code, libelle, icone, couleur, ordre) AS (
     SELECT 'DEMANDE_EXTERNE_AGENT', 'Validation de l''agent', 'fas fa-user', '#f57900', 20 UNION
     SELECT 'DEMANDE_EXTERNE_RESP', 'Validation du responsable de l''agent', 'fas fa-user-tie', '#edd400', 30 UNION
     SELECT 'DEMANDE_EXTERNE_FORCEE_PARAPHEUR', 'Demande envoyée dans le parapheur', 'icon icon-importer', '#cbcb00', 35 UNION
+    SELECT 'DEMANDE_EXTERNE_GESTIONNAIRE', 'Demande validée par un gestionnaire', 'fas fa-hourglass', '#cbcb00', 36 UNION
     SELECT 'DEMANDE_EXTERNE_DRH', 'Validation par le bureau de gestion des formations', 'fas fa-user-check', '#8ae234', 40 UNION
     SELECT 'DEMANDE_EXTERNE_TERMINEE', 'Demande de formation externe traitée', 'far fa-check-square', '#4e9a06', 50 UNION
     SELECT 'DEMANDE_EXTERNE_REJETEE', 'Demande de formation externe rejetée', 'fas fa-times', '#a40000', 60

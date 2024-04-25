@@ -304,7 +304,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'INTRANET_DOCUMENT', 'Lien vers les documents associés à l''entretien professionnel', null, 'String', 1000 UNION
     SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000 UNION
     SELECT 'CAMPAGNE_BLOCAGE_STRICT_MODIFICATION', 'Blocage strict de la modification des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la modification des entretiens professionnels (comptes-rendus) doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 1 UNION
-    SELECT 'CAMPAGNE_BLOCAGE_STRICT_VALIDATION', 'Blocage strict de la validation des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la validation des entretiens professionnels doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 2
+    SELECT 'CAMPAGNE_BLOCAGE_STRICT_VALIDATION', 'Blocage strict de la validation des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la validation des entretiens professionnels doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 2 UNION
+    SELECT 'OBSERVATION_AGENT_FINAL', 'Activation de l''observation finale par l''agent', '<p>Pour désactiver cette observation basculer la valeur à false</p>', 'Boolean', 3000
 )
 SELECT cp.id, d.CODE, d.LIBELLE, d.DESCRIPTION, d.VALEURS_POSSIBLES, d.ORDRE
 FROM d

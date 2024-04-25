@@ -458,7 +458,7 @@ WITH d(code, lib, ordre) AS (
     SELECT 'missionspecifiqueaffectation_modifier', 'Affectation - Modifier une affectation de mission specifique', 230 UNION
     SELECT 'missionspecifiqueaffectation_historiser', 'Affectation - Historiser/restaurer une affectation de mission spécifique', 240 UNION
     SELECT 'missionspecifiqueaffectation_detruire', 'Affectation - Détruire une affectation de mission spécifique', 250 UNION
-    SELECT 'missionspecifiqueaffectation_onglet', 'Afficher l''onglet associé dans les écrans de la structure', 400
+    SELECT 'missionspecifiqueaffectation_onglet', 'Afficher l''onglet - Missions spécifiques -', 400
 )
 SELECT cp.id, d.code, d.lib, d.ordre
 FROM d
