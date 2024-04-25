@@ -109,13 +109,19 @@ return [
                     'action' => [
                         'rechercher',
                         'rechercher-large',
-                        'rechercher-with-structure-mere',
                         'rechercher-responsable',
                         'rechercher-gestionnaire',
                     ],
                     'privileges' => [
                         AgentPrivileges::AGENT_RECHERCHER,
                     ],
+                ],
+                [
+                    'controller' => AgentController::class,
+                    'action' => [
+                        'rechercher-with-structure-mere',
+                    ],
+                    'roles' => [],
                 ],
                 [
                     'controller' => AgentController::class,
@@ -232,7 +238,7 @@ return [
                         'options' => [
                             'route'    => '/rechercher-with-structure-mere/:structure',
                             'defaults' => [
-                                'controller' => AgentController::class,
+                                /** @see AgentController::rechercherWithStructureMereAction() */
                                 'action'     => 'rechercher-with-structure-mere',
                             ],
                         ],

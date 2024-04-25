@@ -167,6 +167,25 @@ class AgentAutoriteService
         return $agents;
     }
 
+    /** @return Agent[] */
+    public function getAgentsWithAutoriteAndTerm(Agent $autorite, string $term): array
+    {
+        $qb = $this->createQueryBuilder();
+        //autorite
+        $qb = $qb   ->andWhere('agent.deleted_on  IS NULL')
+            ->andWhere('agentautorite.autorite = :autorite')->setParameter('autorite', $autorite)
+            ->andWhere('agentautorite.histoDestruction IS NULL')
+        ;
+        //term
+        $qb = $qb   ->andWhere("LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search OR LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search")
+            ->setParameter('search', '%'.strtolower($term).'%')
+            ->orderBy("concat(agent.nomUsuel, ' ', agent.prenom)", 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return array_map(function (AgentAutorite $agentAutorite) { return $agentAutorite->getAgent(); }, $result);
+    }
+
+
     /** FACADE ********************************************************************************************************/
 
     public function createAgentAutorite(Agent $agent, Agent $autorite) : AgentAutorite

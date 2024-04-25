@@ -1,6 +1,7 @@
 <?php
 
 use Application\Entity\Db\AgentMissionSpecifique;
+use Application\Provider\Privilege\MissionspecifiqueaffectationPrivileges;
 use Missionspecifique\Provider\Privilege\MissionspecifiquePrivileges;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use Structure\Entity\Db\Structure;
@@ -16,11 +17,11 @@ use Structure\Entity\Db\Structure;
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
 
-$canVoirAffectation         = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_AFFICHER));
-$canAjouterAffectation      = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_MODIFIER));
-$canModifierAffectation     = $canAjouterAffectation;
-$canHistoriserAffectation   = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_HISTORISER));
-$canDetruireAffectation     = $this->isAllowed(MissionspecifiquePrivileges::getResourceId(MissionspecifiquePrivileges::MISSIONSPECIFIQUE_DETRUIRE));
+$canVoirAffectation         = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
+$canAjouterAffectation      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
+$canModifierAffectation     = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
+$canHistoriserAffectation   = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
+$canDetruireAffectation     = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 
 ?>
 

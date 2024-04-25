@@ -272,4 +272,30 @@ class AgentHierarchieController extends AbstractActionController
         return new JsonModel($data);
     }
 
+    /** Fonction de recherche *****************************************************************************************/
+
+    public function rechercherAgentWithAutoriteAction(): JsonModel
+    {
+        $superieur = $this->getAgentService()->getAgentByConnectedUser();
+
+        if ($superieur !== null and ($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getAgentAutoriteService()->getAgentsWithAutoriteAndTerm($superieur, $term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit();
+    }
+
+    public function rechercherAgentWithSuperieurAction(): JsonModel
+    {
+        $superieur = $this->getAgentService()->getAgentByConnectedUser();
+
+        if ($superieur !== null and ($term = $this->params()->fromQuery('term'))) {
+            $agents = $this->getAgentSuperieurService()->getAgentsWithSuperieurAndTerm($superieur, $term);
+            $result = $this->getAgentService()->formatAgentJSON($agents);
+            return new JsonModel($result);
+        }
+        exit();
+    }
+
 }

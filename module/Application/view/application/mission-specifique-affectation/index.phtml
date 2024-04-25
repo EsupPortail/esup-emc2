@@ -22,8 +22,8 @@ $this->headTitle("Affectations de missions spécifiques");
 
 $canVoir        = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
 $canLettre      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AFFICHER));
-$canAjouter     = $this->isAllowed(AgentPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
-$canEditer      = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_EDITER));
+$canAjouter     = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_AJOUTER));
+$canEditer      = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_MODIFIER));
 $canhistoriser  = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_HISTORISER));
 $canDetruire    = $this->isAllowed(MissionspecifiqueaffectationPrivileges::getResourceId(MissionspecifiqueaffectationPrivileges::MISSIONSPECIFIQUEAFFECTATION_DETRUIRE));
 

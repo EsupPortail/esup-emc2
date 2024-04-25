@@ -2,44 +2,53 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentMissionSpecifique;
-use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueForm;
 use Application\Form\AgentMissionSpecifique\AgentMissionSpecifiqueFormAwareTrait;
 use Application\Provider\Template\PdfTemplate;
 use Application\Service\Agent\AgentServiceAwareTrait;
+use Application\Service\AgentAutorite\AgentAutoriteServiceAwareTrait;
 use Application\Service\AgentMissionSpecifique\AgentMissionSpecifiqueServiceAwareTrait;
+use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
+use Laminas\Http\Request;
 use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use MissionSpecifique\Service\MissionSpecifique\MissionSpecifiqueServiceAwareTrait;
 use Mpdf\MpdfException;
 use RuntimeException;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Role\RoleProvider;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenApp\Form\Element\SearchAndSelect;
 use UnicaenPdf\Exporter\PdfExporter;
 use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
-use Laminas\Http\Request;
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\ViewModel;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
-class MissionSpecifiqueAffectationController extends AbstractActionController {
+class MissionSpecifiqueAffectationController extends AbstractActionController
+{
     use AgentServiceAwareTrait;
+    use AgentAutoriteServiceAwareTrait;
     use AgentMissionSpecifiqueServiceAwareTrait;
+    use AgentSuperieurServiceAwareTrait;
     use RenduServiceAwareTrait;
     use MissionSpecifiqueServiceAwareTrait;
     use StructureServiceAwareTrait;
+    use UserServiceAwareTrait;
 
     use AgentMissionSpecifiqueFormAwareTrait;
 
-    public function indexAction() : ViewModel
+    public function indexAction(): ViewModel
     {
-        $fromQueries  = $this->params()->fromQuery();
-        $agentId      = $fromQueries['agent']??'';
-        $structureId  = $fromQueries['structure']??'';
-        $missionId    = (isset($fromQueries['mission']) AND $fromQueries['mission'] !== '')?((int) $fromQueries['mission']):null;
-        $agent        = ($agentId !== '')?$this->getAgentService()->getAgent($agentId):null;
-        $structure    = ($structureId !== '')?$this->getStructureService()->getStructure($structureId):null;
-        $mission      = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
+        $fromQueries = $this->params()->fromQuery();
+        $agentId = $fromQueries['agent'] ?? '';
+        $structureId = $fromQueries['structure'] ?? '';
+        $missionId = (isset($fromQueries['mission']) and $fromQueries['mission'] !== '') ? ((int)$fromQueries['mission']) : null;
+        $agent = ($agentId !== '') ? $this->getAgentService()->getAgent($agentId) : null;
+        $structure = ($structureId !== '') ? $this->getStructureService()->getStructure($structureId) : null;
+        $mission = $this->getMissionSpecifiqueService()->getMissionSpecifique($missionId);
         $affectations = $this->getAgentMissionSpecifiqueService()->getAgentMissionsSpecifiquesByAgentAndMissionAndStructure($agent, $mission, $structure, false);
-        $missions    = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
+        $missions = $this->getMissionSpecifiqueService()->getMissionsSpecifiques();
 
         return new ViewModel([
             'agent' => $agent,
@@ -51,7 +60,7 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         ]);
     }
 
-    public function afficherAction() : ViewModel
+    public function afficherAction(): ViewModel
     {
         $affectation = $this->getAgentMissionSpecifiqueService()->getRequestedAgentMissionSpecifique($this);
 
@@ -74,17 +83,17 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent');
+        $url = $this->getRouteRechercherAgent($structure);
+        $agentSS->setAutocompleteSource($url);
 
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/ajouter', [], [], true));
         } else {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/ajouter', [], ["query" =>["structure" => $structure->getId()]], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/ajouter', [], ["query" => ["structure" => $structure->getId()]], true));
             /** @var SearchAndSelect $structureSS */
             $structureSS = $form->get('structure');
             /** @see StructureController::rechercherWithStructureMereAction() */
             $structureSS->setAutocompleteSource($this->url()->fromRoute('structure/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
-            /** @see AgentController::rechercherWithStructureMereAction() */
-            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
         }
         if ($agent !== null) {
             $affectation->setAgent($agent);
@@ -122,12 +131,12 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
         $form = $this->getAgentMissionSpecifiqueForm();
         /** @var SearchAndSelect $agentSS */
         $agentSS = $form->get('agent');
+        $url = $this->getRouteRechercherAgent();
+        $agentSS->setAutocompleteSource($url);
         if ($structure === null) {
             $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/modifier', [], [], true));
         } else {
-            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/modifier', [], ["query" =>["structure" => $structure->getId()]], true));
-            /** @see AgentController::rechercherWithStructureMereAction() */
-            $agentSS->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true));
+            $form->setAttribute('action', $this->url()->fromRoute('mission-specifique-affectation/modifier', [], ["query" => ["structure" => $structure->getId()]], true));
             /** @var SearchAndSelect $structureSS */
             $structureSS = $form->get('structure');
             /** @see StructureController::rechercherWithStructureMereAction() */
@@ -221,8 +230,30 @@ class MissionSpecifiqueAffectationController extends AbstractActionController {
             $exporter->setFooterScript('');
             $exporter->addBodyHtml($rendu->getCorps());
             return $exporter->export($rendu->getSujet());
-        } catch(MpdfException $e) {
-            throw new RuntimeException("Un problème est survenu lors de la génération du PDF",0,$e);
+        } catch (MpdfException $e) {
+            throw new RuntimeException("Un problème est survenu lors de la génération du PDF", 0, $e);
         }
+    }
+
+    /** FONCTIONS UTILITAIRES *****************************************************************************************/
+
+    public function getRouteRechercherAgent(?Structure $structure=null): string
+    {
+        $role = $this->getUserService()->getConnectedRole();
+
+        if ($role->getRoleId() === Agent::ROLE_AUTORITE) {
+            /** @see AgentHierarchieController::rechercherAgentWithAutoriteAction() */
+            return $this->url()->fromRoute('agent/hierarchie/rechercher-agent-with-autorite', [], [], true);
+        }
+        if ($role->getRoleId() === Agent::ROLE_SUPERIEURE) {
+            /** @see AgentHierarchieController::rechercherAgentWithSuperieurAction() */
+            $url = $this->url()->fromRoute('agent/hierarchie/rechercher-agent-with-superieur', [], [], true);
+            return $url;
+        }
+        if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
+            /** @see AgentController::rechercherWithStructureMereAction() */
+            return $this->url()->fromRoute('agent/rechercher-with-structure-mere', ['structure' => $structure->getId()], [], true);
+        }
+        return $this->url()->fromRoute('agent/rechercher-large', [], [], true);
     }
 }

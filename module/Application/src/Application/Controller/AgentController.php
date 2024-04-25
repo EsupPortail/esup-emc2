@@ -452,6 +452,9 @@ class AgentController extends AbstractActionController
     public function rechercherWithStructureMereAction(): JsonModel
     {
         $structure = $this->getStructureService()->getRequestedStructure($this);
+        if ($structure === null) {
+            throw new RuntimeException("Aucune structure de founie");
+        }
 
         $structures = $this->getStructureService()->getStructuresFilles($structure);
         $structures[] = $structure;

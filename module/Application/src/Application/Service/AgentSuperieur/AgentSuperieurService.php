@@ -140,6 +140,24 @@ class AgentSuperieurService
         return $agents;
     }
 
+    /** @return Agent[] */
+    public function getAgentsWithSuperieurAndTerm(Agent $superieur, string $term): array
+    {
+        $qb = $this->createQueryBuilder();
+        //superieur
+        $qb = $qb   ->andWhere('agent.deleted_on  IS NULL')
+                    ->andWhere('agentsuperieur.superieur = :superieur')->setParameter('superieur', $superieur)
+                    ->andWhere('agentsuperieur.histoDestruction IS NULL')
+        ;
+        //term
+        $qb = $qb   ->andWhere("LOWER(CONCAT(agent.nomUsuel, ' ', agent.prenom)) like :search OR LOWER(CONCAT(agent.prenom, ' ', agent.nomUsuel)) like :search")
+        ->setParameter('search', '%'.strtolower($term).'%')
+        ->orderBy("concat(agent.nomUsuel, ' ', agent.prenom)", 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+        return array_map(function (AgentSuperieur $agentSuperieur) { return $agentSuperieur->getAgent(); }, $result);
+    }
+
     /** FACADE ********************************************************************************************************/
 
     public function createAgentSuperieur(Agent $agent, Agent $superieur) : AgentSuperieur

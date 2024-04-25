@@ -45,6 +45,14 @@ return [
                         AgentPrivileges::AGENT_INDEX, //todo "Faites mieux !!!"
                     ],
                 ],
+                [
+                    'controller' => AgentHierarchieController::class,
+                    'action' => [
+                        'rechercher-agent-with-autorite',
+                        'rechercher-agent-with-superieur',
+                    ],
+                    'roles' => [],
+                ],
             ],
         ],
     ],
@@ -149,6 +157,30 @@ return [
                                         /** @see AgentHierarchieController::calculerAction() */
                                         'controller' => AgentHierarchieController::class,
                                         'action'     => 'calculer',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'rechercher-agent-with-autorite' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/rechercher-agent-with-autorite',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::rechercherAgentWithAutoriteAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'rechercher-agent-with-autorite',
+                                    ],
+                                ],
+                                'may_terminate' => true,
+                            ],
+                            'rechercher-agent-with-superieur' => [
+                                'type'  => Literal::class,
+                                'options' => [
+                                    'route'    => '/rechercher-agent-with-superieur',
+                                    'defaults' => [
+                                        /** @see AgentHierarchieController::rechercherAgentWithSuperieurAction() */
+                                        'controller' => AgentHierarchieController::class,
+                                        'action'     => 'rechercher-agent-with-superieur',
                                     ],
                                 ],
                                 'may_terminate' => true,
