@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * @var Campagne[] $campagnes
+ * @var array $params
+ */
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use UnicaenApp\Form\Element\SearchAndSelect;
+
+?>
+
+
+<div class="card">
+    <div class="card-header bg-default">
+        <span class="icon icon-filtrer">
+            Filtre de recherche des observateur·trices d'entretiens professionnels
+        </span>
+    </div>
+    <div class="card-body">
+        <form id="filtre" action="<?php echo $this->url(); ?>" method="get">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-5">
+                            <?php
+                            /** @see \EntretienProfessionnel\Controller\ObservateurController::rechercherAction() */
+                            $observateurF = new SearchAndSelect('observateur-filtre', ['label' => "Observateur·trice :"]);
+                            $observateurF
+                                ->setAutocompleteSource($this->url('entretien-professionnel/observateur/rechercher'))
+                                ->setSelectionRequired(true)
+                                ->setAttributes([
+                                    'id' => 'observateur-filtre',
+                                    'placeholder' => "Dénomination de l'observateur·trice ...",
+                                ]);
+                            ?>
+                            <?php echo $this->formControlGroup($observateurF); ?>
+                    </div>
+                    <div class="col-md-5">
+                        <?php
+                        /** @see \Application\Controller\AgentController::rechercherLargeAction() */
+                        $agentF = new SearchAndSelect('agent-filtre', ['label' => "Agent·e :"]);
+                        $agentF
+                            ->setAutocompleteSource($this->url('agent/rechercher-large'))
+                            ->setSelectionRequired(true)
+                            ->setAttributes([
+                                'id' => 'agent-filtre',
+                                'placeholder' => "Dénomination de l'agent·e ...",
+                            ]);
+                        ?>
+                        <?php echo $this->formControlGroup($agentF); ?>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="campagne">Campagne :</label><br>
+                        <select id="campagne" name="campagne" class="selecpicker" data-live-search="true">
+                            <option value=""> Peu importe </option>
+                            <?php foreach ($campagnes as $campagne) : ?>
+                                <option value="<?php echo $campagne->getId(); ?>"
+                                    <?php if (isset($params['campagne']) AND $params['campagne'] == $campagne->getId())  echo " selected "; ?>
+                                >
+                                    <?php echo $campagne->getAnnee(); ?> </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" id="filtre">
+                    <span class="icon icon-filtrer"></span>
+                    Filtrer
+                </button>
+                <button class="btn btn-primary" id="clear">
+                    <span class="icon icon-gommer"></span>
+                    Remise à zéro
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('select').selectpicker();
+        <?php if (isset($params['agent-id']) AND isset($params['agent-label'])) :?>
+            $('input[name="agent-filtre[id]"]').val("<?php echo $params['agent-id']; ?>");
+            $('input[name="agent-filtre[label]"]').val("<?php echo $params['agent-label']; ?>");
+        <?php endif; ?>
+        <?php if (isset($params['observateur-id']) AND isset($params['observateur-label'])) :?>
+            $('input[name="observateur-filtre[id]"]').val("<?php echo $params['observateur-id']; ?>");
+            $('input[name="observateur-filtre[label]"]').val("<?php echo $params['observateur-label']; ?>");
+        <?php endif; ?>
+    });
+
+    $("form#filtre").on("submit",function(e){
+        e.preventDefault();
+    });
+
+    $('button#clear').click(function() {
+        window.location.href = '?';
+    });
+
+    $('button#filtre').on("click",function() {
+        let campagne = $('select#campagne option:selected').val();
+        let agentId = $('input[name="agent-filtre[id]"]').val();
+        let agentLabel = $('input[name="agent-filtre[label]"]').val();
+        let observateurId = $('input[name="observateur-filtre[id]"]').val();
+        let observateurLabel = $('input[name="observateur-filtre[label]"]').val();
+
+        let query = "";
+        if (campagne !== "") query += "&campagne=" + campagne;
+        if (agentId !== "") {
+            query += "&agent-id=" + agentId;
+            query += "&agent-label=" + agentLabel;
+        }
+        if (observateurId !== "") {
+            query += "&observateur-id=" + observateurId;
+            query += "&observateur-label=" + observateurLabel;
+        }
+        window.location.href = '?'+ query;
+    });
+
+
+</script>

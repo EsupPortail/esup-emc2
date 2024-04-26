@@ -4,22 +4,53 @@ namespace EntretienProfessionnel\Controller;
 
 use EntretienProfessionnel\Entity\Db\Observateur;
 use EntretienProfessionnel\Form\Observateur\ObservateurFormAwareTrait;
+use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
 use EntretienProfessionnel\Service\Observateur\ObservateurServiceAwareTrait;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 
 class ObservateurController extends AbstractActionController {
+    use CampagneServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use ObservateurServiceAwareTrait;
+    use UserServiceAwareTrait;
     use ObservateurFormAwareTrait;
 
     public function indexAction(): ViewModel
     {
-        $observateurs = $this->getObservateurService()->getObservateurs(true);
+        $params = $this->params()->fromQuery();
+
+        $observateurs = $this->getObservateurService()->getObservateursWithFiltre($params);
+        $campagnes = $this->getCampagneService()->getCampagnes();
+
         return new ViewModel([
             'observateurs' => $observateurs,
+            'campagnes' => $campagnes,
+            'params' => $params,
+        ]);
+    }
+
+    public function indexObservateurAction(): ViewModel
+    {
+        $user = $this->getUserService()->getConnectedUser();
+        $observateurs = $this->getObservateurService()->getObservateursByUser($user, false);
+
+        $campagnes = [];
+        $entretiens = [];
+        foreach ($observateurs as $observateur) {
+            $entretien = $observateur->getEntretienProfessionnel();
+            $campagne = $entretien->getCampagne();
+            $campagnes[$campagne->getId()] = $campagne;
+            $entretiens[$campagne->getId()][] = $entretien;
+        }
+
+        return new ViewModel([
+            'campagnes' => $campagnes,
+            'entretiens' => $entretiens,
         ]);
     }
 
@@ -118,5 +149,17 @@ class ObservateurController extends AbstractActionController {
             ]);
         }
         return $vm;
+    }
+
+    /** FONCTION DE RECHERCHE *****************************************************************************************/
+
+    public function rechercherAction(): JsonModel
+    {
+        if (($term = $this->params()->fromQuery('term'))) {
+            $observateurs = $this->getObservateurService()->getObservateursByTerm($term);
+            $result = $this->getObservateurService()->formatObservateurJSON($observateurs);
+            return new JsonModel($result);
+        }
+        exit;
     }
 }

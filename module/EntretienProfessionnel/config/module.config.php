@@ -4,6 +4,8 @@ namespace EntretienProfessionnel;
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use EntretienProfessionnel\Provider\Identity\IdentityProvider;
+use EntretienProfessionnel\Provider\Identity\IdentityProviderFactory;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteService;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementAutoriteServiceFactory;
 use EntretienProfessionnel\Service\Evenement\RappelCampagneAvancementSuperieurService;
@@ -51,6 +53,7 @@ return [
 
     'service_manager' => [
         'factories' => [
+            IdentityProvider::class => IdentityProviderFactory::class,
             NotificationService::class => NotificationServiceFactory::class,
             UrlService::class => UrlServiceFactory::class,
 

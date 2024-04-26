@@ -11,7 +11,9 @@ use DateTime;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelServiceAwareTrait;
+use EntretienProfessionnel\Service\Observateur\ObservateurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
@@ -28,6 +30,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use AgentAutoriteServiceAwareTrait;
     use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -93,6 +96,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             RoleProvider::RESPONSABLE => $predicats['isResponsableStructure'],
             Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
             Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
+            EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->getObservateurService()->isObservateur($entretienProfessionnel, $connectedAgent->getUtilisateur()),
             default => false,
         };
     }
@@ -117,6 +121,14 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
         $role = $this->getUserService()->getConnectedRole();
         $user = $this->getUserService()->getConnectedUser();
         $agent = $this->getAgentService()->getAgentByUser($user);
+
+        if ($agent === null) {
+            $agent = new Agent();
+            $agent->setId(-1);
+            $agent->setUtilisateur($user);
+        }
+
+
 
         if (!$this->getPrivilegeService()->checkPrivilege($privilege, $role)) return false;
 
@@ -170,6 +182,8 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                         return $predicats['isSuperieureHierarchique'];
                     case Agent::ROLE_AUTORITE:
                         return $predicats['isAutoriteHierarchique'];
+                    case EntretienProfessionnelRoleProvider::OBSERVATEUR:
+                        return $this->isScopeCompatible($entretien, $agent, $role);
                     default:
                         return false;
                 }
@@ -179,6 +193,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
                     RoleProvider::RESPONSABLE => (($predicats['isResponsableStructure'] and $predicats['isResponsableEntretien']) or $predicats['isAutoriteStructure']),
                     Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'] and $predicats['isResponsableEntretien'],
                     Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
+                    EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->isScopeCompatible($entretien, $agent, $role),
                     default => false,
                 };
             case EntretienproPrivileges::ENTRETIENPRO_AFFICHER :

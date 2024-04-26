@@ -17,6 +17,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
 use EntretienProfessionnel\Form\EntretienProfessionnel\EntretienProfessionnelFormAwareTrait;
 use EntretienProfessionnel\Provider\Etat\EntretienProfessionnelEtats;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
+use EntretienProfessionnel\Provider\Role\RoleProvider;
 use EntretienProfessionnel\Provider\Template\PdfTemplates;
 use EntretienProfessionnel\Provider\Validation\EntretienProfessionnelValidations;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -598,6 +599,9 @@ class EntretienProfessionnelController extends AbstractActionController
             case  Agent::ROLE_AGENT :
                 /** @see EntretienProfessionnelController::indexAgentAction() */
                 return $this->redirect()->toRoute('entretien-professionnel/index-agent', [], [], true);
+            case  RoleProvider::OBSERVATEUR :
+                /** @see IndexController::indexAction() */
+                return $this->redirect()->toRoute('home', [], [], true);
             default:
                 throw new RuntimeException("Rôle [".$role->getRoleId()."] non prévu");
         }

@@ -7,6 +7,7 @@ use Application\Service\AgentAutorite\AgentAutoriteService;
 use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
+use EntretienProfessionnel\Service\Observateur\ObservateurService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
@@ -33,6 +34,7 @@ class EntretienProfessionnelAssertionFactory
          * @var AgentSuperieurService $agentSuperieurService
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var StructureService $structureService
+         * @var ObservateurService $observateurService
          * @var ParametreService $parametreService
          * @var PrivilegeService $privilegeService
          * @var UserService $userService
@@ -41,6 +43,7 @@ class EntretienProfessionnelAssertionFactory
         $agentAutoriteService = $container->get(AgentAutoriteService::class);
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
+        $observateurService = $container->get(ObservateurService::class);
         $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
@@ -52,6 +55,7 @@ class EntretienProfessionnelAssertionFactory
         $assertion->setAgentAutoriteService($agentAutoriteService);
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setEntretienProfessionnelService($entretienProfessionnelService);
+        $assertion->setObservateurService($observateurService);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 

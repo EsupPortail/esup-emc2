@@ -25,7 +25,7 @@ class ObservateurFormFactory
         $pluginManager = $container->get('ViewHelperManager');
         $urlManager = $pluginManager->get('Url');
         /** @see UtilisateurController::rechercherAction() */
-        $urlRecherche =  $urlManager->__invoke('unicaen-utilisateur/rechercher', [], [], true);
+        $urlRecherche =  $urlManager->__invoke('unicaen-utilisateur/rechercher-interne', [], [], true);
 
         /** @var ObservateurHydrator $hydrator */
         $hydrator = $container->get('HydratorManager')->get(ObservateurHydrator::class);

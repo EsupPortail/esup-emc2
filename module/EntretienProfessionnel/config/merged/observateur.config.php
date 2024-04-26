@@ -2,7 +2,6 @@
 
 namespace EntretienProfessionnel;
 
-use EntretienProfessionnel\Controller\EntretienProfessionnelController;
 use EntretienProfessionnel\Controller\ObservateurController;
 use EntretienProfessionnel\Controller\ObservateurControllerFactory;
 use EntretienProfessionnel\Form\Observateur\ObservateurForm;
@@ -28,6 +27,15 @@ return [
                     ],
                     'privileges' => [
                         ObservateurPrivileges::OBSERVATEUR_INDEX,
+                    ],
+                ],
+                [
+                    'controller' => ObservateurController::class,
+                    'action' => [
+                        'index-observateur',
+                    ],
+                    'privileges' => [
+                        ObservateurPrivileges::OBSERVATEUR_INDEX_OBSERVATEUR,
                     ],
                 ],
                 [
@@ -67,6 +75,42 @@ return [
                         ObservateurPrivileges::OBSERVATEUR_SUPPRIMER,
                     ],
                 ],
+                [
+                    'controller' => ObservateurController::class,
+                    'action' => [
+                        'rechercher',
+                    ],
+                    'privileges' => [
+                        ObservateurPrivileges::OBSERVATEUR_RECHERCHER,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'navigation'      => [
+        'default' => [
+            'home' => [
+                'pages' => [
+                    'gestion' => [
+                        'pages' => [
+                            'entretienpros' => [
+                                'label' => 'Gestion des entretiens professionnels',
+                                'route' => 'entretien-professionnel',
+                                'resource' =>  EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_INDEX) ,
+                                'order'    => 3000,
+                                'dropdown-header' => true,
+                            ],
+                            'observateur' => [
+                                'label' => 'Observateurs',
+                                'route' => 'entretien-professionnel/observateur',
+                                'resource' =>  ObservateurPrivileges::getResourceId(ObservateurPrivileges::OBSERVATEUR_INDEX) ,
+                                'order'    => 3030,
+                                'icon' => 'fas fa-angle-right',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -87,6 +131,16 @@ return [
                             ],
                         ],
                         'child_routes' => [
+                            'index-observateur' => [
+                                'type' => Segment::class,
+                                'options' => [
+                                    'route'    => '/index',
+                                    'defaults' => [
+                                        /** @see ObservateurController::indexObservateurAction() */
+                                        'action'     => 'index-observateur',
+                                    ],
+                                ],
+                            ],
                             'ajouter' => [
                                 'type' => Segment::class,
                                 'options' => [
@@ -134,6 +188,16 @@ return [
                                     'defaults' => [
                                         /** @see ObservateurController::supprimerAction() */
                                         'action'     => 'supprimer',
+                                    ],
+                                ],
+                            ],
+                            'rechercher' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route'    => '/rechercher',
+                                    'defaults' => [
+                                        /** @see ObservateurController::rechercherAction() */
+                                        'action'     => 'rechercher',
                                     ],
                                 ],
                             ],

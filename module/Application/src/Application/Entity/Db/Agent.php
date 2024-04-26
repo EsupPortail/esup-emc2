@@ -107,6 +107,11 @@ class Agent implements
         return $this->id;
     }
 
+    public function setId(?string $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getPrenom() : ?string
     {
         return $this->prenom;

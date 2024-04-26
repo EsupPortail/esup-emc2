@@ -1,0 +1,34 @@
+<?php
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+
+/**
+ * @see \EntretienProfessionnel\Controller\ObservateurController::indexObservateurAction()
+ * @var Campagne[] $campagnes
+ * @var EntretienProfessionnel[][] $entretiens;
+ */
+
+usort($campagnes, function (Campagne $a, Campagne $b) { return $b->getDateDebut()->getTimestamp() - $a->getDateDebut()->getTimestamp(); });
+
+$this->headTitle("Liste des entretiens dont vous observateur·trice");
+?>
+
+
+<h1 class="page-header">
+    Liste des entretiens dont vous observateur·trice
+</h1>
+
+<?php foreach ($campagnes as $campagne) : ?>
+    <h2> Campagne <?php echo $campagne->getAnnee(); ?> (<?php echo $campagne->getDateDebut()->format('d/m/Y'); ?> &Rightarrow; <?php echo $campagne->getDateDebut()->format('d/m/Y'); ?>)</h2>
+
+    <?php
+        $entretiens_ = $entretiens[$campagne->getId()];
+        usort($entretiens_, function (EntretienProfessionnel $a, EntretienProfessionnel $b) { return $a->getAgent()->getDenomination() <=> $b->getAgent()->getDenomination();});
+    ?>
+
+    <?php echo $this->entretienProfessionnelArray($entretiens_, ['affichages' => ['annee' => false], 'id' => 'campagne_'.$campagne->getId()]); ?>
+<?php endforeach; ?>
+
+
+

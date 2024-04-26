@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @see \EntretienProfessionnel\Controller\ObservateurController::indexAction()
+ * @var Campagne[] $campagnes
+ * @var Observateur[] $observateurs
+ * @var array $params
+ **/
+
+use EntretienProfessionnel\Entity\Db\Campagne;
+use EntretienProfessionnel\Entity\Db\Observateur;
+use EntretienProfessionnel\Provider\Privilege\EntretienproPrivileges;
+
+//note economie de temps en testant globalement
+$canAcceder = $this->isAllowed(EntretienproPrivileges::getResourceId(EntretienproPrivileges::ENTRETIENPRO_AFFICHER));
+
+?>
+
+
+<h1 class="page-header">
+    Observateur·trices d'entretiens professionnels
+</h1>
+
+
+<?php echo $this->partial('partial/filtre', ['campagnes' => $campagnes, 'params' => $params]); ?>
+
+<table class="table table-condensed datatable">
+    <thead>
+        <tr>
+            <th>
+                Observateurs
+            </th>
+            <th data-type="string">
+                Acteurs de l'entretien
+            </th>
+            <th data-type="num">
+                Campagne et date
+            </th>
+            <th data-type="num">
+                État
+            </th>
+            <th class="action">
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($observateurs as $observateur) : ?>
+        <?php $entretien = $observateur->getEntretienProfessionnel(); ?>
+        <tr>
+            <td>
+                <?php echo $observateur->getUser()->getDisplayName(); ?>
+            </td>
+            <td data-order="<?php echo $entretien->getAgent()->getDenomination(); ?>">
+                <dl class="row">
+                    <dt class="col-md-4"> Agent·e&nbsp;:</dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getAgent()->getDenomination(true); ?> </dd>
+                    <dt class="col-md-4"> Responsable&nbsp;:</dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getResponsable()->getDenomination(true); ?> </dd>
+                </dl>
+            </td>
+            <td data-order="<?php echo $entretien->getDateEntretien()->getTimestamp(); ?>">
+                <dl class="row">
+                    <dt class="col-md-4"> Campagne&nbsp;:</dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getCampagne()->getAnnee(); ?>
+                    <dt class="col-md-4"> Date de l'entretien&nbsp;:</dt>
+                    <dd class="col-md-8"> <?php echo $entretien->getDateEntretien()->format("d/m/Y"); ?></dd>
+                </dl>
+            </td>
+            <?php $etat = $entretien->getEtatActif(); ?>
+            <td data-order="<?php echo $etat->getType()->getOrdre();?>">
+                <?php echo $this->etatinstance($entretien->getEtatActif()); ?>
+            </td>
+            <td class="action">
+                <?php if ($canAcceder) : ?>
+                    <?php /** @see \EntretienProfessionnel\Controller\EntretienProfessionnelController::accederAction() */ ?>
+                    <a href="<?php echo $this->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()] ,[], true); ?>">
+                        <span class="icon icon-voir"></span>
+                        Accéder
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+        $('.datatable').DataTable( {
+            language: {
+                url: '/localisation/fr_FR.json'
+            }
+        });
+    });
+</script>
