@@ -40,7 +40,7 @@ class UrlService {
     public function getUrlApp() : string
     {
         $url = $this->renderer->url('home', [], ['force_canonical' => true], true);
-        return '<a href="'.$url.'">'.$url.'</a>';
+        return UrlService::trueLink($url);
     }
 
     /** @noinspection PhpUnused */
@@ -68,7 +68,12 @@ class UrlService {
     {
         $ficheposte = $this->variables['ficheposte'];
         $url = $this->renderer->url('fiche-poste/afficher', ['fiche-poste' => $ficheposte->getId()], ['force_canonical' => true], true);
-        return $url;
+        return UrlService::trueLink($url);
+    }
+
+    static public function trueLink(string $url) : string
+    {
+        return "<a href='".$url."' target='_blank'>".$url."</a>";
     }
 
 }

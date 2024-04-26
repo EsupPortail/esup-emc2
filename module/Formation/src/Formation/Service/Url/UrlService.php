@@ -13,7 +13,7 @@ class UrlService extends \Application\Service\Url\UrlService
     {
         /** @see IndexController::indexAction() */
         $url = $this->renderer->url('mes-formations', [], ['force_canonical' => true], true);
-        return $url;
+        return UrlService::trueLink($url);
     }
 
     /** @noinspection PhpUnused :: macro */
@@ -24,7 +24,7 @@ class UrlService extends \Application\Service\Url\UrlService
         if ($instance === null) return "<span style='color:darkred'>Variable [instance] non founie à UrlService</span>";
         /** @see FormationInstanceController::afficherAction() */
         $url = $this->renderer->url('formation-instance/afficher', ['formation-instance' => $instance->getId()], ['force_canonical' => true], true);
-        return $url;
+        return  UrlService::trueLink($url);
     }
 
 }

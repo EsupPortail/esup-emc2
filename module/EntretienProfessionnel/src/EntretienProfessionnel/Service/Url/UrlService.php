@@ -14,7 +14,7 @@ class UrlService extends \Application\Service\Url\UrlService
         $entretien = $this->getVariable('entretien');
         if ($entretien === null) return "<span style='color:darkred'>Variable [entretien] non founie à UrlService</span>";
         $url = $this->renderer->url('entretien-professionnel/accepter-entretien', ['entretien-professionnel' => $entretien->getId(), 'token' => $entretien->getToken()], ['force_canonical' => true], true);
-        return $url;
+        return  UrlService::trueLink($url);
     }
 
     /** @noinspection PhpUnused */
@@ -24,6 +24,6 @@ class UrlService extends \Application\Service\Url\UrlService
         $entretien = $this->getVariable('entretien');
         if ($entretien === null) return "<span style='color:darkred'>Variable [entretien] non founie à UrlService</span>";
         $url = $this->renderer->url('entretien-professionnel/acceder', ['entretien-professionnel' => $entretien->getId()], ['force_canonical' => true], true);
-        return $url;
+        return UrlService::trueLink($url);
     }
 }
