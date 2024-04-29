@@ -116,24 +116,22 @@ echo $this->doctype();
 </script>
 
 <script>
-    $(function() {
-        switch($('#user-status-name').text()) {
-            case 'Aoi' : $('div#contenu-principal').addClass('Aoi'); break;
-            case 'Blanche' : $('div#contenu-principal').addClass('Blanche'); break;
-            case 'Bruno' : $('div#contenu-principal').addClass('Bruno'); break;
-            case 'Cerise' : $('div#contenu-principal').addClass('Cerise'); break;
-            case 'Clémentine' : $('div#contenu-principal').addClass('Clementine'); break;
-            case 'Grey' : $('div#contenu-principal').addClass('Grey'); break;
-            case 'Jonathan' : $('div#contenu-principal').addClass('Jonathan'); break;
-            case 'Océane' : $('div#contenu-principal').addClass('Oceane'); break;
-            case 'Olive' : $('div#contenu-principal').addClass('Olive'); break;
-            case 'Rose' : $('div#contenu-principal').addClass('Rose'); break;
-            case 'Rusty' : $('div#contenu-principal').addClass('Rusty'); break;
-            case 'Violette' : $('div#contenu-principal').addClass('Violette'); break;
-            default : $('div#contenu-principal').addClass('hidden'); break;
+    <!-- On récupère la liste des images associées aux personnas -->
+    <?php
+    $directory = "/var/www/html/public/img/Personna";
+    $files =  array_diff(scandir($directory), ['.', '..']);
+    $files =  array_map(function(string $name) { return explode('.', $name)[0]; }, $files);
+    $s = "['".implode("', '",$files)."']";
+    ?>
+    const personaClasses = <?php echo $s; ?>;
 
+    <!-- Changement si existe -->
+    $(function() {
+        const userStatusName = $('#user-status-name').text();
+        if (personaClasses.includes(userStatusName)) {
+            $('div#contenu-principal').css("background-image", 'url("img/Personna/' + userStatusName + '.jpg")');
         }
-    })
+    });
 </script>
 
 <style>
@@ -149,19 +147,6 @@ echo $this->doctype();
         background-attachment: fixed;
         background-position: right var(--position-x) top var(--position-y);
     }
-
-    div#contenu-principal.Aoi { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Aoi.jpg'); }
-    div#contenu-principal.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Blanche.jpg'); }
-    div#contenu-principal.Bruno { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Bruno.jpg'); }
-    div#contenu-principal.Cerise { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Cerise.jpg'); }
-    div#contenu-principal.Clementine { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Clementine.jpg'); }
-    div#contenu-principal.Grey { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Grey.jpg'); }
-    div#contenu-principal.Jonathan { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Jonathan.jpg'); }
-    div#contenu-principal.Oceane { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Oceane.jpg'); }
-    div#contenu-principal.Olive { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Olive.jpg'); }
-    div#contenu-principal.Rose { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rose.jpg'); }
-    div#contenu-principal.Rusty { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Rusty.jpg'); }
-    div#contenu-principal.Violette { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Violette.jpg'); }
 
 </style>
 
