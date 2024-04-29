@@ -252,9 +252,14 @@ class FormationInstanceService
         $qb = $this->createQueryBuilder();
         $qb = $qb->leftJoin('Finstance.gestionnaires', 'gestionnaire')
             ->andWhere('gestionnaire.id IS NULL')
-            ->andWhere('Finstance.histoDestruction IS NULL');
+            ->andWhere('Finstance.histoDestruction IS NULL')
+        ;
+        // retrait des états finaux
+        $qb = $qb->andWhere('etype.code not in (:etatsfinaux)')->setParameter('etatsfinaux', SessionEtats::ETATS_FINAUX);
         /** @var FormationInstance[] $sessions */
         $sessions = $qb->getQuery()->getResult();
+
+        $sessions = array_filter($sessions, function (FormationInstance $session) { return $session->getEtatActif()->getType() !== SessionEtats::ETAT_CLOTURE_INSTANCE;});
         return $sessions;
     }
 

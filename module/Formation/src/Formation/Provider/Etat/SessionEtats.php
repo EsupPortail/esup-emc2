@@ -27,4 +27,9 @@ class SessionEtats {
         SessionEtats::ETAT_INSCRIPTION_OUVERTE,
         SessionEtats::ETAT_INSCRIPTION_FERMEE,
     ];
+
+    const ETATS_FINAUX              = [
+        SessionEtats::ETAT_SESSION_ANNULEE,
+        SessionEtats::ETAT_CLOTURE_INSTANCE,
+    ];
 }
