@@ -118,6 +118,7 @@ echo $this->doctype();
 <script>
     $(function() {
         switch($('#user-status-name').text()) {
+            case 'Aoi' : $('div#contenu-principal').addClass('Aoi'); break;
             case 'Blanche' : $('div#contenu-principal').addClass('Blanche'); break;
             case 'Bruno' : $('div#contenu-principal').addClass('Bruno'); break;
             case 'Cerise' : $('div#contenu-principal').addClass('Cerise'); break;
@@ -149,6 +150,7 @@ echo $this->doctype();
         background-position: right var(--position-x) top var(--position-y);
     }
 
+    div#contenu-principal.Aoi { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Aoi.jpg'); }
     div#contenu-principal.Blanche { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Blanche.jpg'); }
     div#contenu-principal.Bruno { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Bruno.jpg'); }
     div#contenu-principal.Cerise { background-image:url('<?php echo $this->url('home', [], ['force_canonical' => true], true); ?>img/Personna/Cerise.jpg'); }
