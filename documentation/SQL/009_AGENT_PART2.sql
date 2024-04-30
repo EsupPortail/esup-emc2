@@ -409,8 +409,8 @@ create unique index agent_missionspecifique_id_uindex on agent_missionspecifique
 
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES
     ('LETTRE_MISSION', null, 'pdf', 'Application\Provider\Privilege',
-     'Lettre de mission pour VAR[AGENT#denomination] réalisant la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]',
-     '<p>L''agent VAR[AGENT#denomination] réalise la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]</p>',
+     'Lettre de mission pour VAR[AGENT#Denomination] réalisant la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]',
+     '<p>L''agent VAR[AGENT#Denomination] réalise la mission spécifique VAR[MISSIONSPECIFIQUE#Libelle]</p>',
      null);
 
 -- ---------------------------------------------------------------------------------------------------------------------

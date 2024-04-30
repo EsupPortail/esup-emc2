@@ -39,7 +39,7 @@ create table unicaen_utilisateur_role
     ldap_filter          varchar(255) default NULL::character varying,
     accessible_exterieur boolean      default true  not null,
     description          text,
-    dispayed             boolean default true not null
+    displayed             boolean default true not null
 );
 create unique index un_unicaen_utilisateur_role_role_id on unicaen_utilisateur_role (role_id);
 create index ix_unicaen_utilisateur_role_parent on unicaen_utilisateur_role (parent_id);

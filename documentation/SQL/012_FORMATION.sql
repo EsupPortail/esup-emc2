@@ -145,17 +145,6 @@ create table formation_enquete_question
 create unique index formation_enquete_question_id_uindex
     on formation_enquete_question (id);
 
-create table formation_session_gestionnaire
-(
-    session_id      integer not null
-        constraint formation_session_gestionnaire_formation_instance_id_fk
-            references formation_instance on delete cascade,
-    gestionnaire_id integer not null
-        constraint formation_session_gestionnaire_unicaen_utilisateur_user_id_fk
-            references unicaen_utilisateur_user on delete cascade,
-    constraint formation_session_gestionnaire_pk primary key (session_id, gestionnaire_id)
-);
-
 create table formation_session_parametre
 (
     id                    serial
@@ -501,10 +490,20 @@ create table formation_instance
         references formation_session_parametre
         on delete set null
 );
+create unique index formation_instance_id_uindex on formation_instance (id);
 
 
-create unique index formation_instance_id_uindex
-    on formation_instance (id);
+create table formation_session_gestionnaire
+(
+    session_id      integer not null
+        constraint formation_session_gestionnaire_formation_instance_id_fk
+            references formation_instance on delete cascade,
+    gestionnaire_id integer not null
+        constraint formation_session_gestionnaire_unicaen_utilisateur_user_id_fk
+            references unicaen_utilisateur_user on delete cascade,
+    constraint formation_session_gestionnaire_pk primary key (session_id, gestionnaire_id)
+);
+
 
 
 create table formation_formateur
@@ -1014,7 +1013,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, documen
 -- TEMPLATE - PDF ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_ATTESTATION', null, 'pdf', 'Formation\Provider\Template', 'Attestation de formation de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle]', e'<p> </p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_ATTESTATION', null, 'pdf', 'Formation\Provider\Template', 'Attestation de formation de VAR[AGENT#Denomination] à la formation VAR[SESSION#libelle]', e'<p> </p>
 <p> </p>
 <p> </p>
 <p> </p>
@@ -1025,7 +1024,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <h1 style="text-align: center;">Attestation de stage</h1>
 <p> </p>
 <p>Le bureau conseil, carrière, compétences, certifie que le stagiaire :</p>
-<p>VAR[AGENT#denomination] a suivi la formation : <strong>VAR[SESSION#libelle] </strong>qui s\'est déroulée du VAR[SESSION#periode] (Durée : VAR[SESSION#duree])VAR[SESSION#lieu].</p>
+<p>VAR[AGENT#Denomination] a suivi la formation : <strong>VAR[SESSION#libelle] </strong>qui s\'est déroulée du VAR[SESSION#periode] (Durée : VAR[SESSION#duree])VAR[SESSION#lieu].</p>
 <p> </p>
 <p>L\'agent a suivi VAR[INSCRIPTION#duree] de formation.</p>
 <p> </p>
@@ -1038,7 +1037,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p> </p>
 <h1 style="text-align: center;">Convocation à une action de formation</h1>
 <p style="text-align: right;"> À Caen, le VAR[EMC2#Date]</p>
-<p>Bonjour <strong>VAR[AGENT#denomination]</strong>,</p>
+<p>Bonjour <strong>VAR[AGENT#Denomination]</strong>,</p>
 <p> </p>
 <p>Le bureau conseil carrière compétences vous informe que vous êtes retenu-e à la formation :</p>
 <p style="text-align: center;"><strong>VAR[SESSION#libelle]<br /></strong></p>
@@ -1050,9 +1049,9 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p style="text-align: justify;"> </p>
 <p style="text-align: justify;">La responsable du bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr </p>
 <p style="text-align: left;"><em>P.S. : Cette convocation vaut ordre de mission</em></p>', 'table { border-collapse: collapse;} tr th {border-bottom:1px solid black;} td {text-align:center;}');
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_HISTORIQUE', null, 'pdf', 'Formation\Provider\Template', 'Historique des formations de VAR[AGENT#denomination]', e'<h1 style="text-align: center;"> Historique de formation</h1>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_HISTORIQUE', null, 'pdf', 'Formation\Provider\Template', 'Historique des formations de VAR[AGENT#Denomination]', e'<h1 style="text-align: center;"> Historique de formation</h1>
 <p> </p>
-<p>L\'agent <strong>VAR[AGENT#denomination]</strong> a suivi les formations suivantes  : ###A REMPLACER###</p>
+<p>L\'agent <strong>VAR[AGENT#Denomination]</strong> a suivi les formations suivantes  : ###A REMPLACER###</p>
 <p> </p>
 <p style="text-align: right;">La responsable du bureau conseil, carrière, compétences.<br /><br /></p>', null);
 
@@ -1060,13 +1059,13 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 -- TEMPLATE - MAIL ------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_TOTALEMENT_VALIDEE', '<p>Mail envoyé vers le CCC lorsque d''une demande extérieur est totalement validée</p>', 'mail', 'Formation\Provider\Template', 'La demande stage externe de VAR[AGENT#denomination] est maintenant totalement validée', e'<p>Bonjour,</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_TOTALEMENT_VALIDEE', '<p>Mail envoyé vers le CCC lorsque d''une demande extérieur est totalement validée</p>', 'mail', 'Formation\Provider\Template', 'La demande stage externe de VAR[AGENT#Denomination] est maintenant totalement validée', e'<p>Bonjour,</p>
 <p>La demande de stage externe suivante est maintenant totalement validée.</p>
 <table style="width: 450px; height: 116px;">
 <tbody>
 <tr>
 <td style="width: 197.717px;">Agent</td>
-<td style="width: 234.283px;">VAR[AGENT#denomination]</td>
+<td style="width: 234.283px;">VAR[AGENT#Denomination]</td>
 </tr>
 <tr>
 <td style="width: 197.717px;">Libellé du stage</td>
@@ -1087,7 +1086,7 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 </tbody>
 </table>
 <p>L\'application Mes Formations<br />VAR[EMC2#AppLink]</p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_AGENT', '<p>Courrier envoyé vers le responsable de l''agent lorsque celui-ci valide un demande de formation externe.</p>', 'mail', 'Formation\Provider\Template', 'Demande de validation d''une demande de formation externe de VAR[AGENT#denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_AGENT', '<p>Courrier envoyé vers le responsable de l''agent lorsque celui-ci valide un demande de formation externe.</p>', 'mail', 'Formation\Provider\Template', 'Demande de validation d''une demande de formation externe de VAR[AGENT#Denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#Date]</p>
 <p> Bonjour,</p>
 <p>VAR[AGENT#Prenom] VAR[AGENT#NomUsage] vient d\'effectuer une demande de formation externe (hors plan de formation).<br />Vous pouvez désormais en tant que Responsable de VAR[AGENT#Prenom] VAR[AGENT#NomUsage] valider (ou refuser) cette demande.</p>
@@ -1125,11 +1124,11 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p>Vous pouvez valider (ou refuser) celle-ci en vous connectant à Mes Formations (VAR[EMC2#AppLink]), dans l\'onglet "Demande de formation de votre structure".</p>
 <p> </p>
 <p>Le bureau conseil carrière compétences,<br />drh.formation@unicaen.fr<br />VAR[EMC2#AppLink]</p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_DRH', '<p>Courrier envoyé lors de la validation par la drh d''une demande externe (Agent et Responsable)</p>', 'mail', 'Formation\Provider\Template', 'Validation de la demande de formation externe de VAR[AGENT#denomination] par le bureau gérant les formations', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_DRH', '<p>Courrier envoyé lors de la validation par la drh d''une demande externe (Agent et Responsable)</p>', 'mail', 'Formation\Provider\Template', 'Validation de la demande de formation externe de VAR[AGENT#Denomination] par le bureau gérant les formations', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#Date]</p>
 <p> </p>
 <p>Bonjour,</p>
-<p>Le demande suivante de formation externe (hors plan de formation) pour VAR[AGENT#denomination] est <strong>validée</strong>.</p>
+<p>Le demande suivante de formation externe (hors plan de formation) pour VAR[AGENT#Denomination] est <strong>validée</strong>.</p>
 <table style="width: 572px; height: 89px;">
 <tbody>
 <tr>
@@ -1159,16 +1158,16 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 </tbody>
 </table>
 <p> </p>
-<p>VAR[AGENT#denomination] est invité-e à procéder à son inscription auprès de l\'organisme sollicité.</p>
+<p>VAR[AGENT#Denomination] est invité-e à procéder à son inscription auprès de l\'organisme sollicité.</p>
 <p> </p>
 <p>Le bureau conseil carrière compétences est à votre disposition et se charge des démarches administratives.</p>
 <p> </p>
 <p>Le bureau conseil carrière compétences,<br />drh.formation@unicaen.fr</p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_REFUS', '<p>Mail envoyé lors du refus par le responsable ou la DRH</p>', 'mail', 'Formation\Provider\Template', 'Refus de la demande de formation externe de VAR[AGENT#denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_REFUS', '<p>Mail envoyé lors du refus par le responsable ou la DRH</p>', 'mail', 'Formation\Provider\Template', 'Refus de la demande de formation externe de VAR[AGENT#Denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#date]</p>
 <p> </p>
 <p>Bonjour,</p>
-<p>Le demande suivante de formation externe (hors plan de formation) pour VAR[AGENT#denomination] vient d\'être refusée.</p>
+<p>Le demande suivante de formation externe (hors plan de formation) pour VAR[AGENT#Denomination] vient d\'être refusée.</p>
 <table style="width: 572px; height: 89px;">
 <tbody>
 <tr>
@@ -1233,11 +1232,11 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p>Le bureau conseil carrière compétences,<br />drh.formation@unicaen.fr</p>
 <p> </p>
 <p> </p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_RESP_DRH', '<p>Courrier envoyé vers la DRH lorsque celui-ci valide une demande de formation externe validée par un responsable.</p>', 'mail', 'Formation\Provider\Template', 'Validation d''une demande de formation externe de VAR[AGENT#denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_DEMANDE_EXTERNE_VALIDATION_RESP_DRH', '<p>Courrier envoyé vers la DRH lorsque celui-ci valide une demande de formation externe validée par un responsable.</p>', 'mail', 'Formation\Provider\Template', 'Validation d''une demande de formation externe de VAR[AGENT#Denomination]', e'<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#Date]</p>
 <p> </p>
 <p>Bonjour,</p>
-<p>Le responsable de l\'agent VAR[AGENT#denomination] vient de valider une demande de formation externe (hors plan de formation).<br /><br /></p>
+<p>Le responsable de l\'agent VAR[AGENT#Denomination] vient de valider une demande de formation externe (hors plan de formation).<br /><br /></p>
 <p>La responsable du bureau conseil carrière compétences est chargée de procéder à la validation définitive de cette demande.</p>
 <p>Informations à propos de la demande :</p>
 <table style="width: 572px; height: 89px;">
@@ -1272,10 +1271,10 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p> </p>
 <p><strong>EMC2</strong></p>
 <p> </p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_1_AGENT', '<p>Demande d''inscription à une formation (Agent &gt; Responsable)</p>', 'mail', 'Formation\Provider\Template', 'Demande d''inscription de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Université de Caen Normandie<br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_1_AGENT', '<p>Demande d''inscription à une formation (Agent &gt; Responsable)</p>', 'mail', 'Formation\Provider\Template', 'Demande d''inscription de VAR[AGENT#Denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Université de Caen Normandie<br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">À Caen, le VAR[EMC2#Date]</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour,</p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> <span style="color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">VAR[AGENT#denomination]</span> vient de procéder à une demande d\'inscription pour la formation <span style="color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">VAR[SESSION#libelle] </span>du VAR[SESSION#periode]. </p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> <span style="color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">VAR[AGENT#Denomination]</span> vient de procéder à une demande d\'inscription pour la formation <span style="color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">VAR[SESSION#libelle] </span>du VAR[SESSION#periode]. </p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Merci de vous connecter à l\'application "Mes Formations" (VAR[URL#App]) afin d\'accepter ou de refuser sa demande.<br />La liste des "demandes en attente" est accessible dans l\'onglet \'Demande de formation\' dans votre structure.</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[URL#App]</p>', null);
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_2_RESPONSABLE_REFUS', '<p>Refus de la demande d''inscription par le responsable (Responsable &gt; Agent)</p>', 'mail', 'Formation\Provider\Template', 'Refus de la demande d''inscription à la formation VAR[SESSION#libelle] du VAR[SESSION#periode] par votre responsable', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
@@ -1289,9 +1288,9 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 </tbody>
 </table>
 <p><br />La responsable du bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[URL#App]</p>', 'table {border:1px solid black;}');
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_2_RESPONSABLE_VALIDATION', '<p>Demande d''inscription à une formation (Responsable &gt; DRH)</p>', 'mail', 'Formation\Provider\Template', 'Validation par le responsable de structure de la demande de formation de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_2_RESPONSABLE_VALIDATION', '<p>Demande d''inscription à une formation (Responsable &gt; DRH)</p>', 'mail', 'Formation\Provider\Template', 'Validation par le responsable de structure de la demande de formation de VAR[AGENT#Denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#Date]</p>
-<p>Bonjour,<br /><br />La demande de formation de VAR[AGENT#denomination] à VAR[SESSION#libelle] du VAR[SESSION#periode] vient d\'être validée par le responsable hiérarchique.<br />Vous pouvez maintenant valider ou refuser cette demande de formation via l\'application "Mes Formations" : VAR[URL#SessionAfficher]<br /><br /></p>
+<p>Bonjour,<br /><br />La demande de formation de VAR[AGENT#Denomination] à VAR[SESSION#libelle] du VAR[SESSION#periode] vient d\'être validée par le responsable hiérarchique.<br />Vous pouvez maintenant valider ou refuser cette demande de formation via l\'application "Mes Formations" : VAR[URL#SessionAfficher]<br /><br /></p>
 <p>L\'application Mes Formations</p>', null);
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_3_DRH_REFUS', '<p>Refus de la demande d''inscription par la DRH (DRH &gt; Agent)</p>', 'mail', 'Formation\Provider\Template', 'Refus de la demande d''inscription à la formation VAR[SESSION#libelle] du VAR[SESSION#periode] par la direction des ressources humaines.', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
 <p>À Caen, le VAR[EMC2#Date]</p>
@@ -1306,15 +1305,15 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 <p> Le bureau conseil carrière compétences se tient à votre disposition pour toute information complémentaire.</p>
 <p>La responsable du bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[URL#App]</p>
 <p> </p>', 'table {border:1px solid black;}');
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_3_DRH_VALIDATION', '<p>Demande d''inscription à une formation (DRH &gt; Agent)</p>', 'mail', 'Formation\Provider\Template', 'Validation de la demande de formation de VAR[AGENT#denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
-<p>À Caen, le VAR[EMC2#Date]<br /><br /> <br /><br />Bonjour,<br /><br /><br />La demande de formation de VAR[AGENT#denomination] à VAR[SESSION#libelle] du VAR[SESSION#periode] vient d\'être validée par le bureau conseil, carrière, compétences.<br />Vous recevrez une notification quelques jours avant la formation et pourrez ainsi télécharger si besoin votre convocation directement sur l\'application Mes Formations (VAR[EMC2#AppLink])<br /><br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[EMC2#AppLink]</p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_PREVENTION', null, 'mail', 'Formation\Provider\Template', 'Validation de l''inscription de VAR[AGENT#denomination] à une formation de prévention', e'<p>Bonjour,</p>
-<p>VAR[AGENT#denomination] vient classé en liste principale pour une formation de prévention</p>
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_3_DRH_VALIDATION', '<p>Demande d''inscription à une formation (DRH &gt; Agent)</p>', 'mail', 'Formation\Provider\Template', 'Validation de la demande de formation de VAR[AGENT#Denomination] à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN CEDEX 5</p>
+<p>À Caen, le VAR[EMC2#Date]<br /><br /> <br /><br />Bonjour,<br /><br /><br />La demande de formation de VAR[AGENT#Denomination] à VAR[SESSION#libelle] du VAR[SESSION#periode] vient d\'être validée par le bureau conseil, carrière, compétences.<br />Vous recevrez une notification quelques jours avant la formation et pourrez ainsi télécharger si besoin votre convocation directement sur l\'application Mes Formations (VAR[EMC2#AppLink])<br /><br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br />VAR[EMC2#AppLink]</p>', null);
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_INSCRIPTION_PREVENTION', null, 'mail', 'Formation\Provider\Template', 'Validation de l''inscription de VAR[AGENT#Denomination] à une formation de prévention', e'<p>Bonjour,</p>
+<p>VAR[AGENT#Denomination] vient classé en liste principale pour une formation de prévention</p>
 <table style="width: 573px;">
 <tbody>
 <tr>
 <td style="width: 241.65px;">Agent</td>
-<td style="width: 335.35px;">VAR[AGENT#denomination]</td>
+<td style="width: 335.35px;">VAR[AGENT#Denomination]</td>
 </tr>
 <tr>
 <td style="width: 241.65px;">Date de naissance</td>
@@ -1364,17 +1363,17 @@ INSERT INTO unicaen_renderer_template (code, description, document_type, namespa
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_SESSION_ANNULEE', '<p>Mail envoyé aux inscrits d''une session venant d''être annulée</p>', 'mail', 'Formation\Provider\Template', 'La session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] est annulée', e'<p><strong>Université de Caen Normandie</strong><br /><strong>DRH - Bureau conseil, carrière, compétences</strong><br />Esplanade de la Paix<br />14032 CAEN                                                                                                                                                                                                 </p>
 <p>A Caen, le VAR[EMC2#date]</p>
 <p> </p>
-<p>Bonjour VAR[AGENT#denomination],</p>
+<p>Bonjour VAR[AGENT#Denomination],</p>
 <p>Nous vous informons que la session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] pour laquelle vous étiez inscrit, est annulée.</p>
 <p>Si vous souhaitez vous inscrire de nouveau sur cette même formation, vous serez alors notifié dès la réouverture d\'une prochaine session.</p>
 <p> </p>
 <p>Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr</p>', null);
-INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_SESSION_CONVOCATION', '<p>Mail de convocation envoyé aux agents</p>', 'mail', 'Formation\Provider\Template', 'La session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] va bientôt commencer', '<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN                                                                                                                       <br /><br />A Caen, le VAR[EMC2#date]<br /><br /> <br />Bonjour VAR[AGENT#denomination],<br /> <br /><br />La session de formation VAR[SESSION#libelle] (VAR[SESSION#identification]) du VAR[SESSION#periode] à laquelle vous êtes inscrit va débuter prochainement.<br /><br /><br />Pour rappel, cette formation se déroulera selon le calendrier suivant :<br />VAR[SESSION#seances]<br /><br />Vous pouvez retrouver sur l''application EMC2 (VAR[URL#App]) votre convocation qui vaut ordre de mission.<br />N''imprimez celle-ci que si nécessaire.<br /><br /> <br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br /><br /> P.S.: Vous pouvez retrouver les plans d’accès et des campus sur le site de l''Université https://www.unicaen.fr/universite/decouvrir/territoire/caen</p>', null);
+INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_SESSION_CONVOCATION', '<p>Mail de convocation envoyé aux agents</p>', 'mail', 'Formation\Provider\Template', 'La session de formation VAR[SESSION#libelle] du VAR[SESSION#periode] va bientôt commencer', '<p><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN                                                                                                                       <br /><br />A Caen, le VAR[EMC2#date]<br /><br /> <br />Bonjour VAR[AGENT#Denomination],<br /> <br /><br />La session de formation VAR[SESSION#libelle] (VAR[SESSION#identification]) du VAR[SESSION#periode] à laquelle vous êtes inscrit va débuter prochainement.<br /><br /><br />Pour rappel, cette formation se déroulera selon le calendrier suivant :<br />VAR[SESSION#seances]<br /><br />Vous pouvez retrouver sur l''application EMC2 (VAR[URL#App]) votre convocation qui vaut ordre de mission.<br />N''imprimez celle-ci que si nécessaire.<br /><br /> <br />Le bureau conseil, carrière, compétences.<br />drh.formation@unicaen.fr<br /><br /> P.S.: Vous pouvez retrouver les plans d’accès et des campus sur le site de l''Université https://www.unicaen.fr/universite/decouvrir/territoire/caen</p>', null);
 INSERT INTO unicaen_renderer_template (code, description, document_type, namespace, document_sujet, document_corps, document_css) VALUES ('FORMATION_SESSION_DEMANDE_RETOUR', e'<p>Mail demandant aux agents ayant suivi la formation de remplir le formulaire</p>
 <p> </p>', 'mail', 'Formation\Provider\Template', 'Demande de saisie des formulaires de retour de la formation VAR[SESSION#libelle] du VAR[SESSION#periode]', e'<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><strong>Université de Caen Normandie</strong><br />DRH - Bureau conseil, carrière, compétences<br />Esplanade de la Paix<br />14032 CAEN 5</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">À Caen, le VAR[EMC2#date]</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
-<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour VAR[AGENT#denomination],</p>
+<p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Bonjour VAR[AGENT#Denomination],</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Vous venez de participer à la formation VAR[SESSION#libelle] du VAR[SESSION#periode]. Afin d\'obtenir votre attestation de présence, merci de compléter le questionnaire de satisfaction à votre disposition dans l\'application VAR[EMC2#appname].</p>
 <p style="line-height: 1.2em; color: #000000; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"> </p>
