@@ -251,7 +251,7 @@ $this->headTitle("Vérification de l'installation");
                         }
 
                         foreach ($constants as $name => $value) {
-                            if ($name !== 'TYPE') {
+                            if ($name !== 'TYPE' AND !is_array($value)) {
                                 $etat = $etatTypeService->getEtatTypeByCode($value);
                                 if ($etat !== null) {
                                     echo "<span class='icon icon-checked text-success'></span> L'état [".$value."] bien déclarée <br>";
