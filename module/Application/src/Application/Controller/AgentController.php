@@ -2,9 +2,11 @@
 
 namespace Application\Controller;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\AgentAutorite;
 use Application\Entity\Db\AgentSuperieur;
 use Application\Form\AgentAccompagnement\AgentAccompagnementFormAwareTrait;
+use Application\Provider\Parametre\AgentParametres;
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Application\Service\AgentAccompagnement\AgentAccompagnementServiceAwareTrait;
 use Application\Service\AgentAffectation\AgentAffectationServiceAwareTrait;
@@ -168,6 +170,8 @@ class AgentController extends AbstractActionController
             'intranet' => $lienIntranet,
 
             'mobilites' => $mobilites,
+
+            'parametres' => $this->getParametreService()->getParametresByCategorieCode(AgentParametres::TYPE),
         ]);
     }
 

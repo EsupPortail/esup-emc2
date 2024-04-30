@@ -13,9 +13,10 @@ use Application\Entity\Db\AgentStageObservation;
 use Application\Entity\Db\AgentStatut;
 use Application\Entity\Db\AgentTutorat;
 use Application\Entity\Db\FichePoste;
-use Application\Provider\Privilege\AgentmobilitePrivileges;
+use Application\Provider\Parametre\AgentParametres;
 use Application\Provider\Privilege\AgentPrivileges;
 use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
+use UnicaenParametre\Entity\Db\Parametre;
 
 /**
  * @see Application\Controller\AgentController::afficherAction()
@@ -40,6 +41,7 @@ use EntretienProfessionnel\Entity\Db\EntretienProfessionnel;
  * @var AgentTutorat[] $tutorats
  * @var AgentAccompagnement[] $accompagnements
  * @var AgentMobilite[] $mobilites
+ * @var Parametre[] $parametres
  *
  */
 
@@ -53,9 +55,6 @@ if ($agent !== null) {
     $canDetruire = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_DETRUIRE);
     $canValider = $this->isAllowed($agent, AgentPrivileges::AGENT_ELEMENT_VALIDER);
     $canAfficherMission = $canVoir;
-    $canCCC = $this->isAllowed(AgentPrivileges::getResourceId(AgentPrivileges::AGENT_GESTION_CCC));
-    $canMobilite = $this->isAllowed(AgentmobilitePrivileges::getResourceId(AgentmobilitePrivileges::AGENTMOBILITE_AFFICHER));
-    $canPortfolio = $canCCC;
 
     $droits = [
         'afficher' => $canVoir,
@@ -89,29 +88,35 @@ if ($agent !== null) {
     </h1>
 
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
         <button class="nav-link active" id="informations-tab"
                 data-bs-toggle="tab" data-bs-target="#informations"
                 type="button" role="tab" aria-controls="informations" aria-selected="true">
             Informations <br/> générales
         </button>
+        <?php endif; ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_FICHES]) || $parametres[AgentParametres::ONGLET_FICHES]->getValeur() !== "false") : ?>
         <button class="nav-link" id="fiches-tab"
                 data-bs-toggle="tab" data-bs-target="#fiches"
                 type="button" role="tab" aria-controls="fiches" aria-selected="true">
             Fiches de poste et <br/> missions spécifiques
         </button>
-        <?php if ($canPortfolio) : ?>
+        <?php endif; ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
             <button class="nav-link" id="acquis-tab"
                     data-bs-toggle="tab" data-bs-target="#acquis"
                     type="button" role="tab" aria-controls="acquis" aria-selected="true">
                 Acquis de l'agent <br/> &nbsp;
             </button>
+        <?php endif; ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_PORTFOLIO]) || $parametres[AgentParametres::ONGLET_PORTFOLIO]->getValeur() !== "false") : ?>
             <button class="nav-link" id="portfolio-tab"
                     data-bs-toggle="tab" data-bs-target="#portfolio"
                     type="button" role="tab" aria-controls="portfolio" aria-selected="true">
                 Portfolio <br/> &nbsp;
             </button>
         <?php endif; ?>
-        <?php if ($canCCC === true) : ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_CCC]) || $parametres[AgentParametres::ONGLET_CCC]->getValeur() !== "false") : ?>
             <button class="nav-link" id="ppp-tab"
                     data-bs-toggle="tab" data-bs-target="#ppp"
                     type="button" role="tab" aria-controls="ppp" aria-selected="true">
@@ -123,7 +128,7 @@ if ($agent !== null) {
                 Tutorats et <br/> encadrements
             </button>
         <?php endif; ?>
-        <?php if ($canMobilite === true) : ?>
+        <?php if (!isset($parametres[AgentParametres::ONGLET_MOBILITES]) || $parametres[AgentParametres::ONGLET_MOBILITES]->getValeur() !== "false") : ?>
             <button class="nav-link" id="mobilite-tab"
                     data-bs-toggle="tab" data-bs-target="#mobilite"
                     type="button" role="tab" aria-controls="mobilite" aria-selected="true">
@@ -134,6 +139,7 @@ if ($agent !== null) {
 
     <div>
         <div class="tab-content">
+            <?php if (!isset($parametres[AgentParametres::ONGLET_INFORMATIONS]) || $parametres[AgentParametres::ONGLET_INFORMATIONS]->getValeur() !== "false") : ?>
             <div id="informations" class="tab-pane fade show" role="tabpanel" aria-labelledby="informations-tab">
 
                 <?php echo $this->partial('partial/informations-generales',
@@ -142,12 +148,19 @@ if ($agent !== null) {
                         'superieures' => $superieures, 'autorites' => $autorites,
                         'statuts' => $statuts, 'echelons' => $echelons, 'grades' => $grades, 'quotite' => $quotite]); ?>
             </div>
-            <div id="fiches" class="tab-pane " role="tabpanel">
+
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_FICHES]) || $parametres[AgentParametres::ONGLET_FICHES]->getValeur() !== "false") : ?>
+
+                <div id="fiches" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/fiche-poste',
                     ['fichespostes' => $fichespostes, 'agent' => $agent, 'droits' => $droits], []); ?>
                 <?php echo $this->partial('partial/mission-specifique', ['missions' => $missions, 'agent' => $agent, "options" => $options['actions']], []); ?>
             </div>
 
+
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_ACQUIS]) || $parametres[AgentParametres::ONGLET_ACQUIS]->getValeur() !== "false") : ?>
 
             <div id="acquis" class="tab-pane " role="tabpanel">
                 <h2> Applications, compétences et formations</h2>
@@ -169,18 +182,25 @@ if ($agent !== null) {
                 <?php //echo $this->formationBloc($agent->getFormationDictionnaire(), $agent, $options); ?>
 <!--                Formation desactiver pour le moment-->
             </div>
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_PORTFOLIO]) || $parametres[AgentParametres::ONGLET_PORTFOLIO]->getValeur() !== "false") : ?>
             <div id="portfolio" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/portfolio', ['fichiers' => $agent->getFichiers(), 'agent' => $agent, 'droits' => $droits], []); ?>
             </div>
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_CCC]) || $parametres[AgentParametres::ONGLET_CCC]->getValeur() !== "false") : ?>
             <div id="ppp" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/ppp', ['agent' => $agent, 'ppps' => $ppps, 'stages' => $stages, 'droits' => $droits], []); ?>
             </div>
             <div id="tutorat" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/tutorat', ['agent' => $agent, 'tutorats' => $tutorats, 'accompagnements' => $accompagnements, 'droits' => $droits], []); ?>
             </div>
+            <?php endif; ?>
+            <?php if (!isset($parametres[AgentParametres::ONGLET_MOBILITES]) || $parametres[AgentParametres::ONGLET_MOBILITES]->getValeur() !== "false") : ?>
             <div id="mobilite" class="tab-pane " role="tabpanel">
                 <?php echo $this->partial('partial/mobilite', ['agent' => $agent, 'mobilites' => $mobilites], []); ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 <?php endif; ?>

@@ -3,8 +3,12 @@
 namespace Application\Provider\Parametre;
 
 class AgentParametres {
-    const TYPE = "GLOBAL";
-    const INSTALL_PATH = "INSTALL_PATH";
-    const EMAIL_ASSISTANCE = "EMAIL_ASSISTANCE";
-    const CODE_UNIV = 'CODE_UNIV';
+    const TYPE = "AGENT";
+
+    const ONGLET_INFORMATIONS = "ONGLET_INFORMATIONS";
+    const ONGLET_FICHES = "ONGLET_FICHES";
+    const ONGLET_MOBILITES = 'ONGLET_MOBILITES';
+    const ONGLET_ACQUIS = 'ONGLET_ACQUIS';
+    const ONGLET_PORTFOLIO = 'ONGLET_PORTFOLIO';
+    const ONGLET_CCC = 'ONGLET_CCC';
 }
