@@ -1162,6 +1162,8 @@ INSERT INTO unicaen_privilege_categorie (code, libelle, ordre, namespace)
 VALUES ('indicateur', 'Gestions des indicateurs', 800, 'UnicaenIndicateur\Provider\Privilege');
 INSERT INTO unicaen_privilege_privilege(CATEGORIE_ID, CODE, LIBELLE, ORDRE)
 WITH d(code, lib, ordre) AS (
+    SELECT 'indicateur_index', 'Index du module', 1   UNION
+    SELECT 'indicateur_mes_indicateurs', 'Menu - Mes indicateurs - ', 1   UNION
     SELECT 'afficher_indicateur', 'Afficher un indicateur', 1   UNION
     SELECT 'editer_indicateur', 'Éditer un indicateur', 2   UNION
     SELECT 'detruire_indicateur', 'Effacer un indicateur', 3 UNION

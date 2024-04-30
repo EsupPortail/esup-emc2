@@ -300,7 +300,8 @@ WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'MAIL_LISTE_BIATS', 'Adresse électronique de la liste de diffusion pour le personnel', '<p>Utilis&eacute;e lors de la cr&eacute;ation d''une campagne d''entretien profesionnel</p>', 'String', 11 UNION
     SElECT 'TEMOIN_STATUT', 'Filtrage selon les statuts', null, 'String',  2000 UNION
     SElECT 'TEMOIN_AFFECTATION', 'Filtrage selon les affectations', null, 'String', 2000 UNION
-    SELECT 'DELAI_ACCEPTATION_AGENT', 'Délai d''acceptation de l''entretien par l''agent (en jours)', null, 'Number', 100 UNION
+    SELECT 'DELAI_CONVOCATION_AGENT', 'Délai minimal recommandé pour convoquer un·e agent·e (en jours)', null, 'Number', 100 UNION
+    SELECT 'DELAI_ACCEPTATION_AGENT', 'Délai d''acceptation de l''entretien par l''agent (en jours)', null, 'Number', 110 UNION
     SELECT 'INTRANET_DOCUMENT', 'Lien vers les documents associés à l''entretien professionnel', null, 'String', 1000 UNION
     SELECT 'TEMOIN_EMPLOITYPE', 'Filtrage sur les codes des emploi-types', null, 'String', 2000 UNION
     SELECT 'CAMPAGNE_BLOCAGE_STRICT_MODIFICATION', 'Blocage strict de la modification des entretiens professionnels', '<p>Si le param&egrave;tre est &agrave; <em>true</em> alors la modification des entretiens professionnels (comptes-rendus) doit &ecirc;tre faite durant l''ouverture de la campagne</p>', 'Boolean', 1 UNION
