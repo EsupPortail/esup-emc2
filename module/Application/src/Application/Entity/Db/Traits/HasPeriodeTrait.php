@@ -37,7 +37,7 @@ trait HasPeriodeTrait {
     public function estCommence(?DateTime $date = null) : bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->dateDebut <= $date);
+        return ($this->dateDebut->format('Ymd') <= $date->format('Ymd'));
     }
 
     /**
@@ -47,7 +47,7 @@ trait HasPeriodeTrait {
     public function estFini(?DateTime $date = null) : bool
     {
         if ($date === null) $date = new DateTime();
-        return ($this->dateFin !== null AND $this->dateFin < $date) ;
+        return ($this->dateFin !== null AND $this->dateFin->format('Ymd') < $date->format('Ymd')) ;
     }
 
     /**
@@ -56,7 +56,9 @@ trait HasPeriodeTrait {
      */
     public function estEnCours(?DateTime $date = null) : bool
     {
-        return ($this->estCommence($date) AND !$this->estFini($date));
+        $estCommence = $this->estCommence($date);
+        $estFini = $this->estFini($date);
+        return ($estCommence AND !$estFini);
     }
 
     /** Fonctions pour les macros *************************************************************************************/
