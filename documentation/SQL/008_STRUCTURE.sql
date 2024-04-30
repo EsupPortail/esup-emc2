@@ -189,6 +189,9 @@ INSERT INTO unicaen_utilisateur_role (role_id, libelle, is_default, is_auto, par
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('STRUCTURE', 'Paramètres liés aux structures', 1000, null);
 INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE)
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, VALEUR, ORDRE) AS (
     SELECT 'AGENT_TEMOIN_STATUT', 'Filtre sur les témoins de statuts associés aux agents affiché·es dans la partie structure', 'Il s''agit d''une cha&icirc;ne de caract&egrave;res reli&eacute;e par des ; avec les temoins suivant : cdi, cdd, titulaire, vacataire, enseignant, administratif, chercheur, doctorant, detacheIn, detacheOut, dispo <br/> Le modificateur ! est une n&eacute;gation.</p>', 'String', 'administratif;!dispo;!doctorant', 100 UNION

@@ -962,7 +962,8 @@ INSERT INTO unicaen_validation_type (code, libelle, refusable) VALUES
 -- ---------------------------------------------------------------------------------------------------------------------
 -- PARAMETRE -----------------------------------------------------------------------------------------------------------
 -- ---------------------------------------------------------------------------------------------------------------------
-
+INSERT INTO unicaen_parametre_categorie (code, libelle, ordre, description)
+VALUES ('FORMATION', 'Paramètres liés aux formations', 2000, null);
 INSERT INTO unicaen_parametre_parametre(CATEGORIE_ID, CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE)
 WITH d(CODE, LIBELLE, DESCRIPTION, VALEURS_POSSIBLES, ORDRE) AS (
     SELECT 'MAIL_PERSONNEL', 'Adresse électronique du personnel', null, 'String', 10 UNION
