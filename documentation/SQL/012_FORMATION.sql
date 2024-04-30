@@ -321,7 +321,7 @@ create table formation
     programme             text,
     prerequis             text,
     public                text,
-    type_id               integer
+    action_type_id        integer
         constraint formation_type_fk
             references formation_action_type on delete set null,
     type                  varchar(64),

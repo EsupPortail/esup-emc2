@@ -424,6 +424,7 @@ VALUES
     ('AGENT#AffectationStructureFine', '<p>Affiche le libellé long de la structure fine de l''agent</p>', 'agent', 'toStringAffectationStructureFine'),
     ('AGENT#CorpsGrade', null, 'agent', 'toStringCorpsGrade'),
     ('AGENT#DateAffectationPrincipale', null, 'agent', 'toStringAffectationDate'),
+    ('AGENT#DateNaissance', null, 'agent', 'toStringDateNaissance'),
     ('AGENT#Denomination', '<p>Retourne la d&eacute;nomination de l''agent (Pr&eacute;nom1 NomUsuel)</p>', 'agent', 'getDenomination'),
     ('Agent#Echelon', null, 'agent', 'toStringEchelon'),
     ('Agent#EchelonDate', null, 'agent', 'toStringEchelonPassage'),
