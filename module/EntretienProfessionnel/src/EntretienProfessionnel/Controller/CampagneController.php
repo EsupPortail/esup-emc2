@@ -371,7 +371,7 @@ class CampagneController extends AbstractActionController {
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
         // récupération des agents selon les critères de la structure
-        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut());
+        $agents = $this->getAgentService()->getAgentsByStructures($structures, $campagne->getDateDebut(),false);
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT),$campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), $campagne->getDateDebut());
         $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE), $campagne->getDateDebut());

@@ -280,14 +280,11 @@ EOS;
      * @param Structure[] $structures
      * @return Agent[]
      */
-    public function getAgentsByStructures(array $structures, ?DateTime $date = null): array
+    public function getAgentsByStructures(array $structures, ?DateTime $date = null, bool $withJoin = true): array
     {
         if ($date === null) $date = new DateTime();
 
         $qb = $this->getObjectManager()->getRepository(Agent::class)->createQueryBuilder('agent')
-            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
-            ->addSelect('affectation')->join('agent.affectations', 'affectation')
-            ->andWhere('affectation.deleted_on IS NULL')
             // AFFECTATION FILTER
             ->addSelect('affectationfilter')->join('agent.affectations', 'affectationfilter')
             ->andWhere('affectationfilter.deleted_on IS NULL')
@@ -295,23 +292,30 @@ EOS;
             ->andWhere('affectationfilter.dateDebut <= :today')
             ->setParameter('today', $date)
 
-            //STATUS
+            ->andWhere('agent.deleted_on IS NULL')
+            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+
+        if ($withJoin) {
+            $qb = $qb
+            //AFFECTATION ALL (NB : Si on ne remonte pas toutes les affectations doctrine nous fout dedans)
+                ->addSelect('affectation')->join('agent.affectations', 'affectation')
+                ->addSelect('affectation_structure')->join('affectation.structure', 'affectation_structure')
+                ->andWhere('affectation.deleted_on IS NULL')
+                //STATUS
             ->addSelect('statut')->leftjoin('agent.statuts', 'statut')
-//            ->andWhere('(statut.enseignant = :false AND statut.chercheur = :false AND statut.retraite = :false AND (statut.detacheOut = :false OR (statut.detacheOut = :true AND statut.detacheIn = :true)) AND statut.vacataire = :false)')
             ->andWhere('statut.deleted_on IS NULL')
-            //GRADE
+                //GRADE
             ->addSelect('grade')->leftjoin('agent.grades', 'grade')
+            ->addSelect('emploitype')->leftjoin('grade.emploiType', 'emploitype')
             ->addSelect('gstructure')->leftjoin('grade.structure', 'gstructure')
             ->addSelect('ggrade')->leftjoin('grade.grade', 'ggrade')
             ->addSelect('gcorrespondance')->leftjoin('grade.correspondance', 'gcorrespondance')
             ->addSelect('gcorps')->leftjoin('grade.corps', 'gcorps')
-//            ->andWhere('grade.dateFin >= :today OR grade.dateFin IS NULL')
-//            ->andWhere('grade.dateDebut <= :today OR grade.dateDebut IS NULL')
             ->andWhere('grade.deleted_on IS NULL')
-            //FICHE DE POSTE
+                //FICHE DE POSTE
             ->addSelect('ficheposte')->leftJoin('agent.fiches', 'ficheposte')
-            ->andWhere('agent.deleted_on IS NULL')
-            ->orderBy('agent.nomUsuel, agent.prenom', 'ASC');
+            ;
+        }
 
         $qb = AgentSuperieur::decorateWithAgentSuperieur($qb);
         $qb = AgentAutorite::decorateWithAgentAutorite($qb);

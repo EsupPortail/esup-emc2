@@ -54,7 +54,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                 <?php if ($canVoirAgent) : ?>
                     <a
                         <?php /** @see \Application\Controller\AgentController::afficherAction() */?>
-                        href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
+                        href="<?php //echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                         target="_blank"
                         title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>" data-bs-toggle="tooltip" data-bs-html="true"
                     >
@@ -113,7 +113,7 @@ $isForce = (isset($options['force']) AND $options['force'] === true);
                             href="<?php echo $this->url('agent/afficher', ['agent' => $agent->getId()], [], true); ?>"
                             target="_blank"
                     >
-                        <span class="icon personnel" data-bs-toggle="tooltip" data-bs-html="true" title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>"></span></a>
+                        <span class="icon icon-user" data-bs-toggle="tooltip" data-bs-html="true" title="Voir les renseignements de <span class='highlight agent'><?php echo $agent->getDenomination(); ?></span>"></span></a>
                 <?php endif; ?>
 
                 <?php if ($isForce AND $canRetirerAgentForce) : ?>

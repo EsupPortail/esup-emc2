@@ -111,9 +111,10 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $structures = $this->getStructureService()->getStructuresFilles($structure, true);
 
-        $agents = $this->getAgentService()->getAgentsByStructures($structures);
+        $agents = $this->getAgentService()->getAgentsByStructures($structures,null, false);
         $agents = $this->getAgentService()->filtrerWithStatutTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_STATUT));
         $agents = $this->getAgentService()->filtrerWithAffectationTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_AFFECTATION), null, $structures);
+        $agents = $this->getAgentService()->filtrerWithEmploiTypeTemoin($agents, $this->getParametreService()->getParametreByCode(StructureParametres::TYPE, StructureParametres::AGENT_TEMOIN_EMPLOITYPE));
         $agentsForces = $this->getStructureService()->getAgentsForces($structure);
 
         usort($agents, function (Agent $a, Agent $b) {
