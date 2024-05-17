@@ -23,7 +23,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     {
         $data = [
             'mission'   => ($object->getMission()?$object->getMission()->getId():null),
-            'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
+            'agent-sas'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
             'structure' => ($object->getStructure())?['id' => $object->getStructure()->getId(), 'label' => $object->getStructure()->getLibelleLong()]:null,
             'HasPeriode'        => [
                 'date_debut' => ($object->getDateDebut())?$object->getDateDebut()->format(HasPeriodeFieldset::format):null,
@@ -42,7 +42,7 @@ class AgentMissionSpecifiqueHydrator implements HydratorInterface {
     public function hydrate(array $data, object $object)
     {
         $mission = (isset($data['mission']) AND $data['mission'] !== '')?$this->getMissionSpecifiqueService()->getMissionSpecifique($data['mission']):null;
-        $agent = $this->getAgentService()->getAgent($data['agent']['id']);
+        $agent = $this->getAgentService()->getAgent($data['agent-sas']['id']);
         $structure = $this->getStructureService()->getStructure((int) $data['structure']['id']);
         $dataDebut = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_debut']) AND trim($data['HasPeriode']['date_debut']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_debut']):null;
         $dateFin = (isset($data['HasPeriode']) AND isset($data['HasPeriode']['date_fin']) AND trim($data['HasPeriode']['date_fin']) !== '')?DateTime::createFromFormat(HasPeriodeFieldset::format, $data['HasPeriode']['date_fin']):null;

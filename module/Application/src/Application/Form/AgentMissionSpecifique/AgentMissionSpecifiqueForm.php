@@ -59,12 +59,12 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         //Agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $agent = new SearchAndSelect('agent-sas', ['label' => "Agent * :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
             ->setAttributes([
-                'id' => 'agent',
+                'id' => 'agent-sas',
                 'placeholder' => "Agent effectuant la mission ...",
             ]);
         $this->add($agent);
@@ -117,7 +117,7 @@ class AgentMissionSpecifiqueForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent'             => [ 'required' => true,  ],
+            'agent-sas'             => [ 'required' => true,  ],
             'mission'           => [ 'required' => true,  ],
             'structure'         => [ 'required' => false, ],
             'HasPeriode'        => [ 'required' => false,
