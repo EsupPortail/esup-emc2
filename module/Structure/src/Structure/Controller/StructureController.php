@@ -84,6 +84,9 @@ class StructureController extends AbstractActionController {
         $gestionnaires = $this->getStructureService()->getGestionnaires($structure, new DateTime());
         $observateurs = $this->getObservateurService()->getObservateursByStructures([$structure]);
 
+        $blocGestionnaire = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_GESTIONNAIRE);
+        $blocObservateur = $this->getParametreService()->getValeurForParametre(StructureParametres::TYPE, StructureParametres::BLOC_OBSERVATEUR);
+
         $niveau2 = $structure->getNiv2();
         $parent = $structure->getParent();
         $filles = $structure->getEnfants();
@@ -105,6 +108,9 @@ class StructureController extends AbstractActionController {
             'filles' => $filles,
 
             'campagnes' => $campagnes,
+
+            'blocGestionnaire' => $blocGestionnaire,
+            'blocObservateur' => $blocObservateur,
         ]);
     }
 

@@ -2,12 +2,14 @@
 
 use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructurePrivileges;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 /**
  * @see \Structure\Controller\ObservateurController::indexObservateurAction()
  * @var UserInterface $user
  * @var Observateur[] $observateurs
+ * @var array $observateursByStructures
  * @var Structure[] $structures
  */
 
@@ -23,12 +25,47 @@ $this->headTitle("Les structures dont vous êtes observateur·trice");
     <thead>
     <tr>
         <th> Libellé de la structure </th>
-        <th> Description associée au rôle </th>
+<!--        <th> Description associée au rôle </th>-->
         <th class="action">
             Action
         </th>
     </tr>
     </thead>
     <tbody>
+    <?php foreach ($structures as $structure) : ?>
+        <tr>
+            <td>
+                <?php echo $structure->getLibelleLong(); ?>
+            </td>
+<!--            <td>-->
+<!--                --><?php //$descriptions = []; ?>
+<!--                --><?php //foreach ($observateursByStructures[$structure->getId()] as $observateurs_) : ?>
+<!--                    --><?php //foreach ($observateurs_ as $observateur) : ?>
+<!--                        --><?php //if ($observateur->getDescription()) : ?>
+<!--                            --><?php //$descriptions[] = $observateur->getDescription(); ?>
+<!--                        --><?php //endif ; ?>
+<!--                    --><?php //endforeach;?>
+<!--                --><?php //endforeach;?>
+<!--                --><?php //if (empty($descriptions)) : ?>
+<!--                    Aucune description-->
+<!--                --><?php //else : ?>
+<!--                    <ul>-->
+<!--                        --><?php //foreach ($descriptions as $description) : ?>
+<!--                            <li>--><?php //echo $description; ?><!--</li>-->
+<!--                        --><?php //endforeach; ?>
+<!--                    </ul>-->
+<!--                --><?php //endif; ?>
+<!--            </td>-->
+            <td class="action">
+                <?php if ($this->isAllowed($structure, StructurePrivileges::STRUCTURE_AFFICHER)) : ?>
+                    <?php /** @see \Structure\Controller\StructureController::descriptionAction() */ ?>
+                    <a href="<?php echo $this->url('structure/description', ['structure' => $structure->getId()], [], true); ?>">
+                        <span class="icon icon-voir"></span>
+                        Afficher
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
     </tbody>
 </table>

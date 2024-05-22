@@ -8,6 +8,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Structure\Form\Observateur\ObservateurForm;
 use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
+use UnicaenUtilisateur\Service\User\UserService;
 
 class ObservateurControllerFactory
 {
@@ -21,16 +22,19 @@ class ObservateurControllerFactory
         /**
          * @var ObservateurService $observateurService
          * @var StructureService $structureService
+         * @var UserService $userService
          * @var ObservateurForm $observateurForm
          */
         $observateurService = $container->get(ObservateurService::class);
         $structureService = $container->get(StructureService::class);
+        $userService = $container->get(UserService::class);
         $observateurForm = $container->get('FormElementManager')->get(ObservateurForm::class);
 
         $controller = new ObservateurController();
         $controller->setObservateurForm($observateurForm);
         $controller->setStructureService($structureService);
         $controller->setObservateurService($observateurService);
+        $controller->setUserService($userService);
         return $controller;
     }
 }

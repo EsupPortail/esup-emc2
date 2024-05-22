@@ -20,6 +20,10 @@ use Structure\Provider\Privilege\StructurePrivileges;
  * @var Structure[] $filles
  *
  * @var Campagne[] $campagnes
+ *
+ * PARAMETRES
+ * @var bool $blocGestionnaire
+ * @var bool $blocObservateur
  */
 
 $this->headTitle($structure->getLibelleLong() . " - Description");
@@ -128,7 +132,7 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             </ul>
         <?php endif; ?>
 
-        <?php if ($canGererGestionnaire) : ?>
+        <?php if ($blocGestionnaire AND $canGererGestionnaire) : ?>
             <h2> Gestionnaire·s </h2>
 
             <?php if (empty($gestionnaires)) : ?>
@@ -149,7 +153,9 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php echo $this->partial('partial/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
+        <?php if ($blocObservateur) : ?>
+            <?php echo $this->partial('partial/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
+        <?php endif; ?>
 
         <h2> Positionnement de la structure </h2>
 
