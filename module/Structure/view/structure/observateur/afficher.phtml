@@ -1,0 +1,50 @@
+<?php
+
+use Structure\Entity\Db\Observateur;
+
+/**
+ * @see \Structure\Controller\ObservateurController::afficherAction()
+ * @var Observateur $observateur
+ */
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl>
+            <dt> Structure </dt>
+            <dd>
+                <?php echo $observateur->getStructure()->getLibelleLong(); ?>
+            </dd>
+            <dt> Utilisateur·trice </dt>
+            <dd>
+                <?php echo $observateur->getUtilisateur()->getDisplayName(); ?>
+                <br>
+                <?php echo $observateur->getUtilisateur()->getEmail(); ?>
+            </dd>
+            <?php if ($observateur->getDescription()) : ?>
+                <dt> Description </dt>
+                <dd> <?php echo $observateur->getDescription(); ?> </dd>
+            <?php endif; ?>
+
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <dl>
+            <dt> Derniere modification </dt>
+            <dd> <?php echo $observateur->getHistoModification()->format('d/m/Y à H:i'); ?> </dd>
+
+            <dt>
+                Est historisé·e
+            </dt>
+            <dd>
+                <?php if ($observateur->estHistorise()) : ?>
+                    Oui (<?php echo $observateur->getHistoDestruction()->format('d/m/Y à H:i'); ?>)
+                <?php else : ?>
+                    Non
+                <?php endif; ?>
+            </dd>
+        </dl>
+
+    </div>
+</div>

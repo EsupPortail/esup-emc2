@@ -30,6 +30,7 @@ use Mpdf\MpdfException;
 use RuntimeException;
 use Structure\Entity\Db\StructureAgentForce;
 use Structure\Provider\Parametre\StructureParametres;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use Structure\Service\StructureAgentForce\StructureAgentForceServiceAwareTrait;
 use UnicaenApp\View\Model\CsvModel;
@@ -46,6 +47,7 @@ class StructureController extends AbstractActionController {
     use ParametreServiceAwareTrait;
     use StructureServiceAwareTrait;
     use StructureAgentForceServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use SpecificitePosteServiceAwareTrait;
 
     use CampagneServiceAwareTrait;
@@ -80,6 +82,7 @@ class StructureController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
         $responsables = $this->getStructureService()->getResponsables($structure, new DateTime());
         $gestionnaires = $this->getStructureService()->getGestionnaires($structure, new DateTime());
+        $observateurs = $this->getObservateurService()->getObservateursByStructures([$structure]);
 
         $niveau2 = $structure->getNiv2();
         $parent = $structure->getParent();
@@ -95,6 +98,7 @@ class StructureController extends AbstractActionController {
             'structure' => $structure,
             'responsables' => $responsables,
             'gestionnaires' => $gestionnaires,
+            'observateurs' => $observateurs,
 
             'niveau2' => $niveau2,
             'parent' => $parent,

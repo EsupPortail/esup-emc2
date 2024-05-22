@@ -7,6 +7,7 @@ use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 use Structure\Provider\Role\RoleProvider;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -15,6 +16,7 @@ use Laminas\Permissions\Acl\Resource\ResourceInterface;
 
 class StructureAssertion extends AbstractAssertion {
     use AgentServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
@@ -29,6 +31,10 @@ class StructureAssertion extends AbstractAssertion {
         if ($role->getRoleId() === RoleProvider::RESPONSABLE) {
             $isResponsable = $this->getStructureService()->isResponsable($entity, $agent);
         }
+        $isObservateur = false;
+        if ($role->getRoleId() === RoleProvider::OBSERVATEUR) {
+            $isObservateur = $this->getObservateurService()->isObservateur($entity, $user);
+        }
 
         return match ($privilege) {
             StructurePrivileges::STRUCTURE_AFFICHER => match ($role->getRoleId()) {
@@ -39,6 +45,8 @@ class StructureAssertion extends AbstractAssertion {
                             => true,
                 RoleProvider::RESPONSABLE
                             => $isResponsable,
+                RoleProvider::OBSERVATEUR
+                => $isObservateur,
                 default
                             => false,
             },

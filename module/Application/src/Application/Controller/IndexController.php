@@ -14,6 +14,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurServiceAwareTrait;
 use Application\Service\FichePoste\FichePosteServiceAwareTrait;
 use Application\Service\Url\UrlServiceAwareTrait;
 use EntretienProfessionnel\Controller\ObservateurController;
+use Structure\Controller\ObservateurController as StructureObservateurController;
 use EntretienProfessionnel\Entity\Db\Campagne;
 use EntretienProfessionnel\Provider\Role\RoleProvider as EntretienProfessionnelRoleProvider;
 use EntretienProfessionnel\Service\Campagne\CampagneServiceAwareTrait;
@@ -100,6 +101,9 @@ class IndexController extends AbstractActionController
                 case Agent::ROLE_AUTORITE :
                     /** @see IndexController::indexAutoriteAction() */
                     return $this->redirect()->toRoute('index-autorite', [], [], true);
+                case RoleProvider::OBSERVATEUR :
+                    /** @see StructureObservateurController::indexObservateurAction() */
+                    return $this->redirect()->toRoute('structure/observateur/index-observateur', [], [], true);
                 case EntretienProfessionnelRoleProvider::OBSERVATEUR :
                     /** @see ObservateurController::indexObservateurAction() */
                     return $this->redirect()->toRoute('entretien-professionnel/observateur/index-observateur', [], [], true);

@@ -16,6 +16,7 @@ use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnel
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Structure\Service\Observateur\ObservateurService;
 use Structure\Service\Structure\StructureService;
 use Structure\Service\StructureAgentForce\StructureAgentForceService;
 use UnicaenEtat\Service\EtatType\EtatTypeService;
@@ -39,6 +40,7 @@ class StructureControllerFactory {
          * @var EtatTypeService $etatTypeService
          * @var CampagneService $campagneService
          * @var FichePosteService $fichePosteService
+         * @var ObservateurService $observateurService
          * @var ParametreService $parametreService
          * @var SpecificitePosteService $specificiteService
          * @var StructureService $structureService
@@ -51,6 +53,7 @@ class StructureControllerFactory {
         $etatTypeService = $container->get(EtatTypeService::class);
         $campagneService = $container->get(CampagneService::class);
         $fichePosteService = $container->get(FichePosteService::class);
+        $observateurService = $container->get(ObservateurService::class);
         $parametreService = $container->get(ParametreService::class);
         $specificiteService = $container->get(SpecificitePosteService::class);
         $structureService = $container->get(StructureService::class);
@@ -74,6 +77,7 @@ class StructureControllerFactory {
         $controller->setEtatTypeService($etatTypeService);
         $controller->setCampagneService($campagneService);
         $controller->setFichePosteService($fichePosteService);
+        $controller->setObservateurService($observateurService);
         $controller->setParametreService($parametreService);
         $controller->setSpecificitePosteService($specificiteService);
         $controller->setStructureService($structureService);

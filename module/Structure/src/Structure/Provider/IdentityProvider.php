@@ -4,6 +4,7 @@ namespace Structure\Provider;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Structure\Provider\Role\RoleProvider;
+use Structure\Service\Observateur\ObservateurServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenAuthentification\Provider\Identity\ChainEvent;
 use UnicaenUtilisateur\Entity\Db\RoleInterface;
@@ -15,6 +16,7 @@ use UnicaenUtilisateur\Service\User\UserServiceAwareTrait;
 class IdentityProvider extends AbstractIdentityProvider
 {
     use AgentServiceAwareTrait;
+    use ObservateurServiceAwareTrait;
     use RoleServiceAwareTrait;
     use StructureServiceAwareTrait;
     use UserServiceAwareTrait;
@@ -28,6 +30,9 @@ class IdentityProvider extends AbstractIdentityProvider
         switch ($code) {
             case RoleProvider::RESPONSABLE :
                 $user = $this->getStructureService()->getUsersInResponsables();
+                return $user;
+            case RoleProvider::OBSERVATEUR :
+                $user = $this->getObservateurService()->getUsersInObservateurs();
                 return $user;
         }
         return null;
@@ -52,6 +57,12 @@ class IdentityProvider extends AbstractIdentityProvider
                 $roleResponsable = $this->getRoleService()->findByRoleId(RoleProvider::RESPONSABLE);
                 $roles[] = $roleResponsable;
             }
+        }
+
+        $observateurs = $this->getObservateurService()->getObservateursByUtilisateur($user);
+        if (! empty($observateurs)) {
+            $roleObservateur = $this->getRoleService()->findByRoleId(RoleProvider::OBSERVATEUR);
+            $roles[] = $roleObservateur;
         }
         return $roles;
     }

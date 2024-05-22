@@ -1,0 +1,74 @@
+<?php
+
+use Structure\Entity\Db\Observateur;
+use Structure\Entity\Db\Structure;
+use Structure\Provider\Privilege\StructureobservateurPrivileges;
+
+/**
+ * @var Structure $structure
+ * @var Observateur[] $observateurs
+ */
+
+
+$canAjouter = $this->isAllowed(StructureobservateurPrivileges::getResourceId(StructureobservateurPrivileges::STRUCTUREOBSERVATEUR_AJOUTER));
+$canModifier = $this->isAllowed(StructureobservateurPrivileges::getResourceId(StructureobservateurPrivileges::STRUCTUREOBSERVATEUR_MODIFIER));
+$canHistoriser = $this->isAllowed(StructureobservateurPrivileges::getResourceId(StructureobservateurPrivileges::STRUCTUREOBSERVATEUR_HISTORISER));
+$canSupprimer = $this->isAllowed(StructureobservateurPrivileges::getResourceId(StructureobservateurPrivileges::STRUCTUREOBSERVATEUR_SUPPRIMER));
+
+
+?>
+
+<h2>
+    Observateur·trices
+    <?php if ($canAjouter) : ?>
+        <?php /** @see \Structure\Controller\ObservateurController::ajouterAction() */ ?>
+        <a href="<?php echo $this->url('structure/observateur/ajouter', ['structure' => $structure->getId()], [] , true); ?>"
+           class="ajax-modal" data-event="modification" title="Ajouter un observateur pour cette structure" data-bs-toggle="tooltip" data-bs-html="true">
+            <span class="icon icon-ajouter"></span>
+        </a>
+    <?php endif; ?>
+</h2>
+
+<?php if (empty($observateurs)) : ?>
+    Aucun·e observatrice
+<?php else : ?>
+    <ul>
+        <?php foreach ($observateurs as $observateur) : ?>
+            <li>
+                <?php echo $observateur->getUtilisateur()->getDisplayName(); ?>
+                <?php if ($observateur->getDescription()) : ?>
+                    <span class="icon icon-information" data-bs-toggle="tooltip" data-bs-html="true"
+                          title="<?php echo $observateur->getDescription(); ?>"></span>
+                <?php endif; ?>
+
+
+                <?php if ($canModifier) : ?>
+                    <?php /** @see \Structure\Controller\ObservateurController::modifierAction() */ ?>
+                    <a href="<?php echo $this->url("structure/observateur/modifier", ['observateur' => $observateur->getId()] , [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="icon icon-editer"></span></a>
+                <?php endif; ?>
+                <?php if ($canHistoriser): ?>
+                    <?php if ($observateur->estNonHistorise()) : ?>
+                        <?php /** @see \Structure\Controller\ObservateurController::historiserAction() */ ?>
+                        <a href="<?php echo $this->url("structure/observateur/historiser", ['observateur' => $observateur->getId()] , ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>">
+                            <span class="icon icon-historiser"></span></a>
+                    <?php else : ?>
+                        <?php /** @see \Structure\Controller\ObservateurController::restaurerAction() */ ?>
+                        <a href="<?php echo $this->url("structure/observateur/restaurer", ['observateur' => $observateur->getId()] , ['query' => ['retour' => $this->url('structure/description', ['structure' => $structure->getId()], [], true)]], true); ?>">
+                            <span class="icon icon-restaurer"></span></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canSupprimer): ?>
+                    <?php /** @see \Structure\Controller\ObservateurController::supprimerAction() */ ?>
+                    <a href="<?php echo $this->url("structure/observateur/supprimer", ['observateur' => $observateur->getId()] , [], true); ?>"
+                       class="ajax-modal" data-event="modification">
+                        <span class="text-danger">
+                            <span class="icon icon-unchecked"></span>
+                        </span></a>
+                <?php endif; ?>
+
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

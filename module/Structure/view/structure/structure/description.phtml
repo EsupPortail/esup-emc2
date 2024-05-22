@@ -2,6 +2,7 @@
 
 use Application\Entity\Db\Agent;
 use EntretienProfessionnel\Entity\Db\Campagne;
+use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
 use Structure\Provider\Privilege\StructurePrivileges;
 
@@ -12,6 +13,7 @@ use Structure\Provider\Privilege\StructurePrivileges;
  *
  * @var Agent[] $responsables
  * @var Agent[] $gestionnaires
+ * @var Observateur[] $observateurs
  *
  * @var Structure $niveau2
  * @var Structure $parent
@@ -146,6 +148,8 @@ $filles = array_filter($filles, function (Structure $s) use ($date) { return ! $
                 </ul>
             <?php endif; ?>
         <?php endif; ?>
+
+        <?php echo $this->partial('partial/observateurs', ['structure' => $structure, 'observateurs' => $observateurs]); ?>
 
         <h2> Positionnement de la structure </h2>
 

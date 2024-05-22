@@ -1,0 +1,34 @@
+<?php
+
+use Structure\Entity\Db\Observateur;
+use Structure\Entity\Db\Structure;
+use UnicaenUtilisateur\Entity\Db\UserInterface;
+
+/**
+ * @see \Structure\Controller\ObservateurController::indexObservateurAction()
+ * @var UserInterface $user
+ * @var Observateur[] $observateurs
+ * @var Structure[] $structures
+ */
+
+$this->headTitle("Les structures dont vous êtes observateur·trice");
+
+?>
+
+<h1 class="page-header">
+    Les structures dont vous êtes observateur·trice
+</h1>
+
+<table class="table table-condensed datatable">
+    <thead>
+    <tr>
+        <th> Libellé de la structure </th>
+        <th> Description associée au rôle </th>
+        <th class="action">
+            Action
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
