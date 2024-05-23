@@ -678,6 +678,38 @@ EOS;
     }
 
     /**
+     * @param Agent[] $agents
+     * @param Structure[]|null $structures
+     * @return Agent[]
+     */
+    public function filtrerWithGradeTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
+            return $a->isValideGrade($parametre, $date, $structures);
+        });
+        return $agents;
+    }
+
+    /**
+     * @param Agent[] $agents
+     * @param Structure[]|null $structures
+     * @return Agent[]
+     */
+    public function filtrerWithCorpsTemoin(array $agents, ?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): array
+    {
+        if ($parametre === null || $parametre->getValeur() === null || $parametre->getValeur() === '') return $agents;
+        if ($date === null) $date = new DateTime();
+
+        $agents = array_filter($agents, function (Agent $a) use ($parametre, $date, $structures) {
+            return $a->isValideCorps($parametre, $date, $structures);
+        });
+        return $agents;
+    }
+
+    /**
      * @return Agent[]
      */
     public function getAgentsByIds(array $agentIds): array

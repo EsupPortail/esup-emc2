@@ -62,9 +62,8 @@ class ObservateurController extends AbstractActionController {
         $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $observateur = new Observateur();
-        if ($structure != null) {
-            $observateur->setStructure($structure);
-        }
+        if ($structure !== null) $observateur->setStructure($structure);
+
         $form = $this->getObservateurForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/observateur/ajouter', ['structure' => $structure?->getId()], [], true));
         $form->bind($observateur);
@@ -82,8 +81,9 @@ class ObservateurController extends AbstractActionController {
         $vm = new ViewModel([
             'title' => "Ajout d'un·e observateur·trce",
             'form' => $form,
+            'structure' => $structure,
         ]);
-        $vm->setTemplate('default/default-form');
+        $vm->setTemplate('structure/observateur/modifier');
         return $vm;
     }
 
@@ -91,6 +91,7 @@ class ObservateurController extends AbstractActionController {
     public function modifierAction(): ViewModel
     {
         $observateur = $this->getObservateurService()->getRequestedObservateur($this);
+        $structure = $this->getStructureService()->getRequestedStructure($this);
 
         $form = $this->getObservateurForm();
         $form->setAttribute('action', $this->url()->fromRoute('structure/observateur/modifier', ['observateur' => $observateur->getId()], [], true));
@@ -109,15 +110,16 @@ class ObservateurController extends AbstractActionController {
         $vm = new ViewModel([
             'title' => "Modification de l'observateur·trce",
             'form' => $form,
+            'structure' => $structure,
         ]);
-        $vm->setTemplate('default/default-form');
+//        $vm->setTemplate('default/default-form');
         return $vm;
     }
 
     public function historiserAction(): Response
     {
         $observateur = $this->getObservateurService()->getRequestedObservateur($this);
-        $this->observateurService->historise($observateur);
+        $this->observateurStructureService->historise($observateur);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);
@@ -127,7 +129,7 @@ class ObservateurController extends AbstractActionController {
     public function restaurerAction(): Response
     {
         $observateur = $this->getObservateurService()->getRequestedObservateur($this);
-        $this->observateurService->restore($observateur);
+        $this->observateurStructureService->restore($observateur);
 
         $retour = $this->params()->fromQuery('retour');
         if ($retour) return $this->redirect()->toUrl($retour);

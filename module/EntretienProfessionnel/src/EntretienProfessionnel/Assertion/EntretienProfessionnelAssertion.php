@@ -17,6 +17,7 @@ use EntretienProfessionnel\Service\Observateur\ObservateurServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Structure\Provider\Role\RoleProvider;
+use Structure\Service\Observateur\ObservateurStructureServiceAwareTrait;
 use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenPrivilege\Assertion\AbstractAssertion;
 use UnicaenPrivilege\Service\Privilege\PrivilegeServiceAwareTrait;
@@ -31,6 +32,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     use AgentSuperieurServiceAwareTrait;
     use EntretienProfessionnelServiceAwareTrait;
     use ObservateurServiceAwareTrait;
+    use ObservateurStructureServiceAwareTrait;
     use PrivilegeServiceAwareTrait;
     use UserServiceAwareTrait;
     use StructureServiceAwareTrait;
@@ -90,6 +92,9 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
     public function isScopeCompatible(EntretienProfessionnel $entretienProfessionnel, ?Agent $connectedAgent, ?RoleInterface $connectedRole, ?array $predicats = null): bool
     {
         if ($predicats === null) $predicats = $this->computePredicats($entretienProfessionnel, $connectedAgent, $connectedRole);
+
+        $structures = $entretienProfessionnel->getAgent()->getStructures();
+
         return match ($connectedRole->getRoleId()) {
             AppRoleProvider::ADMIN_FONC, AppRoleProvider::ADMIN_TECH, AppRoleProvider::DRH, AppRoleProvider::OBSERVATEUR  => true,
             AppRoleProvider::AGENT => $predicats['isAgentEntretien'],
@@ -97,6 +102,7 @@ class EntretienProfessionnelAssertion extends AbstractAssertion {
             Agent::ROLE_SUPERIEURE => $predicats['isSuperieureHierarchique'],
             Agent::ROLE_AUTORITE => $predicats['isAutoriteHierarchique'],
             EntretienProfessionnelRoleProvider::OBSERVATEUR => $this->getObservateurService()->isObservateur($entretienProfessionnel, $connectedAgent->getUtilisateur()),
+            RoleProvider::OBSERVATEUR => $this->getObservateurStructureService()->isObservateur($structures, $connectedAgent->getUtilisateur()),
             default => false,
         };
     }

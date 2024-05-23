@@ -122,7 +122,7 @@ return [
                             'modifier' => [
                                 'type' => Segment::class,
                                 'options' => [
-                                    'route' => '/modifier/:observateur',
+                                    'route' => '/modifier/:observateur[/:structure]',
                                     'defaults' => [
                                         /** @see ObservateurController::modifierAction() */
                                         'action' => 'modifier',

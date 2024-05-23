@@ -87,6 +87,7 @@ class Agent implements
         $this->structuresForcees = new ArrayCollection();
         $this->forcesSansObligation = new ArrayCollection();
 
+        $this->affectations = new ArrayCollection();
         $this->autorites = new ArrayCollection();
         $this->superieurs = new ArrayCollection();
     }
@@ -353,6 +354,58 @@ class Agent implements
         $grades = $this->getEmploiTypesActifs($date, $structures);
         foreach ($grades as $grade) {
             if ($grade->getEmploiType()) $count[$grade->getEmploiType()->getCode()] = true;
+        }
+
+        $keep = true;
+        foreach ($temoins['on'] as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        foreach ($temoins['off'] as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        return $keep;
+    }
+
+    public function isValideGrade(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    {
+        $temoins = $parametre->getTemoins();
+
+        $count = [];
+        $grades = $this->getGradesActifs($date, $structures);
+        foreach ($grades as $grade) {
+            if ($grade->getGrade()) $count[$grade->getGrade()->getLibelleCourt()] = true;
+        }
+
+        $keep = true;
+        foreach ($temoins['on'] as $temoin) {
+            if (!isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        foreach ($temoins['off'] as $temoin) {
+            if (isset($count[$temoin])) {
+                $keep = false;
+                break;
+            }
+        }
+        return $keep;
+    }
+
+    public function isValideCorps(?Parametre $parametre, ?DateTime $date = null, ?array $structures = null): bool
+    {
+        $temoins = $parametre->getTemoins();
+
+        $count = [];
+        $grades = $this->getGradesActifs($date, $structures);
+        foreach ($grades as $grade) {
+            if ($grade->getCorps()) $count[$grade->getCorps()->getLibelleCourt()] = true;
         }
 
         $keep = true;

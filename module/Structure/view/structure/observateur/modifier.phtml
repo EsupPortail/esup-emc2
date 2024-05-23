@@ -1,0 +1,49 @@
+<?php
+
+use Structure\Entity\Db\Structure;
+use Structure\Form\Observateur\ObservateurForm;
+
+/**
+ * @see \Structure\Controller\ObservateurController::ajouterAction()
+ * @see \Structure\Controller\ObservateurController::modifierAction()
+ * @var ObservateurForm $form
+ * @var Structure $structure
+ */
+
+?>
+
+
+<?php echo $this->form()->openTag($form); ?>
+    <div <?php if ($structure !== null) echo ' style="display: none;" '?> >
+        <?php echo $this->formControlGroup($form->get('structure-sas')); ?>
+    </div>
+        <?php echo $this->formControlGroup($form->get('utilisateur-sas')); ?>
+        <?php echo $this->formControlGroup($form->get('description')); ?>
+        <?php echo $this->formControlGroup($form->get('creer')); ?>
+<?php echo $this->form()->closeTag();?>
+
+
+<script>
+    $(document).ready(function() {
+        tinymce.remove();
+        tinymce.init({
+            selector: '.type2',
+            toolbar: 'newdocument undo redo | bold italic underline removeformat | bullist',
+            resize: true,
+            language: 'fr_FR',
+            plugins: 'lists',
+            statusbar: true,
+            browser_spellcheck : true,
+            branding: false,
+            menu: {},
+            body_id: 'description',
+            setup: function (editor) {
+                editor.on("focusout", function () {
+                    console.log(tinymce.get('description').getContent());
+                    $('textarea').val(tinymce.get('description').getContent());
+                });
+            }
+        });
+    });
+</script>
+

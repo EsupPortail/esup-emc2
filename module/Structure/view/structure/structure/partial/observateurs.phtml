@@ -44,7 +44,7 @@ $canSupprimer = $this->isAllowed(StructureobservateurPrivileges::getResourceId(S
 
                 <?php if ($canModifier) : ?>
                     <?php /** @see \Structure\Controller\ObservateurController::modifierAction() */ ?>
-                    <a href="<?php echo $this->url("structure/observateur/modifier", ['observateur' => $observateur->getId()] , [], true); ?>"
+                    <a href="<?php echo $this->url("structure/observateur/modifier", ['observateur' => $observateur->getId(), 'structure' => $structure->getId()] , [], true); ?>"
                        class="ajax-modal" data-event="modification">
                         <span class="icon icon-editer"></span></a>
                 <?php endif; ?>

@@ -9,12 +9,14 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use RuntimeException;
 use Structure\Entity\Db\Observateur;
 use Structure\Entity\Db\Structure;
+use Structure\Service\Structure\StructureServiceAwareTrait;
 use UnicaenUtilisateur\Entity\Db\AbstractUser;
 use UnicaenUtilisateur\Entity\Db\UserInterface;
 
 class ObservateurService
 {
     use ProvidesObjectManager;
+    use StructureServiceAwareTrait;
 
     /** GESTION DES ENTITES *******************************************************************************************/
 
@@ -108,8 +110,9 @@ class ObservateurService
     }
 
     /** @return Observateur[] */
-    public function getObservateursByUtilisateur(UserInterface $user, bool $withHisto = false): array
+    public function getObservateursByUtilisateur(?UserInterface $user, bool $withHisto = false): array
     {
+        if ($user === null) return [];
         $qb = $this->createQueryBuilder()
             ->andWhere('observateur.utilisateur = :utilisateur')->setParameter("utilisateur", $user);
 
@@ -118,17 +121,33 @@ class ObservateurService
         return $result;
     }
 
-    public function isObservateur(Structure $structure, AbstractUser $user, bool $withHisto = false): bool
+    public function isObservateur(array $structures, UserInterface $user, bool $withHisto = false): bool
     {
-        $qb = $this->createQueryBuilder()
-            ->andWhere('observateur.structure = :structure')->setParameter("structure", $structure)
-            ->andWhere('observateur.utilisateur = :utilisateur')->setParameter("utilisateur", $user);
-        if (!$withHisto) {
-            $qb = $qb->andWhere('observateur.histoDestruction IS NULL');
+        $observateurs = $this->getObservateursByUtilisateur($user);
+
+        $structuresEnObservations = [];
+        foreach ($observateurs as $observateur) {
+            $structure = $observateur->getStructure();
+            $structures_ = $this->getStructureService()->getStructuresFilles($structure, true);
+            foreach ($structures_ as $structure_) {
+                $structuresEnObservations[$structure_->getId()] = $structure_;
+            }
         }
 
-        $result = $qb->getQuery()->getResult();
-        return !empty($result);
+        $structuresAObservees = [];
+        foreach ($structures as $structure) {
+            $structures_ = $this->getStructureService()->getStructuresFilles($structure, true);
+            foreach ($structures_ as $structure_) {
+                $structuresAObservees[$structure_->getId()] = $structure_;
+            }
+        }
+
+        foreach ($structuresAObservees as $structureAObservee) {
+            if (in_array($structureAObservee, $structuresEnObservations, true)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** FACADE ********************************************************************************************************/

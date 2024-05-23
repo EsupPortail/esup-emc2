@@ -299,7 +299,22 @@ trait AgentMacroTrait
         $agent = $this;
         $grades = ($agent->getGradesActifs())?$agent->getGradesActifs():null;
 
-        if ($grades === null) return "Aucune date";
+        if ($grades === null) return "Aucun grade/corps de remontée";
+
+        $texte = "";
+        foreach ($grades as $grade) {
+            $texte .= $grade->getCorps()->getLibelleLong() . "  - " . $grade->getGrade()->getLibelleLong();
+        }
+        return $texte;
+    }
+
+    public function toStringCorpsGradeSilencieux() : string
+    {
+        /** @var Agent $agent */
+        $agent = $this;
+        $grades = ($agent->getGradesActifs())?$agent->getGradesActifs():null;
+
+        if ($grades === null) return "";
 
         $texte = "";
         foreach ($grades as $grade) {

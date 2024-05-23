@@ -33,7 +33,7 @@ class StructureAssertion extends AbstractAssertion {
         }
         $isObservateur = false;
         if ($role->getRoleId() === RoleProvider::OBSERVATEUR) {
-            $isObservateur = $this->getObservateurService()->isObservateur($entity, $user);
+            $isObservateur = $this->getObservateurService()->isObservateur([$entity], $user);
         }
 
         return match ($privilege) {

@@ -2,16 +2,16 @@
 
 namespace Structure\Service\Observateur;
 
-trait ObservateurServiceAwareTrait
+trait ObservateurStructureServiceAwareTrait
 {
     protected ObservateurService $observateurStructureService;
 
-    public function getObservateurService(): ObservateurService
+    public function getObservateurStructureService(): ObservateurService
     {
         return $this->observateurStructureService;
     }
 
-    public function setObservateurService(ObservateurService $observateurStructureService): void
+    public function setObservateurStructureService(ObservateurService $observateurStructureService): void
     {
         $this->observateurStructureService = $observateurStructureService;
     }

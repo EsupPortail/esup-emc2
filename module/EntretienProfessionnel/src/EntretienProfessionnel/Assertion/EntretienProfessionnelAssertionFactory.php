@@ -8,6 +8,7 @@ use Application\Service\AgentSuperieur\AgentSuperieurService;
 use EntretienProfessionnel\Provider\Parametre\EntretienProfessionnelParametres;
 use EntretienProfessionnel\Service\EntretienProfessionnel\EntretienProfessionnelService;
 use EntretienProfessionnel\Service\Observateur\ObservateurService;
+use Structure\Service\Observateur\ObservateurService AS ObservateurStructureService;
 use Interop\Container\ContainerInterface;
 use Laminas\Mvc\Application;
 use Psr\Container\ContainerExceptionInterface;
@@ -35,6 +36,7 @@ class EntretienProfessionnelAssertionFactory
          * @var EntretienProfessionnelService $entretienProfessionnelService
          * @var StructureService $structureService
          * @var ObservateurService $observateurService
+         * @var ObservateurStructureService $observateurServiceStructure
          * @var ParametreService $parametreService
          * @var PrivilegeService $privilegeService
          * @var UserService $userService
@@ -44,6 +46,7 @@ class EntretienProfessionnelAssertionFactory
         $agentSuperieurService = $container->get(AgentSuperieurService::class);
         $entretienProfessionnelService = $container->get(EntretienProfessionnelService::class);
         $observateurService = $container->get(ObservateurService::class);
+        $observateurServiceStructure = $container->get(ObservateurStructureService::class);
         $parametreService = $container->get(ParametreService::class);
         $structureService = $container->get(StructureService::class);
         $userService = $container->get(UserService::class);
@@ -56,6 +59,7 @@ class EntretienProfessionnelAssertionFactory
         $assertion->setAgentSuperieurService($agentSuperieurService);
         $assertion->setEntretienProfessionnelService($entretienProfessionnelService);
         $assertion->setObservateurService($observateurService);
+        $assertion->setObservateurStructureService($observateurServiceStructure);
         $assertion->setStructureService($structureService);
         $assertion->setUserService($userService);
 
