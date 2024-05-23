@@ -25,13 +25,13 @@ class SelectionAgentForm extends Form {
     public function init(): void
     {
         //Agent
-        $agent = new SearchAndSelect('agent', ['label' => "Agent * :"]);
+        $agent = new SearchAndSelect('agent-sas', ['label' => "Agent·e * :"]);
         $agent
             ->setAutocompleteSource($this->urlAgent)
             ->setSelectionRequired(true)
             ->setAttributes([
-                'id' => 'agent',
-                'placeholder' => "Dénomination de l'agent ...",
+                'id' => 'agent-sas',
+                'placeholder' => "Dénomination de l'agent·e ...",
             ]);
         $this->add($agent);
 
@@ -52,7 +52,7 @@ class SelectionAgentForm extends Form {
         ]);
 
         $this->setInputFilter((new Factory())->createInputFilter([
-            'agent'             => [ 'required' => true,  ],
+            'agent-sas'             => [ 'required' => true,  ],
         ]));
     }
 }

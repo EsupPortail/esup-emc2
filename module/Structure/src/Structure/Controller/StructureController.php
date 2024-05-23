@@ -330,7 +330,7 @@ class StructureController extends AbstractActionController {
 
         $form = $this->getSelectionAgentForm();
         /** @see AgentController::rechercherLargeAction() */
-        $form->get('agent')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
+        $form->get('agent-sas')->setAutocompleteSource($this->url()->fromRoute('agent/rechercher-large', [], [], true));
         $form->setAttribute('action',$this->url()->fromRoute('structure/ajouter-manuellement-agent', ['structure' => $structure->getId()], [], true));
         $form->bind($structureAgentForce);
 
@@ -345,12 +345,11 @@ class StructureController extends AbstractActionController {
             }
         }
 
-        $vm = new ViewModel();
-        $vm->setTemplate('application/default/default-form');
-        $vm->setVariables([
+        $vm = new ViewModel([
             'title' => "Forcer manuellement l'ajout d'un agent",
             'form' => $form,
         ]);
+        $vm->setTemplate('default/default-form');
         return $vm;
     }
 

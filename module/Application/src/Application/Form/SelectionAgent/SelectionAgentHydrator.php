@@ -13,10 +13,10 @@ class SelectionAgentHydrator implements HydratorInterface {
      * @param HasAgentInterface $object
      * @return array
      */
-    public function extract($object): array
+    public function extract(object $object): array
     {
         $data = [
-            'agent'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
+            'agent-sas'     => ($object->getAgent())?['id' => $object->getAgent()->getId(), 'label' => $object->getAgent()->getDenomination()]:null,
         ];
         return $data;
     }
@@ -26,9 +26,9 @@ class SelectionAgentHydrator implements HydratorInterface {
      * @param HasAgentInterface $object
      * @return HasAgentInterface
      */
-    public function hydrate(array $data, $object)
+    public function hydrate(array $data,object $object): object
     {
-        $agent = $this->getAgentService()->getAgent($data['agent']['id'], true);
+        $agent = $this->getAgentService()->getAgent($data['agent-sas']['id'], true);
         $object->setAgent($agent);
         return $object;
     }
