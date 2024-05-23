@@ -178,7 +178,7 @@ class AgentService
             ->setParameter('date', $date);
 
         if ($term !== null) {
-            $qb = AgentService::decorateWithTerm($qb, $term);
+            $qb = AgentService::decorateWithTerm($qb, strtolower($term));
         }
 
         if ($structures !== null) {
@@ -194,7 +194,7 @@ class AgentService
     /** @return Agent[] */
     public function getAgentsLargeByTerm(?string $term): array
     {
-        $params = ["term" => $term];
+        $params = ["term" => strtolower($term)];
         $sql = <<<EOS
 select a.c_individu as id
 from agent a
