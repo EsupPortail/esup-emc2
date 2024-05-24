@@ -73,6 +73,7 @@ class DemandeExterneAssertion extends AbstractAssertion {
             case AppRoleProvider::ADMIN_FONC :
             case AppRoleProvider::DRH :
             case FormationRoles::GESTIONNAIRE_FORMATION :
+            case FormationRoles::RESPONSABLE_FORMATION :
                 return true;
             case AppRoleProvider::AGENT :
                 if ($privilege === DemandeexternePrivileges::DEMANDEEXTERNE_MODIFIER AND !$demande->isEtatActif(DemandeExterneEtats::ETAT_CREATION_EN_COURS)) return false;
