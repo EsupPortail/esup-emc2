@@ -6,6 +6,7 @@ use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 /**
  * @see \Formation\Controller\PlanDeFormationController::courantAction()
@@ -14,6 +15,7 @@ use Formation\Provider\Privilege\FormationPrivileges;
  * @var Formation[] $actions
  * @var Domaine[] $domaines
  * @var array $actionsByDomaines
+ * @var Rendu $rendu
  */
 
 $this->headTitle("Plan de formation");
@@ -43,11 +45,12 @@ usort($domaines, function (Domaine $a, Domaine $b) {
             Plan de formation
         </h1>
 
-        <div class="alert alert-info">
-            <span class="icon icon-information"></span>
-            En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous
-            inscrire.
-        </div>
+        <?php if ($rendu) : ?>
+            <div class="alert alert-info">
+                <?php echo $rendu->getCorps(); ?>
+            </div>
+        <?php endif; ?>
+
     </div>
     <div class="col-md-4">
         <?php if (empty($plansDeFormation)) : ?>

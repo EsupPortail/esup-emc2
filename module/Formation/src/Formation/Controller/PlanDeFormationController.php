@@ -11,6 +11,7 @@ use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
 use Formation\Form\PlanDeFormationImportation\PlanDeFormationImportationFormAwareTrait;
 use Formation\Form\SelectionFormation\SelectionFormationFormAwareTrait;
 use Formation\Form\SelectionPlanDeFormation\SelectionPlanDeFormationFormAwareTrait;
+use Formation\Provider\Template\TextTemplates;
 use Formation\Service\Abonnement\AbonnementServiceAwareTrait;
 use Formation\Service\ActionCoutPrevisionnel\ActionCoutPrevisionnelServiceAwareTrait;
 use Formation\Service\Axe\AxeServiceAwareTrait;
@@ -21,6 +22,7 @@ use Formation\Service\FormationInstance\FormationInstanceServiceAwareTrait;
 use Formation\Service\PlanDeFormation\PlanDeFormationServiceAwareTrait;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use UnicaenRenderer\Service\Rendu\RenduServiceAwareTrait;
 
 class PlanDeFormationController extends AbstractActionController
 {
@@ -33,6 +35,7 @@ class PlanDeFormationController extends AbstractActionController
     use FormationServiceAwareTrait;
     use PlanDeFormationServiceAwareTrait;
     use FormationInstanceServiceAwareTrait;
+    use RenduServiceAwareTrait;
 
     use PlanDeFormationFormAwareTrait;
     use PlanDeFormationImportationFormAwareTrait;
@@ -58,6 +61,7 @@ class PlanDeFormationController extends AbstractActionController
 
         // recuperation des actions de formation et des domaines
         [$actions, $domaines, $actionsByDomaines] = $this->getFormationService()->genererDictionnaireParDomaine($plansDeFormation);
+        $rendu = $this->getRenduService()->generateRenduByTemplateCode(TextTemplates::PLANS_DE_FORMATION, [], false);
 
         return new ViewModel([
             'plansDeFormation' => $plansDeFormation,
@@ -66,6 +70,7 @@ class PlanDeFormationController extends AbstractActionController
             'actionsByDomaines' => $actionsByDomaines,
 
             'agent' => $agent,
+            'rendu' => $rendu,
         ]);
     }
 

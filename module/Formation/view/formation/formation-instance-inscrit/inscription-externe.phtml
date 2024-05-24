@@ -4,11 +4,13 @@
  * @see \Formation\Controller\FormationInstanceInscritController::inscriptionExterneAction()
  * @var DemandeExterne[] $demandes
  * @var Agent $agent
+ * @var Rendu $rendu
  */
 
 use Application\Entity\Db\Agent;
 use Formation\Entity\Db\DemandeExterne;
 use Formation\Provider\Privilege\DemandeexternePrivileges;
+use UnicaenRenderer\Entity\Db\Rendu;
 
 $this->headTitle("M'inscrire à un stage hors du plan de formation");
 
@@ -19,12 +21,15 @@ $this->headTitle("M'inscrire à un stage hors du plan de formation");
 
 <h1 class="page-header"> M'inscrire à un stage hors du plan de formation </h1>
 
-<div class="alert alert-info">
-    <span class="icon icon-attention"></span>
-    <strong>La demande d'inscription ne vaut pas acceptation.</strong>
-    Votre inscription est soumise à validation et en fonction des places disponibles.
+<div class="row">
+    <div class="col-md-9">
+        <?php if ($rendu) : ?>
+            <div class="alert alert-info">
+                <?php echo $rendu->getCorps(); ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
-
 
 <?php
 

@@ -18,6 +18,7 @@ use Formation\Service\PlanDeFormation\PlanDeFormationService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use UnicaenRenderer\Service\Rendu\RenduService;
 
 class PlanDeFormationControllerFactory
 {
@@ -40,6 +41,7 @@ class PlanDeFormationControllerFactory
          * @var FormationGroupeService $formationGroupeService
          * @var FormationInstanceService $formationInstanceService
          * @var PlanDeFormationService $planDeFormationService
+         * @var RenduService $renduService
          */
         $abonnementService = $container->get(AbonnementService::class);
         $axeService = $container->get(AxeService::class);
@@ -50,6 +52,7 @@ class PlanDeFormationControllerFactory
         $formationGroupeService = $container->get(FormationGroupeService::class);
         $formationInstanceService = $container->get(FormationInstanceService::class);
         $planDeFormationService = $container->get(PlanDeFormationService::class);
+        $renduService = $container->get(RenduService::class);
 
         /**
          * @var PlanDeFormationForm $planDeFormationForm
@@ -72,6 +75,7 @@ class PlanDeFormationControllerFactory
         $controller->setFormationGroupeService($formationGroupeService);
         $controller->setFormationInstanceService($formationInstanceService);
         $controller->setPlanDeFormationService($planDeFormationService);
+        $controller->setRenduService($renduService);
         $controller->setPlanDeFormationForm($planDeFormationForm);
         $controller->setPlanDeFormationImportationForm($planDeFormationImportationForm);
         $controller->setSelectionFormationForm($selectionFormationForm);
