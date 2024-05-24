@@ -1,23 +1,19 @@
 <?php
 
-use Formation\Entity\Db\Axe;
+use Application\Entity\Db\Agent;
+use Formation\Entity\Db\Domaine;
 use Formation\Entity\Db\Formation;
-use Formation\Entity\Db\FormationAbonnement;
-use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Provider\Privilege\FormationabonnementPrivileges;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 /**
  * @see \Formation\Controller\PlanDeFormationController::courantAction()
- * @var array $plansDeFormation
- * @var FormationGroupe[] $groupes
- * @var Axe[] $axes
- * @var FormationGroupe[] $groupesArrayByAxe @desc $axeId => FormationGroupe[]
- * @var Formation[] $formationsArrayByGroupe @desc $groupeId => Formation[]
- * @var Formation[] $sessionsArrayByFormation @desc $formationId => FormationInstance[]
- * @var Formation[] $formations
- * @var FormationAbonnement[] $abonnements
+ *
+ * @var ?Agent $agent
+ * @var Formation[] $actions
+ * @var Domaine[] $domaines
+ * @var array $actionsByDomaines
  */
 
 $this->headTitle("Plan de formation");
@@ -29,7 +25,16 @@ $canDesabonner = $this->isAllowed(FormationabonnementPrivileges::getResourceId(F
 $canAfficherAction = $this->isAllowed(FormationPrivileges::getResourceId(FormationPrivileges::FORMATION_AFFICHER));
 $canListerAbonnement = $this->isAllowed(FormationabonnementPrivileges::getResourceId(FormationabonnementPrivileges::FORMATIONABONNEMENT_LISTE_AGENT));
 
-usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { return $a->getDateDebut() <=> $b->getDateDebut();});
+usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) {
+    return $a->getDateDebut() <=> $b->getDateDebut();
+});
+usort($domaines, function (Domaine $a, Domaine $b) {
+    if ($a->getOrdre() === $b->getOrdre()) {
+        return $a->getLibelle() <=> $b->getLibelle();
+    }
+    return $a->getOrdre() <=> $b->getOrdre();
+});
+
 ?>
 
 <div class="row">
@@ -40,7 +45,8 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
 
         <div class="alert alert-info">
             <span class="icon icon-information"></span>
-            En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous inscrire.
+            En vous abonnant aux notifications, vous recevrez un mail une fois la session ouverte et vous pourrez vous
+            inscrire.
         </div>
     </div>
     <div class="col-md-4">
@@ -54,44 +60,45 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
                 </div>
             </div>
         <?php else : ?>
-        <div class="card">
-            <div class="card-header bg-success">
-                Plan·s de formation actif·s
+            <div class="card">
+                <div class="card-header bg-success">
+                    Plan·s de formation actif·s
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <?php /** @var PlanDeFormation $planDeFormation */ ?>
+                        <?php foreach ($plansDeFormation as $planDeFormation) : ?>
+                            <li>
+                                <?php echo $planDeFormation->getLibelle(); ?>
+                                (<?php echo $planDeFormation->getPeriode(); ?>)
+                                <?php if ($planDeFormation->getDescription()) : ?>
+                                    <span class="icon icon-information"
+                                          title="<?php echo $planDeFormation->getDescription(); ?>"
+                                          data-bs-toggle="tooltip" data-bs-html="true"
+                                    ></span>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-                <ul>
-                    <?php /** @var PlanDeFormation $planDeFormation */ ?>
-                    <?php foreach ($plansDeFormation as $planDeFormation) : ?>
-                        <li>
-                            <?php echo $planDeFormation->getLibelle(); ?>
-                            (<?php echo $planDeFormation->getPeriode(); ?>)
-                            <?php if ($planDeFormation->getDescription()) : ?>
-                                <span class="icon icon-information" title="<?php echo $planDeFormation->getDescription(); ?>"
-                                      data-bs-toggle="tooltip" data-bs-html="true"
-                                ></span>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
         <?php endif; ?>
     </div>
 </div>
 
-    <?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
+<?php echo $this->messenger()->addMessagesFromFlashMessenger(); ?>
 
-    <?php if ($canGererAbonnement) : ?>
-        <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
-        <a href="<?php echo $this->url('formation/abonnement/ajouter', [], [], true); ?>"
-            class="btn btn-primary ajax-modal" data-event="modification"
-        >
-            <span class="icon icon-ajouter"></span>
-            Abonner un agent
-        </a>
-    <?php endif; ?>
+<?php if ($canGererAbonnement) : ?>
+    <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
+    <a href="<?php echo $this->url('formation/abonnement/ajouter', [], [], true); ?>"
+       class="btn btn-primary ajax-modal" data-event="modification"
+    >
+        <span class="icon icon-ajouter"></span>
+        Abonner un agent
+    </a>
+<?php endif; ?>
 
-    <?php if ($canListerAbonnement) : ?>
+<?php if ($canListerAbonnement) : ?>
     <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParAgentAction() */ ?>
     <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-agent', [], [], true); ?>"
        class="btn btn-secondary ajax-modal" data-event="modification"
@@ -99,79 +106,63 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
         <span class="icon icon-listing"></span>
         Lister mes abonnements
     </a>
-    <?php endif; ?>
-
-<?php true; ?>
-
-<?php if (!empty($plansDeFormation)) : ?>
-    <?php foreach ($axes as $axe) : ?>
-    <span class="axe" style="border-color: <?php echo $axe->getCouleur(); ?>"><?php echo $axe->getLibelle(); ?></span>
-    <ul>
-        <?php foreach ($groupesArrayByAxe[$axe->getId()] as $groupe) : ?>
-        <ul>
-            <li>
-                <span class="groupe"> <?php echo $groupe->getLibelle(); ?></span>
-                (<?php echo count($formationsArrayByGroupe[$groupe->getId()]); ?> formations)
-                <ul>
-                    <?php foreach ($formationsArrayByGroupe[$groupe->getId()] as $formation) : ?>
-                        <li>
-                            <?php if ($canAfficherAction) : ?>
-                                <?php /** @see \Formation\Controller\FormationController::afficherAction() */ ?>
-                                <a href="<?php echo $this->url("formation/afficher", ["formation" => $formation->getId()], [], true); ?>" class="ajax-modal">
-                                    <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
-                                </a>
-                            <?php else : ?>
-                                <span class="formation"> <?php echo $formation->getLibelle(); ?> </span>
-                            <?php endif; ?>
-                            (<?php echo count($sessionsArrayByFormation[$formation->getId()]); ?> sessions)
-
-                            <?php
-                                $abonnement = null;
-                                foreach ($abonnements as $abonnement_) {
-                                    if ($abonnement_->getFormation() === $formation) {
-                                        $abonnement = $abonnement_;
-                                        break;
-                                    }
-                                }
-                            ?>
-
-                            <?php if ($abonnement !== null) : ?>
-                                <span class="icon icon-checked text-success" title="Vous êtes abonné·e aux notifications liées à cette formation"></span>
-                            <?php endif; ?>
-                            <?php if ($canAbonner AND $abonnement === null) : ?>
-                                <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
-                                <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $formation->getId()], [], true); ?>"
-                                >
-                                    <span class="icon icon-follow text-success" title="S'abonner aux notifications liées à la formation"></span></a>
-                            <?php endif; ?>
-
-                            <?php if ($canAbonner AND $abonnement !== null) : ?>
-                                <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
-                                <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], [], true); ?>"
-                                >
-                                    <span class="icon icon-unfollow text-danger" title="Se désabonner des notifications liées à la formation"></span>
-                                </a>
-                            <?php endif; ?>
-
-                            <?php if ($canListerParFormation) : ?>
-                                <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction() */ ?>
-                                <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $formation->getId()], [], true); ?>"
-                                   class="ajax-modal"
-                                >
-                                    <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </li>
-        </ul>
-        <?php endforeach; ?>
-    </ul>
-    <?php endforeach; ?>
 <?php endif; ?>
 
+<?php foreach ($domaines as $domaine) : ?>
+    <span class="domaine" style="border-color: <?php echo $domaine->getCouleur(); ?>">
+            <?php echo $domaine->getLibelle(); ?> (<?php echo count($actionsByDomaines[$domaine->getId()]); ?> actions de formation)
+        </span>
+
+    <?php
+    $actions_ = $actionsByDomaines[$domaine->getId()];
+    usort($actions_, function (Formation $a, Formation $b) {
+        return $a->getLibelle() <=> $b->getLibelle();
+    });
+    ?>
+    <ul>
+        <?php foreach ($actions_ as $action) : ?>
+            <li>
+                <?php echo $action->getLibelle(); ?>
+                (<?php echo count($actions[$action->getId()]->getSessionsOuvertes()); ?> session·s ouverte·s)
+
+                <?php $abonnement = $action->getAbonnementByAgent($agent); ?>
+                <?php if ($abonnement !== null) : ?>
+                    <span class="icon icon-checked text-success"
+                          title="Vous êtes abonné·e aux notifications liées à cette formation"></span>
+                <?php endif; ?>
+                <?php if ($canAbonner and $abonnement === null) : ?>
+                    <?php /** @see \Formation\Controller\AbonnementController::ajouterAction() */ ?>
+                    <a href="<?php echo $this->url('formation/abonnement/ajouter', ['formation' => $action->getId()], [], true); ?>"
+                    >
+                        <span class="icon icon-follow text-success"
+                              title="S'abonner aux notifications liées à la formation"></span></a>
+                <?php endif; ?>
+
+                <?php if ($canAbonner and $abonnement !== null) : ?>
+                    <?php /** @see \Formation\Controller\AbonnementController::retirerAction() */ ?>
+                    <a href="<?php echo $this->url('formation/abonnement/retirer', ['abonnement' => $abonnement->getId()], [], true); ?>"
+                    >
+                        <span class="icon icon-unfollow text-danger"
+                              title="Se désabonner des notifications liées à la formation"></span>
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($canListerParFormation) : ?>
+                    <?php /** @see \Formation\Controller\AbonnementController::listerAbonnementsParFormationAction() */ ?>
+                    <a href="<?php echo $this->url('formation/abonnement/lister-abonnements-par-formation', ['formation' => $action->getId()], [], true); ?>"
+                       class="ajax-modal"
+                    >
+                        <span class="icon icon-listing" title="lister les abonnements pour cette formation"></span></a>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+
+<?php endforeach; ?>
+
 <script>
-    $(function() {
+    $(function () {
         $("body").on("modification", function (event) {
             event.div.modal('hide');
             window.location.reload();
@@ -179,9 +170,8 @@ usort($plansDeFormation, function (PlanDeFormation $a, PlanDeFormation $b) { ret
     });
 </script>
 
-
 <style>
-    span.axe {
+    span.domaine {
         border-left: 1rem solid;
         border-bottom: 0.1rem solid;
         display: block;

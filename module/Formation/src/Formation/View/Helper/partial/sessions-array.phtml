@@ -10,6 +10,7 @@
 /** Droits pour les actions */
 
 use Formation\Entity\Db\FormationInstance;
+use Formation\Entity\Db\Seance;
 use Formation\Provider\Privilege\FormationPrivileges;
 
 $displayGestionnaire = true;
@@ -36,6 +37,8 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
     $canSupprimerInstance = $options['droits']['supprimer'];
 }
 
+usort($instances, function (FormationInstance $a, FormationInstance $b) { return$a->getDebut(true) <=> $b->getDebut(true); });
+$instances = array_reverse($instances);
 ?>
 
 <table class="datatable table table-condensed">
@@ -54,7 +57,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
     <?php foreach ($instances as $instance) : ?>
         <?php if ($canSupprimerInstance OR $instance->estNonHistorise()) : ?>
             <tr <?php if ($instance->estHistorise()) echo 'class="historise"'; ?> >
-                <td>
+                <td class="identification">
                         <span class="badge source <?php echo $instance->getSource(); ?>">
                             <?php echo $instance->getSource(); ?>
                             <?php echo $instance->getIdSource(); ?>
@@ -64,7 +67,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                     <?php echo ($instance->getFormation()->getGroupe())?$instance->getFormation()->getGroupe()->getLibelle():"Sans thème de formation"; ?>
                 </td>
                 <?php if ($displayGestionnaire) : ?>
-                    <td>
+                    <td class="gestionnaire">
                         <?php if (empty($instance->getGestionnaires())) : ?>
                             Aucun·e gestionnaire
                         <?php else : ?>
@@ -76,9 +79,19 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                         <?php endif; ?>
                     </td>
                 <?php endif; ?>
-                <td> <?php echo $instance->getPeriode(); ?></td>
-                <td> <?php echo ($instance->getSeances())?count($instance->getSeances()):"???"; ?></td>
-                <td>
+                <td class="periode"> <?php echo $instance->getPeriode(); ?></td>
+                <td class="plages">
+                    <?php $seances = $instance->getSeances(); ?>
+                    <?php if ($seances === null) : ?>
+                        &emptyset;
+                    <?php else: ?>
+                        <?php
+                            $seances = array_filter($seances, function (Seance $seance) { return $seance->estNonHistorise(); });
+                            echo count($seances);
+                        ?>
+                    <?php endif; ?>
+                </td>
+                <td class="listes">
                     <?php if ($instance->getInscriptions()) : ?>
                         Principale : <?php echo count($instance->getListePrincipale())."/".$instance->getNbPlacePrincipale(); ?>
                         <?php if ($instance->isListePrincipaleComplete()) : ?>
@@ -91,7 +104,7 @@ if (!isset($options['droits']) AND !isset($options['droits']['supprimer'])) {
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
-                <td>
+                <td class="etat">
                     <?php echo ($instance->getEtatActif())?$this->etatinstance($instance->getEtatActif()):"N.C."; ?>
                 </td>
                 <td class="action">

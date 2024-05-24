@@ -4,6 +4,7 @@ namespace Formation\Controller;
 
 use Application\Service\Agent\AgentServiceAwareTrait;
 use Formation\Entity\Db\Axe;
+use Formation\Entity\Db\Domaine;
 use Formation\Entity\Db\FormationGroupe;
 use Formation\Entity\Db\PlanDeFormation;
 use Formation\Form\PlanDeFormation\PlanDeFormationFormAwareTrait;
@@ -48,125 +49,47 @@ class PlanDeFormationController extends AbstractActionController
 
     public function courantAction(): ViewModel
     {
+        $agent = $this->getAgentService()->getAgentByConnectedUser();
         $plansDeFormation = $this->getPlanDeFormationService()->getPlansDeFormationActifs();
 
         if (empty($plansDeFormation)) {
             return new ViewModel(['plansDeFormation' => $plansDeFormation]);
         }
 
-        $axes = [];
-
-        $formations = [];
-        foreach ($plansDeFormation as $planDeFormation) {
-            foreach ($planDeFormation->getFormations() as $formation) {
-                $formations[$formation->getId()] = $formation;
-            }
-        }
-        $sansgroupe = new FormationGroupe();
-        $sansgroupe->setLibelle("Formations sans groupe");
-        $sansaxe = new Axe();
-        $sansaxe->setLibelle("Thème de formation sans axe");
-        $sansaxe->setOrdre(99999);
-
-        $groupes = [];
-        $formationsArrayByGroupe = [];
-        $groupesArrayByAxe = [];
-        foreach ($formations as $formation) {
-            $groupe = $formation->getGroupe();
-            if ($groupe !== null) {
-                $groupes[$formation->getGroupe()->getId()] = $groupe;
-                $formationsArrayByGroupe[$groupe->getId()][] = $formation;
-                $axe = $groupe->getAxe();
-                if ($axe !== null) {
-                    $axes[$axe->getId()] = $axe;
-                    $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
-                } else {
-                    $axes[-1] = $sansaxe;
-                    $groupesArrayByAxe[-1][$groupe->getId()] = $groupe;
-                }
-            } else {
-                $axes[-1] = $sansaxe;
-                $groupes[-1] = $sansgroupe;
-                $formationsArrayByGroupe[-1][] = $formation;
-                $groupesArrayByAxe[-1][-1] = $sansgroupe;
-            }
-        }
-
-        $sessionsArrayByFormation = [];
-        foreach ($formations as $formation) {
-            //todo recupérer par lot
-            $sessionsArrayByFormation[$formation->getId()] = $this->getFormationInstanceService()->getFormationsInstancesOuvertesByFormation($formation);
-        }
-
-        $abonnements = [];
-        $agent = $this->getAgentService()->getAgentByConnectedUser();
-        if ($agent !== null) $abonnements = $this->getAbonnementService()->getAbonnementsByAgent($agent);
+        // recuperation des actions de formation et des domaines
+        [$actions, $domaines, $actionsByDomaines] = $this->getFormationService()->genererDictionnaireParDomaine($plansDeFormation);
 
         return new ViewModel([
             'plansDeFormation' => $plansDeFormation,
-            'formations' => $formations,
-            'groupes' => $groupes,
-            'axes' => $axes,
-            'groupesArrayByAxe' => $groupesArrayByAxe,
-            'formationsArrayByGroupe' => $formationsArrayByGroupe,
-            'sessionsArrayByFormation' => $sessionsArrayByFormation,
-            'abonnements' => $abonnements,
+            'actions' => $actions,
+            'domaines' => $domaines,
+            'actionsByDomaines' => $actionsByDomaines,
+
+            'agent' => $agent,
         ]);
     }
 
     public function afficherAction(): ViewModel
     {
-        $plan = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
-        $formations = $plan->getFormations();
+        $planDeFormation = $this->getPlanDeFormationService()->getRequestedPlanDeFormation($this);
+        $plansDeFormation = [$this->getPlanDeFormationService()->getRequestedPlanDeFormation($this)];
 
-        $axes = [];
-
-        $sansgroupe = new FormationGroupe();
-        $sansgroupe->setLibelle("Formations sans thème");
-        $sansaxe = new Axe();
-        $sansaxe->setLibelle("Thème de formation sans axe");
-        $sansaxe->setOrdre(99999);
-
-        $groupes = [];
-        $formationsArrayByGroupe = [];
-        $groupesArrayByAxe = [];
-        foreach ($formations as $formation) {
-            $groupe = $formation->getGroupe();
-            if ($groupe !== null) {
-                $groupes[$formation->getGroupe()->getId()] = $groupe;
-                $formationsArrayByGroupe[$groupe->getId()][] = $formation;
-                $axe = $groupe->getAxe();
-                if ($axe !== null) {
-                    $axes[$axe->getId()] = $axe;
-                    $groupesArrayByAxe[$axe->getId()][$groupe->getId()] = $groupe;
-                } else {
-                    $axes[-1] = $sansaxe;
-                    $groupesArrayByAxe[-1][$groupe->getId()] = $groupe;
-                }
-            } else {
-                $axes[-1] = $sansaxe;
-                $groupes[-1] = $sansgroupe;
-                $formationsArrayByGroupe[-1][] = $formation;
-                $groupesArrayByAxe[-1][-1] = $sansgroupe;
-            }
+        if (empty($plansDeFormation)) {
+            return new ViewModel(['plansDeFormation' => $plansDeFormation]);
         }
 
-        $sessionsArrayByFormation = [];
-        foreach ($formations as $formation) {
-            //todo recupérer par lot
-            $sessionsArrayByFormation[$formation->getId()] = []; //todo $this->getFormationInstanceService()->getFormationsInstancesByFormationAndPlan($formation, $plan);
-        }
+        // recuperation des actions de formation et des domaines
+        [$actions, $domaines, $actionsByDomaines] = $this->getFormationService()->genererDictionnaireParDomaine($plansDeFormation);
 
         return new ViewModel([
-            'plan' => $plan,
-            'formations' => $formations,
-            'groupes' => $groupes,
-            'axes' => $axes,
-            'groupesArrayByAxe' => $groupesArrayByAxe,
-            'formationsArrayByGroupe' => $formationsArrayByGroupe,
-            'sessionsArrayByFormation' => $sessionsArrayByFormation,
-            'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByPlan($plan),
+            'planDeFormation' => $planDeFormation,
+            'plansDeFormation' => $plansDeFormation,
 
+            'actions' => $actions,
+            'domaines' => $domaines,
+            'actionsByDomaines' => $actionsByDomaines,
+
+            'coutsPrevisionnels' => $this->getActionCoutPrevisionnelService()->getActionsCoutsPrevisionnelsByPlan($planDeFormation),
         ]);
     }
 

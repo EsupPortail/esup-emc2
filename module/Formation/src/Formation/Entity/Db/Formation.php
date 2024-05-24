@@ -2,6 +2,7 @@
 
 namespace Formation\Entity\Db;
 
+use Application\Entity\Db\Agent;
 use Application\Entity\Db\Interfaces\HasDescriptionInterface;
 use Application\Entity\Db\Interfaces\HasSourceInterface;
 use Application\Entity\Db\Traits\HasDescriptionTrait;
@@ -14,6 +15,7 @@ use Element\Entity\Db\Interfaces\HasCompetenceCollectionInterface;
 use Element\Entity\Db\Traits\HasApplicationCollectionTrait;
 use Element\Entity\Db\Traits\HasCompetenceCollectionTrait;
 use FicheMetier\Entity\Db\Mission;
+use Formation\Provider\Etat\SessionEtats;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareInterface;
 use UnicaenUtilisateur\Entity\Db\HistoriqueAwareTrait;
 
@@ -33,7 +35,7 @@ class Formation implements HistoriqueAwareInterface,
 
     const TYPE_PRESENTIEL = 'Présentiel';
     const TYPE_DISTANCIEL = 'Distanciel';
-    const TYPE_MIXTE      = 'Mixte';
+    const TYPE_MIXTE = 'Mixte';
     const TYPES = [
         Formation::TYPE_PRESENTIEL => 'Formation en présentiel',
         Formation::TYPE_DISTANCIEL => 'Formation en distanciel',
@@ -71,11 +73,11 @@ class Formation implements HistoriqueAwareInterface,
         $this->domaines = new ArrayCollection();
     }
 
-    public static function getAnnee(?DateTime $date = null) : ?int
+    public static function getAnnee(?DateTime $date = null): ?int
     {
         if ($date === null) $date = new DateTime();
-        $month = (int) $date->format("m");
-        $year = (int) $date->format("Y");
+        $month = (int)$date->format("m");
+        $year = (int)$date->format("Y");
         if ($month > 8) return $year;
         return ($year - 1);
     }
@@ -83,7 +85,7 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -91,7 +93,7 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return string|null
      */
-    public function getLibelle() : ?string
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
@@ -100,7 +102,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param string|null $libelle
      * @return Formation
      */
-    public function setLibelle(?string $libelle) : Formation
+    public function setLibelle(?string $libelle): Formation
     {
         $this->libelle = $libelle;
         return $this;
@@ -109,7 +111,7 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return string|null
      */
-    public function getLien() : ?string
+    public function getLien(): ?string
     {
         return $this->lien;
     }
@@ -118,7 +120,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param string|null $lien
      * @return Formation
      */
-    public function setLien(?string $lien) : Formation
+    public function setLien(?string $lien): Formation
     {
         $this->lien = $lien;
         return $this;
@@ -127,7 +129,7 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return FormationGroupe|null
      */
-    public function getGroupe() : ?FormationGroupe
+    public function getGroupe(): ?FormationGroupe
     {
         return $this->groupe;
     }
@@ -136,7 +138,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param FormationGroupe|null $groupe
      * @return Formation
      */
-    public function setGroupe(?FormationGroupe $groupe) : Formation
+    public function setGroupe(?FormationGroupe $groupe): Formation
     {
         $this->groupe = $groupe;
         return $this;
@@ -161,7 +163,7 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return Mission[]
      */
-    public function getMissions() : array
+    public function getMissions(): array
     {
         return $this->missions->toArray();
     }
@@ -170,7 +172,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param Mission $mission
      * @return Formation
      */
-    public function addMission(Mission $mission) : Formation
+    public function addMission(Mission $mission): Formation
     {
         $this->missions->add($mission);
         return $this;
@@ -180,7 +182,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param Mission $mission
      * @return Formation
      */
-    public function removeMission(Mission $mission) : Formation
+    public function removeMission(Mission $mission): Formation
     {
         $this->missions->removeElement($mission);
         return $this;
@@ -190,7 +192,7 @@ class Formation implements HistoriqueAwareInterface,
      * @param Formation[] $formations
      * @return array
      */
-    public static function generateOptions(array $formations) : array
+    public static function generateOptions(array $formations): array
     {
         $groupes = [];
         foreach ($formations as $formation) $groupes[($formation->getGroupe()) ? $formation->getGroupe()->getLibelle() : "Sans groupe"][] = $formation;
@@ -294,18 +296,37 @@ class Formation implements HistoriqueAwareInterface,
     /**
      * @return FormationInstance[]
      */
-    public function getInstances() : array
+    public function getInstances(): array
     {
         return $this->instances->toArray();
     }
 
-    /**
-     * @return FormationAbonnement[]
-     */
-    public function getAbonnements() : array
+    /** @return FormationInstance[] */
+    public function getSessionsOuvertes(): array
+    {
+        $sessions = $this->getInstances();
+        $sessions = array_filter($sessions, function (FormationInstance $a) {
+            return in_array($a->getEtatActif()->getType()->getCode(), SessionEtats::ETATS_OUVERTS);
+        });
+        return $sessions;
+    }
+
+    /** GESTION DES ABONNEMENTS ***************************************************************************************/
+    /** @return FormationAbonnement[] */
+    public function getAbonnements(): array
     {
         return $this->abonnements->toArray();
     }
+
+    public function getAbonnementByAgent(?Agent $agent): ?FormationAbonnement
+    {
+        if ($agent === null) return null;
+        foreach ($this->abonnements as $abonnement) {
+            if ($abonnement->getAgent() === $agent) return $abonnement;
+        }
+        return null;
+    }
+
 
     /** GESTION DES DOMAINES *************************************************************************/
 
@@ -317,17 +338,17 @@ class Formation implements HistoriqueAwareInterface,
         return $this->domaines->toArray();
     }
 
-    public function addDomaine(Domaine $domaine) : void
+    public function addDomaine(Domaine $domaine): void
     {
         $this->domaines->add($domaine);
     }
 
-    public function removeDomaine(Domaine  $domaine) : void
+    public function removeDomaine(Domaine $domaine): void
     {
         $this->domaines->removeElement($domaine);
     }
 
-    public function hasDomaine(Domaine $domaine) : bool
+    public function hasDomaine(Domaine $domaine): bool
     {
         return $this->domaines->contains($domaine);
     }
@@ -342,18 +363,19 @@ class Formation implements HistoriqueAwareInterface,
         return $this->plans->toArray();
     }
 
-    public function addPlanDeForamtion(PlanDeFormation $plan) : void
+    public function addPlanDeForamtion(PlanDeFormation $plan): void
     {
         $this->plans->add($plan);
     }
 
-    public function removePlanDeFormation(PlanDeFormation  $plan) : void
+    public function removePlanDeFormation(PlanDeFormation $plan): void
     {
         $this->plans->removeElement($plan);
     }
 
-    public function hasPlanDeFormation(PlanDeFormation $plan) : bool
+    public function hasPlanDeFormation(PlanDeFormation $plan): bool
     {
         return $this->plans->contains($plan);
     }
+
 }

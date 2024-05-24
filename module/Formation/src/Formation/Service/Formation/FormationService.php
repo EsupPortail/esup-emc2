@@ -6,6 +6,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use DoctrineModule\Persistence\ProvidesObjectManager;
 use Formation\Entity\Db\Axe;
+use Formation\Entity\Db\Domaine;
 use Formation\Entity\Db\Formateur;
 use Formation\Entity\Db\Formation;
 use Formation\Entity\Db\FormationGroupe;
@@ -351,6 +352,35 @@ class FormationService
         $formation->setGroupe($theme);
         $this->create($formation);
         return $formation;
+    }
+
+    public function genererDictionnaireParDomaine(array $plansDeFormation) : array
+    {
+        $actions  = [];
+        $domaines = [];
+        $actionsByDomaines = [];
+
+        $sansDomaine = new Domaine();
+        $sansDomaine->setLibelle("Sans domaine");
+        $sansDomaine->setOrdre(999999);
+
+        foreach ($plansDeFormation as $planDeFormation) {
+            foreach ($planDeFormation->getFormations() as $action) {
+                $actions[$action->getId()] = $action;
+                $domaines_ = $action->getDomaines();
+                if (empty($domaines_)) {
+                    $domaines[-1] = $sansDomaine;
+                    $actionsByDomaines[-1][] = $action;
+                } else {
+                    foreach ($domaines_ as $domaine) {
+                        $domaines[$domaine->getId()] = $domaine;
+                        $actionsByDomaines[$domaine->getId()][] = $action;
+                    }
+                }
+            }
+        }
+
+        return [$actions, $domaines, $actionsByDomaines];
     }
 
 }
