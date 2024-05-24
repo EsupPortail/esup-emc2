@@ -106,7 +106,7 @@ return [
                     ],
                     [
                         'order' => 400,
-                        'label' => 'Mon projet personnel',
+                        'label' => "Mon projet d'évolution professionnelle",
                         'route' => 'projet-personnel',
                         'resource' => PrivilegeController::getResourceId(ProjetPersonnelController::class, 'index'),
                     ],
