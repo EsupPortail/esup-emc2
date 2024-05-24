@@ -3,15 +3,18 @@
 namespace Formation\Form\Formateur;
 
 use Formation\Entity\Db\Formateur;
+use Formation\Service\Formateur\FormateurServiceAwareTrait;
 use Laminas\Form\Element\Button;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Form;
 use Laminas\InputFilter\Factory;
 use Laminas\Validator\Callback;
+use RuntimeException;
 
 class FormateurForm extends Form
 {
+    use FormateurServiceAwareTrait;
 
     public function init(): void
     {
@@ -21,12 +24,12 @@ class FormateurForm extends Form
             'name' => 'formateur-type',
             'options' => [
                 'label' => "Type de formateur <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
                 'value_options' => Formateur::TYPES
             ],
             'attributes' => [
                 'id' => 'formateur-type',
-                'class'             => 'bootstrap-selectpicker show-tick',
+                'class' => 'bootstrap-selectpicker show-tick',
             ],
         ]);
         //organisme
@@ -34,7 +37,8 @@ class FormateurForm extends Form
             'type' => Text::class,
             'name' => 'organisme',
             'options' => [
-                'label' => "Organisme * :",
+                'label' => "Organisme <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'organisme',
@@ -46,7 +50,8 @@ class FormateurForm extends Form
             'type' => Text::class,
             'name' => 'prenom',
             'options' => [
-                'label' => "Prénom * :",
+                'label' => "Prénom <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'prenom',
@@ -57,7 +62,8 @@ class FormateurForm extends Form
             'type' => Text::class,
             'name' => 'nom',
             'options' => [
-                'label' => "Nom * :",
+                'label' => "Nom <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'nom',
@@ -79,7 +85,8 @@ class FormateurForm extends Form
             'type' => Text::class,
             'name' => 'email',
             'options' => [
-                'label' => "Adresse électronique  :",
+                'label' => "Adresse électronique <span class='icon icon-obligatoire' title='Champ obligatoire'></span>:",
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'id' => 'email',
@@ -103,7 +110,7 @@ class FormateurForm extends Form
             'name' => 'creer',
             'options' => [
                 'label' => '<i class="fas fa-save"></i> Enregistrer',
-                'label_options' => [ 'disable_html_escape' => true, ],
+                'label_options' => ['disable_html_escape' => true,],
             ],
             'attributes' => [
                 'type' => 'submit',
@@ -121,9 +128,9 @@ class FormateurForm extends Form
                             Callback::INVALID_VALUE => "Une information obligatoire est manquante",
                         ],
                         'callback' => function ($value, $context = []) {
-                            if($context['type'] === Formateur::TYPE_FORMATEUR)
-                                return ($context['nom'] !== '' AND $context['prenom']);
-                            if($context['type'] === Formateur::TYPE_ORGANISME)
+                            if ($context['formateur-type'] === Formateur::TYPE_FORMATEUR)
+                                return ($context['nom'] !== '' and $context['prenom']);
+                            if ($context['formateur-type'] === Formateur::TYPE_ORGANISME)
                                 return ($context['organisme'] !== '');
                             return true;
                         },
@@ -136,7 +143,23 @@ class FormateurForm extends Form
             'nom' => ['required' => false],
             'attachement' => ['required' => false],
 
-            'email' => ['required' => false],
+            'email' => [
+                'required' => true,
+                'validators' => [
+                    [
+                        'name' => Callback::class,
+                        'options' => [
+                            'messages' => [
+                                Callback::INVALID_VALUE => "Un·e formateur·trice utilise déjà cette adresse électronique",
+                            ],
+                            'callback' => function ($value, $context = []) {
+                                $formateurs = $this->getFormateurService()->getFormateursByEmail($value);
+                            },
+                            //'break_chain_on_failure' => true,
+                        ],
+                    ],
+                ],
+            ],
             'telephone' => ['required' => false],
         ]));
     }

@@ -229,4 +229,15 @@ class FormateurService
         $result = $qb->getQuery()->getResult();
         return $result;
     }
+
+    /** @return Formateur[] */
+    public function getFormateursByEmail(string $email): array
+    {
+        $qb = $this->createQueryBuilder()
+            ->andWhere('formateur.email = :email')
+            ->setParameter('email', $email)
+        ;
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
 }
