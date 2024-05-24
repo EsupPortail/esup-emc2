@@ -50,10 +50,11 @@ class FormationController extends AbstractActionController
         $groupe_ = ($groupe !== null and $groupe !== "") ? $this->getFormationGroupeService()->getFormationGroupe((int)$groupe) : null;
         $source = $this->params()->fromQuery('source');
         $historise = $this->params()->fromQuery('historise');
-        $planDeFormation = $this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation'));
+        $planId = $this->params()->fromQuery('planDeFormation');
+        $planDeFormation = ($planId !== null && $planId !== '')?$this->getPlanDeFormationService()->getPlanDeFormation($this->params()->fromQuery('planDeFormation')):null;
 
         $formations = $this->getFormationService()->getFormationsByGroupe($groupe_);
-        $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) { return $formation->hasPlanDeFormation($planDeFormation); });
+        if ($planDeFormation !== null) $formations = array_filter($formations, function (Formation $formation) use ($planDeFormation) { return $formation->hasPlanDeFormation($planDeFormation); });
 
         if ($source !== null and $source !== "") $formations = array_filter($formations, function (Formation $a) use ($source) {
             return $a->getSource() === $source;
